@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropzone{min-height:3rem}
+    .token{cursor:grab}
+    .token:active{cursor:grabbing}
+    .dragging{opacity:.7; transform:scale(.98)}
+  </style>
+</head>
+<body class="bg-gray-50">
+  <section class="bg-white rounded-xl shadow-md border-l-4 border-purple-500 max-w-4xl mx-auto my-6">
+    <div class="p-4">
+      <h2 class="font-bold text-purple-700 mb-2">Curiosidad: Metáforas en la canción (Actividad)</h2>
+      <p class="mb-4 text-gray-800">
+        Arrastra las respuestas correctas desde el banco a cada recuadro. Hay <em>distractores</em>. 
+        Cuando todas sean correctas, verás un código para introducir en Schoology.
+      </p>
+
+      <!-- CONFIGURACIÓN: establece el origen correcto del artista/grupo -->
+      <!-- Posibles opciones incluidas en el banco: España, México, Argentina, Colombia -->
+      <script>
+        window.CORRECT_ORIGIN = "España"; // <-- cámbialo según el artista
+      </script>
+
+      <!-- Preguntas -->
+      <div class="grid gap-4 md:grid-cols-2">
+        <!-- Q1 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">1) ¿Qué metáfora usa el artista para describir su relación?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q1" aria-label="Zona de respuesta 1"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">2) ¿Qué representa el “baúl que ya no cierra”?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q2" aria-label="Zona de respuesta 2"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">3) ¿Qué significa “estar cansado de volar”?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q3" aria-label="Zona de respuesta 3"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">4) ¿De dónde es el artista o el grupo?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q4" aria-label="Zona de respuesta 4"></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="bg-white border rounded-lg p-3 md:col-span-2">
+          <p class="font-semibold text-gray-900">5) ¿Qué juegos menciona la canción? ¿Qué podrían simbolizar?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q5" aria-label="Zona de respuesta 5"></div>
+        </div>
+      </div>
+
+      <!-- Banco de respuestas -->
+      <div class="mt-6">
+        <p class="font-semibold text-gray-900">Banco de respuestas (arrástralas):</p>
+        <div id="bank" class="mt-2 flex flex-wrap gap-2">
+          <!-- Correctas -->
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="el vuelo / el avión">el vuelo / el avión</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="el baúl lleno de recuerdos">el baúl lleno de recuerdos</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="estar agotado de mantener la relación">estar agotado de mantener la relación</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="piedra, papel o tijera">piedra, papel o tijera</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="España">España</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="México">México</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="Argentina">Argentina</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="Colombia">Colombia</span>
+          <!-- Distractores -->
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="la playa">la playa</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="un coche">un coche</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="una promesa">una promesa</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="la primavera">la primavera</span>
+        </div>
+        <p class="text-sm text-gray-500 mt-1">Puedes volver a arrastrar una ficha desde una respuesta para regresarla al banco.</p>
+      </div>
+
+      <!-- Controles -->
+      <div class="mt-6 flex flex-wrap gap-2">
+        <button id="btnCheck" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Verificar</button>
+        <button id="btnReset" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Reiniciar</button>
+      </div>
+
+      <!-- Feedback + Código -->
+      <div id="result" class="mt-4"></div>
+    </div>
+  </section>
+
+  <script>
+    // --- Utils ---
+    const norm = s => (s ?? "").trim().normalize('NFC').toLocaleLowerCase('es-ES');
+
+    // Respuestas correctas (por texto de ficha)
+    const ANSWERS = {
+      q1: ["el vuelo / el avión"],                               // metáfora
+      q2: ["el baúl lleno de recuerdos"],                        // significado del baúl
+      q3: ["estar agotado de mantener la relación"],             // “cansado de volar”
+      q4: [window.CORRECT_ORIGIN || "España"],                   // origen (config)
+      q5: ["piedra, papel o tijera"]                             // juegos
+    };
+
+    // Código determinista a partir de las respuestas colocadas
+    function makeCode(payload) {
+      // simple checksum -> 6 chars base36
+      let sum = 0;
+      for (const ch of payload) sum = (sum + ch.charCodeAt(0) * 17) % 2_147_483_647;
+      const part = sum.toString(36).toUpperCase().padStart(6, '0').slice(-6);
+      return `ESP-${part}`;
+    }
+
+    // Drag & drop
+    let dragEl = null;
+
+    function onDragStart(e){
+      dragEl = e.target;
+      dragEl.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', dragEl.dataset.token);
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function onDragEnd(e){
+      if (dragEl) dragEl.classList.remove('dragging');
+      dragEl = null;
+      saveState();
+    }
+    function onDragOver(e){
+      if (e.currentTarget.classList.contains('dropzone')) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('ring-2','ring-purple-300');
+      }
+    }
+    function onDragLeave(e){
+      e.currentTarget.classList.remove('ring-2','ring-purple-300');
+    }
+    function onDrop(e){
+      e.preventDefault();
+      const dz = e.currentTarget;
+      dz.classList.remove('ring-2','ring-purple-300');
+
+      // If dropping a token from bank or from another zone:
+      const token = dragEl;
+      if (!token || !token.classList.contains('token')) return;
+
+      // If this dropzone already has a token, return that token to bank first
+      const existing = dz.querySelector('.token');
+      if (existing) document.getElementById('bank').appendChild(existing);
+
+      // Move token into dropzone
+      dz.appendChild(token);
+      saveState();
+    }
+
+    // Allow returning a token to the bank by clicking a small 'x'
+    // (Simpler: double-click on a token to send it back)
+    function onTokenDblClick(e){
+      const t = e.target.closest('.token');
+      if (!t) return;
+      document.getElementById('bank').appendChild(t);
+      saveState();
+    }
+
+    // Attach events
+    function attachDnD(){
+      document.querySelectorAll('.token').forEach(t=>{
+        t.addEventListener('dragstart', onDragStart);
+        t.addEventListener('dragend', onDragEnd);
+        t.addEventListener('dblclick', onTokenDblClick);
+      });
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        z.addEventListener('dragover', onDragOver);
+        z.addEventListener('dragleave', onDragLeave);
+        z.addEventListener('drop', onDrop);
+      });
+    }
+
+    // Check answers
+  function checkAll(){
+    let correct = 0, total = Object.keys(ANSWERS).length;
+    let answerConcat = '';
+
+    document.querySelectorAll('.dropzone').forEach(zone=>{
+      const qid = zone.dataset.q;
+      const placed = zone.querySelector('.token');
+      const expect = (ANSWERS[qid] || []).map(norm);
+      zone.classList.remove('border-green-400','bg-green-50','border-red-400','bg-red-50');
+
+      if (placed){
+        const txt = placed.dataset.token;
+        answerConcat += `|${qid}:${txt}`;
+        if (expect.includes(norm(txt))){
+          zone.classList.add('border-green-400','bg-green-50');
+          correct++;
+        } else {
+          zone.classList.add('border-red-400','bg-red-50');
+        }
+      } else {
+        zone.classList.add('border-red-400','bg-red-50');
+      }
+    });
+
+    const result = document.getElementById('result');
+    let code = "";
+    if (correct === total){
+      code = "ESP-SI";   // ✅ all correct
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300">
+          <p class="font-semibold text-emerald-800">¡Muy bien! Todo correcto.</p>
+          <p class="mt-1 text-emerald-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-emerald-100 text-emerald-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-emerald-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    } else if (correct === 0){
+      code = "ESP-NO";   // ❌ all wrong
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-red-50 border border-red-300">
+          <p class="font-semibold text-red-800">Todas incorrectas.</p>
+          <p class="mt-1 text-red-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-red-100 text-red-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-red-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    } else {
+      code = "ESP-MEH";     // ⚠️ partially correct
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-amber-50 border border-amber-300">
+          <p class="font-semibold text-amber-800">Respuestas correctas: ${correct} de ${total}.</p>
+          <p class="mt-1 text-amber-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-amber-100 text-amber-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-amber-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    }
+  }
+
+    // Persistencia local simple
+    const STORAGE_KEY = 'curiosidad_dragdrop_v1';
+    function saveState(){
+      const state = { bank: [], zones: {} };
+      document.querySelectorAll('#bank .token').forEach(t => state.bank.push(t.dataset.token));
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        const t = z.querySelector('.token');
+        state.zones[z.dataset.q] = t ? t.dataset.token : null;
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try{
+        const state = JSON.parse(raw);
+        // Put all tokens back to bank first (in bank order)
+        const bank = document.getElementById('bank');
+        const allTokens = Array.from(document.querySelectorAll('.token'));
+        // Clear bank
+        allTokens.forEach(t => bank.appendChild(t));
+        // Rebuild bank order
+        if (Array.isArray(state.bank)){
+          state.bank.forEach(txt=>{
+            const el = allTokens.find(t=>t.dataset.token===txt);
+            if (el) bank.appendChild(el);
+          });
+        }
+        // Fill zones
+        document.querySelectorAll('.dropzone').forEach(z=>{
+          const want = state.zones?.[z.dataset.q] || null;
+          if (!want) return;
+          const el = allTokens.find(t=>t.dataset.token===want);
+          if (el) z.appendChild(el);
+        });
+      }catch(e){ /* ignore */ }
+    }
+
+    function resetAll(){
+      const bank = document.getElementById('bank');
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        z.classList.remove('border-green-400','bg-green-50','border-red-400','bg-red-50');
+        const t = z.querySelector('.token');
+        if (t) bank.appendChild(t);
+      });
+      document.getElementById('result').innerHTML = '';
+      saveState();
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', ()=>{
+      attachDnD();
+      loadState();
+      document.getElementById('btnCheck').addEventListener('click', checkAll);
+      document.getElementById('btnReset').addEventListener('click', resetAll);
+    });
+  </script>
+</body>
+</html>
