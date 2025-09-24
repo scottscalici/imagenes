@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Día 9 - 24 de septiembre</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .media-contain { max-height: 300px; object-fit: contain; margin: 0 auto; }
+    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display:none; }
+  </style>
+</head>
+<body class="font-sans bg-gray-100 text-gray-900">
+  <header class="bg-blue-900 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-baseline justify-between">
+      <h1 class="text-xl font-bold">Día 9</h1>
+      <time class="text-sm opacity-90" datetime="2025-09-24">24 de septiembre</time>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto p-4 space-y-6">
+    <!-- Evaluación -->
+    <section class="bg-white shadow rounded-lg border-l-4 border-emerald-500">
+      <h2 class="text-emerald-600 font-bold text-lg p-3">Evaluación</h2>
+      <div class="px-4 pb-4 space-y-3">
+        <p class="text-base">Vocabulario 8.3</p>
+        <div>
+          <p class="font-semibold">Próximas pruebas</p>
+          <ul class="list-disc list-inside">
+            <li>Nada - la próxima clase</li>
+            <li>Vocabulario 1.1 - Día 11</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calentamiento -->
+    <section class="bg-white shadow rounded-lg border-l-4 border-red-500">
+      <h2 class="text-red-600 font-bold text-lg p-3">Calentamiento</h2>
+      <div class="px-4 pb-4 space-y-4">
+        <div>
+          <p class="font-semibold">Schoology</p>
+          <ul class="list-disc list-inside">
+            <li>Pretérito 1</li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-semibold">Repaso de vocabulario: <span class="font-normal">Descubre 2-8-3</span></p>
+          <details class="mt-2">
+            <summary class="cursor-pointer inline-flex items-center gap-2 text-blue-600 hover:underline select-none">
+              <span class="inline-block w-5 h-5 rounded-full bg-blue-100 text-blue-700 grid place-content-center text-xs">▼</span>
+              Expandir/Reducir
+            </summary>
+            <div class="overflow-x-auto mt-3">
+              <table class="table-auto w-full text-sm">
+                <tbody>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>1</strong> el nombre</td>
+                    <td class="p-1"><strong>11</strong> compartir</td>
+                    <td class="p-1"><strong>21</strong> elegante</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>2</strong> la maleta</td>
+                    <td class="p-1"><strong>12</strong> los ratos libres</td>
+                    <td class="p-1"><strong>22</strong> hasta</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>3</strong> el/la compañero/a de cuarto</td>
+                    <td class="p-1"><strong>13</strong> la pelota</td>
+                    <td class="p-1"><strong>23</strong> maquillarse</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>4</strong> las materias</td>
+                    <td class="p-1"><strong>14</strong> dormir (o:ue)</td>
+                    <td class="p-1"><strong>24</strong> el lavabo</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>5</strong> delante de</td>
+                    <td class="p-1"><strong>15</strong> estar de vacaciones (f. pl.)</td>
+                    <td class="p-1"><strong>25</strong> la fruta</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>6</strong> enseñar</td>
+                    <td class="p-1"><strong>16</strong> el/la viajero/a</td>
+                    <td class="p-1"><strong>26</strong> la chuleta (de cerdo)</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>7</strong> mirar</td>
+                    <td class="p-1"><strong>17</strong> abierto/a</td>
+                    <td class="p-1"><strong>27</strong> hacer el papel (de)</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>8</strong> el/la tío/a</td>
+                    <td class="p-1"><strong>18</strong> segundo/a</td>
+                    <td class="p-1"><strong>28</strong> ... de aventuras</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>9</strong> gordo/a</td>
+                    <td class="p-1"><strong>19</strong> conducir</td>
+                    <td class="p-1"><strong>29</strong> artístico/a</td>
+                  </tr>
+                  <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="p-1"><strong>10</strong> negro/a</td>
+                    <td class="p-1"><strong>20</strong> gastar</td>
+                    <td class="p-1"><strong>30</strong> el/la poeta</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estructura -->
+    <section class="bg-white shadow rounded-lg border-l-4 border-blue-500">
+      <h2 class="text-blue-600 font-bold text-lg p-3">Estructura</h2>
+      <div class="px-4 pb-4 space-y-4">
+        <div>
+          <h3 class="font-semibold">Introducir</h3>
+          <p>Pretérito: -GAR, -CAR, -ZAR; ir/ser, dar, ver</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Repasar</h3>
+          <p>Ejercicios guiados y corrección rápida en grupo.</p>
+        </div>
+        <div>
+          <h3 class="font-semibold">Apuntes</h3>
+          <ul class="list-disc list-inside space-y-1">
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente">General – presente</a></li>
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/1">Regulares</a></li>
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/2">Irregulares</a></li>
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3">Cambios radicales</a></li>
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/4">Cambios ortográficos</a></li>
+            <li><a class="text-blue-600 hover:underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common">Common stem changing verbs</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropzone{min-height:3rem}
+    .token{cursor:grab}
+    .token:active{cursor:grabbing}
+    .dragging{opacity:.7; transform:scale(.98)}
+  </style>
+</head>
+<body class="bg-gray-50">
+  <section class="bg-white rounded-xl shadow-md border-l-4 border-purple-500 max-w-4xl mx-auto my-6">
+    <div class="p-4">
+      <h2 class="font-bold text-purple-700 mb-2">Curiosidad: Metáforas en la canción (Actividad)</h2>
+      <p class="mb-4 text-gray-800">
+        Arrastra las respuestas correctas desde el banco a cada recuadro. Hay <em>distractores</em>. 
+        Cuando todas sean correctas, verás un código para introducir en Schoology.
+      </p>
+
+      <!-- CONFIGURACIÓN: establece el origen correcto del artista/grupo -->
+      <!-- Posibles opciones incluidas en el banco: España, México, Argentina, Colombia -->
+      <script>
+        window.CORRECT_ORIGIN = "España"; // <-- cámbialo según el artista
+      </script>
+
+      <!-- Preguntas -->
+      <div class="grid gap-4 md:grid-cols-2">
+        <!-- Q1 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">1) ¿Qué metáfora usa el artista para describir su relación?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q1" aria-label="Zona de respuesta 1"></div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">2) ¿Qué representa el “baúl que ya no cierra”?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q2" aria-label="Zona de respuesta 2"></div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">3) ¿Qué significa “estar cansado de volar”?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q3" aria-label="Zona de respuesta 3"></div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="bg-white border rounded-lg p-3">
+          <p class="font-semibold text-gray-900">4) ¿De dónde es el artista o el grupo?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q4" aria-label="Zona de respuesta 4"></div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="bg-white border rounded-lg p-3 md:col-span-2">
+          <p class="font-semibold text-gray-900">5) ¿Qué juegos menciona la canción? ¿Qué podrían simbolizar?</p>
+          <div class="dropzone mt-2 border-2 border-dashed border-gray-300 rounded p-2" data-q="q5" aria-label="Zona de respuesta 5"></div>
+        </div>
+      </div>
+
+      <!-- Banco de respuestas -->
+      <div class="mt-6">
+        <p class="font-semibold text-gray-900">Banco de respuestas (arrástralas):</p>
+        <div id="bank" class="mt-2 flex flex-wrap gap-2">
+          <!-- Correctas -->
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="el vuelo / el avión">el vuelo / el avión</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="el baúl lleno de recuerdos">el baúl lleno de recuerdos</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="estar agotado de mantener la relación">estar agotado de mantener la relación</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="piedra, papel o tijera">piedra, papel o tijera</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="España">España</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="México">México</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="Argentina">Argentina</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="Colombia">Colombia</span>
+          <!-- Distractores -->
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="la playa">la playa</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="un coche">un coche</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="una promesa">una promesa</span>
+          <span class="token inline-block bg-white border rounded px-2 py-1" draggable="true" data-token="la primavera">la primavera</span>
+        </div>
+        <p class="text-sm text-gray-500 mt-1">Puedes volver a arrastrar una ficha desde una respuesta para regresarla al banco.</p>
+      </div>
+
+      <!-- Controles -->
+      <div class="mt-6 flex flex-wrap gap-2">
+        <button id="btnCheck" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Verificar</button>
+        <button id="btnReset" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Reiniciar</button>
+      </div>
+
+      <!-- Feedback + Código -->
+      <div id="result" class="mt-4"></div>
+    </div>
+  </section>
+
+  <script>
+    // --- Utils ---
+    const norm = s => (s ?? "").trim().normalize('NFC').toLocaleLowerCase('es-ES');
+
+    // Respuestas correctas (por texto de ficha)
+    const ANSWERS = {
+      q1: ["el vuelo / el avión"],                               // metáfora
+      q2: ["el baúl lleno de recuerdos"],                        // significado del baúl
+      q3: ["estar agotado de mantener la relación"],             // “cansado de volar”
+      q4: [window.CORRECT_ORIGIN || "España"],                   // origen (config)
+      q5: ["piedra, papel o tijera"]                             // juegos
+    };
+
+    // Código determinista a partir de las respuestas colocadas
+    function makeCode(payload) {
+      // simple checksum -> 6 chars base36
+      let sum = 0;
+      for (const ch of payload) sum = (sum + ch.charCodeAt(0) * 17) % 2_147_483_647;
+      const part = sum.toString(36).toUpperCase().padStart(6, '0').slice(-6);
+      return `ESP-${part}`;
+    }
+
+    // Drag & drop
+    let dragEl = null;
+
+    function onDragStart(e){
+      dragEl = e.target;
+      dragEl.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', dragEl.dataset.token);
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function onDragEnd(e){
+      if (dragEl) dragEl.classList.remove('dragging');
+      dragEl = null;
+      saveState();
+    }
+    function onDragOver(e){
+      if (e.currentTarget.classList.contains('dropzone')) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        e.currentTarget.classList.add('ring-2','ring-purple-300');
+      }
+    }
+    function onDragLeave(e){
+      e.currentTarget.classList.remove('ring-2','ring-purple-300');
+    }
+    function onDrop(e){
+      e.preventDefault();
+      const dz = e.currentTarget;
+      dz.classList.remove('ring-2','ring-purple-300');
+
+      // If dropping a token from bank or from another zone:
+      const token = dragEl;
+      if (!token || !token.classList.contains('token')) return;
+
+      // If this dropzone already has a token, return that token to bank first
+      const existing = dz.querySelector('.token');
+      if (existing) document.getElementById('bank').appendChild(existing);
+
+      // Move token into dropzone
+      dz.appendChild(token);
+      saveState();
+    }
+
+    // Allow returning a token to the bank by clicking a small 'x'
+    // (Simpler: double-click on a token to send it back)
+    function onTokenDblClick(e){
+      const t = e.target.closest('.token');
+      if (!t) return;
+      document.getElementById('bank').appendChild(t);
+      saveState();
+    }
+
+    // Attach events
+    function attachDnD(){
+      document.querySelectorAll('.token').forEach(t=>{
+        t.addEventListener('dragstart', onDragStart);
+        t.addEventListener('dragend', onDragEnd);
+        t.addEventListener('dblclick', onTokenDblClick);
+      });
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        z.addEventListener('dragover', onDragOver);
+        z.addEventListener('dragleave', onDragLeave);
+        z.addEventListener('drop', onDrop);
+      });
+    }
+
+    // Check answers
+  function checkAll(){
+    let correct = 0, total = Object.keys(ANSWERS).length;
+    let answerConcat = '';
+
+    document.querySelectorAll('.dropzone').forEach(zone=>{
+      const qid = zone.dataset.q;
+      const placed = zone.querySelector('.token');
+      const expect = (ANSWERS[qid] || []).map(norm);
+      zone.classList.remove('border-green-400','bg-green-50','border-red-400','bg-red-50');
+
+      if (placed){
+        const txt = placed.dataset.token;
+        answerConcat += `|${qid}:${txt}`;
+        if (expect.includes(norm(txt))){
+          zone.classList.add('border-green-400','bg-green-50');
+          correct++;
+        } else {
+          zone.classList.add('border-red-400','bg-red-50');
+        }
+      } else {
+        zone.classList.add('border-red-400','bg-red-50');
+      }
+    });
+
+    const result = document.getElementById('result');
+    let code = "";
+    if (correct === total){
+      code = "ESP-SI";   // ✅ all correct
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-300">
+          <p class="font-semibold text-emerald-800">¡Muy bien! Todo correcto.</p>
+          <p class="mt-1 text-emerald-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-emerald-100 text-emerald-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-emerald-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    } else if (correct === 0){
+      code = "ESP-NO";   // ❌ all wrong
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-red-50 border border-red-300">
+          <p class="font-semibold text-red-800">Todas incorrectas.</p>
+          <p class="mt-1 text-red-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-red-100 text-red-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-red-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    } else {
+      code = "ESP-MEH";     // ⚠️ partially correct
+      result.innerHTML = `
+        <div class="p-3 rounded-lg bg-amber-50 border border-amber-300">
+          <p class="font-semibold text-amber-800">Respuestas correctas: ${correct} de ${total}.</p>
+          <p class="mt-1 text-amber-900">Código para Schoology:</p>
+          <div class="mt-2 inline-flex items-center gap-2">
+            <span class="inline-block bg-amber-100 text-amber-800 font-mono font-bold px-3 py-1 rounded">${code}</span>
+            <button class="text-sm px-2 py-1 border rounded hover:bg-amber-100" onclick="navigator.clipboard.writeText('${code}')">Copiar</button>
+          </div>
+        </div>`;
+    }
+  }
+
+    // Persistencia local simple
+    const STORAGE_KEY = 'curiosidad_dragdrop_v1';
+    function saveState(){
+      const state = { bank: [], zones: {} };
+      document.querySelectorAll('#bank .token').forEach(t => state.bank.push(t.dataset.token));
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        const t = z.querySelector('.token');
+        state.zones[z.dataset.q] = t ? t.dataset.token : null;
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try{
+        const state = JSON.parse(raw);
+        // Put all tokens back to bank first (in bank order)
+        const bank = document.getElementById('bank');
+        const allTokens = Array.from(document.querySelectorAll('.token'));
+        // Clear bank
+        allTokens.forEach(t => bank.appendChild(t));
+        // Rebuild bank order
+        if (Array.isArray(state.bank)){
+          state.bank.forEach(txt=>{
+            const el = allTokens.find(t=>t.dataset.token===txt);
+            if (el) bank.appendChild(el);
+          });
+        }
+        // Fill zones
+        document.querySelectorAll('.dropzone').forEach(z=>{
+          const want = state.zones?.[z.dataset.q] || null;
+          if (!want) return;
+          const el = allTokens.find(t=>t.dataset.token===want);
+          if (el) z.appendChild(el);
+        });
+      }catch(e){ /* ignore */ }
+    }
+
+    function resetAll(){
+      const bank = document.getElementById('bank');
+      document.querySelectorAll('.dropzone').forEach(z=>{
+        z.classList.remove('border-green-400','bg-green-50','border-red-400','bg-red-50');
+        const t = z.querySelector('.token');
+        if (t) bank.appendChild(t);
+      });
+      document.getElementById('result').innerHTML = '';
+      saveState();
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', ()=>{
+      attachDnD();
+      loadState();
+      document.getElementById('btnCheck').addEventListener('click', checkAll);
+      document.getElementById('btnReset').addEventListener('click', resetAll);
+    });
+  </script>
+</body>
+</html>
+
+<!-- PERFIL · Hacer surf al estilo hispano -->
+<section class="bg-white rounded-xl shadow-md border-l-4 border-cyan-600">
+  <div class="p-4 space-y-4">
+    <h2 class="font-bold text-cyan-700 text-lg">Perfil: Hacer surf al estilo hispano</h2>
+
+    <!-- Imagen del artículo -->
+    <figure class="md:flex gap-4">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/surf.png"
+        alt="Surfista cabalgando una ola"
+        class="w-full md:w-56 aspect-[3/4] object-cover rounded-xl border"
+      />
+      <figcaption class="text-sm text-gray-600 mt-2 md:mt-0">
+        Lee el perfil sobre el surf hispano (Gabriel Villarán y Ornella Pellizzari) y contesta.
+        <br><span class="italic">Nota: La verificación es sensible a tildes (acentos) y no distingue mayúsculas/minúsculas.</span>
+      </figcaption>
+    </figure>
+
+    <!-- Preguntas -->
+    <form id="surfQuiz" class="space-y-4">
+      <!-- 1 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q1" class="font-medium">1) ¿De dónde es Gabriel Villarán?</label>
+        <input id="q1" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+        <p class="text-xs text-gray-500 mt-1">ciudad o país</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q2" class="font-medium">2) ¿En qué año ganó el primer lugar en los Juegos Panamericanos de Surf?</label>
+        <input id="q2" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+      </div>
+
+      <!-- 3 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q3" class="font-medium">3) En el mundial de 2010, Villarán fue…</label>
+        <input id="q3" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+        <p class="text-xs text-gray-500 mt-1"></p>
+      </div>
+
+      <!-- 4 -->
+      <div class="p-3 rounded-lg border">
+        <span class="font-medium">4) Ornella Pellizzari es de…</span>
+        <div class="mt-2 space-y-2">
+          <label class="block"><input type="radio" name="q4" value="Argentina" class="mr-2">Argentina</label>
+          <label class="block"><input type="radio" name="q4" value="Perú" class="mr-2">Perú</label>
+          <label class="block"><input type="radio" name="q4" value="Chile" class="mr-2">Chile</label>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q5" class="font-medium">5) ¿A qué edad ganó Ornella el Campeonato Latinoamericano de Surf Profesional?</label>
+        <input id="q5" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+      </div>
+
+      <!-- 6 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q6" class="font-medium">6) ¿A qué edad se compró su primera tabla Ornella?</label>
+        <input id="q6" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+      </div>
+
+      <!-- 7 -->
+      <div class="p-3 rounded-lg border">
+        <span class="font-medium">7) V/F: “Agarrar una ola” tiene el mismo significado para quien nunca ha practicado surf.</span>
+        <div class="mt-2 space-y-2">
+          <label class="block"><input type="radio" name="q7" value="verdadero" class="mr-2">Verdadero</label>
+          <label class="block"><input type="radio" name="q7" value="falso" class="mr-2">Falso</label>
+        </div>
+      </div>
+
+      <!-- 8 -->
+      <div class="p-3 rounded-lg border">
+        <label for="q8" class="font-medium">8) ¿Dónde se originó el surf?</label>
+        <input id="q8" type="text" class="mt-2 w-full border rounded-md p-2" placeholder=" " />
+        <p class="text-xs text-gray-500 mt-1"></p>
+      </div>
+
+      <!-- Controles -->
+      <div class="pt-2">
+        <button type="button" id="verificarBtn" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg">Verificar</button>
+        <button type="button" id="resetBtn" class="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+        <span id="score" class="ml-4 font-semibold"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  // util: case-insensitive, accent-sensitive compare
+  function eqAccentSensitive(a, b) {
+    return (a ?? "").trim().toLowerCase() === (b ?? "").trim().toLowerCase();
+  }
+
+  // Accept lists (text inputs can have multiple correct forms)
+  const ACCEPT = {
+    q1: ["perú", "lima, perú"],
+    q2: ["2006"],
+    q3: ["subcampeón", "segundo lugar"],
+    q4: "Argentina",
+    q5: ["dieciocho", "18"],
+    q6: ["once", "11"],
+    q7: "falso",
+    q8: ["hawái"]
+  };
+
+  function mark(el, ok) {
+    el.classList.remove("ok","no","border-green-400","border-red-400","bg-green-50","bg-red-50");
+    if (ok) {
+      el.classList.add("ok","border-green-400","bg-green-50");
+    } else {
+      el.classList.add("no","border-red-400","bg-red-50");
+    }
+  }
+
+  document.getElementById("verificarBtn").addEventListener("click", () => {
+    let correct = 0, total = 8;
+
+    // Q1 text
+    const q1 = document.getElementById("q1");
+    const ok1 = ACCEPT.q1.some(ans => eqAccentSensitive(q1.value, ans));
+    mark(q1, ok1); if (ok1) correct++;
+
+    // Q2 text (year)
+    const q2 = document.getElementById("q2");
+    const ok2 = ACCEPT.q2.some(ans => eqAccentSensitive(q2.value, ans));
+    mark(q2, ok2); if (ok2) correct++;
+
+    // Q3 text (subcampeón / segundo lugar)
+    const q3 = document.getElementById("q3");
+    const ok3 = ACCEPT.q3.some(ans => eqAccentSensitive(q3.value, ans));
+    mark(q3, ok3); if (ok3) correct++;
+
+    // Q4 radio
+    const q4Wrap = document.querySelector('[name="q4"]').closest(".border");
+    const q4 = document.querySelector('input[name="q4"]:checked');
+    const ok4 = q4 && q4.value === ACCEPT.q4;
+    mark(q4Wrap, ok4); if (ok4) correct++;
+
+    // Q5 text (18/dieciocho)
+    const q5 = document.getElementById("q5");
+    const ok5 = ACCEPT.q5.some(ans => eqAccentSensitive(q5.value, ans));
+    mark(q5, ok5); if (ok5) correct++;
+
+    // Q6 text (11/once)
+    const q6 = document.getElementById("q6");
+    const ok6 = ACCEPT.q6.some(ans => eqAccentSensitive(q6.value, ans));
+    mark(q6, ok6); if (ok6) correct++;
+
+    // Q7 V/F radio
+    const q7Wrap = document.querySelector('[name="q7"]').closest(".border");
+    const q7 = document.querySelector('input[name="q7"]:checked');
+    const ok7 = q7 && eqAccentSensitive(q7.value, ACCEPT.q7);
+    mark(q7Wrap, ok7); if (ok7) correct++;
+
+    // Q8 text (Hawái)
+    const q8 = document.getElementById("q8");
+    const ok8 = ACCEPT.q8.some(ans => eqAccentSensitive(q8.value, ans));
+    mark(q8, ok8); if (ok8) correct++;
+
+    // Score
+    document.getElementById("score").textContent = `Resultado: ${correct}/${total}`;
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    const form = document.getElementById("surfQuiz");
+    form.reset();
+    document.getElementById("score").textContent = "";
+    // remove visual marks
+    form.querySelectorAll(".ok,.no,.border-green-400,.border-red-400,.bg-green-50,.bg-red-50")
+        .forEach(el => el.classList.remove("ok","no","border-green-400","border-red-400","bg-green-50","bg-red-50"));
+  });
+</script>
+    <!-- Práctica -->
+    <section class="bg-white shadow rounded-lg border-l-4 border-pink-500">
+      <h2 class="text-pink-600 font-bold text-lg p-3">Práctica</h2>
+      <div class="px-4 pb-4 space-y-3">
+        <p>Conjugar <em>jugar, lanzar, buscar, ir, ser, dar, ver</em> en el pretérito.</p>
+        <div class="overflow-x-auto">
+          <table class="table-auto w-full text-sm">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="p-2 text-left">Verbo</th>
+                <th class="p-2 text-left">yo</th>
+                <th class="p-2 text-left">tú</th>
+                <th class="p-2 text-left">él/ella/Ud.</th>
+                <th class="p-2 text-left">nosotros</th>
+                <th class="p-2 text-left">vosotros</th>
+                <th class="p-2 text-left">ellos/ellas/Uds.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">jugar</td>
+                <td class="p-1"><input data-answer="jugué" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="jugaste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="jugó" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="jugamos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="jugasteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="jugaron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">lanzar</td>
+                <td class="p-1"><input data-answer="lancé" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="lanzaste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="lanzó" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="lanzamos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="lanzasteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="lanzaron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">buscar</td>
+                <td class="p-1"><input data-answer="busqué" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="buscaste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="buscó" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="buscamos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="buscasteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="buscaron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">ir / ser</td>
+                <td class="p-1"><input data-answer="fui" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="fuiste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="fue" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="fuimos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="fuisteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="fueron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">dar</td>
+                <td class="p-1"><input data-answer="di" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="diste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="dio" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="dimos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="disteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="dieron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+              <tr class="odd:bg-white even:bg-gray-50">
+                <td class="p-2">ver</td>
+                <td class="p-1"><input data-answer="vi" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="viste" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="vio" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="vimos" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="visteis" class="border rounded px-2 py-1 w-full"></td>
+                <td class="p-1"><input data-answer="vieron" class="border rounded px-2 py-1 w-full"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="checkBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">Check</button>
+          <button id="revealBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Reveal</button>
+          <button id="resetBtn" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1 rounded">Reset</button>
+        </div>
+      </div>
+    </section>
+
+   <!-- Video --> 
+<section class="bg-white shadow rounded-lg border-l-4 border-gray-400">
+  <h2 class="text-gray-600 font-bold text-lg p-3">Video</h2>
+  <div class="px-4 pb-4">
+    <div class="video-wrap rounded overflow-hidden bg-gray-100">
+      <iframe 
+        class="w-full aspect-video" 
+        src="https://www.youtube.com/embed/nZdmI9npriM" 
+        title="YouTube video player" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+    <p class="mt-2 text-sm text-gray-700 font-semibold">
+      🎸 Maldita Nerea – Piedra ✊, papel ✋, o tijera ✌️
+    </p>
+  </div>
+</section>
+
+  <!-- Información adicional -->
+<section class="bg-white shadow rounded-lg border-l-4 border-red-700">
+  <h2 class="text-red-700 font-bold text-lg p-3">Información adicional</h2>
+  <div class="px-4 pb-4 space-y-5">
+
+    <div>
+      <p class="font-medium">Próximas pruebas</p>
+      <ul class="list-disc list-inside marker:text-red-700">
+        <li>Nada - la próxima clase</li>
+        <li>Vocabulario 1.1 - Día 11</li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="font-medium">Tarea (Dominio)</p>
+      <ul class="list-disc list-inside marker:text-red-700">
+        <li>Vocabulario de lección 1
+          <span class="bg-yellow-200/70 rounded-full px-2 py-0.5 ml-1">📅 30 de octubre</span>
+        </li>
+        <li>Pretérito
+          <span class="bg-yellow-200/70 rounded-full px-2 py-0.5 ml-1">📅 30 de octubre</span>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="font-medium">Pretérito</p>
+      <ul class="list-disc list-inside space-y-1 marker:text-red-700">
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente">General – presente</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/1">Regulares</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/2">Irregulares</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3">Cambios radicales</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/4">Cambios ortográficos</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common">Common stem changing verbs</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/6">Información de las Pruebas</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="font-medium">Vocabulario (Lección 1)</p>
+      <ul class="list-disc list-inside space-y-1 marker:text-red-700">
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-espa%C3%B1ol-iiiiv/1">Listas</a></li>
+        <li><a class="text-red-700 hover:text-red-800 underline underline-offset-2" href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-espa%C3%B1ol-iiiiv/1/flashcards">Flashcards</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p><strong>Ayuda con la vida</strong> - <a class="text-blue-600 hover:text-blue-700 underline underline-offset-2" href="#">recursos de MISD</a></p>
+    </div>
+
+    <!-- Viaje a Costa Rica -->
+    <div>
+      <p class="mt-2">
+        <a class="text-gray-700 hover:text-gray-900 underline underline-offset-2" href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" rel="noopener">
+          Viaje a <strong>Costa Rica</strong>
+        </a>
+      </p>
+      <img class="media-contain mt-2 rounded-lg border" src="https://senoraburak.weebly.com/uploads/1/3/9/0/13908307/sloth_orig.jpg" alt="Costa Rica" />
+    </div>
+
+  </div>
+</section>
+
+  </main>
+
+  <script>
+    const inputs = Array.from(document.querySelectorAll('input[data-answer]'));
+    const checkBtn = document.getElementById('checkBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function normalize(s){ return (s ?? '').trim(); }
+
+    function checkAnswers(){
+      inputs.forEach(inp => {
+        const ok = normalize(inp.value) === inp.dataset.answer;
+        inp.classList.toggle('bg-green-200', ok);
+        inp.classList.toggle('bg-red-200', !ok && normalize(inp.value) !== '');
+        if(!ok && normalize(inp.value) === '') {
+          inp.classList.remove('bg-red-200');
+        }
+      });
+    }
+
+    function revealAnswers(){
+      inputs.forEach(inp => {
+        inp.value = inp.dataset.answer;
+        inp.classList.add('bg-green-200');
+        inp.classList.remove('bg-red-200');
+      });
+    }
+
+    function resetAnswers(){
+      inputs.forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('bg-green-200','bg-red-200');
+      });
+    }
+
+    checkBtn.addEventListener('click', checkAnswers);
+    revealBtn.addEventListener('click', revealAnswers);
+    resetBtn.addEventListener('click', resetAnswers);
+
+    inputs.forEach(inp => inp.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        checkAnswers();
+      }
+    }));
+  </script>
+</body>
+</html>
