@@ -158,6 +158,92 @@
   </style>
 </head>
 <body class="bg-gray-50">
+<!-- Lyrics (collapsible) -->
+<details class="bg-white rounded-xl shadow-md border-l-4 border-purple-500 max-w-4xl mx-auto mt-4 mb-2 group open:mb-4">
+  <summary class="cursor-pointer select-none flex items-center justify-between gap-3 p-3 text-purple-700 font-bold">
+    <span>Letra: Maldita Nerea — Piedra, papel o tijera</span>
+    <!-- neat chevron -->
+    <svg class="w-4 h-4 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 011.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+    </svg>
+  </summary>
+
+  <div class="px-4 pb-4 space-y-2">
+    <div class="flex justify-end">
+      <button id="copyLyrics" class="text-xs px-2 py-1 border rounded hover:bg-gray-50">Copiar letra</button>
+    </div>
+
+    <!-- Scroll if tall -->
+    <pre id="lyricsText" class="whitespace-pre-wrap leading-6 text-gray-800 text-sm max-h-72 overflow-y-auto p-3 bg-gray-50 rounded-lg border">
+Ya ves
+Yo enciendo la puerta
+Tu me cierras la luz
+Los dos le damos mil vueltas
+Pero siempre sale cruz
+Gritar
+Perder la cabeza
+Ir llenando un baúl
+Que ni siquiera ya cierra
+Si no lo cierras tú
+Si no lo cierras tú
+
+Aquí piloto llamando a tierra
+Pido pista para aterrizar
+Que mi nave se ha vuelto a romper
+Pierde vida
+Y empieza a caer
+Caer
+Cayendo
+
+Y dices que no puedes hacer nada
+Que yo fui quien quiso despegar
+Eso es cierto
+Pero hay que arriesgar
+Porque este vuelo nos puede matar
+Matar, y yo ya estoy cansando de volar
+
+Si ves
+Que enciendo la puerta
+Tu me cierras la luz
+Los dos le damos mil vueltas
+Y siempre sale cruz
+
+Gritar
+Perder la cabeza
+Ir llenando un baúl
+Que ni siquiera ya cierra
+Si no lo cierras tú
+Si tu no lo cierras no se cansa
+De decir que no se llenará
+Con las cosas que pueda traer
+Y de piedra, tijera o papel, papel
+Para que todo vuelva a suceder
+
+Ya ves
+Que enciendo la puerta
+Tu me cierras la luz
+Los dos le damos mil vueltas
+Y siempre sale cruz
+Gritar
+Perder la cabeza
+Ir llenando un baúl
+Que ni siquiera ya cierra
+Si no lo cierras tú, si no lo cierras tú
+
+Si ves
+Que enciendo la puerta
+No me cierres la luz
+No quiero darle mas vueltas
+Porque siempre sale cruz
+Gritar
+Perder la cabeza
+Ir cerrando el baúl
+Que mi canción no se llena
+Si no la llenas tú, si no la llenas tú
+    </pre>
+  </div>
+</details>
+
   <section class="bg-white rounded-xl shadow-md border-l-4 border-purple-500 max-w-4xl mx-auto my-6">
     <div class="p-4">
       <h2 class="font-bold text-purple-700 mb-2">Curiosidad: Metáforas en la canción (Actividad)</h2>
@@ -445,6 +531,19 @@
       document.getElementById('btnReset').addEventListener('click', resetAll);
     });
   </script>
+<script>
+  document.getElementById('copyLyrics')?.addEventListener('click', () => {
+    const txt = document.getElementById('lyricsText')?.innerText || '';
+    navigator.clipboard.writeText(txt).then(() => {
+      // optional: quick visual feedback
+      const b = document.getElementById('copyLyrics');
+      const old = b.textContent;
+      b.textContent = '¡Copiado!';
+      setTimeout(()=> b.textContent = old, 1200);
+    });
+  });
+</script>
+
 </body>
 </html>
 
@@ -621,6 +720,7 @@
         .forEach(el => el.classList.remove("ok","no","border-green-400","border-red-400","bg-green-50","bg-red-50"));
   });
 </script>
+
     <!-- Práctica -->
     <section class="bg-white shadow rounded-lg border-l-4 border-pink-500">
       <h2 class="text-pink-600 font-bold text-lg p-3">Práctica</h2>
