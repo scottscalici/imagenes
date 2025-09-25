@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Día 10 – 25/26 de septiembre</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .media-contain { object-fit: contain; max-height: 420px; width: 100%; background-color: #f8fafc; }
+    .video-wrap { position: relative; padding-top: 56.25%; }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+    details>summary { list-style: none; }
+    details>summary::-webkit-details-marker { display: none; }
+    .badge { background: #fff1f2; color:#9f1239; padding:0.125rem 0.5rem; border-radius:9999px; font-size:0.75rem; }
+    .card { background:white; border-radius:0.75rem; box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+    .leftbar { border-left-width:4px; }
+  </style>
+</head>
+<body class="font-sans bg-gray-100">
+  <!-- Encabezado -->
+  <header class="bg-slate-900 text-white">
+    <div class="max-w-5xl mx-auto p-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold">Día 9</h1>
+      <time class="opacity-90">23/24 de septiembre</time>
+    </div>
+  </header>
+  <main class="p-4 space-y-6 max-w-5xl mx-auto">
+       
+    <!-- Evaluación -->
+    <section class="card leftbar border-gray-500">
+      <div class="p-4">
+        <h2 class="font-bold text-gray-700 mb-2">Evaluación</h2>
+        <p>Pretérito 1</p>
+        <p class="mt-3 font-semibold">Próximas pruebas:</p>
+        <ul class="list-disc ml-6">
+          <li>Vocabulario 2.3 – la próxima clase</li>
+          <li>Pretérito 2 – Día 12</li>
+        </ul>
+      </div>
+    </section>
+
+  <!-- Calentamiento -->
+<section class="card leftbar border-red-500">
+  <div class="p-4">
+    <h2 class="font-bold text-red-600 mb-2">Calentamiento</h2>
+    <ul class="list-disc ml-6">
+      <li><strong>Schoology:</strong> Pretérito 4</li>
+      <li><strong>Repaso de vocabulario:</strong> Descubre 3 — 2 — 4</li>
+    </ul>
+
+    <details class="mt-3">
+      <summary class="cursor-pointer text-sm text-gray-600 underline">Expandir/Reducir</summary>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-3 text-sm">
+        <!-- Columna 1: 1–10 -->
+        <div class="space-y-1">
+          <div><strong>1.</strong> la tienda</div>
+          <div><strong>2.</strong> recomendar (e:ie)</div>
+          <div><strong>3.</strong> el/la esposo/a</div>
+          <div><strong>4.</strong> el amor</div>
+          <div><strong>5.</strong> la carne</div>
+          <div><strong>6.</strong> empezar (e:ie)</div>
+          <div><strong>7.</strong> pescar</div>
+          <div><strong>8.</strong> el baño, el cuarto de baño</div>
+          <div><strong>9.</strong> la lechuga</div>
+          <div><strong>10.</strong> pasear en bicicleta</div>
+        </div>
+        <!-- Columna 2: 11–20 -->
+        <div class="space-y-1">
+          <div><strong>11.</strong> el programa de computación</div>
+          <div><strong>12.</strong> la pintura</div>
+          <div><strong>13.</strong> la luna</div>
+          <div><strong>14.</strong> el cibercafé</div>
+          <div><strong>15.</strong> la cuadra</div>
+          <div><strong>16.</strong> tomar la temperatura</div>
+          <div><strong>17.</strong> chatear</div>
+          <div><strong>18.</strong> levantar pesas</div>
+          <div><strong>19.</strong> el recurso natural</div>
+          <div><strong>20.</strong> la computadora (portátil)</div>
+        </div>
+        <!-- Columna 3: 21–30 -->
+        <div class="space-y-1">
+          <div><strong>21.</strong> el impuesto</div>
+          <div><strong>22.</strong> ecologista</div>
+          <div><strong>23.</strong> la personalidad</div>
+          <div><strong>24.</strong> llevarse bien/mal/fatal</div>
+          <div><strong>25.</strong> el/la amado/a</div>
+          <div><strong>26.</strong> el festival</div>
+          <div><strong>27.</strong> el álbum</div>
+          <div><strong>28.</strong> el/la entrenador(a)</div>
+          <div><strong>29.</strong> emocionado/a</div>
+          <div><strong>30.</strong> sensible</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+
+    <!-- Estructura -->
+    <section class="card leftbar border-blue-500">
+      <div class="p-4">
+        <h2 class="font-bold text-blue-600 mb-2">Estructura</h2>
+
+        <h3 class="font-bold text-indigo-700 text-lg mb-2">Pretérito</h3>
+
+        <!-- Introducir  -->
+ <p class="font-semibold mt-2">Repasar</p>
+        <ul class="list-disc ml-6">
+          <li>Los cambios ortogrficos: caer, creer, leer, oír; -UIR</li>
+<li>Los cambios ortogrficos: -UIR</li>
+        </ul>
+               <!-- Repasar -->
+        <p class="font-semibold mt-2">Repasar</p>
+        <ul class="list-disc ml-6">
+          <li>Los cambios morfológicos</li>
+        </ul>
+
+        <!-- Apuntes -->
+        <p class="font-semibold mt-2">Apuntes</p>
+        <ul class="list-disc ml-8">
+          <li><a class="text-blue-600 underline" href="/notes/preterito.html">Notas generales</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" rel="noopener">Regulares</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" rel="noopener">Los 4 irregulares</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" rel="noopener">-GAR, -CAR, -ZAR</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" rel="noopener">Cambios morfológicos</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" rel="noopener">Caer, creer, leer, oír</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" rel="noopener">Verbos terminados en -UIR</a></li>
+          <li><a class="text-blue-600 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" rel="noopener">Cambios radicales (stem changers)</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Cultura -->
+    <section class="card leftbar border-indigo-500">
+      <div class="p-4">
+        <h2 class="font-bold text-indigo-600 mb-2">Cultura</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+          <img class="media-contain rounded-xl md:col-span-1" src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pedro-pascal.jpg" alt="Cine/actuación" />
+          <div class="md:col-span-2">
+            <p><strong>Actores y actrices hispanohablantes:</strong> explora intérpretes como Gael García Bernal, Pedro Pascal, Ana de Armas y Sofía Vergara. ¿De qué países son?</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- Práctica -->
+<section class="card leftbar border-pink-500">
+  <div class="p-4">
+    <h2 class="font-bold text-pink-600 mb-2">Práctica</h2>
+    <p class="text-sm text-gray-600 mb-3">
+      Conjuga en el <strong>pretérito</strong> los verbos:
+      <em>jugar, tener, caer, creer, leer, oír, incluir, fluir</em>.
+    </p>
+    <p class="text-xs text-gray-500 mb-3">
+      Mayúsculas/minúsculas: no importa • Tildes: <span class="font-semibold">necesarias</span>
+    </p>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody id="tbody" class="[&>tr:nth-child(even)]:bg-gray-50">
+          <!-- Rows generated below -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-4 flex gap-3">
+      <button id="checkBtn" class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button id="revealBtn" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button id="resetBtn2" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
+
+ <!-- Video -->
+<section class="card leftbar border-slate-300">
+  <div class="p-4">
+    <h2 class="font-bold text-slate-700 mb-2">Video</h2>
+    <div class="video-wrap bg-gray-100 rounded-xl" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+      <iframe src="https://youtu.be/C25VhUJn038?si=HZNL2R2xrRbunajq"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Información adicional -->
+<section class="card leftbar border-rose-700">
+  <div class="p-4 space-y-4">
+        <h2 class="font-bold text-rose-700 mb-2">Información adicional</h2>
+
+        <!-- 1. Próximas pruebas -->
+        <div>
+          <p><strong>Próximas pruebas</strong></p>
+          <ul class="list-disc ml-6">
+            <li>Vocabulario 2.3 – la próxima clase</li>
+            <li>Pretérito 2 – Día 12</li>
+          </ul>
+        </div>
+
+<!-- Tarea (Dominio) -->
+<p class="mt-2 font-semibold">Tarea (Dominio):</p>
+<ul class="list-disc ml-6 space-y-1">
+  <li>
+    Presente — completar antes de 
+    <span class="inline-block bg-rose-100 text-rose-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+      📅 26 de septiembre
+    </span>
+  </li>
+  <li>
+Pretérito — completar antes de 
+    <span class="inline-block bg-rose-100 text-rose-800 text-xs font-semibold px-2 py-0.5 rounded-full">
+      📅 17 de octubre
+    </span>
+  </li>
+</ul>
+    
+
+
+        <!-- 4. Apuntes gramaticales -->
+        <div>
+          <p><strong>Pretérito</strong></p>
+          <ul class="list-disc ml-6">
+            <li><a class="text-rose-700 underline" href="/notes/preterito.html">Notas generales</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" rel="noopener">Regulares</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" rel="noopener">Los 4 irregulares</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" rel="noopener">-GAR, -CAR, -ZAR</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" rel="noopener">Cambios morfológicos</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" rel="noopener">Caer, creer, leer, oír</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" rel="noopener">Verbos terminados en -UIR</a></li>
+            <li><a class="text-rose-700 underline" href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" rel="noopener">Cambios radicales (stem changers)</a></li>
+          </ul>
+        </div>
+
+    
+        <!-- 6. Ayuda con la vida -->
+        <div>
+          <p><strong>Ayuda con la vida</strong> – <a class="text-rose-700 underline" href="https://connection.misd.net/index.html" target="_blank" rel="noopener">recursos de MISD</a></p>
+        </div>
+
+        </section>
+  </main>
+
+<script>
+  // Conversación timer (se asume que existen #timer, #startBtn, #resetBtn en la página)
+  let timerInterval;
+  let seconds = 0;
+  const timerDisplay = document.getElementById("timer");
+  if (document.getElementById("startBtn")) {
+    document.getElementById("startBtn").addEventListener("click", () => {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds++;
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        if (timerDisplay) timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+    });
+  }
+  if (document.getElementById("resetBtn")) {
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      clearInterval(timerInterval);
+      seconds = 0;
+      if (timerDisplay) timerDisplay.textContent = "00:00";
+    });
+  }
+
+  // Aviso temporal auto-ocultar (cambiar cutoff si hace falta)
+  (function(){
+    const cutoff = new Date(new Date().getFullYear(), 8, 28); // 28 septiembre (mes 0-indexado)
+    const box = document.getElementById('avisoBox');
+    if (box && new Date() > cutoff) box.style.display = 'none';
+  })();
+
+  // ==== Práctica: tabla de conjugación (pretérito) ====
+  const rows = [
+    { verb: 'jugar',   forms: ['jugué','jugaste','jugó','jugamos','jugasteis','jugaron'] },      // -GAR (yo jugué)
+    { verb: 'tener',   forms: ['tuve','tuviste','tuvo','tuvimos','tuvisteis','tuvieron'] },       // irregular (u)
+    { verb: 'caer',    forms: ['caí','caíste','cayó','caímos','caísteis','cayeron'] },            // i→y 3ªs/3ªp, í en otras
+    { verb: 'creer',   forms: ['creí','creíste','creyó','creímos','creísteis','creyeron'] },
+    { verb: 'leer',    forms: ['leí','leíste','leyó','leímos','leísteis','leyeron'] },
+    { verb: 'oír',     forms: ['oí','oíste','oyó','oímos','oísteis','oyeron'] },
+    { verb: 'incluir', forms: ['incluí','incluiste','incluyó','incluimos','incluisteis','incluyeron'] }, // -uir (no acentos en tú/ellos)
+    { verb: 'fluir',   forms: ['fluí','fluiste','fluyó','fluimos','fluisteis','fluyeron'] }
+  ];
+
+  const tbody = document.getElementById('tbody');
+  function buildRow(v, idx){
+    const tr = document.createElement('tr');
+    tr.className = idx % 2 ? 'bg-gray-50' : '';
+    const first = document.createElement('td');
+    first.className = 'px-3 py-2 font-medium text-gray-700';
+    first.textContent = v.verb;
+    tr.appendChild(first);
+    v.forms.forEach(ans => {
+      const td = document.createElement('td');
+      td.className = 'px-2 py-1';
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'w-full border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-pink-400';
+      inp.setAttribute('data-answer', ans);
+      inp.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); checkAll(); }});
+      td.appendChild(inp);
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+  rows.forEach((r, i)=> tbody.appendChild(buildRow(r, i)));
+
+  // Case-insensitive; accent-sensitive (no normalizamos tildes)
+  function normalize(s){ return (s||'').trim().toLowerCase(); }
+  function checkAll(){
+    const inputs = tbody.querySelectorAll('input');
+    let correctCount = 0;
+    inputs.forEach(inp=>{
+      const ok = normalize(inp.value) === normalize(inp.dataset.answer);
+      inp.classList.remove('ring-2','ring-red-400','ring-green-400','bg-red-50','bg-green-50');
+      if(ok){ inp.classList.add('ring-2','ring-green-400','bg-green-50'); correctCount++; }
+      else if(inp.value.trim()!==''){ inp.classList.add('ring-2','ring-red-400','bg-red-50'); }
+    });
+    return correctCount;
+  }
+  function revealAll(){
+    tbody.querySelectorAll('input').forEach(inp=>{
+      inp.value = inp.dataset.answer;
+      inp.classList.remove('ring-red-400','bg-red-50');
+      inp.classList.add('ring-2','ring-green-400','bg-green-50');
+    });
+  }
+  function resetAll(){
+    tbody.querySelectorAll('input').forEach(inp=>{
+      inp.value = '';
+      inp.classList.remove('ring-2','ring-red-400','ring-green-400','bg-red-50','bg-green-50');
+    });
+  }
+  document.getElementById('checkBtn').addEventListener('click', checkAll);
+  document.getElementById('revealBtn').addEventListener('click', revealAll);
+  document.getElementById('resetBtn2').addEventListener('click', resetAll);
+</script>
+</body>
+</html>
