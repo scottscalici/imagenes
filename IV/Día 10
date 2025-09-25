@@ -135,9 +135,9 @@
       <div class="p-4">
         <h2 class="font-bold text-indigo-600 mb-2">Cultura</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-          <img class="media-contain rounded-xl md:col-span-1" src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/ChatGPT%20Image%20Sep%2025%2C%202025%2C%2011_02_47%20AM.png" alt="Ccognados o no" />
+          <img class="media-contain rounded-xl md:col-span-1" src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/ChatGPT%20Image%20Sep%2025%2C%202025%2C%2011_02_47%20AM.png" alt="cognados o no" />
           <div class="md:col-span-2">
-            <p><strong>Falsos aamigos</p>
+            <p><strong>Falsos amigos</p>
           </div>
         </div>
       </div>
@@ -194,62 +194,141 @@
 
     <div class="space-y-6">
       <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
-        <p class="text-gray-700">Encabezado 1 __________________________________________</p>
-        <p class="mt-2 text-sm text-gray-800">
-          En su obra <em>Chicano Folklore</em>, Rafaela Castro define al chicano como una persona de ascendencia mexicana nacida en los Estados Unidos. Muchos mexicano-americanos nacidos en este país se identifican como chicanos para enfatizar y reivindicar su herencia mexicana e indígena. Castro menciona que existen diversas teorías sobre el origen del término. Algunos lo vinculan al estado mexicano de Chihuahua, sugiriendo que la palabra "chicano" deriva de la unión de "Chihuahua" y "mexicano" (Chihuahua / Mexicano → Chicano). Otros, por su parte, creen que "chicano" tiene raíces en el náhuatl, la lengua principal de los aztecas. Estos últimos llamaban a su territorio "Mexica" (pronunciado [me'shi.ka]), una palabra que suena similar a "chicano".
-        </p>
-        <p class="mt-2 text-sm text-gray-800">
-          Durante la década de 1960, jóvenes y estudiantes universitarios comenzaron a utilizar "chicano/a" en sus movimientos políticos como una forma de expresar su identidad cultural. Como señala Castro, "chicano/a" se convirtió en un "código simbólico cargado ideológicamente que expresa el orgullo cultural por una herencia mexicana común. Llamarse a sí mismo chicano simboliza una solidaridad con la lengua española y con un pasado indígena precolombino, y una comprensión de la opresión racial estadounidense y la discriminación contra los mexicano-americanos". Por lo tanto, el término no solo se refiere a la ascendencia mexicano-americana, sino que también refleja la postura política de la persona.
-        </p>
-      </div>
+        <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lectura cultural – Chicano/a</title>
+  <style>
+    :root{
+      --ink:#111;
+      --muted:#9aa0a6;
+      --paper:#fff;
+      --rule:#cfd4d9;
+    }
+    html,body{background:#f5f6f8;margin:0;padding:0;}
+    .doc{
+      background:var(--paper);
+      color:var(--ink);
+      max-width: 760px;          /* similar to your screenshot width */
+      margin: 24px auto;
+      padding: 28px 32px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.05);
+      border-radius: 10px;
+      font-family: "Georgia","Times New Roman",serif;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+    .doc h2{
+      margin: 0 0 10px 0;
+      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      font-weight: 700;
+      letter-spacing:.2px;
+    }
+    /* Encabezado label with a rule line that fills to the right */
+    .hdr{
+      display:flex; align-items:center; gap:.75rem;
+      margin: 22px 0 10px 0;
+      font-weight: 700;
+      font-size: 1.05rem;
+      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    .hdr .line{height:1px; background:var(--rule); flex:1;}
+    p{margin: .5rem 0; text-align: justify;}
+    em{font-style: italic;}
+    ul{margin:.25rem 0 .75rem 1.25rem}
+    hr{border:0; height:1px; background:var(--rule); margin:18px 0;}
+    /* MC questions */
+    .qs{margin-top: 14px}
+    .qs ol{margin: .25rem 0 .25rem 1.25rem}
+    .qs li{margin: .35rem 0}
+    .choices{list-style: none; margin:.35rem 0 .6rem 1.25rem; padding:0;}
+    .choices li{margin:.15rem 0; color:#2f3640}
+    /* print tweaks */
+    @media print{
+      html,body{background:#fff}
+      .doc{box-shadow:none; margin:0; border-radius:0;}
+    }
+  </style>
+</head>
+<body>
+  <main class="doc">
+    <h2>Lectura cultural</h2>
+    <p style="color:#4b5563; font-size:.95rem; margin-top:0">
+      Lee el texto y decide qué encabezado corresponde a cada sección. Después, responde a las preguntas de comprensión.
+    </p>
 
-      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
-        <p class="text-gray-700">Encabezado 2 __________________________________________</p>
-        <p class="mt-2 text-sm text-gray-800">
-          El Movimiento Chicano surgió en la década de 1960 con el objetivo de mejorar las condiciones de los mexicano-americanos en diversos ámbitos: la política, la educación y el trabajo, especialmente en el sector agrícola. Este movimiento se inspiró en parte en el movimiento por los derechos civiles liderado por Martin Luther King Jr. y ganó gran apoyo entre los estudiantes universitarios, quienes comenzaron a interesarse por su identidad y a valorar su herencia indígena mexicana. Uno de estos grupos era MEChA, el Movimiento Estudiantil Chicano de Aztlán. Aztlán representa el antiguo territorio de los aztecas. Recientemente, el colectivo ha votado a favor de cambiar su nombre y eliminar la mención de Aztlán.
-        </p>
-        <p class="mt-2 text-sm text-gray-800">
-          Un líder fundamental en el movimiento de los trabajadores agrícolas fue César Chávez, quien dedicó su vida a luchar por los derechos de los mexicano-americanos. Chávez nació en Yuma, Arizona, en el seno de una familia de campesinos migrantes. En 1962, fundó el sindicato "United Farm Workers" (UFW) con el objetivo de mejorar los derechos y las condiciones laborales de los trabajadores agrícolas. En 1965, organizó una huelga para obtener mejores contratos para los trabajadores. El Movimiento Chicano promueve la identidad de los mexicano-americanos y busca corregir los estereotipos negativos sobre los mexicanos en los Estados Unidos sin recurrir a la violencia. Aunque Chávez falleció en 1993, UFW continúa trabajando para mejorar las condiciones en los campos.
-        </p>
-      </div>
+    <!-- Encabezado 1 -->
+    <div class="hdr">Encabezado 1 <span class="line"></span></div>
+    <p>
+      En su obra <em>Chicano Folklore</em>, Rafaela Castro define al chicano como una persona de ascendencia mexicana nacida en los Estados Unidos. Muchos mexicano-americanos nacidos en este país se identifican como chicanos para enfatizar y reivindicar su herencia mexicana e indígena. Castro menciona que existen diversas teorías sobre el origen del término. Algunos lo vinculan al estado mexicano de Chihuahua, sugiriendo que la palabra "chicano" deriva de la unión de "Chihuahua" y "mexicano" (Chihuahua / Mexicano → Chicano). Otros, por su parte, creen que "chicano" tiene raíces en el náhuatl, la lengua principal de los aztecas. Estos últimos llamaban a su territorio "Mexica" (pronunciado [me'shi.ka]), una palabra que suena similar a "chicano".
+    </p>
+    <p>
+      Durante la década de 1960, jóvenes y estudiantes universitarios comenzaron a utilizar "chicano/a" en sus movimientos políticos como una forma de expresar su identidad cultural. Como señala Castro, "chicano/a" se convirtió en un "código simbólico cargado ideológicamente que expresa el orgullo cultural por una herencia mexicana común. Llamarse a sí mismo chicano simboliza una solidaridad con la lengua española y con un pasado indígena precolombino, y una comprensión de la opresión racial estadounidense y la discriminación contra los mexicano-americanos". Por lo tanto, el término no solo se refiere a la ascendencia mexicano-americana, sino que también refleja la postura política de la persona.
+    </p>
 
-      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
-        <p class="text-gray-700">Encabezado 3 __________________________________________</p>
-        <ul class="list-disc ml-6 text-sm text-gray-800 mt-2">
-          <li>El término "chicano" surgió en la década de 1960 como una forma de expresar la identidad cultural y política de los mexicano-americanos, reivindicando su herencia mexicana e indígena.</li>
-          <li>El Movimiento Chicano, inspirado en el movimiento por los derechos civiles, luchó por la mejora de las condiciones de los mexicano-americanos en áreas como la política, la educación y el trabajo, especialmente en el sector agrícola.</li>
-          <li>El movimiento se caracterizó por la lucha por la dignidad y la reconciliación, buscando corregir los estereotipos negativos sobre los mexicanos en los Estados Unidos y promover la identidad de los mexicano-americanos.</li>
-        </ul>
-      </div>
-    </div>
+    <hr>
 
-    <h3 class="font-semibold text-amber-700 mt-6 mb-2">Encabezados disponibles:</h3>
-    <ul class="list-disc ml-6 mb-4 text-sm text-gray-800">
+    <!-- Encabezado 2 -->
+    <div class="hdr">Encabezado 2 <span class="line"></span></div>
+    <p>
+      El Movimiento Chicano surgió en la década de 1960 con el objetivo de mejorar las condiciones de los mexicano-americanos en diversos ámbitos: la política, la educación y el trabajo, especialmente en el sector agrícola. Este movimiento se inspiró en parte en el movimiento por los derechos civiles liderado por Martin Luther King Jr. y ganó gran apoyo entre los estudiantes universitarios, quienes comenzaron a interesarse por su identidad y a valorar su herencia indígena mexicana. Uno de estos grupos era MEChA, el Movimiento Estudiantil Chicano de Aztlán. Aztlán representa el antiguo territorio de los aztecas. Recientemente, el colectivo ha votado a favor de cambiar su nombre y eliminar la mención de Aztlán.
+    </p>
+    <p>
+      Un líder fundamental en el movimiento de los trabajadores agrícolas fue César Chávez, quien dedicó su vida a luchar por los derechos de los mexicano-americanos. Chávez nació en Yuma, Arizona, en el seno de una familia de campesinos migrantes. En 1962, fundó el sindicato "United Farm Workers" (UFW) con el objetivo de mejorar los derechos y las condiciones laborales de los trabajadores agrícolas. En 1965, organizó una huelga para obtener mejores contratos para los trabajadores. El Movimiento Chicano promueve la identidad de los mexicano-americanos y busca corregir los estereotipos negativos sobre los mexicanos en los Estados Unidos sin recurrir a la violencia. Aunque Chávez falleció en 1993, UFW continúa trabajando para mejorar las condiciones en los campos.
+    </p>
+
+    <hr>
+
+    <!-- Encabezado 3 -->
+    <div class="hdr">Encabezado 3 <span class="line"></span></div>
+    <ul>
+      <li>El término "chicano" surgió en la década de 1960 como una forma de expresar la identidad cultural y política de los mexicano-americanos, reivindicando su herencia mexicana e indígena.</li>
+      <li>El Movimiento Chicano, inspirado en el movimiento por los derechos civiles, luchó por la mejora de las condiciones de los mexicano-americanos en áreas como la política, la educación y el trabajo, especialmente en el sector agrícola.</li>
+      <li>El movimiento se caracterizó por la lucha por la dignidad y la reconciliación, buscando corregir los estereotipos negativos sobre los mexicanos en los Estados Unidos y promover la identidad de los mexicano-americanos.</li>
+    </ul>
+
+    <hr>
+
+    <h3 style="margin:18px 0 8px 0; font-family: ui-sans-serif,system-ui; font-size:1rem;">Encabezados disponibles</h3>
+    <ul style="margin-top:4px;">
       <li>El movimiento chicano: Lucha por la dignidad y la reconciliación</li>
       <li>El término "chicano"</li>
       <li>Resumen</li>
     </ul>
 
-    <h3 class="font-semibold text-amber-700 mb-2">Preguntas de comprensión:</h3>
-    <ol class="list-decimal ml-6 space-y-2 text-sm text-gray-800">
-      <li>Según el texto, ¿qué representa Aztlán para el Movimiento Estudiantil Chicano de Aztlán (MEChA)?
-        <ul class="list-none ml-4">
+    <div class="qs">
+      <h3 style="margin:18px 0 8px 0; font-family: ui-sans-serif,system-ui; font-size:1rem;">Preguntas de comprensión</h3>
+      <ol>
+        <li>Según el texto, ¿qué representa Aztlán para el Movimiento Estudiantil Chicano de Aztlán (MEChA)?</li>
+        <ul class="choices">
           <li>A) Aztlán representa el territorio actual de México.</li>
           <li>B) Aztlán representa el territorio de los Estados Unidos.</li>
           <li>C) Aztlán representa el antiguo territorio de los aztecas.</li>
           <li>D) Aztlán representa un lugar sagrado para los indígenas de América del Norte.</li>
         </ul>
-      </li>
-      <li>¿Qué objetivo principal tenía el Movimiento Chicano en la década de 1960?
-        <ul class="list-none ml-4">
+        <li>¿Qué objetivo principal tenía el Movimiento Chicano en la década de 1960?</li>
+        <ul class="choices">
           <li>A) Promover la independencia de México de los Estados Unidos.</li>
           <li>B) Luchar por la igualdad de derechos para los mexicano-americanos.</li>
           <li>C) Fomentar la cultura mexicana en los Estados Unidos.</li>
           <li>D) Crear un nuevo estado para los mexicano-americanos.</li>
+  </ul>
+        <li>De acuerdo con el texto, ¿qué simboliza el término "chicano/a"?
+ <ul class="choices">
+<li>A) Un rechazo a la cultura mexicana.</li>
+<li>B) Una identidad cultural y política.</li>
+<li>C) Una afiliación al partido político mexicano.</li>
+<li>D) Un deseo de regresar a México.</li>
+
         </ul>
-      </li>
-    </ol>
-  </div>
+      </ol>
+    </div>
+  </main>
+</body>
+</html>
+
 </section>
 
 
