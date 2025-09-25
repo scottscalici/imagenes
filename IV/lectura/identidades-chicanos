@@ -1,0 +1,45 @@
+<!-- Respuestas (cortas) -->
+<section style="max-width:780px;margin:16px auto;background:#fff;border:1px solid #e5e7eb;border-left:6px solid #10b981;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.05);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial">
+  <div style="padding:16px 18px">
+    <h3 style="margin:0 0 10px;color:#065f46;font-weight:800">Respuestas</h3>
+
+    <textarea id="answersBox" readonly
+      style="width:100%;min-height:170px;resize:vertical;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#111827;line-height:1.5;font-size:15px;">
+C — el antiguo territorio de los aztecas.
+B — luchar por la igualdad de derechos para los mexicano-americanos.
+B — una identidad cultural y política.
+Inspiró el Movimiento Chicano: modelo de derechos civiles y tácticas no violentas para exigir igualdad.
+Chávez lideró la UFW, organizó huelgas y defendió a jornaleros; encarnó las metas del movimiento.
+Porque reivindica herencia mexicana/indígena y expresa solidaridad frente a opresión y discriminación.
+    </textarea>
+
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+      <button id="copyBtn"
+        style="background:#10b981;color:#fff;border:0;border-radius:10px;padding:.55rem .9rem;font-weight:700;cursor:pointer">
+        Copiar
+      </button>
+      <span id="copiedMsg" style="color:#065f46;font-weight:700;display:none">¡Copiado!</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function(){
+    const btn = document.getElementById('copyBtn');
+    const box = document.getElementById('answersBox');
+    const msg = document.getElementById('copiedMsg');
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(box.value);
+        msg.style.display = 'inline';
+        setTimeout(()=> msg.style.display='none', 1200);
+      } catch {
+        // fallback
+        box.select();
+        document.execCommand('copy');
+        msg.style.display = 'inline';
+        setTimeout(()=> msg.style.display='none', 1200);
+      }
+    });
+  })();
+</script>
