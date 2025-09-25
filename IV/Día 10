@@ -20,8 +20,8 @@
   <!-- Encabezado -->
   <header class="bg-slate-900 text-white">
     <div class="max-w-5xl mx-auto p-4 flex items-center justify-between">
-      <h1 class="text-xl font-bold">Día 9</h1>
-      <time class="opacity-90">23/24 de septiembre</time>
+      <h1 class="text-xl font-bold">Día 10</h1>
+      <time class="opacity-90">25/26 de septiembre</time>
     </div>
   </header>
   <main class="p-4 space-y-6 max-w-5xl mx-auto">
@@ -135,9 +135,9 @@
       <div class="p-4">
         <h2 class="font-bold text-indigo-600 mb-2">Cultura</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-          <img class="media-contain rounded-xl md:col-span-1" src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pedro-pascal.jpg" alt="Cine/actuación" />
+          <img class="media-contain rounded-xl md:col-span-1" src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/ChatGPT%20Image%20Sep%2025%2C%202025%2C%2011_02_47%20AM.png" alt="Ccognados o no" />
           <div class="md:col-span-2">
-            <p><strong>Actores y actrices hispanohablantes:</strong> explora intérpretes como Gael García Bernal, Pedro Pascal, Ana de Armas y Sofía Vergara. ¿De qué países son?</p>
+            <p><strong>Falsos aamigos</p>
           </div>
         </div>
       </div>
@@ -182,13 +182,73 @@
   </div>
 </section>
 
+<!-- Lectura Cultural -->
+<section class="card leftbar border-amber-500">
+  <div class="p-4">
+    <h2 class="font-bold text-amber-600 mb-2">Lectura cultural</h2>
+
+    <p class="mb-3 text-sm text-gray-700">
+      Lee el texto y decide qué encabezado corresponde a cada sección. 
+      Después, responde a las preguntas de comprensión.
+    </p>
+
+    <div class="space-y-4">
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <p><strong>Encabezado 1 __________________________________________</strong></p>
+        <p>En su obra <em>Chicano Folklore</em>, Rafaela Castro define al chicano como una persona de ascendencia mexicana nacida en los Estados Unidos... (texto completo)</p>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <p><strong>Encabezado 2 __________________________________________</strong></p>
+        <p>El Movimiento Chicano surgió en la década de 1960 con el objetivo de mejorar las condiciones de los mexicano-americanos... (texto completo)</p>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3">
+        <p><strong>Encabezado 3 __________________________________________</strong></p>
+        <ul class="list-disc ml-6">
+          <li>El término "chicano" surgió en la década de 1960 como una forma de expresar la identidad cultural y política...</li>
+          <li>El Movimiento Chicano, inspirado en el movimiento por los derechos civiles...</li>
+          <li>El movimiento se caracterizó por la lucha por la dignidad y la reconciliación...</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="font-semibold text-amber-700 mt-6 mb-2">Encabezados disponibles:</h3>
+    <ul class="list-disc ml-6 mb-4">
+      <li>El movimiento chicano: Lucha por la dignidad y la reconciliación</li>
+      <li>El término "chicano"</li>
+      <li>Resumen</li>
+    </ul>
+
+    <h3 class="font-semibold text-amber-700 mb-2">Preguntas de comprensión:</h3>
+    <ol class="list-decimal ml-6 space-y-2 text-sm">
+      <li>Según el texto, ¿qué representa Aztlán para el Movimiento Estudiantil Chicano de Aztlán (MEChA)?
+        <ul class="list-none ml-4">
+          <li>A) Aztlán representa el territorio actual de México.</li>
+          <li>B) Aztlán representa el territorio de los Estados Unidos.</li>
+          <li>C) Aztlán representa el antiguo territorio de los aztecas.</li>
+          <li>D) Aztlán representa un lugar sagrado para los indígenas de América del Norte.</li>
+        </ul>
+      </li>
+      <li>¿Qué objetivo principal tenía el Movimiento Chicano en la década de 1960?
+        <ul class="list-none ml-4">
+          <li>A) Promover la independencia de México de los Estados Unidos.</li>
+          <li>B) Luchar por la igualdad de derechos para los mexicano-americanos.</li>
+          <li>C) Fomentar la cultura mexicana en los Estados Unidos.</li>
+          <li>D) Crear un nuevo estado para los mexicano-americanos.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</section>
+
 
  <!-- Video -->
 <section class="card leftbar border-slate-300">
   <div class="p-4">
     <h2 class="font-bold text-slate-700 mb-2">Video</h2>
     <div class="video-wrap bg-gray-100 rounded-xl" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-      <iframe src="https://youtu.be/C25VhUJn038?si=HZNL2R2xrRbunajq"
+      <iframe src="https://www.youtube.com/embed/C25VhUJn038"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -198,6 +258,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- Información adicional -->
 <section class="card leftbar border-rose-700">
