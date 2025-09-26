@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notas: Verbo gustar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Utilidad para cartas con barra izquierda de color */
+    .leftbar { border-left-width: 6px; }
+    .kbd { @apply inline-block rounded-md border px-2 py-0.5 text-xs font-mono; }
+    /* Contenedor max para Sites (opcional, quita max-w si quieres ancho completo) */
+    .wrap { max-width: 1000px; }
+    /* Inputs */
+    input[type="text"] { outline: none; }
+    .is-correct { box-shadow: 0 0 0 2px rgba(34,197,94,.7) inset; }   /* verde */
+    .is-wrong   { box-shadow: 0 0 0 2px rgba(239,68,68,.7) inset; }   /* rojo */
+    details > summary { cursor: pointer; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <!-- Encabezado -->
+  <header class="bg-sky-900 text-white">
+    <div class="wrap mx-auto px-4 py-5">
+      <h1 class="text-2xl md:text-3xl font-bold">Verbo <em>gustar</em></h1>
+      <p class="text-sky-100">Pronombres de objeto indirecto, presente, pretérito, pronombres preposicionales y práctica interactiva.</p>
+    </div>
+  </header>
+
+  <main class="wrap mx-auto p-4 space-y-6">
+
+    <!-- Pronombres de OI -->
+    <section class="bg-white rounded-xl shadow leftbar border-sky-600">
+      <div class="p-5">
+        <h2 class="text-xl font-bold text-sky-700 mb-3">Pronombres de objeto indirecto</h2>
+        <p class="mb-3">Estos pronombres indican <strong>a quién</strong> le “gusta(n)” algo. Siempre van con <em>gustar</em>:</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border border-gray-200 rounded-lg">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="p-2">Pronombre</th>
+                <th class="p-2">Equivalente</th>
+                <th class="p-2">Ejemplo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="p-2 font-medium">me</td>
+                <td class="p-2">a mí</td>
+                <td class="p-2"><em>(A mí)</em> <strong>me</strong> gusta el libro.</td>
+              </tr>
+              <tr class="border-t">
+                <td class="p-2 font-medium">te</td>
+                <td class="p-2">a ti</td>
+                <td class="p-2"><em>(A ti)</em> <strong>te</strong> gustan los perros.</td>
+              </tr>
+              <tr class="border-t">
+                <td class="p-2 font-medium">le</td>
+                <td class="p-2">a él/ella/usted</td>
+                <td class="p-2"><em>(A ella)</em> <strong>le</strong> gusta la música.</td>
+              </tr>
+              <tr class="border-t">
+                <td class="p-2 font-medium">nos</td>
+                <td class="p-2">a nosotros/as</td>
+                <td class="p-2"><em>(A nosotros)</em> <strong>nos</strong> gustan los colores.</td>
+              </tr>
+              <tr class="border-t">
+                <td class="p-2 font-medium">os</td>
+                <td class="p-2">a vosotros/as</td>
+                <td class="p-2"><em>(A vosotros)</em> <strong>os</strong> gusta la película.</td>
+              </tr>
+              <tr class="border-t">
+                <td class="p-2 font-medium">les</td>
+                <td class="p-2">a ellos/ellas/ustedes</td>
+                <td class="p-2"><em>(A ellos)</em> <strong>les</strong> gustan las flores.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">
+          <span class="font-semibold">Nota:</span> la forma del verbo depende de lo que “gusta” (el sujeto gramatical).
+        </p>
+      </div>
+    </section>
+
+    <!-- Presente -->
+    <section class="bg-white rounded-xl shadow leftbar border-emerald-600">
+      <div class="p-5">
+        <h2 class="text-xl font-bold text-emerald-700 mb-3"><em>Gustar</em> en presente</h2>
+        <p class="mb-3">Usa <strong>gusta</strong> con sujeto singular o infinitivo, y <strong>gustan</strong> con sujeto plural.</p>
+        <ul class="list-disc pl-6 space-y-1">
+          <li><em>Me gusta</em> la película. / <em>Me gustan</em> las películas.</li>
+          <li><em>Te gusta</em> bailar. (infinitivo)</li>
+          <li><em>Les gustan</em> los gatos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Pretérito -->
+    <section class="bg-white rounded-xl shadow leftbar border-rose-600">
+      <div class="p-5">
+        <h2 class="text-xl font-bold text-rose-700 mb-3"><em>Gustar</em> en pretérito</h2>
+        <p class="mb-3">Para un momento puntual en el pasado usa <strong>gustó</strong> (singular/infinitivo) o <strong>gustaron</strong> (plural).</p>
+        <div class="grid md:grid-cols-2 gap-3">
+          <div class="bg-rose-50 rounded-lg p-3">
+            <p><em>A mí</em> me <strong>gustó</strong> la comida.</p>
+            <p><em>A ella</em> le <strong>gustó</strong> el concierto.</p>
+          </div>
+          <div class="bg-rose-50 rounded-lg p-3">
+            <p><em>A nosotros</em> nos <strong>gustaron</strong> los museos.</p>
+            <p><em>A ellos</em> les <strong>gustaron</strong> los regalos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pronombres preposicionales -->
+    <section class="bg-white rounded-xl shadow leftbar border-indigo-600">
+      <div class="p-5">
+        <h2 class="text-xl font-bold text-indigo-700 mb-3">Pronombres preposicionales (“a + pronombre”)</h2>
+        <p class="mb-3">Para enfatizar o aclarar a quién, añade <strong>a + pronombre</strong>:</p>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a mí</strong> me gusta…</div>
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a ti</strong> te gusta…</div>
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a él/ella/usted</strong> le gusta…</div>
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a nosotros/as</strong> nos gusta…</div>
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a vosotros/as</strong> os gusta…</div>
+          <div class="bg-indigo-50 rounded-md p-2"><strong>a ellos/ellas/ustedes</strong> les gusta…</div>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">Útil para evitar ambigüedad: “Le gusta el piano” → “<strong>A ella</strong> le gusta el piano”.</p>
+      </div>
+    </section>
+
+    <!-- Práctica interactiva -->
+    <section class="bg-white rounded-xl shadow leftbar border-pink-600" id="practica">
+      <div class="p-5 space-y-4">
+        <h2 class="text-xl font-bold text-pink-700">Práctica</h2>
+        <p class="text-sm text-gray-600">Comprobación <em>insensible a mayúsculas</em> pero <strong>con acentos obligatorios</strong>. Usa <span class="kbd">Comprobar</span>, <span class="kbd">Revelar</span> y <span class="kbd">Reiniciar</span>.</p>
+
+        <!-- A. Completa con pronombre + forma correcta -->
+        <div class="space-y-2">
+          <h3 class="font-semibold">A) Completa con el pronombre OI y la forma de <em>gustar</em> en el presente</h3>
+          <ol class="list-decimal pl-6 space-y-2">
+            <li>
+              <span class="text-gray-700">___ ______ el chocolate caliente.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a1p" placeholder="pronombre: me/te/le..." class="px-3 py-1 rounded border" />
+                <input data-id="a1v" placeholder="verbo: gusta/gustan/..." class="px-3 py-1 rounded border" />
+              </div>
+         
+            </li>
+            <li>
+              <span class="text-gray-700">___ ______ los deportes extremos.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a2p" class="px-3 py-1 rounded border" placeholder="pronombre" />
+                <input data-id="a2v" class="px-3 py-1 rounded border" placeholder="verbo" />
+              </div>
+     
+            </li>
+            <li>
+              <span class="text-gray-700"><em>A él</em> ___ ______ la canción que escuchó ayer.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a3p" class="px-3 py-1 rounded border" placeholder="pronombre" />
+                <input data-id="a3v" class="px-3 py-1 rounded border" placeholder="verbo (pretérito)" />
+              </div>
+          
+            </li>
+            <li>
+              <span class="text-gray-700"><em>A nosotros</em> ___ ______ viajar por carretera.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a4p" class="px-3 py-1 rounded border" placeholder="pronombre" />
+                <input data-id="a4v" class="px-3 py-1 rounded border" placeholder="verbo" />
+              </div>
+             
+            </li>
+            <li>
+              <span class="text-gray-700"><em>A vosotros</em> ___ ______ las películas de acción.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a5p" class="px-3 py-1 rounded border" placeholder="pronombre" />
+                <input data-id="a5v" class="px-3 py-1 rounded border" placeholder="verbo" />
+              </div>
+           
+            </li>
+            <li>
+              <span class="text-gray-700"><em>A ellos</em> ___ ______ los museos antiguos.</span>
+              <div class="mt-1 flex flex-wrap gap-2">
+                <input data-id="a6p" class="px-3 py-1 rounded border" placeholder="pronombre" />
+                <input data-id="a6v" class="px-3 py-1 rounded border" placeholder="verbo" />
+              </div>
+             
+            </li>
+          </ol>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- B. Traduce al español (respuesta corta) -->
+        <div class="space-y-2">
+          <h3 class="font-semibold">B) Traduce al español</h3>
+          <ol class="list-decimal pl-6 space-y-2">
+            <li>
+              They like the beach.
+              <input data-id="b1" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+            <li>
+              I liked the concert.
+              <input data-id="b2" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+            <li>
+              Do you (tú) like dancing?
+              <input data-id="b3" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+            <li>
+              We liked the food.
+              <input data-id="b4" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+            <li>
+              You (vosotros) like to swim.
+              <input data-id="b5" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+            <li>
+              She liked the gift.
+              <input data-id="b6" class="mt-1 w-full max-w-lg px-3 py-1 rounded border" placeholder="Escribe tu traducción..." />
+              <small class="text-gray-500"></small>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Controles -->
+        <div class="flex flex-wrap gap-2 pt-2">
+          <button id="checkBtn" class="px-4 py-2 rounded-xl bg-pink-600 text-white hover:bg-pink-700 active:scale-[.98]">Comprobar</button>
+          <button id="revealBtn" class="px-4 py-2 rounded-xl bg-gray-800 text-white hover:bg-gray-900 active:scale-[.98]">Revelar</button>
+          <button id="resetBtn" class="px-4 py-2 rounded-xl bg-white border hover:bg-gray-50 active:scale-[.98]">Reiniciar</button>
+          <div id="score" class="ml-auto font-semibold text-pink-700"></div>
+        </div>
+
+        <!-- Clave (plegable) -->
+        <details class="bg-gray-50 rounded-lg p-3">
+          <summary class="font-semibold text-gray-700">Ver claves (referencia)</summary>
+          <div class="mt-2 text-sm space-y-2">
+            <p><strong>A)</strong> 1) me + gusta 2) te + gustan 3) le + gustó 4) nos + gusta 5) os + gustan 6) les + gustan</p>
+            <p><strong>B)</strong> 1) Les gusta la playa. 2) Me gustó el concierto. 3) ¿Te gusta bailar? 4) Nos gustó la comida. 5) Os gusta nadar. 6) A ella le gustó el regalo.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+<!-- Verbos como gustar -->
+<section class="bg-white rounded-xl shadow leftbar border-amber-600">
+  <div class="p-5">
+    <h2 class="text-xl font-bold text-amber-700 mb-3">Verbos como <em>gustar</em></h2>
+    <p class="mb-3">
+      Existen otros verbos en español que siguen el mismo patrón que <em>gustar</em>: 
+      requieren un <strong>pronombre de objeto indirecto</strong> y concuerdan en 
+      tercera persona con la cosa/acción que causa la reacción.
+    </p>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border border-gray-200 rounded-lg">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2">Verbo</th>
+            <th class="p-2">Significado</th>
+            <th class="p-2">Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t">
+            <td class="p-2 font-medium">encantar</td>
+            <td class="p-2">to love (something)</td>
+            <td class="p-2"><em>Me encanta</em> el chocolate.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">interesar</td>
+            <td class="p-2">to interest</td>
+            <td class="p-2"><em>Nos interesan</em> los deportes.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">fascinar</td>
+            <td class="p-2">to fascinate</td>
+            <td class="p-2"><em>A ella le fascina</em> la historia.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">importar</td>
+            <td class="p-2">to matter / to care about</td>
+            <td class="p-2"><em>Les importa</em> el medio ambiente.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">molestar</td>
+            <td class="p-2">to bother</td>
+            <td class="p-2"><em>Me molesta</em> el ruido.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">quedar</td>
+            <td class="p-2">to fit / remain</td>
+            <td class="p-2"><em>¿Cómo me queda</em> la camisa?</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">faltar</td>
+            <td class="p-2">to lack / to be missing</td>
+            <td class="p-2"><em>Nos falta</em> dinero para el viaje.</td>
+          </tr>
+          <tr class="border-t">
+            <td class="p-2 font-medium">doler (o→ue)</td>
+            <td class="p-2">to hurt</td>
+            <td class="p-2"><em>Me duelen</em> los pies.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-3 text-sm text-gray-600">
+      <span class="font-semibold">Nota:</span> Estos verbos siguen la misma estructura: 
+      <em>pronombre de objeto indirecto + verbo en 3ª persona (singular o plural)</em>.
+    </p>
+  </div>
+</section>
+<!-- Práctica interactiva: Verbos como gustar -->
+<section class="bg-white rounded-xl shadow leftbar border-amber-600" id="practica-como-gustar">
+  <div class="p-5 space-y-4">
+    <h2 class="text-xl font-bold text-amber-700">Práctica: verbos como <em>gustar</em></h2>
+    <p class="text-sm text-gray-600">
+      Completa con el pronombre de objeto indirecto y la forma correcta del verbo. 
+      <br><span class="kbd">Comprobar</span> = revisar, <span class="kbd">Revelar</span> = mostrar respuestas, <span class="kbd">Reiniciar</span> = empezar de nuevo.
+    </p>
+
+    <ol class="list-decimal pl-6 space-y-3">
+      <li>
+        ___ ______ la música clásica. (encantar, yo)
+        <div class="mt-1 flex flex-wrap gap-2">
+          <input data-id="c1p" placeholder="pronombre" class="px-3 py-1 rounded border" />
+          <input data-id="c1v" placeholder="verbo" class="px-3 py-1 rounded border" />
+        </div>
+        <small class="text-gray-500">Esperado: me encanta</small>
+      </li>
+      <li>
+        ___ ______ los partidos de fútbol. (interesar, ellos)
+        <div class="mt-1 flex flex-wrap gap-2">
+          <input data-id="c2p" placeholder="pronombre" class="px-3 py-1 rounded border" />
+          <input data-id="c2v" placeholder="verbo" class="px-3 py-1 rounded border" />
+        </div>
+        <small class="text-gray-500">Esperado: les interesan</small>
+      </li>
+      <li>
+        ___ ______ el ruido por la noche. (molestar, nosotros)
+        <div class="mt-1 flex flex-wrap gap-2">
+          <input data-id="c3p" placeholder="pronombre" class="px-3 py-1 rounded border" />
+          <input data-id="c3v" placeholder="verbo" class="px-3 py-1 rounded border" />
+        </div>
+        <small class="text-gray-500">Esperado: nos molesta</small>
+      </li>
+      <li>
+        ___ ______ los pies después de correr. (doler, yo)
+        <div class="mt-1 flex flex-wrap gap-2">
+          <input data-id="c4p" placeholder="pronombre" class="px-3 py-1 rounded border" />
+          <input data-id="c4v" placeholder="verbo" class="px-3 py-1 rounded border" />
+        </div>
+        <small class="text-gray-500">Esperado: me duelen</small>
+      </li>
+    </ol>
+
+    <!-- Botones -->
+    <div class="flex flex-wrap gap-2 pt-2">
+      <button id="checkBtn2" class="px-4 py-2 rounded-xl bg-amber-600 text-white hover:bg-amber-700">Comprobar</button>
+      <button id="revealBtn2" class="px-4 py-2 rounded-xl bg-gray-800 text-white hover:bg-gray-900">Revelar</button>
+      <button id="resetBtn2" class="px-4 py-2 rounded-xl bg-white border hover:bg-gray-50">Reiniciar</button>
+      <div id="score2" class="ml-auto font-semibold text-amber-700"></div>
+    </div>
+
+    <!-- Clave -->
+    <details class="bg-gray-50 rounded-lg p-3">
+      <summary class="font-semibold text-gray-700">Ver claves (referencia)</summary>
+      <div class="mt-2 text-sm space-y-2">
+        <p>1) me encanta</p>
+        <p>2) les interesan</p>
+        <p>3) nos molesta</p>
+        <p>4) me duelen</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<script>
+  function eqCaseAccent(a, b) {
+    if (!a || !b) return false;
+    return a.trim().toLocaleLowerCase('es') === b.trim().toLocaleLowerCase('es');
+  }
+
+  const answers2 = {
+    c1p: "me", c1v: "encanta",
+    c2p: "les", c2v: "interesan",
+    c3p: "nos", c3v: "molesta",
+    c4p: "me", c4v: "duelen"
+  };
+
+  const btnCheck2 = document.getElementById('checkBtn2');
+  const btnReveal2 = document.getElementById('revealBtn2');
+  const btnReset2 = document.getElementById('resetBtn2');
+  const score2 = document.getElementById('score2');
+
+  function inputs2() {
+    return Array.from(document.querySelectorAll('#practica-como-gustar input[type="text"]'));
+  }
+
+  function reset2() {
+    inputs2().forEach(i => {
+      i.value = '';
+      i.classList.remove('is-correct','is-wrong');
+    });
+    score2.textContent = '';
+  }
+
+  function reveal2() {
+    for (const [k,v] of Object.entries(answers2)) {
+      const f = document.querySelector(`#practica-como-gustar input[data-id="${k}"]`);
+      if (f) f.value = v;
+    }
+    score2.textContent = '';
+    inputs2().forEach(i => i.classList.remove('is-correct','is-wrong'));
+  }
+
+  function check2() {
+    let total=0, correct=0;
+    for (const [k,v] of Object.entries(answers2)) {
+      total++;
+      const f = document.querySelector(`#practica-como-gustar input[data-id="${k}"]`);
+      if (!f) continue;
+      const u = f.value||'';
+      const ok = eqCaseAccent(u,v);
+      f.classList.toggle('is-correct', ok);
+      f.classList.toggle('is-wrong', !ok);
+      if (ok) correct++;
+    }
+    score2.textContent = `Puntaje: ${correct}/${total}`;
+  }
+
+  btnCheck2.addEventListener('click', check2);
+  btnReveal2.addEventListener('click', reveal2);
+  btnReset2.addEventListener('click', reset2);
+</script>
+  </main>
+
+  <script>
+    // Utilidad: comparación insensible a mayúsculas pero SENSIBLE a acentos
+    function eqCaseInsensitiveAccentSensitive(a, b) {
+      if (!a || !b) return false;
+      return a.trim().toLocaleLowerCase('es') === b.trim().toLocaleLowerCase('es');
+    }
+
+    // Respuestas correctas
+    const answers = {
+      // A)
+      a1p: "me", a1v: "gusta",
+      a2p: "te", a2v: "gustan",
+      a3p: "le", a3v: "gustó",
+      a4p: "nos", a4v: "gusta",
+      a5p: "os", a5v: "gustan",
+      a6p: "les", a6v: "gustan",
+      // B) Aceptamos una de varias formas "modelo" para cada ítem.
+      // Puedes ampliar estos arrays si quieres admitir más variantes.
+      b1: ["les gusta la playa"],
+      b2: ["me gustó el concierto"],
+      b3: ["¿te gusta bailar?", "te gusta bailar?"], // permite omitir signo inicial por tecleo
+      b4: ["nos gustó la comida"],
+      b5: ["os gusta nadar"],
+      b6: ["a ella le gustó el regalo", "le gustó el regalo"]
+    };
+
+    const checkBtn = document.getElementById('checkBtn');
+    const revealBtn = document.getElementById('revealBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const scoreEl = document.getElementById('score');
+
+    function allInputs() {
+      return Array.from(document.querySelectorAll('input[type="text"]'));
+    }
+
+    function clearMarks() {
+      allInputs().forEach(inp => {
+        inp.classList.remove('is-correct','is-wrong');
+      });
+      scoreEl.textContent = '';
+    }
+
+    function revealAll() {
+      for (const [key, val] of Object.entries(answers)) {
+        const field = document.querySelector(`input[data-id="${key}"]`);
+        if (!field) continue;
+        if (Array.isArray(val)) {
+          field.value = val[0]; // muestra la primera variante
+        } else {
+          field.value = val;
+        }
+      }
+      clearMarks();
+    }
+
+    function resetAll() {
+      allInputs().forEach(inp => inp.value = '');
+      clearMarks();
+    }
+
+    function checkAll() {
+      let correct = 0, total = 0;
+
+      for (const [key, val] of Object.entries(answers)) {
+        total++;
+        const field = document.querySelector(`input[data-id="${key}"]`);
+        if (!field) continue;
+        const user = field.value || '';
+        let ok = false;
+
+        if (Array.isArray(val)) {
+          ok = val.some(v => eqCaseInsensitiveAccentSensitive(user, v));
+        } else {
+          ok = eqCaseInsensitiveAccentSensitive(user, val);
+        }
+
+        field.classList.toggle('is-correct', ok);
+        field.classList.toggle('is-wrong', !ok);
+        if (ok) correct++;
+      }
+      scoreEl.textContent = `Puntaje: ${correct}/${total}`;
+    }
+
+    checkBtn.addEventListener('click', checkAll);
+    revealBtn.addEventListener('click', revealAll);
+    resetBtn.addEventListener('click', resetAll);
+  </script>
+
+
+</body>
+</html>
