@@ -3,76 +3,136 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lesson Page</title>
+  <title>Día 11 - 30 de septiembre</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
-    
-<header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
-    <h1 class="text-3xl font-bold drop-shadow">Día 11</h1>
-    <p class="text-lg italic drop-shadow">30 de septiembre</p>
-  </div>
-</header>
-<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
-  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
-  <div class="p-4 text-gray-800">
-    <p>Vocabulario 1.1</p>
-    
-            <p class="font-semibold mt-2">Próximas pruebas</p>
-            <ul class="list-disc ml-6 mt-1"><li>Pretérito 1 - la próxima clase</li><li>Vocabulario 1.2 - Día 13</li></ul>
-          
-  </div>
-</section>
-<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
-  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Schoology:</p>
-      <p>Pretérito 3</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repaso de vocabulario: Descubre 2-8-5</p>
-      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
-      <div id="vocabBox" class="hidden">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="space-y-1"><p><span class="font-semibold">1.</span> hay</p><p><span class="font-semibold">2.</span> la maleta</p><p><span class="font-semibold">3.</span> la puerta</p><p><span class="font-semibold">4.</span> el horario</p><p><span class="font-semibold">5.</span> la sociología</p><p><span class="font-semibold">6.</span> conversar</p><p><span class="font-semibold">7.</span> terminar</p><p><span class="font-semibold">8.</span> el/la nieto/a</p><p><span class="font-semibold">9.</span> alto/a</p><p><span class="font-semibold">10.</span> costarricense</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> beber</p><p><span class="font-semibold">12.</span> escribir una carta</p><p><span class="font-semibold">13.</span> deportivo/a</p><p><span class="font-semibold">14.</span> almorzar (o:ue)</p><p><span class="font-semibold">15.</span> salir</p><p><span class="font-semibold">16.</span> el/la botones</p><p><span class="font-semibold">17.</span> listo/a</p><p><span class="font-semibold">18.</span> de buen humor</p><p><span class="font-semibold">19.</span> la chaqueta</p><p><span class="font-semibold">20.</span> la caja</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> vender</p><p><span class="font-semibold">22.</span> de repente</p><p><span class="font-semibold">23.</span> peinarse</p><p><span class="font-semibold">24.</span> el champú</p><p><span class="font-semibold">25.</span> la cena</p><p><span class="font-semibold">26.</span> la langosta</p><p><span class="font-semibold">27.</span> la canción</p><p><span class="font-semibold">28.</span> el/la director(a)</p><p><span class="font-semibold">29.</span> el cuento</p><p><span class="font-semibold">30.</span> la artesanía</p></div>
+
+    <!-- Title -->
+    <header class="shadow rounded-xl overflow-hidden">
+      <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+        <h1 class="text-3xl font-bold drop-shadow">Día 11</h1>
+        <p class="text-lg italic drop-shadow">30 de septiembre</p>
+      </div>
+    </header>
+
+    <!-- Evaluación -->
+    <section class="bg-white shadow rounded-xl border-l-4 border-gray-500 overflow-hidden">
+      <h2 class="text-gray-700 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+      <div class="p-4 text-gray-800">
+        <p class="mb-2"><strong>Evaluación de hoy:</strong> Vocabulario 1.1</p>
+        <p class="mt-2 font-semibold">Próximas pruebas:</p>
+        <ul class="list-disc ml-6">
+          <li>Pretérito 1 – la próxima clase</li>
+          <li>Vocabulario 1.2 – Día 13</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Calentamiento -->
+    <section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+      <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Schoology:</p>
+          <p>Pretérito 3</p>
+        </div>
+        <div>
+          <p class="font-semibold">Repaso de vocabulario: Descubre 2-8-5</p>
+          <button onclick="toggleVocab()" id="toggleBtn" class="text-blue-600 hover:underline mb-2">Expandir</button>
+          <div id="vocabBox" class="hidden">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="space-y-1">
+                <p><span class="font-semibold">1.</span> hay</p>
+                <p><span class="font-semibold">2.</span> la maleta</p>
+                <p><span class="font-semibold">3.</span> la puerta</p>
+                <p><span class="font-semibold">4.</span> el horario</p>
+                <p><span class="font-semibold">5.</span> la sociología</p>
+                <p><span class="font-semibold">6.</span> conversar</p>
+                <p><span class="font-semibold">7.</span> terminar</p>
+                <p><span class="font-semibold">8.</span> el/la nieto/a</p>
+                <p><span class="font-semibold">9.</span> alto/a</p>
+                <p><span class="font-semibold">10.</span> costarricense</p>
+              </div>
+              <div class="space-y-1">
+                <p><span class="font-semibold">11.</span> beber</p>
+                <p><span class="font-semibold">12.</span> escribir una carta</p>
+                <p><span class="font-semibold">13.</span> deportivo/a</p>
+                <p><span class="font-semibold">14.</span> almorzar (o:ue)</p>
+                <p><span class="font-semibold">15.</span> salir</p>
+                <p><span class="font-semibold">16.</span> el/la botones</p>
+                <p><span class="font-semibold">17.</span> listo/a</p>
+                <p><span class="font-semibold">18.</span> de buen humor</p>
+                <p><span class="font-semibold">19.</span> la chaqueta</p>
+                <p><span class="font-semibold">20.</span> la caja</p>
+              </div>
+              <div class="space-y-1">
+                <p><span class="font-semibold">21.</span> vender</p>
+                <p><span class="font-semibold">22.</span> de repente</p>
+                <p><span class="font-semibold">23.</span> peinarse</p>
+                <p><span class="font-semibold">24.</span> el champú</p>
+                <p><span class="font-semibold">25.</span> la cena</p>
+                <p><span class="font-semibold">26.</span> la langosta</p>
+                <p><span class="font-semibold">27.</span> la canción</p>
+                <p><span class="font-semibold">28.</span> el/la director(a)</p>
+                <p><span class="font-semibold">29.</span> el cuento</p>
+                <p><span class="font-semibold">30.</span> la artesanía</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
-  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Introducir:</p>
-      <p>Pretérito: Cambios morfológicos</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repasar:</p>
-      <p>Pretérito:-CAR, -GAR, -ZAR y los 4 irregulares</p>
-    </div>
-    <div>
-      <p class="font-semibold">Apuntes:</p>
-      <div class="space-y-6">
-        
+    </section>
+
+    <!-- Estructura -->
+    <section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+      <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Introducir:</p>
+          <p>Pretérito: Cambios morfológicos</p>
+        </div>
+        <div>
+          <p class="font-semibold">Repasar:</p>
+          <p>Pretérito: -CAR, -GAR, -ZAR y los 4 irregulares</p>
+        </div>
+        <div>
+          <p class="font-semibold">Apuntes:</p>
+          <div class="space-y-6">
             <div>
-              <p class="font-semibold mt-4">Pretérito</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li></ul>
+              <p class="font-semibold mt-4">Pretérito</p>
+              <ul class="list-disc ml-6">
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li>
+              </ul>
             </div>
-          
-            <div>
-              <p class="font-semibold mt-4">Gustar</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/gustar" target="_blank" class="text-blue-600 hover:underline">Gustar y verbos similares</a></li></ul>
-            </div>
-          
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
   </div>
+
+  <!-- Shared JavaScript -->
+  <script>
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
 </body>
 </html>
