@@ -6,6 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Día 11 - 30 de septiembre</title>
   <script src="https://cdn.tailwindcss.com"></script>
+<style>
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  width: 100%;
+}
+.video-container iframe,
+.video-container img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+.video-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 64px;
+  color: white;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.video-container:hover .video-play {
+  opacity: 1;
+}
+</style>
+
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
@@ -120,7 +153,439 @@ A los dieciocho años, Ornella Pellizzari ganó el Campeonato Latinoamericano de
       </figure>
     </div>
   </div>
-</section>  </div>
+</section> 
+
+
+<div id="prev-hsbdei2"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`ser / ir (tienen la misma conjugación en pretérito):
+
+yo fui
+
+tú fuiste
+
+él/ella/usted fue
+
+nosotros/nosotras fuimos
+
+vosotros/vosotras fuisteis
+
+ellos/ellas/ustedes fueron
+
+dar:
+
+yo di
+
+tú diste
+
+él/ella/usted dio
+
+nosotros/nosotras dimos
+
+vosotros/vosotras disteis
+
+ellos/ellas/ustedes dieron
+
+ver:
+
+yo vi
+
+tú viste
+
+él/ella/usted vio
+
+nosotros/nosotras vimos
+
+vosotros/vosotras visteis
+
+ellos/ellas/ustedes vieron
+
+Irregulares con raíz especial
+
+andar → anduv-:
+
+yo anduve
+
+tú anduviste
+
+él/ella/usted anduvo
+
+nosotros/nosotras anduvimos
+
+vosotros/vosotras anduvisteis
+
+ellos/ellas/ustedes anduvieron
+
+tener → tuv-:
+
+yo tuve
+
+tú tuviste
+
+él/ella/usted tuvo
+
+nosotros/nosotras tuvimos
+
+vosotros/vosotras tuvisteis
+
+ellos/ellas/ustedes tuvieron
+
+estar → estuv-:
+
+yo estuve
+
+tú estuviste
+
+él/ella/usted estuvo
+
+nosotros/nosotras estuvimos
+
+vosotros/vosotras estuvisteis
+
+ellos/ellas/ustedes estuvieron
+
+Cambio de raíz con terminaciones irregulares
+
+hacer → hic- (hizo en 3a sing.):
+
+yo hice
+
+tú hiciste
+
+él/ella/usted hizo
+
+nosotros/nosotras hicimos
+
+vosotros/vosotras hicisteis
+
+ellos/ellas/ustedes hicieron
+
+decir → dij- (3a plural pierde la “i”):
+
+yo dije
+
+tú dijiste
+
+él/ella/usted dijo
+
+nosotros/nosotras dijimos
+
+vosotros/vosotras dijisteis
+
+ellos/ellas/ustedes dijeron
+
+-CAR/-GAR/-ZAR
+
+llegar (gar → gué en 1a persona):
+
+yo llegué
+
+tú llegaste
+
+él/ella/usted llegó
+
+nosotros/nosotras llegamos
+
+vosotros/vosotras llegasteis
+
+ellos/ellas/ustedes llegaron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-hsbdei2");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
+
+
+
+
+<section class="bg-white shadow rounded-xl border-l-4 border-amber-500 overflow-hidden">
+  <h2 class="text-amber-600 font-semibold text-lg px-4 pt-4">vocab</h2>
+  <div class="p-4 text-gray-800 space-y-4"><!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vocab Matching – Partes del cuerpo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dropzone { min-height: 44px; }
+    .dragging { opacity: .6; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <div class="max-w-4xl mx-auto p-6 space-y-4">
+    <h1 class="text-2xl font-bold">Empareja: Español ↔ Inglés</h1>
+    <p class="text-sm text-gray-600">Arrastra cada definición en inglés a la palabra en español correcta. (Acentos cuentan.)</p>
+
+    <!-- Controls -->
+    <div class="flex flex-wrap gap-2">
+      <button id="checkBtn" class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700">Verificar</button>
+      <button id="revealBtn" class="px-4 py-2 rounded-xl bg-amber-600 text-white hover:bg-amber-700">Revelar</button>
+      <button id="resetBtn" class="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300">Reiniciar</button>
+      <span id="score" class="ml-auto font-semibold"></span>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Spanish (dropzones) -->
+      <div>
+        <h2 class="font-semibold mb-2">Español</h2>
+        <div id="leftCol" class="space-y-2">
+          <!-- JS will inject rows -->
+        </div>
+      </div>
+
+      <!-- English (draggables) -->
+      <div>
+        <h2 class="font-semibold mb-2">English</h2>
+        <div id="rightCol" class="grid sm:grid-cols-2 gap-2">
+          <!-- JS will inject cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Pairs (left = Spanish, right = English). Keys must be unique.
+    const PAIRS = [
+      { key: "brazo", left: "el brazo", right: "arm" },
+      { key: "tobillo", left: "el tobillo", right: "ankle" },
+      { key: "distraido", left: "distraído/a", right: "distracted" },
+      { key: "cojera", left: "la cojera", right: "limp" },
+      { key: "ojo", left: "el ojo", right: "eye" },
+      { key: "menosmal", left: "menos mal", right: "it’s a good thing" },
+      { key: "pobrecito", left: "pobrecito/a", right: "poor thing" },
+      { key: "roto", left: "roto/a", right: "broken" },
+      { key: "corazon", left: "el corazón", right: "heart" },
+      { key: "dedopie", left: "el dedo del pie", right: "toe" },
+    ];
+
+    // Utility: shuffle array
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random()* (i+1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    const leftCol = document.getElementById("leftCol");
+    const rightCol = document.getElementById("rightCol");
+    const scoreEl = document.getElementById("score");
+    const checkBtn = document.getElementById("checkBtn");
+    const revealBtn = document.getElementById("revealBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    function render() {
+      scoreEl.textContent = "";
+      leftCol.innerHTML = "";
+      rightCol.innerHTML = "";
+
+      // Build left column (dropzones)
+      PAIRS.forEach((p, idx) => {
+        const row = document.createElement("div");
+        row.className = "flex items-center gap-3 bg-white border rounded-xl p-2 shadow-sm";
+        row.innerHTML = `
+          <div class="w-8 h-8 grid place-content-center rounded-lg bg-indigo-50 text-indigo-700 font-semibold">${idx+1}</div>
+          <div class="flex-1">${p.left}</div>
+          <div class="w-1/2 dropzone border-2 border-dashed border-gray-300 rounded-lg p-2 text-sm text-gray-400"
+               data-accept="${p.key}" ondragover="event.preventDefault()"></div>
+        `;
+        leftCol.appendChild(row);
+      });
+
+      // Build right column (draggables)
+      shuffle(PAIRS).forEach(p => {
+        const card = document.createElement("div");
+        card.className = "draggable bg-white border rounded-xl p-3 shadow-sm cursor-move";
+        card.draggable = true;
+        card.dataset.key = p.key;
+        card.textContent = p.right;
+
+        card.addEventListener("dragstart", e => {
+          card.classList.add("dragging");
+          e.dataTransfer.setData("text/plain", p.key);
+        });
+        card.addEventListener("dragend", () => card.classList.remove("dragging"));
+
+        rightCol.appendChild(card);
+      });
+
+      // Drop behavior for each dropzone
+      leftCol.querySelectorAll(".dropzone").forEach(zone => {
+        zone.addEventListener("drop", e => {
+          e.preventDefault();
+          const key = e.dataTransfer.getData("text/plain");
+          const dragged = rightCol.querySelector(`.draggable[data-key="${key}"]`);
+          if (!dragged) return;
+
+          // If zone already has a card, send it back to right column
+          const existing = zone.querySelector(".draggable");
+          if (existing) rightCol.appendChild(existing);
+
+          zone.textContent = "";
+          zone.classList.remove("text-gray-400");
+          zone.appendChild(dragged);
+        });
+      });
+    }
+
+    function checkAnswers() {
+      let correct = 0, total = PAIRS.length;
+      leftCol.querySelectorAll(".dropzone").forEach(zone => {
+        const expect = zone.dataset.accept;
+        const placed = zone.querySelector(".draggable");
+        zone.classList.remove("ring-2","ring-red-400","ring-green-500","bg-green-50","bg-red-50");
+        if (placed && placed.dataset.key === expect) {
+          correct++;
+          zone.classList.add("ring-2","ring-green-500","bg-green-50");
+        } else {
+          zone.classList.add("ring-2","ring-red-400","bg-red-50");
+        }
+      });
+      scoreEl.textContent = `Resultado: ${correct}/${total}`;
+    }
+
+    function revealAll() {
+      // Put every card into its matching zone
+      leftCol.querySelectorAll(".dropzone").forEach(zone => {
+        const key = zone.dataset.accept;
+        const card = rightCol.querySelector(`.draggable[data-key="${key}"]`) ||
+                     leftCol.querySelector(`.draggable[data-key="${key}"]`);
+        if (!card) return;
+
+        // If zone has a different card, return it first
+        const existing = zone.querySelector(".draggable");
+        if (existing && existing.dataset.key !== key) rightCol.appendChild(existing);
+
+        zone.textContent = "";
+        zone.classList.remove("text-gray-400");
+        zone.appendChild(card);
+      });
+      checkAnswers();
+    }
+
+    function resetAll() {
+      render();
+    }
+
+    checkBtn.addEventListener("click", checkAnswers);
+    revealBtn.addEventListener("click", revealAll);
+    resetBtn.addEventListener("click", resetAll);
+
+    // Init
+    render();
+  </script>
+</body>
+</html></div>
+</section>
+
+
+
+<section class="bg-white shadow rounded-xl border-l-4 border-slate-500 overflow-hidden">
+  <h2 class="text-slate-600 font-semibold text-lg px-4 pt-4">Video</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    
+    
+<div class="video-container" onclick="this.innerHTML='<iframe src=&quot;https://www.youtube.com/embed/FDL2y1sqS0Q?autoplay=1&quot; allowfullscreen></iframe>'">
+  <img src="https://img.youtube.com/vi/FDL2y1sqS0Q/hqdefault.jpg" alt="YouTube video">
+  <div class="video-play">▶</div>
+</div>
+  </div>
+</section>
+
+
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Conversación</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Rosetta_Stone.JPG/500px-Rosetta_Stone.JPG" alt="Conversación" class="rounded-lg shadow-md max-h-64 object-cover">
+    <p class="whitespace-pre-line">45</p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
+
+
+</div>
 
   <!-- Shared JavaScript -->
   <script>
