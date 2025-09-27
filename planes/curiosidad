@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Curiosidad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6">
+      <textarea id="curInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Pega aquí el blurb con sección de Curiosidad..."></textarea>
+      <div class="mt-4">
+        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
+        <input type="text" id="imgUrl" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="https://...">
+      </div>
+      <button onclick="generateCuriosidad()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Curiosidad
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="curSection" class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden hidden mb-6">
+      <h2 id="curTitle" class="text-indigo-600 font-semibold text-lg px-4 pt-4"></h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <p id="curCaption" class="font-semibold text-lg"></p>
+        <figure id="curFigure" class="hidden">
+          <img id="curImage" class="rounded-lg shadow-md mx-auto" alt="">
+        </figure>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    // Convert GitHub blob link -> raw link
+    function cleanImageUrl(url) {
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      return url;
+    }
+
+    function generateCuriosidad() {
+      const input = document.getElementById("curInput").value;
+      let imgUrl = document.getElementById("imgUrl").value.trim();
+      imgUrl = cleanImageUrl(imgUrl);
+
+      // Match "Curiosidad #" line
+      const curMatch = input.match(/Curiosidad\s*(\d+)/i);
+      const curNum = curMatch ? curMatch[1] : "";
+
+      // Caption = next line after Curiosidad
+      const captionMatch = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const curIndex = captionMatch.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
+      const caption = (curIndex !== -1 && captionMatch[curIndex + 1]) ? captionMatch[curIndex + 1] : "";
+
+      // Update preview
+      document.getElementById("curTitle").innerText = curNum ? `Curiosidad ${curNum}` : "Curiosidad";
+      document.getElementById("curCaption").innerText = caption || "";
+
+      if (imgUrl) {
+        document.getElementById("curFigure").classList.remove("hidden");
+        document.getElementById("curImage").src = imgUrl;
+        document.getElementById("curImage").alt = caption || `Curiosidad ${curNum}`;
+      } else {
+        document.getElementById("curFigure").classList.add("hidden");
+      }
+
+      document.getElementById("curSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Build HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad ${curNum}</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
+    ${imgUrl ? `
+    <figure>
+      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto">
+    </figure>` : ""}
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
