@@ -73,6 +73,230 @@
 </section>
 
 <!--Curiosidad-->
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 11</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/curiosidad/miaucoles_dormi_14_horas_necesito_una_siesta_720.jpg" alt="Curiosidad 11" class="rounded-lg shadow-md mx-auto">
+    </figure>
+  </div>
+</section>
+
+<!--práctica de verbos-->
+
+<div id="prev-aa2rvfj"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`Mentir (to lie)
+
+yo mentí
+
+tú mentiste
+
+él/ella/usted mintió
+
+nosotros/as mentimos
+
+vosotros/as mentisteis
+
+ellos/ellas/ustedes mintieron
+
+Divertirse (to have fun) 
+
+yo me divertí
+
+tú te divertiste
+
+él/ella/usted se divirtió
+
+nosotros/as nos divertimos
+
+vosotros/as os divertisteis
+
+ellos/ellas/ustedes se divirtieron
+
+Sentir (to feel)
+
+yo sentí
+
+tú sentiste
+
+él/ella/usted sintió
+
+nosotros/as sentimos
+
+vosotros/as sentisteis
+
+ellos/ellas/ustedes sintieron
+
+Dormirse  (to fall asleep)
+
+yo me dormí
+
+tú te dormiste
+
+él/ella/usted se durmió
+
+nosotros/as nos dormimos
+
+vosotros/as os dormisteis
+
+ellos/ellas/ustedes se durmieron
+
+Morir (to die)
+
+yo morí
+
+tú moriste
+
+él/ella/usted murió
+
+nosotros/as morimos
+
+vosotros/as moristeis
+
+ellos/ellas/ustedes murieron
+
+Pedir (to ask for)
+
+yo pedí
+
+tú pediste
+
+él/ella/usted pidió
+
+nosotros/as pedimos
+
+vosotros/as pedisteis
+
+ellos/ellas/ustedes pidieron
+
+Seguir  (to follow, to continue)
+
+yo seguí
+
+tú seguiste
+
+él/ella/usted siguió
+
+nosotros/as seguimos
+
+vosotros/as seguisteis
+
+ellos/ellas/ustedes siguieron
+
+Freír  (to fry)
+yo freí
+
+tú freíste
+
+él/ella/usted frió
+
+nosotros/as freímos
+
+vosotros/as freísteis
+
+ellos/ellas/ustedes frieron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-aa2rvfj");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
+
+<!--video-->
+<section class="bg-white shadow rounded-xl border-l-4 border-slate-500 overflow-hidden">
+  <h2 class="text-slate-600 font-semibold text-lg px-4 pt-4">Cultura chicana</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    
+    
+<div class="video-container" onclick="this.innerHTML='<iframe src=&quot;https://www.youtube.com/embed/M3B4S3VSY0s?autoplay=1&quot; allowfullscreen></iframe>'">
+  <img src="https://img.youtube.com/vi/M3B4S3VSY0s/hqdefault.jpg" alt="YouTube video">
+  <div class="video-play">▶</div>
+</div>
+  </div>
+</section>
+
+
+
+
+
 
 
 
