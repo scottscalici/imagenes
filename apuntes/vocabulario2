@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vocabulario — Descubre 2 (Español III/IV)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-sky-50 via-rose-50 to-violet-50 text-gray-800">
+<main class="container mx-auto px-4 py-12 max-w-5xl space-y-9">
+
+  <header class="text-center space-y-3">
+    <h1 class="text-3xl sm:text-4xl font-bold">
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-sky-600">
+        Vocabulario · Índice (Descubre 2)
+      </span>
+    </h1>
+    <p class="text-gray-600">Acceso rápido a cada lección: listas + práctica y flashcards.</p>
+
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-2">
+      <input id="filter" class="border border-white/60 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 w-56 shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-400" placeholder="Filtrar por lección (p. ej., 4, 7)…" />
+      <button id="clear" class="text-sm border border-white/60 bg-white/80 backdrop-blur-sm rounded-lg px-3 py-2 shadow-sm hover:bg-white">Limpiar</button>
+    </div>
+  </header>
+
+  <!-- Grid -->
+  <section id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></section>
+
+  <footer class="text-center text-sm text-gray-500 pt-4">
+    Consejo: marca esta página como favorita para volver al índice.
+  </footer>
+</main>
+
+<script>
+(function(){
+  const BASE = "https://sites.google.com/view/srscalici/vocabulario//descubre-2-español-2";
+
+  // Emojis + pequeños resúmenes por lección (según contenidos de D2)
+  const LESSONS = [
+    { n: 1, sections: 4, icon: "🩺", blurb: "El cuerpo, la salud, verbos y adjetivos" },
+    { n: 2, sections: 4, icon: "💻", blurb: "Tecnología, la computadora, el carro" },
+    { n: 3, sections: 4, icon: "🏠", blurb: "La vivienda, muebles, quehaceres" },
+    { n: 4, sections: 5, icon: "🌿", blurb: "Naturaleza, medio ambiente, emociones" },
+    { n: 5, sections: 2, icon: "🏙️", blurb: "La ciudad, el banco, correo y direcciones" },
+    { n: 6, sections: 2, icon: "🏋️", blurb: "Bienestar, gimnasio y nutrición" },
+    { n: 7, sections: 3, icon: "💼", blurb: "Ocupaciones, mundo laboral, entrevista" },
+    { n: 8, sections: 3, icon: "🎭", blurb: "Artes, música, cine y TV" },
+    { n: 9, sections: 2, icon: "🗞️", blurb: "Noticias, medios y política" },
+  ];
+
+  // Solid-color classes (cycled per card) for the "Listas + práctica" button
+  const SOLIDS = [
+    "bg-rose-600 hover:bg-rose-700",
+    "bg-amber-600 hover:bg-amber-700",
+    "bg-emerald-600 hover:bg-emerald-700",
+    "bg-sky-600 hover:bg-sky-700",
+    "bg-fuchsia-600 hover:bg-fuchsia-700",
+    "bg-cyan-600 hover:bg-cyan-700",
+    "bg-violet-600 hover:bg-violet-700",
+    "bg-orange-600 hover:bg-orange-700",
+    "bg-teal-600 hover:bg-teal-700",
+  ];
+
+  const grid   = document.getElementById("grid");
+  const filter = document.getElementById("filter");
+  const clear  = document.getElementById("clear");
+
+  function card({n, sections, icon, blurb}, idx){
+    const list  = `${BASE}/${n}`;
+    const flash = `${BASE}/${n}/flashcards`;
+    const solid = SOLIDS[idx % SOLIDS.length];
+
+    return `
+      <article class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg shadow-slate-200/60 border border-white/60 p-6 flex flex-col transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-xl">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-xl font-semibold">${icon} Lección ${n}</h2>
+          <span class="text-xs bg-white/70 text-gray-700 rounded px-2 py-1 border border-white/60 shadow-sm">${sections} secciones</span>
+        </div>
+        <p class="text-sm text-gray-600 mt-1">${blurb}</p>
+
+        <div class="mt-4 grid grid-cols-1 gap-2">
+          <!-- Solid color button -->
+          <a href="${list}" target="_blank" rel="noopener"
+             class="inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 ${solid}
+                    text-white shadow-sm transition active:scale-[.99]
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">
+            <span>Listas + práctica</span>
+          </a>
+
+          <!-- Flashcards stay blue -->
+          <a href="${flash}" target="_blank" rel="noopener"
+             class="inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2
+                    bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition active:scale-[.99]
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">
+            <span>Flashcards</span>
+          </a>
+        </div>
+      </article>`;
+  }
+
+  function render(items){
+    grid.innerHTML = items.map((l, i) => card(l, i)).join("");
+  }
+  render(LESSONS);
+
+  // Filter by lesson number
+  filter.addEventListener("input", () => {
+    const q = filter.value.trim().replace(/[^\d]/g, "");
+    if (!q) return render(LESSONS);
+    render(LESSONS.filter(l => String(l.n).includes(q)));
+  });
+
+  clear.addEventListener("click", () => { filter.value = ""; render(LESSONS); filter.focus(); });
+
+  // Subtle highlight for visited lessons
+  const visitedKey = n => `visited-${n}`;
+  grid.addEventListener("click", (e) => {
+    const a = e.target.closest("a[href]"); if (!a) return;
+    const h2 = a.closest("article")?.querySelector("h2")?.textContent || "";
+    const n  = h2.match(/\d+/)?.[0]; if (n) localStorage.setItem(visitedKey(n), "1");
+  });
+  const observer = new MutationObserver(()=>{
+    grid.querySelectorAll("article").forEach((art) => {
+      const n = art.querySelector("h2")?.textContent.match(/\d+/)?.[0];
+      if (n && localStorage.getItem(visitedKey(n)) === "1") {
+        art.classList.add("ring-1","ring-emerald-200");
+      }
+    });
+  });
+  observer.observe(grid, { childList: true });
+})();
+</script>
+</body>
+</html>
 
