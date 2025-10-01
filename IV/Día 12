@@ -9,8 +9,295 @@
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
 
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 12</h1>
+    <p class="text-lg italic drop-shadow">1/2 de octubre</p>
+  </div>
+</header>
+
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Pretérito 2</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 3.1 - la próxima clase</li><li>Vocabulario 3.2 - Día 14</li></ul>
+          
+  </div>
+</section>
+
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Pretérito 6</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 2 - 6</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> el pastel (de chocolate)</p><p><span class="font-semibold">2.</span> la madurez</p><p><span class="font-semibold">3.</span> la blusa</p><p><span class="font-semibold">4.</span> la planta baja</p><p><span class="font-semibold">5.</span> las sandalias</p><p><span class="font-semibold">6.</span> la biblioteca</p><p><span class="font-semibold">7.</span> dibujar</p><p><span class="font-semibold">8.</span> fácil</p><p><span class="font-semibold">9.</span> el autobús</p><p><span class="font-semibold">10.</span> delante de</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> la planta</p><p><span class="font-semibold">12.</span> a menos que</p><p><span class="font-semibold">13.</span> sin que</p><p><span class="font-semibold">14.</span> tener éxito</p><p><span class="font-semibold">15.</span> el/la enfermero/a</p><p><span class="font-semibold">16.</span> el desierto</p><p><span class="font-semibold">17.</span> la pastilla</p><p><span class="font-semibold">18.</span> el cuadro</p><p><span class="font-semibold">19.</span> pedir un préstamo</p><p><span class="font-semibold">20.</span> es terrible</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> firmar</p><p><span class="font-semibold">22.</span> el sofá</p><p><span class="font-semibold">23.</span> el/la cantante</p><p><span class="font-semibold">24.</span> los deportes</p><p><span class="font-semibold">25.</span> la televisión</p><p><span class="font-semibold">26.</span> llevarse bien/mal/fatal</p><p><span class="font-semibold">27.</span> la discoteca</p><p><span class="font-semibold">28.</span> deprimido/a</p><p><span class="font-semibold">29.</span> inseguro/a</p><p><span class="font-semibold">30.</span> odiar</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Los usos</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Todas las estructuras del pretérito</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Pretérito</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="text-blue-600 hover:underline">Pruebas (Español 2)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
+
+
+<!--CURIOSIDAD-->
+
+
+
+
+
+
+
+<div id="prev-qtxdach"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`Ir (to go) 
+
+yo fui
+
+tú fuiste
+
+él/ella/usted fue
+
+nosotros/nosotras fuimos
+
+vosotros/vosotras fuisteis
+
+ellos/ellas/ustedes fueron
+
+Pegar (to hit/glue) 
+
+yo pegué
+
+tú pegaste
+
+él/ella/usted pegó
+
+nosotros/nosotras pegamos
+
+vosotros/vosotras pegasteis
+
+ellos/ellas/ustedes pegaron
+
+Hacer (to do/make)
+
+yo hice
+
+tú hiciste
+
+él/ella/usted hizo
+
+nosotros/nosotras hicimos
+
+vosotros/vosotras hicisteis
+
+ellos/ellas/ustedes hicieron
+
+Leer (to read) 
+
+yo leí
+
+tú leíste
+
+él/ella/usted leyó
+
+nosotros/nosotras leímos
+
+vosotros/vosotras leísteis
+
+ellos/ellas/ustedes leyeron
+
+Seguir (to follow) 
+
+yo seguí
+
+tú seguiste
+
+él/ella/usted siguió
+
+nosotros/nosotras seguimos
+
+vosotros/vosotras seguisteis
+
+ellos/ellas/ustedes siguieron
+
+Incluir (to include) 
+
+yo incluí
+
+tú incluiste
+
+él/ella/usted incluyó
+
+nosotros/nosotras incluimos
+
+vosotros/vosotras incluisteis
+
+ellos/ellas/ustedes incluyeron
+
+Dormir (to sleep) 
+yo dormí
+
+tú dormiste
+
+él/ella/usted durmió
+
+nosotros/nosotras dormimos
+
+vosotros/vosotras dormisteis
+
+ellos/ellas/ustedes durmieron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-qtxdach");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
+
+
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Conversación</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+
+
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
+
+
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+          <h4 class="font-semibold">Próximas pruebas</h4>
+          <ul class="list-disc list-inside">
+            <li>Vocabulario 3.1 - la próxima clase</li><li>Vocabulario 3.2 - Día 14</li>
+          </ul>
+        
+  
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            <li><span class="font-semibold">Pretérito</span> 📅 17 de oct</li>
+          </ul>
+        
+  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li></ul>
+  
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+</section>
 
 
   </div>
