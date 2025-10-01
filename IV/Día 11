@@ -349,6 +349,39 @@ Relaciona la imagen con una experiencia personal o cultural.</p>
 
   <!-- Shared JavaScript -->
   <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+
+
+    // Aviso temporal auto-ocultar (cambiar cutoff si hace falta)
+    (function(){
+      const cutoff = new Date(new Date().getFullYear(), 8, 28); // 28 septiembre (mes 0-indexado)
+      if (new Date() > cutoff) {
+        const box = document.getElementById('avisoBox');
+        if (box) box.style.display = 'none';
+      }
+    })();
+
     function toggleVocab() {
       const box = document.getElementById("vocabBox");
       const btn = document.getElementById("toggleBtn");
