@@ -119,7 +119,17 @@
 
 
 <!--Video-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-slate-500 overflow-hidden">
+  <h2 class="text-slate-600 font-semibold text-lg px-4 pt-4">Pato</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    
+    
+<div class="video-container" onclick="this.innerHTML='<iframe src=&quot;https://www.youtube.com/embed/pS8n2QqrCGo?autoplay=1&quot; allowfullscreen></iframe>'">
+  <img src="https://img.youtube.com/vi/pS8n2QqrCGo/hqdefault.jpg" alt="YouTube video">
+  <div class="video-play">▶</div>
+</div>
+  </div>
+</section>
 
 
 
