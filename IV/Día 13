@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Día 11 - 30 de septiembre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
 
+<!--Aviso o Anuncio-->
+
+
+
+
+<!--Día-->
+
+
+
+
+<!--Evaluación-->
+
+
+
+
+<!--Calentamiento-->
+
+
+
+
+
+<!--Estructura-->
+
+
+
+
+<!--Curiosidad-->
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 13: Pato</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/Throwing_in_for_the_goal.jpg?raw=true" alt="Curiosidad 13" class="rounded-lg shadow-md mx-auto">
+    </figure>
+  </div>
+</section>
+
+
+
+<!--Cultura-->
+
+
+
+
+<!--Práctica de verbos-->
+
+
+
+
+<!--Práctica general-->
+
+
+
+
+<!--Video-->
+
+
+
+
+<!--Conversacion-->
+
+
+
+
+<!--Información adicional-->
+
+
+  </div>
+
+ 
+  <!-- Shared JavaScript -->
+  <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
