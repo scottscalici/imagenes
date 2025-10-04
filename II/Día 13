@@ -15,28 +15,96 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 13</h1>
+    <p class="text-lg italic drop-shadow">7 de octubre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Vocabulario 1.2</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Pretérito 2 - la próxima clase</li><li>Nada - Día 15</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Pretérito 5</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 2-8-7</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> Lo siento.</p><p><span class="font-semibold">2.</span> la palabra</p><p><span class="font-semibold">3.</span> la casa</p><p><span class="font-semibold">4.</span> la biología</p><p><span class="font-semibold">5.</span> detrás de</p><p><span class="font-semibold">6.</span> bailar</p><p><span class="font-semibold">7.</span> necesitar (+ inf.)</p><p><span class="font-semibold">8.</span> el/la suegro/a</p><p><span class="font-semibold">9.</span> el/la novio/a</p><p><span class="font-semibold">10.</span> rubio/a</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> inglés, inglesa</p><p><span class="font-semibold">12.</span> escribir una carta</p><p><span class="font-semibold">13.</span> el centro</p><p><span class="font-semibold">14.</span> comenzar (e:ie)</p><p><span class="font-semibold">15.</span> ir en autobús (m.)</p><p><span class="font-semibold">16.</span> el pasaporte</p><p><span class="font-semibold">17.</span> enojado/a</p><p><span class="font-semibold">18.</span> de buen humor</p><p><span class="font-semibold">19.</span> la camisa</p><p><span class="font-semibold">20.</span> pagar</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> corto/a</p><p><span class="font-semibold">22.</span> bañarse</p><p><span class="font-semibold">23.</span> después</p><p><span class="font-semibold">24.</span> interesar</p><p><span class="font-semibold">25.</span> sabroso/a</p><p><span class="font-semibold">26.</span> el jamón</p><p><span class="font-semibold">27.</span> dirigir</p><p><span class="font-semibold">28.</span> la telenovela</p><p><span class="font-semibold">29.</span> la canción</p><p><span class="font-semibold">30.</span> el/la director(a)</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Se con eventos inesperados</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Pretérito: Cambios morfológicos</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Pretérito</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="text-blue-600 hover:underline">Pruebas (Español 2)</a></li></ul>
+            </div>
+          
+            <div>
+              <p class="font-semibold mt-4">Usos de SE</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="text-blue-600 hover:underline">Se con voz pasiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="text-blue-600 hover:underline">Se con eventos inesperados</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 13</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">Pato</p>
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/Throwing_in_for_the_goal.jpg?raw=true" alt="Pato" class="rounded-lg shadow-md mx-auto">
+    </figure>
+  </div>
+</section>
 
 
 
