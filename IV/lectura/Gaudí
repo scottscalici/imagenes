@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Día 11 - 30 de septiembre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
 
+<!--Aviso o Anuncio-->
+
+
+
+
+<!--Día-->
+
+
+
+
+<!--Evaluación-->
+
+
+
+
+<!--Calentamiento-->
+
+
+
+
+
+<!--Estructura-->
+
+
+
+
+<!--Curiosidad-->
+
+
+
+
+<!--Cultura-->
+
+
+
+
+<!--Práctica de verbos-->
+
+
+
+
+<!--Práctica general-->
+<section class="bg-white shadow rounded-xl border-l-4 border-amber-500 overflow-hidden">
+  <h2 class="text-amber-600 font-semibold text-lg px-4 pt-4">La arquitectura de Gaudí en Barcelona: la Sagrada Familia y el Park Güell</h2>
+  <div class="p-4 text-gray-800 space-y-4"><p class="whitespace-pre-line">(1) Antoni Gaudí, arquitecto catalán nacido en 1852, es uno de los grandes representantes
+(2) del modernismo europeo. Su estilo único, caracterizado por la combinación de formas naturales,
+(3) innovaciones técnicas y simbolismo religioso, ha dejado una huella imborrable en la ciudad
+(4) de Barcelona. Dos de sus obras más conocidas, la Sagrada Familia y el
+(5) Park Güell, atraen cada año a millones de visitantes de todo el mundo.
+(6) La Sagrada Familia comenzó a construirse en 1882 y, más de un siglo
+(7) después, todavía no ha sido terminada. El templo está diseñado con una fuerte
+(8) inspiración gótica, aunque Gaudí incorporó elementos innovadores inspirados en la naturaleza, como columnas
+(9) que recuerdan árboles o fachadas que parecen montañas talladas por el viento. Cada
+(10) torre y cada puerta tienen un simbolismo religioso específico, lo que convierte a
+(11) la basílica en una auténtica catequesis de piedra.
+(12) A lo largo de su vida, Gaudí se dedicó casi por completo a
+(13) este proyecto, consciente de que probablemente no llegaría a verlo finalizado. Hoy en
+(14) día, la construcción continúa gracias a las donaciones de visitantes y al esfuerzo
+(15) de numerosos arquitectos e ingenieros que intentan respetar las ideas originales del maestro.
+(16) Aunque algunos críticos señalan que las obras actuales se alejan del diseño de
+(17) Gaudí, la Sagrada Familia sigue siendo un icono mundial.
+(18) Por otro lado, el Park Güell, iniciado en 1900, nació con la intención
+(19) de crear una ciudad-jardín para familias adineradas. El proyecto, sin embargo, no tuvo
+(20) éxito y terminó convirtiéndose en un parque público lleno de color y fantasía.
+(21) Sus famosos mosaicos de 'trencadís' —piezas de cerámica rota— cubren bancos, fuentes y
+(22) esculturas. La plaza central, con su banco ondulado, está diseñada para adaptarse a
+(23) la forma del cuerpo humano, lo que une estética y comodidad.
+(24) El parque refleja la creatividad lúdica de Gaudí y su deseo de integrar
+(25) arte y naturaleza en un mismo espacio. Los visitantes pasean por senderos rodeados
+(26) de columnas que parecen troncos de árboles y por escalinatas custodiadas por el
+(27) famoso dragón de colores. Estas formas fantásticas no solo atraen a turistas, sino
+(28) que también muestran la visión de un arquitecto que entendía la arquitectura como
+(29) un puente entre el hombre y el entorno natural.
+(30) Tanto la Sagrada Familia como el Park Güell han sido declarados Patrimonio de
+(31) la Humanidad por la UNESCO y se consideran tesoros culturales de España. Más
+(32) allá de su belleza artística, estas obras son también un motor económico para
+(33) Barcelona, pues generan empleo, turismo y un orgullo colectivo en la identidad catalana.
+(34) En ellas se combinan arte, religión, historia y naturaleza, confirmando a Gaudí como
+(35) un genio universal de la arquitectura.
+
+ 
+1. Elige las cuatro frases verdaderas (líneas 3–25). 
+A. La Sagrada Familia es un edificio moderno que Gaudí terminó en 1890. 
+B. Gaudí se inspiró en la naturaleza para diseñar elementos de la Sagrada Familia. 
+C. Las torres y las puertas de la Sagrada Familia tienen significados simbólicos. 
+D. El Park Güell fue concebido como una ciudad-jardín para familias ricas. 
+E. El proyecto del Park Güell tuvo un gran éxito inicial y se convirtió en una propiedad privada. 
+F. Los mosaicos de cerámica rota decoran muchos espacios del Park Güell. 
+G. La construcción de la Sagrada Familia se detuvo completamente tras la muerte de Gaudí por falta de fondos. H. El diseño del banco ondulado del Park Güell es puramente estético y no considera la comodidad humana.
+2. ¿Qué elementos de la naturaleza se mencionan en la construcción de la Sagrada Familia? (líneas 5–9)
+3. ¿Cómo se financia hoy en día la construcción de la Sagrada Familia? (líneas 10–13)
+4. ¿Qué significan estas palabras del texto?
+A. enseñanza religiosa (línea 11) 
+B. aportaciones voluntarios (línea 14) 
+C. diversión/recreativa (línea 24) 
+D. satisfacción (línea 33) 
+8. ¿Qué dos aspectos se combinan en la obra de Gaudí según el texto? (líneas 20–25)
+9. ¿Qué beneficios aportan la Sagrada Familia y el Park Güell a Barcelona además de su valor artístico? (líneas 32–33)
+10. El estilo del autor en el texto es… 
+A. persuasivo 
+B. satírico 
+C. motivador 
+D. informativo</p></div>
+</section>
+
+
+
+<!--Video-->
+
+
+
+
+<!--Conversacion-->
+
+
+
+
+<!--Información adicional-->
+
+
+  </div>
+
+ 
+  <!-- Shared JavaScript -->
+  <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
