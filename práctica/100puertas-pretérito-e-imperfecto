@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Puertas: Pretérito vs Imperfecto</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 20px;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .door-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .door-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+
+        .sentence {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .blank {
+            background: #FFD700;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: linear-gradient(145deg, #ff6b6b, #ee5a52);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            animation: correctPulse 0.6s ease;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(145deg, #f44336, #d32f2f);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback.correct {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4CAF50;
+        }
+
+        .feedback.incorrect {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #f44336;
+        }
+
+        .next-btn {
+            background: linear-gradient(145deg, #2196F3, #1976D2);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .completion {
+            background: linear-gradient(145deg, #FFD700, #FFA000);
+            color: #333;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        .completion h2 {
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .restart-btn {
+            background: linear-gradient(145deg, #9C27B0, #7B1FA2);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .option-btn {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🚪 100 Puertas: Pretérito vs Imperfecto</h1>
+            <div style="margin-bottom: 15px; font-size: 1.2rem; font-weight: bold;">
+                <span id="roundTitle">Ronda 1: Conceptos Básicos</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 1%">
+                    Puerta <span id="currentDoor">1</span> de 100
+                </div>
+            </div>
+        </div>
+
+        <div id="gameArea">
+            <div class="door-container">
+                <div class="door-number">🚪 Puerta <span id="doorNumber">1</span></div>
+                <div class="sentence" id="sentence">
+                    Cuando era niño, siempre <span class="blank">_____</span> al parque los domingos.
+                </div>
+                <div class="options">
+                    <button class="option-btn" onclick="selectAnswer('iba', true)">iba (imperfecto)</button>
+                    <button class="option-btn" onclick="selectAnswer('fui', false)">fui (pretérito)</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+
+        <div id="completionArea" style="display: none;">
+            <div class="completion">
+                <h2>🎉 ¡Felicidades!</h2>
+                <p>Has completado las 10 rondas del juego (100 puertas total).</p>
+                <p>Puntuación final: <span id="finalScore">0</span>/100</p>
+                <p style="margin-top: 15px;">
+                    <strong>Ronda 1:</strong> Conceptos básicos de pretérito vs imperfecto<br>
+                    <strong>Ronda 2:</strong> Uso del imperfecto para información de fondo<br>
+                    <strong>Ronda 3:</strong> Contraste entre fondo y acción principal<br>
+                    <strong>Ronda 4:</strong> Acciones en progreso vs acciones completadas<br>
+                    <strong>Ronda 5:</strong> Estados pasados vs inicio y fin de acciones<br>
+                    <strong>Ronda 6:</strong> Procesos mentales y estados psicológicos<br>
+                    <strong>Ronda 7:</strong> Secuencia de eventos vs acciones habituales<br>
+                    <strong>Ronda 8:</strong> Verbos especiales (poder, querer, saber, conocer)<br>
+                    <strong>Ronda 9:</strong> Práctica mixta - Combinando todos los conceptos<br>
+                    <strong>Ronda 10:</strong> Desafío final - Dominio completo
+                </p>
+                <button class="restart-btn" onclick="restartGame()">🔄 Jugar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentDoorIndex = 0;
+        let score = 0;
+        let answered = false;
+        let currentRound = 1;
+        let totalRounds = 10;
+
+        const round1Doors = [
+            {
+                sentence: "Cuando era niño, siempre <span class='blank'>_____</span> al parque los domingos.",
+                options: [
+                    { text: "iba (imperfecto)", value: "iba", correct: true },
+                    { text: "fui (pretérito)", value: "fui", correct: false }
+                ],
+                explanation: "¡Correcto! 'Iba' es imperfecto porque describe una acción habitual en el pasado."
+            },
+            {
+                sentence: "Ayer <span class='blank'>_____</span> a mi abuela en el mercado.",
+                options: [
+                    { text: "veía (imperfecto)", value: "veía", correct: false },
+                    { text: "vi (pretérito)", value: "vi", correct: true }
+                ],
+                explanation: "¡Correcto! 'Vi' es pretérito porque es una acción específica que ocurrió ayer."
+            },
+            {
+                sentence: "Mientras <span class='blank'>_____</span> la televisión, sonó el teléfono.",
+                options: [
+                    { text: "miraba (imperfecto)", value: "miraba", correct: true },
+                    { text: "miré (pretérito)", value: "miré", correct: false }
+                ],
+                explanation: "¡Correcto! 'Miraba' es imperfecto porque describe una acción en progreso."
+            },
+            {
+                sentence: "El año pasado <span class='blank'>_____</span> a España por primera vez.",
+                options: [
+                    { text: "viajaba (imperfecto)", value: "viajaba", correct: false },
+                    { text: "viajé (pretérito)", value: "viajé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Viajé' es pretérito porque es una acción completada en un tiempo específico."
+            },
+            {
+                sentence: "Todos los veranos <span class='blank'>_____</span> en la playa con mis primos.",
+                options: [
+                    { text: "jugué (pretérito)", value: "jugué", correct: false },
+                    { text: "jugaba (imperfecto)", value: "jugaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Jugaba' es imperfecto porque describe una acción repetida en el pasado."
+            },
+            {
+                sentence: "De repente, <span class='blank'>_____</span> un ruido extraño en el jardín.",
+                options: [
+                    { text: "escuché (pretérito)", value: "escuché", correct: true },
+                    { text: "escuchaba (imperfecto)", value: "escuchaba", correct: false }
+                ],
+                explanation: "¡Correcto! 'Escuché' es pretérito porque 'de repente' indica una acción súbita y específica."
+            },
+            {
+                sentence: "Mi hermana <span class='blank'>_____</span> muy tímida cuando era pequeña.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fue (pretérito)", value: "fue", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe una característica permanente en el pasado."
+            },
+            {
+                sentence: "Anoche <span class='blank'>_____</span> una película muy interesante.",
+                options: [
+                    { text: "veía (imperfecto)", value: "veía", correct: false },
+                    { text: "vi (pretérito)", value: "vi", correct: true }
+                ],
+                explanation: "¡Correcto! 'Vi' es pretérito porque 'anoche' especifica un momento concreto del pasado."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> 15 años, aprendí a manejar.",
+                options: [
+                    { text: "tuve (pretérito)", value: "tuve", correct: false },
+                    { text: "tenía (imperfecto)", value: "tenía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Tenía' es imperfecto porque expresa la edad como contexto de otra acción."
+            },
+            {
+                sentence: "El lunes pasado <span class='blank'>_____</span> mi examen final de matemáticas.",
+                options: [
+                    { text: "presentaba (imperfecto)", value: "presentaba", correct: false },
+                    { text: "presenté (pretérito)", value: "presenté", correct: true }
+                ],
+                explanation: "¡Correcto! 'Presenté' es pretérito porque es una acción específica en un día concreto."
+            }
+        ];
+
+        const round2Doors = [
+            {
+                sentence: "Era una noche muy oscura y <span class='blank'>_____</span> mucho viento.",
+                options: [
+                    { text: "hizo (pretérito)", value: "hizo", correct: false },
+                    { text: "hacía (imperfecto)", value: "hacía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Hacía' es imperfecto porque describe las condiciones atmosféricas como información de fondo."
+            },
+            {
+                sentence: "La casa <span class='blank'>_____</span> muy antigua y tenía muchas habitaciones.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fue (pretérito)", value: "fue", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe las características físicas de la casa como información de fondo."
+            },
+            {
+                sentence: "Mientras mis padres <span class='blank'>_____</span> en la cocina, yo estudié para el examen.",
+                options: [
+                    { text: "cocinaron (pretérito)", value: "cocinaron", correct: false },
+                    { text: "cocinaban (imperfecto)", value: "cocinaban", correct: true }
+                ],
+                explanation: "¡Correcto! 'Cocinaban' es imperfecto porque proporciona el contexto de lo que pasaba mientras yo estudiaba."
+            },
+            {
+                sentence: "El pueblo <span class='blank'>_____</span> situado entre montañas y tenía un río cristalino.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true },
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe la ubicación del pueblo como información descriptiva de fondo."
+            },
+            {
+                sentence: "En aquella época, la gente no <span class='blank'>_____</span> teléfonos móviles.",
+                options: [
+                    { text: "tuvo (pretérito)", value: "tuvo", correct: false },
+                    { text: "tenía (imperfecto)", value: "tenía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Tenía' es imperfecto porque describe las condiciones generales de una época pasada."
+            },
+            {
+                sentence: "Mi abuela <span class='blank'>_____</span> cuentos maravillosos y siempre nos hacía reír.",
+                options: [
+                    { text: "contaba (imperfecto)", value: "contaba", correct: true },
+                    { text: "contó (pretérito)", value: "contó", correct: false }
+                ],
+                explanation: "¡Correcto! 'Contaba' es imperfecto porque describe una característica habitual de la abuela como información de fondo."
+            },
+            {
+                sentence: "El restaurante <span class='blank'>_____</span> lleno de gente cuando llegamos.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true },
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe el estado del restaurante como contexto de nuestra llegada."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> estudiante, vivía cerca de la universidad.",
+                options: [
+                    { text: "fui (pretérito)", value: "fui", correct: false },
+                    { text: "era (imperfecto)", value: "era", correct: true }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe mi condición de estudiante como información de contexto."
+            },
+            {
+                sentence: "La música <span class='blank'>_____</span> muy alta y no podíamos conversar.",
+                options: [
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false },
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe las condiciones ambientales que afectaban nuestra conversación."
+            },
+            {
+                sentence: "En mi infancia, el barrio <span class='blank'>_____</span> muy tranquilo y seguro.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fue (pretérito)", value: "fue", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe las características del barrio durante un período prolongado del pasado."
+            }
+        ];
+
+        const round3Doors = [
+            {
+                sentence: "Cuando <span class='blank'>_____</span> las 8 de la noche, decidí salir a caminar.",
+                options: [
+                    { text: "eran (imperfecto)", value: "eran", correct: true },
+                    { text: "fueron (pretérito)", value: "fueron", correct: false }
+                ],
+                explanation: "¡Correcto! 'Eran' es imperfecto porque la hora proporciona el contexto temporal de fondo para la acción principal (decidí salir)."
+            },
+            {
+                sentence: "El cielo <span class='blank'>_____</span> nublado cuando empezó a llover.",
+                options: [
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false },
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe las condiciones del cielo como fondo, mientras que 'empezó' es la acción principal."
+            },
+            {
+                sentence: "Mientras los niños <span class='blank'>_____</span> en el parque, sus madres conversaron.",
+                options: [
+                    { text: "jugaron (pretérito)", value: "jugaron", correct: false },
+                    { text: "jugaban (imperfecto)", value: "jugaban", correct: true }
+                ],
+                explanation: "¡Correcto! 'Jugaban' es imperfecto porque es la acción de fondo que ocurría mientras las madres conversaron (acción principal)."
+            },
+            {
+                sentence: "La tienda <span class='blank'>_____</span> cerrada, así que fuimos a otra.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true },
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe el estado de la tienda como información de fondo que explica por qué fuimos a otra."
+            },
+            {
+                sentence: "Como <span class='blank'>_____</span> mucho calor, abrí todas las ventanas.",
+                options: [
+                    { text: "hizo (pretérito)", value: "hizo", correct: false },
+                    { text: "hacía (imperfecto)", value: "hacía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Hacía' es imperfecto porque el calor es la condición de fondo que motivó la acción de abrir las ventanas."
+            },
+            {
+                sentence: "Mis hermanos <span class='blank'>_____</span> la televisión cuando llegué a casa.",
+                options: [
+                    { text: "vieron (pretérito)", value: "vieron", correct: false },
+                    { text: "veían (imperfecto)", value: "veían", correct: true }
+                ],
+                explanation: "¡Correcto! 'Veían' es imperfecto porque describe lo que estaba pasando como fondo cuando ocurrió mi llegada."
+            },
+            {
+                sentence: "El profesor <span class='blank'>_____</span> muy serio y nunca sonreía en clase.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fue (pretérito)", value: "fue", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe las características permanentes del profesor como información de fondo."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> pequeña, mi familia vivía en el campo.",
+                options: [
+                    { text: "fui (pretérito)", value: "fui", correct: false },
+                    { text: "era (imperfecto)", value: "era", correct: true }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque ser pequeña es el contexto temporal de fondo durante el cual vivíamos en el campo."
+            },
+            {
+                sentence: "La música <span class='blank'>_____</span> tan fuerte que tuve que gritar para hablar.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true },
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque el volumen de la música es la condición de fondo que causó que tuviera que gritar."
+            },
+            {
+                sentence: "Como no <span class='blank'>_____</span> dinero suficiente, pedí un préstamo al banco.",
+                options: [
+                    { text: "tuve (pretérito)", value: "tuve", correct: false },
+                    { text: "tenía (imperfecto)", value: "tenía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Tenía' es imperfecto porque la falta de dinero es la situación de fondo que motivó pedir el préstamo."
+            }
+        ];
+
+        const round4Doors = [
+            {
+                sentence: "Ayer a las 3 de la tarde <span class='blank'>_____</span> mis tareas cuando me llamaste.",
+                options: [
+                    { text: "hice (pretérito)", value: "hice", correct: false },
+                    { text: "hacía (imperfecto)", value: "hacía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Hacía' es imperfecto porque la acción estaba en progreso cuando ocurrió la llamada."
+            },
+            {
+                sentence: "Anoche <span class='blank'>_____</span> toda la novela de una vez.",
+                options: [
+                    { text: "leía (imperfecto)", value: "leía", correct: false },
+                    { text: "leí (pretérito)", value: "leí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Leí' es pretérito porque la acción se completó totalmente anoche."
+            },
+            {
+                sentence: "Cuando llegaste, yo <span class='blank'>_____</span> la cena en la cocina.",
+                options: [
+                    { text: "preparaba (imperfecto)", value: "preparaba", correct: true },
+                    { text: "preparé (pretérito)", value: "preparé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Preparaba' es imperfecto porque la acción estaba en progreso en el momento de tu llegada."
+            },
+            {
+                sentence: "El sábado pasado <span class='blank'>_____</span> todo el jardín en dos horas.",
+                options: [
+                    { text: "limpiaba (imperfecto)", value: "limpiaba", correct: false },
+                    { text: "limpié (pretérito)", value: "limpié", correct: true }
+                ],
+                explanation: "¡Correcto! 'Limpié' es pretérito porque la acción se completó en un tiempo específico (dos horas)."
+            },
+            {
+                sentence: "Durante toda la mañana <span class='blank'>_____</span> en mi proyecto sin parar.",
+                options: [
+                    { text: "trabajé (pretérito)", value: "trabajé", correct: false },
+                    { text: "trabajaba (imperfecto)", value: "trabajaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Trabajaba' es imperfecto porque describe una acción continua durante un período prolongado."
+            },
+            {
+                sentence: "Finalmente <span class='blank'>_____</span> el problema después de tres intentos.",
+                options: [
+                    { text: "resolvía (imperfecto)", value: "resolvía", correct: false },
+                    { text: "resolví (pretérito)", value: "resolví", correct: true }
+                ],
+                explanation: "¡Correcto! 'Resolví' es pretérito porque 'finalmente' indica que la acción se completó exitosamente."
+            },
+            {
+                sentence: "Mientras tú <span class='blank'>_____</span> el auto, yo organicé la casa.",
+                options: [
+                    { text: "lavabas (imperfecto)", value: "lavabas", correct: true },
+                    { text: "lavaste (pretérito)", value: "lavaste", correct: false }
+                ],
+                explanation: "¡Correcto! 'Lavabas' es imperfecto porque describe una acción en progreso simultánea a otra acción completada."
+            },
+            {
+                sentence: "Ayer por la noche <span class='blank'>_____</span> todas las ventanas antes de dormir.",
+                options: [
+                    { text: "cerraba (imperfecto)", value: "cerraba", correct: false },
+                    { text: "cerré (pretérito)", value: "cerré", correct: true }
+                ],
+                explanation: "¡Correcto! 'Cerré' es pretérito porque es una acción que se completó antes de otra acción (dormir)."
+            },
+            {
+                sentence: "Durante el viaje <span class='blank'>_____</span> fotos constantemente del paisaje.",
+                options: [
+                    { text: "tomaba (imperfecto)", value: "tomaba", correct: true },
+                    { text: "tomé (pretérito)", value: "tomé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Tomaba' es imperfecto porque describe una acción repetida y continua durante el viaje."
+            },
+            {
+                sentence: "Por fin <span class='blank'>_____</span> mi tesis después de seis meses de trabajo.",
+                options: [
+                    { text: "terminaba (imperfecto)", value: "terminaba", correct: false },
+                    { text: "terminé (pretérito)", value: "terminé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Terminé' es pretérito porque 'por fin' indica la finalización exitosa de una acción prolongada."
+            }
+        ];
+
+        const round5Doors = [
+            {
+                sentence: "Mi abuelo <span class='blank'>_____</span> muy sabio y siempre daba buenos consejos.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fue (pretérito)", value: "fue", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe un estado permanente de la personalidad del abuelo."
+            },
+            {
+                sentence: "A los 18 años <span class='blank'>_____</span> médico y trabajé en hospitales por 30 años.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: false },
+                    { text: "me hice (pretérito)", value: "me hice", correct: true }
+                ],
+                explanation: "¡Correcto! 'Me hice' es pretérito porque marca el momento específico cuando comenzó a ser médico."
+            },
+            {
+                sentence: "Cuando era joven, <span class='blank'>_____</span> muy tímido con las personas desconocidas.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fui (pretérito)", value: "fui", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe un estado de carácter durante un período prolongado."
+            },
+            {
+                sentence: "El día de su graduación <span class='blank'>_____</span> muy feliz y orgulloso.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: false },
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: true }
+                ],
+                explanation: "¡Correcto! 'Estuvo' es pretérito porque describe un estado emocional en un momento específico y limitado."
+            },
+            {
+                sentence: "Durante toda su infancia <span class='blank'>_____</span> una niña muy curiosa.",
+                options: [
+                    { text: "fue (pretérito)", value: "fue", correct: false },
+                    { text: "era (imperfecto)", value: "era", correct: true }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe una característica continua durante toda la infancia."
+            },
+            {
+                sentence: "Después del accidente <span class='blank'>_____</span> a caminar con dificultad.",
+                options: [
+                    { text: "empezaba (imperfecto)", value: "empezaba", correct: false },
+                    { text: "empezó (pretérito)", value: "empezó", correct: true }
+                ],
+                explanation: "¡Correcto! 'Empezó' es pretérito porque marca el inicio de una nueva condición después del accidente."
+            },
+            {
+                sentence: "Mi hermana <span class='blank'>_____</span> enferma durante todo el invierno pasado.",
+                options: [
+                    { text: "estuvo (pretérito)", value: "estuvo", correct: true },
+                    { text: "estaba (imperfecto)", value: "estaba", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estuvo' es pretérito porque la enfermedad tuvo un inicio y fin definidos (todo el invierno)."
+            },
+            {
+                sentence: "En aquella época <span class='blank'>_____</span> soltero y vivía con mis padres.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: true },
+                    { text: "fui (pretérito)", value: "fui", correct: false }
+                ],
+                explanation: "¡Correcto! 'Era' es imperfecto porque describe un estado civil durante un período indefinido del pasado."
+            },
+            {
+                sentence: "A los 25 años <span class='blank'>_____</span> a ser vegetariano y nunca más comí carne.",
+                options: [
+                    { text: "era (imperfecto)", value: "era", correct: false },
+                    { text: "decidí (pretérito)", value: "decidí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Decidí' es pretérito porque marca el momento específico cuando comenzó el cambio de hábitos."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> de llorar, se sintió mucho mejor.",
+                options: [
+                    { text: "terminaba (imperfecto)", value: "terminaba", correct: false },
+                    { text: "terminó (pretérito)", value: "terminó", correct: true }
+                ],
+                explanation: "¡Correcto! 'Terminó' es pretérito porque marca el final específico de la acción de llorar."
+            }
+        ];
+
+        const round6Doors = [
+            {
+                sentence: "Cuando era niño, siempre <span class='blank'>_____</span> que los monstruos vivían debajo de mi cama.",
+                options: [
+                    { text: "pensé (pretérito)", value: "pensé", correct: false },
+                    { text: "pensaba (imperfecto)", value: "pensaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Pensaba' es imperfecto porque describe un proceso mental habitual y continuo durante la infancia."
+            },
+            {
+                sentence: "Durante toda la conferencia <span class='blank'>_____</span> en las vacaciones de verano.",
+                options: [
+                    { text: "soñé (pretérito)", value: "soñé", correct: false },
+                    { text: "soñaba (imperfecto)", value: "soñaba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Soñaba' es imperfecto porque describe un proceso mental continuo durante toda la conferencia."
+            },
+            {
+                sentence: "De repente <span class='blank'>_____</span> la solución al problema matemático.",
+                options: [
+                    { text: "comprendía (imperfecto)", value: "comprendía", correct: false },
+                    { text: "comprendí (pretérito)", value: "comprendí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Comprendí' es pretérito porque 'de repente' indica un momento específico de comprensión súbita."
+            },
+            {
+                sentence: "Mientras estudiaba, <span class='blank'>_____</span> constantemente en mi familia.",
+                options: [
+                    { text: "pensaba (imperfecto)", value: "pensaba", correct: true },
+                    { text: "pensé (pretérito)", value: "pensé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Pensaba' es imperfecto porque describe un proceso mental continuo que ocurría mientras estudiaba."
+            },
+            {
+                sentence: "En aquella época <span class='blank'>_____</span> que la vida era muy injusta.",
+                options: [
+                    { text: "creía (imperfecto)", value: "creía", correct: true },
+                    { text: "creí (pretérito)", value: "creí", correct: false }
+                ],
+                explanation: "¡Correcto! 'Creía' es imperfecto porque describe una creencia mental que se mantenía durante un período prolongado."
+            },
+            {
+                sentence: "Anoche <span class='blank'>_____</span> con mi profesor de la universidad.",
+                options: [
+                    { text: "soñaba (imperfecto)", value: "soñaba", correct: false },
+                    { text: "soñé (pretérito)", value: "soñé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Soñé' es pretérito porque 'anoche' especifica un momento concreto cuando ocurrió el sueño."
+            },
+            {
+                sentence: "Durante mi adolescencia <span class='blank'>_____</span> que nadie me comprendía.",
+                options: [
+                    { text: "sentía (imperfecto)", value: "sentía", correct: true },
+                    { text: "sentí (pretérito)", value: "sentí", correct: false }
+                ],
+                explanation: "¡Correcto! 'Sentía' es imperfecto porque describe un sentimiento mental continuo durante toda la adolescencia."
+            },
+            {
+                sentence: "Cuando vi la película, inmediatamente <span class='blank'>_____</span> en mi infancia.",
+                options: [
+                    { text: "recordaba (imperfecto)", value: "recordaba", correct: false },
+                    { text: "recordé (pretérito)", value: "recordé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Recordé' es pretérito porque 'inmediatamente' indica un momento específico cuando surgió el recuerdo."
+            },
+            {
+                sentence: "Todos los días <span class='blank'>_____</span> en lo que haría cuando fuera mayor.",
+                options: [
+                    { text: "reflexionaba (imperfecto)", value: "reflexionaba", correct: true },
+                    { text: "reflexioné (pretérito)", value: "reflexioné", correct: false }
+                ],
+                explanation: "¡Correcto! 'Reflexionaba' es imperfecto porque describe un proceso mental habitual que ocurría todos los días."
+            },
+            {
+                sentence: "Mientras <span class='blank'>_____</span> la respuesta, el profesor me hizo otra pregunta.",
+                options: [
+                    { text: "recordaba (imperfecto)", value: "recordaba", correct: true },
+                    { text: "recordé (pretérito)", value: "recordé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Recordaba' es imperfecto porque describe un proceso mental en progreso cuando ocurrió la interrupción."
+            }
+        ];
+
+        const round7Doors = [
+            {
+                sentence: "Primero <span class='blank'>_____</span> el desayuno, luego me duché y finalmente salí de casa.",
+                options: [
+                    { text: "desayunaba (imperfecto)", value: "desayunaba", correct: false },
+                    { text: "desayuné (pretérito)", value: "desayuné", correct: true }
+                ],
+                explanation: "¡Correcto! 'Desayuné' es pretérito porque forma parte de una secuencia de eventos específicos que ocurrieron uno después del otro."
+            },
+            {
+                sentence: "Todos los domingos <span class='blank'>_____</span> a misa con mi familia.",
+                options: [
+                    { text: "fui (pretérito)", value: "fui", correct: false },
+                    { text: "iba (imperfecto)", value: "iba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Iba' es imperfecto porque describe una acción habitual que se repetía todos los domingos."
+            },
+            {
+                sentence: "Ayer <span class='blank'>_____</span> temprano, corrí en el parque y después trabajé todo el día.",
+                options: [
+                    { text: "me levantaba (imperfecto)", value: "me levantaba", correct: false },
+                    { text: "me levanté (pretérito)", value: "me levanté", correct: true }
+                ],
+                explanation: "¡Correcto! 'Me levanté' es pretérito porque es el primer evento en una secuencia específica de acciones de ayer."
+            },
+            {
+                sentence: "Durante mi juventud <span class='blank'>_____</span> fútbol todos los sábados por la tarde.",
+                options: [
+                    { text: "jugaba (imperfecto)", value: "jugaba", correct: true },
+                    { text: "jugué (pretérito)", value: "jugué", correct: false }
+                ],
+                explanation: "¡Correcto! 'Jugaba' es imperfecto porque describe una actividad habitual que se repetía durante un período prolongado."
+            },
+            {
+                sentence: "El lunes <span class='blank'>_____</span> al banco, pagué las cuentas y compré comida para la semana.",
+                options: [
+                    { text: "iba (imperfecto)", value: "iba", correct: false },
+                    { text: "fui (pretérito)", value: "fui", correct: true }
+                ],
+                explanation: "¡Correcto! 'Fui' es pretérito porque es parte de una serie de acciones específicas que se completaron el lunes."
+            },
+            {
+                sentence: "En mi infancia, cada verano <span class='blank'>_____</span> a la playa con mis abuelos.",
+                options: [
+                    { text: "viajaba (imperfecto)", value: "viajaba", correct: true },
+                    { text: "viajé (pretérito)", value: "viajé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Viajaba' es imperfecto porque describe una costumbre repetida cada verano durante la infancia."
+            },
+            {
+                sentence: "Anoche <span class='blank'>_____</span> la cena, lavé los platos y me acosté a las 10.",
+                options: [
+                    { text: "preparaba (imperfecto)", value: "preparaba", correct: false },
+                    { text: "preparé (pretérito)", value: "preparé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Preparé' es pretérito porque forma parte de una secuencia ordenada de eventos específicos de anoche."
+            },
+            {
+                sentence: "Cuando vivía en París, <span class='blank'>_____</span> por los Campos Elíseos todas las tardes.",
+                options: [
+                    { text: "caminaba (imperfecto)", value: "caminaba", correct: true },
+                    { text: "caminé (pretérito)", value: "caminé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Caminaba' es imperfecto porque describe una rutina habitual durante el tiempo que vivía en París."
+            },
+            {
+                sentence: "El sábado <span class='blank'>_____</span> la casa, organicé el garaje y pinté la cerca del jardín.",
+                options: [
+                    { text: "limpiaba (imperfecto)", value: "limpiaba", correct: false },
+                    { text: "limpié (pretérito)", value: "limpié", correct: true }
+                ],
+                explanation: "¡Correcto! 'Limpié' es pretérito porque es el primer evento en una serie de tareas específicas completadas el sábado."
+            },
+            {
+                sentence: "En aquella época, los fines de semana <span class='blank'>_____</span> películas en el cine del barrio.",
+                options: [
+                    { text: "veía (imperfecto)", value: "veía", correct: true },
+                    { text: "vi (pretérito)", value: "vi", correct: false }
+                ],
+                explanation: "¡Correcto! 'Veía' es imperfecto porque describe una actividad habitual que se repetía los fines de semana en aquella época."
+            }
+        ];
+
+        const round8Doors = [
+            {
+                sentence: "Cuando era niño, no <span class='blank'>_____</span> nadar y tenía miedo del agua.",
+                options: [
+                    { text: "pude (pretérito)", value: "pude", correct: false },
+                    { text: "podía (imperfecto)", value: "podía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Podía' es imperfecto porque describe una habilidad general que no tenía durante la infancia."
+            },
+            {
+                sentence: "Ayer intenté abrir la puerta pero no <span class='blank'>_____</span> porque estaba trabada.",
+                options: [
+                    { text: "podía (imperfecto)", value: "podía", correct: false },
+                    { text: "pude (pretérito)", value: "pude", correct: true }
+                ],
+                explanation: "¡Correcto! 'Pude' es pretérito porque se refiere a un intento específico que falló ayer."
+            },
+            {
+                sentence: "Durante mi juventud <span class='blank'>_____</span> ser astronauta y estudié ciencias.",
+                options: [
+                    { text: "quería (imperfecto)", value: "quería", correct: true },
+                    { text: "quise (pretérito)", value: "quise", correct: false }
+                ],
+                explanation: "¡Correcto! 'Quería' es imperfecto porque describe un deseo continuo durante un período prolongado."
+            },
+            {
+                sentence: "Cuando me ofrecieron el trabajo, no <span class='blank'>_____</span> aceptarlo y lo rechacé.",
+                options: [
+                    { text: "quería (imperfecto)", value: "quería", correct: false },
+                    { text: "quise (pretérito)", value: "quise", correct: true }
+                ],
+                explanation: "¡Correcto! 'Quise' es pretérito porque se refiere a una decisión específica de rechazar la oferta."
+            },
+            {
+                sentence: "En la universidad ya <span class='blank'>_____</span> hablar francés perfectamente.",
+                options: [
+                    { text: "sabía (imperfecto)", value: "sabía", correct: true },
+                    { text: "supe (pretérito)", value: "supe", correct: false }
+                ],
+                explanation: "¡Correcto! 'Sabía' es imperfecto porque describe un conocimiento o habilidad que ya poseía."
+            },
+            {
+                sentence: "Ayer <span class='blank'>_____</span> que mi hermana está embarazada. ¡Qué sorpresa!",
+                options: [
+                    { text: "sabía (imperfecto)", value: "sabía", correct: false },
+                    { text: "supe (pretérito)", value: "supe", correct: true }
+                ],
+                explanation: "¡Correcto! 'Supe' es pretérito porque se refiere al momento específico cuando me enteré de la noticia."
+            },
+            {
+                sentence: "Cuando vivía en Madrid, <span class='blank'>_____</span> a muchos artistas famosos.",
+                options: [
+                    { text: "conocía (imperfecto)", value: "conocía", correct: true },
+                    { text: "conocí (pretérito)", value: "conocí", correct: false }
+                ],
+                explanation: "¡Correcto! 'Conocía' es imperfecto porque describe relaciones que existían durante el tiempo que vivía allí."
+            },
+            {
+                sentence: "En la fiesta de anoche <span class='blank'>_____</span> a la hermana de Carlos.",
+                options: [
+                    { text: "conocía (imperfecto)", value: "conocía", correct: false },
+                    { text: "conocí (pretérito)", value: "conocí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Conocí' es pretérito porque se refiere al momento específico del primer encuentro."
+            },
+            {
+                sentence: "De pequeño no <span class='blank'>_____</span> comer verduras y siempre las dejaba en el plato.",
+                options: [
+                    { text: "quise (pretérito)", value: "quise", correct: false },
+                    { text: "quería (imperfecto)", value: "quería", correct: true }
+                ],
+                explanation: "¡Correcto! 'Quería' es imperfecto porque describe una actitud general y continua durante la infancia."
+            },
+            {
+                sentence: "Finalmente ayer <span class='blank'>_____</span> resolver el problema que me tenía confundido.",
+                options: [
+                    { text: "podía (imperfecto)", value: "podía", correct: false },
+                    { text: "pude (pretérito)", value: "pude", correct: true }
+                ],
+                explanation: "¡Correcto! 'Pude' es pretérito porque se refiere al momento específico cuando logré resolver el problema."
+            }
+        ];
+
+        const round9Doors = [
+            {
+                sentence: "Mientras <span class='blank'>_____</span> en el café, de repente recordé que tenía una cita importante.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: true },
+                    { text: "estuve (pretérito)", value: "estuve", correct: false }
+                ],
+                explanation: "¡Correcto! 'Estaba' es imperfecto porque describe la situación de fondo cuando ocurrió el recuerdo súbito."
+            },
+            {
+                sentence: "Cuando era estudiante, no <span class='blank'>_____</span> cocinar y siempre comía en restaurantes.",
+                options: [
+                    { text: "supe (pretérito)", value: "supe", correct: false },
+                    { text: "sabía (imperfecto)", value: "sabía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Sabía' es imperfecto porque describe una habilidad que no poseía durante un período prolongado."
+            },
+            {
+                sentence: "Ayer <span class='blank'>_____</span> muy temprano, desayuné rápido y salí corriendo al trabajo.",
+                options: [
+                    { text: "me levantaba (imperfecto)", value: "me levantaba", correct: false },
+                    { text: "me levanté (pretérito)", value: "me levanté", correct: true }
+                ],
+                explanation: "¡Correcto! 'Me levanté' es pretérito porque es el primer evento en una secuencia específica de acciones de ayer."
+            },
+            {
+                sentence: "Durante toda mi infancia <span class='blank'>_____</span> que mi padre era el hombre más fuerte del mundo.",
+                options: [
+                    { text: "creía (imperfecto)", value: "creía", correct: true },
+                    { text: "creí (pretérito)", value: "creí", correct: false }
+                ],
+                explanation: "¡Correcto! 'Creía' es imperfecto porque describe un proceso mental continuo durante toda la infancia."
+            },
+            {
+                sentence: "El día de mi boda <span class='blank'>_____</span> tan nervioso que casi me desmayo.",
+                options: [
+                    { text: "estaba (imperfecto)", value: "estaba", correct: false },
+                    { text: "estuve (pretérito)", value: "estuve", correct: true }
+                ],
+                explanation: "¡Correcto! 'Estuve' es pretérito porque describe un estado emocional específico en un día concreto y limitado."
+            },
+            {
+                sentence: "Como <span class='blank'>_____</span> mucho tráfico, decidimos tomar otra ruta.",
+                options: [
+                    { text: "había (imperfecto)", value: "había", correct: true },
+                    { text: "hubo (pretérito)", value: "hubo", correct: false }
+                ],
+                explanation: "¡Correcto! 'Había' es imperfecto porque el tráfico es la condición de fondo que motivó cambiar de ruta."
+            },
+            {
+                sentence: "En la reunión de anoche finalmente <span class='blank'>_____</span> a la nueva directora de la empresa.",
+                options: [
+                    { text: "conocía (imperfecto)", value: "conocía", correct: false },
+                    { text: "conocí (pretérito)", value: "conocí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Conocí' es pretérito porque se refiere al momento específico del primer encuentro."
+            },
+            {
+                sentence: "Todos los fines de semana <span class='blank'>_____</span> a visitar a mis abuelos en el pueblo.",
+                options: [
+                    { text: "fui (pretérito)", value: "fui", correct: false },
+                    { text: "iba (imperfecto)", value: "iba", correct: true }
+                ],
+                explanation: "¡Correcto! 'Iba' es imperfecto porque describe una acción habitual que se repetía todos los fines de semana."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> las 12 de la noche, apagué la televisión y me fui a dormir.",
+                options: [
+                    { text: "eran (imperfecto)", value: "eran", correct: true },
+                    { text: "fueron (pretérito)", value: "fueron", correct: false }
+                ],
+                explanation: "¡Correcto! 'Eran' es imperfecto porque la hora proporciona el contexto temporal para las acciones principales."
+            },
+            {
+                sentence: "Después de tres horas de trabajo, por fin <span class='blank'>_____</span> arreglar la computadora.",
+                options: [
+                    { text: "podía (imperfecto)", value: "podía", correct: false },
+                    { text: "pude (pretérito)", value: "pude", correct: true }
+                ],
+                explanation: "¡Correcto! 'Pude' es pretérito porque se refiere al momento específico cuando logré completar la reparación."
+            }
+        ];
+
+        const round10Doors = [
+            {
+                sentence: "Era un día soleado y <span class='blank'>_____</span> mucho calor cuando decidí ir a la playa.",
+                options: [
+                    { text: "hizo (pretérito)", value: "hizo", correct: false },
+                    { text: "hacía (imperfecto)", value: "hacía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Hacía' es imperfecto porque describe las condiciones climáticas como información de fondo para la decisión."
+            },
+            {
+                sentence: "Durante mi adolescencia no <span class='blank'>_____</span> estudiar medicina, pero cambié de opinión en la universidad.",
+                options: [
+                    { text: "quería (imperfecto)", value: "quería", correct: true },
+                    { text: "quise (pretérito)", value: "quise", correct: false }
+                ],
+                explanation: "¡Correcto! 'Quería' es imperfecto porque describe un deseo continuo durante un período prolongado."
+            },
+            {
+                sentence: "Anoche <span class='blank'>_____</span> la cena, lavé los platos, estudié dos horas y me acosté tarde.",
+                options: [
+                    { text: "preparaba (imperfecto)", value: "preparaba", correct: false },
+                    { text: "preparé (pretérito)", value: "preparé", correct: true }
+                ],
+                explanation: "¡Correcto! 'Preparé' es pretérito porque forma parte de una secuencia ordenada de eventos específicos."
+            },
+            {
+                sentence: "Mientras mis hermanos <span class='blank'>_____</span> en el jardín, yo ayudé a mamá en la cocina.",
+                options: [
+                    { text: "jugaron (pretérito)", value: "jugaron", correct: false },
+                    { text: "jugaban (imperfecto)", value: "jugaban", correct: true }
+                ],
+                explanation: "¡Correcto! 'Jugaban' es imperfecto porque describe la acción de fondo que ocurría mientras yo ayudaba."
+            },
+            {
+                sentence: "En aquella época <span class='blank'>_____</span> que la vida era mucho más simple que ahora.",
+                options: [
+                    { text: "pensaba (imperfecto)", value: "pensaba", correct: true },
+                    { text: "pensé (pretérito)", value: "pensé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Pensaba' es imperfecto porque describe un proceso mental continuo durante aquella época."
+            },
+            {
+                sentence: "Ayer en la biblioteca <span class='blank'>_____</span> que mi libro favorito estaba disponible.",
+                options: [
+                    { text: "descubría (imperfecto)", value: "descubría", correct: false },
+                    { text: "descubrí (pretérito)", value: "descubrí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Descubrí' es pretérito porque se refiere al momento específico cuando me enteré de la disponibilidad."
+            },
+            {
+                sentence: "Cuando <span class='blank'>_____</span> 16 años, mis padres me regalaron mi primer auto.",
+                options: [
+                    { text: "cumplí (pretérito)", value: "cumplí", correct: false },
+                    { text: "cumplía (imperfecto)", value: "cumplía", correct: true }
+                ],
+                explanation: "¡Correcto! 'Cumplía' es imperfecto porque la edad proporciona el contexto temporal para el regalo."
+            },
+            {
+                sentence: "Durante todo el concierto <span class='blank'>_____</span> en lo feliz que me sentía.",
+                options: [
+                    { text: "pensaba (imperfecto)", value: "pensaba", correct: true },
+                    { text: "pensé (pretérito)", value: "pensé", correct: false }
+                ],
+                explanation: "¡Correcto! 'Pensaba' es imperfecto porque describe un proceso mental continuo durante todo el concierto."
+            },
+            {
+                sentence: "El mes pasado finalmente <span class='blank'>_____</span> a hablar italiano después de años de estudio.",
+                options: [
+                    { text: "aprendía (imperfecto)", value: "aprendía", correct: false },
+                    { text: "aprendí (pretérito)", value: "aprendí", correct: true }
+                ],
+                explanation: "¡Correcto! 'Aprendí' es pretérito porque 'finalmente' indica el momento específico cuando se completó el aprendizaje."
+            },
+            {
+                sentence: "Como no <span class='blank'>_____</span> la dirección exacta, llegué una hora tarde a la cita.",
+                options: [
+                    { text: "sabía (imperfecto)", value: "sabía", correct: true },
+                    { text: "supe (pretérito)", value: "supe", correct: false }
+                ],
+                explanation: "¡Correcto! 'Sabía' es imperfecto porque la falta de conocimiento es la condición de fondo que causó el retraso."
+            }
+        ];
+
+        let doors = round1Doors;
+
+        function loadDoor() {
+            const door = doors[currentDoorIndex];
+            document.getElementById('doorNumber').textContent = currentDoorIndex + 1;
+            document.getElementById('currentDoor').textContent = currentDoorIndex + 1;
+            document.getElementById('sentence').innerHTML = door.sentence;
+            
+            const optionsContainer = document.querySelector('.options');
+            optionsContainer.innerHTML = '';
+            
+            door.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option.text;
+                button.onclick = () => selectAnswer(option.value, option.correct, option.text);
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('feedback').className = 'feedback';
+            answered = false;
+            
+            // Update progress bar
+            const totalDoorsCompleted = (currentRound - 1) * 10 + currentDoorIndex + 1;
+            const progress = (totalDoorsCompleted / 100) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressBar').innerHTML = `Puerta <span id="currentDoor">${totalDoorsCompleted}</span> de 100`;
+        }
+
+        function selectAnswer(selectedValue, isCorrect, selectedText) {
+            if (answered) return;
+            answered = true;
+            
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach(btn => {
+                btn.style.pointerEvents = 'none';
+                if (btn.textContent === selectedText) {
+                    btn.className = isCorrect ? 'option-btn correct' : 'option-btn incorrect';
+                }
+            });
+            
+            if (isCorrect) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `
+                    <div>
+                        <div style="font-size: 1.2rem; margin-bottom: 10px;">🎉 ¡Excelente!</div>
+                        <div>${doors[currentDoorIndex].explanation}</div>
+                        <button class="next-btn" onclick="nextDoor()">Siguiente Puerta →</button>
+                    </div>
+                `;
+            } else {
+                feedback.className = 'feedback incorrect';
+                const correctOption = doors[currentDoorIndex].options.find(opt => opt.correct);
+                feedback.innerHTML = `
+                    <div>
+                        <div style="font-size: 1.2rem; margin-bottom: 10px;">❌ Incorrecto</div>
+                        <div>La respuesta correcta era: <strong>${correctOption.text}</strong></div>
+                        <div style="margin-top: 10px;">${doors[currentDoorIndex].explanation}</div>
+                        <button class="next-btn" onclick="nextDoor()">Siguiente Puerta →</button>
+                    </div>
+                `;
+            }
+        }
+
+        function nextDoor() {
+            currentDoorIndex++;
+            if (currentDoorIndex >= doors.length) {
+                if (currentRound < totalRounds) {
+                    showRoundCompletion();
+                } else {
+                    showFinalCompletion();
+                }
+            } else {
+                loadDoor();
+            }
+        }
+
+        function showRoundCompletion() {
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback correct';
+            
+            let roundScore = 0;
+            if (currentRound === 1) roundScore = score;
+            else if (currentRound === 2) roundScore = score - 10;
+            else if (currentRound === 3) roundScore = score - 20;
+            else if (currentRound === 4) roundScore = score - 30;
+            else if (currentRound === 5) roundScore = score - 40;
+            else if (currentRound === 6) roundScore = score - 50;
+            else if (currentRound === 7) roundScore = score - 60;
+            else if (currentRound === 8) roundScore = score - 70;
+            else if (currentRound === 9) roundScore = score - 80;
+            else if (currentRound === 10) roundScore = score - 90;
+            
+            let nextRoundText = '';
+            let buttonText = '';
+            
+            if (currentRound === 1) {
+                nextRoundText = '¿Listo para la Ronda 2? Se enfoca en el imperfecto para información de fondo.';
+                buttonText = 'Comenzar Ronda 2 →';
+            } else if (currentRound === 2) {
+                nextRoundText = '¿Listo para la Ronda 3? Compara información de fondo vs acciones principales.';
+                buttonText = 'Comenzar Ronda 3 →';
+            } else if (currentRound === 3) {
+                nextRoundText = '¿Listo para la Ronda 4? Distingue entre acciones en progreso y completadas.';
+                buttonText = 'Comenzar Ronda 4 →';
+            } else if (currentRound === 4) {
+                nextRoundText = '¿Listo para la Ronda 5? Contrasta estados pasados vs inicio y fin de acciones.';
+                buttonText = 'Comenzar Ronda 5 →';
+            } else if (currentRound === 5) {
+                nextRoundText = '¿Listo para la Ronda 6? Practica procesos mentales y estados psicológicos.';
+                buttonText = 'Comenzar Ronda 6 →';
+            } else if (currentRound === 6) {
+                nextRoundText = '¿Listo para la Ronda 7? Distingue entre secuencias de eventos y acciones habituales.';
+                buttonText = 'Comenzar Ronda 7 →';
+            } else if (currentRound === 7) {
+                nextRoundText = '¿Listo para la Ronda 8? Practica verbos especiales como poder, querer, saber y conocer.';
+                buttonText = 'Comenzar Ronda 8 →';
+            } else if (currentRound === 8) {
+                nextRoundText = '¿Listo para la Ronda 9? Práctica mixta combinando todos los conceptos aprendidos.';
+                buttonText = 'Comenzar Ronda 9 →';
+            } else if (currentRound === 9) {
+                nextRoundText = '¿Listo para la Ronda 10? ¡El desafío final para demostrar tu dominio completo!';
+                buttonText = 'Comenzar Ronda 10 →';
+            }
+            
+            feedback.innerHTML = `
+                <div>
+                    <div style="font-size: 1.5rem; margin-bottom: 15px;">🎉 ¡Ronda ${currentRound} Completada!</div>
+                    <div style="margin-bottom: 15px;">Puntuación de esta ronda: ${roundScore}/10</div>
+                    <div style="margin-bottom: 20px;">${nextRoundText}</div>
+                    <button class="next-btn" onclick="startNextRound()" style="font-size: 1.1rem; padding: 15px 25px;">${buttonText}</button>
+                </div>
+            `;
+        }
+
+        function startNextRound() {
+            currentRound++;
+            currentDoorIndex = 0;
+            if (currentRound === 2) {
+                doors = round2Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 2: Información de Fondo (Imperfecto)';
+            } else if (currentRound === 3) {
+                doors = round3Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 3: Fondo vs Acción Principal';
+            } else if (currentRound === 4) {
+                doors = round4Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 4: Acciones en Progreso vs Completadas';
+            } else if (currentRound === 5) {
+                doors = round5Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 5: Estados Pasados vs Inicio y Fin';
+            } else if (currentRound === 6) {
+                doors = round6Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 6: Procesos Mentales y Estados Psicológicos';
+            } else if (currentRound === 7) {
+                doors = round7Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 7: Secuencia de Eventos vs Acciones Habituales';
+            } else if (currentRound === 8) {
+                doors = round8Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 8: Verbos Especiales (poder, querer, saber, conocer)';
+            } else if (currentRound === 9) {
+                doors = round9Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 9: Práctica Mixta - Combinando Todos los Conceptos';
+            } else if (currentRound === 10) {
+                doors = round10Doors;
+                document.getElementById('roundTitle').textContent = 'Ronda 10: Desafío Final - Dominio Completo';
+            }
+            loadDoor();
+        }
+
+        function showFinalCompletion() {
+            document.getElementById('gameArea').style.display = 'none';
+            document.getElementById('completionArea').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+        }
+
+        function restartGame() {
+            currentDoorIndex = 0;
+            score = 0;
+            currentRound = 1;
+            doors = round1Doors;
+            document.getElementById('roundTitle').textContent = 'Ronda 1: Conceptos Básicos';
+            document.getElementById('gameArea').style.display = 'block';
+            document.getElementById('completionArea').style.display = 'none';
+            loadDoor();
+        }
+
+        // Initialize the game
+        loadDoor();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a1cf6f351d1122',t:'MTc1OTcxODU5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
