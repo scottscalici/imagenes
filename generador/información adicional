@@ -23,6 +23,15 @@
     <section class="bg-white shadow rounded-xl p-6 space-y-4">
       <h1 class="text-2xl font-bold text-gray-800">Generador: Información adicional</h1>
 
+      <!-- Course Selector -->
+      <div>
+        <label class="block font-semibold mb-1">Selecciona el curso:</label>
+        <select id="courseSelect" class="w-full border rounded-xl p-2 shadow-sm focus:ring-2 focus:ring-purple-400">
+          <option value="II">Español II (sophomores)</option>
+          <option value="IV">Español IV (seniors)</option>
+        </select>
+      </div>
+
       <div>
         <label class="block font-semibold mb-1">Blurb del día:</label>
         <textarea id="blurbInput" class="w-full h-40 p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-purple-400"></textarea>
@@ -116,36 +125,35 @@
       const tareaIndex = lines.findIndex(l => l.toLowerCase().startsWith("tarea"));
       if (tareaIndex === -1) return [];
       const tareas = [];
-
-      // Collect until Conversación or end
       let tareaText = lines[tareaIndex].replace(/^tarea\s*:/i, "");
       for (let i = tareaIndex + 1; i < lines.length; i++) {
         if (lines[i].toLowerCase().startsWith("conversación")) break;
         tareaText += " " + lines[i];
       }
-
-      // Normalize separators (remove extra periods/spaces between tareas)
       tareaText = tareaText.replace(/\.\s*/g, " ");
-
-      // Match patterns like "Tema: 17 de oct"
       const regex = /([^:]+):\s*(\d{1,2}\s*de\s*\w+)/gi;
       let match;
       while ((match = regex.exec(tareaText)) !== null) {
         tareas.push({ tema: match[1].trim(), fecha: match[2].trim() });
       }
-
       return tareas;
     }
 
     function generateInfo() {
       const blurb = document.getElementById("blurbInput").value.trim();
+      const course = document.getElementById("courseSelect").value;
       const quizzes = extractQuizzes(blurb);
       const tareas = extractTareas(blurb);
+
+      // choose course-specific Evaluaciones link
+      const evalLink = course === "IV"
+        ? "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
+        : "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones";
 
       let quizzesHtml = "";
       if (quizzes.length) {
         quizzesHtml = `
-          <h4 class="font-semibold">Próximas pruebas</h4>
+          <h4 class="font-semibold"><a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
           <ul class="list-disc list-inside">
             ${quizzes.map(q => `<li>${q}</li>`).join("")}
           </ul>
@@ -162,7 +170,6 @@
         `;
       }
 
-      // Grammar
       const selectedGrammar = Array.from(document.querySelectorAll(".grammar-check:checked")).map(cb => cb.value);
       let grammarHtml = "";
       selectedGrammar.forEach(key => {
@@ -174,7 +181,6 @@
         grammarHtml += `</ul>`;
       });
 
-      // Vocab
       const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked")).map(cb => cb.value);
       let vocabHtml = "";
       if (selectedVocab.length) {
@@ -186,7 +192,6 @@
         vocabHtml += `</ul>`;
       }
 
-      // Costa Rica trip toggle
       let tripHtml = "";
       if (document.getElementById("tripOption").checked) {
         tripHtml = `
