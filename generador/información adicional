@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador: Información adicional</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .info-section h4 {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .info-section ul {
+      margin-top: 0.1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Generator Form -->
+    <section class="bg-white shadow rounded-xl p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">Generador: Información adicional</h1>
+
+      <div>
+        <label class="block font-semibold mb-1">Blurb del día:</label>
+        <textarea id="blurbInput" class="w-full h-40 p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-purple-400"></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Selecciona gramática:</label>
+        <div id="grammarOptions" class="grid grid-cols-2 gap-2 text-sm"></div>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Selecciona vocabulario:</label>
+        <div id="vocabOptions" class="grid grid-cols-2 gap-2 text-sm"></div>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Opciones adicionales:</label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" id="tripOption" checked>
+          <span>Incluir viaje a Costa Rica</span>
+        </label>
+      </div>
+
+      <button onclick="generateInfo()" class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="infoSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="infoPreview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    let jsonData = {};
+
+    async function loadJSON() {
+      const url = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/apuntes.json";
+      const res = await fetch(url);
+      jsonData = await res.json();
+      renderOptions();
+    }
+
+    function renderOptions() {
+      const grammarDiv = document.getElementById("grammarOptions");
+      grammarDiv.innerHTML = "";
+      Object.keys(jsonData).forEach(key => {
+        if (key !== "vocabulario") {
+          const label = document.createElement("label");
+          label.className = "flex items-center space-x-2";
+          label.innerHTML = `<input type="checkbox" value="${key}" class="grammar-check"> <span>${jsonData[key].title}</span>`;
+          grammarDiv.appendChild(label);
+        }
+      });
+
+      const vocabDiv = document.getElementById("vocabOptions");
+      vocabDiv.innerHTML = "";
+      Object.keys(jsonData.vocabulario.chapters).forEach(ch => {
+        const label = document.createElement("label");
+        label.className = "flex items-center space-x-2";
+        label.innerHTML = `<input type="checkbox" value="${ch}" class="vocab-check"> <span>${ch}</span>`;
+        vocabDiv.appendChild(label);
+      });
+    }
+
+    function extractQuizzes(blurb) {
+      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
+      const evalIndex = lines.findIndex(l => l.toLowerCase().startsWith("información adicional:") || l.toLowerCase().startsWith("evaluaciones"));
+      if (evalIndex === -1) return [];
+      const evals = [];
+      for (let i = evalIndex + 1; i < lines.length; i++) {
+        if (/ayuda con la vida/i.test(lines[i]) || /viaje/i.test(lines[i])) break;
+        if (lines[i].toLowerCase().startsWith("vocabulario") || lines[i].toLowerCase().startsWith("pretérito") || lines[i].toLowerCase().startsWith("imperfecto")) {
+          if (!lines[i].includes("hoy")) evals.push(lines[i]);
+        }
+      }
+      return evals.slice(0, 2);
+    }
+
+    function extractTareas(blurb) {
+      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
+      const tareaIndex = lines.findIndex(l => l.toLowerCase().startsWith("tarea"));
+      if (tareaIndex === -1) return [];
+      const tareas = [];
+
+      // Collect until Conversación or end
+      let tareaText = lines[tareaIndex].replace(/^tarea\s*:/i, "");
+      for (let i = tareaIndex + 1; i < lines.length; i++) {
+        if (lines[i].toLowerCase().startsWith("conversación")) break;
+        tareaText += " " + lines[i];
+      }
+
+      // Normalize separators (remove extra periods/spaces between tareas)
+      tareaText = tareaText.replace(/\.\s*/g, " ");
+
+      // Match patterns like "Tema: 17 de oct"
+      const regex = /([^:]+):\s*(\d{1,2}\s*de\s*\w+)/gi;
+      let match;
+      while ((match = regex.exec(tareaText)) !== null) {
+        tareas.push({ tema: match[1].trim(), fecha: match[2].trim() });
+      }
+
+      return tareas;
+    }
+
+    function generateInfo() {
+      const blurb = document.getElementById("blurbInput").value.trim();
+      const quizzes = extractQuizzes(blurb);
+      const tareas = extractTareas(blurb);
+
+      let quizzesHtml = "";
+      if (quizzes.length) {
+        quizzesHtml = `
+          <h4 class="font-semibold">Próximas pruebas</h4>
+          <ul class="list-disc list-inside">
+            ${quizzes.map(q => `<li>${q}</li>`).join("")}
+          </ul>
+        `;
+      }
+
+      let tareasHtml = "";
+      if (tareas.length) {
+        tareasHtml = `
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            ${tareas.map(t => `<li><span class="font-semibold">${t.tema}</span> 📅 ${t.fecha}</li>`).join("")}
+          </ul>
+        `;
+      }
+
+      // Grammar
+      const selectedGrammar = Array.from(document.querySelectorAll(".grammar-check:checked")).map(cb => cb.value);
+      let grammarHtml = "";
+      selectedGrammar.forEach(key => {
+        const group = jsonData[key];
+        grammarHtml += `<h4 class="font-semibold">${group.title}</h4><ul class="list-disc list-inside text-purple-700">`;
+        group.links.forEach(link => {
+          grammarHtml += `<li><a href="${link.url}" target="_blank" class="hover:underline">${link.title}</a></li>`;
+        });
+        grammarHtml += `</ul>`;
+      });
+
+      // Vocab
+      const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked")).map(cb => cb.value);
+      let vocabHtml = "";
+      if (selectedVocab.length) {
+        vocabHtml += `<h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700">`;
+        selectedVocab.forEach(ch => {
+          const data = jsonData.vocabulario.chapters[ch];
+          vocabHtml += `<li>${ch}: <a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>, <a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a></li>`;
+        });
+        vocabHtml += `</ul>`;
+      }
+
+      // Costa Rica trip toggle
+      let tripHtml = "";
+      if (document.getElementById("tripOption").checked) {
+        tripHtml = `
+  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+        `;
+      }
+
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  ${quizzesHtml}
+  ${tareasHtml}
+  ${grammarHtml}
+  ${vocabHtml}
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  ${tripHtml}
+</section>
+      `.trim();
+
+      document.getElementById("infoPreview").innerHTML = htmlSnippet;
+      document.getElementById("infoSection").classList.remove("hidden");
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("codeOutput").classList.remove("hidden");
+    }
+
+    loadJSON();
+  </script>
+</body>
+</html>
