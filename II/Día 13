@@ -115,6 +115,200 @@
 
 <!--Práctica de verbos-->
 
+<div id="prev-ltax1yu"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`poder (to be able to)
+yo pude
+tú pudiste
+él pudo
+nosotros pudimos
+vosotros pudisteis
+ellos pudieron
+
+poner (to put)
+yo puse
+tú pusiste
+él puso
+nosotros pusimos
+vosotros pusisteis
+ellos pusieron
+
+saber (to know, find out)
+yo supe
+tú supiste
+él supo
+nosotros supimos
+vosotros supisteis
+ellos supieron
+
+caber (to fit)
+yo cupe
+tú cupiste
+él cupo
+nosotros cupimos
+vosotros cupisteis
+ellos cupieron
+
+haber (to have [auxiliary])
+yo hube
+tú hubiste
+él hubo
+nosotros hubimos
+vosotros hubisteis
+ellos hubieron
+
+tener (to have)
+yo tuve
+tú tuviste
+él tuvo
+nosotros tuvimos
+vosotros tuvisteis
+ellos tuvieron
+
+andar (to walk, go around)
+yo anduve
+tú anduviste
+él anduvo
+nosotros anduvimos
+vosotros anduvisteis
+ellos anduvieron
+
+estar (to be)
+yo estuve
+tú estuviste
+él estuvo
+nosotros estuvimos
+vosotros estuvisteis
+ellos estuvieron
+
+hacer (to do, make)
+yo hice
+tú hiciste
+él hizo
+nosotros hicimos
+vosotros hicisteis
+ellos hicieron
+
+venir (to come)
+yo vine
+tú viniste
+él vino
+nosotros vinimos
+vosotros vinisteis
+ellos vinieron
+
+querer (to want)
+yo quise
+tú quisiste
+él quiso
+nosotros quisimos
+vosotros quisisteis
+ellos quisieron
+
+traer (to bring)
+yo traje
+tú trajiste
+él trajo
+nosotros trajimos
+vosotros trajisteis
+ellos trajeron
+
+decir (to say, tell)
+yo dije
+tú dijiste
+él dijo
+nosotros dijimos
+vosotros dijisteis
+ellos dijeron
+
+producir (to produce)
+yo produje
+tú produjiste
+él produjo
+nosotros produjimos
+vosotros produjisteis
+ellos produjeron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-ltax1yu");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
 
 
 
@@ -138,6 +332,31 @@
 <p><span class="text-red-600 font-bold">Se</span> <span class="text-blue-600">me</span> <span class="text-green-600">rompieron</span> los zapatos ortopédicos al salir del hospital.</p></div>
 </section>
 
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 p-4 space-y-4">
+  <h2 class="text-blue-600 font-semibold text-lg">Práctica: Se Inesperado</h2>
+
+  <p>___ me rompió el vaso. <span class="text-gray-500 italic">(The glass broke.)</span></p>
+  <p>___ te olvidó la tarea. <span class="text-gray-500 italic">(You forgot the homework.)</span></p>
+  <p>___ le cayeron las llaves. <span class="text-gray-500 italic">(He/She dropped the keys.)</span></p>
+  <p>___ nos quedó el libro en casa. <span class="text-gray-500 italic">(We accidentally left the book at home.)</span></p>
+  <p>___ les perdieron las recetas. <span class="text-gray-500 italic">(They lost the prescriptions.)</span></p>
+
+  <hr class="my-4 border-gray-300">
+
+  <p>___ ___ cayó el teléfono. <span class="text-gray-500 italic">(I dropped the phone.)</span></p>
+  <p>___ ___ rompió la computadora. <span class="text-gray-500 italic">(You broke the computer.)</span></p>
+  <p>___ ___ olvidó la cita médica. <span class="text-gray-500 italic">(He/She forgot the doctor's appointment.)</span></p>
+  <p>___ ___ quedaron las gafas en el coche. <span class="text-gray-500 italic">(We left the glasses in the car.)</span></p>
+  <p>___ ___ perdieron los papeles. <span class="text-gray-500 italic">(They lost the papers.)</span></p>
+
+  <hr class="my-4 border-gray-300">
+
+  <p>___ ___ __________ <span class="text-gray-500">(caer)</span> el plato. <span class="text-gray-500 italic">(The plate fell / I dropped the plate.)</span></p>
+  <p>___ ___ __________ <span class="text-gray-500">(romper)</span> el espejo. <span class="text-gray-500 italic">(You broke the mirror.)</span></p>
+  <p>___ ___ __________ <span class="text-gray-500">(olvidar)</span> la dirección. <span class="text-gray-500 italic">(He/She forgot the address.)</span></p>
+  <p>___ ___ __________ <span class="text-gray-500">(quedar)</span> las entradas en casa. <span class="text-gray-500 italic">(We left the tickets at home.)</span></p>
+  <p>___ ___ __________ <span class="text-gray-500">(perder)</span> las llaves del coche. <span class="text-gray-500 italic">(They lost the car keys.)</span></p>
+</section>
 
 
 <!--Video-->
