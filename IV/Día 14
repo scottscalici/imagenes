@@ -296,6 +296,50 @@ Está ubicada en el número 43 del Paseo de Gracia, una avenida muy conocida de 
 
 
 <!--Conversacion-->
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Ingenio humano (Opción 1)</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/casa%20batllo.jpg" alt="Ingenio humano" class="rounded-lg shadow-md max-h-64 object-cover">
+    <p class="whitespace-pre-line">La meta: 45 segundos o más
+
+Usa al menos 3 verbos en presente y 3 en pretérito.
+
+Utiliza ser, estar, y un conector lógico correctamente.
+
+Describe el primer plano y el fondo.
+
+Explica qué pasa y predice qué va a pasar después.
+
+Relaciona la imagen con una experiencia personal o cultural.</p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Ingenio humano (Opción 2)</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/park%20guell.jpg" alt="Ingenio humano" class="rounded-lg shadow-md max-h-64 object-cover">
+    <p class="whitespace-pre-line">La meta: 45 segundos o más
+
+Usa al menos 3 verbos en presente y 3 en pretérito.
+
+Utiliza ser, estar, y un conector lógico correctamente.
+
+Describe el primer plano y el fondo.
+
+Explica qué pasa y predice qué va a pasar después.
+
+Relaciona la imagen con una experiencia personal o cultural.</p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
 
 
 
