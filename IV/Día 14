@@ -90,11 +90,192 @@
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 14</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">La sobremesa</p>
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/curiosidad/sobremesa.png" alt="La sobremesa" class="rounded-lg shadow-md mx-auto">
+    </figure>
+  </div>
+</section>
 
 
 
 <!--Cultura-->
+<section class="bg-white shadow rounded-xl border-l-4 border-teal-500 overflow-hidden">
+  <h2 class="text-teal-600 font-semibold text-lg px-4 pt-4">Cultura</h2>
+  <div class="p-4 text-gray-800">
+    <div class="flex flex-col md:flex-row md:items-start gap-4">
+      <div class="md:w-2/3 space-y-4">
+        <p class="font-semibold text-lg">Antoni Gaudí</p>
+        <p class="whitespace-pre-line">La Casa Batlló es un edificio muy famoso diseñado por el arquitecto Antoni Gaudí, uno de los artistas más importantes del modernismo catalán.
+
+Gaudí no construyó la casa desde cero, sino que remodeló completamente un edificio que ya existía, hecho originalmente por Emilio Sala Cortés.
+
+Está ubicada en el número 43 del Paseo de Gracia, una avenida muy conocida de Barcelona, dentro del barrio del Ensanche (Eixample). Esta zona se llama “la Manzana de la Discordia”, porque en ella hay varias casas modernistas muy diferentes entre sí.</p>
+      </div>
+      
+      <figure class="md:w-1/3 flex-shrink-0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Casa_Batllo_Overview_Barcelona_Spain_cut.jpg/500px-Casa_Batllo_Overview_Barcelona_Spain_cut.jpg" alt="Antoni Gaudí" class="rounded-lg shadow-md w-full max-w-xs mx-auto">
+      </figure>
+    </div>
+  </div>
+</section>
+<!-- Galería Gaudí con curiosidades -->
+<section class="max-w-6xl mx-auto p-4">
+  <h2 class="text-xl font-semibold mb-3">Galería: Obras de Gaudí</h2>
+  <div class="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+
+    <!-- Sagrada Familia -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="Gaudí trabajó más de 40 años en la Sagrada Familia, y aún hoy no está terminada.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sagradafamilia.jpg"
+        alt="Basílica de la Sagrada Familia, Barcelona"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Sagrada Familia
+      </figcaption>
+    </figure>
+
+    <!-- Casa Batlló -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="Las formas onduladas de la fachada simbolizan el mar y los huesos del dragón de Sant Jordi.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/casabatllo.jpg"
+        alt="Fachada de la Casa Batlló, Barcelona"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Casa Batlló
+      </figcaption>
+    </figure>
+
+    <!-- Park Güell -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="El Park Güell fue diseñado como una ciudad-jardín; solo se construyeron dos casas.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/parcguell.jpg"
+        alt="Park Güell, Barcelona"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Park Güell
+      </figcaption>
+    </figure>
+
+    <!-- Casa Milà -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="También conocida como 'La Pedrera', su techo tiene chimeneas en forma de guerreros.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/casamila.jpg"
+        alt="Casa Milà (La Pedrera), Barcelona"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Casa Milà (La Pedrera)
+      </figcaption>
+    </figure>
+
+    <!-- Sagrada Familia - Detalle del techo -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="El interior de la Sagrada Familia parece un bosque: las columnas se ramifican como árboles.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/Sagrada_Familia_nave_roof_detail.jpg"
+        alt="Detalle del techo interior de la Sagrada Familia"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Sagrada Familia — detalle del techo
+      </figcaption>
+    </figure>
+
+    <!-- Celler Güell -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="El Celler Güell fue diseñado para la familia Güell y combina piedra, ladrillo y hierro.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/Celler_Güell01.jpg"
+        alt="Celler Güell, Garraf, Cataluña"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Celler Güell
+      </figcaption>
+    </figure>
+
+    <!-- Reptil Parc Güell -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="El dragón o salamandra de mosaico es uno de los símbolos más conocidos de Barcelona.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/Reptil_Parc_Guell_Barcelona.jpg"
+        alt="El famoso dragón de mosaico del Park Güell, Barcelona"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Dragón de mosaico — Park Güell
+      </figcaption>
+    </figure>
+
+    <!-- Palacio Episcopal de Astorga -->
+    <figure class="relative group rounded-xl overflow-hidden border" title="El Palacio Episcopal de Astorga parece un castillo medieval, pero fue diseñado por Gaudí.">
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/Palacio_Episcopal_Astorga_2021_-_exterior.jpg"
+        alt="Palacio Episcopal de Astorga, León"
+        loading="lazy"
+        class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable"
+      />
+      <figcaption class="absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1">
+        Palacio Episcopal de Astorga
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<dialog id="lightbox" class="p-0 bg-transparent">
+  <img id="lightbox-img" alt="" class="max-h-[90vh] max-w-[95vw] rounded-xl shadow-xl" />
+</dialog>
+
+<script>
+  const dlg = document.getElementById('lightbox');
+  const big = document.getElementById('lightbox-img');
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.previewable');
+    if (img) {
+      big.src = img.src;
+      big.alt = img.alt || '';
+      dlg.showModal();
+    }
+  });
+  dlg.addEventListener('click', () => dlg.close());
+  document.addEventListener('keydown', (e) => (e.key === 'Escape') && dlg.close());
+</script>
+
+
+<!-- Lightbox minimal con <dialog> -->
+<dialog id="lightbox" class="p-0 bg-transparent">
+  <img id="lightbox-img" alt="" class="max-h-[90vh] max-w-[95vw] rounded-xl shadow-xl" />
+</dialog>
+
+<script>
+  const dlg = document.getElementById('lightbox');
+  const big = document.getElementById('lightbox-img');
+
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.previewable');
+    if (img) {
+      big.src = img.src;
+      big.alt = img.alt || '';
+      dlg.showModal();
+    }
+  });
+
+  dlg.addEventListener('click', () => dlg.close());
+  document.addEventListener('keydown', (e) => (e.key === 'Escape') && dlg.close());
+</script>
 
 
 
@@ -116,6 +297,27 @@
 
 <!--Conversacion-->
 
+
+
+
+<!--Señor+-->
+<section class="bg-gradient-to-br from-sky-50 to-blue-100 shadow-lg rounded-2xl border-l-4 border-blue-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+  <div class="flex items-center space-x-4 p-6">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
+    <div>
+      <h2 class="text-blue-700 font-bold text-xl tracking-tight">💬 Señor+</h2>
+      <p class="text-gray-600 text-sm italic">Tu asistente de gramática y conversación</p>
+    </div>
+  </div>
+
+  <div class="bg-white p-6 border-t border-blue-200 text-gray-800 text-center">
+    <p class="mb-4">Practica español con tu coach personal:</p>
+    <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" 
+       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full font-semibold shadow hover:from-blue-700 hover:to-sky-600 transition">
+      🚀 Iniciar Chat con Señor+
+    </a>
+  </div>
+</section>
 
 
 
