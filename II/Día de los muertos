@@ -1,203 +1,186 @@
 <!DOCTYPE html>
 <html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Día de los Muertos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 🌟 Candle Flicker Effect */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 0.99;
+        filter: drop-shadow(0 0 8px #fbbf24) drop-shadow(0 0 16px #f59e0b);
+      }
+      20%, 24%, 55% {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 4px #f59e0b);
+      }
+    }
 
-<header class="shadow-2xl rounded-xl overflow-hidden">
-  <div class="bg-gradient-to-r from-black via-purple-900 to-orange-600 flex justify-between items-center py-8 px-8 text-white border-b-4 border-amber-400">
-    <h1 class="text-4xl font-extrabold tracking-wide drop-shadow-lg flex items-center gap-3">
+    .flicker-glow {
+      animation: flicker 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-b from-black via-purple-950 to-gray-900 text-gray-100 min-h-screen">
+
+<!-- Header -->
+<header class="relative shadow-2xl rounded-xl overflow-hidden mb-10">
+  <!-- Glowing candlelight layer -->
+  <div class="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-orange-500/20 to-purple-600/10 blur-3xl flicker-glow"></div>
+
+  <div class="relative bg-gradient-to-r from-black via-purple-900 to-orange-600 flex justify-between items-center py-8 px-8 text-white border-b-4 border-amber-400">
+    <h1 class="text-4xl font-extrabold tracking-wide drop-shadow-lg flex items-center gap-3 flicker-glow">
       💀 <span class="font-serif">Día de los Muertos</span> 🌼
     </h1>
-    <p class="text-xl italic drop-shadow-sm text-amber-200">1 y 2 de noviembre</p>
+    <p class="text-xl italic drop-shadow-sm text-amber-200 flicker-glow">1 y 2 de noviembre</p>
   </div>
 </header>
 
+<div class="max-w-5xl mx-auto px-4 space-y-16">
 
-
-
-
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Día de Muertos: Palabras desordenadas</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-orange-50 text-gray-900">
-  <div class="max-w-5xl mx-auto py-10 px-4">
-    <h1 class="text-3xl font-bold text-orange-700 mb-6 text-center">💀 Día de Muertos: Palabras desordenadas</h1>
-    <p class="mb-8 text-center text-gray-700">Escribe la palabra correcta para cada pista. Luego haz clic en <strong>Verificar</strong>.</p>
-
-    <div id="quiz" class="space-y-5"></div>
-
+  <!-- 🟣 Palabras desordenadas -->
+  <section id="palabras" class="bg-gradient-to-br from-purple-950 via-purple-800 to-amber-700 shadow-xl rounded-xl border border-amber-400 p-6">
+    <h2 class="text-3xl font-bold text-amber-300 mb-6 text-center drop-shadow-md">💀 Palabras desordenadas</h2>
+    <p class="mb-8 text-center text-gray-200">
+      Escribe la palabra correcta para cada pista. Luego haz clic en <strong class="text-amber-300">Verificar</strong>.
+    </p>
+    <div id="quizWords" class="space-y-5"></div>
     <div class="text-center mt-8">
-      <button id="checkBtn" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-5 rounded-lg">Verificar</button>
-      <p id="score" class="mt-4 text-lg font-semibold"></p>
+      <button id="checkWords" class="bg-amber-500 hover:bg-amber-600 text-black font-semibold py-2 px-5 rounded-lg shadow-md flicker-glow">
+        Verificar
+      </button>
+      <p id="scoreWords" class="mt-4 text-lg font-semibold text-amber-200"></p>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const data = [
-      { scrambled: "ecvlaara", answer: "calavera", clue: "Representa la muerte. Puede ser de azúcar." },
-      { scrambled: "eppla apicdo", answer: "papel picado", clue: "Es un papel decorativo. Para hacerlo, necesitas papel de colores y unas tijeras." },
-      { scrambled: "zcur", answer: "cruz", clue: "Puede ser de sal." },
-      { scrambled: "btuma", answer: "tumba", clue: "Lugar donde descansa el difunto." },
-      { scrambled: "eval", answer: "vela", clue: "La luz de la ____ guía a los muertos hacia el mundo de los vivos." },
-      { scrambled: "rofl", answer: "flor", clue: "La ____ cempasúchil es la más común en las ofrendas." },
-      { scrambled: "emneetrico", answer: "cementerio", clue: "Lugar con tumbas y difuntos." },
-      { scrambled: "apn ed mrueto", answer: "pan de muerto", clue: "Postre típico del Día de Muertos." },
-      { scrambled: "frodaen", answer: "ofrenda", clue: "Conjunto de regalos para los difuntos." },
-      { scrambled: "als", answer: "sal", clue: "En las ofrendas podemos encontrar platos con ___. Sirve para purificar las almas." },
-      { scrambled: "ugtiaarr", answer: "guitarra", clue: "La música es importante para celebrar el Día de Muertos. Este es el instrumento más común." },
-      { scrambled: "ctraian", answer: "catrina", clue: "Es el personaje más famoso del Día de Muertos." },
-      { scrambled: "sfidutno", answer: "difuntos", clue: "Son los protagonistas del Día de Muertos. Los altares están dedicados a ellos." },
-      { scrambled: "arlta", answer: "altar", clue: "Lugar donde se coloca la ofrenda." },
-      { scrambled: "tqiileua", answer: "tequila", clue: "Bebida alcohólica típica de México muy común en los altares." },
-      { scrambled: "nsicinioe", answer: "incienso", clue: "Cuando se quema desprende un buen aroma." },
-      { scrambled: "etrarot", answer: "retrato", clue: "El ___ del difunto es la parte más importante del altar." },
-      { scrambled: "savo de gaua", answer: "vaso de agua", clue: "El difunto tiene sed después de su viaje hasta el mundo de los vivos." },
-      { scrambled: "jutuege", answer: "juguete", clue: "Se coloca en los altares para niños." }
-    ];
-
-    const quiz = document.getElementById("quiz");
-    data.forEach((item, i) => {
-      const div = document.createElement("div");
-      div.className = "bg-white border-l-4 border-orange-400 p-4 rounded-lg shadow-sm";
-      div.innerHTML = `
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-          <span class="font-bold text-orange-600 text-lg">${String.fromCharCode(97 + i)}.</span>
-          <div class="flex-1">
-            <p class="font-mono text-orange-700">${item.scrambled}</p>
-            <input type="text" class="answer mt-1 w-full sm:w-72 border rounded px-2 py-1" data-answer="${item.answer.toLowerCase()}">
-          </div>
-        </div>
-        <p class="mt-2 text-sm text-gray-700">${item.clue}</p>
-      `;
-      quiz.appendChild(div);
-    });
-
-    document.getElementById("checkBtn").addEventListener("click", () => {
-      const inputs = document.querySelectorAll(".answer");
-      let correct = 0;
-      inputs.forEach(input => {
-        const user = input.value.trim().toLowerCase();
-        const ans = input.dataset.answer;
-        if (user === ans) {
-          input.classList.remove("border-red-400");
-          input.classList.add("border-green-500", "bg-green-50");
-          correct++;
-        } else {
-          input.classList.remove("border-green-500");
-          input.classList.add("border-red-400", "bg-red-50");
-        }
-      });
-      document.getElementById("score").textContent = `✅ ${correct} de ${data.length} correctos`;
-    });
-  </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Día de Muertos: Comprensión de video</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-amber-50 text-gray-900">
-  <div class="max-w-5xl mx-auto py-10 px-4">
-    <!-- Header -->
-    <h1 class="text-3xl font-bold text-amber-700 mb-3 text-center">💀 Día de Muertos: Comprensión de video</h1>
-    <p class="text-center text-gray-700 mb-8">
-      Mira el video y responde las preguntas de comprensión seleccionando <strong>Verdadero</strong> o <strong>Falso</strong>.
+  <!-- 🟡 Comprensión de video -->
+  <section id="video" class="bg-gradient-to-br from-gray-900 via-purple-900 to-orange-800 shadow-xl rounded-xl border border-amber-400 p-6">
+    <h2 class="text-3xl font-bold text-amber-300 mb-3 text-center drop-shadow-md">🎥 Comprensión de video</h2>
+    <p class="text-center text-gray-200 mb-8">
+      Mira el video y responde las preguntas seleccionando <strong class="text-amber-300">Verdadero</strong> o <strong class="text-amber-300">Falso</strong>.
     </p>
 
-    <!-- Video -->
     <div class="flex justify-center mb-8">
-      <iframe class="rounded-xl shadow-md w-full sm:w-3/4 aspect-video"
+      <iframe class="rounded-xl shadow-lg w-full sm:w-3/4 aspect-video border-4 border-amber-400"
         src="https://www.youtube.com/embed/C3RhyHHWWCE"
         title="Día de Muertos - Video"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
+        allowfullscreen></iframe>
     </div>
 
-    <!-- Quiz Section -->
-    <section id="quiz" class="space-y-5"></section>
-
-    <!-- Check Button -->
+    <div id="quizVideo" class="space-y-5"></div>
     <div class="text-center mt-8">
-      <button id="checkBtn" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-lg">
+      <button id="checkVideo" class="bg-amber-500 hover:bg-amber-600 text-black font-semibold py-2 px-6 rounded-lg shadow-md flicker-glow">
         Verificar
       </button>
-      <p id="score" class="mt-4 text-lg font-semibold"></p>
+      <p id="scoreVideo" class="mt-4 text-lg font-semibold text-amber-200"></p>
     </div>
-  </div>
+  </section>
+</div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const questions = [
-        { text: "En México la conmemoración del Día de Muertos es muy macabra y oscura.", answer: "F" },
-        { text: "El origen del Día de Muertos está en la Mesoamérica prehispánica.", answer: "V" },
-        { text: "Los pueblos prehispánicos honraban a sus muertos con ofrendas durante todo el año.", answer: "F" },
-        { text: "Algunos de los pueblos indígenas que celebraban el día de muertos eran los purépechas, los mexicas y los mayas.", answer: "V" },
-        { text: "El Día de Muertos coincide con las fechas católicas de Corpus Christi y los Santos Inocentes.", answer: "F" },
-        { text: "Muchas familias colocan en sus casas ofrendas dedicadas a sus seres queridos muertos.", answer: "V" },
-        { text: "Otras personas van a poner sus ofrendas familiares en los atrios de las iglesias.", answer: "V" },
-        { text: "Las familias que pasan la noche en los cementerios rezan y comparten recuerdos sobre sus muertos mientras velan.", answer: "V" },
-        { text: "Las flores de cempasúchil que guían a los muertos son de color blanco.", answer: "F" },
-        { text: "El pan de muerto, las calaveritas de azúcar, la sal, el copal y el papel picado son elementos importantes de las ofrendas del Día de Muertos.", answer: "V" },
-        { text: "En las tumbas de los niños que murieron los familiares usan globos en lugar de flores.", answer: "V" },
-        { text: "La Velación de las Ánimas y el Día de Muertos son Patrimonio Cultural Inmaterial de la Humanidad de la Unesco.", answer: "V" }
-      ];
+<!-- ✳️ Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // === Palabras desordenadas ===
+  const words = [
+    { scrambled: "ecvlaara", answer: "calavera", clue: "Representa la muerte. Puede ser de azúcar." },
+    { scrambled: "eppla apicdo", answer: "papel picado", clue: "Papel decorativo de colores." },
+    { scrambled: "zcur", answer: "cruz", clue: "Puede ser de sal o madera." },
+    { scrambled: "btuma", answer: "tumba", clue: "Lugar donde descansa el difunto." },
+    { scrambled: "eval", answer: "vela", clue: "La luz de la ____ guía a los muertos hacia el mundo de los vivos." },
+    { scrambled: "rofl", answer: "flor", clue: "La ____ de cempasúchil es la más común en las ofrendas." },
+    { scrambled: "emneetrico", answer: "cementerio", clue: "Lugar con tumbas y difuntos." },
+    { scrambled: "apn ed mrueto", answer: "pan de muerto", clue: "Pan dulce típico del Día de Muertos." },
+    { scrambled: "frodaen", answer: "ofrenda", clue: "Conjunto de regalos para los difuntos." },
+    { scrambled: "als", answer: "sal", clue: "Elemento de purificación en las ofrendas." }
+  ];
 
-      const quiz = document.getElementById("quiz");
+  const quizWords = document.getElementById("quizWords");
+  words.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "bg-purple-950/50 border-l-4 border-amber-400 p-4 rounded-lg shadow-sm";
+    div.innerHTML = `
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <span class="font-bold text-amber-300 text-lg">${String.fromCharCode(97 + i)}.</span>
+        <div class="flex-1">
+          <p class="font-mono text-amber-200">${item.scrambled}</p>
+          <input type="text" class="answer mt-1 w-full sm:w-72 border rounded px-2 py-1 bg-gray-800 text-gray-100" data-answer="${item.answer.toLowerCase()}">
+        </div>
+      </div>
+      <p class="mt-2 text-sm text-gray-300">${item.clue}</p>`;
+    quizWords.appendChild(div);
+  });
 
-      // Create each question dynamically
-      questions.forEach((q, i) => {
-        const div = document.createElement("div");
-        div.className = "bg-white border-l-4 border-amber-400 p-4 rounded-lg shadow-sm";
-        div.innerHTML = `
-          <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-            <span class="font-bold text-amber-700">${i + 1}.</span>
-            <p class="flex-1">${q.text}</p>
-            <div class="flex gap-2 mt-2 sm:mt-0">
-              <label class="flex items-center gap-1">
-                <input type="radio" name="q${i}" value="V" class="accent-amber-600"> V
-              </label>
-              <label class="flex items-center gap-1">
-                <input type="radio" name="q${i}" value="F" class="accent-amber-600"> F
-              </label>
-            </div>
-          </div>
-        `;
-        quiz.appendChild(div);
-      });
-
-      // Check answers
-      const checkBtn = document.getElementById("checkBtn");
-      checkBtn.addEventListener("click", () => {
-        let score = 0;
-        questions.forEach((q, i) => {
-          const selected = document.querySelector(`input[name="q${i}"]:checked`);
-          const div = quiz.children[i];
-          if (selected) {
-            if (selected.value === q.answer) {
-              score++;
-              div.classList.remove("border-red-400");
-              div.classList.add("border-green-500", "bg-green-50");
-            } else {
-              div.classList.remove("border-green-500");
-              div.classList.add("border-red-400", "bg-red-50");
-            }
-          } else {
-            div.classList.remove("border-green-500");
-            div.classList.add("border-red-400");
-          }
-        });
-        document.getElementById("score").textContent = `✅ ${score} de ${questions.length} correctas`;
-      });
+  document.getElementById("checkWords").addEventListener("click", () => {
+    let correct = 0;
+    document.querySelectorAll(".answer").forEach(input => {
+      const user = input.value.trim().toLowerCase();
+      const ans = input.dataset.answer;
+      if (user === ans) {
+        input.classList.add("border-green-400","bg-green-900/30");
+        correct++;
+      } else {
+        input.classList.add("border-red-500","bg-red-900/40");
+      }
     });
-  </script>
+    document.getElementById("scoreWords").textContent = `✅ ${correct} de ${words.length} correctos`;
+  });
+
+  // === Comprensión de video ===
+  const questions = [
+    { text: "En México la conmemoración del Día de Muertos es muy macabra y oscura.", answer: "F" },
+    { text: "El origen del Día de Muertos está en la Mesoamérica prehispánica.", answer: "V" },
+    { text: "Los pueblos prehispánicos honraban a sus muertos con ofrendas durante todo el año.", answer: "F" },
+    { text: "Algunos pueblos indígenas que celebraban el día de muertos eran los purépechas, los mexicas y los mayas.", answer: "V" },
+    { text: "El Día de Muertos coincide con Corpus Christi y los Santos Inocentes.", answer: "F" },
+    { text: "Muchas familias colocan en sus casas ofrendas dedicadas a sus seres queridos.", answer: "V" },
+    { text: "Otras personas van a poner sus ofrendas familiares en los atrios de las iglesias.", answer: "V" },
+    { text: "Las familias que pasan la noche en los cementerios rezan y comparten recuerdos mientras velan.", answer: "V" },
+    { text: "Las flores de cempasúchil que guían a los muertos son de color blanco.", answer: "F" },
+    { text: "El pan de muerto, las calaveritas, la sal, el copal y el papel picado son elementos importantes de las ofrendas.", answer: "V" },
+    { text: "En las tumbas de los niños se usan globos en lugar de flores.", answer: "V" },
+    { text: "La Velación de las Ánimas y el Día de Muertos son Patrimonio Cultural Inmaterial de la Humanidad de la Unesco.", answer: "V" }
+  ];
+
+  const quizVideo = document.getElementById("quizVideo");
+  questions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "bg-gray-800/60 border-l-4 border-amber-400 p-4 rounded-lg shadow-sm";
+    div.innerHTML = `
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <span class="font-bold text-amber-300">${i + 1}.</span>
+        <p class="flex-1 text-gray-100">${q.text}</p>
+        <div class="flex gap-2 mt-2 sm:mt-0">
+          <label class="flex items-center gap-1 text-amber-300"><input type="radio" name="q${i}" value="V" class="accent-amber-500"> V</label>
+          <label class="flex items-center gap-1 text-amber-300"><input type="radio" name="q${i}" value="F" class="accent-amber-500"> F</label>
+        </div>
+      </div>`;
+    quizVideo.appendChild(div);
+  });
+
+  document.getElementById("checkVideo").addEventListener("click", () => {
+    let score = 0;
+    questions.forEach((q, i) => {
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const div = quizVideo.children[i];
+      if (selected) {
+        if (selected.value === q.answer) {
+          score++;
+          div.classList.add("border-green-400","bg-green-900/30");
+        } else {
+          div.classList.add("border-red-500","bg-red-900/40");
+        }
+      } else {
+        div.classList.add("border-red-500","bg-red-900/40");
+      }
+    });
+    document.getElementById("scoreVideo").textContent = `✅ ${score} de ${questions.length} correctas`;
+  });
+});
+</script>
+
 </body>
 </html>
