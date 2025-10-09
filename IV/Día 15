@@ -15,23 +15,77 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 15</h1>
+    <p class="text-lg italic drop-shadow">10/13 de octubre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Pretérito 3</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 3.3 - la próxima clase</li><li>Imperfecto - Día 17</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Pretérito 9</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 3 - 3</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> la librería</p><p><span class="font-semibold">2.</span> las sandalias</p><p><span class="font-semibold">3.</span> la semana pasada</p><p><span class="font-semibold">4.</span> decir (e:i)</p><p><span class="font-semibold">5.</span> el cine</p><p><span class="font-semibold">6.</span> mexicano/a</p><p><span class="font-semibold">7.</span> el año pasado</p><p><span class="font-semibold">8.</span> ¿Cuándo?</p><p><span class="font-semibold">9.</span> la lección</p><p><span class="font-semibold">10.</span> la bebida</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> el/la enfermero/a</p><p><span class="font-semibold">12.</span> de vidrio</p><p><span class="font-semibold">13.</span> el/la electricista</p><p><span class="font-semibold">14.</span> el ascenso</p><p><span class="font-semibold">15.</span> el boleto</p><p><span class="font-semibold">16.</span> grabar</p><p><span class="font-semibold">17.</span> la ecología</p><p><span class="font-semibold">18.</span> publicar</p><p><span class="font-semibold">19.</span> la comedia</p><p><span class="font-semibold">20.</span> la hierba</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> animado/a</p><p><span class="font-semibold">22.</span> las diversiones</p><p><span class="font-semibold">23.</span> coquetear</p><p><span class="font-semibold">24.</span> la tarjeta de crédito</p><p><span class="font-semibold">25.</span> el/la deportista</p><p><span class="font-semibold">26.</span> el club deportivo</p><p><span class="font-semibold">27.</span> el espectáculo</p><p><span class="font-semibold">28.</span> tradicional</p><p><span class="font-semibold">29.</span> barrer</p><p><span class="font-semibold">30.</span> dejar a alguien</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Imperfecto y los usos de ello</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Pretérito: los usos y las formas</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Pretérito</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="text-blue-600 hover:underline">Pruebas (Español 2)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
