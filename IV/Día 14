@@ -445,18 +445,20 @@ ellos trajeron`);
 
 
 <!--Video-->
-<section class="bg-white shadow rounded-xl border-l-4 border-slate-500 overflow-hidden">
-  <h2 class="text-slate-600 font-semibold text-lg px-4 pt-4">Sagrada Família</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    
-    
-<div class="video-container" onclick="this.innerHTML='<iframe src=&quot;https://www.youtube.com/embed/Z2DH-B0ADjk?autoplay=1&quot; allowfullscreen></iframe>'">
-  <img src="https://img.youtube.com/vi/Z2DH-B0ADjk/hqdefault.jpg" alt="YouTube video">
-  <div class="video-play">▶</div>
-</div>
+<!-- ▶️ YouTube embed (formato clásico) -->
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-slate-600 overflow-hidden">
+  <h2 class="text-slate-700 font-semibold text-lg mb-2">Sagrada Família</h2>
+  <p class="text-gray-700 mb-3">Video de un dron adentro de la basílica</p>
+  <div class="video-wrap">
+    <iframe width="560" height="315"
+      src="https://www.youtube.com/embed/Z2DH-B0ADjk"
+      title="Sagrada Família" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
   </div>
 </section>
-
 
 
 <!--Conversacion-->
