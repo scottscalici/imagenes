@@ -401,27 +401,37 @@ ellos tuvieron`);
 // === Se Impersonal Continuous ===
 (function(){
   const sentences=[
-    ["hablar","se habla","español, inglés y francés en esta empresa."],
-    ["comer","se come","muy bien en este restaurante."],
-    ["escribir","se escribe","mucho en la universidad."],
-    ["trabajar","se trabaja","duro en esta compañía."],
-    ["viajar","se viaja","mucho en verano."],
-    ["aceptar","se aceptan","tarjetas de crédito en esta tienda."],
-    ["prohibir","se prohíbe","hablar en la biblioteca."],
-    ["necesitar","se necesita","un nuevo empleado para el departamento de ventas."],
-    ["organizar","se organizan","eventos culturales todos los meses en el centro comunitario."],
-    ["producir","se producen","muchos automóviles en esta fábrica."],
-    ["investigar","se investiga","una nueva vacuna contra la enfermedad."],
-    ["celebrar","se celebra","el cumpleaños de María el próximo sábado."],
-    ["recomendar","se recomienda","visitar el parque nacional."],
-    ["alquilar","se alquilan","bicicletas en la playa."],
-    ["vender","se venden","entradas para el concierto."],
-    ["buscar","se busca","una casa en el campo."],
-    ["necesitar","se necesita","paciencia para aprender un nuevo idioma."],
-    ["hablar","se habla","español como lengua materna en este país."],
-    ["comer","se come","muy bien y barato aquí."],
-    ["aprender","se aprende","mucho en la escuela."]
-  ];
+  ["hablar", "se habla", "español, inglés y francés en esta empresa."],
+  ["comer", "se come", "muy bien en este restaurante."],
+  ["escribir", "se escribe", "mucho en la universidad."],
+  ["trabajar", "se trabaja", "duro en esta compañía."],
+  ["viajar", "se viaja", "mucho en verano."],
+  ["aceptar", "se aceptan", "tarjetas de crédito en esta tienda."],
+  ["prohibir", "se prohíbe", "hablar en la biblioteca."],
+  ["necesitar", "se necesita", "un nuevo empleado para el departamento de ventas."],
+  ["organizar", "se organizan", "eventos culturales todos los meses en el centro comunitario."],
+  ["producir", "se producen", "muchos automóviles en esta fábrica."],
+  ["investigar", "se investiga", "una nueva vacuna contra la enfermedad."],
+  ["celebrar", "se celebra", "el cumpleaños de María el próximo sábado."],
+  ["recomendar", "se recomienda", "visitar el parque nacional."],
+  ["alquilar", "se alquilan", "bicicletas en la playa."],
+  ["vender", "se venden", "entradas para el concierto."],
+  ["buscar", "se busca", "una casa en el campo."],
+  ["necesitar", "se necesita", "paciencia para aprender un nuevo idioma."],
+  ["hablar", "se habla", "español como lengua materna en este país."],
+  ["comer", "se come", "muy bien y barato aquí."],
+  ["aprender", "se aprende", "mucho en la escuela."],
+  ["viajar", "se viaja", "a lugares exóticos durante las vacaciones."],
+  ["decir", "se dice", "que el ejercicio físico es bueno para la salud."],
+  ["esperar", "se espera", "que la economía mejore el próximo año."],
+  ["vender", "se venden", "muchas prendas en esta tienda."],
+  ["hablar", "se habla", "árabe en este hotel."],
+  ["prohibir", "se prohíbe", "la venta de alcohol a menores de edad."],
+  ["prohibir", "se prohíben", "los teléfonos móviles en la escuela."],
+  ["jugar", "se juega", "mucho al fútbol en Costa Rica."],
+  ["usar", "se usa", "el tiempo libre para estudiar el español."],
+  ["hacer", "se hacen", "los sombreros panameños en Ecuador."]
+];
   const quiz=document.getElementById("quiz-imp2");
   sentences.forEach((item,i)=>{
     const li=document.createElement("li");
