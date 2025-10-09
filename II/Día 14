@@ -286,313 +286,192 @@ ellos tuvieron`);
 <!--Práctica general-->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Práctica: Se impersonal y Se accidental</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
 
-<body class="bg-sky-50 text-gray-900">
-  <div class="max-w-4xl mx-auto py-10 px-4 space-y-10">
-    <!-- Header -->
-    <header class="text-center">
-      <h1 class="text-3xl font-bold text-sky-700">🌀 Se impersonal y Se accidental</h1>
-      <p class="text-gray-700 mt-2">Completa las oraciones con la forma correcta del verbo y “se”.</p>
-    </header>
+<!-- === Se Impersonal (Simple) === -->
+<section id="impersonal-simple" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-sky-700 mb-4">🌀 Se impersonal (presente)</h2>
+  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+    <strong>Modelo:</strong>
+    <span class="text-sky-700 font-semibold">Se enseñan</span> (enseñar) cinco lenguas en esta escuela.
+  </p>
 
-    <!-- Se impersonal (Presente) -->
-    <section class="bg-white border rounded-xl shadow-sm p-6">
-      <h2 class="text-2xl font-semibold text-sky-700 mb-4">Se impersonal (presente)</h2>
+  <ol class="space-y-4">
+    <li><input type="text" id="imp1" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (comer) muy bien en Las Delicias.</li>
+    <li><input type="text" id="imp2" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (vender) muchas camisetas allí.</li>
+    <li><input type="text" id="imp3" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (servir) platos exquisitos cada noche.</li>
+  </ol>
 
-      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5"><strong>Modelo:</strong> <span class="text-sky-700 font-semibold">Se enseñan</span> (enseñar) cinco lenguas en esta escuela.</p>
-
-      <ol class="space-y-4">
-        <li>
-          <input type="text" id="q1" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí">
-          (comer) muy bien en Las Delicias.
-        </li>
-        <li>
-          <input type="text" id="q2" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí">
-          (vender) muchas camisetas allí.
-        </li>
-        <li>
-          <input type="text" id="q3" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí">
-          (servir) platos exquisitos cada noche.
-        </li>
-      </ol>
-    </section>
-  <!-- Se accidental (Pretérito) -->
-    <section class="bg-white border rounded-xl shadow-sm p-6">
-      <h2 class="text-2xl font-semibold text-sky-700 mb-4">Se accidental (pretérito)</h2>
-
-      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5"><strong>Modelo:</strong> <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.</p>
-
-      <ol start="4" class="space-y-4">
-        <li>
-          <input type="text" id="q4" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí">
-          (You [fam., sing.] dropped) las pastillas.
-        </li>
-        <li>
-          <input type="text" id="q5" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí">
-          (They lost) la receta.
-        </li>
-        <li>
-          <input type="text" id="q6" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí">
-          (You [form., sing.] left) aquí la radiografía.
-        </li>
-      </ol>
-    </section>
-
-    <!-- Button -->
-    <div class="text-center">
-      <button id="checkBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
-        Verificar
-      </button>
-      <p id="score" class="mt-4 text-lg font-semibold"></p>
-    </div>
+  <div class="text-center mt-6">
+    <button id="btn-imp" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
+    <p id="score-imp" class="mt-4 text-lg font-semibold"></p>
   </div>
+</section>
 
-  <script>
-    // Correct answers
-    const answers = {
-      q1: ["se come"],
-      q2: ["se venden"],
-      q3: ["se sirven"],
-      q4: ["se te cayeron"],
-      q5: ["se les perdió"],
-      q6: ["se le quedó"]
-    };
+<!-- === Se Accidental (Pretérito) === -->
+<section id="accidental" class="bg-white border rounded-xl shadow-sm p-6">
+  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito)</h2>
+  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+    <strong>Modelo:</strong>
+    <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
+  </p>
 
-    // Verification
-    document.getElementById("checkBtn").addEventListener("click", () => {
-      let correct = 0;
-      Object.keys(answers).forEach(id => {
-        const input = document.getElementById(id);
-        const user = input.value.trim().toLowerCase();
-        if (answers[id].includes(user)) {
-          input.classList.remove("border-red-400", "bg-red-50");
-          input.classList.add("border-green-500", "bg-green-50");
-          correct++;
-        } else {
-          input.classList.remove("border-green-500", "bg-green-50");
-          input.classList.add("border-red-400", "bg-red-50");
-        }
-      });
-      document.getElementById("score").textContent = `✅ ${correct} de ${Object.keys(answers).length} correctas`;
-    });
-  </script>
-</body>
-</html>
+  <ol start="4" class="space-y-4">
+    <li><input type="text" id="acc4" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [fam., sing.] dropped) las pastillas.</li>
+    <li><input type="text" id="acc5" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (They lost) la receta.</li>
+    <li><input type="text" id="acc6" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [form., sing.] left) aquí la radiografía.</li>
+  </ol>
 
-
-
-
-
-<!--Práctica general-->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Se impersonal - práctica continua</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-orange-50 text-gray-900">
-  <div class="max-w-5xl mx-auto py-10 px-4">
-    <!-- Header -->
-    <h1 class="text-3xl font-bold text-orange-700 mb-3 text-center">🌀 Se impersonal — práctica</h1>
-    <p class="text-center text-gray-700 mb-8">
-      Completa las oraciones con la forma correcta del verbo entre paréntesis en <strong>presente</strong>.
-      Usa <strong>se</strong> impersonal.
-    </p>
-
-    <!-- Compact continuous style -->
-    <section class="bg-white rounded-xl shadow-sm p-6 leading-relaxed text-lg">
-      <ol id="quiz" class="list-decimal list-inside space-y-2"></ol>
-    </section>
-
-    <div class="text-center mt-8">
-      <button id="checkBtn" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg">
-        Verificar
-      </button>
-      <p id="score" class="mt-4 text-lg font-semibold"></p>
-    </div>
+  <div class="text-center mt-6">
+    <button id="btn-acc" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
+    <p id="score-acc" class="mt-4 text-lg font-semibold"></p>
   </div>
+</section>
 
-  <script>
-    const sentences = [
-      ["hablar", "se habla", "español, inglés y francés en esta empresa."],
-      ["comer", "se come", "muy bien en este restaurante."],
-      ["escribir", "se escribe", "mucho en la universidad."],
-      ["trabajar", "se trabaja", "duro en esta compañía."],
-      ["viajar", "se viaja", "mucho en verano."],
-      ["aceptar", "se aceptan", "tarjetas de crédito en esta tienda."],
-      ["prohibir", "se prohíbe", "hablar en la biblioteca."],
-      ["necesitar", "se necesita", "un nuevo empleado para el departamento de ventas."],
-      ["organizar", "se organizan", "eventos culturales todos los meses en el centro comunitario."],
-      ["producir", "se producen", "muchos automóviles en esta fábrica."],
-      ["investigar", "se investiga", "una nueva vacuna contra la enfermedad."],
-      ["celebrar", "se celebra", "el cumpleaños de María el próximo sábado."],
-      ["recomendar", "se recomienda", "visitar el parque nacional."],
-      ["alquilar", "se alquilan", "bicicletas en la playa."],
-      ["vender", "se venden", "entradas para el concierto."],
-      ["buscar", "se busca", "una casa en el campo."],
-      ["necesitar", "se necesita", "paciencia para aprender un nuevo idioma."],
-      ["hablar", "se habla", "español como lengua materna en este país."],
-      ["comer", "se come", "muy bien y barato aquí."],
-      ["aprender", "se aprende", "mucho en la escuela."],
-      ["viajar", "se viaja", "a lugares exóticos durante las vacaciones."],
-      ["decir", "se dice", "que el ejercicio físico es bueno para la salud."],
-      ["esperar", "se espera", "que la economía mejore el próximo año."],
-      ["vender", "se venden", "muchas prendas en esta tienda."],
-      ["hablar", "se habla", "árabe en este hotel."],
-      ["prohibir", "se prohíbe", "la venta de alcohol a menores de edad."],
-      ["prohibir", "se prohíben", "los teléfonos móviles en la escuela."],
-      ["jugar", "se juega", "mucho al fútbol en Costa Rica."],
-      ["usar", "se usa", "el tiempo libre para estudiar el español."],
-      ["hacer", "se hacen", "los sombreros panameños en Ecuador."]
-    ];
+<!-- === Se Impersonal (Continuous / 30 questions) === -->
+<section id="impersonal-continuous" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-orange-700 mb-4 text-center">🌀 Se impersonal — práctica continua</h2>
+  <p class="text-center text-gray-700 mb-6">
+    Completa las oraciones con la forma correcta del verbo entre paréntesis en <strong>presente</strong>.
+    Usa <strong>se</strong> impersonal.
+  </p>
 
-    const quiz = document.getElementById("quiz");
+  <ol id="quiz-imp2" class="list-decimal list-inside space-y-2"></ol>
 
-    // Generate the continuous list
-    sentences.forEach((item, i) => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        Se <input type="text" id="q${i}" class="border rounded px-2 py-1 w-32 text-base" placeholder="verbo"> 
-        ${item[2]} 
-        <span class="text-sm text-gray-500">( ${item[0]} )</span>
-      `;
-      quiz.appendChild(li);
-    });
-
-    // Check answers
-    document.getElementById("checkBtn").addEventListener("click", () => {
-      let correct = 0;
-      sentences.forEach((item, i) => {
-        const input = document.getElementById(`q${i}`);
-        const user = ("se " + input.value.trim().toLowerCase()).replace(/\s+/g, " ");
-        if (user === item[1]) {
-          input.classList.remove("border-red-400", "bg-red-50");
-          input.classList.add("border-green-500", "bg-green-50");
-          correct++;
-        } else {
-          input.classList.remove("border-green-500", "bg-green-50");
-          input.classList.add("border-red-400", "bg-red-50");
-        }
-      });
-      document.getElementById("score").textContent = `✅ ${correct} de ${sentences.length} correctas`;
-    });
-  </script>
-</body>
-</html>
-
-
-
-
-
-
-  
-
-
-
-
-<!--práctica de se inesperado-->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Se accidental (pretérito)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-sky-50 text-gray-900">
-  <div class="max-w-4xl mx-auto py-10 px-4 space-y-10">
-    <section class="bg-white border rounded-xl shadow-sm p-6">
-      <h2 class="text-2xl font-semibold text-sky-700 mb-4">Se accidental (pretérito)</h2>
-      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
-        <strong>Modelo:</strong>
-        <span class="text-sky-700 font-semibold">Se me rompieron</span>
-        (I broke) las gafas.
-      </p>
-
-      <ol class="space-y-4 text-lg">
-        <li><input type="text" id="q1" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [fam., sing.] dropped) los libros.</li>
-        <li><input type="text" id="q2" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They lost) la dirección.</li>
-        <li><input type="text" id="q3" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [form., sing.] left) aquí el papel.</li>
-        <li><input type="text" id="q4" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (We forgot) comprar el pan.</li>
-        <li><input type="text" id="q5" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She dropped) el teléfono en el suelo.</li>
-        <li><input type="text" id="q6" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (I lost) las llaves del coche.</li>
-        <li><input type="text" id="q7" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You all [pl.] ran out of) la leche.</li>
-        <li><input type="text" id="q8" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She broke) el vaso por accidente.</li>
-        <li><input type="text" id="q9" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They forgot) hacer la tarea.</li>
-        <li><input type="text" id="q10" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [fam., sing.] burned) la comida.</li>
-        <li><input type="text" id="q11" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She lost) su cartera en el supermercado.</li>
-        <li><input type="text" id="q12" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (We forgot) hacer la reservación para el hotel.</li>
-        <li><input type="text" id="q13" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They broke) los platos durante la cena.</li>
-        <li><input type="text" id="q14" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [fam., sing.] left) el paraguas en la clase.</li>
-        <li><input type="text" id="q15" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (I burned) el pan en el horno.</li>
-        <li><input type="text" id="q16" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She dropped) los documentos en el pasillo.</li>
-        <li><input type="text" id="q17" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (We lost) las entradas para el concierto.</li>
-        <li><input type="text" id="q18" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They ran out of) tiempo para terminar el examen.</li>
-        <li><input type="text" id="q19" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [form., sing.] broke) la computadora.</li>
-        <li><input type="text" id="q20" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (I dropped) el café en el suelo.</li>
-        <li><input type="text" id="q21" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She forgot) traer los materiales.</li>
-        <li><input type="text" id="q22" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You all [pl.] left) la puerta abierta.</li>
-        <li><input type="text" id="q23" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (We broke) el vaso de cristal.</li>
-        <li><input type="text" id="q24" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They dropped) la caja grande.</li>
-        <li><input type="text" id="q25" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (I lost) mi teléfono en el parque.</li>
-        <li><input type="text" id="q26" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (He/She ran out of) dinero antes de pagar.</li>
-        <li><input type="text" id="q27" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [fam., sing.] forgot) apagar la luz.</li>
-        <li><input type="text" id="q28" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (We burned) las galletas otra vez.</li>
-        <li><input type="text" id="q29" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (They broke) la lámpara del salón.</li>
-        <li><input type="text" id="q30" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> (You [form., sing.] dropped) el archivo en la papelera.</li>
-      </ol>
-
-      <div class="text-center mt-8">
-        <button id="checkBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
-          Verificar
-        </button>
-        <p id="score" class="mt-4 text-lg font-semibold"></p>
-      </div>
-    </section>
+  <div class="text-center mt-8">
+    <button id="btn-imp2" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg">
+      Verificar
+    </button>
+    <p id="score-imp2" class="mt-4 text-lg font-semibold"></p>
   </div>
+</section>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const answers = {
-      q1:["se te cayeron"], q2:["se les perdió"], q3:["se le quedó"], q4:["se nos olvidó"], q5:["se le cayó"],
-      q6:["se me perdieron"], q7:["se les acabó"], q8:["se le rompió"], q9:["se les olvidó"], q10:["se te quemó"],
-      q11:["se le perdió"], q12:["se nos olvidó"], q13:["se les rompieron"], q14:["se te quedó"], q15:["se me quemó"],
-      q16:["se le cayeron"], q17:["se nos perdieron"], q18:["se les acabó"], q19:["se le rompió"], q20:["se me cayó"],
-      q21:["se le olvidó"], q22:["se les quedó"], q23:["se nos rompió"], q24:["se les cayó"], q25:["se me perdió"],
-      q26:["se le acabó"], q27:["se te olvidó"], q28:["se nos quemaron"], q29:["se les rompió"], q30:["se le cayó"]
-    };
+<!-- === Se Accidental (Extended 30) === -->
+<section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito) — práctica completa</h2>
+  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+    <strong>Modelo:</strong>
+    <span class="text-sky-700 font-semibold">Se me rompieron</span>
+    (I broke) las gafas.
+  </p>
 
-    document.getElementById("checkBtn").addEventListener("click", function() {
-      let correct = 0;
-      Object.keys(answers).forEach(function(id) {
-        const input = document.getElementById(id);
-        const user = input.value.trim().toLowerCase();
-        if (answers[id].includes(user)) {
-          input.classList.remove("border-red-400","bg-red-50");
-          input.classList.add("border-green-500","bg-green-50");
-          correct++;
-        } else {
-          input.classList.remove("border-green-500","bg-green-50");
-          input.classList.add("border-red-400","bg-red-50");
-        }
-      });
-      document.getElementById("score").textContent =
-        "✅ " + correct + " de " + Object.keys(answers).length + " correctas";
+  <ol class="space-y-4 text-lg" id="acc-list"></ol>
+
+  <div class="text-center mt-8">
+    <button id="btn-acc2" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
+      Verificar
+    </button>
+    <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
+  </div>
+</section>
+
+  </div> <!-- end wrapper -->
+
+<!-- === Scripts === -->
+<script>
+// === Se Impersonal (Simple) ===
+(function(){
+  const answers = { imp1:["se come"], imp2:["se venden"], imp3:["se sirven"] };
+  document.getElementById("btn-imp").addEventListener("click",()=>{
+    let correct=0;
+    Object.keys(answers).forEach(id=>{
+      const input=document.getElementById(id);
+      const user=input.value.trim().toLowerCase();
+      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
+      else{input.classList.add("border-red-400","bg-red-50");}
     });
+    document.getElementById("score-imp").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
   });
-  </script>
+})();
+
+// === Se Accidental (Short) ===
+(function(){
+  const answers={acc4:["se te cayeron"],acc5:["se les perdió"],acc6:["se le quedó"]};
+  document.getElementById("btn-acc").addEventListener("click",()=>{
+    let correct=0;
+    Object.keys(answers).forEach(id=>{
+      const input=document.getElementById(id);
+      const user=input.value.trim().toLowerCase();
+      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
+      else{input.classList.add("border-red-400","bg-red-50");}
+    });
+    document.getElementById("score-acc").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
+  });
+})();
+
+// === Se Impersonal Continuous ===
+(function(){
+  const sentences=[
+    ["hablar","se habla","español, inglés y francés en esta empresa."],
+    ["comer","se come","muy bien en este restaurante."],
+    ["escribir","se escribe","mucho en la universidad."],
+    ["trabajar","se trabaja","duro en esta compañía."],
+    ["viajar","se viaja","mucho en verano."],
+    ["aceptar","se aceptan","tarjetas de crédito en esta tienda."],
+    ["prohibir","se prohíbe","hablar en la biblioteca."],
+    ["necesitar","se necesita","un nuevo empleado para el departamento de ventas."],
+    ["organizar","se organizan","eventos culturales todos los meses en el centro comunitario."],
+    ["producir","se producen","muchos automóviles en esta fábrica."],
+    ["investigar","se investiga","una nueva vacuna contra la enfermedad."],
+    ["celebrar","se celebra","el cumpleaños de María el próximo sábado."],
+    ["recomendar","se recomienda","visitar el parque nacional."],
+    ["alquilar","se alquilan","bicicletas en la playa."],
+    ["vender","se venden","entradas para el concierto."],
+    ["buscar","se busca","una casa en el campo."],
+    ["necesitar","se necesita","paciencia para aprender un nuevo idioma."],
+    ["hablar","se habla","español como lengua materna en este país."],
+    ["comer","se come","muy bien y barato aquí."],
+    ["aprender","se aprende","mucho en la escuela."]
+  ];
+  const quiz=document.getElementById("quiz-imp2");
+  sentences.forEach((item,i)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`Se <input type="text" id="imp2-${i}" class="border rounded px-2 py-1 w-32 text-base" placeholder="verbo"> ${item[2]} <span class="text-sm text-gray-500">( ${item[0]} )</span>`;
+    quiz.appendChild(li);
+  });
+  document.getElementById("btn-imp2").addEventListener("click",()=>{
+    let correct=0;
+    sentences.forEach((item,i)=>{
+      const input=document.getElementById(`imp2-${i}`);
+      const user=("se "+input.value.trim().toLowerCase()).replace(/\s+/g," ");
+      if(user===item[1]){input.classList.add("border-green-500","bg-green-50");correct++;}
+      else{input.classList.add("border-red-400","bg-red-50");}
+    });
+    document.getElementById("score-imp2").textContent=`✅ ${correct} de ${sentences.length} correctas`;
+  });
+})();
+
+// === Se Accidental Extended ===
+(function(){
+  const answers={
+    q1:["se te cayeron"], q2:["se les perdió"], q3:["se le quedó"], q4:["se nos olvidó"], q5:["se le cayó"],
+    q6:["se me perdieron"], q7:["se les acabó"], q8:["se le rompió"], q9:["se les olvidó"], q10:["se te quemó"],
+    q11:["se le perdió"], q12:["se nos olvidó"], q13:["se les rompieron"], q14:["se te quedó"], q15:["se me quemó"],
+    q16:["se le cayeron"], q17:["se nos perdieron"], q18:["se les acabó"], q19:["se le rompió"], q20:["se me cayó"],
+    q21:["se le olvidó"], q22:["se les quedó"], q23:["se nos rompió"], q24:["se les cayó"], q25:["se me perdió"],
+    q26:["se le acabó"], q27:["se te olvidó"], q28:["se nos quemaron"], q29:["se les rompió"], q30:["se le cayó"]
+  };
+  const list=document.getElementById("acc-list");
+  Object.keys(answers).forEach((id,i)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<input type="text" id="${id}" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> <span class="text-sm text-gray-500">( ${Object.values(answers)[i]} )</span>`;
+    list.appendChild(li);
+  });
+  document.getElementById("btn-acc2").addEventListener("click",()=>{
+    let correct=0;
+    Object.keys(answers).forEach(id=>{
+      const input=document.getElementById(id);
+      const user=input.value.trim().toLowerCase();
+      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
+      else{input.classList.add("border-red-400","bg-red-50");}
+    });
+    document.getElementById("score-acc2").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
+  });
+})();
+</script>
+
 </body>
 </html>
+
 
 
 <!--Video-->
