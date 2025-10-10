@@ -1,0 +1,1797 @@
+<!--Título-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Título</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="titleInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Pega aquí el blurb con Día y Fecha...&#10;&#10;Ejemplo:&#10;Día 11 30 de septiembre"></textarea>
+      <button onclick="generateTitle()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Título
+      </button>
+    </section>
+
+    <!-- Title Section Preview -->
+    <header id="titleSection" class="shadow rounded-xl overflow-hidden hidden mb-6">
+      <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+        <h1 id="dia" class="text-3xl font-bold drop-shadow">Día ___</h1>
+        <p id="fecha" class="text-lg italic drop-shadow">___</p>
+      </div>
+    </header>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-40 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateTitle() {
+      const input = document.getElementById("titleInput").value;
+
+      const diaLine = input.match(/D[ií]a\s*(\d+)(.*)/i);
+
+      let diaText = "___";
+      let fechaText = "___";
+
+      if (diaLine) {
+        diaText = diaLine[1];
+        if (diaLine[2] && diaLine[2].trim() !== "") {
+          fechaText = diaLine[2].trim();
+        }
+      }
+
+      if (fechaText === "___") {
+        const fechaMatch = input.match(/Fecha[:\s]*([^\n\r]+)/i);
+        if (fechaMatch) {
+          fechaText = fechaMatch[1].trim();
+        }
+      }
+
+      document.getElementById("dia").innerText = "Día " + diaText;
+      document.getElementById("fecha").innerText = fechaText;
+
+      document.getElementById("titleSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate the reusable HTML snippet
+      const htmlSnippet = `
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día ${diaText}</h1>
+    <p class="text-lg italic drop-shadow">${fechaText}</p>
+  </div>
+</header>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Evaluación-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Evaluación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="evalInput" class="w-full h-48 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Pega aquí el blurb completo..."></textarea>
+      <button onclick="generateEvaluacion()" class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Evaluación
+      </button>
+    </section>
+
+    <!-- Evaluación Preview -->
+    <section id="evalSection" class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden hidden mb-6">
+      <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+      <div class="p-4 text-gray-800">
+        <p id="evalCurrent"></p>
+        <div id="evalUpcoming" class="mt-4"></div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-56 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateEvaluacion() {
+      const input = document.getElementById("evalInput").value;
+
+      // Get today's quiz (Evaluación:)
+      const currentMatch = input.match(/Evaluación[:\s]*([^\n\r]*)/i);
+      const currentQuiz = currentMatch ? currentMatch[1].trim() : "Nada";
+
+      // Look for "Evaluaciones" under Información Adicional
+      const evalBlockMatch = input.match(/Evaluaciones([\s\S]*?)(?=\n\s*\n|$)/i);
+      let upcomingHtml = "";
+      if (evalBlockMatch) {
+        const lines = evalBlockMatch[1].split(/\r?\n/).map(l => l.trim()).filter(l => l);
+
+        // Take the next two after "hoy"
+        const upcoming = lines.filter(l => !l.toLowerCase().includes("hoy")).slice(0, 2);
+
+        if (upcoming.length > 0) {
+          const items = upcoming.map(line => `<li>${line}</li>`).join("");
+          upcomingHtml = `
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1">${items}</ul>
+          `;
+        }
+      }
+
+      // Insert into preview
+      document.getElementById("evalCurrent").innerText = currentQuiz;
+      document.getElementById("evalUpcoming").innerHTML = upcomingHtml;
+
+      document.getElementById("evalSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate reusable HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>${currentQuiz}</p>
+    ${upcomingHtml}
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+<!--calentamiento-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Calentamiento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="calInput" class="w-full h-48 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="Pega aquí el blurb con sección de Calentamiento..."></textarea>
+      <button onclick="generateCalentamiento()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Calentamiento
+      </button>
+    </section>
+
+    <!-- Calentamiento Preview -->
+    <section id="calSection" class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden hidden mb-6">
+      <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Schoology:</p>
+          <p id="calSchoology"></p>
+        </div>
+        <div>
+          <p id="calRepasoHeading" class="font-semibold"></p>
+          <button onclick="toggleVocab()" id="toggleBtn" class="text-blue-600 hover:underline mb-2">Expandir</button>
+          <div id="vocabBox" class="hidden">
+            <div id="calVocab" class="grid grid-cols-3 gap-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateCalentamiento() {
+      const input = document.getElementById("calInput").value;
+
+      // Schoology line
+      const schoologyMatch = input.match(/Schoology[:\s]*([^\n\r]*)/i);
+      const schoology = schoologyMatch ? schoologyMatch[1].trim() : "—";
+
+      // Grab block of repaso de vocabulario
+      const repasoBlockMatch = input.match(/Repaso de vocabulario[:\s]*([^\n\r]*)[\r\n]+([\s\S]*?)(?=\n[A-ZÁÉÍÓÚÑ]|$)/i);
+
+      let repasoHeading = "Repaso de vocabulario";
+      let vocabContent = [];
+
+      if (repasoBlockMatch) {
+        repasoHeading = "Repaso de vocabulario: " + repasoBlockMatch[1].trim();
+
+        // only take numbered lines inside this block
+        const vocabMatches = [...repasoBlockMatch[2].matchAll(/(\d+)\s+([^\n\r]+)/g)].map(m => ({
+          num: parseInt(m[1], 10),
+          word: m[2].trim()
+        }));
+
+        vocabMatches.sort((a, b) => a.num - b.num);
+        vocabContent = vocabMatches;
+      }
+
+      // Build columns of 10
+      const columns = [[], [], []];
+      vocabContent.forEach((item) => {
+        const colIndex = Math.floor((item.num - 1) / 10);
+        columns[colIndex].push(`<p><span class="font-semibold">${item.num}.</span> ${item.word}</p>`);
+      });
+
+      const vocabHtml = columns.map(col => `<div class="space-y-1">${col.join("")}</div>`).join("");
+
+      // Update preview
+      document.getElementById("calSchoology").innerText = schoology;
+      document.getElementById("calRepasoHeading").innerText = repasoHeading;
+      document.getElementById("calVocab").innerHTML = vocabHtml;
+
+      document.getElementById("calSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>${schoology}</p>
+    </div>
+    <div>
+      <p class="font-semibold">${repasoHeading}</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          ${vocabHtml}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+<!--Estructura-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Estructura con Checkboxes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Input Area -->
+    <section class="mb-10 space-y-4">
+      <textarea id="estrInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Pega aquí el blurb con Introducir y Repasar..."></textarea>
+
+      <!-- Checkboxes for Apuntes -->
+      <div>
+        <label class="font-semibold block mb-2">Elige apuntes:</label>
+        <div class="flex items-center gap-4 mb-2">
+          <button type="button" onclick="toggleAll(true)" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow">Seleccionar todo</button>
+          <button type="button" onclick="toggleAll(false)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow">Deseleccionar todo</button>
+        </div>
+        <div id="apuntesCheckboxes" class="grid grid-cols-2 gap-2"></div>
+      </div>
+
+      <button onclick="generateEstructura()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Estructura
+      </button>
+    </section>
+
+    <!-- Estructura Preview -->
+    <section id="estrSection" class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden hidden mb-6">
+      <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Introducir:</p>
+          <p id="estrIntroducir"></p>
+        </div>
+        <div>
+          <p class="font-semibold">Repasar:</p>
+          <p id="estrRepasar"></p>
+        </div>
+        <div>
+          <p class="font-semibold">Apuntes:</p>
+          <div id="estrApuntes" class="space-y-6"></div> <!-- extra space between groups -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+    <!-- Debug -->
+    <pre id="debug" class="bg-gray-200 text-sm p-2 rounded mt-4"></pre>
+
+  </div>
+
+  <script>
+    let apuntesData = {};
+
+    // Load JSON into checkboxes
+    async function loadApuntes() {
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json");
+        apuntesData = await res.json();
+
+        const container = document.getElementById("apuntesCheckboxes");
+        container.innerHTML = "";
+
+        Object.keys(apuntesData).forEach(group => {
+          const id = "chk_" + group.replace(/\s+/g, "_");
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <label class="inline-flex items-center">
+              <input type="checkbox" value="${group}" id="${id}" class="mr-2">
+              ${apuntesData[group].title || group}
+            </label>
+          `;
+          container.appendChild(div);
+        });
+
+        document.getElementById("debug").textContent =
+          "Cargado apuntes.json con grupos:\n" +
+          Object.keys(apuntesData).join(", ");
+      } catch (err) {
+        document.getElementById("debug").textContent =
+          "Error al cargar apuntes.json: " + err;
+        console.error(err);
+      }
+    }
+
+    // Toggle all checkboxes
+    function toggleAll(checked) {
+      document.querySelectorAll("#apuntesCheckboxes input[type=checkbox]").forEach(cb => {
+        cb.checked = checked;
+      });
+    }
+
+    async function generateEstructura() {
+      const input = document.getElementById("estrInput").value;
+
+      // Parse Introducir
+      const introMatch = input.match(/Introducir[:\s]*([^\n\r]*)/i);
+      const introducir = introMatch ? introMatch[1].trim() : "";
+
+      // Parse Repasar
+      const repMatch = input.match(/Repasar[:\s]*([^\n\r]*)/i);
+      const repasar = repMatch ? repMatch[1].trim() : "";
+
+      // Get checked Apuntes groups
+      const selectedGroups = Array.from(
+        document.querySelectorAll("#apuntesCheckboxes input:checked")
+      ).map(cb => cb.value);
+
+      let apHtml = "";
+      selectedGroups.forEach(groupKey => {
+        const group = apuntesData[groupKey];
+        if (group && group.links) {
+          const links = group.links
+            .map(
+              l =>
+                `<li><a href="${l.url}" target="_blank" class="text-blue-600 hover:underline">${l.title}</a></li>`
+            )
+            .join("");
+          apHtml += `
+            <div>
+              <p class="font-semibold mt-4">${group.title}</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6">${links}</ul>
+            </div>
+          `;
+        } else {
+          apHtml += `<p class="text-red-600">No se encontró el grupo: ${groupKey}</p>`;
+        }
+      });
+
+      // Update preview
+      document.getElementById("estrIntroducir").innerText = introducir;
+      document.getElementById("estrRepasar").innerText = repasar;
+      document.getElementById("estrApuntes").innerHTML = apHtml;
+
+      document.getElementById("estrSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>${introducir}</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>${repasar}</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        ${apHtml}
+      </div>
+    </div>
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("debug").textContent +=
+        "\nSeleccionado: " + selectedGroups.join(", ");
+    }
+
+    // Load checkboxes on page load
+    loadApuntes();
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Curiosidad-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Curiosidad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6">
+      <textarea id="curInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Pega aquí el blurb con sección de Curiosidad..."></textarea>
+      <div class="mt-4">
+        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
+        <input type="text" id="imgUrl" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="https://...">
+      </div>
+      <button onclick="generateCuriosidad()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Curiosidad
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="curSection" class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden hidden mb-6">
+      <h2 id="curTitle" class="text-indigo-600 font-semibold text-lg px-4 pt-4"></h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <p id="curCaption" class="font-semibold text-lg"></p>
+        <figure id="curFigure" class="hidden">
+          <img id="curImage" class="rounded-lg shadow-md mx-auto" alt="">
+        </figure>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    // Convert GitHub blob link -> raw link
+    function cleanImageUrl(url) {
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      return url;
+    }
+
+    function generateCuriosidad() {
+      const input = document.getElementById("curInput").value;
+      let imgUrl = document.getElementById("imgUrl").value.trim();
+      imgUrl = cleanImageUrl(imgUrl);
+
+      // Match "Curiosidad #" line
+      const curMatch = input.match(/Curiosidad\s*(\d+)/i);
+      const curNum = curMatch ? curMatch[1] : "";
+
+      // Caption = next line after Curiosidad
+      const captionMatch = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const curIndex = captionMatch.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
+      const caption = (curIndex !== -1 && captionMatch[curIndex + 1]) ? captionMatch[curIndex + 1] : "";
+
+      // Update preview
+      document.getElementById("curTitle").innerText = curNum ? `Curiosidad ${curNum}` : "Curiosidad";
+      document.getElementById("curCaption").innerText = caption || "";
+
+      if (imgUrl) {
+        document.getElementById("curFigure").classList.remove("hidden");
+        document.getElementById("curImage").src = imgUrl;
+        document.getElementById("curImage").alt = caption || `Curiosidad ${curNum}`;
+      } else {
+        document.getElementById("curFigure").classList.add("hidden");
+      }
+
+      document.getElementById("curSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Build HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad ${curNum}</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
+    ${imgUrl ? `
+    <figure>
+      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto">
+    </figure>` : ""}
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Curiosidad-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Curiosidad</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6">
+      <textarea id="curInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Pega aquí el blurb con sección de Curiosidad..."></textarea>
+      <div class="mt-4">
+        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
+        <input type="text" id="imgUrl" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="https://...">
+      </div>
+      <button onclick="generateCuriosidad()" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Curiosidad
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="curSection" class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden hidden mb-6">
+      <h2 id="curTitle" class="text-indigo-600 font-semibold text-lg px-4 pt-4"></h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <p id="curCaption" class="font-semibold text-lg"></p>
+        <figure id="curFigure" class="hidden">
+          <img id="curImage" class="rounded-lg shadow-md mx-auto" alt="">
+        </figure>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    // Convert GitHub blob link -> raw link
+    function cleanImageUrl(url) {
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      return url;
+    }
+
+    function generateCuriosidad() {
+      const input = document.getElementById("curInput").value;
+      let imgUrl = document.getElementById("imgUrl").value.trim();
+      imgUrl = cleanImageUrl(imgUrl);
+
+      // Match "Curiosidad #" line
+      const curMatch = input.match(/Curiosidad\s*(\d+)/i);
+      const curNum = curMatch ? curMatch[1] : "";
+
+      // Caption = next line after Curiosidad
+      const captionMatch = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const curIndex = captionMatch.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
+      const caption = (curIndex !== -1 && captionMatch[curIndex + 1]) ? captionMatch[curIndex + 1] : "";
+
+      // Update preview
+      document.getElementById("curTitle").innerText = curNum ? `Curiosidad ${curNum}` : "Curiosidad";
+      document.getElementById("curCaption").innerText = caption || "";
+
+      if (imgUrl) {
+        document.getElementById("curFigure").classList.remove("hidden");
+        document.getElementById("curImage").src = imgUrl;
+        document.getElementById("curImage").alt = caption || `Curiosidad ${curNum}`;
+      } else {
+        document.getElementById("curFigure").classList.add("hidden");
+      }
+
+      document.getElementById("curSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Build HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad ${curNum}</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
+    ${imgUrl ? `
+    <figure>
+      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto">
+    </figure>` : ""}
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+<!--Cultura-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Cultura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6 space-y-4">
+      <div>
+        <label class="block font-semibold mb-1">Tema cultural:</label>
+        <input type="text" id="culturaTopic" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Hacer surf al estilo hispano">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Lectura (opcional):</label>
+        <textarea id="culturaLectura" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="Pega aquí el texto de la lectura..."></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
+        <input type="text" id="culturaImg" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-400" placeholder="https://...">
+      </div>
+
+      <button onclick="generateCultura()" class="mt-4 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Cultura
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="culturaSection" class="bg-white shadow rounded-xl border-l-4 border-teal-500 overflow-hidden hidden mb-6">
+      <h2 class="text-teal-600 font-semibold text-lg px-4 pt-4">Cultura</h2>
+      <div class="p-4 text-gray-800">
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="md:w-2/3 space-y-4">
+            <p id="culturaTopicOut" class="font-semibold text-lg"></p>
+            <p id="culturaLecturaOut" class="whitespace-pre-line"></p>
+          </div>
+          <figure id="culturaFigure" class="hidden md:w-1/3 flex-shrink-0">
+            <img id="culturaImage" class="rounded-lg shadow-md w-full max-w-xs mx-auto" alt="">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    // Convert GitHub blob link -> raw link
+    function cleanImageUrl(url) {
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      return url;
+    }
+
+    function generateCultura() {
+      const topic = document.getElementById("culturaTopic").value.trim();
+      const lectura = document.getElementById("culturaLectura").value.trim();
+      let imgUrl = document.getElementById("culturaImg").value.trim();
+      imgUrl = cleanImageUrl(imgUrl);
+
+      // Update preview
+      document.getElementById("culturaTopicOut").innerText = topic || "";
+      document.getElementById("culturaLecturaOut").innerText = lectura || "";
+
+      if (imgUrl) {
+        document.getElementById("culturaFigure").classList.remove("hidden");
+        document.getElementById("culturaImage").src = imgUrl;
+        document.getElementById("culturaImage").alt = topic || "Cultura";
+      } else {
+        document.getElementById("culturaFigure").classList.add("hidden");
+      }
+
+      document.getElementById("culturaSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Build HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-teal-500 overflow-hidden">
+  <h2 class="text-teal-600 font-semibold text-lg px-4 pt-4">Cultura</h2>
+  <div class="p-4 text-gray-800">
+    <div class="flex flex-col md:flex-row md:items-start gap-4">
+      <div class="md:w-2/3 space-y-4">
+        ${topic ? `<p class="font-semibold text-lg">${topic}</p>` : ""}
+        ${lectura ? `<p class="whitespace-pre-line">${lectura}</p>` : ""}
+      </div>
+      ${imgUrl ? `
+      <figure class="md:w-1/3 flex-shrink-0">
+        <img src="${imgUrl}" alt="${topic || "Cultura"}" class="rounded-lg shadow-md w-full max-w-xs mx-auto">
+      </figure>` : ""}
+    </div>
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Práctica de verbos-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador: Práctica de las conjugaciones</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .checkmark { margin-left: 6px; font-weight: bold; }
+    .correct { color: #16a34a; }
+    .incorrect { color: #dc2626; }
+  </style>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-8">
+
+    <!-- Input -->
+    <section class="bg-white rounded-xl shadow p-5 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">Generador: Práctica de las conjugaciones</h1>
+      <textarea id="inputArea" class="w-full h-64 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-400 font-mono text-sm"
+        placeholder="ser
+yo fui
+tú fuiste
+él/ella/usted fue
+nosotros/nosotras fuimos
+vosotros/vosotras fuisteis
+ellos/ellas/ustedes fueron"></textarea>
+      <button id="genBtn" class="mt-2 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">Generar sección</button>
+      <span id="parseMsg" class="text-sm text-gray-600 ml-2"></span>
+    </section>
+
+    <!-- Preview -->
+    <section>
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="previewArea"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeBox" class="hidden space-y-3">
+      <h2 class="text-xl font-semibold">Código HTML para copiar</h2>
+      <textarea id="htmlCode" class="w-full h-96 p-4 border rounded-xl font-mono text-xs bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    // --- Helper for preview ---
+    function instantiateWidget(container, rawText) {
+      const normalize = (s) => s.normalize("NFC").toLowerCase().trim();
+      function parseInput(text) {
+        const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+        let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+        for (const line of lines) {
+          if (personStart.test(line)) {
+            const form=line.split(/\s+/).slice(1).join(" ");
+            temp.push(form);
+            if (temp.length===6 && currentVerb) { data[currentVerb]=temp; temp=[]; }
+          } else {
+            currentVerb=line.replace(/[:→].*$/,"").trim();
+          }
+        }
+        return data;
+      }
+
+      const answers=parseInput(rawText);
+      let totalCells=0;
+
+      container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+
+      const tbody=container.querySelector("tbody");
+      Object.keys(answers).forEach(verb=>{
+        const tr=document.createElement("tr");
+        tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+        answers[verb].forEach((ans,i)=>{
+          const td=document.createElement("td");
+          td.className="px-3 py-2";
+          td.innerHTML=`
+            <div class="flex items-center">
+              <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+              <span class="checkmark"></span>
+            </div>`;
+          tr.appendChild(td); totalCells++;
+        });
+        tbody.appendChild(tr);
+      });
+
+      const progress=container.querySelector(".progress");
+      function updateProgress(){
+        const c=container.querySelectorAll(".checkmark.correct").length;
+        progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+      }
+      function checkInput(inp){
+        const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+        const mark=inp.nextElementSibling;
+        if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+        else{mark.textContent="✗";mark.className="checkmark incorrect";}
+        updateProgress();
+      }
+      function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+      function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+      function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+
+      container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+      container.querySelector(".checkBtn").addEventListener("click",checkAll);
+      container.querySelector(".revealBtn").addEventListener("click",revealAll);
+      container.querySelector(".resetBtn").addEventListener("click",resetAll);
+      updateProgress();
+    }
+
+    // --- Generate Button ---
+    document.getElementById("genBtn").addEventListener("click", ()=>{
+      const raw=document.getElementById("inputArea").value.trim();
+      if(!raw) return;
+
+      // PREVIEW
+      const prevId="prev-"+Math.random().toString(36).slice(2,9);
+      document.getElementById("previewArea").innerHTML=`<div id="${prevId}"></div>`;
+      instantiateWidget(document.getElementById(prevId),raw);
+
+      // EXPORT — full standalone snippet
+      const safeRaw=raw.replace(/`/g,"\\`").replace(/<\/script>/gi,"<\\/script>");
+      const snippet=`
+<div id="${prevId}"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(\`${safeRaw}\`);
+  let totalCells=0;
+  const container=document.getElementById("${prevId}");
+  container.innerHTML=\`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>\`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=\`<td class="px-3 py-2 font-semibold">\${verb}</td>\`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=\`<div class="flex items-center">
+        <input type="text" data-verb="\${verb}" data-index="\${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>\`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?\`🎉 ¡Completado! (\${c} / \${totalCells} correct)\`: \`✅ \${c} / \${totalCells} correct\`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+<\/script>`;
+      document.getElementById("htmlCode").value=snippet;
+      document.getElementById("codeBox").classList.remove("hidden");
+
+      const verbCount=(raw.match(/\n\s*(yo|tú|él|nosotros|vosotros|ellos)/gi)||[]).length/6;
+      document.getElementById("parseMsg").textContent=`Detectados ~${Math.max(1,Math.floor(verbCount))} verbo(s).`;
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Práactica general-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador: Práctica (general)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6 space-y-4 bg-white shadow rounded-xl p-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Generador: Práctica (general)</h1>
+
+      <div>
+        <label class="block font-semibold mb-1">Título (opcional):</label>
+        <input type="text" id="practicaTitle" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Práctica de vocabulario">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Contenido / instrucciones:</label>
+        <textarea id="practicaContent" class="w-full h-40 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="Escribe aquí las instrucciones o la actividad..."></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Link / Embed / Script (opcional):</label>
+        <textarea id="practicaEmbed" class="w-full h-24 p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono text-sm" placeholder="https://... o código <iframe> o <script>"></textarea>
+      </div>
+
+      <button onclick="generatePractica()" class="mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="practicaSection" class="hidden mb-6">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="practicaPreview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generatePractica() {
+      const title = document.getElementById("practicaTitle").value.trim() || "Práctica";
+      const content = document.getElementById("practicaContent").value.trim();
+      const embed = document.getElementById("practicaEmbed").value.trim();
+
+      // Handle embed separately
+      let embedPreview = "";
+      let embedOutput = "";
+      if (embed) {
+        if (embed.startsWith("<script")) {
+          embedPreview = `<p class="text-gray-500 italic">[script block]</p>`;
+          embedOutput = embed;
+        } else if (embed.startsWith("<")) {
+          embedPreview = embed;
+          embedOutput = embed;
+        } else {
+          embedPreview = `<a href="${embed}" target="_blank" class="text-amber-600 hover:underline">${embed}</a>`;
+          embedOutput = `<a href="${embed}" target="_blank" class="text-amber-600 hover:underline">${embed}</a>`;
+        }
+      }
+
+      // Build inner content
+      let innerContent = "";
+      if (content) innerContent += `<p class="whitespace-pre-line">${content}</p>`;
+      if (embedOutput) innerContent += embedOutput;
+
+      // Wrapper logic: if only a script, no padding
+      const contentWrapper = (embed.startsWith("<script") && !content)
+        ? `<div class="text-gray-800">${innerContent}</div>`
+        : `<div class="p-4 text-gray-800 space-y-4">${innerContent}</div>`;
+
+      // Final snippet
+      let htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-amber-500 overflow-hidden">
+  <h2 class="text-amber-600 font-semibold text-lg px-4 pt-4">${title}</h2>
+  ${contentWrapper}
+</section>`.trim();
+
+      // Update preview
+      let previewWrapper = (embed.startsWith("<script") && !content)
+        ? `<div class="text-gray-800">${content ? `<p class="whitespace-pre-line">${content}</p>` : ""}${embedPreview}</div>`
+        : `<div class="p-4 text-gray-800 space-y-4">${content ? `<p class="whitespace-pre-line">${content}</p>` : ""}${embedPreview}</div>`;
+
+      document.getElementById("practicaPreview").innerHTML = `
+<section class="bg-white shadow rounded-xl border-l-4 border-amber-500 overflow-hidden">
+  <h2 class="text-amber-600 font-semibold text-lg px-4 pt-4">${title}</h2>
+  ${previewWrapper}
+</section>`;
+
+      document.getElementById("practicaSection").classList.remove("hidden");
+
+      // Update output
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("codeOutput").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Video-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador: Video (clásico + color)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .video-wrap {
+      display: flex;
+      justify-content: center;
+      background: #000;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .video-wrap iframe {
+      width: 560px;
+      height: 315px;
+      max-width: 100%;
+      border: 0;
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Input Form -->
+    <section class="bg-white shadow rounded-xl p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">🎥 Generador: Video (formato clásico con color)</h1>
+
+      <div>
+        <label class="block font-semibold mb-1">Título del video:</label>
+        <input id="videoTitle"
+               class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-slate-400"
+               placeholder="Ej: Juanes – Nada valgo sin tu amor (Música #1)">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Descripción / instrucciones (opcional):</label>
+        <textarea id="videoDesc"
+                  class="w-full p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-slate-400"
+                  rows="3"
+                  placeholder="Escribe instrucciones o contexto para el video..."></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">URL de YouTube o Vimeo:</label>
+        <input id="videoURL"
+               class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-slate-400"
+               placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Color del borde lateral:</label>
+        <select id="colorChoice"
+                class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-slate-400">
+          <option value="slate">Slate (predeterminado)</option>
+          <option value="blue">Azul</option>
+          <option value="red">Rojo</option>
+          <option value="green">Verde</option>
+          <option value="yellow">Amarillo</option>
+          <option value="purple">Morado</option>
+          <option value="teal">Turquesa</option>
+          <option value="indigo">Índigo</option>
+          <option value="pink">Rosa</option>
+          <option value="orange">Naranja</option>
+        </select>
+      </div>
+
+      <button onclick="generateVideo()"
+              class="mt-4 bg-slate-700 hover:bg-slate-800 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="videoSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="videoPreview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode"
+                class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+  </div>
+
+  <script>
+    function generateVideo() {
+      const title = document.getElementById("videoTitle").value.trim() || "Video";
+      const desc = document.getElementById("videoDesc").value.trim();
+      const color = document.getElementById("colorChoice").value;
+      let url = document.getElementById("videoURL").value.trim();
+
+      if (!url) {
+        alert("Por favor ingresa un enlace de video.");
+        return;
+      }
+
+      // Convert to embed form
+      if (url.includes("youtube.com/watch?v=")) {
+        const id = new URL(url).searchParams.get("v");
+        url = `https://www.youtube.com/embed/${id}`;
+      } else if (url.includes("youtu.be/")) {
+        const id = url.split("/").pop().split("?")[0];
+        url = `https://www.youtube.com/embed/${id}`;
+      } else if (url.includes("vimeo.com/")) {
+        const id = url.split("/").pop().split("?")[0];
+        url = `https://player.vimeo.com/video/${id}`;
+      }
+
+      const html = `
+<!-- ▶️ YouTube embed (formato clásico) -->
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-${color}-600 overflow-hidden">
+  <h2 class="text-${color}-700 font-semibold text-lg mb-2">${title}</h2>
+  ${desc ? `<p class="text-gray-700 mb-3">${desc}</p>` : ""}
+  <div class="video-wrap">
+    <iframe width="560" height="315"
+      src="${url}"
+      title="${title}" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>`.trim();
+
+      document.getElementById("videoPreview").innerHTML = html;
+      document.getElementById("videoSection").classList.remove("hidden");
+      document.getElementById("htmlCode").value = html;
+      document.getElementById("codeOutput").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Conversación-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador: Conversación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Input Area -->
+    <section class="mb-6 space-y-4 bg-white shadow rounded-xl p-6">
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Generador: Conversación</h1>
+
+      <div>
+        <label class="block font-semibold mb-1">Título (opcional):</label>
+        <input type="text" id="convTitle" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Conversación">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
+        <input type="text" id="convImg" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="https://...">
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Instrucciones / Texto:</label>
+        <textarea id="convText" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Escribe aquí tus instrucciones o preguntas..."></textarea>
+      </div>
+
+      <button type="button" onclick="generateConversacion()" class="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="convSection" class="hidden mb-6">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="convPreview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    window.generateConversacion = function() {
+      const title = document.getElementById("convTitle").value.trim() || "Conversación";
+      const imgUrl = document.getElementById("convImg").value.trim();
+      const text = document.getElementById("convText").value.trim();
+
+      const htmlSnippet = [
+        '<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">',
+        `  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">${title}</h2>`,
+        '  <div class="p-4 text-gray-800 space-y-4">',
+        imgUrl ? `    <img src="${imgUrl}" alt="${title}" class="rounded-lg shadow-md max-h-64 object-cover">` : "",
+        text ? `    <p class="whitespace-pre-line">${text}</p>` : "",
+        '    <div class="flex items-center gap-3 mt-4">',
+        '      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>',
+        '      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>',
+        '      <span class="font-mono" data-timer>00:00</span>',
+        '    </div>',
+        '  </div>',
+        '</section>'
+      ].join("\n");
+
+      // Show preview
+      document.getElementById("convPreview").innerHTML = htmlSnippet;
+      document.getElementById("convSection").classList.remove("hidden");
+
+      // Show output
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("codeOutput").classList.remove("hidden");
+    };
+
+    // Timer logic
+    window.startTimer = function(btn) {
+      const container = btn.closest("div");
+      const display = container.querySelector("[data-timer]");
+      let seconds = 0;
+      clearInterval(container.timer);
+      container.timer = setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const s = String(seconds % 60).padStart(2, "0");
+        display.textContent = `${m}:${s}`;
+      }, 1000);
+    };
+
+    window.resetTimer = function(btn) {
+      const container = btn.closest("div");
+      const display = container.querySelector("[data-timer]");
+      clearInterval(container.timer);
+      display.textContent = "00:00";
+    };
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Información adivional-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador: Información adicional</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .info-section h4 {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .info-section ul {
+      margin-top: 0.1rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- Generator Form -->
+    <section class="bg-white shadow rounded-xl p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">Generador: Información adicional</h1>
+
+      <!-- Course Selector -->
+      <div>
+        <label class="block font-semibold mb-1">Selecciona el curso:</label>
+        <select id="courseSelect" class="w-full border rounded-xl p-2 shadow-sm focus:ring-2 focus:ring-purple-400">
+          <option value="II">Español II (sophomores)</option>
+          <option value="IV">Español IV (seniors)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Blurb del día:</label>
+        <textarea id="blurbInput" class="w-full h-40 p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-purple-400"></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Selecciona gramática:</label>
+        <div id="grammarOptions" class="grid grid-cols-2 gap-2 text-sm"></div>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Selecciona vocabulario:</label>
+        <div id="vocabOptions" class="grid grid-cols-2 gap-2 text-sm"></div>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Opciones adicionales:</label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" id="tripOption" checked>
+          <span>Incluir viaje a Costa Rica</span>
+        </label>
+      </div>
+
+      <button onclick="generateInfo()" class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="infoSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="infoPreview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    let jsonData = {};
+
+    async function loadJSON() {
+      const url = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/apuntes.json";
+      const res = await fetch(url);
+      jsonData = await res.json();
+      renderOptions();
+    }
+
+    function renderOptions() {
+      const grammarDiv = document.getElementById("grammarOptions");
+      grammarDiv.innerHTML = "";
+      Object.keys(jsonData).forEach(key => {
+        if (key !== "vocabulario") {
+          const label = document.createElement("label");
+          label.className = "flex items-center space-x-2";
+          label.innerHTML = `<input type="checkbox" value="${key}" class="grammar-check"> <span>${jsonData[key].title}</span>`;
+          grammarDiv.appendChild(label);
+        }
+      });
+
+      const vocabDiv = document.getElementById("vocabOptions");
+      vocabDiv.innerHTML = "";
+      Object.keys(jsonData.vocabulario.chapters).forEach(ch => {
+        const label = document.createElement("label");
+        label.className = "flex items-center space-x-2";
+        label.innerHTML = `<input type="checkbox" value="${ch}" class="vocab-check"> <span>${ch}</span>`;
+        vocabDiv.appendChild(label);
+      });
+    }
+
+    function extractQuizzes(blurb) {
+      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
+      const evalIndex = lines.findIndex(l => l.toLowerCase().startsWith("información adicional:") || l.toLowerCase().startsWith("evaluaciones"));
+      if (evalIndex === -1) return [];
+      const evals = [];
+      for (let i = evalIndex + 1; i < lines.length; i++) {
+        if (/ayuda con la vida/i.test(lines[i]) || /viaje/i.test(lines[i])) break;
+        if (lines[i].toLowerCase().startsWith("vocabulario") || lines[i].toLowerCase().startsWith("pretérito") || lines[i].toLowerCase().startsWith("imperfecto")) {
+          if (!lines[i].includes("hoy")) evals.push(lines[i]);
+        }
+      }
+      return evals.slice(0, 2);
+    }
+
+    function extractTareas(blurb) {
+      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
+      const tareaIndex = lines.findIndex(l => l.toLowerCase().startsWith("tarea"));
+      if (tareaIndex === -1) return [];
+      const tareas = [];
+      let tareaText = lines[tareaIndex].replace(/^tarea\s*:/i, "");
+      for (let i = tareaIndex + 1; i < lines.length; i++) {
+        if (lines[i].toLowerCase().startsWith("conversación")) break;
+        tareaText += " " + lines[i];
+      }
+      tareaText = tareaText.replace(/\.\s*/g, " ");
+      const regex = /([^:]+):\s*(\d{1,2}\s*de\s*\w+)/gi;
+      let match;
+      while ((match = regex.exec(tareaText)) !== null) {
+        tareas.push({ tema: match[1].trim(), fecha: match[2].trim() });
+      }
+      return tareas;
+    }
+
+    function generateInfo() {
+      const blurb = document.getElementById("blurbInput").value.trim();
+      const course = document.getElementById("courseSelect").value;
+      const quizzes = extractQuizzes(blurb);
+      const tareas = extractTareas(blurb);
+
+      // choose course-specific Evaluaciones link
+      const evalLink = course === "IV"
+        ? "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
+        : "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones";
+
+      let quizzesHtml = "";
+      if (quizzes.length) {
+        quizzesHtml = `
+          <h4 class="font-semibold"><a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
+          <ul class="list-disc list-inside">
+            ${quizzes.map(q => `<li>${q}</li>`).join("")}
+          </ul>
+        `;
+      }
+
+      let tareasHtml = "";
+      if (tareas.length) {
+        tareasHtml = `
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            ${tareas.map(t => `<li><span class="font-semibold">${t.tema}</span> 📅 ${t.fecha}</li>`).join("")}
+          </ul>
+        `;
+      }
+
+      const selectedGrammar = Array.from(document.querySelectorAll(".grammar-check:checked")).map(cb => cb.value);
+      let grammarHtml = "";
+      selectedGrammar.forEach(key => {
+        const group = jsonData[key];
+        grammarHtml += `<h4 class="font-semibold">${group.title}</h4><ul class="list-disc list-inside text-purple-700">`;
+        group.links.forEach(link => {
+          grammarHtml += `<li><a href="${link.url}" target="_blank" class="hover:underline">${link.title}</a></li>`;
+        });
+        grammarHtml += `</ul>`;
+      });
+
+      const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked")).map(cb => cb.value);
+      let vocabHtml = "";
+      if (selectedVocab.length) {
+        vocabHtml += `<h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700">`;
+        selectedVocab.forEach(ch => {
+          const data = jsonData.vocabulario.chapters[ch];
+          vocabHtml += `<li>${ch}: <a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>, <a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a></li>`;
+        });
+        vocabHtml += `</ul>`;
+      }
+
+      let tripHtml = "";
+      if (document.getElementById("tripOption").checked) {
+        tripHtml = `
+  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+        `;
+      }
+
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  ${quizzesHtml}
+  ${tareasHtml}
+  ${grammarHtml}
+  ${vocabHtml}
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  ${tripHtml}
+</section>
+      `.trim();
+
+      document.getElementById("infoPreview").innerHTML = htmlSnippet;
+      document.getElementById("infoSection").classList.remove("hidden");
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("codeOutput").classList.remove("hidden");
+    }
+
+    loadJSON();
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!--Aviso/Anuncio-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador: Aviso / Anuncio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans p-6">
+  <div class="max-w-3xl mx-auto space-y-6">
+
+    <!-- Generator Form -->
+    <section class="bg-white shadow rounded-xl p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800">Generador: Aviso / Anuncio</h1>
+
+      <!-- Type selector -->
+      <div>
+        <label class="block font-semibold mb-1">Tipo:</label>
+        <select id="typeSelect" class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400" onchange="renderForm()">
+          <option value="aviso">Aviso</option>
+          <option value="anuncio">Anuncio</option>
+        </select>
+      </div>
+
+      <!-- Dynamic form fields -->
+      <div id="dynamicFields"></div>
+
+      <button onclick="generateBlock()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar sección
+      </button>
+    </section>
+
+    <!-- Preview -->
+    <section id="previewSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <div id="preview"></div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="outputSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+  </div>
+
+  <script>
+    function renderForm() {
+      const type = document.getElementById("typeSelect").value;
+      const fieldsDiv = document.getElementById("dynamicFields");
+
+      if (type === "aviso") {
+        fieldsDiv.innerHTML = `
+          <div>
+            <label class="block font-semibold mb-1">Título (opcional):</label>
+            <input type="text" id="avisoTitle" class="w-full p-2 border rounded-xl shadow-sm" placeholder="¡Aviso!">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Texto principal:</label>
+            <input type="text" id="avisoText" class="w-full p-2 border rounded-xl shadow-sm">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Fecha (opcional):</label>
+            <input type="text" id="avisoDate" class="w-full p-2 border rounded-xl shadow-sm" placeholder="📅 26 sep">
+          </div>
+        `;
+      } else {
+        fieldsDiv.innerHTML = `
+          <div>
+            <label class="block font-semibold mb-1">Título (opcional):</label>
+            <input type="text" id="anuncioTitle" class="w-full p-2 border rounded-xl shadow-sm" placeholder="📢 Anuncio:">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Texto principal:</label>
+            <textarea id="anuncioText" class="w-full h-24 p-2 border rounded-xl shadow-sm"></textarea>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Cuerpo (opcional):</label>
+            <textarea id="anuncioBody" class="w-full h-24 p-2 border rounded-xl shadow-sm"></textarea>
+          </div>
+        `;
+      }
+    }
+
+    function generateBlock() {
+      const type = document.getElementById("typeSelect").value;
+      let htmlSnippet = "";
+
+      if (type === "aviso") {
+        const title = document.getElementById("avisoTitle").value.trim() || "¡Aviso!";
+        const text = document.getElementById("avisoText").value.trim();
+        const date = document.getElementById("avisoDate").value.trim();
+
+        htmlSnippet = `
+<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
+  <p class="font-semibold text-yellow-800"><strong>${title}</strong></p>
+  <p class="text-sm text-yellow-900">
+    ${text}
+    ${date ? `<span class="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded-full">${date}</span>` : ""}
+  </p>
+</div>
+        `.trim();
+      } else {
+        const title = document.getElementById("anuncioTitle").value.trim() || "📢 Anuncio:";
+        const text = document.getElementById("anuncioText").value.trim();
+        const body = document.getElementById("anuncioBody").value.trim();
+
+        htmlSnippet = `
+<div class="p-4 rounded-lg bg-green-100 border border-green-300">
+  <p class="font-bold text-green-800 mb-2">${title}</p>
+  <p class="text-green-900">${text.replace(/\n/g,"<br>")}</p>
+  ${body ? `<p class="mt-2 text-green-900">${body.replace(/\n/g,"<br>")}</p>` : ""}
+</div>
+        `.trim();
+      }
+
+      // Update preview
+      document.getElementById("preview").innerHTML = htmlSnippet;
+      document.getElementById("previewSection").classList.remove("hidden");
+
+      // Update output
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("outputSection").classList.remove("hidden");
+    }
+
+    // Load initial form
+    renderForm();
+  </script>
+</body>
+</html>
