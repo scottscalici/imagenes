@@ -15,28 +15,88 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 4</h1>
+    <p class="text-lg italic drop-shadow">9 de septiembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Presente 2</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 8.1 - la próxima clase</li><li>Presente 3 - Día 6</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Presente 5</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 2 - 0 - 4</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> la chica</p><p><span class="font-semibold">2.</span> el problema</p><p><span class="font-semibold">3.</span> la papelera</p><p><span class="font-semibold">4.</span> las materias</p><p><span class="font-semibold">5.</span> entre</p><p><span class="font-semibold">6.</span> descansar</p><p><span class="font-semibold">7.</span> trabajar</p><p><span class="font-semibold">8.</span> el/la esposo/a</p><p><span class="font-semibold">9.</span> las profesiones</p><p><span class="font-semibold">10.</span> rubio/a</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> ruso/a</p><p><span class="font-semibold">12.</span> el pasatiempo</p><p><span class="font-semibold">13.</span> el vóleibol</p><p><span class="font-semibold">14.</span> pedir (e:i)</p><p><span class="font-semibold">15.</span> ir en taxi (m.)</p><p><span class="font-semibold">16.</span> la tabla de (wind)surf</p><p><span class="font-semibold">17.</span> equivocado/a</p><p><span class="font-semibold">18.</span> tercer, tercero/a</p><p><span class="font-semibold">19.</span> la camiseta</p><p><span class="font-semibold">20.</span> hacer juego (con)</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> marrón, café</p><p><span class="font-semibold">22.</span> cepillarse el pelo</p><p><span class="font-semibold">23.</span> algo</p><p><span class="font-semibold">24.</span> tampoco</p><p><span class="font-semibold">25.</span> por la noche</p><p><span class="font-semibold">26.</span> el pavo</p><p><span class="font-semibold">27.</span> el yogur</p><p><span class="font-semibold">28.</span> saber (a)</p><p><span class="font-semibold">29.</span> el amor</p><p><span class="font-semibold">30.</span> llevarse bien/mal (con)</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Presente: decir, tener, venir, oír, oler, caber</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Presente: -ger, -gir, -cer, -cir, -guir</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Presente</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente" target="_blank" class="text-blue-600 hover:underline">General – presente</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/2" target="_blank" class="text-blue-600 hover:underline">Irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3" target="_blank" class="text-blue-600 hover:underline">Cambios radicales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/4" target="_blank" class="text-blue-600 hover:underline">Cambios ortográficos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 4</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">Cenote sagrado</p>
+    
+  </div>
+</section>
 
 
 
@@ -88,7 +148,25 @@
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+          <h4 class="font-semibold"><a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
+          <ul class="list-disc list-inside">
+            <li>Vocabulario 8.1 - la próxima clase</li>
+          </ul>
+        
+  
+  <h4 class="font-semibold">Presente</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente" target="_blank" class="hover:underline">General – presente</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/2" target="_blank" class="hover:underline">Irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3" target="_blank" class="hover:underline">Cambios radicales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/4" target="_blank" class="hover:underline">Cambios ortográficos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li></ul>
+  <h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700"><li>Lección 8: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/8" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/8/flashcards" target="_blank" class="hover:underline">Flashcards</a></li></ul>
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+        
+</section>
 
   </div>
 
