@@ -1,0 +1,76 @@
+<!-- 🪙 Lanzar moneda - Peso mexicano (3D Flip) -->
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-amber-500 text-center max-w-sm mx-auto">
+  <h2 class="text-amber-600 font-semibold text-lg mb-4">Lanzar moneda</h2>
+
+  <!-- Coin Container -->
+  <div class="relative mx-auto perspective-[1000px] w-[150px] h-[150px]" id="coin-container">
+    <div id="coin" class="absolute inset-0 transition-transform duration-[1000ms] transform-style-preserve-3d">
+      <!-- Cara (Águila) -->
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/c680d7d4-65ee-4a39-897e-c18217ebf8f3.png"
+        alt="Cara - Águila"
+        class="absolute inset-0 w-full h-full rounded-full backface-hidden"
+      />
+      <!-- Cruz ($1) -->
+      <img
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/e020547f-6598-4465-8a87-85b24725d823.png"
+        alt="Cruz - $1"
+        class="absolute inset-0 w-full h-full rounded-full backface-hidden transform rotateY-180"
+      />
+    </div>
+  </div>
+
+  <!-- Flip button -->
+  <button
+    id="flipBtn"
+    class="mt-6 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded font-semibold"
+  >
+    Lanzar moneda
+  </button>
+
+  <!-- Result text -->
+  <p id="resultText" class="mt-4 text-gray-800 font-medium min-h-[1.5rem]"></p>
+</section>
+
+<!-- Optional style for 3D flipping -->
+<style>
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .perspective-\[1000px\] {
+    perspective: 1000px;
+  }
+  .transform-style-preserve-3d {
+    transform-style: preserve-3d;
+  }
+</style>
+
+<!-- Script -->
+<script>
+  const coin = document.getElementById('coin');
+  const flipBtn = document.getElementById('flipBtn');
+  const resultText = document.getElementById('resultText');
+  let flipping = false;
+
+  flipBtn.addEventListener('click', () => {
+    if (flipping) return; // Prevent spam clicks
+    flipping = true;
+    resultText.textContent = '';
+    
+    // Random outcome: 0 = cara, 1 = cruz
+    const result = Math.random() < 0.5 ? 'cara' : 'cruz';
+    const spins = 5 + Math.floor(Math.random() * 3); // random spin count
+
+    // Animate the flip
+    coin.style.transform = `rotateY(${spins * 360 + (result === 'cara' ? 0 : 180)}deg)`;
+    
+    setTimeout(() => {
+      if (result === 'cara') {
+        resultText.textContent = '🦅 Cara — avanza 1 espacio';
+      } else {
+        resultText.textContent = '💲 Cruz — avanza 2 espacios';
+      }
+      flipping = false;
+    }, 1000); // match animation duration
+  });
+</script>
