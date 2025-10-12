@@ -7,13 +7,13 @@
     <div id="coin" class="absolute inset-0 transition-transform duration-[1000ms] transform-style-preserve-3d">
       <!-- Cara (Águila) -->
       <img
-        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/c680d7d4-65ee-4a39-897e-c18217ebf8f3.png"
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/juegos/peso-cara.png"
         alt="Cara - Águila"
         class="absolute inset-0 w-full h-full rounded-full backface-hidden"
       />
       <!-- Cruz ($1) -->
       <img
-        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/e020547f-6598-4465-8a87-85b24725d823.png"
+        src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/juegos/peso-cruz.png"
         alt="Cruz - $1"
         class="absolute inset-0 w-full h-full rounded-full backface-hidden transform rotateY-180"
       />
@@ -53,17 +53,17 @@
   let flipping = false;
 
   flipBtn.addEventListener('click', () => {
-    if (flipping) return; // Prevent spam clicks
+    if (flipping) return; // Prevent multiple clicks
     flipping = true;
     resultText.textContent = '';
-    
-    // Random outcome: 0 = cara, 1 = cruz
+
+    // Random outcome
     const result = Math.random() < 0.5 ? 'cara' : 'cruz';
     const spins = 5 + Math.floor(Math.random() * 3); // random spin count
 
-    // Animate the flip
+    // Animate
     coin.style.transform = `rotateY(${spins * 360 + (result === 'cara' ? 0 : 180)}deg)`;
-    
+
     setTimeout(() => {
       if (result === 'cara') {
         resultText.textContent = '🦅 Cara — avanza 1 espacio';
@@ -71,6 +71,6 @@
         resultText.textContent = '💲 Cruz — avanza 2 espacios';
       }
       flipping = false;
-    }, 1000); // match animation duration
+    }, 1000);
   });
 </script>
