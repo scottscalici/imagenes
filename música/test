@@ -8,160 +8,95 @@
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Música Header Generator – Poster Edition</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes posterPulse { 0%,100%{opacity:1;filter:brightness(1)} 50%{opacity:.96;filter:brightness(1.05)} }
-    .animate-pulse-soft { animation: posterPulse 10s ease-in-out infinite; }
-    @keyframes gradientPan { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
-    .animate-gradient-pan { background-size:200% 200%; animation: gradientPan 10s linear infinite; }
-    @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-    .animate-fadeInUp { animation: fadeInUp .6s ease both; }
-  </style>
-</head>
-<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 min-h-screen p-6 text-gray-800">
-  <main class="max-w-4xl mx-auto space-y-6">
-    <header class="rounded-2xl bg-white/70 backdrop-blur shadow-xl p-6">
-      <h1 class="text-2xl font-extrabold text-pink-600 text-center">🎶 Generador de Encabezado – Estilo Poster</h1>
-      <p class="text-center text-sm text-gray-600">Elige un tema, animación y añade artista + canción. Copia el HTML resultante.</p>
-    </header>
 
-    <section class="rounded-2xl bg-white shadow p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label class="block">
-          <span class="font-semibold">Artista</span>
-          <input id="artist" type="text" placeholder="Karol G"
-                 class="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-pink-400" />
-        </label>
-        <label class="block">
-          <span class="font-semibold">Canción</span>
-          <input id="song" type="text" placeholder="Contigo"
-                 class="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-pink-400" />
-        </label>
-        <label class="block md:col-span-1">
-          <span class="font-semibold">Tema</span>
-          <select id="theme" class="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-pink-400">
-            <option value="romantico">Romántico 🌹</option>
-            <option value="energetico">Energético 🔥</option>
-            <option value="solemne">Solemne 🌙</option>
-            <option value="generico" selected>Genérico 🎶</option>
-            <option value="natural">Natural 🍃</option>
-            <option value="urbano">Urbano 🎧</option>
-            <option value="esperanzador">Esperanzador 🌅</option>
-            <option value="cool">Cool ❄️</option>
-            <option value="fantastico">Fantástico 💫</option>
-            <option value="reggaeton">Reggaetón 🔥</option>
-            <option value="flamenco">Flamenco 💃</option>
-            <option value="bachata">Bachata 💞</option>
-            <option value="dembow">Dembow 🥁</option>
-            <option value="poplatino">Pop Latino 🎤</option>
-            <option value="salsa">Salsa 🪗</option>
-            <option value="merengue">Merengue 💃🏽</option>
-            <option value="ranchera">Ranchera 🇲🇽</option>
-            <option value="cumbia">Cumbia 💃</option>
-            <option value="trap">Trap 💎</option>
-            <option value="bolero">Bolero 🌹</option>
-          </select>
-        </label>
-        <label class="block md:col-span-1">
-          <span class="font-semibold">Animación</span>
-          <select id="anim" class="mt-1 w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-pink-400">
-            <option value="none" selected>Sin animación</option>
-            <option value="pulse">Pulso suave (10s)</option>
-            <option value="pan">Panorámica del gradiente (10s)</option>
-          </select>
-        </label>
-      </div>
-    </section>
 
-    <section class="rounded-2xl overflow-hidden shadow-xl border border-white/60 bg-white">
-      <div id="preview"></div>
-    </section>
 
-    <section class="rounded-2xl bg-white shadow p-6">
-      <div class="flex items-center justify-between">
-        <h2 class="text-lg font-semibold">Código generado</h2>
-        <button id="copyBtn" class="text-sm bg-pink-600 text-white px-3 py-1.5 rounded-lg hover:bg-pink-700">
-          Copiar
-        </button>
-      </div>
-      <textarea id="output" rows="12" class="mt-3 w-full border rounded-lg p-3 text-sm bg-gray-50"></textarea>
-    </section>
-  </main>
+<!--Título-->
 
-  <script>
-    const themes = {
-      romantico: "from-pink-500 via-fuchsia-400 to-rose-500",
-      energetico: "from-amber-400 via-orange-500 to-red-500",
-      solemne: "from-slate-600 via-gray-700 to-gray-900",
-      generico: "from-sky-400 via-indigo-500 to-purple-500",
-      natural: "from-emerald-400 via-green-500 to-lime-400",
-      urbano: "from-zinc-700 via-gray-800 to-black",
-      esperanzador: "from-yellow-300 via-orange-300 to-pink-400",
-      cool: "from-cyan-400 via-blue-500 to-indigo-500",
-      fantastico: "from-purple-500 via-violet-500 to-indigo-500",
-      reggaeton: "from-amber-500 via-orange-600 to-red-600",
-      flamenco: "from-red-700 via-orange-500 to-yellow-400",
-      bachata: "from-rose-400 via-pink-500 to-purple-500",
-      dembow: "from-yellow-400 via-amber-500 to-orange-600",
-      poplatino: "from-pink-400 via-purple-400 to-indigo-500",
-      salsa: "from-red-500 via-orange-400 to-yellow-300",
-      merengue: "from-yellow-300 via-lime-400 to-green-400",
-      ranchera: "from-green-700 via-amber-500 to-red-700",
-      cumbia: "from-pink-500 via-amber-400 to-lime-400",
-      trap: "from-zinc-800 via-gray-700 to-gray-900",
-      bolero: "from-rose-300 via-pink-400 to-red-400"
-    };
 
-    const artistEl = document.getElementById("artist");
-    const songEl = document.getElementById("song");
-    const themeEl = document.getElementById("theme");
-    const animEl = document.getElementById("anim");
-    const preview = document.getElementById("preview");
-    const outputEl = document.getElementById("output");
-    const copyBtn = document.getElementById("copyBtn");
 
-    artistEl.value = "Karol G";
-    songEl.value = "Contigo";
 
-    function buildHeaderHTML(artist, song, theme, anim) {
-      const gradient = themes[theme] || themes.generico;
-      const animClass =
-        anim === "pulse" ? "animate-pulse-soft" :
-        anim === "pan" ? "animate-gradient-pan" : "";
-      return `
-<header class="shadow-2xl rounded-2xl overflow-hidden">
-  <div class="bg-gradient-to-r ${gradient} ${animClass} text-white text-center py-12 px-6">
-    <h1 class="text-5xl md:text-6xl font-extrabold tracking-wide drop-shadow-xl animate-fadeInUp">${artist}</h1>
-    <p class="text-2xl md:text-3xl italic mt-2 text-white/80 drop-shadow-md animate-fadeInUp" style="animation-delay:.05s">“${song}”</p>
+
+
+
+
+
+
+
+
+
+
+
+<!--Curiosidad-->
+
+
+
+
+<!--Cultura-->
+
+
+
+
+<!--Práctica de verbos-->
+
+
+
+
+
+
+
+
+<!--Video-->
+
+
+
+
+<!--Conversacion-->
+
+
+
+
+
+
+
   </div>
-</header>`;
+
+ 
+  <!-- Shared JavaScript -->
+  <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
     }
-
-    function render() {
-      const artist = artistEl.value.trim() || "Artista";
-      const song = songEl.value.trim() || "Título";
-      const theme = themeEl.value;
-      const anim = animEl.value;
-      const header = buildHeaderHTML(artist, song, theme, anim);
-      preview.innerHTML = header;
-      outputEl.value = header.trim();
-    }
-
-    [artistEl, songEl, themeEl, animEl].forEach(el => el.addEventListener("input", render));
-    render();
-
-    copyBtn.addEventListener("click", async () => {
-      outputEl.select();
-      await navigator.clipboard.writeText(outputEl.value);
-      copyBtn.textContent = "¡Copiado!";
-      setTimeout(() => copyBtn.textContent = "Copiar", 1200);
-    });
   </script>
 </body>
 </html>
