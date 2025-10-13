@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Karol G – “Contigo”</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* --- Animations & Utilities --- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+
+    .text-gradient {
+      background: linear-gradient(to right, #f472b6, #ec4899, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-gradient-to-br from-rose-100 via-pink-50 to-purple-100 min-h-screen p-6 text-gray-800">
+  <div class="max-w-5xl mx-auto space-y-10">
+
+    <!-- 🎤 Header -->
+    <header class="shadow-xl rounded-2xl overflow-hidden animate-fadeIn">
+      <div class="bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-600 text-white text-center py-10 px-6">
+        <h1 class="text-5xl font-extrabold tracking-wide drop-shadow-lg text-gradient">Karol G</h1>
+        <p class="text-2xl italic text-pink-100 mt-2 drop-shadow-md">“Contigo”</p>
+      </div>
+    </header>
+
+
+
+
+
+<!--CLOZE-->
+<section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-pink-400 space-y-4">
+  <h2 class="text-pink-600 font-semibold text-xl mb-2">📝 Completa la letra – “Contigo”</h2>
+  <p class="text-gray-700 mb-4">
+    Escribe las palabras que faltan. Pulsa <strong>Revisar</strong> o presiona <kbd>Enter</kbd> para comprobar tus respuestas.
+  </p>
+
+  <div id="lyric" class="leading-relaxed text-lg text-gray-800 space-y-1"></div>
+
+  <div class="mt-6 flex items-center gap-3">
+    <button id="checkBtn"
+      class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
+      Revisar
+    </button>
+    <button id="resetBtn"
+      class="bg-white border border-pink-200 text-pink-700 px-4 py-2 rounded-lg hover:bg-pink-50 transition">
+      Reiniciar
+    </button>
+    <span id="score" class="ml-auto text-sm text-gray-600">0 correctas</span>
+  </div>
+</section>
+
+<script>
+const raw = `De mi parte
+1)_Sigo recordando cuando tomaba tu 2)_mano
+La vida se me está yendo 3)_pensando
+Solo en ti
+No puedo 4)_olvidarte
+Y estas ganas me dan con ir a 5)_buscarte
+Todo es tan 6)_rico si tú 7)_estás
+Si estás 8)_aquí
+No quiero vida si no es
+Contigo, con-contigo, ey
+Contigo, con-contigo, ey
+Contigo, con-contigo, ey
+<bis>
+Dicen que es 9)_grave
+Hoy no te 10)_tengo y las 11)_palabras no me salen
+Están presas en mi 12)_corazón y tú lo sabes
+Yo te 13)_quiero a ti, no 14)_necesito a más nadie, yeh-yeah
+Par de llamadas al celular y tú no me 15)_contestas
+16)_Mensajes al DM y no tengo 17)_respuestas
+Me daño la mente por saber tú qué 18)_piensas
+Tú 19)_eres para mí, tienes que darte cuenta
+Lo que te 20)_pensé no se puede contar
+La foto mental no la 21)_puedo borrar
+Qué me 22)_hiciste tú que no puedo soltar
+Tengo presente cada 23)_lugar de ti
+Cómo 24)_fue que antes no te 25)_vi
+
+No quiero vida si no es
+Contigo, con-contigo, ey…`;
+
+const norm = s => s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").trim();
+const lyric = document.getElementById("lyric");
+const regex = /(\d+\))_([^\s<]+)/g;
+
+// --- Build DOM safely ---
+raw.split("\n").forEach(line => {
+  const div = document.createElement("div");
+  let lastIndex = 0;
+  let result;
+  while ((result = regex.exec(line)) !== null) {
+    div.appendChild(document.createTextNode(line.substring(lastIndex, result.index)));
+    const input = document.createElement("input");
+    input.dataset.answer = result[2];
+    input.size = result[2].length + 1;
+    input.className =
+      "border-b-2 border-gray-300 bg-pink-50 rounded-md px-1 mx-1 text-center focus:outline-none focus:ring-2 focus:ring-pink-300";
+    div.appendChild(input);
+    lastIndex = regex.lastIndex;
+  }
+  div.appendChild(document.createTextNode(line.substring(lastIndex)));
+  lyric.appendChild(div);
+});
+
+// --- Main elements ---
+const inputs = lyric.querySelectorAll("input");
+const scoreEl = document.getElementById("score");
+
+// --- Check function ---
+function checkAnswers() {
+  let correct = 0;
+  inputs.forEach(i => {
+    const ok = norm(i.value) === norm(i.dataset.answer);
+    i.style.borderColor = ok ? "#22c55e" : "#ef4444";
+    i.style.backgroundColor = ok ? "#f0fff5" : "#fff5f5";
+    if (ok) correct++;
+  });
+  scoreEl.textContent = `${correct}/${inputs.length} correctas`;
+}
+
+document.getElementById("checkBtn").onclick = checkAnswers;
+
+document.getElementById("resetBtn").onclick = () => {
+  inputs.forEach(i => {
+    i.value = "";
+    i.style.borderColor = "#cbd5e1";
+    i.style.backgroundColor = "#fff";
+  });
+  scoreEl.textContent = `0/${inputs.length} correctas`;
+};
+
+// --- Keyboard controls ---
+inputs.forEach((input, index) => {
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // prevent form-like submit
+      checkAnswers();
+    } else if (e.key === "Tab" && !e.shiftKey) {
+      // custom next-field behavior (normal tab + safety)
+      e.preventDefault();
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else inputs[0].focus(); // loop back if at end
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Música-->
+<section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-fuchsia-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-fuchsia-600 font-semibold text-xl mb-4">🌹 Primera estrofa – “Contigo” (Karol G)</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/2023-11-16_Gala_de_los_Latin_Grammy%2C_15_%28cropped_2%29.jpg/800px-2023-11-16_Gala_de_los_Latin_Grammy%2C_15_%28cropped_2%29.jpg" alt="imagen lectura" class="w-1/3 mx-auto rounded-lg shadow-md" />
+    <p class="text-sm text-gray-500 italic">
+      By Junta de Andalucía - 
+      <a href="https://www.flickr.com/photos/68782198@N02/53347630303/" class="text-indigo-500 hover:underline" target="_blank">Flickr</a>, 
+      CC BY-SA 2.0, 
+      <a href="https://commons.wikimedia.org/w/index.php?curid=169726723" class="text-indigo-500 hover:underline" target="_blank">Wikimedia Commons</a>
+    </p>
+
+    <p> <div class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-fuchsia-700">
+      Sigo recordando cuando tomaba tu mano<br>
+      La vida se me está yendo pensando solo en ti<br>
+      No puedo olvidarte<br>
+      Y estas ganas me dan con ir a buscarte<br>
+      Todo es tan rico si tú estás, si estás aquí<br>
+      No quiero vida si no es contigo…
+    </p>
+
+   <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+      <summary><strong>1.</strong> ¿Qué hace la cantante cuando dice “Sigo recordando cuando tomaba tu mano”?<br>
+      A) Habla de una relación nueva<br>
+      B) Rechaza pensar en el pasado<br>
+      C) Imagina el futuro con su pareja<br>
+      D) Describe un recuerdo que sigue presente</summary>
+      <p>D</p>
+    </details>
+
+   <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+      <summary><strong>2.</strong> ¿Qué sugiere la frase “La vida se me está yendo pensando solo en ti”?<br>
+      A) Está perdiendo el tiempo sin sentido<br>
+      B) Siente que su vida pasa sin disfrutarla porque no puede dejar de pensar en esa persona<br>
+      C) Está muy ocupada con otras cosas<br>
+      D) Tiene esperanza en un nuevo comienzo</summary>
+      <p>B</p>
+    </details>
+
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+      <summary><strong>3.</strong> Cuando dice “No puedo olvidarte”, ¿qué sentimiento expresa?<br>
+      A) Alegría<br>
+      B) Nostalgia y tristeza<br>
+      C) Culpa<br>
+      D) Confusión</summary>
+      <p>B</p>
+    </details>
+
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+      <summary><strong>4.</strong> ¿Qué efecto produce la repetición de “si tú estás, si estás aquí”?<br>
+      A) Cambia de tema<br>
+      B) Refuerza su deseo de presencia y cercanía<br>
+      C) Indica duda sobre el amor<br>
+      D) Muestra sarcasmo</summary>
+      <p>B</p>
+    </details>
+
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+      <summary><strong>5.</strong> ¿Qué significa “No quiero vida si no es contigo”?<br>
+      A) No tiene tiempo para relaciones<br>
+      B) Solo quiere ser amiga<br>
+      C) No quiere vivir sin esa persona<br>
+      D) Está cansada de la rutina</summary>
+      <p>C</p>
+    </details>
+  </div>
+</section>
+
+ <section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-lime-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-lime-600 font-semibold text-xl mb-4">💔 Segunda estrofa – “Contigo” (Karol G)</h2>
+  <p class="leading-relaxed text-lg mb-4 text-center">
+    <p><div class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-lime-700">
+      Dicen que es grave<br>
+      Hoy no te tengo y las palabras no me salen<br>
+      Están presas en mi corazón y tú lo sabes<br>
+      Yo te quiero a ti, no necesito a más nadie, yeh-yeah<br>
+      Par de llamadas al celular y tú no me contestas<br>
+      Mensajes al DM y no tengo respuestas<br>
+      Me daño la mente por saber tú qué piensas<br>
+      Tú eres para mí, tienes que darte cuenta…
+    </p>
+
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>6.</strong> ¿Qué significa la frase “Dicen que es grave”?<br>
+      A) Que la situación emocional de la cantante es seria<br>
+      B) Que el amor es un delito<br>
+      C) Que la persona está enferma físicamente<br>
+      D) Que habla de un problema social</summary>
+      <p>A</p>
+    </details>
+
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>7.</strong> ¿Qué revela “Hoy no te tengo y las palabras no me salen”?<br>
+      A) Está tan triste que ni puede expresarse<br>
+      B) Está discutiendo con alguien más<br>
+      C) No sabe qué decir por falta de interés<br>
+      D) Está cansada de hablar tanto</summary>
+      <p>A</p>
+    </details>
+
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>8.</strong> En “Yo te quiero a ti, no necesito a más nadie”, la cantante demuestra…<br>
+      A) Orgullo y frialdad<br>
+      B) Alegría por tener muchos amigos<br>
+      C) Dependencia emocional y fidelidad absoluta<br>
+      D) Deseo de olvidar pronto</summary>
+      <p>C</p>
+    </details>
+
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>9.</strong> ¿Qué muestran las líneas “Par de llamadas… no me contestas / Mensajes al DM y no tengo respuestas”?<br>
+      A) Falta de comunicación y frustración<br>
+      B) Que ella no quiere hablar<br>
+      C) Una amistad lejana<br>
+      D) Interés pasajero</summary>
+      <p>A</p>
+    </details>
+
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>10.</strong> Cuando dice “Tú eres para mí, tienes que darte cuenta”, ¿qué expresa principalmente?<br>
+      A) Aceptación de la separación<br>
+      B) Deseo de venganza<br>
+      C) Culpa por lo sucedido<br>
+      D) Confianza en que el amor es mutuo aunque el otro no lo admita</summary>
+      <p>D</p>
+    </details>
+  </div>
+</section>
+
+ <section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-cyan-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-cyan-600 font-semibold text-xl mb-4">✨ Tercera estrofa – “Contigo” (Karol G)</h2>
+  <div class="p-4 space-y-4 text-gray-800">
+    <p><div class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-cyan-700">
+      Lo que te pensé no se puede contar<br>
+      La foto mental no la puedo borrar<br>
+      Qué me hiciste tú que no puedo soltar<br>
+      Tengo presente cada lugar de ti<br>
+      Cómo fue que antes no te vi<br>
+      No quiero vida si no es contigo…
+    </p>
+
+     
+ <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium">
+     <strong>11.</strong> ¿Qué quiere decir “Lo que te pensé no se puede contar”?<br>
+      A) Que no le importa recordar<br>
+      B) Que ya no tiene sentimientos<br>
+      C) Que ha pensado tanto en esa persona que es imposible explicarlo<br>
+      D) Que ha olvidado lo que sintió</summary>
+      <p>C</p>
+    </details>
+
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>12.</strong> En “La foto mental no la puedo borrar”, la expresión “foto mental” simboliza…<br>
+      A) Un recuerdo que no puede sacar de su mente<br>
+      B) Una imagen real que guarda en su teléfono<br>
+      C) Una obra de arte que le gusta<br>
+      D) Un sueño futuro que desea cumplir</summary>
+      <p>A</p>
+    </details>
+
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>13.</strong> ¿Qué emoción transmite la línea “Qué me hiciste tú que no puedo soltar”?<br>
+      A) Tranquilidad total<br>
+      B) Confusión ante la intensidad del amor<br>
+      C) Indiferencia<br>
+      D) Rabia y enojo</summary>
+      <p>B</p>
+    </details>
+
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>14.</strong> ¿Qué sugiere “Tengo presente cada lugar de ti”?<br>
+      A) Que recuerda detalles muy personales de la otra persona<br>
+      B) Que no la conoce bien<br>
+      C) Que habla de lugares turísticos<br>
+      D) Que quiere viajar con esa persona</summary>
+      <p>A</p>
+    </details>
+
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>15.</strong> ¿Cómo se puede interpretar “Cómo fue que antes no te vi”?<br>
+      A) Se refiere a un malentendido visual<br>
+      B) No entiende por qué se separaron<br>
+      C) Cree que la otra persona cambió físicamente<br>
+      D) Se sorprende de no haber notado antes cuánto la persona significaba para ella</summary>
+      <p>D</p>
+    </details>
+  </div>
+</section>
+
+
+
+
+
+    <!-- 🎬 Video -->
+    <section class="glass rounded-2xl shadow-lg p-6 border-l-4 border-purple-400">
+      <h2 class="text-purple-600 font-semibold text-lg mb-3">🎬 Video oficial</h2>
+      <div class="aspect-video">
+        <iframe class="rounded-xl w-full h-full"
+          src="https://www.youtube.com/embed/h5mxJsbgNKM"
+          title="Karol G – Contigo"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <!-- 🎧 Spotify -->
+    <section class="glass rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+      <h2 class="text-green-600 font-semibold text-lg mb-3">🎧 Escucha en Spotify</h2>
+      <iframe style="border-radius:12px" class="w-full"
+        src="https://open.spotify.com/embed/track/4UkUxO2WlKLc0Q1iEutGGh?si=bbd05e2cfb2b4e75&utm_source=generator"
+        height="152" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </section>
+
+    <!-- 💞 Footer -->
+    <footer class="text-center text-sm text-gray-600 mt-10">
+      <hr class="border-t border-pink-300 mb-3">
+      <p class="italic">
+        Creado por <span class="font-semibold text-fuchsia-600">Señor Scalici</span> · Clase de español · Análisis musical de “Contigo”
+      </p>
+      <p class="text-xs text-pink-400 mt-1">💖 Inspirado en Karol G · Arte, emoción y lenguaje</p>
+    </footer>
+
+  </div>
+</body>
+</html>
