@@ -3,31 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Día 11 - 30 de septiembre</title>
+  <title>Karol G – “Contigo”</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* --- Animations & Utilities --- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+
+    .text-gradient {
+      background: linear-gradient(to right, #f472b6, #ec4899, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+    }
+  </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
 
-<!--Aviso o Anuncio-->
+<body class="font-sans bg-gradient-to-br from-rose-100 via-pink-50 to-purple-100 min-h-screen p-6 text-gray-800">
+  <div class="max-w-5xl mx-auto space-y-10">
 
-
-
-
-<!--Día-->
-<header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
-    <h1 class="text-3xl font-bold drop-shadow">Día 16</h1>
-    <p class="text-lg italic drop-shadow">15 de octubre</p>
-  </div>
-</header>
-
-
-
+    <!-- 🎤 Header -->
+    <header class="shadow-xl rounded-2xl overflow-hidden animate-fadeIn">
+      <div class="bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-600 text-white text-center py-10 px-6">
+        <h1 class="text-5xl font-extrabold tracking-wide drop-shadow-lg text-gradient">Karol G</h1>
+        <p class="text-2xl italic text-pink-100 mt-2 drop-shadow-md">“Contigo”</p>
+      </div>
+    </header>
 
 <!--Música-->
-<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 border-indigo-500">
-  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">🌹 Primera estrofa – “Contigo” (Karol G)</h2>
+<section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-fuchsia-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-fuchsia-600 font-semibold text-xl mb-4">🌹 Primera estrofa – “Contigo” (Karol G)</h2>
   <div class="p-4 text-gray-800 space-y-4">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/2023-11-16_Gala_de_los_Latin_Grammy%2C_15_%28cropped_2%29.jpg/800px-2023-11-16_Gala_de_los_Latin_Grammy%2C_15_%28cropped_2%29.jpg" alt="imagen lectura" class="w-1/3 mx-auto rounded-lg shadow-md" />
     <p class="text-sm text-gray-500 italic">
@@ -37,7 +50,8 @@
       <a href="https://commons.wikimedia.org/w/index.php?curid=169726723" class="text-indigo-500 hover:underline" target="_blank">Wikimedia Commons</a>
     </p>
 
-    <p>
+    <p> <div class="mb-2 bg-pink-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-fuchsia-700">
       Sigo recordando cuando tomaba tu mano<br>
       La vida se me está yendo pensando solo en ti<br>
       No puedo olvidarte<br>
@@ -46,7 +60,7 @@
       No quiero vida si no es contigo…
     </p>
 
-    <details class="mb-2">
+   <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
       <summary><strong>1.</strong> ¿Qué hace la cantante cuando dice “Sigo recordando cuando tomaba tu mano”?<br>
       A) Habla de una relación nueva<br>
       B) Rechaza pensar en el pasado<br>
@@ -55,7 +69,7 @@
       <p>D</p>
     </details>
 
-    <details class="mb-2">
+   <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
       <summary><strong>2.</strong> ¿Qué sugiere la frase “La vida se me está yendo pensando solo en ti”?<br>
       A) Está perdiendo el tiempo sin sentido<br>
       B) Siente que su vida pasa sin disfrutarla porque no puede dejar de pensar en esa persona<br>
@@ -64,7 +78,7 @@
       <p>B</p>
     </details>
 
-    <details class="mb-2">
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
       <summary><strong>3.</strong> Cuando dice “No puedo olvidarte”, ¿qué sentimiento expresa?<br>
       A) Alegría<br>
       B) Nostalgia y tristeza<br>
@@ -73,7 +87,7 @@
       <p>B</p>
     </details>
 
-    <details class="mb-2">
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
       <summary><strong>4.</strong> ¿Qué efecto produce la repetición de “si tú estás, si estás aquí”?<br>
       A) Cambia de tema<br>
       B) Refuerza su deseo de presencia y cercanía<br>
@@ -82,7 +96,7 @@
       <p>B</p>
     </details>
 
-    <details class="mb-2">
+    <details class="mb-2 bg-pink-50 rounded-md px-3 py-2">
       <summary><strong>5.</strong> ¿Qué significa “No quiero vida si no es contigo”?<br>
       A) No tiene tiempo para relaciones<br>
       B) Solo quiere ser amiga<br>
@@ -93,10 +107,11 @@
   </div>
 </section>
 
-<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 border-lime-500">
-  <h2 class="text-lime-600 font-semibold text-lg px-4 pt-4">💔 Segunda estrofa – “Contigo” (Karol G)</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <p>
+ <section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-lime-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-lime-600 font-semibold text-xl mb-4">💔 Segunda estrofa – “Contigo” (Karol G)</h2>
+  <p class="leading-relaxed text-lg mb-4 text-center">
+    <p><div class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-lime-700">
       Dicen que es grave<br>
       Hoy no te tengo y las palabras no me salen<br>
       Están presas en mi corazón y tú lo sabes<br>
@@ -107,8 +122,8 @@
       Tú eres para mí, tienes que darte cuenta…
     </p>
 
-    <details class="mb-2">
-      <summary><strong>6.</strong> ¿Qué significa la frase “Dicen que es grave”?<br>
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>6.</strong> ¿Qué significa la frase “Dicen que es grave”?<br>
       A) Que la situación emocional de la cantante es seria<br>
       B) Que el amor es un delito<br>
       C) Que la persona está enferma físicamente<br>
@@ -116,8 +131,8 @@
       <p>A</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>7.</strong> ¿Qué revela “Hoy no te tengo y las palabras no me salen”?<br>
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>7.</strong> ¿Qué revela “Hoy no te tengo y las palabras no me salen”?<br>
       A) Está tan triste que ni puede expresarse<br>
       B) Está discutiendo con alguien más<br>
       C) No sabe qué decir por falta de interés<br>
@@ -125,8 +140,8 @@
       <p>A</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>8.</strong> En “Yo te quiero a ti, no necesito a más nadie”, la cantante demuestra…<br>
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>8.</strong> En “Yo te quiero a ti, no necesito a más nadie”, la cantante demuestra…<br>
       A) Orgullo y frialdad<br>
       B) Alegría por tener muchos amigos<br>
       C) Dependencia emocional y fidelidad absoluta<br>
@@ -134,8 +149,8 @@
       <p>C</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>9.</strong> ¿Qué muestran las líneas “Par de llamadas… no me contestas / Mensajes al DM y no tengo respuestas”?<br>
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>9.</strong> ¿Qué muestran las líneas “Par de llamadas… no me contestas / Mensajes al DM y no tengo respuestas”?<br>
       A) Falta de comunicación y frustración<br>
       B) Que ella no quiere hablar<br>
       C) Una amistad lejana<br>
@@ -143,8 +158,8 @@
       <p>A</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>10.</strong> Cuando dice “Tú eres para mí, tienes que darte cuenta”, ¿qué expresa principalmente?<br>
+    <details class="mb-2 bg-lime-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>10.</strong> Cuando dice “Tú eres para mí, tienes que darte cuenta”, ¿qué expresa principalmente?<br>
       A) Aceptación de la separación<br>
       B) Deseo de venganza<br>
       C) Culpa por lo sucedido<br>
@@ -154,10 +169,11 @@
   </div>
 </section>
 
-<section class="bg-white rounded-xl shadow p-6 border-l-4 border-l-cyan-500">
-  <h2 class="text-cyan-600 font-semibold text-lg px-4 pt-4">✨ Tercera estrofa – “Contigo” (Karol G)</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <p>
+ <section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-cyan-400 hover:shadow-xl transition-all duration-300">
+      <h2 class="text-cyan-600 font-semibold text-xl mb-4">✨ Tercera estrofa – “Contigo” (Karol G)</h2>
+  <div class="p-4 space-y-4 text-gray-800">
+    <p><div class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+  <p class="font-semibold text-cyan-700">
       Lo que te pensé no se puede contar<br>
       La foto mental no la puedo borrar<br>
       Qué me hiciste tú que no puedo soltar<br>
@@ -166,8 +182,10 @@
       No quiero vida si no es contigo…
     </p>
 
-    <details class="mb-2">
-      <summary><strong>11.</strong> ¿Qué quiere decir “Lo que te pensé no se puede contar”?<br>
+     
+ <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium">
+     <strong>11.</strong> ¿Qué quiere decir “Lo que te pensé no se puede contar”?<br>
       A) Que no le importa recordar<br>
       B) Que ya no tiene sentimientos<br>
       C) Que ha pensado tanto en esa persona que es imposible explicarlo<br>
@@ -175,8 +193,8 @@
       <p>C</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>12.</strong> En “La foto mental no la puedo borrar”, la expresión “foto mental” simboliza…<br>
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>12.</strong> En “La foto mental no la puedo borrar”, la expresión “foto mental” simboliza…<br>
       A) Un recuerdo que no puede sacar de su mente<br>
       B) Una imagen real que guarda en su teléfono<br>
       C) Una obra de arte que le gusta<br>
@@ -184,8 +202,8 @@
       <p>A</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>13.</strong> ¿Qué emoción transmite la línea “Qué me hiciste tú que no puedo soltar”?<br>
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>13.</strong> ¿Qué emoción transmite la línea “Qué me hiciste tú que no puedo soltar”?<br>
       A) Tranquilidad total<br>
       B) Confusión ante la intensidad del amor<br>
       C) Indiferencia<br>
@@ -193,8 +211,8 @@
       <p>B</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>14.</strong> ¿Qué sugiere “Tengo presente cada lugar de ti”?<br>
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>14.</strong> ¿Qué sugiere “Tengo presente cada lugar de ti”?<br>
       A) Que recuerda detalles muy personales de la otra persona<br>
       B) Que no la conoce bien<br>
       C) Que habla de lugares turísticos<br>
@@ -202,8 +220,8 @@
       <p>A</p>
     </details>
 
-    <details class="mb-2">
-      <summary><strong>15.</strong> ¿Cómo se puede interpretar “Cómo fue que antes no te vi”?<br>
+    <details class="mb-2 bg-cyan-50 rounded-md px-3 py-2">
+        <summary class="cursor-pointer font-medium"><strong>15.</strong> ¿Cómo se puede interpretar “Cómo fue que antes no te vi”?<br>
       A) Se refiere a un malentendido visual<br>
       B) No entiende por qué se separaron<br>
       C) Cree que la otra persona cambió físicamente<br>
@@ -217,81 +235,38 @@
 
 
 
+    <!-- 🎬 Video -->
+    <section class="glass rounded-2xl shadow-lg p-6 border-l-4 border-purple-400">
+      <h2 class="text-purple-600 font-semibold text-lg mb-3">🎬 Video oficial</h2>
+      <div class="aspect-video">
+        <iframe class="rounded-xl w-full h-full"
+          src="https://www.youtube.com/embed/h5mxJsbgNKM"
+          title="Karol G – Contigo"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+    </section>
 
-<!--Video-->
-<!-- ▶️ YouTube embed (formato clásico) -->
-<section class="bg-white rounded-xl shadow p-6 border-l-4 border-slate-600 overflow-hidden">
-  <h2 class="text-slate-700 font-semibold text-lg mb-2">Karol G - Contigo</h2>
-  
-  <div class="video-wrap">
-    <iframe width="560" height="315"
-      src="https://www.youtube.com/embed/h5mxJsbgNKM"
-      title="Karol G - Contigo" frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen>
-    </iframe>
-  </div>
-</section>
+    <!-- 🎧 Spotify -->
+    <section class="glass rounded-2xl shadow-lg p-6 border-l-4 border-green-500">
+      <h2 class="text-green-600 font-semibold text-lg mb-3">🎧 Escucha en Spotify</h2>
+      <iframe style="border-radius:12px" class="w-full"
+        src="https://open.spotify.com/embed/track/4UkUxO2WlKLc0Q1iEutGGh?si=bbd05e2cfb2b4e75&utm_source=generator"
+        height="152" frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <!-- 💞 Footer -->
+    <footer class="text-center text-sm text-gray-600 mt-10">
+      <hr class="border-t border-pink-300 mb-3">
+      <p class="italic">
+        Creado por <span class="font-semibold text-fuchsia-600">Señor Scalici</span> · Clase de Español · Análisis musical de “Contigo”
+      </p>
+      <p class="text-xs text-pink-400 mt-1">💖 Inspirado en Karol G · Arte, emoción y lenguaje</p>
+    </footer>
 
   </div>
-
- 
-  <!-- Shared JavaScript -->
-  <script>
-
-  // Conversación timer
- let timerInterval;
-let seconds = 0;
-
-function startTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    seconds++;
-    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-  }, 1000);
-}
-
-function resetTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  seconds = 0;
-  timerDisplay.textContent = "00:00";
-}
-    function toggleVocab() {
-      const box = document.getElementById("vocabBox");
-      const btn = document.getElementById("toggleBtn");
-      if (box.classList.contains("hidden")) {
-        box.classList.remove("hidden");
-        btn.innerText = "Reducir";
-      } else {
-        box.classList.add("hidden");
-        btn.innerText = "Expandir";
-      }
-    }
-  </script>
 </body>
 </html>
-
