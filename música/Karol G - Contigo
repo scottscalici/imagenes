@@ -38,6 +38,141 @@
       </div>
     </header>
 
+
+
+
+
+<!--CLOZE-->
+<section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-pink-400 space-y-4">
+  <h2 class="text-pink-600 font-semibold text-xl mb-2">📝 Completa la letra – “Contigo”</h2>
+  <p class="text-gray-700 mb-4">
+    Escribe las palabras que faltan. Pulsa <strong>Revisar</strong> o presiona <kbd>Enter</kbd> para comprobar tus respuestas.
+  </p>
+
+  <div id="lyric" class="leading-relaxed text-lg text-gray-800 space-y-1"></div>
+
+  <div class="mt-6 flex items-center gap-3">
+    <button id="checkBtn"
+      class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition">
+      Revisar
+    </button>
+    <button id="resetBtn"
+      class="bg-white border border-pink-200 text-pink-700 px-4 py-2 rounded-lg hover:bg-pink-50 transition">
+      Reiniciar
+    </button>
+    <span id="score" class="ml-auto text-sm text-gray-600">0 correctas</span>
+  </div>
+</section>
+
+<script>
+const raw = `De mi parte
+1)_Sigo recordando cuando tomaba tu 2)_mano
+La vida se me está yendo 3)_pensando
+Solo en ti
+No puedo 4)_olvidarte
+Y estas ganas me dan con ir a 5)_buscarte
+Todo es tan 6)_rico si tú 7)_estás
+Si estás 8)_aquí
+No quiero vida si no es
+Contigo, con-contigo, ey
+Contigo, con-contigo, ey
+Contigo, con-contigo, ey
+<bis>
+Dicen que es 9)_grave
+Hoy no te 10)_tengo y las 11)_palabras no me salen
+Están presas en mi 12)_corazón y tú lo sabes
+Yo te 13)_quiero a ti, no 14)_necesito a más nadie, yeh-yeah
+Par de llamadas al celular y tú no me 15)_contestas
+16)_Mensajes al DM y no tengo 17)_respuestas
+Me daño la mente por saber tú qué 18)_piensas
+Tú 19)_eres para mí, tienes que darte cuenta
+Lo que te 20)_pensé no se puede contar
+La foto mental no la 21)_puedo borrar
+Qué me 22)_hiciste tú que no puedo soltar
+Tengo presente cada 23)_lugar de ti
+Cómo 24)_fue que antes no te 25)_vi
+
+No quiero vida si no es
+Contigo, con-contigo, ey…`;
+
+const norm = s => s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").trim();
+const lyric = document.getElementById("lyric");
+const regex = /(\d+\))_([^\s<]+)/g;
+
+// --- Build DOM safely ---
+raw.split("\n").forEach(line => {
+  const div = document.createElement("div");
+  let lastIndex = 0;
+  let result;
+  while ((result = regex.exec(line)) !== null) {
+    div.appendChild(document.createTextNode(line.substring(lastIndex, result.index)));
+    const input = document.createElement("input");
+    input.dataset.answer = result[2];
+    input.size = result[2].length + 1;
+    input.className =
+      "border-b-2 border-gray-300 bg-pink-50 rounded-md px-1 mx-1 text-center focus:outline-none focus:ring-2 focus:ring-pink-300";
+    div.appendChild(input);
+    lastIndex = regex.lastIndex;
+  }
+  div.appendChild(document.createTextNode(line.substring(lastIndex)));
+  lyric.appendChild(div);
+});
+
+// --- Main elements ---
+const inputs = lyric.querySelectorAll("input");
+const scoreEl = document.getElementById("score");
+
+// --- Check function ---
+function checkAnswers() {
+  let correct = 0;
+  inputs.forEach(i => {
+    const ok = norm(i.value) === norm(i.dataset.answer);
+    i.style.borderColor = ok ? "#22c55e" : "#ef4444";
+    i.style.backgroundColor = ok ? "#f0fff5" : "#fff5f5";
+    if (ok) correct++;
+  });
+  scoreEl.textContent = `${correct}/${inputs.length} correctas`;
+}
+
+document.getElementById("checkBtn").onclick = checkAnswers;
+
+document.getElementById("resetBtn").onclick = () => {
+  inputs.forEach(i => {
+    i.value = "";
+    i.style.borderColor = "#cbd5e1";
+    i.style.backgroundColor = "#fff";
+  });
+  scoreEl.textContent = `0/${inputs.length} correctas`;
+};
+
+// --- Keyboard controls ---
+inputs.forEach((input, index) => {
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // prevent form-like submit
+      checkAnswers();
+    } else if (e.key === "Tab" && !e.shiftKey) {
+      // custom next-field behavior (normal tab + safety)
+      e.preventDefault();
+      const next = inputs[index + 1];
+      if (next) next.focus();
+      else inputs[0].focus(); // loop back if at end
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
 <!--Música-->
 <section class="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-fuchsia-400 hover:shadow-xl transition-all duration-300">
       <h2 class="text-fuchsia-600 font-semibold text-xl mb-4">🌹 Primera estrofa – “Contigo” (Karol G)</h2>
@@ -262,7 +397,7 @@
     <footer class="text-center text-sm text-gray-600 mt-10">
       <hr class="border-t border-pink-300 mb-3">
       <p class="italic">
-        Creado por <span class="font-semibold text-fuchsia-600">Señor Scalici</span> · Clase de Español · Análisis musical de “Contigo”
+        Creado por <span class="font-semibold text-fuchsia-600">Señor Scalici</span> · Clase de español · Análisis musical de “Contigo”
       </p>
       <p class="text-xs text-pink-400 mt-1">💖 Inspirado en Karol G · Arte, emoción y lenguaje</p>
     </footer>
