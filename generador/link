@@ -3,127 +3,228 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>plan de clase</title>
+  <title>Generador de Enlace (Tarjeta)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background:#f8fafc; }
+    textarea, input, select { outline: none; }
+  </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+<body class="p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <header class="rounded-2xl overflow-hidden shadow">
+      <div class="bg-gradient-to-r from-pink-500 via-fuchsia-500 to-purple-600 text-white py-6 px-6">
+        <h1 class="text-2xl font-bold drop-shadow">Generador de Enlace (Tarjeta)</h1>
+        <p class="text-white/80 text-sm">Auto-lee metadatos de páginas de música y crea una tarjeta de enlace con tema.</p>
+      </div>
+    </header>
 
-<!--Aviso o Anuncio-->
+    <!-- FORM -->
+    <section class="bg-white rounded-xl shadow p-5 space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="block font-medium mb-1">URL de la página a enlazar</label>
+          <input id="url" class="w-full border rounded px-3 py-2" placeholder="https://tusitio/musica/contigo.html" />
+          <p class="text-xs text-gray-500 mt-1">Al pegar la URL, intentará leer <code><!-- music-meta {...} --></code> automáticamente.</p>
+        </div>
 
+        <div>
+          <label class="block font-medium mb-1">Título (opcional)</label>
+          <input id="title" class="w-full border rounded px-3 py-2" placeholder="(Si hay artista + canción, se usa 'Artista – Canción')" />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Subtítulo (opcional)</label>
+          <input id="subtitle" class="w-full border rounded px-3 py-2" placeholder="Ej. Letra y actividad · Spotify + Video" />
+        </div>
 
+        <div>
+          <label class="block font-medium mb-1">Icono (opcional)</label>
+          <input id="icon" class="w-full border rounded px-3 py-2" placeholder="🎵, 📘, 🎥, 🏃 …" />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">Miniatura (URL) (opcional)</label>
+          <input id="image" class="w-full border rounded px-3 py-2" placeholder="https://raw.githubusercontent.com/...jpg" />
+          <p class="text-xs text-gray-500 mt-1">Si se detecta en metadatos, se rellena sola.</p>
+        </div>
 
+        <div>
+          <label class="block font-medium mb-1">Tema</label>
+          <select id="theme" class="w-full border rounded px-3 py-2">
+            <option>Romántico</option>
+            <option>Energético</option>
+            <option>Nostálgico</option>
+            <option>Urbano</option>
+            <option>Solemne</option>
+            <option selected>Genérico</option>
+            <option>Reggaetón</option>
+            <option>Flamenco</option>
+            <option>Bachata</option>
+            <option>Dembow</option>
+          </select>
+        </div>
 
-<!--Día-->
+        <div>
+          <label class="block font-medium mb-1">Tipo</label>
+          <select id="type" class="w-full border rounded px-3 py-2">
+            <option value="card" selected>Tarjeta con imagen</option>
+            <option value="text">Enlace de texto</option>
+          </select>
+        </div>
+      </div>
 
+      <div class="flex gap-3">
+        <button id="generate" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">Generar HTML</button>
+        <button id="copy" class="bg-gray-800 hover:bg-black text-white rounded px-4 py-2">Copiar</button>
+      </div>
+    </section>
 
+    <!-- PREVIEW -->
+    <section class="bg-white rounded-xl shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">Vista previa</h2>
+      <div id="preview" class="space-y-3"></div>
+    </section>
 
-
-<!--Evaluación-->
-
-
-
-
-<!--Calentamiento-->
-
-
-
-
-
-<!--Estructura-->
-
-
-
-
-<!--Curiosidad-->
-
-
-
-
-<!--Cultura-->
-
-
-
-
-<!--Enlace-->
-<a href="musica/contigo.html" class="block group rounded-xl shadow-lg overflow-hidden border-l-4 border-pink-400 hover:shadow-xl transition">
-  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/m%C3%BAsica/karolg.png" class="w-full h-40 object-cover" alt="Contigo – Karol G">
-  <div class="p-3 bg-white">
-    <h3 class="font-bold text-pink-600">Karol G</h3>
-    <p class="text-sm text-gray-700">Contigo</p>
+    <!-- OUTPUT -->
+    <section class="bg-white rounded-xl shadow p-5">
+      <h2 class="text-lg font-semibold text-gray-700 mb-3">HTML generado</h2>
+      <textarea id="output" rows="10" class="w-full border rounded p-3 font-mono text-sm"></textarea>
+      <p class="text-xs text-gray-500 mt-2">Pega este snippet dentro de una página que ya cargue Tailwind.</p>
+    </section>
   </div>
-</a>
 
-
-
-
-<!--Práctica de verbos-->
-
-
-
-
-<!--Práctica general-->
-
-
-
-
-<!--Video-->
-
-
-
-
-<!--Conversacion-->
-
-
-
-
-<!--Señor+-->
-
-
-
-
-
-<!--Información adicional-->
-
-
-  </div>
-
- 
-  <!-- Shared JavaScript -->
   <script>
+    // Theme map (matching your system)
+    const THEMES = {
+      "Romántico": { accent: "text-pink-600",  border: "border-pink-400",  ring: "ring-pink-300" },
+      "Energético":{ accent: "text-amber-600", border: "border-amber-400", ring: "ring-amber-300" },
+      "Nostálgico":{ accent: "text-sky-600",   border: "border-sky-400",   ring: "ring-sky-300" },
+      "Urbano":    { accent: "text-violet-600",border: "border-violet-400",ring: "ring-violet-300" },
+      "Solemne":   { accent: "text-slate-600", border: "border-slate-400", ring: "ring-slate-300" },
+      "Genérico":  { accent: "text-indigo-600",border: "border-indigo-400",ring: "ring-indigo-300" },
+      "Reggaetón": { accent: "text-orange-600",border: "border-orange-400",ring: "ring-orange-300" },
+      "Flamenco":  { accent: "text-red-600",   border: "border-red-400",   ring: "ring-red-300" },
+      "Bachata":   { accent: "text-rose-600",  border: "border-rose-400",  ring: "ring-rose-300" },
+      "Dembow":    { accent: "text-lime-600",  border: "border-lime-400",  ring: "ring-lime-300" }
+    };
 
-  // Conversación timer
- let timerInterval;
-let seconds = 0;
+    // Elements
+    const $ = id => document.getElementById(id);
+    const urlEl = $('url');
+    const titleEl = $('title');
+    const subtitleEl = $('subtitle');
+    const iconEl = $('icon');
+    const imageEl = $('image');
+    const themeEl = $('theme');
+    const typeEl = $('type');
+    const previewEl = $('preview');
+    const outputEl = $('output');
 
-function startTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    seconds++;
-    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-  }, 1000);
-}
+    // State (includes artist/song if found)
+    let state = { url:"", artist:"", song:"", theme:"Genérico", image:"", title:"", subtitle:"", icon:"", type:"card" };
 
-function resetTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  seconds = 0;
-  timerDisplay.textContent = "00:00";
-}
-    function toggleVocab() {
-      const box = document.getElementById("vocabBox");
-      const btn = document.getElementById("toggleBtn");
-      if (box.classList.contains("hidden")) {
-        box.classList.remove("hidden");
-        btn.innerText = "Reducir";
-      } else {
-        box.classList.add("hidden");
-        btn.innerText = "Expandir";
-      }
+    function sanitize(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+    function getThemeParts(name){
+      return THEMES[name] || THEMES["Genérico"];
     }
+
+    function computeTitle(){
+      const manual = titleEl.value.trim();
+      const a = state.artist.trim();
+      const s = state.song.trim();
+      if (manual) return manual;
+      if (a && s) return `${a} – ${s}`;
+      return a || s || "Recurso";
+    }
+
+    function buildCardHTML() {
+      const { accent, border, ring } = getThemeParts(state.theme);
+      const title = sanitize(computeTitle());
+      const subtitle = sanitize(subtitleEl.value.trim());
+      const icon = sanitize(iconEl.value.trim());
+      const img = imageEl.value.trim();
+      const href = state.url.trim() || "#";
+
+      if (typeEl.value === "text" || !img) {
+        // Text-only link (still themed)
+        return `
+<a href="${href}" class="block bg-white rounded-xl shadow p-3 border-l-4 ${border} hover:shadow-md transition">
+  <span class="font-semibold ${accent}">${icon? icon+" " : ""}${title}</span>
+  ${subtitle ? `<span class="block text-sm text-gray-600 mt-0.5">${subtitle}</span>` : ""}
+</a>`.trim();
+      }
+
+      // Image card (full-width, thumbnail left, dynamic aspect with cap)
+      return `
+<a href="${href}" class="block bg-white rounded-xl shadow border-l-4 ${border} hover:shadow-lg hover:${ring} hover:ring-2 transition">
+  <div class="flex items-center gap-4 p-4">
+    <img src="${img}" alt="${title}" class="max-h-24 w-auto object-cover rounded-md">
+    <div class="min-w-0">
+      <h3 class="font-semibold ${accent} truncate">${icon? icon+" " : ""}${title}</h3>
+      ${subtitle ? `<p class="text-sm text-gray-600 mt-0.5 line-clamp-2">${subtitle}</p>` : ""}
+    </div>
+  </div>
+</a>`.trim();
+    }
+
+    function renderPreviewAndOutput(){
+      const html = buildCardHTML();
+      previewEl.innerHTML = html;
+      outputEl.value = html;
+    }
+
+    // Auto-fetch metadata when URL changes
+    async function fetchMetadataIfAny(rawUrl){
+      const url = rawUrl.trim();
+      if (!url) return;
+      state.url = url;
+
+      try {
+        const res = await fetch(url, { mode: 'cors' });
+        const text = await res.text();
+        // Find <!-- music-meta { ... } -->
+        const match = text.match(/<!--\s*music-meta\s*(\{[\s\S]*?\})\s*-->/i);
+        if (match && match[1]) {
+          try {
+            const meta = JSON.parse(match[1]);
+            // Apply if present
+            if (meta.artist) state.artist = String(meta.artist);
+            if (meta.song)   state.song   = String(meta.song);
+            if (meta.image)  imageEl.value = String(meta.image);
+            if (meta.theme && THEMES[meta.theme]) state.theme = meta.theme;
+
+            // Push into form for visibility/override
+            if (!titleEl.value.trim()) titleEl.placeholder = `${state.artist||""}${(state.artist&&state.song)?" – ":""}${state.song||""}`.trim();
+            themeEl.value = state.theme;
+          } catch { /* ignore bad JSON */ }
+        }
+      } catch {
+        // If CORS or fetch fails, just keep manual mode.
+      }
+      renderPreviewAndOutput();
+    }
+
+    // Events
+    urlEl.addEventListener('input', e => fetchMetadataIfAny(e.target.value));
+    titleEl.addEventListener('input', renderPreviewAndOutput);
+    subtitleEl.addEventListener('input', renderPreviewAndOutput);
+    iconEl.addEventListener('input', renderPreviewAndOutput);
+    imageEl.addEventListener('input', renderPreviewAndOutput);
+    themeEl.addEventListener('change', e => { state.theme = e.target.value; renderPreviewAndOutput(); });
+    typeEl.addEventListener('change', renderPreviewAndOutput);
+
+    // Buttons
+    document.getElementById('generate').addEventListener('click', renderPreviewAndOutput);
+    document.getElementById('copy').addEventListener('click', ()=>{
+      outputEl.select();
+      document.execCommand('copy');
+      alert('¡HTML copiado!');
+    });
+
+    // Defaults for quick testing
+    urlEl.value = ""; // paste a URL to auto-fetch meta
+    themeEl.value = "Genérico";
+    renderPreviewAndOutput();
   </script>
 </body>
 </html>
