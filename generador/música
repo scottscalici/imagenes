@@ -185,12 +185,8 @@ La vida se me está yendo 3)_pensando ..."></textarea>
       const theme  = themeEl.value;
       const image  = imageURL.value.trim();
 
-      const meta = `<!-- music-meta {
-  "artist": "${artist}",
-  "song": "${song}",
-  "theme": "${theme}",
-  "image": "${image}"
-} -->`;
+      const meta = `<!-- music-meta {"artist":"${artist}","song":"${song}","theme":"${theme}","image":"${image}"} -->`;
+
 
       let html = "";
       html += "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>"+(artist||"Artista")+" – “"+(song||"Título")+"”</title><script src='https://cdn.tailwindcss.com'><\/script></head>";
