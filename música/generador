@@ -71,19 +71,6 @@ La vida se me está yendo 3)_pensando ..."></textarea>
     <p class="text-sm text-gray-500 mt-1">Deja vacío si no hay sección. Enter = revisar, Tab = siguiente campo.</p>
   </div>
 
-  <!-- MCQs -->
-  <div class="mb-4">
-    <label class="block font-medium mb-1">Preguntas de opción múltiple</label>
-    <textarea id="mcqs" rows="8" class="w-full border rounded px-3 py-2" placeholder="¿De qué habla la primera línea?
-A) Futuro  B) Recuerdos  C) Trabajo  D) Amigos
-Correcta: B
-
-¿Qué sugiere 'No puedo olvidarte'?
-A) Alegría  B) Nostalgia  C) Culpa  D) Humor
-Correcta: B"></textarea>
-    <p class="text-sm text-gray-500 mt-1">Formato: pregunta + opciones A–D y opcionalmente “Correcta: X”.</p>
-  </div>
-
   <button id="generate" class="bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white font-semibold rounded px-6 py-3 hover:opacity-90">Generar página completa</button>
   <button id="copy" class="ml-3 bg-gray-800 text-white rounded px-4 py-2">Copiar</button>
 
@@ -93,7 +80,6 @@ Correcta: B"></textarea>
   </div>
 
   <script>
-    // Theme map for accents/borders in blocks
     const T = {
       "Romántico": {accent:"text-pink-600",  border:"border-pink-400",  hdr:"from-pink-500 via-fuchsia-500 to-purple-600"},
       "Energético":{accent:"text-amber-600", border:"border-amber-400", hdr:"from-orange-400 via-amber-400 to-red-500"},
@@ -107,9 +93,8 @@ Correcta: B"></textarea>
       "Dembow":    {accent:"text-lime-600",  border:"border-lime-400",  hdr:"from-lime-400 via-cyan-400 to-teal-500"}
     };
 
-    // Utilities
     const $ = id => document.getElementById(id);
-    function ytId(val){
+    const ytId = val => {
       if(!val) return "";
       try{
         const u = new URL(val);
@@ -117,9 +102,8 @@ Correcta: B"></textarea>
         if(u.hostname.includes("youtube.com")) return u.searchParams.get("v") || u.pathname.split("/embed/")[1] || "";
       } catch { return val; }
       return val;
-    }
+    };
 
-    // Sections
     function headerHTML({artist, song, theme}) {
       const {hdr} = T[theme];
       return `
@@ -144,10 +128,60 @@ Correcta: B"></textarea>
 </section>`;
     }
 
+    function clozeHTML(text, theme){
+      if(!text.trim()) return "";
+      const {accent, border} = T[theme];
+      const withInputs = text
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(/\r\n/g,"\n").replace(/\n/g,"<br>")
+        .replace(/(\d+)\)_([^\s<]+)/g, (m,n,word)=> `<span class="font-semibold">${n})</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="${word}" aria-label="Hueco ${n}">`);
+      const script = `
+<script>
+(function(){
+  const sect = document.currentScript.previousElementSibling;
+  const inputs = sect.querySelectorAll('.cloze-inp');
+  const checkBtn = sect.querySelector('.cloze-check');
+  const resetBtn = sect.querySelector('.cloze-reset');
+
+  function normalize(s){ return (s||"").trim().toLowerCase(); }
+  function checkOne(el){
+    const ok = normalize(el.value) === normalize(el.dataset.answer);
+    el.classList.remove('ring-2','ring-red-400','ring-emerald-400');
+    el.classList.add('ring-2', ok ? 'ring-emerald-400' : 'ring-red-400');
+    return ok;
+  }
+  inputs.forEach((inp, i)=>{
+    inp.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const correct = checkOne(inp);
+        if(correct && inputs[i+1]) inputs[i+1].focus();
+      }
+    });
+  });
+  checkBtn.addEventListener('click', ()=> inputs.forEach(checkOne));
+  resetBtn.addEventListener('click', ()=>{
+    inputs.forEach(i=>{ i.value=''; i.classList.remove('ring-2','ring-red-400','ring-emerald-400'); });
+    inputs[0]?.focus();
+  });
+})();
+<\/script>`;
+      return `
+<section class="bg-white rounded-xl shadow p-6 border-l-4 ${border} mb-4">
+  <h2 class="font-semibold text-lg mb-3 ${accent}">📝 Completa la letra</h2>
+  <div class="leading-relaxed text-gray-800">${withInputs}</div>
+  <div class="mt-4 flex gap-3">
+    <button type="button" class="cloze-check bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-sm">Revisar</button>
+    <button type="button" class="cloze-reset bg-gray-600 hover:bg-gray-700 text-white rounded-lg px-3 py-1.5 text-sm">Reiniciar</button>
+  </div>
+  <p class="text-xs text-gray-500 mt-2">Enter = revisar campo actual · Tab = siguiente campo</p>
+</section>
+${script}`;
+    }
+
     function spotifyHTML(url, theme){
       if(!url.trim()) return "";
       const {accent, border} = T[theme];
-      // If it's a track URL, convert to embed automatically
       if(url.includes("open.spotify.com/track/") && !url.includes("/embed/")){
         const id = url.split("/track/")[1].split("?")[0];
         url = `https://open.spotify.com/embed/track/${id}?utm_source=generator`;
@@ -174,121 +208,23 @@ Correcta: B"></textarea>
 </section>`;
     }
 
-    function clozeHTML(text, theme){
-      if(!text.trim()) return "";
-      const {accent, border} = T[theme];
-      const withInputs = text
-        .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-        .replace(/\r\n/g,"\n").replace(/\n/g,"<br>")
-        .replace(/(\d+)\)_([^\s<]+)/g, (m,n,word)=> `<span class="font-semibold">${n})</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="${word}" aria-label="Hueco ${n}">`);
-      const script = `
-<script>
-(function(){
-  const sect = document.currentScript.previousElementSibling; // section
-  const inputs = sect.querySelectorAll('.cloze-inp');
-  const checkBtn = sect.querySelector('.cloze-check');
-  const resetBtn = sect.querySelector('.cloze-reset');
-  function norm(s){return (s||'').trim();}
-  function checkOne(el){
-    const ok = norm(el.value) === norm(el.dataset.answer);
-    el.classList.remove('ring-2','ring-red-400','ring-emerald-400');
-    el.classList.add('ring-2', ok ? 'ring-emerald-400' : 'ring-red-400');
-    return ok;
-  }
-  inputs.forEach((inp)=>{
-    inp.addEventListener('keydown',(e)=>{
-      if(e.key==='Enter'){ e.preventDefault(); checkOne(inp); }
-    });
-  });
-  checkBtn.addEventListener('click',()=> inputs.forEach(checkOne));
-  resetBtn.addEventListener('click',()=>{
-    inputs.forEach(i=>{ i.value=''; i.classList.remove('ring-2','ring-red-400','ring-emerald-400');});
-    inputs[0]?.focus();
-  });
-})();
-<\/script>`;
-      return `
-<section class="bg-white rounded-xl shadow p-6 border-l-4 ${border} mb-4">
-  <h2 class="font-semibold text-lg mb-3 ${accent}">📝 Completa la letra</h2>
-  <div class="leading-relaxed text-gray-800">${withInputs}</div>
-  <div class="mt-4 flex gap-3">
-    <button type="button" class="cloze-check bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-sm">Revisar</button>
-    <button type="button" class="cloze-reset bg-gray-600 hover:bg-gray-700 text-white rounded-lg px-3 py-1.5 text-sm">Reiniciar</button>
-  </div>
-  <p class="text-xs text-gray-500 mt-2">Enter = revisar campo actual · Tab = siguiente campo</p>
-</section>
-${script}`;
-    }
+    const artistEl=$('artist'), songEl=$('song'), themeEl=$('theme'), imageURL=$('imageURL'), caption=$('caption'), spotify=$('spotify'), youtube=$('youtube'), cloze=$('cloze'), output=$('output');
 
-    function mcqToHTML(text, theme){
-      if(!text.trim()) return "";
-      const {accent, border} = T[theme];
-      const blocks = text.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
-      const cards = blocks.map((b, idx)=>{
-        const lines = b.split(/\n/).map(l=>l.trim()).filter(Boolean);
-        if(!lines.length) return "";
-        const q = lines[0];
-        const optLine = (lines[1]||"").replace(/\s{2,}/g," ");
-        let options = [];
-        const inlineOpts = optLine.split(/\s*[ABCD]\)\s*/i).filter(Boolean);
-        options = inlineOpts.length>=2 ? inlineOpts.map(s=>s.trim())
-                 : lines.slice(1,5).map(s=>s.replace(/^[ABCD]\)?\s*/i,"").trim()).filter(Boolean);
-        const corrLine = lines.find(l=>/^correcta\s*:/i.test(l)) || "";
-        const correct = (corrLine.match(/correcta\s*:\s*([ABCD])/i)||[])[1] || "";
-        const letters = ["A","B","C","D"];
-        return `
-<details class="mb-3 bg-white rounded-lg p-4 border ${border}">
-  <summary class="cursor-pointer font-medium">${idx+1}. ${q}</summary>
-  <div class="mt-2 text-gray-800">
-    <ul class="list-disc pl-5 space-y-1">
-      ${letters.map((L,i)=> options[i] ? `<li><strong>${L})</strong> ${options[i]}</li>` : "").join("")}
-    </ul>
-    <div class="mt-2 text-sm ${accent}">
-      ${correct ? `Respuesta correcta: <strong>${correct}</strong>` : `<em>(Sin respuesta indicada)</em>`}
-    </div>
-  </div>
-</details>`;
-      }).join("\n");
-
-      return `
-<section class="bg-white rounded-xl shadow p-6 border-l-4 ${border}">
-  <h2 class="font-semibold text-lg mb-3 ${accent}">🧠 Comprensión (opción múltiple)</h2>
-  ${cards || `<p class="text-sm text-gray-500">No hay preguntas.</p>`}
-</section>`;
-    }
-
-    // Elements
-    const artistEl = $('artist');
-    const songEl   = $('song');
-    const themeEl  = $('theme');
-    const imageURL = $('imageURL');
-    const caption  = $('caption');
-    const spotify  = $('spotify');
-    const youtube  = $('youtube');
-    const cloze    = $('cloze');
-    const mcqs     = $('mcqs');
-    const output   = $('output');
-
-    // Generate
     $('generate').addEventListener('click', ()=>{
-      const artist = artistEl.value.trim();
-      const song   = songEl.value.trim();
-      const theme  = themeEl.value;
-
+      const artist=artistEl.value.trim(), song=songEl.value.trim(), theme=themeEl.value;
+      const image=imageURL.value.trim(), cap=caption.value.trim();
+      const meta = `<!-- music-meta {"artist":"${artist}","song":"${song}","theme":"${theme}","image":"${image}"} -->`;
       let html = "";
       html += "<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>"+(artist||"Artista")+" – “"+(song||"Título")+"”</title><script src='https://cdn.tailwindcss.com'><\/script></head>";
       html += "<body class='font-sans bg-gray-100 min-h-screen p-6'><div class='max-w-5xl mx-auto space-y-6'>";
-
-      html += headerHTML({artist, song, theme});
-      html += imageHTML(imageURL.value, caption.value, artist, theme);
-      if (spotify.value.trim()) html += spotifyHTML(spotify.value, theme);
-      if (youtube.value.trim()) html += youtubeHTML(youtube.value, theme);
-      if (cloze.value.trim())   html += clozeHTML(cloze.value, theme);
-      if (mcqs.value.trim())    html += mcqToHTML(mcqs.value, theme);
-
+      html += meta;
+      html += headerHTML({artist,song,theme});
+      html += imageHTML(image,cap,artist,theme);
+      html += clozeHTML(cloze.value,theme);
+      html += spotifyHTML(spotify.value,theme);
+      html += youtubeHTML(youtube.value,theme);
       html += "<footer class='text-center text-xs text-gray-500 pt-6'>Creado para clase · "+(artist||"Artista")+" – “"+(song||"Título")+"”</footer>";
       html += "</div></body></html>";
-
       output.value = html;
     });
 
@@ -298,9 +234,7 @@ ${script}`;
       alert('¡Código copiado!');
     });
 
-    // defaults
-    artistEl.value = 'Karol G';
-    songEl.value   = 'Contigo';
+    artistEl.value='Karol G'; songEl.value='Contigo';
   </script>
 </body>
 </html>
