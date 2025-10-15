@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notas: El subjuntivo presente – Conjugaciones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .ok { background:#d1fae5; }
+    .no { background:#fee2e2; }
+    .is-correct { box-shadow: 0 0 0 2px rgba(34,197,94,.7) inset; }
+    .is-wrong   { box-shadow: 0 0 0 2px rgba(239,68,68,.7) inset; }
+    details > summary { cursor:pointer; color:#4f46e5; }
+    details > p { margin-top:0.25rem; color:#374151; }
+    code { background:#f3f4f6; padding:.1rem .35rem; border-radius:.25rem; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <header class="bg-indigo-700 text-white py-6">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-3xl font-bold">El subjuntivo presente: Conjugaciones</h1>
+      <p class="text-indigo-200">Formación, irregularidades y práctica interactiva</p>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-10 max-w-4xl space-y-8">
+
+    <!-- Introducción -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">¿Cuándo se usa el subjuntivo?</h2>
+      <p>El subjuntivo se usa para expresar <strong>deseos, emociones, dudas, o situaciones hipotéticas</strong>.</p>
+      <details><summary>💡 Ver traducción</summary><p>The subjunctive is used to express wishes, emotions, doubts, or hypothetical situations.</p></details>
+    </section>
+
+    <!-- Formación -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Cómo se forma</h2>
+      <ol class="list-decimal ml-6 space-y-1">
+        <li>Empieza con la forma <strong>yo</strong> del presente de indicativo.</li>
+        <li>Quita la terminación <code>-o</code>.</li>
+        <li>Añade las terminaciones opuestas.</li>
+      </ol>
+      <details><summary>💡 Ver traducción</summary><p>Start with the present-tense “yo” form, drop the <code>-o</code>, and add the opposite endings.</p></details>
+    </section>
+
+    <!-- Terminaciones -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Terminaciones del subjuntivo presente</h2>
+      <div class="grid md:grid-cols-3 gap-4 text-center">
+        <div>
+          <h3 class="font-semibold text-indigo-600 mb-1">-AR</h3>
+          <p>yo <strong>e</strong></p><p>tú <strong>es</strong></p><p>él/ella/Ud. <strong>e</strong></p><p>nosotros <strong>emos</strong></p><p>vosotros <strong>éis</strong></p><p>ellos/Uds. <strong>en</strong></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-indigo-600 mb-1">-ER</h3>
+          <p>yo <strong>a</strong></p><p>tú <strong>as</strong></p><p>él/ella/Ud. <strong>a</strong></p><p>nosotros <strong>amos</strong></p><p>vosotros <strong>áis</strong></p><p>ellos/Uds. <strong>an</strong></p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-indigo-600 mb-1">-IR</h3>
+          <p>(igual que -ER)</p>
+        </div>
+      </div>
+      <details><summary>💡 Ver traducción</summary><p>-AR verbs take endings with “e”, while -ER/-IR verbs take endings with “a”.</p></details>
+    </section>
+
+    <!-- Irregularidades -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Verbos con cambio en la forma de yo</h2>
+      <p>Los verbos que tienen una forma irregular en <em>yo</em> la mantienen en todo el subjuntivo:</p>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><strong>tener → tenga</strong></li>
+        <li><strong>hacer → haga</strong></li>
+        <li><strong>salir → salga</strong></li>
+        <li><strong>conocer → conozca</strong></li>
+        <li><strong>decir → diga</strong></li>
+      </ul>
+      <details><summary>💡 Ver traducción</summary><p>Verbs with irregular “yo” forms keep that irregular stem throughout the subjunctive.</p></details>
+    </section>
+
+    <!-- Cambios ortográficos -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Cambios ortográficos y radicales</h2>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><strong>-car → -que</strong> (buscar → busque)</li>
+        <li><strong>-gar → -gue</strong> (llegar → llegue)</li>
+        <li><strong>-zar → -ce</strong> (empezar → empiece)</li>
+            </ul>
+      <details><summary>💡 Ver traducción</summary><p>Spelling changes preserve pronunciation; -IR stem-changers also change in nosotros/vosotros forms.</p></details>
+    </section>
+
+    
+    <!-- Cambios de raíz (stem changers) -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Verbos con cambio de raíz</h2>
+      <p>Los verbos de cambio de raíz (-AR y -ER) siguen el mismo patrón que en el presente de indicativo: el cambio ocurre en todas las formas excepto en <strong>nosotros</strong> y <strong>vosotros</strong>.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li><strong>pensar → piense, pienses, piense, pensemos, penséis, piensen</strong></li>
+        <li><strong>volver → vuelva, vuelvas, vuelva, volvamos, volváis, vuelvan</strong></li>
+      </ul>
+      <p class="mt-3">Los verbos -IR con cambio de raíz también cambian en <strong>nosotros</strong> y <strong>vosotros</strong>, pero solo con una <em>vocal distinta</em> (e→i, o→u):</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li><strong>pedir → pida, pidas, pida, pidamos, pidáis, pidan</strong></li>
+        <li><strong>dormir → duerma, duermas, duerma, durmamos, durmáis, duerman</strong></li>
+      </ul>
+      <details><summary>💡 Ver traducción</summary>
+        <p>-AR and -ER stem-changing verbs keep their normal “boot” pattern. -IR stem-changers also change in nosotros and vosotros, but with a different vowel (e→i, o→u).</p>
+      </details>
+    </section>
+
+    <!-- Totalmente irregulares -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Cinco totalmente irregulares</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="bg-indigo-50 p-3 rounded-lg">
+          <p><strong>dar → dé, des, dé, demos, deis, den</strong></p>
+          <p><strong>estar → esté, estés, esté, estemos, estéis, estén</strong></p>
+          <p><strong>ir → vaya, vayas, vaya, vayamos, vayáis, vayan</strong></p>
+        </div>
+        <div class="bg-indigo-50 p-3 rounded-lg">
+          <p><strong>saber → sepa, sepas, sepa, sepamos, sepáis, sepan</strong></p>
+          <p><strong>ser → sea, seas, sea, seamos, seáis, sean</strong></p>
+        </div>
+      </div>
+      <details><summary>💡 Ver traducción</summary><p>The five totally irregular verbs are <em>dar, estar, ir, saber, ser</em>.</p></details>
+    </section>
+
+    <!-- Práctica -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100" id="practica">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Práctica: completa con la forma del subjuntivo</h2>
+      <p class="text-sm text-gray-600 mb-4">Escribe solo el verbo correcto. Ejemplo: <em>Es importante que tú <strong>estudies</strong>.</em></p>
+
+      <ol class="list-decimal ml-6 space-y-2 mb-6">
+        <li>Es necesario que ellos _______ temprano. (llegar) <input data-id="p1" class="border rounded px-2" /></li>
+        <li>Dudo que tú _______ la verdad. (saber) <input data-id="p2" class="border rounded px-2" /></li>
+        <li>Ojalá que nosotros _______ un viaje este verano. (hacer) <input data-id="p3" class="border rounded px-2" /></li>
+        <li>Mi mamá quiere que yo _______ más verduras. (comer) <input data-id="p4" class="border rounded px-2" /></li>
+        <li>Es posible que ustedes _______ tarde. (venir) <input data-id="p5" class="border rounded px-2" /></li>
+        <li>No creo que él _______ en casa. (estar) <input data-id="p6" class="border rounded px-2" /></li>
+        <li>Es importante que tú _______ bien en el examen. (salir) <input data-id="p7" class="border rounded px-2" /></li>
+        <li>Recomiendo que ella _______ más. (estudiar) <input data-id="p8" class="border rounded px-2" /></li>
+        <li>Es mejor que nosotros _______ el dinero. (guardar) <input data-id="p9" class="border rounded px-2" /></li>
+        <li>Temo que ellos no _______ venir. (poder) <input data-id="p10" class="border rounded px-2" /></li>
+      </ol>
+
+      <div class="flex gap-2 mb-4">
+        <button id="checkBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded">Comprobar</button>
+        <button id="revealBtn" class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded">Revelar</button>
+        <button id="resetBtn" class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-1 rounded">Reiniciar</button>
+        <div id="score" class="ml-auto font-semibold text-indigo-700"></div>
+      </div>
+
+      <details class="bg-gray-50 rounded p-3">
+        <summary class="font-semibold">Ver claves</summary>
+        <p>1) lleguen 2) sepas 3) hagamos 4) coma 5) vengan 6) esté 7) salgas 8) estudie 9) guardemos 10) puedan</p>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    function eqAccent(a,b){ return a.trim().toLocaleLowerCase('es')===b.trim().toLocaleLowerCase('es'); }
+
+    const answers={
+      p1:"lleguen",p2:"sepas",p3:"hagamos",p4:"coma",p5:"vengan",
+      p6:"esté",p7:"salgas",p8:"estudie",p9:"guardemos",p10:"puedan"
+    };
+
+    function checkAll(){
+      let correct=0,total=0;
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        total++;
+        let val=inp.value.trim();
+        if(answers[inp.dataset.id] && eqAccent(val,answers[inp.dataset.id])){
+          inp.classList.add('is-correct'); inp.classList.remove('is-wrong'); correct++;
+        } else {
+          inp.classList.add('is-wrong'); inp.classList.remove('is-correct');
+        }
+      });
+      document.getElementById('score').textContent=`${correct}/${total}`;
+    }
+
+    function revealAll(){
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        inp.value=answers[inp.dataset.id]||"";
+        inp.classList.remove('is-wrong'); inp.classList.add('is-correct');
+      });
+    }
+
+    function resetAll(){
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        inp.value=""; inp.classList.remove('is-wrong','is-correct');
+      });
+      document.getElementById('score').textContent="";
+    }
+
+    document.getElementById('checkBtn').onclick=checkAll;
+    document.getElementById('revealBtn').onclick=revealAll;
+    document.getElementById('resetBtn').onclick=resetAll;
+  </script>
+</body>
+</html>
