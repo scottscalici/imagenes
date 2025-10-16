@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>plan de clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Preterite Flowchart (Guided Questions)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .question {display:none;}
+    .active {display:block;}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <main class="max-w-4xl mx-auto p-8 space-y-6">
+    <header class="bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h1 class="text-2xl font-bold">Interactive Preterite Flowchart</h1>
+      <p class="text-sm text-gray-600 mt-2">
+        Answer the questions below to determine how to conjugate your verb in the preterite tense.
+      </p>
+    </header>
+
+    <!-- Q1 -->
+    <section id="q1" class="question active bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Is the verb <em>ir</em>, <em>ser</em>, <em>dar</em>, or <em>ver</em>?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('irser')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('q2')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <!-- IRREGULAR TOTAL -->
+    <section id="irser" class="question bg-white border border-red-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-lg text-red-700 mb-2">Totally Irregular (no accent marks)</h3>
+      <ul class="list-disc ms-5 text-sm">
+        <li><b>IR/SER:</b> fui, fuiste, fue, fuimos, fuisteis, fueron</li>
+        <li><b>DAR:</b> di, diste, dio, dimos, disteis, dieron</li>
+        <li><b>VER:</b> vi, viste, vio, vimos, visteis, vieron</li>
+      </ul>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <!-- Q2 -->
+    <section id="q2" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Is it a morphing verb (tener, poder, hacer, decir...)?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('morphing')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('q3')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <!-- MORPHING -->
+    <section id="morphing" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-lg text-orange-700 mb-2">Morphing Verbs (stem change + irregular endings)</h3>
+      <ul class="list-disc ms-5 text-sm">
+        <li><b>UV:</b> tener → tuv-, estar → estuv-, andar → anduv-</li>
+        <li><b>U:</b> poder → pud-, saber → sup-, caber → cup-, haber → hub-</li>
+        <li><b>I:</b> hacer → hic- (hizo), venir → vin-, querer → quis-</li>
+        <li><b>J:</b> decir → dij-, traer → traj-, conducir → conduj-</li>
+      </ul>
+      <p class="mt-2 text-sm">Endings: <code class="bg-gray-100 px-1 rounded">-e, -iste, -o, -imos, -isteis, -ieron</code> (<em>-J</em> group uses <code>-eron</code>).</p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <!-- Q3 -->
+    <section id="q3" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">What type of verb ending does it have?</h2>
+      <div class="mt-4 flex flex-wrap gap-4">
+        <button onclick="showSection('q4')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">-AR</button>
+        <button onclick="showSection('q5')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">-ER</button>
+        <button onclick="showSection('q6')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">-IR</button>
+      </div>
+    </section>
+
+    <!-- AR VERBS -->
+    <section id="q4" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Does it end in -gar, -car, or -zar?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('spelling')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('arregular')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="spelling" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-orange-700 mb-2">Spelling Changes (-gar, -car, -zar)</h3>
+      <p class="text-sm">Only change in the <b>yo</b> form:</p>
+      <ul class="list-disc ms-5 text-sm">
+        <li>-gar → gué (llegar → llegué)</li>
+        <li>-car → qué (buscar → busqué)</li>
+        <li>-zar → cé (empezar → empecé)</li>
+      </ul>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="arregular" class="question bg-white border border-emerald-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-emerald-700 mb-2">Regular -AR Endings</h3>
+      <p class="text-sm"><code class="bg-gray-100 px-1 rounded">é, aste, ó, amos, asteis, aron</code></p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <!-- ER VERBS -->
+    <section id="q5" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Is it <em>leer</em>, <em>caer</em>, or <em>creer</em>?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('eyerchange')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('erregular')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="eyerchange" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-orange-700 mb-2">Caer, Creer, Leer</h3>
+      <p class="text-sm">In 3rd person: i→y (leyó, leyeron); extra accents on í in other forms.</p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="erregular" class="question bg-white border border-emerald-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-emerald-700 mb-2">Regular -ER Endings</h3>
+      <p class="text-sm"><code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <!-- IR VERBS -->
+    <section id="q6" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Is it <em>oír</em>?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('oir')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('q7')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="oir" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-orange-700 mb-2">Oír</h3>
+      <p class="text-sm">Follows same pattern as leer: i→y (oyó, oyeron), with extra accents on í elsewhere.</p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="q7" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Does it end in -eír?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('eir')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('q8')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="eir" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-orange-700 mb-2">-eír Verbs</h3>
+      <p class="text-sm">Same accent rules as oír; drop the e in 3rd person (rió, rieron).</p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="q8" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Does it end in -uir (not -guir)?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('uir')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('q10')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="uir" class="question bg-white border border-orange-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-orange-700 mb-2">-uir Verbs (no G)</h3>
+      <p class="text-sm">i→y in 3rd person (construyó, construyeron), no extra accents.</p>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="q10" class="question bg-white border border-gray-200 rounded-2xl p-6 shadow">
+      <h2 class="font-semibold text-lg">Is it a stem-changing verb?</h2>
+      <div class="mt-4 flex gap-4">
+        <button onclick="showSection('stemchange')" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">Yes</button>
+        <button onclick="showSection('regular')" class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">No</button>
+      </div>
+    </section>
+
+    <section id="stemchange" class="question bg-white border border-blue-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-blue-700 mb-2">Stem Change (only in 3rd person)</h3>
+      <ul class="list-disc ms-5 text-sm">
+        <li>e→i: pedir → pidió/pidieron</li>
+        <li>o→u: dormir → durmió/durmieron</li>
+      </ul>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <section id="regular" class="question bg-white border border-emerald-300 rounded-2xl p-6 shadow">
+      <h3 class="font-bold text-emerald-700 mb-2">Regular Endings Summary</h3>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-4 border border-emerald-200 bg-emerald-50 rounded-xl">
+          <p class="font-semibold">-AR</p>
+          <p class="text-sm"><code class="bg-gray-100 px-1 rounded">é, aste, ó, amos, asteis, aron</code></p>
+        </div>
+        <div class="p-4 border border-emerald-200 bg-emerald-50 rounded-xl">
+          <p class="font-semibold">-ER</p>
+          <p class="text-sm"><code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
+        </div>
+        <div class="p-4 border border-emerald-200 bg-emerald-50 rounded-xl">
+          <p class="font-semibold">-IR</p>
+          <p class="text-sm"><code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
+        </div>
+      </div>
+      <div class="mt-6 text-right">
+        <button onclick="restartFlow()" class="px-4 py-2 bg-emerald-100 rounded-lg hover:bg-emerald-200">🔁 Start Over</button>
+      </div>
+    </section>
+
+    <script>
+      function showSection(id) {
+        document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+      function restartFlow() {
+        document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+        document.getElementById('q1').classList.add('active');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('q1').classList.add('active');
+      });
+    </script>
+  </main>
+</body>
+</html>
+
+
+
+
+
+</body>
+</html>
+
+
+</body>
+</html>
