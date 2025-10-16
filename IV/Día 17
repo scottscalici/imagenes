@@ -124,7 +124,20 @@
 
 
 <!--Video-->
-
+<!-- ▶️ YouTube embed (formato clásico) -->
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-slate-600 overflow-hidden">
+  <h2 class="text-slate-700 font-semibold text-lg mb-2">Gestos argentinos</h2>
+  
+  <div class="video-wrap">
+    <iframe width="560" height="315"
+      src="https://www.youtube.com/embed/F_EHfr6y9fg"
+      title="Gestos argentinos" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
 
 
 
