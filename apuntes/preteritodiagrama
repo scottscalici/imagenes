@@ -14,7 +14,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Diagrama de Flujo del Pretérito · Prototipo v2</title>
+  <title>Diagrama de Flujo del Pretérito · Completo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @media print {
@@ -37,39 +37,129 @@
       </div>
     </header>
 
-    <!-- FUI / DI / VI section fix -->
+    <!-- FUI / DI / VI -->
     <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
       <h2 class="text-xl font-bold mb-4">START → ¿Qué tipo de verbo es?</h2>
-
-      <div class="border-b border-gray-200 pb-4 mb-4">
-        <p class="font-semibold text-lg">¿Es <em>ir, ser, dar</em> o <em>ver</em>? <span class="text-red-600 text-sm">(Irregular total · sin acentos)</span></p>
-      </div>
-
+      <p class="font-semibold text-lg mb-2">¿Es <em>ir, ser, dar</em> o <em>ver</em>? <span class="text-red-600 text-sm">(Irregular total · sin acentos)</span></p>
       <div class="grid md:grid-cols-3 gap-4">
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex flex-col items-center justify-center text-center">
-          <p class="font-semibold text-gray-800 mb-1">IR / SER</p>
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+          <p class="font-semibold">IR / SER</p>
           <p class="text-sm">fui, fuiste, fue, fuimos, fuisteis, fueron</p>
         </div>
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex flex-col items-center justify-center text-center">
-          <p class="font-semibold text-gray-800 mb-1">DAR</p>
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+          <p class="font-semibold">DAR</p>
           <p class="text-sm">di, diste, dio, dimos, disteis, dieron</p>
         </div>
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex flex-col items-center justify-center text-center">
-          <p class="font-semibold text-gray-800 mb-1">VER</p>
+        <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+          <p class="font-semibold">VER</p>
           <p class="text-sm">vi, viste, vio, vimos, visteis, vieron</p>
         </div>
       </div>
     </section>
 
-    <!-- Additional sections placeholder -->
+    <!-- Morphing Verbs -->
     <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
-      <p class="text-sm text-gray-600 italic">Resto del diagrama sigue igual (morphing, -AR, -ER, -IR)...</p>
+      <h2 class="text-xl font-bold mb-4">¿Es un verbo “morphing” (con cambio de raíz)?</h2>
+      <p class="text-sm mb-2">Identifica el tipo de raíz y aplica terminaciones: <code class="bg-gray-100 px-1 rounded">-e, -iste, -o, -imos, -isteis, -ieron</code> (excepto en <span class="font-semibold">-J</span> → <code>-eron</code>).</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">Grupos</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li><b>UV:</b> tener → <em>tuv-</em>, estar → <em>estuv-</em>, andar → <em>anduv-</em></li>
+            <li><b>U:</b> poder → <em>pud-</em>, saber → <em>sup-</em>, caber → <em>cup-</em>, haber → <em>hub-</em></li>
+            <li><b>I:</b> hacer → <em>hic-</em> (él <em>hizo</em>), venir → <em>vin-</em>, querer → <em>quis-</em></li>
+            <li><b>J:</b> decir → <em>dij-</em>, traer → <em>traj-</em>, conducir → <em>conduj-</em></li>
+          </ul>
+        </div>
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">Detalles clave</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li><b>-J</b> → usan <code>-eron</code> (no <code>-ieron</code>).</li>
+            <li><b>Hacer</b>: él → <code>hizo</code> (c→z).</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
+    <!-- AR Verbs -->
+    <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
+      <h2 class="text-xl font-bold mb-4">¿Termina en -AR?</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <p class="font-semibold">Terminaciones regulares</p>
+          <p class="text-sm"><code class="bg-gray-100 px-1 rounded">é, aste, ó, amos, asteis, aron</code></p>
+        </div>
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">Cambio ortográfico (solo “yo”)</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li>-gar → <b>gué</b> (llegar → llegué)</li>
+            <li>-car → <b>qué</b> (buscar → busqué)</li>
+            <li>-zar → <b>cé</b> (empezar → empecé)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ER Verbs -->
+    <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
+      <h2 class="text-xl font-bold mb-4">¿Termina en -ER?</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <p class="font-semibold">Terminaciones regulares</p>
+          <p class="text-sm"><code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
+        </div>
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">Vocal + ER (i→y + acentos)</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li>caer, creer, leer</li>
+            <li>i→y en 3ª: <em>leyó, leyeron</em></li>
+            <li>Acentos en í: <em>caí, caíste, caímos, caísteis</em></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- IR Verbs -->
+    <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
+      <h2 class="text-xl font-bold mb-4">¿Termina en -IR?</h2>
+      <p class="text-sm mb-3">Comparte terminaciones con -ER: <code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">¿Es oír o -eír?</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li><b>oír:</b> i→y en 3ª (<em>oyó, oyeron</em>), acentos en <em>í</em> (<em>oí, oíste</em>...)</li>
+            <li><b>-eír:</b> (<em>reír</em>) mismos acentos; en 3ª se cae la e (<em>rió, rieron</em>).</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+          <p class="font-semibold">¿Termina en -uir (no -guir)?</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li>i→y en 3ª (<em>construyó, construyeron</em>).</li>
+            <li>Sin acentos extra.</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl md:col-span-2">
+          <p class="font-semibold">¿Tiene cambio de raíz (solo 3ª)?</p>
+          <ul class="list-disc text-sm ms-5 mt-2">
+            <li><b>e→i:</b> pedir → <em>pidió, pidieron</em></li>
+            <li><b>o→u:</b> dormir → <em>durmió, durmieron</em></li>
+            <li>En otras personas, es regular.</li>
+          </ul>
+        </div>
+        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl md:col-span-2 text-center">
+          <p class="font-semibold">Si nada de lo anterior aplica → Regular (-IR)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="flex justify-between items-center text-sm text-gray-500">
+      <button onclick="window.print()" class="no-print px-4 py-2 bg-white border border-gray-300 rounded-xl hover:bg-gray-100 shadow">🖨️ Imprimir</button>
+      <p>Versión completa · Octubre 2025</p>
+    </footer>
   </main>
 </body>
 </html>
-
 
 
 
