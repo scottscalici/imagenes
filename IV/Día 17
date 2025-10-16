@@ -124,6 +124,335 @@
 
 <!--Práctica de verbos-->
 
+<div id="prev-ujnoz15"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`ir (to go)
+yo fui
+tú fuiste
+él fue
+nosotros fuimos
+vosotros fuisteis
+ellos fueron
+
+poner (to put)
+yo puse
+tú pusiste
+él puso
+nosotros pusimos
+vosotros pusisteis
+ellos pusieron
+
+oír (to hear)
+yo oí
+tú oíste
+él oyó
+nosotros oímos
+vosotros oísteis
+ellos oyeron
+
+buscar (to look for)
+yo busqué
+tú buscaste
+él buscó
+nosotros buscamos
+vosotros buscasteis
+ellos buscaron
+
+influir (to influence)
+yo influí
+tú influiste
+él influyó
+nosotros influimos
+vosotros influisteis
+ellos influyeron
+
+caer (to fall)
+yo caí
+tú caíste
+él cayó
+nosotros caímos
+vosotros caísteis
+ellos cayeron
+
+leer (to read)
+yo leí
+tú leíste
+él leyó
+nosotros leímos
+vosotros leísteis
+ellos leyeron
+
+querer (to want)
+yo quise
+tú quisiste
+él quiso
+nosotros quisimos
+vosotros quisisteis
+ellos quisieron
+
+dar (to give)
+yo di
+tú diste
+él dio
+nosotros dimos
+vosotros disteis
+ellos dieron
+
+reducir (to reduce)
+yo reduje
+tú redujiste
+él redujo
+nosotros redujimos
+vosotros redujisteis
+ellos redujeron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-ujnoz15");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica del pretérito</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
+
+
+
+
+
+<div id="prev-v5oags4"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`ir (to go)
+yo iba
+tú ibas
+él iba
+nosotros íbamos
+vosotros ibais
+ellos iban
+
+poner (to put)
+yo ponía
+tú ponías
+él ponía
+nosotros poníamos
+vosotros poníais
+ellos ponían
+
+oír (to hear)
+yo oía
+tú oías
+él oía
+nosotros oíamos
+vosotros oíais
+ellos oían
+
+buscar (to look for)
+yo buscaba
+tú buscabas
+él buscaba
+nosotros buscábamos
+vosotros buscabais
+ellos buscaban
+
+influir (to influence)
+yo influía
+tú influías
+él influía
+nosotros influíamos
+vosotros influíais
+ellos influían
+
+caer (to fall)
+yo caía
+tú caías
+él caía
+nosotros caíamos
+vosotros caíais
+ellos caían
+
+leer (to read)
+yo leía
+tú leías
+él leía
+nosotros leíamos
+vosotros leíais
+ellos leían
+
+querer (to want)
+yo quería
+tú querías
+él quería
+nosotros queríamos
+vosotros queríais
+ellos querían
+
+dar (to give)
+yo daba
+tú dabas
+él daba
+nosotros dábamos
+vosotros dabais
+ellos daban
+
+reducir (to reduce)
+yo reducía
+tú reducías
+él reducía
+nosotros reducíamos
+vosotros reducíais
+ellos reducían`);
+  let totalCells=0;
+  const container=document.getElementById("prev-v5oags4");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-cyan-500 overflow-hidden">
+  <h2 class="text-cyan-600 font-semibold text-lg px-4 pt-4">Práctica del imperfecto</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-cyan-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-cyan-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-cyan-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
 
 
 
@@ -151,7 +480,29 @@
 
 
 <!--Conversacion-->
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Organización social: relaciones familiares</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/IA/Organizaci%C3%B3n%20social%20%E2%80%93%20relaciones%20familiares%20%E2%80%93%20vida%20cotidiana%20(familia%20en%20casa%20cocinando%20y%20limpiando).png" alt="Organización social: relaciones familiares" class="rounded-lg shadow-md max-h-64 object-cover">
+    <p class="whitespace-pre-line">🎯 Meta: 60 segundos (pero animo que hables más)
+💬 Usa:
+Tiempos verbales: presente, pretérito, imperfecto, y presente progresivo (al menos una vez cada uno)
+Conectores: porque / ya que · por eso · además
+Opiniones: para mí · en mi opinión · creo que · pienso que
+Ideas útiles: se representa la cultura… · muestra… · hay… · la gente está… · en países como… · en mi país…
 
+✅ Incluye:
+Qué ves (primer plano / fondo)
+Qué pasa
+Qué emociones transmite
+Qué podría pasar después</p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
 
 
 
