@@ -15,23 +15,77 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 17</h1>
+    <p class="text-lg italic drop-shadow">16/17 de octubre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Imperfecto</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 4.1 - la próxima clase</li><li>Vocabulario 4.2 - Día 19</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Pretérito e imperfecto 1</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 3 - 5</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> camarones</p><p><span class="font-semibold">2.</span> la tabla de (wind)surf</p><p><span class="font-semibold">3.</span> por la tarde</p><p><span class="font-semibold">4.</span> la juventud</p><p><span class="font-semibold">5.</span> la habitación individual</p><p><span class="font-semibold">6.</span> el/la compañero/a de cuarto</p><p><span class="font-semibold">7.</span> conducir</p><p><span class="font-semibold">8.</span> estadounidense</p><p><span class="font-semibold">9.</span> bonito/a</p><p><span class="font-semibold">10.</span> anaranjado/a</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> el cielo</p><p><span class="font-semibold">12.</span> Es bueno que…</p><p><span class="font-semibold">13.</span> chatear</p><p><span class="font-semibold">14.</span> tocar (un instrumento musical)</p><p><span class="font-semibold">15.</span> el cargador</p><p><span class="font-semibold">16.</span> el bosque (tropical)</p><p><span class="font-semibold">17.</span> el correo</p><p><span class="font-semibold">18.</span> a menos que</p><p><span class="font-semibold">19.</span> el/la científico/a</p><p><span class="font-semibold">20.</span> bastante</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> casado/a</p><p><span class="font-semibold">22.</span> autoritario/a</p><p><span class="font-semibold">23.</span> el dinero en efectivo</p><p><span class="font-semibold">24.</span> enseguida</p><p><span class="font-semibold">25.</span> pasarlo bien/mal/fatal</p><p><span class="font-semibold">26.</span> el divorcio</p><p><span class="font-semibold">27.</span> la rutina</p><p><span class="font-semibold">28.</span> las relaciones personales</p><p><span class="font-semibold">29.</span> celebrar/festejar</p><p><span class="font-semibold">30.</span> el boliche</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Había o hubo<p>Frases idiomáticas en el pasado</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Juxtaponer los usos del pasado</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Pretérito o imperfecto</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/marcadores-temporales" target="_blank" class="text-blue-600 hover:underline">Marcadores temporales</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
@@ -102,7 +156,27 @@
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+          <h4 class="font-semibold"><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
+          <ul class="list-disc list-inside">
+            <li>Vocabulario 4.1 - la próxima clase</li><li>Vocabulario 4.2 - Día 19</li>
+          </ul>
+        
+  
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            <li><span class="font-semibold">Pretérito</span> 📅 17 de oct</li><li><span class="font-semibold">Imperfecto</span> 📅 21 de oct</li><li><span class="font-semibold">Usos de los tiempos pasados</span> 📅 30 de oct</li>
+          </ul>
+        
+  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li></ul><h4 class="font-semibold">Pretérito o imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/marcadores-temporales" target="_blank" class="hover:underline">Marcadores temporales</a></li></ul><h4 class="font-semibold">Imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li></ul>
+  
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+</section>
 
   </div>
 
