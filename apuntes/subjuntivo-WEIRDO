@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notas: El subjuntivo en cláusulas sustantivas (WEIRDO)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .is-correct { box-shadow: 0 0 0 2px rgba(34,197,94,.7) inset; }
+    .is-wrong   { box-shadow: 0 0 0 2px rgba(239,68,68,.7) inset; }
+    details > summary { cursor:pointer; }
+    details > summary:hover { text-decoration: underline; }
+    code { background:#f3f4f6; padding:.1rem .35rem; border-radius:.25rem; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-purple-700 text-white py-6">
+    <div class="max-w-5xl mx-auto px-4">
+      <h1 class="text-3xl font-bold">El subjuntivo en cláusulas sustantivas</h1>
+      <p class="text-purple-200">WEIRDO · usos, ejemplos con traducción al hacer clic y práctica interactiva</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-10 space-y-8">
+
+    <!-- Intro -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-purple-700 mb-2">¿Qué es una cláusula sustantiva?</h2>
+      <p>Es una cláusula dependiente introducida por <strong>que</strong> que funciona como sustantivo (objeto o sujeto) del verbo principal.
+        Cuando el verbo principal expresa <em>voluntad, emoción, duda, recomendaciones, expresiones impersonales</em> u <em>ojalá</em>,
+        se usa el <strong>subjuntivo</strong> en la cláusula subordinada.</p>
+      <details class="mt-2"><summary class="text-purple-700 font-medium">💡 Ver traducción</summary>
+        <p>A noun clause is a dependent clause introduced by <em>que</em> that works like a noun. If the main verb expresses will, emotion, doubt, recommendations, impersonal expressions, or <em>ojalá</em>, the subordinate clause takes the subjunctive.</p>
+      </details>
+    </section>
+
+    <!-- WEIRDO banner -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-purple-700 mb-3">WEIRDO: categorías</h2>
+      <div class="grid sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+        <div class="rounded-lg p-3 bg-yellow-50 border border-yellow-200">
+          <p class="text-2xl font-extrabold text-yellow-700">W</p>
+          <p class="text-sm text-yellow-800">Wishes / Will</p>
+        </div>
+        <div class="rounded-lg p-3 bg-green-50 border border-green-200">
+          <p class="text-2xl font-extrabold text-green-700">E</p>
+          <p class="text-sm text-green-800">Emotions</p>
+        </div>
+        <div class="rounded-lg p-3 bg-sky-50 border border-sky-200">
+          <p class="text-2xl font-extrabold text-sky-700">I</p>
+          <p class="text-sm text-sky-800">Impersonal expr.</p>
+        </div>
+        <div class="rounded-lg p-3 bg-violet-50 border border-violet-200">
+          <p class="text-2xl font-extrabold text-violet-700">R</p>
+          <p class="text-sm text-violet-800">Recomm./Requests</p>
+        </div>
+        <div class="rounded-lg p-3 bg-rose-50 border border-rose-200">
+          <p class="text-2xl font-extrabold text-rose-700">D</p>
+          <p class="text-sm text-rose-800">Doubt / Denial</p>
+        </div>
+        <div class="rounded-lg p-3 bg-orange-50 border border-orange-200">
+          <p class="text-2xl font-extrabold text-orange-700">O</p>
+          <p class="text-sm text-orange-800">Ojalá</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- W -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-yellow-700 mb-1">W – Deseos y voluntad</h3>
+      <p>Se usa el subjuntivo cuando el verbo principal expresa <strong>deseo, preferencia, mandato o influencia</strong> sobre otra persona.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Esperamos que <strong>cocines</strong> bien.</li>
+        <li>Quiero que <strong>vengas</strong> temprano.</li>
+        <li>Prefieren que <strong>estudies</strong> más.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-yellow-800 font-medium">💡 Ver traducción</summary>
+        <p>Use the subjunctive when the main verb expresses wishes, preference, orders, or influence over someone else.</p>
+      </details>
+
+      <!-- Expandable verb list (exact) -->
+      <details class="bg-yellow-50 rounded-lg p-3 border border-yellow-200 mt-4">
+        <summary class="font-semibold cursor-pointer text-yellow-800">📘 Verbos y expresiones de voluntad e influencia</summary>
+        <div class="mt-2 grid md:grid-cols-3 gap-3 text-sm">
+          <div>
+            <p><strong>aconsejar</strong> – to advise</p>
+            <p><strong>desear</strong> – to desire; to wish</p>
+            <p><strong>es importante</strong> – it’s important</p>
+            <p><strong>es necesario</strong> – it’s necessary</p>
+            <p><strong>es urgente</strong> – it’s urgent</p>
+            <p><strong>exigir</strong> – to demand</p>
+            <p><strong>gustar</strong> – to like; to be pleasing</p>
+          </div>
+          <div>
+            <p><strong>hacer</strong> – to make</p>
+            <p><strong>importar</strong> – to be important</p>
+            <p><strong>insistir (en)</strong> – to insist (on)</p>
+            <p><strong>mandar</strong> – to order</p>
+            <p><strong>necesitar</strong> – to need</p>
+            <p><strong>oponerse a</strong> – to oppose; to object to</p>
+            <p><strong>pedir (e:i/i)</strong> – to ask for; request</p>
+            <p><strong>preferir (e:ie/i)</strong> – to prefer</p>
+          </div>
+          <div>
+            <p><strong>prohibir</strong> – to prohibit</p>
+            <p><strong>proponer</strong> – to propose</p>
+            <p><strong>querer (e:ie)</strong> – to want; to wish</p>
+            <p><strong>recomendar (e:ie)</strong> – to recommend</p>
+            <p><strong>rogar (o:ue)</strong> – to beg; to plead</p>
+            <p><strong>sugerir (e:ie/i)</strong> – to suggest</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- E -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-green-700 mb-1">E – Emociones</h3>
+      <p>Cuando la cláusula principal expresa <strong>alegría, tristeza, miedo, sorpresa, molestia, lástima</strong>, etc., la subordinada va en subjuntivo (si el sujeto cambia).</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Me alegro de que <strong>sonrías</strong>.</li>
+        <li>Temo que no <strong>lleguen</strong> a tiempo.</li>
+        <li>Siento que <strong>estés</strong> enfermo.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-green-800 font-medium">💡 Ver traducción</summary>
+        <p>Use the subjunctive when the main clause expresses emotion and the subject of the subordinate clause is different.</p>
+      </details>
+
+      <!-- Expandable verb list (exact) -->
+      <details class="bg-green-50 rounded-lg p-3 border border-green-200 mt-4">
+        <summary class="font-semibold cursor-pointer text-green-800">📗 Verbos y expresiones de emoción</summary>
+        <div class="mt-2 grid md:grid-cols-3 gap-3 text-sm">
+          <div>
+            <p><strong>alegrarse (de)</strong> – to be happy (about)</p>
+            <p><strong>es bueno</strong> – it’s good</p>
+            <p><strong>es extraño</strong> – it’s strange</p>
+            <p><strong>es malo</strong> – it’s bad</p>
+            <p><strong>es mejor</strong> – it’s better</p>
+            <p><strong>es ridículo</strong> – it’s ridiculous</p>
+          </div>
+          <div>
+            <p><strong>es terrible</strong> – it’s terrible</p>
+            <p><strong>es una lástima</strong> – it’s a shame</p>
+            <p><strong>es una pena</strong> – it’s a pity</p>
+            <p><strong>esperar</strong> – to hope; to wish</p>
+            <p><strong>gustar</strong> – to like; to be pleasing</p>
+          </div>
+          <div>
+            <p><strong>molestar</strong> – to bother</p>
+            <p><strong>sentir (e:ie/i)</strong> – to be sorry; to regret</p>
+            <p><strong>sorprender</strong> – to surprise</p>
+            <p><strong>temer</strong> – to fear</p>
+            <p><strong>tener (e:ie) miedo (de)</strong> – to be afraid (of)</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- I -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-sky-700 mb-1">I – Expresiones impersonales</h3>
+      <p>Las expresiones impersonales comunican <strong>opinión, juicio de valor o necesidad</strong> y suelen requerir el subjuntivo cuando se refieren a otra persona.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Es necesario que Jaime <strong>lea</strong> este libro.</li>
+        <li>Es importante que <strong>lleguemos</strong> a tiempo.</li>
+        <li>Es bueno que <strong>ayudes</strong> en casa.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-sky-800 font-medium">💡 Ver traducción</summary>
+        <p>Impersonal expressions (it’s necessary/important/good…) trigger the subjunctive when referring to someone else.</p>
+      </details>
+    </section>
+
+    <!-- R -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-violet-700 mb-1">R – Recomendaciones y pedidos</h3>
+      <p>Cuando alguien <strong>recomienda, sugiere, pide, ruega, manda u ordena</strong> que otra persona haga algo, usamos el subjuntivo.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Mi doctor recomienda que <strong>bebas</strong> más agua.</li>
+        <li>Les sugiero que <strong>practiquen</strong> todos los días.</li>
+        <li>Mis padres quieren que yo <strong>sea</strong> médico.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-violet-800 font-medium">💡 Ver traducción</summary>
+        <p>Recommendations/requests from one person to another trigger the subjunctive.</p>
+      </details>
+    </section>
+
+    <!-- D -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-rose-700 mb-1">D – Duda y negación</h3>
+      <p>Se usa el subjuntivo cuando la oración principal expresa <strong>duda, negación o incertidumbre</strong>.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Dudo que él <strong>tenga</strong> mi número de teléfono.</li>
+        <li>No creo que la novela <strong>tenga</strong> éxito.</li>
+        <li>Es posible que <strong>lleguen</strong> tarde.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-rose-800 font-medium">💡 Ver traducción</summary>
+        <p>Use the subjunctive when the main clause implies doubt, uncertainty, or denial.</p>
+      </details>
+
+      <!-- Expandable verb list (exact) -->
+      <details class="bg-rose-50 rounded-lg p-3 border border-rose-200 mt-4">
+        <summary class="font-semibold cursor-pointer text-rose-800">📕 Verbos y expresiones de duda/negación</summary>
+        <div class="mt-2 grid md:grid-cols-2 gap-3 text-sm">
+          <div>
+            <p><strong>dudar</strong> – to doubt</p>
+            <p><strong>es imposible</strong> – it’s impossible</p>
+            <p><strong>es improbable</strong> – it’s improbable</p>
+            <p><strong>es poco cierto/seguro</strong> – it’s uncertain</p>
+            <p><strong>(no) es posible</strong> – it’s (not) possible</p>
+            <p><strong>(no) es probable</strong> – it’s (not) probable</p>
+          </div>
+          <div>
+            <p><strong>negar (e:ie)</strong> – to deny</p>
+            <p><strong>no creer</strong> – not to believe</p>
+            <p><strong>no es evidente</strong> – it’s not evident</p>
+            <p><strong>no es cierto/seguro</strong> – it’s not certain</p>
+            <p><strong>no es verdad</strong> – it’s not true</p>
+            <p><strong>no estar seguro (de)</strong> – not to be sure (of)</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- O -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h3 class="text-lg font-semibold text-orange-700 mb-1">O – Ojalá</h3>
+      <p><strong>Ojalá</strong> significa “I hope / If only / God willing”. Normalmente va con subjuntivo. El <em>que</em> es opcional.</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>¡Ojalá (que) <strong>recuerde</strong> nuestro aniversario!</li>
+        <li>Ojalá (que) <strong>ganemos</strong> el partido.</li>
+      </ul>
+      <details class="mt-2"><summary class="text-orange-800 font-medium">💡 Ver traducción</summary>
+        <p><em>Ojalá</em> expresses hope/wish; it typically takes the subjunctive. Using <em>que</em> after it is optional.</p>
+      </details>
+    </section>
+
+    <!-- Practice -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100" id="practica">
+      <h2 class="text-xl font-semibold text-purple-700 mb-2">Práctica: completa con la forma correcta del verbo (subjuntivo)</h2>
+      <p class="text-sm text-gray-600 mb-4">Escribe solo el verbo en subjuntivo según el contexto. (Comprobación insensible a mayúsculas/acentos-respetados).</p>
+
+      <ol class="list-decimal ml-6 space-y-2 mb-6">
+        <li>Mis padres quieren que yo _______ en casa. (estar) <input data-id="p1" class="border rounded px-2" /></li>
+        <li>Es necesario que ustedes _______ el proyecto hoy. (terminar) <input data-id="p2" class="border rounded px-2" /></li>
+        <li>Me alegra que tú _______ mejor. (sentirse) <input data-id="p3" class="border rounded px-2" /></li>
+        <li>Dudo que ellos _______ la verdad. (decir) <input data-id="p4" class="border rounded px-2" /></li>
+        <li>Te recomiendo que _______ más agua. (beber) <input data-id="p5" class="border rounded px-2" /></li>
+        <li>Ojalá que nosotros _______ a tiempo. (llegar) <input data-id="p6" class="border rounded px-2" /></li>
+        <li>No es cierto que ella _______ en Madrid. (vivir) <input data-id="p7" class="border rounded px-2" /></li>
+        <li>Es importante que él _______ la tarea. (hacer) <input data-id="p8" class="border rounded px-2" /></li>
+        <li>Temo que el vuelo no _______. (salir) <input data-id="p9" class="border rounded px-2" /></li>
+        <li>Insisten en que tú _______ con nosotros. (venir) <input data-id="p10" class="border rounded px-2" /></li>
+        <li>No creo que nosotros _______ hoy. (poder) <input data-id="p11" class="border rounded px-2" /></li>
+        <li>Es una lástima que ellos no _______ a la fiesta. (asistir) <input data-id="p12" class="border rounded px-2" /></li>
+      </ol>
+
+      <div class="flex gap-2 mb-4">
+        <button id="checkBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded">Comprobar</button>
+        <button id="revealBtn" class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded">Revelar</button>
+        <button id="resetBtn" class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-1 rounded">Reiniciar</button>
+        <div id="score" class="ml-auto font-semibold text-purple-700"></div>
+      </div>
+
+      <details class="bg-gray-50 rounded p-3">
+        <summary class="font-semibold">Ver claves</summary>
+        <p>1) esté 2) terminen 3) te sientas 4) digan 5) bebas 6) lleguemos 7) viva 8) haga 9) salga 10) vengas 11) podamos 12) asistan</p>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    function eqAccent(a,b){ return a.trim().toLocaleLowerCase('es')===b.trim().toLocaleLowerCase('es'); }
+
+    const answers = {
+      p1:"esté", p2:"terminen", p3:"te sientas", p4:"digan", p5:"bebas", p6:"lleguemos",
+      p7:"viva", p8:"haga", p9:"salga", p10:"vengas", p11:"podamos", p12:"asistan"
+    };
+
+    function checkAll(){
+      let correct=0,total=0;
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        total++;
+        const val=inp.value.trim();
+        if(answers[inp.dataset.id] && eqAccent(val, answers[inp.dataset.id])){
+          inp.classList.add('is-correct'); inp.classList.remove('is-wrong'); correct++;
+        } else {
+          inp.classList.add('is-wrong'); inp.classList.remove('is-correct');
+        }
+      });
+      document.getElementById('score').textContent = `${correct}/${total}`;
+    }
+
+    function revealAll(){
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        inp.value = answers[inp.dataset.id] || "";
+        inp.classList.remove('is-wrong'); inp.classList.add('is-correct');
+      });
+    }
+
+    function resetAll(){
+      document.querySelectorAll('#practica input').forEach(inp=>{
+        inp.value=""; inp.classList.remove('is-wrong','is-correct');
+      });
+      document.getElementById('score').textContent="";
+    }
+
+    document.getElementById('checkBtn').onclick = checkAll;
+    document.getElementById('revealBtn').onclick = revealAll;
+    document.getElementById('resetBtn').onclick = resetAll;
+  </script>
+</body>
+</html>
