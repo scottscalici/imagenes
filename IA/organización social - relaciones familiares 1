@@ -11,7 +11,30 @@
 
 
 
-
+<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 border-indigo-500">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Organización social (relaciones familiares)</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/IA/Organizaci%C3%B3n%20social%20%E2%80%93%20relaciones%20familiares%20%E2%80%93%20vida%20cotidiana%20(familia%20en%20casa%20cocinando%20y%20limpiando).png" alt="imagen lectura" class="rounded-lg shadow mb-4">
+    <p>🎯 Meta: 60 segundos (pero animo que hables más)<p>
+💬 Usa:<br>
+Tiempos verbales: presente, pretérito, imperfecto, y presente progresivo (al menos una vez cada uno)<br>
+Conectores: porque / ya que · por eso · además<br>
+Opiniones: para mí · en mi opinión · creo que · pienso que<br>
+Ideas útiles: se representa la cultura… · muestra… · hay… · la gente está… · en países como… · en mi país…
+<p>
+✅ Incluye:
+<br>Qué ves (primer plano / fondo)
+<br>Qué pasa
+<br>Qué emociones transmite
+<br>Qué podría pasar después
+<p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div></p>
+  </div>
+</section>
 
 
  
