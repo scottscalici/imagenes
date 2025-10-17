@@ -1,0 +1,96 @@
+<!-- STYLE GENERATOR DEMO -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Style Generator</title>
+</head>
+<body class="min-h-screen bg-white text-gray-800 p-6">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Controls -->
+    <div class="bg-gray-100 p-4 rounded-xl shadow">
+      <h2 class="text-lg font-bold mb-2">🎨 Choose Your Style</h2>
+      <form id="styleForm" class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block font-medium">Primary Color:</label>
+          <input type="color" name="primary" value="#f87171" class="w-full h-10 rounded border" />
+        </div>
+        <div>
+          <label class="block font-medium">Secondary Color:</label>
+          <input type="color" name="secondary" value="#facc15" class="w-full h-10 rounded border" />
+        </div>
+        <div>
+          <label class="block font-medium">Background:</label>
+          <select name="background" class="w-full rounded border h-10">
+            <option value="white">White</option>
+            <option value="gray-100">Gray</option>
+            <option value="gradient">Tomato Gradient</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-medium">Icon:</label>
+          <select name="icon" class="w-full rounded border h-10">
+            <option value="🍅">Tomato</option>
+            <option value="🎭">Drama</option>
+            <option value="🌹">Romance</option>
+            <option value="🔥">Fire</option>
+            <option value="📖">Book</option>
+            <option value="🎧">Music</option>
+          </select>
+        </div>
+      </form>
+      <button onclick="applyStyle()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600">Apply Style</button>
+    </div>
+
+    <!-- Styled Output Preview -->
+    <div id="output" class="p-6 rounded-xl border border-gray-200 bg-white">
+      <h1 id="title" class="text-2xl font-bold mb-4">📖 Sample Lesson Plan</h1>
+      <p class="mb-2">Esta clase cubrirá los usos del pretérito y del imperfecto con ejemplos y práctica guiada.</p>
+      <ul class="list-disc list-inside">
+        <li>Introducción con imágenes 📸</li>
+        <li>Discusión en grupos pequeños 👥</li>
+        <li>Práctica independiente ✍️</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function applyStyle() {
+      const form = document.forms["styleForm"];
+      const primary = form["primary"].value;
+      const secondary = form["secondary"].value;
+      const background = form["background"].value;
+      const icon = form["icon"].value;
+
+      const output = document.getElementById("output");
+      const title = document.getElementById("title");
+
+      // Apply background
+      output.className = "p-6 rounded-xl border";
+      if (background === "white") {
+        output.classList.add("bg-white");
+      } else if (background === "gray-100") {
+        output.classList.add("bg-gray-100");
+      } else {
+        output.style.background = "linear-gradient(to right, #f87171, #facc15)";
+      }
+
+      // Apply border
+      output.style.borderColor = primary;
+
+      // Apply icon
+      title.textContent = `${icon} Sample Lesson Plan`;
+
+      // Apply color scheme
+      title.style.color = primary;
+      const items = output.querySelectorAll("li");
+      items.forEach((li, i) => {
+        li.style.color = i % 2 === 0 ? primary : secondary;
+      });
+    }
+  </script>
+
+</body>
+</html>
