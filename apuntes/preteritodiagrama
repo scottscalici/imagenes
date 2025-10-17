@@ -26,21 +26,34 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
   <main class="max-w-5xl mx-auto p-6 space-y-6">
-    <header class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
-      <h1 class="text-3xl font-bold">Diagrama de Flujo del Pretérito</h1>
-      <p class="mt-2 text-sm text-gray-600">Identifica qué patrón aplica a un verbo para conjugarlo correctamente en el pretérito.</p>
-      <div class="mt-4 flex flex-wrap gap-2 text-xs">
-        <span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full">🔻 Irregular total</span>
-        <span class="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 rounded-full">🟠 Cambio ortográfico / i→y</span>
-        <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">🔵 Cambio de raíz (e→i / o→u)</span>
-        <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">🟢 Regular</span>
-      </div>
-    </header>
+<header class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
+  <h1 class="text-3xl font-bold">Diagrama de Flujo del Pretérito</h1>
+  <p class="mt-2 text-sm text-gray-600">Identifica qué patrón aplica a un verbo para conjugarlo correctamente en el pretérito.</p>
+
+  <div class="mt-4 flex flex-wrap gap-2 text-xs">
+    <span class="px-2 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full">
+      🔻 Irregular total
+    </span>
+    <span class="px-2 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full">
+      🟡 Morphing verb (tuv-, hic-, dij-, etc.)
+    </span>
+    <span class="px-2 py-1 bg-orange-50 text-orange-700 border border-orange-200 rounded-full">
+      🟠 Spelling / i→y change
+    </span>
+    <span class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
+      🔵 Stem change (e→i / o→u)
+    </span>
+    <span class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">
+      🟢 Regular
+    </span>
+  </div>
+</header>
+
 
     <!-- FUI / DI / VI -->
     <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
       <h2 class="text-xl font-bold mb-4">START → ¿Qué tipo de verbo es?</h2>
-      <p class="font-semibold text-lg mb-2">¿Es <em>ir, ser, dar</em> o <em>ver</em>? <span class="text-red-600 text-sm">(Irregular total · sin acentos)</span></p>
+      <p class="font-semibold text-lg mb-2"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2">¿Es <em>ir, ser, dar</em> o <em>ver</em>? </a><span class="text-red-600 text-sm">(Irregular total · sin acentos)</span></p>
       <div class="grid md:grid-cols-3 gap-4">
         <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
           <p class="font-semibold">IR / SER</p>
@@ -59,16 +72,16 @@
 
     <!-- Morphing Verbs -->
     <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
-      <h2 class="text-xl font-bold mb-4">¿Es un verbo “morphing” (con cambio de raíz)?</h2>
+      <h2 class="text-xl font-bold mb-4"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4">¿Es un verbo “morphing” (con cambio de raíz)?</a></h2>
       <p class="text-sm mb-2">Identifica el tipo de raíz y aplica terminaciones: <code class="bg-gray-100 px-1 rounded">-e, -iste, -o, -imos, -isteis, -ieron</code> (excepto en <span class="font-semibold">-J</span> → <code>-eron</code>).</p>
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
           <p class="font-semibold">Grupos</p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li><b>UV:</b> tener → <em>tuv-</em>, estar → <em>estuv-</em>, andar → <em>anduv-</em></li>
             <li><b>U:</b> poder → <em>pud-</em>, saber → <em>sup-</em>, caber → <em>cup-</em>, haber → <em>hub-</em></li>
             <li><b>I:</b> hacer → <em>hic-</em> (él <em>hizo</em>), venir → <em>vin-</em>, querer → <em>quis-</em></li>
-            <li><b>J:</b> decir → <em>dij-</em>, traer → <em>traj-</em>, conducir → <em>conduj-</em></li>
+            <li><b>J:</b> decir → <em>dij-</em>, traer → <em>traj-</em>, -ducir → <em>-duj-<br>(conducir, producir, introducir → conduj-, produj-,introduj-)</em></li>
           </ul>
         </div>
         <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
@@ -83,14 +96,14 @@
 
     <!-- AR Verbs -->
     <section class="bg-white border border-gray-200 rounded-2xl p-6 shadow card">
-      <h2 class="text-xl font-bold mb-4">¿Termina en -AR?</h2>
+      <h2 class="text-xl font-bold mb-4">¿Termina en -AR?</a></h2>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-          <p class="font-semibold">Terminaciones regulares</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1">Terminaciones regulares</a></p>
           <p class="text-sm"><code class="bg-gray-100 px-1 rounded">é, aste, ó, amos, asteis, aron</code></p>
         </div>
         <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
-          <p class="font-semibold">Cambio ortográfico (solo “yo”)</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3">Cambio ortográfico (solo “yo”)</a></p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li>-gar → <b>gué</b> (llegar → llegué)</li>
             <li>-car → <b>qué</b> (buscar → busqué)</li>
@@ -105,11 +118,11 @@
       <h2 class="text-xl font-bold mb-4">¿Termina en -ER?</h2>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-          <p class="font-semibold">Terminaciones regulares</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1">Terminaciones regulares</a></p>
           <p class="text-sm"><code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
         </div>
         <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
-          <p class="font-semibold">Vocal + ER (i→y + acentos)</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5">¿Es leer, caer, creer?</a> (i→y + acentos)</p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li>caer, creer, leer</li>
             <li>i→y en 3ª: <em>leyó, leyeron</em></li>
@@ -125,29 +138,29 @@
       <p class="text-sm mb-3">Comparte terminaciones con -ER: <code class="bg-gray-100 px-1 rounded">í, iste, ió, imos, isteis, ieron</code></p>
       <div class="grid md:grid-cols-2 gap-4">
         <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
-          <p class="font-semibold">¿Es oír o -eír?</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5">¿Es oír </a><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/11">o -eír?</a></p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li><b>oír:</b> i→y en 3ª (<em>oyó, oyeron</em>), acentos en <em>í</em> (<em>oí, oíste</em>...)</li>
             <li><b>-eír:</b> (<em>reír</em>) mismos acentos; en 3ª se cae la e (<em>rió, rieron</em>).</li>
           </ul>
         </div>
         <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
-          <p class="font-semibold">¿Termina en -uir (no -guir)?</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6">¿Termina en -uir (no -guir)?</a></p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li>i→y en 3ª (<em>construyó, construyeron</em>).</li>
             <li>Sin acentos extra.</li>
           </ul>
         </div>
         <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl md:col-span-2">
-          <p class="font-semibold">¿Tiene cambio de raíz (solo 3ª)?</p>
+          <p class="font-semibold"><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7">¿Tiene cambio de raíz (solo 3ª)?</a></p>
           <ul class="list-disc text-sm ms-5 mt-2">
             <li><b>e→i:</b> pedir → <em>pidió, pidieron</em></li>
             <li><b>o→u:</b> dormir → <em>durmió, durmieron</em></li>
-            <li>En otras personas, es regular.</li>
+            <li>En otras personas, es <a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1">regular.</a></li>
           </ul>
         </div>
         <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl md:col-span-2 text-center">
-          <p class="font-semibold">Si nada de lo anterior aplica → Regular (-IR)</p>
+          <p class="font-semibold">Si nada de lo anterior aplica → <a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1">Regular (-IR)</a></p>
         </div>
       </div>
     </section>
@@ -164,7 +177,7 @@
         🔗 See also:
         <a href="https://yourwebsite.com/diagrama-de-flujo-imperfecto" 
            class="text-emerald-700 font-semibold hover:underline">
-          Diagrama de Flujo – Imperfect Tense
+          Diagrama de Flujo – Imperfect Tense - Versión interactiva
         </a>
       </p>
     </footer>
