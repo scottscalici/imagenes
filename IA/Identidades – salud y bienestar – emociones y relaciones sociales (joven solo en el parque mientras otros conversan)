@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>plan de clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+
+
+
+
 <section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 border-l-4" style="border-color: #0047AB;">
   <h2 class=" font-semibold text-lg px-4 pt-4">Discusión en grupos pequeños</h2>
   <div class="p-4 text-gray-800 space-y-4">
@@ -16,3 +31,46 @@ Qué emociones transmite<br>
 Qué podría pasar después<br></p>
   </div>
 </section>
+
+
+
+
+ 
+  <!-- Shared JavaScript -->
+  <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
