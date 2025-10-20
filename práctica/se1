@@ -3,270 +3,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>plan de clase</title>
+  <title>Práctica: Se impersonal y se accidental</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
 
-
-
-
-
-
-
-
-<!--Práctica general-->
-<!DOCTYPE html>
-<html lang="es">
-
-<!-- === Se Impersonal (Simple) === -->
-<section id="impersonal-simple" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
-  <h2 class="text-2xl font-semibold text-sky-700 mb-4">🌀 Se impersonal (presente)</h2>
-  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
-    <strong>Modelo:</strong>
-    <span class="text-sky-700 font-semibold">Se enseñan</span> (enseñar) cinco lenguas en esta escuela.
-  </p>
-
-  <ol class="space-y-4">
-    <li><input type="text" id="imp1" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (comer) muy bien en Las Delicias.</li>
-    <li><input type="text" id="imp2" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (vender) muchas camisetas allí.</li>
-    <li><input type="text" id="imp3" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (servir) platos exquisitos cada noche.</li>
-  </ol>
-
-  <div class="text-center mt-6">
-    <button id="btn-imp" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
-    <p id="score-imp" class="mt-4 text-lg font-semibold"></p>
-  </div>
-</section>
-
-<!-- === Se Accidental (Pretérito) === -->
-<section id="accidental" class="bg-white border rounded-xl shadow-sm p-6">
-  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito)</h2>
-  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
-    <strong>Modelo:</strong>
-    <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
-  </p>
-
-  <ol start="4" class="space-y-4">
-    <li><input type="text" id="acc4" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [fam., sing.] dropped) las pastillas.</li>
-    <li><input type="text" id="acc5" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (They lost) la receta.</li>
-    <li><input type="text" id="acc6" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [form., sing.] left) aquí la radiografía.</li>
-  </ol>
-
-  <div class="text-center mt-6">
-    <button id="btn-acc" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
-    <p id="score-acc" class="mt-4 text-lg font-semibold"></p>
-  </div>
-</section>
-
-<!-- === Se Impersonal (Continuous / 30 questions) === -->
-<section id="impersonal-continuous" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
-  <h2 class="text-2xl font-semibold text-orange-700 mb-4 text-center">🌀 Se impersonal — práctica continua</h2>
-  <p class="text-center text-gray-700 mb-6">
-    Completa las oraciones con la forma correcta del verbo entre paréntesis en <strong>presente</strong>.
-    Usa <strong>se</strong> impersonal.
-  </p>
-
-  <ol id="quiz-imp2" class="list-decimal list-inside space-y-2"></ol>
-
-  <div class="text-center mt-8">
-    <button id="btn-imp2" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg">
-      Verificar
-    </button>
-    <p id="score-imp2" class="mt-4 text-lg font-semibold"></p>
-  </div>
-</section>
-
-<!-- === Se Accidental (Extended 30) === -->
-<section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
-  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito) — práctica completa</h2>
-  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
-    <strong>Modelo:</strong>
-    <span class="text-sky-700 font-semibold">Se me rompieron</span>
-    (I broke) las gafas.
-  </p>
-
-  <ol class="space-y-4 text-lg" id="acc-list"></ol>
-
-  <div class="text-center mt-8">
-    <button id="btn-acc2" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
-      Verificar
-    </button>
-    <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
-  </div>
-</section>
-
-  </div> <!-- end wrapper -->
-
-<!-- === Scripts === -->
-<script>
-// === Se Impersonal (Simple) ===
-(function(){
-  const answers = { imp1:["se come"], imp2:["se venden"], imp3:["se sirven"] };
-  document.getElementById("btn-imp").addEventListener("click",()=>{
-    let correct=0;
-    Object.keys(answers).forEach(id=>{
-      const input=document.getElementById(id);
-      const user=input.value.trim().toLowerCase();
-      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
-      else{input.classList.add("border-red-400","bg-red-50");}
-    });
-    document.getElementById("score-imp").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
-  });
-})();
-
-// === Se Accidental (Short) ===
-(function(){
-  const answers={acc4:["se te cayeron"],acc5:["se les perdió"],acc6:["se le quedó"]};
-  document.getElementById("btn-acc").addEventListener("click",()=>{
-    let correct=0;
-    Object.keys(answers).forEach(id=>{
-      const input=document.getElementById(id);
-      const user=input.value.trim().toLowerCase();
-      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
-      else{input.classList.add("border-red-400","bg-red-50");}
-    });
-    document.getElementById("score-acc").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
-  });
-})();
-
-// === Se Impersonal Continuous ===
-(function(){
-  const sentences=[
-  ["hablar", "se habla", "español, inglés y francés en esta empresa."],
-  ["comer", "se come", "muy bien en este restaurante."],
-  ["escribir", "se escribe", "mucho en la universidad."],
-  ["trabajar", "se trabaja", "duro en esta compañía."],
-  ["viajar", "se viaja", "mucho en verano."],
-  ["aceptar", "se aceptan", "tarjetas de crédito en esta tienda."],
-  ["prohibir", "se prohíbe", "hablar en la biblioteca."],
-  ["necesitar", "se necesita", "un nuevo empleado para el departamento de ventas."],
-  ["organizar", "se organizan", "eventos culturales todos los meses en el centro comunitario."],
-  ["producir", "se producen", "muchos automóviles en esta fábrica."],
-  ["investigar", "se investiga", "una nueva vacuna contra la enfermedad."],
-  ["celebrar", "se celebra", "el cumpleaños de María el próximo sábado."],
-  ["recomendar", "se recomienda", "visitar el parque nacional."],
-  ["alquilar", "se alquilan", "bicicletas en la playa."],
-  ["vender", "se venden", "entradas para el concierto."],
-  ["buscar", "se busca", "una casa en el campo."],
-  ["necesitar", "se necesita", "paciencia para aprender un nuevo idioma."],
-  ["hablar", "se habla", "español como lengua materna en este país."],
-  ["comer", "se come", "muy bien y barato aquí."],
-  ["aprender", "se aprende", "mucho en la escuela."],
-  ["viajar", "se viaja", "a lugares exóticos durante las vacaciones."],
-  ["decir", "se dice", "que el ejercicio físico es bueno para la salud."],
-  ["esperar", "se espera", "que la economía mejore el próximo año."],
-  ["vender", "se venden", "muchas prendas en esta tienda."],
-  ["hablar", "se habla", "árabe en este hotel."],
-  ["prohibir", "se prohíbe", "la venta de alcohol a menores de edad."],
-  ["prohibir", "se prohíben", "los teléfonos móviles en la escuela."],
-  ["jugar", "se juega", "mucho al fútbol en Costa Rica."],
-  ["usar", "se usa", "el tiempo libre para estudiar el español."],
-  ["hacer", "se hacen", "los sombreros panameños en Ecuador."]
-];
-  const quiz=document.getElementById("quiz-imp2");
-  sentences.forEach((item,i)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`Se <input type="text" id="imp2-${i}" class="border rounded px-2 py-1 w-32 text-base" placeholder="verbo"> ${item[2]} <span class="text-sm text-gray-500">( ${item[0]} )</span>`;
-    quiz.appendChild(li);
-  });
-  document.getElementById("btn-imp2").addEventListener("click",()=>{
-    let correct=0;
-    sentences.forEach((item,i)=>{
-      const input=document.getElementById(`imp2-${i}`);
-      const user=("se "+input.value.trim().toLowerCase()).replace(/\s+/g," ");
-      if(user===item[1]){input.classList.add("border-green-500","bg-green-50");correct++;}
-      else{input.classList.add("border-red-400","bg-red-50");}
-    });
-    document.getElementById("score-imp2").textContent=`✅ ${correct} de ${sentences.length} correctas`;
-  });
-})();
-
-<!-- === Se Accidental (Extended 30) === -->
-<section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
-  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito) — práctica completa</h2>
-  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
-    <strong>Modelo:</strong>
-    <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
-  </p>
-
-  <ol class="space-y-4 text-lg" id="acc-list"></ol>
-
-  <div class="text-center mt-8">
-    <button id="btn-acc2" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
-      Verificar
-    </button>
-    <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
-  </div>
-</section>
-
-<script>
-// === Se Accidental Extended (Complete Version) ===
-(function(){
-  const data = [
-    {id:"q1",  ans:["se te cayeron"], esp:"las pastillas", eng:"You dropped the pills."},
-    {id:"q2",  ans:["se les perdió"], esp:"la receta", eng:"They lost the prescription."},
-    {id:"q3",  ans:["se le quedó"], esp:"la radiografía en casa", eng:"You (formal) left the X-ray at home."},
-    {id:"q4",  ans:["se nos olvidó"], esp:"el libro", eng:"We forgot the book."},
-    {id:"q5",  ans:["se le cayó"], esp:"el teléfono", eng:"He/She dropped the phone."},
-    {id:"q6",  ans:["se me perdieron"], esp:"las llaves del coche", eng:"I lost the car keys."},
-    {id:"q7",  ans:["se les acabó"], esp:"la leche", eng:"They ran out of milk."},
-    {id:"q8",  ans:["se le rompió"], esp:"la computadora", eng:"He/She broke the computer."},
-    {id:"q9",  ans:["se les olvidó"], esp:"la cita médica", eng:"They forgot the doctor’s appointment."},
-    {id:"q10", ans:["se te quemó"], esp:"la comida", eng:"You burned the food."},
-    {id:"q11", ans:["se le perdió"], esp:"la cartera", eng:"He/She lost the wallet."},
-    {id:"q12", ans:["se nos olvidó"], esp:"pagar la cuenta", eng:"We forgot to pay the bill."},
-    {id:"q13", ans:["se les rompieron"], esp:"los vasos", eng:"They broke the glasses."},
-    {id:"q14", ans:["se te quedó"], esp:"el paraguas en casa", eng:"You left your umbrella at home."},
-    {id:"q15", ans:["se me quemó"], esp:"el pan", eng:"I burned the bread."},
-    {id:"q16", ans:["se le cayeron"], esp:"los papeles", eng:"He/She dropped the papers."},
-    {id:"q17", ans:["se nos perdieron"], esp:"las entradas", eng:"We lost the tickets."},
-    {id:"q18", ans:["se les acabó"], esp:"el tiempo", eng:"They ran out of time."},
-    {id:"q19", ans:["se le rompió"], esp:"el espejo", eng:"He/She broke the mirror."},
-    {id:"q20", ans:["se me cayó"], esp:"el plato", eng:"I dropped the plate."},
-    {id:"q21", ans:["se le olvidó"], esp:"hacer la tarea", eng:"He/She forgot to do the homework."},
-    {id:"q22", ans:["se les quedó"], esp:"el coche sin gasolina", eng:"Their car ran out of gas."},
-    {id:"q23", ans:["se nos rompió"], esp:"la lámpara", eng:"We broke the lamp."},
-    {id:"q24", ans:["se les cayó"], esp:"la caja", eng:"They dropped the box."},
-    {id:"q25", ans:["se me perdió"], esp:"el boleto de avión", eng:"I lost the plane ticket."},
-    {id:"q26", ans:["se le acabó"], esp:"la batería del teléfono", eng:"His/Her phone battery died."},
-    {id:"q27", ans:["se te olvidó"], esp:"el cumpleaños de tu amigo", eng:"You forgot your friend’s birthday."},
-    {id:"q28", ans:["se nos quemaron"], esp:"las galletas", eng:"We burned the cookies."},
-    {id:"q29", ans:["se les rompió"], esp:"la puerta", eng:"They broke the door."},
-    {id:"q30", ans:["se le cayó"], esp:"el café", eng:"He/She spilled the coffee."}
-  ];
-
-  const list=document.getElementById("acc-list");
-  data.forEach(item=>{
-    const li=document.createElement("li");
-    li.innerHTML=`
-      <p>
-        <input type="text" id="${item.id}" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí">
-        ${item.esp ? ' ' + item.esp : ''}
-        <span class="text-sm text-gray-500 italic">(${item.eng})</span>
+    <!-- === Se Impersonal (Simple) === -->
+    <section id="impersonal-simple" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+      <h2 class="text-2xl font-semibold text-sky-700 mb-4">🌀 Se impersonal (presente)</h2>
+      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+        <strong>Modelo:</strong>
+        <span class="text-sky-700 font-semibold">Se enseñan</span> (enseñar) cinco lenguas en esta escuela.
       </p>
-    `;
-    list.appendChild(li);
-  });
+      <ol class="space-y-4">
+        <li><input type="text" id="imp1" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (comer) muy bien en Las Delicias.</li>
+        <li><input type="text" id="imp2" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (vender) muchas camisetas allí.</li>
+        <li><input type="text" id="imp3" class="border rounded px-2 py-1 w-56" placeholder="Escribe aquí"> (servir) platos exquisitos cada noche.</li>
+      </ol>
+      <div class="text-center mt-6">
+        <button id="btn-imp" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
+        <p id="score-imp" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
 
-  document.getElementById("btn-acc2").addEventListener("click",()=>{
-    let correct=0;
-    data.forEach(item=>{
-      const input=document.getElementById(item.id);
-      const user=input.value.trim().toLowerCase();
-      if(item.ans.includes(user)){
-        input.classList.add("border-green-500","bg-green-50");
-        correct++;
-      } else {
-        input.classList.add("border-red-400","bg-red-50");
-      }
+    <!-- === Se Accidental (Short) === -->
+    <section id="accidental" class="bg-white border rounded-xl shadow-sm p-6">
+      <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito)</h2>
+      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+        <strong>Modelo:</strong>
+        <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
+      </p>
+      <ol start="4" class="space-y-4">
+        <li><input type="text" id="acc4" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You dropped) las pastillas.</li>
+        <li><input type="text" id="acc5" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (They lost) la receta.</li>
+        <li><input type="text" id="acc6" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You left) aquí la radiografía.</li>
+      </ol>
+      <div class="text-center mt-6">
+        <button id="btn-acc" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
+        <p id="score-acc" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
+
+    <!-- === Se Impersonal (Continuous / 30) === -->
+    <section id="impersonal-continuous" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+      <h2 class="text-2xl font-semibold text-orange-700 mb-4 text-center">🌀 Se impersonal — práctica continua</h2>
+      <p class="text-center text-gray-700 mb-6">
+        Completa las oraciones con la forma correcta del verbo entre paréntesis en <strong>presente</strong>.
+        Usa <strong>se</strong> impersonal.
+      </p>
+      <ol id="quiz-imp2" class="list-decimal list-inside space-y-2"></ol>
+      <div class="text-center mt-8">
+        <button id="btn-imp2" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg">
+          Verificar
+        </button>
+        <p id="score-imp2" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
+
+    <!-- === Se Accidental (Extended 30) === -->
+    <section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+      <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito) — práctica completa</h2>
+      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+        <strong>Modelo:</strong>
+        <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
+      </p>
+      <ol class="space-y-4 text-lg" id="acc-list"></ol>
+      <div class="text-center mt-8">
+        <button id="btn-acc2" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
+          Verificar
+        </button>
+        <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- === Scripts === -->
+  <script>
+  // === Se Impersonal (Simple) ===
+  (function(){
+    const answers = { imp1:["se come"], imp2:["se venden"], imp3:["se sirven"] };
+    document.getElementById("btn-imp").addEventListener("click",()=>{
+      let correct=0;
+      Object.keys(answers).forEach(id=>{
+        const input=document.getElementById(id);
+        const user=input.value.trim().toLowerCase();
+        if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
+        else{input.classList.add("border-red-400","bg-red-50");}
+      });
+      document.getElementById("score-imp").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
     });
-    document.getElementById("score-acc2").textContent=`✅ ${correct} de ${data.length} correctas`;
-  });
-})();
-</script>
+  })();
 
+  // === Se Accidental (Short) ===
+  (function(){
+    const answers={acc4:["se te cayeron"],acc5:["se les perdió"],acc6:["se le quedó"]};
+    document.getElementById("btn-acc").addEventListener("click",()=>{
+      let correct=0;
+      Object.keys(answers).forEach(id=>{
+        const input=document.getElementById(id);
+        const user=input.value.trim().toLowerCase();
+        if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
+        else{input.classList.add("border-red-400","bg-red-50");}
+      });
+      document.getElementById("score-acc").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
+    });
+  })();
+
+  // === Se Impersonal Continuous (30) ===
+  (function(){
+    const sentences=[
+      ["hablar", "se habla", "español, inglés y francés en esta empresa."],
+      ["comer", "se come", "muy bien en este restaurante."],
+      ["escribir", "se escribe", "mucho en la universidad."],
+      ["trabajar", "se trabaja", "duro en esta compañía."],
+      ["viajar", "se viaja", "mucho en verano."],
+      ["aceptar", "se aceptan", "tarjetas de crédito en esta tienda."],
+      ["prohibir", "se prohíbe", "hablar en la biblioteca."],
+      ["necesitar", "se necesita", "un nuevo empleado para el departamento de ventas."],
+      ["organizar", "se organizan", "eventos culturales todos los meses en el centro comunitario."],
+      ["producir", "se producen", "muchos automóviles en esta fábrica."],
+      ["investigar", "se investiga", "una nueva vacuna contra la enfermedad."],
+      ["celebrar", "se celebra", "el cumpleaños de María el próximo sábado."],
+      ["recomendar", "se recomienda", "visitar el parque nacional."],
+      ["alquilar", "se alquilan", "bicicletas en la playa."],
+      ["vender", "se venden", "entradas para el concierto."],
+      ["buscar", "se busca", "una casa en el campo."],
+      ["necesitar", "se necesita", "paciencia para aprender un nuevo idioma."],
+      ["hablar", "se habla", "español como lengua materna en este país."],
+      ["comer", "se come", "muy bien y barato aquí."],
+      ["aprender", "se aprende", "mucho en la escuela."],
+      ["viajar", "se viaja", "a lugares exóticos durante las vacaciones."],
+      ["decir", "se dice", "que el ejercicio físico es bueno para la salud."],
+      ["esperar", "se espera", "que la economía mejore el próximo año."],
+      ["vender", "se venden", "muchas prendas en esta tienda."],
+      ["hablar", "se habla", "árabe en este hotel."],
+      ["prohibir", "se prohíbe", "la venta de alcohol a menores de edad."],
+      ["prohibir", "se prohíben", "los teléfonos móviles en la escuela."],
+      ["jugar", "se juega", "mucho al fútbol en Costa Rica."],
+      ["usar", "se usa", "el tiempo libre para estudiar el español."],
+      ["hacer", "se hacen", "los sombreros panameños en Ecuador."]
+    ];
+    const quiz=document.getElementById("quiz-imp2");
+    sentences.forEach((item,i)=>{
+      const li=document.createElement("li");
+      li.innerHTML=`Se <input type="text" id="imp2-${i}" class="border rounded px-2 py-1 w-32 text-base" placeholder="verbo"> ${item[2]} <span class="text-sm text-gray-500">( ${item[0]} )</span>`;
+      quiz.appendChild(li);
+    });
+    document.getElementById("btn-imp2").addEventListener("click",()=>{
+      let correct=0;
+      sentences.forEach((item,i)=>{
+        const input=document.getElementById(\`imp2-\${i}\`);
+        const user=("se "+input.value.trim().toLowerCase()).replace(/\s+/g," ");
+        if(user===item[1]){input.classList.add("border-green-500","bg-green-50");correct++;}
+        else{input.classList.add("border-red-400","bg-red-50");}
+      });
+      document.getElementById("score-imp2").textContent=\`✅ \${correct} de \${sentences.length} correctas\`;
+    });
+  })();
+
+  // === Se Accidental Extended (30) ===
+  (function(){
+    const data=[
+      {id:"q1",ans:["se te cayeron"],esp:"las pastillas",eng:"You dropped the pills."},
+      {id:"q2",ans:["se les perdió"],esp:"la receta",eng:"They lost the prescription."},
+      {id:"q3",ans:["se le quedó"],esp:"la radiografía en casa",eng:"You (formal) left the X-ray at home."},
+      {id:"q4",ans:["se nos olvidó"],esp:"el libro",eng:"We forgot the book."},
+      {id:"q5",ans:["se le cayó"],esp:"el teléfono",eng:"He/She dropped the phone."},
+      {id:"q6",ans:["se me perdieron"],esp:"las llaves del coche",eng:"I lost the car keys."},
+      {id:"q7",ans:["se les acabó"],esp:"la leche",eng:"They ran out of milk."},
+      {id:"q8",ans:["se le rompió"],esp:"la computadora",eng:"He/She broke the computer."},
+      {id:"q9",ans:["se les olvidó"],esp:"la cita médica",eng:"They forgot the doctor’s appointment."},
+      {id:"q10",ans:["se te quemó"],esp:"la comida",eng:"You burned the food."},
+      {id:"q11",ans:["se le perdió"],esp:"la cartera",eng:"He/She lost the wallet."},
+      {id:"q12",ans:["se nos olvidó"],esp:"pagar la cuenta",eng:"We forgot to pay the bill."},
+      {id:"q13",ans:["se les rompieron"],esp:"los vasos",eng:"They broke the glasses."},
+      {id:"q14",ans:["se te quedó"],esp:"el paraguas en casa",eng:"You left your umbrella at home."},
+      {id:"q15",ans:["se me quemó"],esp:"el pan",eng:"I burned the bread."},
+      {id:"q16",ans:["se le cayeron"],esp:"los papeles",eng:"He/She dropped the papers."},
+      {id:"q17",ans:["se nos perdieron"],esp:"las entradas",eng:"We lost the tickets."},
+      {id:"q18",ans:["se les acabó"],esp:"el tiempo",eng:"They ran out of time."},
+      {id:"q19",ans:["se le rompió"],esp:"el espejo",eng:"He/She broke the mirror."},
+      {id:"q20",ans:["se me cayó"],esp:"el plato",eng:"I dropped the plate."},
+      {id:"q21",ans:["se le olvidó"],esp:"hacer la tarea",eng:"He/She forgot to do the homework."},
+      {id:"q22",ans:["se les quedó"],esp:"el coche sin gasolina",eng:"Their car ran out of gas."},
+      {id:"q23",ans:["se nos rompió"],esp:"la lámpara",eng:"We broke the lamp."},
+      {id:"q24",ans:["se les cayó"],esp:"la caja",eng:"They dropped the box."},
+      {id:"q25",ans:["se me perdió"],esp:"el boleto de avión",eng:"I lost the plane ticket."},
+      {id:"q26",ans:["se le acabó"],esp:"la batería del teléfono",eng:"His/Her phone battery died."},
+      {id:"q27",ans:["se te olvidó"],esp:"el cumpleaños de tu amigo",eng:"You forgot your friend’s birthday."},
+      {id:"q28",ans:["se nos quemaron"],esp:"las galletas",eng:"We burned the cookies."},
+      {id:"q29",ans:["se les rompió"],esp:"la puerta",eng:"They broke the door."},
+      {id:"q30",ans:["se le cayó"],esp:"el café",eng:"He/She spilled the coffee."}
+    ];
+    const list=document.getElementById("acc-list");
+    data.forEach(item=>{
+      const li=document.createElement("li");
+      li.innerHTML=\`
+        <input type="text" id="\${item.id}" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí">
+        \${item.esp}
+        <span class="text-sm text-gray-500 italic">(\${item.eng})</span>
+      \`;
+      list.appendChild(li);
+    });
+    document.getElementById("btn-acc2").addEventListener("click",()=>{
+      let correct=0;
+      data.forEach(item=>{
+        const input=document.getElementById(item.id);
+        const user=input.value.trim().toLowerCase();
+        if(item.ans.includes(user)){
+          input.classList.add("border-green-500","bg-green-50");
+          correct++;
+        } else {
+          input.classList.add("border-red-400","bg-red-50");
+        }
+      });
+      document.getElementById("score-acc2").textContent=\`✅ \${correct} de \${data.length} correctas\`;
+    });
+  })();
+  </script>
 </body>
 </html>
-
