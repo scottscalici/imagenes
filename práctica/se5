@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>plan de clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Práctica: Se accidental</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- === Se Accidental (Short / Intro) === -->
+    <section id="accidental-short" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+      <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito)</h2>
+      <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+        <strong>Modelo:</strong>
+        <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
+      </p>
+      <ol class="space-y-4">
+        <li><input id="acc1" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [fam.] dropped) las pastillas.</li>
+        <li><input id="acc2" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (They lost) la receta.</li>
+        <li><input id="acc3" class="border rounded px-2 py-1 w-64" placeholder="Escribe aquí"> (You [form.] left) aquí la radiografía.</li>
+      </ol>
+      <div class="text-center mt-6">
+        <button id="btn-acc1" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">Verificar</button>
+        <p id="score-acc1" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
+
+    <!-- === Se Accidental (Extended / 30) === -->
+    <section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+      <h2 class="text-2xl font-semibold text-orange-700 mb-4 text-center">💥 Se accidental — práctica completa</h2>
+      <p class="text-center text-gray-700 mb-6">
+        Completa las oraciones con la forma correcta del verbo entre paréntesis en <strong>pretérito</strong>.
+        Usa <strong>se</strong> accidental.
+      </p>
+
+      <ol id="acc-list" class="list-decimal list-inside space-y-2">
+        <li><input id="acc4"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> las pastillas. <span class="text-sm text-gray-500">( caer )</span></li>
+        <li><input id="acc5"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la receta. <span class="text-sm text-gray-500">( perder )</span></li>
+        <li><input id="acc6"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la radiografía en casa. <span class="text-sm text-gray-500">( quedar )</span></li>
+        <li><input id="acc7"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el libro. <span class="text-sm text-gray-500">( olvidar )</span></li>
+        <li><input id="acc8"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el teléfono. <span class="text-sm text-gray-500">( caer )</span></li>
+        <li><input id="acc9"  class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> las llaves del coche. <span class="text-sm text-gray-500">( perder )</span></li>
+        <li><input id="acc10" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la leche. <span class="text-sm text-gray-500">( acabar )</span></li>
+        <li><input id="acc11" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la computadora. <span class="text-sm text-gray-500">( romper )</span></li>
+        <li><input id="acc12" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la cita médica. <span class="text-sm text-gray-500">( olvidar )</span></li>
+        <li><input id="acc13" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la comida. <span class="text-sm text-gray-500">( quemar )</span></li>
+        <li><input id="acc14" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la cartera. <span class="text-sm text-gray-500">( perder )</span></li>
+        <li><input id="acc15" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> pagar la cuenta. <span class="text-sm text-gray-500">( olvidar )</span></li>
+        <li><input id="acc16" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> los vasos. <span class="text-sm text-gray-500">( romper )</span></li>
+        <li><input id="acc17" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el paraguas en casa. <span class="text-sm text-gray-500">( quedar )</span></li>
+        <li><input id="acc18" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el pan. <span class="text-sm text-gray-500">( quemar )</span></li>
+        <li><input id="acc19" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> los papeles. <span class="text-sm text-gray-500">( caer )</span></li>
+        <li><input id="acc20" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> las entradas. <span class="text-sm text-gray-500">( perder )</span></li>
+        <li><input id="acc21" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el tiempo. <span class="text-sm text-gray-500">( acabar )</span></li>
+        <li><input id="acc22" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el espejo. <span class="text-sm text-gray-500">( romper )</span></li>
+        <li><input id="acc23" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el plato. <span class="text-sm text-gray-500">( caer )</span></li>
+        <li><input id="acc24" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> hacer la tarea. <span class="text-sm text-gray-500">( olvidar )</span></li>
+        <li><input id="acc25" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el coche sin gasolina. <span class="text-sm text-gray-500">( quedar )</span></li>
+        <li><input id="acc26" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la lámpara. <span class="text-sm text-gray-500">( romper )</span></li>
+        <li><input id="acc27" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la caja. <span class="text-sm text-gray-500">( caer )</span></li>
+        <li><input id="acc28" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el boleto de avión. <span class="text-sm text-gray-500">( perder )</span></li>
+        <li><input id="acc29" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> la batería del teléfono. <span class="text-sm text-gray-500">( acabar )</span></li>
+        <li><input id="acc30" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> el cumpleaños de tu amigo. <span class="text-sm text-gray-500">( olvidar )</span></li>
+      </ol>
+
+      <div class="text-center mt-8">
+        <button id="btn-acc2" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg">
+          Verificar
+        </button>
+        <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- === Scripts (grading only) === -->
+  <script>
+    // Short practice
+    (function(){
+      const answers={acc1:["se te cayeron"],acc2:["se les perdió"],acc3:["se le quedó"]};
+      document.getElementById("btn-acc1").addEventListener("click",()=>{
+        let correct=0;
+        Object.keys(answers).forEach(id=>{
+          const input=document.getElementById(id);
+          const user=input.value.trim().toLowerCase();
+          if(answers[id].includes(user)){
+            input.classList.add("border-green-500","bg-green-50"); correct++;
+          } else {
+            input.classList.add("border-red-400","bg-red-50");
+          }
+        });
+        document.getElementById("score-acc1").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
+      });
+    })();
+
+    // Extended (static 30)
+    (function(){
+      const expected=[
+        "se te cayeron","se les perdió","se le quedó","se nos olvidó","se le cayó",
+        "se me perdieron","se les acabó","se le rompió","se les olvidó","se te quemó",
+        "se le perdió","se nos olvidó","se les rompieron","se te quedó","se me quemó",
+        "se le cayeron","se nos perdieron","se les acabó","se le rompió","se me cayó",
+        "se le olvidó","se les quedó","se nos rompió","se les cayó","se me perdió",
+        "se le acabó","se te olvidó","se nos quemaron","se les rompió","se le olvidó"
+      ];
+      document.getElementById("btn-acc2").addEventListener("click",()=>{
+        let correct=0;
+        expected.forEach((ans,i)=>{
+          const input=document.getElementById(`acc${i+4}`);
+          const user=input.value.trim().toLowerCase();
+          if(user===ans){
+            input.classList.add("border-green-500","bg-green-50"); correct++;
+          } else {
+            input.classList.add("border-red-400","bg-red-50");
+          }
+        });
+        document.getElementById("score-acc2").textContent=`✅ ${correct} de ${expected.length} correctas`;
+      });
+    })();
+  </script>
+</body>
+</html>
