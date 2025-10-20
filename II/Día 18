@@ -65,10 +65,7 @@
 <section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
   <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
   <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Introducir:</p>
-      <p>Repasar: Todas las formas del pretérito</p>
-    </div>
+
     <div>
       <p class="font-semibold">Repasar:</p>
       <p>Todas las formas del pretérito</p>
@@ -141,12 +138,183 @@ Hoy en día, esta tradición sigue muy viva, y hasta deportistas famosos como Li
   </div>
 </section>
 <!--Enlace-->
-
+<!--Enlace-->
+<a href="https://sites.google.com/view/srscalici/m%C3%BAsica/cuarteto-de-nos-ya-no-s%C3%A9-que-hacer-conmigo" class="block bg-white rounded-xl shadow border-l-4 border-violet-400 hover:shadow-lg hover:ring-violet-300 hover:ring-2 transition">
+  <div class="flex items-center gap-4 p-4">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/m%C3%BAsica/cuarteto.png" alt="Cuarteto de Nos - Ya no sé que hacer conmigo" class="max-h-24 w-auto object-cover rounded-md">
+    <div class="min-w-0">
+      <h3 class="font-semibold text-violet-600 truncate">🎵 Cuarteto de Nos - Ya no sé que hacer conmigo</h3>
+      
+    </div>
+  </div>
+</a>
 
 
 
 <!--Práctica de verbos-->
 
+<div id="prev-tbnh20b"></div>
+<script>
+(function(){
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`ser (to be)
+yo fui
+tú fuiste
+él fue
+nosotros fuimos
+vosotros fuisteis
+ellos fueron
+
+dormir (to sleep)
+yo dormí
+tú dormiste
+él durmió
+nosotros dormimos
+vosotros dormisteis
+ellos durmieron
+
+tocar (to touch, to play an instrument)
+yo toqué
+tú tocaste
+él tocó
+nosotros tocamos
+vosotros tocasteis
+ellos tocaron
+
+sentir (to feel)
+yo sentí
+tú sentiste
+él sintió
+nosotros sentimos
+vosotros sentisteis
+ellos sintieron
+
+influir (to influence)
+yo influí
+tú influiste
+él influyó
+nosotros influimos
+vosotros influisteis
+ellos influyeron
+
+leer (to read)
+yo leí
+tú leíste
+él leyó
+nosotros leímos
+vosotros leísteis
+ellos leyeron
+
+mentir (to lie)
+yo mentí
+tú mentiste
+él mintió
+nosotros mentimos
+vosotros mentisteis
+ellos mintieron
+
+traer (to bring)
+yo traje
+tú trajiste
+él trajo
+nosotros trajimos
+vosotros trajisteis
+ellos trajeron
+
+repetir (to repeat)
+yo repetí
+tú repetiste
+él repitió
+nosotros repetimos
+vosotros repetisteis
+ellos repitieron
+
+saber (to know, to find out)
+yo supe
+tú supiste
+él supo
+nosotros supimos
+vosotros supisteis
+ellos supieron`);
+  let totalCells=0;
+  const container=document.getElementById("prev-tbnh20b");
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <h2 class="text-pink-600 font-semibold text-lg px-4 pt-4">Práctica de las conjugaciones</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`: `✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
 
 
 
