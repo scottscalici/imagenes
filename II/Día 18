@@ -15,23 +15,77 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 18</h1>
+    <p class="text-lg italic drop-shadow">21 de octubre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Nada</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Pretérito 4 - la próxima clase</li><li>Vocabulario 1.4 - Día 20</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Pretérito 10</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 2-1-3</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> Lo siento.</p><p><span class="font-semibold">2.</span> el/la joven</p><p><span class="font-semibold">3.</span> la universidad</p><p><span class="font-semibold">4.</span> delante de</p><p><span class="font-semibold">5.</span> necesitar (+ inf.)</p><p><span class="font-semibold">6.</span> los hijos</p><p><span class="font-semibold">7.</span> gran, grande</p><p><span class="font-semibold">8.</span> japonés, japonesa</p><p><span class="font-semibold">9.</span> andar en patineta</p><p><span class="font-semibold">10.</span> el gimnasio</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> pedir (e:i)</p><p><span class="font-semibold">12.</span> ir en avión (m.)</p><p><span class="font-semibold">13.</span> el hotel</p><p><span class="font-semibold">14.</span> aburrido/a</p><p><span class="font-semibold">15.</span> el mes</p><p><span class="font-semibold">16.</span> la camisa</p><p><span class="font-semibold">17.</span> el almacén</p><p><span class="font-semibold">18.</span> marrón, café</p><p><span class="font-semibold">19.</span> ducharse</p><p><span class="font-semibold">20.</span> quedarse</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> también</p><p><span class="font-semibold">22.</span> por la tarde</p><p><span class="font-semibold">23.</span> el pescado</p><p><span class="font-semibold">24.</span> el huevo</p><p><span class="font-semibold">25.</span> saber (a)</p><p><span class="font-semibold">26.</span> el estado civil</p><p><span class="font-semibold">27.</span> la niñez</p><p><span class="font-semibold">28.</span> la aspirina</p><p><span class="font-semibold">29.</span> estornudar</p><p><span class="font-semibold">30.</span> mareado/a</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Repasar: Todas las formas del pretérito</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Todas las formas del pretérito</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Pretérito</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="text-blue-600 hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="text-blue-600 hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="text-blue-600 hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="text-blue-600 hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="text-blue-600 hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="text-blue-600 hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="text-blue-600 hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="text-blue-600 hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="text-blue-600 hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="text-blue-600 hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="text-blue-600 hover:underline">Pruebas (Español 2)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
@@ -71,22 +125,6 @@ Hoy en día, esta tradición sigue muy viva, y hasta deportistas famosos como Li
 </section>
 
 
-
-<!--Enlace-->
-
-
-
-
-<!--Práctica de verbos-->
-
-
-
-
-<!--Práctica general-->
-
-
-
-
 <!--Video-->
 <!-- ▶️ YouTube embed (formato clásico) -->
 <section class="bg-white rounded-xl shadow p-6 border-l-4 border-green-600 overflow-hidden">
@@ -102,6 +140,22 @@ Hoy en día, esta tradición sigue muy viva, y hasta deportistas famosos como Li
     </iframe>
   </div>
 </section>
+<!--Enlace-->
+
+
+
+
+<!--Práctica de verbos-->
+
+
+
+
+<!--Práctica general-->
+
+
+
+
+
 
 
 
@@ -133,7 +187,30 @@ Hoy en día, esta tradición sigue muy viva, y hasta deportistas famosos como Li
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+          <h4 class="font-semibold"><a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
+          <ul class="list-disc list-inside">
+            <li>Pretérito 4 - la próxima clase</li><li>Vocabulario 1.4 - Día 20</li>
+          </ul>
+        
+  
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            <li><span class="font-semibold">Vocabulario (Leccion 1)</span> 📅 30 de oct</li><li><span class="font-semibold">Pretérito</span> 📅 30 de oct</li><li><span class="font-semibold">Usos de "se"</span> 📅 6 de nov</li><li><span class="font-semibold">Adverbios</span> 📅 6 de nov</li>
+          </ul>
+        
+  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li></ul><h4 class="font-semibold">Usos de SE</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="hover:underline">Se con voz pasiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="hover:underline">Se con eventos inesperados</a></li></ul><h4 class="font-semibold">Adverbios</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/adverbios/" target="_blank" class="hover:underline">Adverbios comunes y cómo se forman</a></li></ul>
+  <h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700"><li>Lección 1: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1/flashcards" target="_blank" class="hover:underline">Flashcards</a></li></ul>
+  <p><span class="font-semibold">Ayuda con la vida</span> – 
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+        
+</section>
 
   </div>
 
