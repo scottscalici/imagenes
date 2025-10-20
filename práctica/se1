@@ -207,31 +207,86 @@
   });
 })();
 
-// === Se Accidental Extended ===
+<!-- === Se Accidental (Extended 30) === -->
+<section id="accidental-extended" class="bg-white border rounded-xl shadow-sm p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-sky-700 mb-4">💥 Se accidental (pretérito) — práctica completa</h2>
+  <p class="bg-gray-100 border-l-4 border-sky-500 p-3 mb-5">
+    <strong>Modelo:</strong>
+    <span class="text-sky-700 font-semibold">Se me rompieron</span> (I broke) las gafas.
+  </p>
+
+  <ol class="space-y-4 text-lg" id="acc-list"></ol>
+
+  <div class="text-center mt-8">
+    <button id="btn-acc2" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-lg">
+      Verificar
+    </button>
+    <p id="score-acc2" class="mt-4 text-lg font-semibold"></p>
+  </div>
+</section>
+
+<script>
+// === Se Accidental Extended (Complete Version) ===
 (function(){
-  const answers={
-    q1:["se te cayeron"], q2:["se les perdió"], q3:["se le quedó"], q4:["se nos olvidó"], q5:["se le cayó"],
-    q6:["se me perdieron"], q7:["se les acabó"], q8:["se le rompió"], q9:["se les olvidó"], q10:["se te quemó"],
-    q11:["se le perdió"], q12:["se nos olvidó"], q13:["se les rompieron"], q14:["se te quedó"], q15:["se me quemó"],
-    q16:["se le cayeron"], q17:["se nos perdieron"], q18:["se les acabó"], q19:["se le rompió"], q20:["se me cayó"],
-    q21:["se le olvidó"], q22:["se les quedó"], q23:["se nos rompió"], q24:["se les cayó"], q25:["se me perdió"],
-    q26:["se le acabó"], q27:["se te olvidó"], q28:["se nos quemaron"], q29:["se les rompió"], q30:["se le cayó"]
-  };
+  const data = [
+    {id:"q1",  ans:["se te cayeron"], esp:"las pastillas", eng:"You dropped the pills."},
+    {id:"q2",  ans:["se les perdió"], esp:"la receta", eng:"They lost the prescription."},
+    {id:"q3",  ans:["se le quedó"], esp:"la radiografía en casa", eng:"You (formal) left the X-ray at home."},
+    {id:"q4",  ans:["se nos olvidó"], esp:"el libro", eng:"We forgot the book."},
+    {id:"q5",  ans:["se le cayó"], esp:"el teléfono", eng:"He/She dropped the phone."},
+    {id:"q6",  ans:["se me perdieron"], esp:"las llaves del coche", eng:"I lost the car keys."},
+    {id:"q7",  ans:["se les acabó"], esp:"la leche", eng:"They ran out of milk."},
+    {id:"q8",  ans:["se le rompió"], esp:"la computadora", eng:"He/She broke the computer."},
+    {id:"q9",  ans:["se les olvidó"], esp:"la cita médica", eng:"They forgot the doctor’s appointment."},
+    {id:"q10", ans:["se te quemó"], esp:"la comida", eng:"You burned the food."},
+    {id:"q11", ans:["se le perdió"], esp:"la cartera", eng:"He/She lost the wallet."},
+    {id:"q12", ans:["se nos olvidó"], esp:"pagar la cuenta", eng:"We forgot to pay the bill."},
+    {id:"q13", ans:["se les rompieron"], esp:"los vasos", eng:"They broke the glasses."},
+    {id:"q14", ans:["se te quedó"], esp:"el paraguas en casa", eng:"You left your umbrella at home."},
+    {id:"q15", ans:["se me quemó"], esp:"el pan", eng:"I burned the bread."},
+    {id:"q16", ans:["se le cayeron"], esp:"los papeles", eng:"He/She dropped the papers."},
+    {id:"q17", ans:["se nos perdieron"], esp:"las entradas", eng:"We lost the tickets."},
+    {id:"q18", ans:["se les acabó"], esp:"el tiempo", eng:"They ran out of time."},
+    {id:"q19", ans:["se le rompió"], esp:"el espejo", eng:"He/She broke the mirror."},
+    {id:"q20", ans:["se me cayó"], esp:"el plato", eng:"I dropped the plate."},
+    {id:"q21", ans:["se le olvidó"], esp:"hacer la tarea", eng:"He/She forgot to do the homework."},
+    {id:"q22", ans:["se les quedó"], esp:"el coche sin gasolina", eng:"Their car ran out of gas."},
+    {id:"q23", ans:["se nos rompió"], esp:"la lámpara", eng:"We broke the lamp."},
+    {id:"q24", ans:["se les cayó"], esp:"la caja", eng:"They dropped the box."},
+    {id:"q25", ans:["se me perdió"], esp:"el boleto de avión", eng:"I lost the plane ticket."},
+    {id:"q26", ans:["se le acabó"], esp:"la batería del teléfono", eng:"His/Her phone battery died."},
+    {id:"q27", ans:["se te olvidó"], esp:"el cumpleaños de tu amigo", eng:"You forgot your friend’s birthday."},
+    {id:"q28", ans:["se nos quemaron"], esp:"las galletas", eng:"We burned the cookies."},
+    {id:"q29", ans:["se les rompió"], esp:"la puerta", eng:"They broke the door."},
+    {id:"q30", ans:["se le cayó"], esp:"el café", eng:"He/She spilled the coffee."}
+  ];
+
   const list=document.getElementById("acc-list");
-  Object.keys(answers).forEach((id,i)=>{
+  data.forEach(item=>{
     const li=document.createElement("li");
-    li.innerHTML=`<input type="text" id="${id}" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí"> <span class="text-sm text-gray-500">( ${Object.values(answers)[i]} )</span>`;
+    li.innerHTML=`
+      <p>
+        <input type="text" id="${item.id}" class="border rounded px-2 py-1 w-72" placeholder="Escribe aquí">
+        ${item.esp ? ' ' + item.esp : ''}
+        <span class="text-sm text-gray-500 italic">(${item.eng})</span>
+      </p>
+    `;
     list.appendChild(li);
   });
+
   document.getElementById("btn-acc2").addEventListener("click",()=>{
     let correct=0;
-    Object.keys(answers).forEach(id=>{
-      const input=document.getElementById(id);
+    data.forEach(item=>{
+      const input=document.getElementById(item.id);
       const user=input.value.trim().toLowerCase();
-      if(answers[id].includes(user)){input.classList.add("border-green-500","bg-green-50");correct++;}
-      else{input.classList.add("border-red-400","bg-red-50");}
+      if(item.ans.includes(user)){
+        input.classList.add("border-green-500","bg-green-50");
+        correct++;
+      } else {
+        input.classList.add("border-red-400","bg-red-50");
+      }
     });
-    document.getElementById("score-acc2").textContent=`✅ ${correct} de ${Object.keys(answers).length} correctas`;
+    document.getElementById("score-acc2").textContent=`✅ ${correct} de ${data.length} correctas`;
   });
 })();
 </script>
