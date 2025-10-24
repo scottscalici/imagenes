@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Práctica de Verbos</title>
+  <title>Conjugatrón 3000</title>
+
   <style>
     body {
       font-family: sans-serif;
@@ -29,7 +30,8 @@
   </style>
 </head>
 <body>
-  <h1>🧠 Práctica de conjugación</h1>
+  <h1>🤖 Conjugatrón 3000</h1>
+
 <div style="margin-bottom: 1rem;">
   <p id="score-display" style="font-size: 1.1rem;">Puntuación: 0 aciertos de 0 (0%)</p>
 </div>
@@ -63,19 +65,28 @@ let respuestasCorrectas = 0;
   }
 
   function generarPregunta() {
-    const verbo = randomItem(verbos);
-    const grupoSujetos = sujetos.find(grupo => grupo.grupo === verbo.sujeto);
-    if (!grupoSujetos) return null;
-    const sujeto = randomItem(grupoSujetos.sujetos);
-    const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
-    const traduccion = `${sujeto.en} ${verbo.traducción}.`;
+  const verbo = randomItem(verbos);
+  const grupoSujetos = sujetos.find(grupo => grupo.grupo === verbo.sujeto);
+  if (!grupoSujetos) return null;
 
-    return {
-      spanish: fraseConHueco,
-      correct: verbo.forma,
-      english: traduccion
-    };
-  }
+  const sujeto = randomItem(grupoSujetos.sujetos);
+  const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
+  const traduccion = `${sujeto.en} ${verbo.traducción}.`;
+
+  return {
+    spanish: fraseConHueco,
+    correct: verbo.forma,
+    english: traduccion,
+    pronombre: grupoSujetos.pronombre,
+    infinitivo: verbo.infinitivo,
+    tiempo: verbo.tiempo
+  };
+}
+function mostrarClave() {
+  const claveBox = document.getElementById("clave");
+  if (claveBox) claveBox.style.display = "block";
+}
+
 
 function actualizarPuntuacion() {
   const porcentaje = totalIntentos === 0 ? 0 : Math.round((respuestasCorrectas / totalIntentos) * 100);
@@ -85,24 +96,32 @@ function actualizarPuntuacion() {
 
 
   function mostrarPregunta() {
-    const pregunta = generarPregunta();
-    if (!pregunta) return;
+  const pregunta = generarPregunta();
+  if (!pregunta) return;
 
-    currentCorrectAnswer = pregunta.correct;
-    esperandoRespuesta = true;
+  currentCorrectAnswer = pregunta.correct;
+  esperandoRespuesta = true;
 
-    const output = document.getElementById("resultado");
-    output.innerHTML = `
-      <p><strong>Completa la frase:</strong></p>
-      <p>${pregunta.spanish}</p>
-      <input type="text" id="respuestaInput" placeholder="Escribe la forma correcta">
-      <button onclick="verificarRespuesta()">Verificar</button>
-      <p><em>Traducción:</em> ${pregunta.english}</p>
-      <div id="feedback"></div>
-    `;
+  const output = document.getElementById("resultado");
+  output.innerHTML = `
+    <p><strong>Completa la frase:</strong></p>
+    <p>${pregunta.spanish}</p>
+    <input type="text" id="respuestaInput" placeholder="Escribe la forma correcta">
+    <button onclick="verificarRespuesta()">Verificar</button>
+    <button onclick="mostrarClave()" style="margin-left: 1rem;">🧩 Ver pista</button>
+    <p><em>Traducción:</em> ${pregunta.english}</p>
+    <div id="clave" style="display:none; margin-top:1rem; background:#eef; padding:0.5rem; border-left:4px solid #339;">
+      🔑 <strong>Clave:</strong> <span id="clave-content"></span>
+    </div>
+    <div id="feedback"></div>
+  `;
 
-    document.getElementById("respuestaInput").focus();
-  }
+  // 🟢 Now properly inject the clue content after HTML is built
+  document.getElementById("clave-content").textContent =
+    `${pregunta.pronombre}, ${pregunta.infinitivo}, ${pregunta.tiempo}`;
+
+  document.getElementById("respuestaInput").focus();
+}
 
   function verificarRespuesta() {
   const entrada = document.getElementById("respuestaInput").value.trim().toLowerCase();
@@ -130,6 +149,8 @@ function actualizarPuntuacion() {
         verificarRespuesta();
       } else {
         mostrarPregunta();
+
+
       }
     }
   });
