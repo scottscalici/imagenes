@@ -15,73 +15,23 @@
 
 
 <!--Día-->
-<header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
-    <h1 class="text-3xl font-bold drop-shadow">Día 20</h1>
-    <p class="text-lg italic drop-shadow">27/28 de octubre</p>
-  </div>
-</header>
+
 
 
 
 <!--Evaluación-->
-<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
-  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
-  <div class="p-4 text-gray-800">
-    <p>Vocabulario 4.2 (prueba escrita-4A)<p>Pretérito o imperfecto</p>
-    
-            <p class="font-semibold mt-2">Próximas pruebas</p>
-            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 4.3 - la próxima clase</li><li>Nada - Día 22</li></ul>
-          
-  </div>
-</section>
+
 
 
 
 <!--Calentamiento-->
-<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
-  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Schoology:</p>
-      <p>Pretérito e imperfecto 4</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 4 - 2</p>
-      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
-      <div id="vocabBox" class="hidden">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="space-y-1"><p><span class="font-semibold">1.</span> vivir</p><p><span class="font-semibold">2.</span> favorito/a</p><p><span class="font-semibold">3.</span> andar en patineta</p><p><span class="font-semibold">4.</span> saber</p><p><span class="font-semibold">5.</span> conversar</p><p><span class="font-semibold">6.</span> cerrar (e:ie)</p><p><span class="font-semibold">7.</span> encima de</p><p><span class="font-semibold">8.</span> tener una cita</p><p><span class="font-semibold">9.</span> alto/a</p><p><span class="font-semibold">10.</span> el/la profesor(a)</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> la solicitud (de trabajo)</p><p><span class="font-semibold">12.</span> la grasa</p><p><span class="font-semibold">13.</span> parar</p><p><span class="font-semibold">14.</span> contratar</p><p><span class="font-semibold">15.</span> el público</p><p><span class="font-semibold">16.</span> la dictadura</p><p><span class="font-semibold">17.</span> alquilar</p><p><span class="font-semibold">18.</span> desarrollar</p><p><span class="font-semibold">19.</span> el tejido</p><p><span class="font-semibold">20.</span> el ejército</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> la escalera</p><p><span class="font-semibold">22.</span> mejorar(se)</p><p><span class="font-semibold">23.</span> el dinero en efectivo</p><p><span class="font-semibold">24.</span> desafiar</p><p><span class="font-semibold">25.</span> sufrir (de)</p><p><span class="font-semibold">26.</span> cotidiano/a</p><p><span class="font-semibold">27.</span> trasnochar</p><p><span class="font-semibold">28.</span> la cita (a ciegas)</p><p><span class="font-semibold">29.</span> la tensión baja</p><p><span class="font-semibold">30.</span> de vez en cuando</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 
 
 
 <!--Estructura-->
-<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
-  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-       <div>
-      <p class="font-semibold">Repasar:</p>
-      <p>Pretérito e imperfecto</p>
-    </div>
-    <div>
-      <p class="font-semibold">Apuntes:</p>
-      <div class="space-y-6">
-        
-            <div>
-              <p class="font-semibold mt-4">Pretérito o imperfecto</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="text-blue-600 hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="text-blue-600 hover:underline">Marcadores temporales</a></li></ul>
-            </div>
-          
-      </div>
-    </div>
-  </div>
-</section>
+
 
 
 
@@ -152,29 +102,7 @@
 
 
 <!--Información adicional-->
-<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
-  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
-  
-          <h4 class="font-semibold"><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
-          <ul class="list-disc list-inside">
-            <li>Vocabulario 4.3 - la próxima clase</li>
-          </ul>
-        
-  
-          <h4 class="font-semibold">Tareas (Dominio)</h4>
-          <ul class="list-disc list-inside text-red-700">
-            <li><span class="font-semibold">Usos de los tiempos pasados</span> 📅 2 de nov</li>
-          </ul>
-        
-  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li></ul><h4 class="font-semibold">Pretérito o imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="hover:underline">Marcadores temporales</a></li></ul><h4 class="font-semibold">Imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li></ul>
-  
-  <p><span class="font-semibold">Ayuda con la vida</span> – 
-    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
-  </p>
-  
-</section>
 
-  </div>
 
  
   <!-- Shared JavaScript -->
