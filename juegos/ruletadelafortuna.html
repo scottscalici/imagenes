@@ -10,46 +10,499 @@
   <div class="max-w-5xl mx-auto space-y-6">
 
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ruleta de la Fortuna – Juego en Español</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Wheel animation container (we rotate this) */
+    #wheelRotator {
+      transition: transform 4.5s cubic-bezier(.17,.67,.12,1.02);
+      transform: rotate(0deg);
+      transform-origin: 50% 50%;
+    }
+    /* Pointer */
+    .pointer {
+      width: 0; height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 28px solid #ef4444; /* Tailwind red-500 */
+      position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.3));
+    }
+    .tile { 
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width: 40px; height: 54px; margin: 4px; border-radius: 8px;
+      font-weight: 700; font-size: 1.4rem; letter-spacing: .03em;
+      border: 2px solid #e5e7eb; background: #fff;
+    }
+    .tile.space { border-color: transparent; background: transparent; width: 18px; }
+    .letter-btn[disabled] { opacity: .35; cursor: not-allowed; }
+    .glow { box-shadow: 0 0 0 3px rgba(59,130,246,.4) inset; }
+    canvas { image-rendering: crisp-edges; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-7xl mx-auto p-6 space-y-6">
+    <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+      <div>
+        <h1 class="text-3xl font-extrabold">Ruleta de la Fortuna</h1>
+        <p class="text-sm text-gray-600">Versión para clase de español — acentos normalizados y letra <strong>Ñ</strong>.</p>
+      </div>
+      <div class="text-sm text-gray-600">Reglas rápidas: gira → adivina consonante; comprar vocal = −250; resolver revela todo.</div>
+    </header>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <!-- LEFT: Wheel -->
+      <section class="bg-white rounded-xl shadow p-5 relative">
+        <div class="pointer"></div>
+        <div class="flex items-center justify-center">
+          <canvas id="wheelCanvas" width="520" height="520"></canvas>
+          <!-- We rotate a wrapper so text stays drawn once -->
+          <div id="wheelRotator" class="absolute inset-0 flex items-center justify-center">
+            <canvas id="wheelCanvasOverlay" width="520" height="520"></canvas>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <button id="spinBtn" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow hover:bg-blue-700">Girar ruleta</button>
+          <div id="spinResult" class="text-gray-700 font-semibold"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Puzzle / Controls -->
+      <section class="bg-white rounded-xl shadow p-5 space-y-4">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-xs uppercase tracking-wide text-gray-500">Categoría</div>
+            <div id="category" class="text-lg font-bold">—</div>
+          </div>
+          <div>
+            <div class="text-xs uppercase tracking-wide text-gray-500">Pista</div>
+            <div id="clue" class="text-lg font-semibold text-amber-700">—</div>
+          </div>
+        </div>
+
+        <div id="puzzle" class="bg-gray-50 rounded-xl p-4 min-h-[96px] flex flex-wrap"></div>
+
+        <div class="grid sm:grid-cols-2 gap-3">
+          <button id="buyVowelBtn" class="px-3 py-2 rounded-lg border font-semibold hover:bg-gray-50">Comprar vocal (−250)</button>
+          <button id="solveBtn" class="px-3 py-2 rounded-lg border font-semibold hover:bg-gray-50">Resolver</button>
+        </div>
+
+        <!-- Letters -->
+        <div>
+          <div class="text-xs uppercase tracking-wide text-gray-500 mb-1">Letras</div>
+          <div id="letters" class="flex flex-wrap gap-2"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Scoreboard -->
+    <section class="bg-white rounded-xl shadow p-5">
+      <div class="flex flex-wrap items-center gap-3 mb-3">
+        <div class="text-sm text-gray-500 uppercase font-semibold">Marcador</div>
+        <button id="newRoundBtn" class="ml-auto px-3 py-1.5 rounded-lg border font-semibold hover:bg-gray-50">Nueva ronda</button>
+        <button id="newPuzzleBtn" class="px-3 py-1.5 rounded-lg border font-semibold hover:bg-gray-50">Cambiar rompecabezas</button>
+      </div>
+      <div id="teams" class="grid sm:grid-cols-3 gap-3"></div>
+      <div class="mt-3 text-sm text-gray-600">Turno: <span id="turnName" class="font-bold">—</span></div>
+    </section>
+
+    <!-- Help -->
+    <details class="bg-white rounded-xl shadow p-5">
+      <summary class="cursor-pointer font-semibold">Instrucciones y opciones</summary>
+      <ul class="list-disc pl-6 mt-3 text-sm leading-6">
+        <li>Consonante correcta: sumas (valor de la ruleta × nº de apariciones).</li>
+        <li><strong>Comprar vocal</strong>: cuesta 250 puntos (A, E, I, O, U).</li>
+        <li><strong>Quiebra</strong>: tu marcador vuelve a 0. <strong>Pierde turno</strong>: pasa al siguiente equipo.</li>
+        <li>Acentos y diéresis se normalizan al comparar (<em>á→a, ü→u...</em>), pero si el rompecabezas lleva acento, se muestra con acento.</li>
+        <li>Puedes editar la lista de rompecabezas en el código: <code>PUZZLES</code>.</li>
+      </ul>
+    </details>
+  </div>
+
+<script>
+/* -------------------- Data -------------------- */
+const SPANISH_ALPHABET = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+const VOWELS = new Set(["A","E","I","O","U"]);
+const NORMALIZE = s =>
+  s.toUpperCase()
+   .replaceAll("Á","A").replaceAll("É","E").replaceAll("Í","I")
+   .replaceAll("Ó","O").replaceAll("Ú","U").replaceAll("Ü","U")
+   .replace(/[^A-ZÑ ]/g,""); // keep Ñ and spaces
+
+/* Sample Mexico/Spain classroom puzzles – edit freely */
+const PUZZLES = [
+  { phrase: "LA CIUDAD DE MÉXICO", category: "Lugar", clue: "Capital de México" },
+  { phrase: "GUADALAJARA", category: "Lugar", clue: "Perla tapatía" },
+  { phrase: "CHILES EN NOGADA", category: "Gastronomía", clue: "Platillo patrio poblano" },
+  { phrase: "DIA DE MUERTOS", category: "Cultura", clue: "Celebración del 2 de noviembre" },
+  { phrase: "XALAPA ENRIQUEZ", category: "Lugar", clue: "Capital de Veracruz" },
+  { phrase: "LAS FALLAS", category: "Cultura", clue: "Fiesta de marzo en Valencia" },
+  { phrase: "SAGRADA FAMILIA", category: "Arte", clue: "Basílica de Gaudí" },
+  { phrase: "SE IMPERSONAL", category: "Gramática", clue: "Construcción: se habla español" },
+  { phrase: "JERGA MEXICANA", category: "Lengua", clue: "Chido, padre, qué onda" },
+  { phrase: "RUTA DEL TEQUILA", category: "Turismo", clue: "Jalisco" },
+];
+
+/* Wheel wedges (value or action) */
+const WEDGES = [
+  {label:"100", value:100, color:"#fde68a"},
+  {label:"150", value:150, color:"#d1fae5"},
+  {label:"200", value:200, color:"#bfdbfe"},
+  {label:"250", value:250, color:"#fecaca"},
+  {label:"300", value:300, color:"#ddd6fe"},
+  {label:"350", value:350, color:"#c7f9cc"},
+  {label:"400", value:400, color:"#fee2e2"},
+  {label:"450", value:450, color:"#e9d5ff"},
+  {label:"500", value:500, color:"#bae6fd"},
+  {label:"600", value:600, color:"#bbf7d0"},
+  {label:"750", value:750, color:"#fbcfe8"},
+  {label:"1000", value:1000, color:"#fde68a"},
+  {label:"PIERDE TURNO", action:"lose", color:"#fca5a5"},
+  {label:"QUIEBRA", action:"bankrupt", color:"#f87171"},
+  {label:"COMODÍN", action:"bonus", color:"#86efac"},
+  {label:"250", value:250, color:"#fecaca"},
+  {label:"300", value:300, color:"#ddd6fe"},
+  {label:"350", value:350, color:"#c7f9cc"},
+  {label:"400", value:400, color:"#fee2e2"},
+  {label:"450", value:450, color:"#e9d5ff"},
+  {label:"500", value:500, color:"#bae6fd"},
+  {label:"600", value:600, color:"#bbf7d0"},
+  {label:"750", value:750, color:"#fbcfe8"},
+  {label:"1000", value:1000, color:"#fde68a"},
+];
+
+/* -------------------- State -------------------- */
+const state = {
+  puzzleIndex: 0,
+  revealed: [],
+  usedLetters: new Set(),
+  scores: [0,0,0],
+  names: ["Equipo 1","Equipo 2","Equipo 3"],
+  turn: 0,
+  spinning: false,
+  buyingVowel: false,
+  lastSpinResult: null
+};
+
+/* -------------------- UI Elements -------------------- */
+const el = {
+  puzzle: document.getElementById("puzzle"),
+  category: document.getElementById("category"),
+  clue: document.getElementById("clue"),
+  letters: document.getElementById("letters"),
+  spinBtn: document.getElementById("spinBtn"),
+  spinResult: document.getElementById("spinResult"),
+  buyVowelBtn: document.getElementById("buyVowelBtn"),
+  solveBtn: document.getElementById("solveBtn"),
+  teams: document.getElementById("teams"),
+  turnName: document.getElementById("turnName"),
+  newRoundBtn: document.getElementById("newRoundBtn"),
+  newPuzzleBtn: document.getElementById("newPuzzleBtn"),
+  wheelCanvas: document.getElementById("wheelCanvas"),
+  wheelOverlay: document.getElementById("wheelCanvasOverlay"),
+  wheelRotator: document.getElementById("wheelRotator")
+};
+
+/* -------------------- Wheel Drawing -------------------- */
+function drawWheelBase() {
+  const ctx = el.wheelCanvas.getContext("2d");
+  const size = el.wheelCanvas.width;
+  const r = size/2, cx = r, cy = r;
+  ctx.clearRect(0,0,size,size);
+  const angle = 2*Math.PI/WEDGES.length;
+  for (let i=0;i<WEDGES.length;i++){
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r-6,i*angle,(i+1)*angle);
+    ctx.closePath();
+    ctx.fillStyle=WEDGES[i].color;
+    ctx.fill();
+  }
+  // Rim
+  ctx.beginPath();
+  ctx.arc(cx,cy,r-3,0,2*Math.PI);
+  ctx.lineWidth=6; ctx.strokeStyle="#374151"; ctx.stroke();
+}
+
+function drawWheelLabels() {
+  const ctx = el.wheelOverlay.getContext("2d");
+  const size = el.wheelOverlay.width;
+  const r = size/2, cx = r, cy = r;
+  ctx.clearRect(0,0,size,size);
+  const angle = 2*Math.PI/WEDGES.length;
+  ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.font="bold 16px system-ui, -apple-system, Segoe UI, Roboto";
+  for (let i=0;i<WEDGES.length;i++){
+    const mid = i*angle + angle/2;
+    const tx = cx + Math.cos(mid) * (r*0.62);
+    const ty = cy + Math.sin(mid) * (r*0.62);
+    ctx.save();
+    ctx.translate(tx,ty);
+    ctx.rotate(mid);
+    ctx.fillStyle="#111827";
+    const label=WEDGES[i].label;
+    ctx.fillText(label, 0, 0);
+    ctx.restore();
+  }
+  // Hub
+  ctx.beginPath();
+  ctx.arc(cx,cy,36,0,2*Math.PI);
+  ctx.fillStyle="#111827"; ctx.fill();
+  ctx.fillStyle="#fff"; ctx.font="bold 14px system-ui"; ctx.textAlign="center";
+  ctx.fillText("GIRAR", cx, cy);
+}
+
+/* -------------------- Puzzle Rendering -------------------- */
+function currentPuzzle(){ return PUZZLES[state.puzzleIndex]; }
+
+function initPuzzle(index=null){
+  if(index!==null) state.puzzleIndex=index;
+  const { phrase, category, clue } = currentPuzzle();
+  state.usedLetters.clear();
+  state.buyingVowel=false;
+  state.revealed = [...phrase].map(ch => (ch===" " || /[^\wÁÉÍÓÚÜÑ]/.test(ch) ? true : false));
+  el.category.textContent = category;
+  el.clue.textContent = clue;
+  el.spinResult.textContent = "";
+  renderPuzzle();
+  renderLetters();
+  updateTurnUI();
+}
+
+function renderPuzzle(){
+  const { phrase } = currentPuzzle();
+  el.puzzle.innerHTML = "";
+  [...phrase].forEach((ch, idx)=>{
+    if (ch===" ") {
+      const span=document.createElement("span");
+      span.className="tile space";
+      span.textContent=" ";
+      el.puzzle.appendChild(span);
+      return;
+    }
+    const show = state.revealed[idx];
+    const span=document.createElement("span");
+    span.className = "tile";
+    span.textContent = show ? ch.toUpperCase() : "•";
+    el.puzzle.appendChild(span);
+  });
+}
+
+function renderLetters(){
+  el.letters.innerHTML="";
+  SPANISH_ALPHABET.forEach(L=>{
+    const btn=document.createElement("button");
+    btn.textContent = L;
+    btn.className="letter-btn px-3 py-2 rounded-lg border font-bold hover:bg-gray-50";
+    btn.disabled = state.usedLetters.has(L);
+    btn.addEventListener("click", ()=>onLetter(L));
+    el.letters.appendChild(btn);
+  });
+}
+
+/* -------------------- Helpers -------------------- */
+function occurrencesOfLetter(letter){
+  const target = currentPuzzle().phrase;
+  const normLetter = NORMALIZE(letter);
+  let count=0;
+  for (let i=0;i<target.length;i++){
+    const ch = target[i].toUpperCase();
+    if (ch==="Ñ" && letter==="Ñ") { if(!state.revealed[i]) count++; continue; }
+    if (ch===" ") continue;
+    if (NORMALIZE(ch)===normLetter && !state.revealed[i]) count++;
+  }
+  return count;
+}
+
+function revealLetter(letter){
+  const target = currentPuzzle().phrase;
+  const normLetter = NORMALIZE(letter);
+  let hits=0;
+  for (let i=0;i<target.length;i++){
+    const ch = target[i].toUpperCase();
+    if (state.revealed[i]) continue;
+    if (ch==="Ñ" && letter==="Ñ"){ state.revealed[i]=true; hits++; continue; }
+    if (NORMALIZE(ch)===normLetter){ state.revealed[i]=true; hits++; }
+  }
+  renderPuzzle();
+  return hits;
+}
+
+function allRevealed(){
+  return state.revealed.every(x=>x===true);
+}
+
+function nextTurn(){
+  state.turn = (state.turn+1) % state.scores.length;
+  state.buyingVowel=false;
+  el.spinResult.textContent="";
+  updateTurnUI();
+}
+
+function updateTurnUI(){
+  const names = state.names;
+  el.teams.innerHTML="";
+  names.forEach((n,idx)=>{
+    const wrap=document.createElement("div");
+    wrap.className = "border rounded-lg p-3 " + (idx===state.turn ? "glow" : "");
+    const nameInput=document.createElement("input");
+    nameInput.value=n; nameInput.className="w-full font-semibold mb-1";
+    nameInput.addEventListener("input", e=>{ state.names[idx]=e.target.value; updateTurnName(); });
+    const score=document.createElement("div");
+    score.innerHTML = `Puntos: <span class="font-bold">${state.scores[idx]}</span>`;
+    wrap.appendChild(nameInput); wrap.appendChild(score);
+    el.teams.appendChild(wrap);
+  });
+  updateTurnName();
+}
+function updateTurnName(){ el.turnName.textContent = state.names[state.turn]; }
+
+/* -------------------- Wheel Spin -------------------- */
+function spinWheel(){
+  if(state.spinning) return;
+  state.spinning=true;
+  state.buyingVowel=false;
+  el.spinResult.textContent="Girando…";
+  // choose target wedge
+  const targetIndex = Math.floor(Math.random()*WEDGES.length);
+  state.lastSpinResult = targetIndex;
+  const fullTurns = 5 + Math.floor(Math.random()*4); // 5–8 turns
+  const anglePer = 360 / WEDGES.length;
+  const stopAngle = (360 - (targetIndex*anglePer + anglePer/2)); // pointer at top
+  const total = fullTurns*360 + stopAngle;
+  el.wheelRotator.style.transform = `rotate(${total}deg)`;
+}
+
+el.wheelRotator.addEventListener("transitionend", ()=>{
+  state.spinning=false;
+  const wedge = WEDGES[state.lastSpinResult];
+  if (wedge.value){
+    el.spinResult.textContent = `Resultado: ${wedge.label}. Elige una consonante.`;
+  } else if (wedge.action==="bankrupt"){
+    state.scores[state.turn]=0; updateTurnUI();
+    el.spinResult.textContent = "¡Quiebra! Tu marcador vuelve a 0.";
+    nextTurn();
+  } else if (wedge.action==="lose"){
+    el.spinResult.textContent = "Pierdes el turno.";
+    nextTurn();
+  } else if (wedge.action==="bonus"){
+    el.spinResult.textContent = "¡Comodín! +200 puntos y conserva el turno.";
+    state.scores[state.turn]+=200; updateTurnUI();
+  }
+});
+
+/* -------------------- Letter / Actions -------------------- */
+function onLetter(L){
+  if(state.spinning) return;
+  if(state.usedLetters.has(L)) return;
+  const isVowel = VOWELS.has(L);
+  const needSpin = !isVowel; // consonants require a value from last spin
+  if (needSpin && (!state.lastSpinResult || !WEDGES[state.lastSpinResult].value)){
+    el.spinResult.textContent = "Primero gira la ruleta para consonantes.";
+    return;
+  }
+  if (isVowel && !state.buyingVowel){
+    el.spinResult.textContent = "Pulsa «Comprar vocal» antes de elegir una vocal.";
+    return;
+  }
+
+  state.usedLetters.add(L);
+  renderLetters();
+
+  const hits = revealLetter(L);
+  if (hits>0){
+    // award points
+    if (isVowel){
+      state.scores[state.turn] = Math.max(0, state.scores[state.turn]-250);
+    } else {
+      const val = WEDGES[state.lastSpinResult].value;
+      state.scores[state.turn] += val * hits;
+    }
+    updateTurnUI();
+    el.spinResult.textContent = hits===1 ? `¡Una ${L}!` : `¡${hits} ${L}!`;
+
+    if (allRevealed()){
+      el.spinResult.textContent = "¡Resuelto! +1000 puntos de bono.";
+      state.scores[state.turn]+=1000;
+      updateTurnUI();
+    }
+    // keep turn on correct guess
+  } else {
+    el.spinResult.textContent = `No hay ${L}.`;
+    // wrong guess passes turn (and cancels buying vowel if any)
+    state.buyingVowel=false;
+    nextTurn();
+  }
+}
+
+function buyVowel(){
+  state.buyingVowel=true;
+  el.spinResult.textContent = "Has comprado vocal: elige A, E, I, O o U (−250).";
+}
+
+function solvePhrase(){
+  const guess = prompt("Escribe la solución:");
+  if (guess===null) return;
+  const normGuess = NORMALIZE(guess).replace(/\s+/g,"").trim();
+  const normAnswer = NORMALIZE(currentPuzzle().phrase).replace(/\s+/g,"").trim();
+  if (normGuess && normGuess===normAnswer){
+    state.revealed = state.revealed.map(()=>true);
+    renderPuzzle();
+    state.scores[state.turn]+=1000;
+    updateTurnUI();
+    el.spinResult.textContent = "¡Correcto! +1000 puntos.";
+  } else {
+    el.spinResult.textContent = "No es correcto. Pierdes el turno.";
+    nextTurn();
+  }
+}
+
+function newRound(resetScores=false){
+  state.usedLetters.clear();
+  state.buyingVowel=false;
+  state.lastSpinResult=null;
+  if (resetScores){ state.scores=[0,0,0]; }
+  initPuzzle(state.puzzleIndex);
+}
+
+function changePuzzle(){
+  const next = Math.floor(Math.random()*PUZZLES.length);
+  state.puzzleIndex = next;
+  newRound(false);
+}
+
+/* -------------------- Boot -------------------- */
+function init(){
+  // Build letter buttons
+  renderLetters();
+  // Draw wheel once (base) + labels overlay (we rotate the overlay)
+  drawWheelBase(); drawWheelLabels();
+  // Teams
+  updateTurnUI();
+  // Puzzle
+  initPuzzle( Math.floor(Math.random()*PUZZLES.length) );
+  // Events
+  el.spinBtn.addEventListener("click", spinWheel);
+  el.buyVowelBtn.addEventListener("click", buyVowel);
+  el.solveBtn.addEventListener("click", solvePhrase);
+  el.newRoundBtn.addEventListener("click", ()=>newRound(false));
+  el.newPuzzleBtn.addEventListener("click", changePuzzle);
+}
+init();
+</script>
+</body>
+</html>
 
 
 
 
  
-  <!-- Shared JavaScript -->
-  <script>
-
-  // Conversación timer
- let timerInterval;
-let seconds = 0;
-
-function startTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    seconds++;
-    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-  }, 1000);
-}
-
-function resetTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  seconds = 0;
-  timerDisplay.textContent = "00:00";
-}
-    function toggleVocab() {
-      const box = document.getElementById("vocabBox");
-      const btn = document.getElementById("toggleBtn");
-      if (box.classList.contains("hidden")) {
-        box.classList.remove("hidden");
-        btn.innerText = "Reducir";
-      } else {
-        box.classList.add("hidden");
-        btn.innerText = "Expandir";
-      }
-    }
-  </script>
+  
 </body>
 </html>
