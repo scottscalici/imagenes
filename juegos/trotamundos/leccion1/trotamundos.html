@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trotamundos del Español</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .used { background-color: #bbb !important; color: #444 !important; pointer-events: none; }
+  </style>
+</head>
+<body class="bg-yellow-50 font-sans min-h-screen">
+  <!-- Title Screen -->
+  <section id="title-screen" class="flex flex-col items-center justify-center min-h-screen">
+    <img src="https://github.com/scottscalici/imagenes/blob/main/juegos/trotamundos/titulo.png?raw=true" alt="Título del juego" class="max-w-md w-full">
+    <button onclick="startGame()" class="mt-8 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white text-xl font-semibold rounded-full shadow">Comenzar aventura</button>
+  </section>
+
+  <!-- Game Board -->
+  <section id="game-board" class="hidden p-6">
+    <div id="board" class="grid grid-cols-5 gap-2 max-w-5xl mx-auto"></div>
+  </section>
+
+  <!-- Modal for Question -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center">
+    <div class="bg-white p-6 rounded-xl max-w-xl w-full">
+      <h2 id="modal-category" class="text-xl font-bold mb-2"></h2>
+      <p id="modal-question" class="mb-4"></p>
+      <div id="modal-media" class="mb-4"></div>
+      <button onclick="revealAnswer()" class="px-4 py-2 bg-blue-600 text-white rounded mr-2">Mostrar respuesta</button>
+      <button onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Cerrar</button>
+      <p id="modal-answer" class="mt-4 hidden font-semibold text-green-700"></p>
+    </div>
+  </div>
+
+  <script>
+    let data = [];
+
+    async function startGame() {
+      document.getElementById('title-screen').classList.add('hidden');
+      document.getElementById('game-board').classList.remove('hidden');
+
+      // Load vocabulario.json (5 entries)
+      const vocabRes = await fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec1.json');
+      const vocabJson = await vocabRes.json();
+      const vocabList = vocabJson
+        .filter(entry => entry.evaluacion)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 5)
+        .map(entry => ({
+          categoria: "Vocabulario",
+          pregunta: `¿Cómo se dice '${entry.definicion}' en español?`,
+          respuesta: entry.palabra
+        }));
+
+      // Load main questions (20 entries from 4 categories)
+      const mainRes = await fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/trotamundos/leccion1/1.json');
+      const mainJson = await mainRes.json();
+
+      const categories = ["Adverbios", "El pasado", "Usos de SE", "Conjugaciones"];
+      const grouped = categories.map(cat =>
+        mainJson.filter(q => q.categoria === cat).sort(() => 0.5 - Math.random()).slice(0, 5)
+      );
+
+      data = [vocabList, ...grouped].flat();
+      renderBoard();
+    }
+
+    function renderBoard() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      const categories = [...new Set(data.map(q => q.categoria))];
+      const grouped = categories.map(cat => data.filter(q => q.categoria === cat));
+
+      categories.forEach(cat => {
+        const div = document.createElement('div');
+        div.className = 'text-center font-bold bg-yellow-300 p-2 rounded';
+        div.textContent = cat;
+        board.appendChild(div);
+      });
+
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+          const q = grouped[col][row];
+          const cell = document.createElement('button');
+          cell.className = 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded text-xl';
+          cell.textContent = `${(row + 1) * 100}`;
+          cell.onclick = () => showQuestion(cell, q);
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function showQuestion(cell, q) {
+      document.getElementById('modal-category').textContent = q.categoria;
+      document.getElementById('modal-question').textContent = q.pregunta;
+      document.getElementById('modal-answer').textContent = q.respuesta;
+      document.getElementById('modal-answer').classList.add('hidden');
+
+      const mediaDiv = document.getElementById('modal-media');
+      mediaDiv.innerHTML = '';
+      if (q.imagen) {
+        const img = document.createElement('img');
+        img.src = q.imagen;
+        img.alt = 'imagen';
+        img.className = 'w-full max-h-64 object-contain';
+        mediaDiv.appendChild(img);
+      }
+      if (q.audio) {
+        const audio = document.createElement('audio');
+        audio.src = q.audio;
+        audio.controls = true;
+        mediaDiv.appendChild(audio);
+      }
+
+      cell.classList.add('used');
+      cell.disabled = true;
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function revealAnswer() {
+      document.getElementById('modal-answer').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
