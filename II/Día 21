@@ -12,7 +12,7 @@
   .header-spooky {
     font-family: 'Creepster', cursive;
     font-size: 3rem;
-    color: #ff4d4d;
+    color: #F75F1C;
     text-shadow: 2px 2px 0 #000;
   }
 </style>
@@ -27,21 +27,34 @@
 
 <!--Día-->
 <header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+  <div class="bg-black text-amber flex justify-between items-center py-6 px-6">
     <h1 class="header-spooky drop-shadow">🎃 Día 21</h1>
-    <p class="text-lg italic drop-shadow">30 de octubre</p>
+    <p class="header-spooky drop-shadow text-2xl">30 de octubre</p>
   </div>
 </header>
 
 
+
 <!--Aviso o Anuncio-->
-<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-  <p class="font-semibold text-yellow-800"><strong>☠️Dominio: Pretérito y Vocabulario vencen HOY</strong></p>
-  <p class="text-sm text-yellow-900">
-    
-    <span class="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded-full">📅30 de oct</span>
+<div class="bg-black border border-black rounded-xl p-4 text-center">
+  <p class="header-spooky drop-shadow text-purple-600 text-xl">
+    ☠️ DOMINIO: PRETÉRITO Y VOCABULARIO VENCEN HOY ⚰️
+  </p>
+
+  <p class="header-spooky drop-shadow text-base mt-2">
+    <span class="inline-block bg-yellow-200 text-yellow-800 font-semibold px-2 py-0.5 rounded-full">
+      📅 30 de oct
+    </span>
+  </p>
+
+  <hr class="my-3 border-t-2 border-purple-800 border-dashed">
+
+  <p class="text-center text-white text-lg tracking-wider">
+    🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️🕸️
   </p>
 </div>
+
+
 
 
 
