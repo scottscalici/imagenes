@@ -17,25 +17,7 @@
   }
 </style>
 <style>
-  .bat {
-    position: absolute;
-    top: 20%;
-    left: -100px;
-    width: 60px;
-    z-index: 50;
-    animation: flyAcross 12s linear infinite;
-  }
-
-  .bat:nth-child(2) {
-    top: 50%;
-    animation-delay: 3s;
-  }
-
-  .bat:nth-child(3) {
-    top: 70%;
-    animation-delay: 6s;
-  }
-
+  /* Keyframes for flight */
   @keyframes flyAcross {
     0% {
       left: -100px;
@@ -49,15 +31,99 @@
       transform: scaleX(1) rotate(0deg);
     }
   }
+@keyframes flyBack {
+  0% {
+    left: 110%;
+    transform: scaleX(-1) rotate(0deg);
+  }
+  50% {
+    transform: scaleX(-1.2) rotate(-10deg);
+  }
+  100% {
+    left: -100px;
+    transform: scaleX(-1) rotate(0deg);
+  }
+}
+
+  /* Base bat class */
+  .bat {
+    position: absolute;
+    left: -100px;
+    z-index: 50;
+    animation: flyAcross 12s linear infinite;
+    pointer-events: none; /* So it doesn't block clicks */
+  }
+
+  /* Individual bat variations */
+  .bat1 {
+    top: 10%;
+    width: 40px;
+    animation-delay: 0s;
+  }
+
+  .bat2 {
+    top: 35%;
+    width: 60px;
+    animation-delay: 4s;
+  }
+
+  .bat3 {
+    top: 65%;
+    width: 30px;
+    animation-delay: 8s;
+  }
+.bat4 {
+  top: 50%;
+  width: 50px;
+  animation: flyBack 14s linear infinite;
+  animation-delay: 6s;
+}
+
 </style>
+
+<style>
+  .bat-swarm-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .bat-swarm-container img {
+    position: absolute;
+    top: 0;
+    left: -100px;
+    animation-name: flyAcross;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes flyAcross {
+    0% {
+      transform: translateX(0) scaleX(1) rotate(0deg);
+    }
+    50% {
+      transform: translateX(50vw) scaleX(1.2) rotate(10deg);
+    }
+    100% {
+      transform: translateX(110vw) scaleX(1) rotate(0deg);
+    }
+  }
+</style>
+
+
+
 
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
 <!-- Flying bats -->
-<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago.gif?raw=true" class="bat" alt="bat" />
-<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago.gif?raw=true" class="bat" alt="bat" />
-<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago.gif?raw=true" class="bat" alt="bat" />
+<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat1" alt="bat" />
+<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat2" alt="bat" />
+<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat3" alt="bat" />
+<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat4" alt="bat" />
 
 
 
@@ -432,5 +498,29 @@ function resetTimer(btn) {
       }
     }
   </script>
+<div class="bat-swarm-container">
+  <script>
+    const batImg = "https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago.gif?raw=true";
+    const container = document.currentScript.parentElement;
+
+    for (let i = 0; i < 7; i++) {
+      const bat = document.createElement("img");
+      bat.src = batImg;
+
+      const size = Math.floor(Math.random() * 30) + 30; // 30px to 60px
+      const top = Math.floor(Math.random() * 70) + 10; // 10% to 80% down the screen
+      const duration = Math.random() * 8 + 8; // 8s to 16s
+      const delay = Math.random() * 5; // 0s to 5s
+
+      bat.style.width = `${size}px`;
+      bat.style.top = `${top}vh`;
+      bat.style.animationDuration = `${duration}s`;
+      bat.style.animationDelay = `${delay}s`;
+
+      container.appendChild(bat);
+    }
+  </script>
+</div>
+
 </body>
 </html>
