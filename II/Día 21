@@ -390,25 +390,28 @@
 
 
 
-<!--Enlace (Creepy Día de los Muertos Style)-->
-<a href="https://sites.google.com/view/srscalici/cultura/DDLM" 
-   class="block bg-[#1e1b2e] rounded-xl shadow border-l-4 border-indigo-500 hover:shadow-lg hover:ring-2 hover:ring-indigo-400 transition duration-300">
+<!--Enlace espeluznante-->
+<a href="https://sites.google.com/view/srscalici/cultura/DDLM"
+   class="block relative rounded-xl shadow-lg border-l-4 border-purple-800 overflow-hidden group hover:shadow-2xl transition">
 
-  <div class="flex items-center gap-4 p-4">
-    <!-- Image: darkened and styled for atmosphere -->
-    <img src="https://github.com/scottscalici/imagenes/blob/main/cultura/diadelosmuertos/diadelosmuertos.jpg?raw=true" 
-         alt="Día de los muertos 🕯️" 
-         class="max-h-24 w-auto object-cover rounded-md grayscale-[30%] brightness-90 shadow-sm">
+  <!-- Fondo espeluznante -->
+  <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/mist.png?raw=true"
+       alt="Fondo fantasmagórico"
+       class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-70 transition duration-300">
 
-    <!-- Text: spooky green and dim gray -->
+  <!-- Contenido -->
+  <div class="relative z-10 flex items-center gap-4 p-4">
+    <img src="https://github.com/scottscalici/imagenes/blob/main/cultura/diadelosmuertos/diadelosmuertos.jpg?raw=true"
+         alt="Día de los muertos 🕯️"
+         class="max-h-24 w-auto object-cover rounded-md border-2 border-purple-900 shadow-md group-hover:scale-105 transition">
+
     <div class="min-w-0">
-      <h3 class="truncate text-lime-300 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.25rem;">
-        💀 Día de los muertos 🕯️
-      </h3>
-      <p class="text-sm text-gray-300 mt-0.5 line-clamp-2 italic">actividades divertidas</p>
+      <h3 class="font-semibold text-white drop-shadow-md text-lg">💀 Día de los muertos 🕯️</h3>
+      <p class="text-sm text-white drop-shadow-sm mt-1 line-clamp-2">actividades divertidas… o escalofriantes 😱</p>
     </div>
   </div>
 </a>
+
 
 
 
