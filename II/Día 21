@@ -16,10 +16,48 @@
     text-shadow: 2px 2px 0 #000;
   }
 </style>
+<style>
+  .bat {
+    position: absolute;
+    top: 20%;
+    left: -100px;
+    width: 60px;
+    z-index: 50;
+    animation: flyAcross 12s linear infinite;
+  }
+
+  .bat:nth-child(2) {
+    top: 50%;
+    animation-delay: 3s;
+  }
+
+  .bat:nth-child(3) {
+    top: 70%;
+    animation-delay: 6s;
+  }
+
+  @keyframes flyAcross {
+    0% {
+      left: -100px;
+      transform: scaleX(1) rotate(0deg);
+    }
+    50% {
+      transform: scaleX(1.2) rotate(10deg);
+    }
+    100% {
+      left: 110%;
+      transform: scaleX(1) rotate(0deg);
+    }
+  }
+</style>
 
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
+<!-- Flying bats -->
+<img src="https://raw.githubusercontent.com/scottscalici/imagenes/diasfestivos/murcielago.gif" class="bat" alt="bat" />
+<img src="https://raw.githubusercontent.com/scottscalici/imagenes/diasfestivos/murcielago.gif" class="bat" alt="bat" />
+<img src="https://raw.githubusercontent.com/scottscalici/imagenes/diasfestivos/murcielago.gif" class="bat" alt="bat" />
 
 
 
