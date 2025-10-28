@@ -8,6 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+<style>
+  /* Full-page background image of La Llorona */
+  body {
+    background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/lallorona.png?raw=true');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+  }
+
+  /* Dark overlay for readability */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65); /* Adjust darkness if needed */
+    z-index: -1;
+  }
+</style>
 
 <style>
   .header-spooky {
@@ -169,14 +188,16 @@
 
 
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+<body class="font-sans min-h-screen p-6 text-white">
+
+  <div class="max-w-5xl mx-auto space-y-8 relative z-10">
+
 <!-- Flying bats -->
 <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat1" alt="bat" />
 <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat2" alt="bat" />
 <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat3" alt="bat" />
 <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/murcielago_transparent.gif?raw=true" class="bat bat4" alt="bat" />
-<img src="https://github.com/scottscalici/imagenes/blob/main/halloween/fantasma1.png?raw=true" alt="Ghost" class="ghost" style="top: -100px;" />
+<img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/fantasma.png?raw=true" alt="Ghost" class="ghost" style="top: -100px;" />
 
 
 
@@ -368,14 +389,14 @@
   <!-- Content -->
   <div class="relative z-10">
     <h2 class="px-4 pt-4 text-indigo-300 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">
-      Curiosidad 20
+      Curiosidad 21
     </h2>
     <div class="p-4 text-indigo-100 space-y-4">
-      <p class="font-semibold text-lg text-indigo-200">La historia (breve) de España</p>
+      <p class="font-semibold text-lg text-indigo-200">Leyendas del mundo hispanohablante</p>
 
       <figure>
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/historia%20de%20espa%C3%B1a.png?raw=true" 
-             alt="La historia (breve) de España" 
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/lallorona.png?raw=true" 
+             alt="Unas leyendas del mundo hispanohablante" 
              class="rounded-lg shadow-md mx-auto w-1/3">
       </figure>
     </div>
@@ -697,7 +718,7 @@ ellos veían`);
       <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-100 hover:underline">Costa Rica</a>
     </p>
 
-    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/osoperezosoespantoso.jpg?raw=true" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
   </div>
 </section>
 
