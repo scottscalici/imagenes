@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>plan de clase</title>
   <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
 
@@ -215,34 +216,96 @@
 
 
 
-<!--Evaluación-->
-<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
-  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
-  <div class="p-4 text-gray-800">
-    <p>Nada</p>
-    
-            <p class="font-semibold mt-2">Próximas pruebas</p>
-            <ul class="list-disc ml-6 mt-1"><li>Nada - la próxima clase</li><li>Imperfecto - Día 23</li></ul>
-          
+<!-- Evaluación (Pumpkin background with green font and cobwebs) -->
+<section class="relative bg-orange-800 shadow-lg rounded-xl border-l-4 border-green-900 overflow-hidden" style="background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cobweb.png?raw=true'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+   <div class="absolute inset-0 bg-orange-800 bg-opacity-60 pointer-events-none"></div>
+
+  <div class="relative z-10">
+    <h2 class="px-4 pt-4 text-green-900 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">
+      Evaluación
+    </h2>
+    <div class="p-4 text-green-600">
+      <p class="text-base">Nada</p>
+
+      <p class="font-semibold mt-4 text-green-500, style="font-family: 'Jolly Lodger', cursive;">Próximas pruebas</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>Nada - la próxima clase</li>
+        <li>Imperfecto - Día 23</li>
+      </ul>
+    </div>
   </div>
 </section>
 
 
 
-<!--Calentamiento-->
-<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
-  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Schoology:</p>
-      <p>Imperfecto 2</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repaso de vocabulario: Descubre 2-1-6</p>
-      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
-      <div id="vocabBox" class="hidden">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="space-y-1"><p><span class="font-semibold">1.</span> el cuaderno</p><p><span class="font-semibold">2.</span> el programa</p><p><span class="font-semibold">3.</span> la tarea</p><p><span class="font-semibold">4.</span> la química</p><p><span class="font-semibold">5.</span> regresar</p><p><span class="font-semibold">6.</span> el apellido</p><p><span class="font-semibold">7.</span> gordo/a</p><p><span class="font-semibold">8.</span> ecuatoriano/a</p><p><span class="font-semibold">9.</span> pasear en bicicleta</p><p><span class="font-semibold">10.</span> el centro</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> oír</p><p><span class="font-semibold">12.</span> ir en moto(cicleta) (f.)</p><p><span class="font-semibold">13.</span> la estación de autobuses</p><p><span class="font-semibold">14.</span> desordenado/a</p><p><span class="font-semibold">15.</span> ahora mismo</p><p><span class="font-semibold">16.</span> los pantalones cortos</p><p><span class="font-semibold">17.</span> la caja</p><p><span class="font-semibold">18.</span> hermoso/a</p><p><span class="font-semibold">19.</span> el año pasado</p><p><span class="font-semibold">20.</span> nadie</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> el jabón</p><p><span class="font-semibold">22.</span> el plato (principal)</p><p><span class="font-semibold">23.</span> el atún</p><p><span class="font-semibold">24.</span> el salmón</p><p><span class="font-semibold">25.</span> el/la mejor</p><p><span class="font-semibold">26.</span> regalar</p><p><span class="font-semibold">27.</span> la niñez</p><p><span class="font-semibold">28.</span> el cuello</p><p><span class="font-semibold">29.</span> la medicina</p><p><span class="font-semibold">30.</span> saludable</p></div>
+<!-- Google Font (Jolly Lodger) -->
+<link href="https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap" rel="stylesheet">
+
+<!-- Calentamiento (black bg, red text, reversed cobweb) -->
+<section class="relative bg-black shadow-lg rounded-xl border-l-4 border-red-600 overflow-hidden">
+
+  <!-- Reversed cobweb background layer only -->
+  <div class="absolute inset-0 bg-no-repeat bg-cover bg-center opacity-30 pointer-events-none"
+       style="background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cobweb.png?raw=true'); transform: scaleX(-1);">
+  </div>
+
+  <!-- Content layer -->
+  <div class="relative z-10">
+    <h2 class="px-4 pt-4 text-red-500 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">
+      Calentamiento
+    </h2>
+    <div class="p-4 text-red-100 space-y-4">
+      <div>
+        <p class="font-semibold text-red-300">Schoology:</p>
+        <p>Imperfecto 2</p>
+      </div>
+      <div>
+        <p class="font-semibold text-red-300">Repaso de vocabulario: Descubre 2-1-6</p>
+        <button onclick="toggleVocab()" class="text-red-400 hover:underline mb-2">Expandir/Reducir</button>
+        <div id="vocabBox" class="hidden">
+          <div class="grid grid-cols-3 gap-4 text-red-200">
+            <!-- Column 1 -->
+            <div class="space-y-1">
+              <p><span class="font-semibold">1.</span> el cuaderno</p>
+              <p><span class="font-semibold">2.</span> el programa</p>
+              <p><span class="font-semibold">3.</span> la tarea</p>
+              <p><span class="font-semibold">4.</span> la química</p>
+              <p><span class="font-semibold">5.</span> regresar</p>
+              <p><span class="font-semibold">6.</span> el apellido</p>
+              <p><span class="font-semibold">7.</span> gordo/a</p>
+              <p><span class="font-semibold">8.</span> ecuatoriano/a</p>
+              <p><span class="font-semibold">9.</span> pasear en bicicleta</p>
+              <p><span class="font-semibold">10.</span> el centro</p>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="space-y-1">
+              <p><span class="font-semibold">11.</span> oír</p>
+              <p><span class="font-semibold">12.</span> ir en moto(cicleta)</p>
+              <p><span class="font-semibold">13.</span> la estación de autobuses</p>
+              <p><span class="font-semibold">14.</span> desordenado/a</p>
+              <p><span class="font-semibold">15.</span> ahora mismo</p>
+              <p><span class="font-semibold">16.</span> los pantalones cortos</p>
+              <p><span class="font-semibold">17.</span> la caja</p>
+              <p><span class="font-semibold">18.</span> hermoso/a</p>
+              <p><span class="font-semibold">19.</span> el año pasado</p>
+              <p><span class="font-semibold">20.</span> nadie</p>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="space-y-1">
+              <p><span class="font-semibold">21.</span> el jabón</p>
+              <p><span class="font-semibold">22.</span> el plato (principal)</p>
+              <p><span class="font-semibold">23.</span> el atún</p>
+              <p><span class="font-semibold">24.</span> el salmón</p>
+              <p><span class="font-semibold">25.</span> el/la mejor</p>
+              <p><span class="font-semibold">26.</span> regalar</p>
+              <p><span class="font-semibold">27.</span> la niñez</p>
+              <p><span class="font-semibold">28.</span> el cuello</p>
+              <p><span class="font-semibold">29.</span> la medicina</p>
+              <p><span class="font-semibold">30.</span> saludable</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -252,42 +315,70 @@
 
 
 
-<!--Estructura-->
-<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
-  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Introducir:</p>
-      <p>Usos del pretérito e imperfecto</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repasar:</p>
-      <p>Las estructuras</p>
-    </div>
-    <div>
-      <p class="font-semibold">Apuntes:</p>
-      <div class="space-y-6">
-        
-            <div>
-              <p class="font-semibold mt-4">Pretérito o imperfecto</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="text-blue-600 hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="text-blue-600 hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="text-blue-600 hover:underline">Marcadores temporales</a></li></ul>
-            </div>
-          
+
+<!--Estructura (Spooky Halloween Theme)-->
+<section class="relative bg-purple-900 shadow-lg rounded-xl border-l-4 border-lime-400 overflow-hidden">
+
+  <!-- Subtle cobweb overlay -->
+  <div class="absolute inset-0 bg-no-repeat bg-cover bg-center opacity-20 pointer-events-none"
+       style="background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cobweb.png?raw=true');">
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10">
+    <h2 class="text-lime-300 font-semibold px-4 pt-4" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">
+      Estructura
+    </h2>
+    <div class="p-4 text-lime-100 space-y-4">
+      <div>
+        <p class="font-semibold text-lime-300">Introducir:</p>
+        <p>Usos del pretérito e imperfecto</p>
+      </div>
+      <div>
+        <p class="font-semibold text-lime-300">Repasar:</p>
+        <p>Las estructuras</p>
+      </div>
+      <div>
+        <p class="font-semibold text-lime-300">Apuntes:</p>
+        <div class="space-y-6">
+          <div>
+            <p class="font-semibold mt-4 text-lime-200">Pretérito o imperfecto</p>
+            <ul class="list-disc ml-6">
+              <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="text-lime-300 hover:underline">Notas generales</a></li>
+              <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="text-lime-300 hover:underline">Matices</a></li>
+              <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="text-lime-300 hover:underline">Marcadores temporales</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 
-<!--Curiosidad-->
-<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
-  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 20</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <p class="font-semibold text-lg">La historia (breve) de España</p>
-    
-    <figure>
-      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/historia%20de%20espa%C3%B1a.png?raw=true" alt="La historia (breve) de España" class="rounded-lg shadow-md mx-auto">
-    </figure>
+
+<!--Curiosidad 20 (Spooky Theme, Cobwebs ON, Smaller Image)-->
+<section class="relative bg-[#111827] shadow-lg rounded-xl border-l-4 border-indigo-400 overflow-hidden">
+
+  <!-- Cobweb background at full size -->
+  <div class="absolute inset-0 bg-no-repeat bg-cover bg-center opacity-20 pointer-events-none"
+       style="background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cobweb.png?raw=true');">
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10">
+    <h2 class="px-4 pt-4 text-indigo-300 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">
+      Curiosidad 20
+    </h2>
+    <div class="p-4 text-indigo-100 space-y-4">
+      <p class="font-semibold text-lg text-indigo-200">La historia (breve) de España</p>
+
+      <figure>
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/historia%20de%20espa%C3%B1a.png?raw=true" 
+             alt="La historia (breve) de España" 
+             class="rounded-lg shadow-md mx-auto w-1/3">
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -299,16 +390,26 @@
 
 
 
-<!--Enlace-->
-<a href="https://sites.google.com/view/srscalici/cultura/DDLM" class="block bg-white rounded-xl shadow border-l-4 border-slate-400 hover:shadow-lg hover:ring-slate-300 hover:ring-2 transition">
+<!--Enlace (Creepy Día de los Muertos Style)-->
+<a href="https://sites.google.com/view/srscalici/cultura/DDLM" 
+   class="block bg-[#1e1b2e] rounded-xl shadow border-l-4 border-indigo-500 hover:shadow-lg hover:ring-2 hover:ring-indigo-400 transition duration-300">
+
   <div class="flex items-center gap-4 p-4">
-    <img src="https://github.com/scottscalici/imagenes/blob/main/cultura/diadelosmuertos/diadelosmuertos.jpg?raw=true" alt="Día de los muertos 🕯️" class="max-h-24 w-auto object-cover rounded-md">
+    <!-- Image: darkened and styled for atmosphere -->
+    <img src="https://github.com/scottscalici/imagenes/blob/main/cultura/diadelosmuertos/diadelosmuertos.jpg?raw=true" 
+         alt="Día de los muertos 🕯️" 
+         class="max-h-24 w-auto object-cover rounded-md grayscale-[30%] brightness-90 shadow-sm">
+
+    <!-- Text: spooky green and dim gray -->
     <div class="min-w-0">
-      <h3 class="font-semibold text-slate-600 truncate">💀 Día de los muertos 🕯️</h3>
-      <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">actividades divertidas</p>
+      <h3 class="truncate text-lime-300 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.25rem;">
+        💀 Día de los muertos 🕯️
+      </h3>
+      <p class="text-sm text-gray-300 mt-0.5 line-clamp-2 italic">actividades divertidas</p>
     </div>
   </div>
 </a>
+
 
 
 
@@ -385,41 +486,50 @@ ellos veían`);
     ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-pink-100 text-pink-700 align-middle">'+TENSETEXT+'</span>'
     : '';
 
-  container.innerHTML=`
-<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
-  <div class="px-4 pt-4 flex items-center gap-2">
-    <h2 class="text-pink-600 font-semibold text-lg">Práctica de las conjugaciones</h2>${tenseBadge}
-  </div>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div class="overflow-x-auto">
-      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
-        <thead>
-          <tr class="bg-pink-50 text-gray-800">
-            <th class="px-3 py-2 text-left">Verbo</th>
-            <th class="px-3 py-2 text-left">yo</th>
-            <th class="px-3 py-2 text-left">tú</th>
-            <th class="px-3 py-2 text-left">él/ella/ud.</th>
-            <th class="px-3 py-2 text-left">nosotros</th>
-            <th class="px-3 py-2 text-left">vosotros</th>
-            <th class="px-3 py-2 text-left">ellos/uds.</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+ container.innerHTML=`
+<section class="relative bg-[#1b1a26] shadow-lg rounded-xl border-l-4 border-purple-600 overflow-hidden">
+
+  <!-- Spooky cobweb background -->
+  <div class="absolute inset-0 bg-[url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cobweb.png?raw=true')] bg-cover bg-center opacity-20 pointer-events-none"></div>
+
+  <div class="relative z-10">
+    <div class="px-4 pt-4 flex items-center gap-2">
+      <h2 class="text-purple-300 font-semibold" style="font-family: 'Jolly Lodger', cursive; font-size: 1.75rem;">Práctica de las conjugaciones</h2>
+      ${tenseBadge}
     </div>
-    <div class="mt-4 flex gap-3">
-      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
-      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
-      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    <div class="p-4 text-purple-100 space-y-4">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm border border-purple-900 rounded-lg">
+          <thead>
+            <tr class="bg-purple-800 text-purple-100">
+              <th class="px-3 py-2 text-left">Verbo</th>
+              <th class="px-3 py-2 text-left">yo</th>
+              <th class="px-3 py-2 text-left">tú</th>
+              <th class="px-3 py-2 text-left">él/ella/ud.</th>
+              <th class="px-3 py-2 text-left">nosotros</th>
+              <th class="px-3 py-2 text-left">vosotros</th>
+              <th class="px-3 py-2 text-left">ellos/uds.</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button class="checkBtn bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+        <button class="revealBtn bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg">Revelar</button>
+        <button class="resetBtn bg-gray-300 hover:bg-gray-400 text-gray-900 px-4 py-2 rounded-lg">Reiniciar</button>
+      </div>
+      <p class="progress font-semibold text-green-400"></p>
     </div>
-    <p class="progress font-semibold text-pink-600"></p>
   </div>
 </section>`;
+
 
   const tbody=container.querySelector("tbody");
   Object.keys(answers).forEach(verb=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+   tr.innerHTML=`<td class="px-3 py-2 font-semibold text-white border-l-4 border-purple-500 pl-2">${verb}</td>`;
+
     answers[verb].forEach((ans,i)=>{
       const td=document.createElement("td");
       td.className="px-3 py-2";
@@ -471,21 +581,24 @@ ellos veían`);
 
 
 
-<!--Señor+-->
-<section class="bg-gradient-to-br from-sky-50 to-blue-100 shadow-lg rounded-2xl border-l-4 border-blue-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+<!--Señor+ Halloween Edition 👻-->
+<section class="bg-gradient-to-br from-purple-900 to-black shadow-lg rounded-2xl border-l-4 border-lime-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
+
   <div class="flex items-center space-x-4 p-6">
-    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
+    <img src="https://github.com/scottscalici/imagenes/blob/main/diasfestivos/cucuy.png?raw=true" alt="El Cucuy Señor+" class="w-16 h-16 rounded-full shadow-md grayscale-[20%] brightness-90">
     <div>
-      <h2 class="text-blue-700 font-bold text-xl tracking-tight">💬 Señor+</h2>
-      <p class="text-gray-600 text-sm italic">Tu asistente de gramática y conversación</p>
+      <h2 class="text-lime-300 font-bold text-xl tracking-tight" style="font-family: 'Jolly Lodger', cursive;">
+        💬 Señor+
+      </h2>
+      <p class="text-purple-300 text-sm italic">Tu asistente de gramática y conversación</p>
     </div>
   </div>
 
-  <div class="bg-white p-6 border-t border-blue-200 text-gray-800 text-center">
+  <div class="bg-[#1f1b2d] p-6 border-t border-purple-700 text-purple-100 text-center">
     <p class="mb-4">Practica español con tu coach personal:</p>
     <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" 
-       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full font-semibold shadow hover:from-blue-700 hover:to-sky-600 transition">
-      🚀 Iniciar Chat con Señor+
+       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-lime-500 to-purple-600 rounded-full font-semibold shadow-md hover:from-lime-600 hover:to-purple-700 transition duration-300">
+      🦇 Iniciar Chat con Señor+
     </a>
   </div>
 </section>
@@ -493,31 +606,99 @@ ellos veían`);
 
 
 
-<!--Información adicional-->
-<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
-  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
-  
-          <h4 class="font-semibold"><a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
-          <ul class="list-disc list-inside">
-            <li>Imperfecto - Día 23</li>
-          </ul>
-        
-  
-          <h4 class="font-semibold">Tareas (Dominio)</h4>
-          <ul class="list-disc list-inside text-red-700">
-            <li><span class="font-semibold">ya no está disponible Usos de "se"</span> 📅 6 de nov</li><li><span class="font-semibold">Adverbios</span> 📅 6 de nov</li>
-          </ul>
-        
-  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li></ul><h4 class="font-semibold">Pretérito o imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="hover:underline">Marcadores temporales</a></li></ul><h4 class="font-semibold">Imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li></ul><h4 class="font-semibold">Usos de SE</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="hover:underline">Se con voz pasiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="hover:underline">Se con eventos inesperados</a></li></ul><h4 class="font-semibold">Adverbios</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/adverbios/" target="_blank" class="hover:underline">Adverbios comunes y cómo se forman</a></li></ul>
-  <h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700"><li>Lección 1: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1/flashcards" target="_blank" class="hover:underline">Flashcards</a></li></ul>
-  <p><span class="font-semibold">Ayuda con la vida</span> – 
-    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
-  </p>
-  
-  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
-  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
-        
+
+<!-- Información adicional (Reflective Pond Style - Full Coverage) -->
+<section class="relative overflow-hidden text-purple-100 shadow-xl border-l-4 border-purple-500 p-4 space-y-1"
+         style="background-image: url('https://github.com/scottscalici/imagenes/blob/main/diasfestivos/water%20surface.png?raw=true');
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                border-radius: 2rem;">
+
+  <!-- Dark overlay for readability -->
+  <div class="absolute inset-0 bg-[#0e0a1e] bg-opacity-60 pointer-events-none z-0"></div>
+
+  <!-- Content -->
+  <div class="relative z-10">
+    <h2 class="text-purple-200 font-semibold text-lg" style="font-family: 'Jolly Lodger', cursive;">Información adicional</h2>
+
+    <h4 class="font-semibold text-purple-200">
+      <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="hover:underline">
+        Evaluaciones
+      </a>
+    </h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li>Imperfecto - Día 23</li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Tareas (Dominio)</h4>
+    <ul class="list-disc list-inside text-red-300">
+      <li><span class="font-semibold">ya no está disponible Usos de "se"</span> 📅 6 de nov</li>
+      <li><span class="font-semibold">Adverbios</span> 📅 6 de nov</li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Pretérito</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Pretérito o imperfecto</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="hover:underline">Matices</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="hover:underline">Marcadores temporales</a></li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Imperfecto</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Usos de SE</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="hover:underline">Notas generales</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="hover:underline">Se con voz pasiva</a></li>
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="hover:underline">Se con eventos inesperados</a></li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Adverbios</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li><a href="https://sites.google.com/view/srscalici/apuntes/adverbios/" target="_blank" class="hover:underline">Adverbios comunes y cómo se forman</a></li>
+    </ul>
+
+    <h4 class="font-semibold text-purple-200">Vocabulario</h4>
+    <ul class="list-disc list-inside text-purple-100">
+      <li>Lección 1: 
+        <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1" target="_blank" class="hover:underline">Listas</a>,
+        <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/1/flashcards" target="_blank" class="hover:underline">Flashcards</a>
+      </li>
+    </ul>
+
+    <p><span class="font-semibold">Ayuda con la vida</span> –
+      <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-100 hover:underline">recursos de MISD</a>
+    </p>
+
+    <p>Viaje a 
+      <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-100 hover:underline">Costa Rica</a>
+    </p>
+
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+  </div>
 </section>
+
+
 
   </div>
 
