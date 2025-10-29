@@ -83,7 +83,7 @@
           <ul class="list-disc ml-6 space-y-1">
             <li><b>-guir</b> (se pierde la <i>u</i>): <em>seguir → siga</em>, <em>distinguir → distinga</em></li>
             <li><b>-cer/-cir</b> con <b>vocal</b> previa → <b>zc</b>: <em>obedecer → obedezca</em>, <em>conducir → conduzca</em>, <em>conocer → conozca</em></li>
-            <li><b>-cer/-cir</b> con <b>consonante</b> previa o <strong>vocal</strong> con cambio de raíz→ <b>z</b>: <em>vencer → venza</em>, <em>torcer → tuerza</em> <span class="pill">(o→ue)</span>, <em>cocer → cueza</em> <span class="pill">(o→ue)</span> <span class="pill">+ cambio de raíz</span></li>
+            <li><b>-cer/-cir</b> con <b>consonante</b> previa → <b>z</b>: <em>vencer → venza</em>, <em>torcer → tuerza</em> <span class="pill">(o→ue)</span>, <em>cocer → cueza</em> <span class="pill">(o→ue)</span> <span class="pill">+ cambio de raíz</span></li>
             <li><b>-uir</b> (no <i>gu</i>): suele aparecer <b>y</b>: <em>construir → construya</em>, <em>huir → huya</em></li>
           </ul>
         </div>
@@ -135,7 +135,7 @@
     <section class="bg-white rounded-xl shadow p-6 border border-gray-100">
       <h2 class="text-xl font-semibold text-indigo-700 mb-2">Errores frecuentes y trucos</h2>
       <ul class="list-disc ml-6 space-y-2">
-        <li><b>Olvidar la raíz de <em>yo</em></b>: *<i>conoce</i> → ✔ <b>conozca</b>.</li>
+        <li><b>Olvidar la raíz de <em>yo</em></b>: *<i>conoca</i> → ✔ <b>conozca</b>.</li>
         <li><b>No aplicar el cambio de -IR en nosotros/vosotros</b>: *<i>dormamos</i> → ✔ <b>durmamos</b>.</li>
         <li><b>Perder acentos</b>: <b>dé</b> (del verbo dar) ≠ <i>de</i> (preposición).</li>
         <li><b>Confundir uso con forma</b>: estas notas son de <i>cómo formar</i>. La elección <i>subjuntivo vs. indicativo</i> se ve en otra página (WEIRDO, cláusulas nominales, etc.).</li>
@@ -206,6 +206,10 @@
             <option>conocer</option>
             <option>construir</option>
             <option>seguir</option>
+            <option>divertirse</option>
+            <option>torcer</option>
+            <option>cocer</option>
+            <option>vencer</option>
           </select>
         </div>
         <div class="flex items-end gap-2">
@@ -230,7 +234,30 @@
       </div>
     </section>
 
-    
+    <!-- Práctica 3: Yo del presente vs. yo del subjuntivo -->
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100" id="practica3">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-2">Práctica 3: "yo" del presente (indicativo) vs. "yo" del subjuntivo</h2>
+      <p class="text-sm text-gray-600 mb-3">Completa las dos columnas para cada verbo. Consejo: piensa <span class="kbd">yo</span> del presente → quita <span class="kbd">-o</span> → añade terminación opuesta para formar el subjuntivo.</p>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="text-left p-2">Verbo</th>
+              <th class="text-left p-2">yo (presente de indicativo)</th>
+              <th class="text-left p-2">yo (subjuntivo presente)</th>
+            </tr>
+          </thead>
+          <tbody id="yoTableBody"></tbody>
+        </table>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button id="checkBtn3" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded">Comprobar</button>
+        <button id="revealBtn3" class="bg-gray-200 hover:bg-gray-300 px-4 py-1 rounded">Revelar</button>
+        <button id="resetBtn3" class="bg-red-100 hover:bg-red-200 text-red-800 px-4 py-1 rounded">Reiniciar</button>
+        <div id="score3" class="ml-auto font-semibold text-indigo-700"></div>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -271,7 +298,11 @@
       tener:{yo:'tenga',tu:'tengas',el:'tenga',nosotros:'tengamos',vosotros:'tengáis',ellos:'tengan'},
       conocer:{yo:'conozca',tu:'conozcas',el:'conozca',nosotros:'conozcamos',vosotros:'conozcáis',ellos:'conozcan'},
       construir:{yo:'construya',tu:'construyas',el:'construya',nosotros:'construyamos',vosotros:'construyáis',ellos:'construyan'},
-      seguir:{yo:'siga',tu:'sigas',el:'siga',nosotros:'sigamos',vosotros:'sigáis',ellos:'sigan'}
+      seguir:{yo:'siga',tu:'sigas',el:'siga',nosotros:'sigamos',vosotros:'sigáis',ellos:'sigan'},
+      divertirse:{yo:'me divierta',tu:'te diviertas',el:'se divierta',nosotros:'nos divirtamos',vosotros:'os divirtáis',ellos:'se diviertan'},
+      torcer:{yo:'tuerza',tu:'tuerzas',el:'tuerza',nosotros:'torzamos',vosotros:'torzáis',ellos:'tuerzan'},
+      cocer:{yo:'cueza',tu:'cuezas',el:'cueza',nosotros:'cozamos',vosotros:'cozáis',ellos:'cuezan'},
+      vencer:{yo:'venza',tu:'venzas',el:'venza',nosotros:'venzamos',vosotros:'venzáis',ellos:'venzan'}
     };
 
     const chart=document.getElementById('chart');
@@ -292,17 +323,75 @@
     document.getElementById('checkChart').onclick=checkChart;
     document.getElementById('resetChart').onclick=resetChart;
 
-    // === Mini-quiz diagnóstico (S/I) ===
-    const diagAns={1:true,2:false,3:false,4:true};
-    document.getElementById('checkDiag').onclick=()=>{
-      let score=0; let total=0;
-      document.querySelectorAll('#diag input[type="checkbox"]').forEach(chk=>{
-        total++; const id=chk.dataset.diag; const shouldCheck=diagAns[id];
-        if(chk.checked===shouldCheck){ score++; chk.parentElement.classList.add('ok'); chk.parentElement.classList.remove('no'); }
-        else { chk.parentElement.classList.add('no'); chk.parentElement.classList.remove('ok'); }
-      });
-      document.getElementById('scoreD').textContent=`${score}/${total}`;
+    // === Práctica 3: yo-indicativo vs yo-subjuntivo ===
+    const yoPairs = {
+      caer:{ind:'caigo',subj:'caiga'},
+      hacer:{ind:'hago',subj:'haga'},
+      poner:{ind:'pongo',subj:'ponga'},
+      salir:{ind:'salgo',subj:'salga'},
+      ver:{ind:'veo',subj:'vea'},
+      traer:{ind:'traigo',subj:'traiga'},
+      valer:{ind:'valgo',subj:'valga'},
+      caber:{ind:'quepo',subj:'quepa'},
+      dirigir:{ind:'dirijo',subj:'dirija'},
+      proteger:{ind:'protejo',subj:'proteja'},
+      jugar:{ind:'juego',subj:'juegue'},
+      corregir:{ind:'corrijo',subj:'corrija'},
+      seguir:{ind:'sigo',subj:'siga'},
+      conducir:{ind:'conduzco',subj:'conduzca'},
+      conocer:{ind:'conozco',subj:'conozca'},
+      influir:{ind:'influyo',subj:'influya'},
+      torcer:{ind:'tuerzo',subj:'tuerza'},
+      decir:{ind:'digo',subj:'diga'},
+      oír:{ind:'oigo',subj:'oiga'},
+      tener:{ind:'tengo',subj:'tenga'},
+      venir:{ind:'vengo',subj:'venga'},
+      oler:{ind:'huelo',subj:'huela'},
+      dar:{ind:'doy',subj:'dé'},
+      ir:{ind:'voy',subj:'vaya'},
+      ser:{ind:'soy',subj:'sea'},
+      saber:{ind:'sé',subj:'sepa'},
+      estar:{ind:'estoy',subj:'esté'}
     };
+
+    const verbsYoList = ['caer','hacer','poner','salir','ver','traer','valer','caber','dirigir','proteger','jugar','corregir','seguir','conducir','conocer','influir','torcer','decir','oír','tener','venir','oler','dar','ir','ser','saber','estar'];
+
+    const yoTableBody = document.getElementById('yoTableBody');
+    if(yoTableBody){
+      yoTableBody.innerHTML = verbsYoList.map(v=>`
+        <tr class="border-t">
+          <td class="p-2">${v}</td>
+          <td class="p-2"><input data-verb="${v}" data-col="ind" class="border rounded px-2 w-full" /></td>
+          <td class="p-2"><input data-verb="${v}" data-col="subj" class="border rounded px-2 w-full" /></td>
+        </tr>
+      `).join('');
+    }
+
+    function checkYo(){
+      let correct=0,total=0;
+      document.querySelectorAll('#practica3 input').forEach(inp=>{
+        total++;
+        const verb = inp.dataset.verb; const col = inp.dataset.col; const ans = yoPairs[verb]?.[col] || '';
+        const val = inp.value.trim();
+        if(eqAccent(val, ans)) { inp.classList.add('is-correct'); inp.classList.remove('is-wrong'); correct++; }
+        else { inp.classList.add('is-wrong'); inp.classList.remove('is-correct'); }
+      });
+      const s = document.getElementById('score3'); if(s) s.textContent = `${correct}/${total}`;
+    }
+    function revealYo(){
+      document.querySelectorAll('#practica3 input').forEach(inp=>{
+        const verb = inp.dataset.verb; const col = inp.dataset.col; const ans = yoPairs[verb]?.[col] || '';
+        inp.value = ans; inp.classList.add('is-correct'); inp.classList.remove('is-wrong');
+      });
+      const s = document.getElementById('score3'); if(s) s.textContent = '✔';
+    }
+    function resetYo(){
+      document.querySelectorAll('#practica3 input').forEach(inp=>{ inp.value=''; inp.classList.remove('is-wrong','is-correct'); });
+      const s = document.getElementById('score3'); if(s) s.textContent = '';
+    }
+    const c3=document.getElementById('checkBtn3'); if(c3) c3.onclick = checkYo;
+    const r3=document.getElementById('revealBtn3'); if(r3) r3.onclick = revealYo;
+    const x3=document.getElementById('resetBtn3'); if(x3) x3.onclick = resetYo;
   </script>
 </body>
 </html>
