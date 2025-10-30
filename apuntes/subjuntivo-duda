@@ -6,6 +6,149 @@
   <title>Interactive Preterite Flowchart (Guided Questions)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subjuntivo: Verbos de Emoción</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hidden-answer { display: none; }
+  </style>
+</head>
+<body class="bg-white text-gray-800 font-sans leading-relaxed px-6 py-8 max-w-4xl mx-auto space-y-8">
+
+  <header>
+    <h1 class="text-3xl font-bold text-pink-700 border-b-4 border-pink-300 pb-2">El Subjuntivo: Verbos de Emoción</h1>
+    <p class="mt-2 text-gray-700">Cuando el verbo en la cláusula principal expresa una emoción o sentimiento como esperanza, alegría, tristeza, miedo, lástima o sorpresa, el subjuntivo se usa en la cláusula subordinada.</p>
+  </header>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-pink-600">¡Atención!</h2>
+    <p class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded">
+      Al igual que con los verbos de influencia, si no hay un cambio de sujeto, se usa el infinitivo y no el subjuntivo.<br>
+      <span class="block mt-2 italic">Ejemplo:</span>
+      <span class="block">Me alegro de <strong>estar</strong> aquí. ✅ (mismo sujeto)</span>
+      <span class="block">Me alegro de que tú <strong>estés</strong> aquí. ✅ (sujetos distintos → subjuntivo)</span>
+    </p>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-pink-600">Estructura</h2>
+    <div class="bg-pink-50 border-l-4 border-pink-400 p-4 rounded shadow">
+      <p><span class="font-bold">[Sujeto 1]</span> + <span class="font-bold">verbo de emoción</span> + <span class="font-bold">que</span> + <span class="font-bold">[sujeto 2]</span> + <span class="font-bold">verbo en subjuntivo</span></p>
+      <p class="mt-2 italic text-sm">Ejemplo: Me molesta que él <strong>grite</strong> tanto.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-pink-600">Lista de verbos y expresiones de emoción</h2>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>alegrarse (de)</strong> – to be happy about</li>
+      <li><strong>esperar</strong> – to hope</li>
+      <li><strong>gustar</strong> – to like / be pleasing</li>
+      <li><strong>molestar</strong> – to bother</li>
+      <li><strong>sentir</strong> – to be sorry / to regret</li>
+      <li><strong>sorprender</strong> – to surprise</li>
+      <li><strong>temer</strong> – to fear</li>
+      <li><strong>tener miedo (de)</strong> – to be afraid of</li>
+      <li><strong>es una lástima</strong> – it’s a shame</li>
+      <li><strong>es extraño</strong> – it’s strange</li>
+      <li><strong>es ridículo</strong> – it’s ridiculous</li>
+      <li><strong>es terrible</strong> – it’s terrible</li>
+      <li><strong>es triste</strong> – it’s sad</li>
+    </ul>
+
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-pink-500">Ejemplos prácticos:</h3>
+      <ul class="list-disc list-inside space-y-2 mt-2 text-sm">
+        <li><strong>Alegrarse:</strong> Me alegro de que tú <em>hayas venido</em>.</li>
+        <li><strong>Esperar:</strong> Espero que <em>tengas</em> un buen día.</li>
+        <li><strong>Gustar:</strong> Me gusta que <em>estemos</em> juntos.</li>
+        <li><strong>Molestar:</strong> Me molesta que <em>llegues</em> tarde siempre.</li>
+        <li><strong>Sentir:</strong> Siento que ella <em>no pueda</em> venir.</li>
+        <li><strong>Sorprender:</strong> Me sorprende que tú <em>sepas</em> eso.</li>
+        <li><strong>Temer:</strong> Temo que ellos <em>no entiendan</em> la situación.</li>
+        <li><strong>Tener miedo de:</strong> Tengo miedo de que <em>haya</em> un accidente.</li>
+        <li><strong>Es una lástima:</strong> Es una lástima que <em>no estudies</em>.</li>
+        <li><strong>Es extraño:</strong> Es extraño que ella <em>no diga</em> nada.</li>
+        <li><strong>Es ridículo:</strong> Es ridículo que <em>griten</em> tanto.</li>
+        <li><strong>Es terrible:</strong> Es terrible que <em>contaminen</em> el río.</li>
+        <li><strong>Es triste:</strong> Es triste que <em>terminemos</em> hoy.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-pink-600">Ojalá (que)...</h2>
+    <p class="mb-2">La expresión <strong>ojalá (que)</strong> significa “I hope” o “I wish” y siempre va seguida del subjuntivo. El uso de <code>que</code> es opcional.</p>
+    <p class="italic text-sm">Ejemplo: Ojalá que <strong>llueva</strong> mañana.</p>
+<p class="italic text-sm">Ejemplo: Ojalá <strong>llueva</strong> mañana.</p>
+  </section>
+
+<section>
+<h2 class="text-2xl font-semibold text-indigo-600">Reglas clave: ¿Subjuntivo o Indicativo?</h2>
+<div class="bg-indigo-100 border-l-4 border-indigo-400 p-4 rounded">
+<ul class="list-disc list-inside space-y-2">
+<li><strong>Frases de duda → subjuntivo</strong><br>Ej: <em>Dudo que tengas razón.</em></li>
+<li><strong>Mismas frases negadas → indicativo</strong><br>Ej: <em>No dudo que tienes razón.</em></li>
+<li><strong>Frases de certeza → indicativo</strong><br>Ej: <em>Estoy seguro de que ella viene.</em></li>
+<li><strong>Mismas frases negadas → subjuntivo</strong><br>Ej: <em>No estoy seguro de que ella venga.</em></li>
+<li><strong>Creer que → indicativo</strong><br>Ej: <em>Creo que él sabe.</em></li>
+<li><strong>No creer que → subjuntivo</strong><br>Ej: <em>No creo que él sepa.</em></li>
+</ul>
+</div>
+</section>
+
+
+<section>
+<h2 class="text-2xl font-semibold text-indigo-600">Probabilidad e incertidumbre</h2>
+<p>Frases que expresan posibilidad o probabilidad también usan el subjuntivo porque indican que algo no es completamente seguro.</p>
+<ul class="list-disc list-inside mt-2 space-y-1">
+<li><strong>Es posible que...</strong> – subjuntivo</li>
+<li><strong>Es probable que...</strong> – subjuntivo</li>
+<li><strong>Es imposible que...</strong> – subjuntivo</li>
+<li><strong>Es improbable que...</strong> – subjuntivo</li>
+<li><strong>Quizás / Tal vez</strong> – normalmente subjuntivo<br><span class="italic text-sm">Ej: Tal vez ella <strong>llegue</strong> tarde.</span></li>
+</ul>
+<p class="mt-2 italic text-sm">⚠️ Nota: A veces quizás/tal vez pueden usarse con indicativo si el hablante tiene más certeza, pero lo más común es usar el subjuntivo.</p>
+</section>
+  <section>
+    <h2 class="text-2xl font-semibold text-pink-600">Práctica guiada</h2>
+    <p class="mb-2">Completa las oraciones con la forma correcta del verbo en el presente del subjuntivo o infinitivo según corresponda.</p>
+    <div class="space-y-2 text-sm bg-gray-50 p-4 border rounded">
+      <p>1. Ojalá que ellos __________ (descubrir) nuevas formas de energía.</p>
+      <p>2. Espero que Ana nos __________ (ayudar) a recoger la basura en la carretera.</p>
+      <p>3. Es una lástima que la gente no __________ (reciclar) más.</p>
+      <p>4. Esperamos __________ (proteger) el aire de nuestra comunidad.</p>
+      <p>5. Me alegro de que mis amigos __________ (querer) conservar la naturaleza.</p>
+      <p>6. Espero que tú __________ (venir) a la reunión del Club de Ecología.</p>
+      <p>7. Es malo __________ (contaminar) el medio ambiente.</p>
+      <p>8. A mis padres les gusta que nosotros __________ (participar) en la reunión.</p>
+      <p>9. Siento que nuestras ciudades __________ (estar) afectadas por la contaminación.</p>
+      <p>10. Ojalá que yo __________ (poder) hacer algo para reducir el calentamiento global.</p>
+    </div>
+    <button onclick="document.getElementById('answers').classList.toggle('hidden')" class="mt-4 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700">Mostrar respuestas</button>
+    <div id="answers" class="mt-4 hidden">
+      <p><strong>Respuestas:</strong></p>
+      <ul class="list-decimal list-inside space-y-1">
+        <li>descubran</li>
+        <li>ayude</li>
+        <li>recicle</li>
+        <li>proteger</li>
+        <li>quieran</li>
+        <li>vengas</li>
+        <li>contaminar</li>
+        <li>participemos</li>
+        <li>estén</li>
+        <li>pueda</li>
+      </ul>
+    </div>
+  </section>
+
+</body>
+</html>
 
 
 
