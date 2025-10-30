@@ -1,17 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Preterite Flowchart (Guided Questions)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Subjuntivo: Verbos de Emoción</title>
+  <title>Subjuntivo: Duda, Negación e Incertidumbre</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .hidden-answer { display: none; }
@@ -20,88 +12,93 @@
 <body class="bg-white text-gray-800 font-sans leading-relaxed px-6 py-8 max-w-4xl mx-auto space-y-8">
 
   <header>
-    <h1 class="text-3xl font-bold text-pink-700 border-b-4 border-pink-300 pb-2">El Subjuntivo: Verbos de Emoción</h1>
-    <p class="mt-2 text-gray-700">Cuando el verbo en la cláusula principal expresa una emoción o sentimiento como esperanza, alegría, tristeza, miedo, lástima o sorpresa, el subjuntivo se usa en la cláusula subordinada.</p>
+    <h1 class="text-3xl font-bold text-indigo-700 border-b-4 border-indigo-300 pb-2">El Subjuntivo: Duda, Negación e Incertidumbre</h1>
+    <p class="mt-2 text-gray-700">Así como se usa el subjuntivo con emociones y la influencia, también se emplea con expresiones de duda, negación o incertidumbre cuando hay un cambio de sujeto.</p>
   </header>
 
   <section>
-    <h2 class="text-2xl font-semibold text-pink-600">¡Atención!</h2>
+    <h2 class="text-2xl font-semibold text-indigo-600">¡Atención!</h2>
     <p class="bg-yellow-100 border-l-4 border-yellow-400 p-4 rounded">
-      Al igual que con los verbos de influencia, si no hay un cambio de sujeto, se usa el infinitivo y no el subjuntivo.<br>
+      El subjuntivo se usa cuando la oración principal expresa duda, negación o incertidumbre y hay un cambio de sujeto.<br>
+      Si no hay duda, se usa el indicativo.<br>
       <span class="block mt-2 italic">Ejemplo:</span>
-      <span class="block">Me alegro de <strong>estar</strong> aquí. ✅ (mismo sujeto)</span>
-      <span class="block">Me alegro de que tú <strong>estés</strong> aquí. ✅ (sujetos distintos → subjuntivo)</span>
+      <span class="block">Dudo que ella <strong>venga</strong>. ✅ (subjuntivo)</span>
+      <span class="block">Es cierto que ella <strong>viene</strong>. ✅ (indicativo)</span>
     </p>
   </section>
 
   <section>
-    <h2 class="text-2xl font-semibold text-pink-600">Estructura</h2>
-    <div class="bg-pink-50 border-l-4 border-pink-400 p-4 rounded shadow">
-      <p><span class="font-bold">[Sujeto 1]</span> + <span class="font-bold">verbo de emoción</span> + <span class="font-bold">que</span> + <span class="font-bold">[sujeto 2]</span> + <span class="font-bold">verbo en subjuntivo</span></p>
-      <p class="mt-2 italic text-sm">Ejemplo: Me molesta que él <strong>grite</strong> tanto.</p>
+    <h2 class="text-2xl font-semibold text-indigo-600">Estructura</h2>
+    <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded shadow">
+      <p><span class="font-bold">[Sujeto 1]</span> + <span class="font-bold">verbo de duda/negación</span> + <span class="font-bold">que</span> + <span class="font-bold">[sujeto 2]</span> + <span class="font-bold">verbo en subjuntivo</span></p>
+      <p class="mt-2 italic text-sm">Ejemplo: No creo que ellos <strong>sepan</strong> la verdad.</p>
     </div>
   </section>
 
   <section>
-    <h2 class="text-2xl font-semibold text-pink-600">Lista de verbos y expresiones de emoción</h2>
+    <h2 class="text-2xl font-semibold text-indigo-600">Verbos y expresiones comunes que requieren el subjuntivo</h2>
     <ul class="list-disc list-inside space-y-1">
-      <li><strong>alegrarse (de)</strong> – to be happy about</li>
-      <li><strong>esperar</strong> – to hope</li>
-      <li><strong>gustar</strong> – to like / be pleasing</li>
-      <li><strong>molestar</strong> – to bother</li>
-      <li><strong>sentir</strong> – to be sorry / to regret</li>
-      <li><strong>sorprender</strong> – to surprise</li>
-      <li><strong>temer</strong> – to fear</li>
-      <li><strong>tener miedo (de)</strong> – to be afraid of</li>
-      <li><strong>es una lástima</strong> – it’s a shame</li>
-      <li><strong>es extraño</strong> – it’s strange</li>
-      <li><strong>es ridículo</strong> – it’s ridiculous</li>
-      <li><strong>es terrible</strong> – it’s terrible</li>
-      <li><strong>es triste</strong> – it’s sad</li>
+      <li><strong>dudar</strong> – to doubt</li>
+      <li><strong>negar (e:ie)</strong> – to deny</li>
+      <li><strong>no creer</strong> – to not believe</li>
+      <li><strong>no estar seguro/a (de)</strong> – to not be sure</li>
+      <li><strong>no es cierto</strong> – it’s not true</li>
+      <li><strong>no es seguro</strong> – it’s not certain</li>
+      <li><strong>no es verdad</strong> – it’s not true</li>
+      <li><strong>es imposible</strong> – it’s impossible</li>
+      <li><strong>es improbable</strong> – it’s unlikely</li>
+      <li><strong>es posible</strong> – it’s possible</li>
+      <li><strong>es probable</strong> – it’s probable</li>
+      <li><strong>quizás / tal vez</strong> – maybe, perhaps</li>
     </ul>
 
     <div class="mt-6">
-      <h3 class="text-xl font-semibold text-pink-500">Ejemplos prácticos:</h3>
+      <h3 class="text-xl font-semibold text-indigo-500">Ejemplos prácticos:</h3>
       <ul class="list-disc list-inside space-y-2 mt-2 text-sm">
-        <li><strong>Alegrarse:</strong> Me alegro de que tú <em>hayas venido</em>.</li>
-        <li><strong>Esperar:</strong> Espero que <em>tengas</em> un buen día.</li>
-        <li><strong>Gustar:</strong> Me gusta que <em>estemos</em> juntos.</li>
-        <li><strong>Molestar:</strong> Me molesta que <em>llegues</em> tarde siempre.</li>
-        <li><strong>Sentir:</strong> Siento que ella <em>no pueda</em> venir.</li>
-        <li><strong>Sorprender:</strong> Me sorprende que tú <em>sepas</em> eso.</li>
-        <li><strong>Temer:</strong> Temo que ellos <em>no entiendan</em> la situación.</li>
-        <li><strong>Tener miedo de:</strong> Tengo miedo de que <em>haya</em> un accidente.</li>
-        <li><strong>Es una lástima:</strong> Es una lástima que <em>no estudies</em>.</li>
-        <li><strong>Es extraño:</strong> Es extraño que ella <em>no diga</em> nada.</li>
-        <li><strong>Es ridículo:</strong> Es ridículo que <em>griten</em> tanto.</li>
-        <li><strong>Es terrible:</strong> Es terrible que <em>contaminen</em> el río.</li>
-        <li><strong>Es triste:</strong> Es triste que <em>terminemos</em> hoy.</li>
+        <li><strong>Dudar:</strong> Dudo que ellos <em>tengan</em> razón.</li>
+        <li><strong>Negar:</strong> Niego que tú <em>hayas dicho</em> eso.</li>
+        <li><strong>No creer:</strong> No creo que ella <em>venga</em> hoy.</li>
+        <li><strong>No estar seguro de:</strong> No estoy seguro de que <em>haya</em> clases mañana.</li>
+        <li><strong>No es cierto:</strong> No es cierto que ellos <em>coman</em> carne.</li>
+        <li><strong>No es seguro:</strong> No es seguro que la reunión <em>suceda</em>.</li>
+        <li><strong>No es verdad:</strong> No es verdad que tú <em>mientas</em>.</li>
+        <li><strong>Es imposible:</strong> Es imposible que él <em>termine</em> tan rápido.</li>
+        <li><strong>Es improbable:</strong> Es improbable que ellas <em>ganen</em> el partido.</li>
+        <li><strong>Es posible:</strong> Es posible que <em>llueva</em> esta tarde.</li>
+        <li><strong>Es probable:</strong> Es probable que nosotros <em>viajemos</em> pronto.</li>
+        <li><strong>Quizás:</strong> Quizás <em>haya</em> una solución.</li>
+        <li><strong>Tal vez:</strong> Tal vez tú <em>necesites</em> ayuda.</li>
       </ul>
     </div>
   </section>
 
   <section>
-    <h2 class="text-2xl font-semibold text-pink-600">Ojalá (que)...</h2>
-    <p class="mb-2">La expresión <strong>ojalá (que)</strong> significa “I hope” o “I wish” y siempre va seguida del subjuntivo. El uso de <code>que</code> es opcional.</p>
-    <p class="italic text-sm">Ejemplo: Ojalá que <strong>llueva</strong> mañana.</p>
-<p class="italic text-sm">Ejemplo: Ojalá <strong>llueva</strong> mañana.</p>
+    <h2 class="text-2xl font-semibold text-indigo-600">¡Ojo con el indicativo!</h2>
+    <p>Se usa el indicativo cuando hay certeza o afirmación en la oración principal:</p>
+    <ul class="list-disc list-inside space-y-1 mt-2">
+      <li><strong>creer que</strong> – to believe that</li>
+      <li><strong>no dudar que</strong> – to not doubt that</li>
+      <li><strong>no negar que</strong> – to not deny that</li>
+      <li><strong>es cierto que</strong> – it’s true that</li>
+      <li><strong>es obvio que</strong> – it’s obvious that</li>
+      <li><strong>es seguro que</strong> – it’s certain that</li>
+      <li><strong>es verdad que</strong> – it’s true that</li>
+    </ul>
+    <p class="italic text-sm mt-2">Ejemplo: Creo que ellos <strong>saben</strong> la respuesta. ✅</p>
   </section>
-
-<section>
-<h2 class="text-2xl font-semibold text-indigo-600">Reglas clave: ¿Subjuntivo o Indicativo?</h2>
-<div class="bg-indigo-100 border-l-4 border-indigo-400 p-4 rounded">
-<ul class="list-disc list-inside space-y-2">
-<li><strong>Frases de duda → subjuntivo</strong><br>Ej: <em>Dudo que tengas razón.</em></li>
-<li><strong>Mismas frases negadas → indicativo</strong><br>Ej: <em>No dudo que tienes razón.</em></li>
-<li><strong>Frases de certeza → indicativo</strong><br>Ej: <em>Estoy seguro de que ella viene.</em></li>
-<li><strong>Mismas frases negadas → subjuntivo</strong><br>Ej: <em>No estoy seguro de que ella venga.</em></li>
-<li><strong>Creer que → indicativo</strong><br>Ej: <em>Creo que él sabe.</em></li>
-<li><strong>No creer que → subjuntivo</strong><br>Ej: <em>No creo que él sepa.</em></li>
-</ul>
-</div>
-</section>
-
-
+  <section>
+    <h2 class="text-2xl font-semibold text-indigo-600">Reglas clave: ¿Subjuntivo o Indicativo?</h2>
+    <div class="bg-indigo-100 border-l-4 border-indigo-400 p-4 rounded">
+      <ul class="list-disc list-inside space-y-2">
+        <li><strong>Frases de duda → subjuntivo</strong><br>Ej: <em>Dudo que tengas razón.</em></li>
+        <li><strong>Mismas frases negadas → indicativo</strong><br>Ej: <em>No dudo que tienes razón.</em></li>
+        <li><strong>Frases de certeza → indicativo</strong><br>Ej: <em>Estoy seguro de que ella viene.</em></li>
+        <li><strong>Mismas frases negadas → subjuntivo</strong><br>Ej: <em>No estoy seguro de que ella venga.</em></li>
+        <li><strong>Creer que → indicativo</strong><br>Ej: <em>Creo que él sabe.</em></li>
+        <li><strong>No creer que → subjuntivo</strong><br>Ej: <em>No creo que él sepa.</em></li>
+      </ul>
+    </div>
+  </section>
 <section class="border-l-4 border-yellow-500 bg-yellow-50 p-6 rounded-xl">
 <h2 class="text-xl font-bold text-yellow-600 mb-2">Probabilidad y Posibilidad</h2>
 <p>Estas expresiones también indican que algo es incierto o no confirmado, y por eso requieren el subjuntivo.</p>
@@ -119,43 +116,49 @@
 <li>Quizás <strong>tenga</strong> razón.</li>
 </ul>
 </section>
-  <section>
-    <h2 class="text-2xl font-semibold text-pink-600">Práctica guiada</h2>
-    <p class="mb-2">Completa las oraciones con la forma correcta del verbo en el presente del subjuntivo o infinitivo según corresponda.</p>
-    <div class="space-y-2 text-sm bg-gray-50 p-4 border rounded">
-      <p>1. Ojalá que ellos __________ (descubrir) nuevas formas de energía.</p>
-      <p>2. Espero que Ana nos __________ (ayudar) a recoger la basura en la carretera.</p>
-      <p>3. Es una lástima que la gente no __________ (reciclar) más.</p>
-      <p>4. Esperamos __________ (proteger) el aire de nuestra comunidad.</p>
-      <p>5. Me alegro de que mis amigos __________ (querer) conservar la naturaleza.</p>
-      <p>6. Espero que tú __________ (venir) a la reunión del Club de Ecología.</p>
-      <p>7. Es malo __________ (contaminar) el medio ambiente.</p>
-      <p>8. A mis padres les gusta que nosotros __________ (participar) en la reunión.</p>
-      <p>9. Siento que nuestras ciudades __________ (estar) afectadas por la contaminación.</p>
-      <p>10. Ojalá que yo __________ (poder) hacer algo para reducir el calentamiento global.</p>
+  <section class="mt-6">
+    <h2 class="text-xl font-semibold text-blue-600 mb-2">Video: Subjuntivo — Duda y Negación</h2>
+    <div class="p-4 text-gray-800 space-y-4 bg-white shadow rounded-lg">
+      <p>Este video analiza cómo usar el subjuntivo tras verbos y expresiones de duda, negación o falta de certeza.</p>
+      <div class="aspect-w-16 aspect-h-9">
+        <iframe class="w-full h-64 rounded-lg" src="https://www.youtube.com/embed/2nrq90aGBQg" title="Subjuntivo – Duda y Negación" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <p class="text-sm text-gray-600">🎯 Consejo: Mira el video y presta atención a cómo se introducen las cláusulas con subjuntivo. ¿Cuáles son los desencadenantes (“triggers”)?</p>
     </div>
-    <button onclick="document.getElementById('answers').classList.toggle('hidden')" class="mt-4 px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700">Mostrar respuestas</button>
+  </section>
+</section>
+  <section>
+    <h2 class="text-2xl font-semibold text-indigo-600">Práctica guiada</h2>
+    <p class="mb-2">Completa las oraciones con la forma correcta del verbo: subjuntivo o indicativo según corresponda.</p>
+    <div class="space-y-2 text-sm bg-gray-50 p-4 border rounded">
+      <p>1. Dudo que ellos __________ (trabajar).</p>
+      <p>2. Es cierto que él __________ (comer) mucho.</p>
+      <p>3. Es imposible que ellos __________ (salir).</p>
+      <p>4. Es probable que ustedes __________ (ganar).</p>
+      <p>5. No creo que ella __________ (volver).</p>
+      <p>6. Es posible que nosotros __________ (ir).</p>
+      <p>7. Dudamos que tú __________ (reciclar).</p>
+      <p>8. Creo que ellos __________ (jugar) al fútbol.</p>
+      <p>9. No niego que ustedes __________ (estudiar).</p>
+      <p>10. Tal vez Juan no nos __________ (oír).</p>
+    </div>
+    <button onclick="document.getElementById('answers').classList.toggle('hidden')" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Mostrar respuestas</button>
     <div id="answers" class="mt-4 hidden">
       <p><strong>Respuestas:</strong></p>
       <ul class="list-decimal list-inside space-y-1">
-        <li>descubran</li>
-        <li>ayude</li>
-        <li>recicle</li>
-        <li>proteger</li>
-        <li>quieran</li>
-        <li>vengas</li>
-        <li>contaminar</li>
-        <li>participemos</li>
-        <li>estén</li>
-        <li>pueda</li>
+        <li>trabajen</li>
+        <li>come</li>
+        <li>salgan</li>
+        <li>ganen</li>
+        <li>vuelva</li>
+        <li>vayamos</li>
+        <li>recicles</li>
+        <li>juegan</li>
+        <li>estudian</li>
+        <li>oiga</li>
       </ul>
     </div>
   </section>
-
-</body>
-</html>
-
-
 
 </body>
 </html>
