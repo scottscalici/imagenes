@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subjuntivo: Expresiones Impersonales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hidden-answer { display: none; }
+  </style>
+</head>
+<body class="bg-white text-gray-800 font-sans leading-relaxed px-6 py-8 max-w-4xl mx-auto space-y-8">
+
+  <header>
+    <h1 class="text-3xl font-bold text-teal-700 border-b-4 border-teal-300 pb-2">El Subjuntivo: Expresiones Impersonales</h1>
+    <p class="mt-2 text-gray-700">Las expresiones impersonales se usan para comunicar opiniones, emociones, juicios y valoraciones. Muchas de estas estructuras requieren el uso del subjuntivo.</p>
+  </header>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">¿Qué es una expresión impersonal?</h2>
+    <p>Una expresión impersonal no tiene un sujeto concreto; normalmente sigue el formato:</p>
+    <div class="bg-teal-50 border-l-4 border-teal-400 p-4 rounded shadow mt-2">
+      <p><strong>Es + adjetivo + que + sujeto + verbo en subjuntivo</strong></p>
+      <p class="mt-2 italic text-sm">Ejemplo: Es importante que los estudiantes <strong>estudien</strong> mucho.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">¿Cuándo se usa el subjuntivo?</h2>
+    <ul class="list-disc list-inside mt-2 space-y-1">
+      <li>Cuando la expresión transmite <strong>deseo, juicio, emoción o duda</strong>.</li>
+      <li>Si hay <strong>cambio de sujeto</strong>.</li>
+    </ul>
+    <p class="mt-2 italic text-sm">Ej: Es necesario que tú <strong>comas</strong> mejor. ✅</p>
+    <p class="italic text-sm">Si no hay cambio de sujeto, se usa el infinitivo:</p>
+    <p class="italic text-sm">Ej: Es necesario <strong>comer</strong> bien. ✅</p>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">Subjuntivo vs. Infinitivo: Traducción y matiz</h2>
+    <p>Ambas estructuras son correctas, pero su traducción y énfasis en inglés pueden variar sutilmente:</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm">
+      <div class="bg-green-100 p-4 rounded shadow">
+        <p class="font-semibold">Con subjuntivo (cambio de sujeto):</p>
+        <p><strong>Es importante que tú estudies.</strong></p>
+        <p class="italic mt-2">Translation: It’s important <u>that you study</u>.</p>
+        <p class="mt-1">➡️ Se enfoca en lo que <strong>otra persona</strong> debe hacer.</p>
+      </div>
+      <div class="bg-blue-100 p-4 rounded shadow">
+        <p class="font-semibold">Con infinitivo (mismo sujeto):</p>
+        <p><strong>Es importante estudiar.</strong></p>
+        <p class="italic mt-2">Translation: Studying is important / It’s important <u>to study</u>.</p>
+        <p class="mt-1">➡️ Más general o aplicado al mismo sujeto.</p>
+      </div>
+    </div>
+    <p class="mt-4">📌 <strong>Consejo:</strong> Si puedes identificar claramente a quién se refiere la acción, usa el subjuntivo. Si es una idea general, usa el infinitivo.</p>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">Expresiones comunes que requieren el subjuntivo</h2>
+    <ul class="list-disc list-inside space-y-2">
+      <li><strong>Es bueno que...</strong> – It’s good that...</li>
+      <li><strong>Es importante que...</strong> – It’s important that...</li>
+      <li><strong>Es mejor que...</strong> – It’s better that...</li>
+      <li><strong>Es necesario que...</strong> – It’s necessary that...</li>
+      <li><strong>Es urgente que...</strong> – It’s urgent that...</li>
+      <li><strong>Es posible que...</strong> – It’s possible that...</li>
+      <li><strong>Es imposible que...</strong> – It’s impossible that...</li>
+      <li><strong>Es probable que...</strong> – It’s probable that...</li>
+      <li><strong>Es una lástima que...</strong> – It’s a shame that...</li>
+      <li><strong>Es raro que...</strong> – It’s strange that...</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">Ejemplos prácticos</h2>
+    <ul class="list-disc list-inside space-y-2 text-sm">
+      <li>Es bueno que <strong>hagas</strong> ejercicio cada día.</li>
+      <li>Es importante que <strong>duermas</strong> ocho horas.</li>
+      <li>Es mejor que <strong>lleguemos</strong> temprano.</li>
+      <li>Es necesario que <strong>estudies</strong> para el examen.</li>
+      <li>Es urgente que <strong>llamen</strong> al médico.</li>
+      <li>Es posible que <strong>llueva</strong> esta noche.</li>
+      <li>Es imposible que <strong>termine</strong> en cinco minutos.</li>
+      <li>Es probable que <strong>viajen</strong> el mes que viene.</li>
+      <li>Es una lástima que <strong>no puedan</strong> venir.</li>
+      <li>Es raro que <strong>ella no diga</strong> nada.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="text-2xl font-semibold text-teal-600">Práctica guiada</h2>
+    <p class="mb-2">Completa las oraciones con el presente del subjuntivo.</p>
+    <div class="space-y-2 text-sm bg-gray-50 p-4 border rounded">
+      <p>1. Es importante que tú __________ (comer) saludable.</p>
+      <p>2. Es mejor que nosotros __________ (tomar) el tren.</p>
+      <p>3. Es una lástima que ellos no __________ (venir).</p>
+      <p>4. Es urgente que los médicos __________ (llegar) a tiempo.</p>
+      <p>5. Es probable que tú __________ (estar) cansado.</p>
+    </div>
+    <button onclick="document.getElementById('answers').classList.toggle('hidden')" class="mt-4 px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700">Mostrar respuestas</button>
+    <div id="answers" class="mt-4 hidden">
+      <p><strong>Respuestas:</strong></p>
+      <ul class="list-decimal list-inside space-y-1">
+        <li>comas</li>
+        <li>tomemos</li>
+        <li>vengan</li>
+        <li>lleguen</li>
+        <li>estés</li>
+      </ul>
+    </div>
+  </section>
+
+</body>
+</html>
