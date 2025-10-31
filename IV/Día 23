@@ -15,23 +15,77 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 23</h1>
+    <p class="text-lg italic drop-shadow">5/6 de noviembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Nada</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 5.1 - la próxima clase</li><li>Presente de subjuntivo 1 - Día 25</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Presente de indicativo Yo</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 4 - 5</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> suponer</p><p><span class="font-semibold">2.</span> oír</p><p><span class="font-semibold">3.</span> compartir</p><p><span class="font-semibold">4.</span> el mapa</p><p><span class="font-semibold">5.</span> odiar</p><p><span class="font-semibold">6.</span> la blusa</p><p><span class="font-semibold">7.</span> antipático/a</p><p><span class="font-semibold">8.</span> ver</p><p><span class="font-semibold">9.</span> japonés, japonesa</p><p><span class="font-semibold">10.</span> la zanahoria</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> descafeinado/a</p><p><span class="font-semibold">12.</span> el/la director(a)</p><p><span class="font-semibold">13.</span> escanear</p><p><span class="font-semibold">14.</span> saludable</p><p><span class="font-semibold">15.</span> el/la ecologista</p><p><span class="font-semibold">16.</span> bastante</p><p><span class="font-semibold">17.</span> el estéreo</p><p><span class="font-semibold">18.</span> el reciclaje</p><p><span class="font-semibold">19.</span> el drama</p><p><span class="font-semibold">20.</span> la clase de ejercicios aeróbicos</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> la tensión baja</p><p><span class="font-semibold">22.</span> sensible</p><p><span class="font-semibold">23.</span> salir (con)</p><p><span class="font-semibold">24.</span> la tarjeta de débito</p><p><span class="font-semibold">25.</span> sanar</p><p><span class="font-semibold">26.</span> el virus</p><p><span class="font-semibold">27.</span> atraer</p><p><span class="font-semibold">28.</span> ir de compras</p><p><span class="font-semibold">29.</span> casi nunca</p><p><span class="font-semibold">30.</span> la sala de emergencias</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Las conjugaciones del presente de subjuntivo</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Presente de indicativo (Yo)</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Presente de subjuntivo</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="text-blue-600 hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="text-blue-600 hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="text-blue-600 hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
