@@ -1,0 +1,102 @@
+<!-- EMPAREJA — plantilla reutilizable -->
+<section class="bg-white shadow rounded-xl border-l-4 border-emerald-500 p-4 space-y-4">
+  <h2 class="text-emerald-600 font-semibold text-lg">Empareja</h2>
+  <p class="text-sm text-gray-600">Relaciona cada letra (A–E) con el número correcto (1–5).</p>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <!-- Columna izquierda: letras + select -->
+    <div class="space-y-3">
+      <!-- A -->
+      <div class="flex items-start gap-3">
+        <div class="font-bold">A</div>
+        <div class="flex-1">
+          <div class="font-medium">[Reemplaza con tu enunciado A]</div>
+          <label class="block mt-1 text-sm text-gray-600">Respuesta:
+            <select class="border rounded px-2 py-1 mt-1" data-letter="A">
+              <option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <!-- B -->
+      <div class="flex items-start gap-3">
+        <div class="font-bold">B</div>
+        <div class="flex-1">
+          <div class="font-medium">[Reemplaza con tu enunciado B]</div>
+          <label class="block mt-1 text-sm text-gray-600">Respuesta:
+            <select class="border rounded px-2 py-1 mt-1" data-letter="B">
+              <option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <!-- C -->
+      <div class="flex items-start gap-3">
+        <div class="font-bold">C</div>
+        <div class="flex-1">
+          <div class="font-medium">[Reemplaza con tu enunciado C]</div>
+          <label class="block mt-1 text-sm text-gray-600">Respuesta:
+            <select class="border rounded px-2 py-1 mt-1" data-letter="C">
+              <option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <!-- D -->
+      <div class="flex items-start gap-3">
+        <div class="font-bold">D</div>
+        <div class="flex-1">
+          <div class="font-medium">[Reemplaza con tu enunciado D]</div>
+          <label class="block mt-1 text-sm text-gray-600">Respuesta:
+            <select class="border rounded px-2 py-1 mt-1" data-letter="D">
+              <option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <!-- E -->
+      <div class="flex items-start gap-3">
+        <div class="font-bold">E</div>
+        <div class="flex-1">
+          <div class="font-medium">[Reemplaza con tu enunciado E]</div>
+          <label class="block mt-1 text-sm text-gray-600">Respuesta:
+            <select class="border rounded px-2 py-1 mt-1" data-letter="E">
+              <option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: opciones numeradas -->
+    <ol class="space-y-3 list-decimal ml-6">
+      <li><span class="font-medium">[Opción 1]</span></li>
+      <li><span class="font-medium">[Opción 2]</span></li>
+      <li><span class="font-medium">[Opción 3]</span></li>
+      <li><span class="font-medium">[Opción 4]</span></li>
+      <li><span class="font-medium">[Opción 5]</span></li>
+    </ol>
+  </div>
+
+  <div class="flex items-center gap-2 pt-2">
+    <button type="button" class="px-3 py-1.5 rounded bg-emerald-600 text-white hover:bg-emerald-700" id="check-match">Comprobar</button>
+    <span class="text-sm text-gray-600">Los aciertos se marcarán en verde; los errores, en rojo.</span>
+  </div>
+
+  <!-- clave para el profe: A-3, B-1, C-5, D-2, E-4 (EDITA AQUÍ LA CLAVE REAL) -->
+</section>
+
+<script>
+  // EDITA LA CLAVE SEGÚN TU ACTIVIDAD:
+  const CLAVE = { A: "3", B: "1", C: "5", D: "2", E: "4" };
+
+  document.getElementById('check-match').addEventListener('click', () => {
+    document.querySelectorAll('select[data-letter]').forEach(sel => {
+      const letra = sel.getAttribute('data-letter');
+      const ok = sel.value === (CLAVE[letra] || "");
+      sel.style.boxShadow = ok
+        ? '0 0 0 2px rgba(34,197,94,.7) inset'   // verde
+        : '0 0 0 2px rgba(239,68,68,.7) inset';  // rojo
+    });
+  });
+</script>
