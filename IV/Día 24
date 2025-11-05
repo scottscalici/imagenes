@@ -15,28 +15,91 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 24</h1>
+    <p class="text-lg italic drop-shadow">7/10 de noviembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Vocabulario 5.1</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Presente de subjuntivo 1 - la próxima clase</li><li>Vocabulario 5.2 - Día 26</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Presente de subjuntivo 2</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 4 - 6</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> en efectivo</p><p><span class="font-semibold">2.</span> la margarina</p><p><span class="font-semibold">3.</span> la madre</p><p><span class="font-semibold">4.</span> el/la mejor</p><p><span class="font-semibold">5.</span> tampoco</p><p><span class="font-semibold">6.</span> el borrador</p><p><span class="font-semibold">7.</span> conversar</p><p><span class="font-semibold">8.</span> sentarse (e:ie)</p><p><span class="font-semibold">9.</span> el mes</p><p><span class="font-semibold">10.</span> mejor</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> el tobillo</p><p><span class="font-semibold">12.</span> la lavadora</p><p><span class="font-semibold">13.</span> la cuenta corriente</p><p><span class="font-semibold">14.</span> el actor, la actriz</p><p><span class="font-semibold">15.</span> el plato</p><p><span class="font-semibold">16.</span> la cocina, la estufa</p><p><span class="font-semibold">17.</span> (inter)nacional</p><p><span class="font-semibold">18.</span> renunciar (a)</p><p><span class="font-semibold">19.</span> el programa de entrevistas/realidad</p><p><span class="font-semibold">20.</span> comercial</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> casi nunca</p><p><span class="font-semibold">22.</span> permisivo/a</p><p><span class="font-semibold">23.</span> el cine</p><p><span class="font-semibold">24.</span> el tratamiento</p><p><span class="font-semibold">25.</span> acostumbrarse (a)</p><p><span class="font-semibold">26.</span> hacerle caso a alguien</p><p><span class="font-semibold">27.</span> educar</p><p><span class="font-semibold">28.</span> averiguar</p><p><span class="font-semibold">29.</span> toser</p><p><span class="font-semibold">30.</span> el consultorio</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Influencia en cláusulas sustantivas</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Conjugaciones del presente de subjuntivo</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Presente de subjuntivo</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="text-blue-600 hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="text-blue-600 hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="text-blue-600 hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 24</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">Los Pistones</p>
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/cade.png?raw=true" alt="Los Pistones" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+    </figure>
+  </div>
+</section>
 
 
 
