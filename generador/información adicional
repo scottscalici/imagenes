@@ -6,14 +6,8 @@
   <title>Generador: Información adicional</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .info-section h4 {
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
-    }
-    .info-section ul {
-      margin-top: 0.1rem;
-      margin-bottom: 0.5rem;
-    }
+    .info-section h4 { margin-top: .25rem; margin-bottom: .25rem; }
+    .info-section ul { margin-top: .1rem; margin-bottom: .5rem; }
   </style>
 </head>
 <body class="bg-gray-100 p-6">
@@ -28,7 +22,7 @@
         <label class="block font-semibold mb-1">Selecciona el curso:</label>
         <select id="courseSelect" class="w-full border rounded-xl p-2 shadow-sm focus:ring-2 focus:ring-purple-400">
           <option value="II">Español II (sophomores)</option>
-          <option value="IV">Español IV (seniors)</option>
+          <option value="IV" selected>Español IV (seniors)</option>
         </select>
       </div>
 
@@ -106,70 +100,160 @@
       });
     }
 
-    function extractQuizzes(blurb) {
-      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
-      const evalIndex = lines.findIndex(l => l.toLowerCase().startsWith("información adicional:") || l.toLowerCase().startsWith("evaluaciones"));
-      if (evalIndex === -1) return [];
-      const evals = [];
-      for (let i = evalIndex + 1; i < lines.length; i++) {
-        if (/ayuda con la vida/i.test(lines[i]) || /viaje/i.test(lines[i])) break;
-        if (lines[i].toLowerCase().startsWith("vocabulario") || lines[i].toLowerCase().startsWith("pretérito") || lines[i].toLowerCase().startsWith("imperfecto")) {
-          if (!lines[i].includes("hoy")) evals.push(lines[i]);
-        }
-      }
-      return evals.slice(0, 2);
+    /* ---------------------------
+       Robust parsing helpers
+    --------------------------- */
+    function normLines(blurb) {
+      return blurb
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/\r/g, "")
+        .replace(/[–—]/g, "-")
+        .split("\n")
+        .map(s => s.trim());
     }
 
+    function sliceBetween(lines, startPat, stopPats = []) {
+      const startIdx = lines.findIndex(l => startPat.test(l));
+      if (startIdx === -1) return [];
+      let endIdx = lines.length;
+      for (const pat of stopPats) {
+        const i = lines.findIndex((l, idx) => idx > startIdx && pat.test(l));
+        if (i !== -1) endIdx = Math.min(endIdx, i);
+      }
+      return lines.slice(startIdx + 1, endIdx);
+    }
+
+    // Show NEXT TWO upcoming items under Evaluaciones by skipping ONLY the first line (today's quiz).
+    // Keep upcoming "Nada" if it appears.
+function extractQuizzes(blurb) {
+  const lines = blurb
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/\r/g, "")
+    .replace(/[–—]/g, "-")
+    .split("\n")
+    .map(s => s.trim());
+
+  // Find "Información adicional" block
+  const infoStart = lines.findIndex(l => /información adicional\b/i.test(l));
+  if (infoStart === -1) return [];
+
+  // End block at "Ayuda con la vida" / "Viaje" (if present)
+  let infoEnd = lines.length;
+  for (let i = infoStart + 1; i < lines.length; i++) {
+    if (/^(ayuda con la vida|viaje)\b/i.test(lines[i])) { infoEnd = i; break; }
+  }
+  const infoBlock = lines.slice(infoStart + 1, infoEnd);
+
+  // Inside that, find "Evaluaciones"
+  const evalIdx = infoBlock.findIndex(l => /^evaluaciones\b/i.test(l));
+  if (evalIdx === -1) return [];
+
+  // Gather lines after "Evaluaciones" until:
+  //  - a blank line
+  //  - a Tarea(s) header
+  //  - "Ayuda con la vida" or "Viaje"
+  const list = [];
+  for (let i = evalIdx + 1; i < infoBlock.length; i++) {
+    const line = infoBlock[i];
+    if (!line) break; // stop at blank
+    if (/^tareas?\b/i.test(line)) break;
+    if (/^(ayuda con la vida|viaje)\b/i.test(line)) break;
+    list.push(line);
+  }
+
+  if (!list.length) return [];
+
+  // Skip ONLY the first item (today's quiz), then take next two valid items
+  const upcoming = list.slice(1);
+
+  // Valid lines: "Title - When" / "Title: When" OR a "Nada..." line
+  const valid = upcoming.filter(l =>
+    /[:\-]/.test(l) || /^nada(?:\b|[\s:-])/i.test(l)
+  );
+
+  return valid.slice(0, 2); // strings (renderer expects strings)
+}
+    // Multiple tareas (up to 5) between "Tarea:" and "Conversación"
     function extractTareas(blurb) {
-      const lines = blurb.split("\n").map(l => l.trim()).filter(Boolean);
-      const tareaIndex = lines.findIndex(l => l.toLowerCase().startsWith("tarea"));
-      if (tareaIndex === -1) return [];
-      const tareas = [];
-      let tareaText = lines[tareaIndex].replace(/^tarea\s*:/i, "");
-      for (let i = tareaIndex + 1; i < lines.length; i++) {
-        if (lines[i].toLowerCase().startsWith("conversación")) break;
-        tareaText += " " + lines[i];
-      }
-      tareaText = tareaText.replace(/\.\s*/g, " ");
-      const regex = /([^:]+):\s*(\d{1,2}\s*de\s*\w+)/gi;
-      let match;
-      while ((match = regex.exec(tareaText)) !== null) {
-        tareas.push({ tema: match[1].trim(), fecha: match[2].trim() });
-      }
-      return tareas;
+      const lines = normLines(blurb);
+      const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
+      if (tareaStartIdx === -1) return [];
+
+      const block = sliceBetween(
+        lines.slice(tareaStartIdx),
+        /^tareas?\s*:/i,
+        [/^conversación\b/i, /^información adicional\b/i, /^práctica\b/i]
+      );
+
+      const rawItems = [];
+      const firstLine = lines[tareaStartIdx];
+      const afterColon = firstLine.replace(/^tareas?\s*:/i, "").trim();
+      if (afterColon) rawItems.push(afterColon);
+      block.forEach(l => { if (l) rawItems.push(l); });
+
+      const dateSlash = /\b\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?\b/;    // 11/30 or 30-11-2025
+      const dateDeMes = /\b\d{1,2}\s+de\s+[a-záéíóúñü]+/i;               // 30 de noviembre
+      const dateWords = /\b(hoy|mañana|próxima clase|la próxima clase)\b/i;
+
+      const tareas = rawItems.map(raw => {
+        let tema = raw, fecha = "";
+        const sepIdx = raw.search(/[:\-]/);
+        if (sepIdx !== -1) {
+          tema = raw.slice(0, sepIdx).trim();
+          const rhs = raw.slice(sepIdx + 1).trim();
+          const m = rhs.match(dateSlash) || rhs.match(dateDeMes) || rhs.match(dateWords);
+          if (m) fecha = m[0].trim(); else if (rhs) fecha = rhs; // keep extra info if no clear date
+        } else {
+          const m = raw.match(dateSlash) || raw.match(dateDeMes) || raw.match(dateWords);
+          if (m) { fecha = m[0].trim(); tema = raw.replace(m[0], "").trim().replace(/[:\-]$/, "").trim(); }
+        }
+        if (!tema) tema = "Tarea";
+        return { tema, fecha };
+      });
+
+      return tareas.slice(0, 5);
     }
 
     function generateInfo() {
       const blurb = document.getElementById("blurbInput").value.trim();
       const course = document.getElementById("courseSelect").value;
-      const quizzes = extractQuizzes(blurb);
-      const tareas = extractTareas(blurb);
 
-      // choose course-specific Evaluaciones link
+      const quizzes = extractQuizzes(blurb);   // strings: next two (skipping only today's)
+      const tareas  = extractTareas(blurb);    // [{tema, fecha}, ...]
+
       const evalLink = course === "IV"
         ? "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
         : "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones";
 
-      let quizzesHtml = "";
-      if (quizzes.length) {
-        quizzesHtml = `
-          <h4 class="font-semibold"><a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a></h4>
-          <ul class="list-disc list-inside">
-            ${quizzes.map(q => `<li>${q}</li>`).join("")}
-          </ul>
-        `;
-      }
+      // Evaluaciones (header autolinks to the right page)
+      const quizzesHtml = `
+        <h4 class="font-semibold">
+          <a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
+        </h4>
+        <ul class="list-disc list-inside">
+          ${
+            (quizzes.length ? quizzes : ["—"])
+              .map(q => `<li>${q}</li>`)
+              .join("")
+          }
+        </ul>
+      `;
 
+      // Tareas (show only if present)
       let tareasHtml = "";
       if (tareas.length) {
         tareasHtml = `
           <h4 class="font-semibold">Tareas (Dominio)</h4>
           <ul class="list-disc list-inside text-red-700">
-            ${tareas.map(t => `<li><span class="font-semibold">${t.tema}</span> 📅 ${t.fecha}</li>`).join("")}
+            ${tareas.map(t => {
+              const fecha = t.fecha ? ` 📅 ${t.fecha}` : "";
+              return `<li><span class="font-semibold">${t.tema}</span>${fecha}</li>`;
+            }).join("")}
           </ul>
         `;
       }
 
+      // Grammar links
       const selectedGrammar = Array.from(document.querySelectorAll(".grammar-check:checked")).map(cb => cb.value);
       let grammarHtml = "";
       selectedGrammar.forEach(key => {
@@ -181,6 +265,7 @@
         grammarHtml += `</ul>`;
       });
 
+      // Vocab links
       const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked")).map(cb => cb.value);
       let vocabHtml = "";
       if (selectedVocab.length) {
@@ -192,11 +277,12 @@
         vocabHtml += `</ul>`;
       }
 
+      // Trip
       let tripHtml = "";
       if (document.getElementById("tripOption").checked) {
         tripHtml = `
-  <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
-  <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+          <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
         `;
       }
 
@@ -207,7 +293,7 @@
   ${tareasHtml}
   ${grammarHtml}
   ${vocabHtml}
-  <p><span class="font-semibold">Ayuda con la vida</span> – 
+  <p><span class="font-semibold">Ayuda con la vida</span> –
     <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
   </p>
   ${tripHtml}
