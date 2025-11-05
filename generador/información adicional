@@ -94,14 +94,14 @@
       vocabDiv.innerHTML = "";
       Object.keys(jsonData.vocabulario.chapters).forEach(ch => {
         const label = document.createElement("label");
-        label.className = "flex items-center space-x-2";
-        label.innerHTML = `<input type="checkbox" value="${ch}" class="vocab-check"> <span>${ch}</span>`;
-        vocabDiv.appendChild(label);
+          label.className = "flex items-center space-x-2";
+          label.innerHTML = `<input type="checkbox" value="${ch}" class="vocab-check"> <span>${ch}</span>`;
+          vocabDiv.appendChild(label);
       });
     }
 
     /* ---------------------------
-       Robust parsing helpers
+       Parsing helpers
     --------------------------- */
     function normLines(blurb) {
       return blurb
@@ -123,93 +123,111 @@
       return lines.slice(startIdx + 1, endIdx);
     }
 
-    // Show NEXT TWO upcoming items under Evaluaciones by skipping ONLY the first line (today's quiz).
-    // Keep upcoming "Nada" if it appears.
-function extractQuizzes(blurb) {
-  const lines = blurb
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/\r/g, "")
-    .replace(/[–—]/g, "-")
-    .split("\n")
-    .map(s => s.trim());
+    /* ---------------------------
+       Evaluaciones (next two)
+       - skip ONLY the first item (today's quiz)
+       - keep upcoming "Nada ..." if it appears
+    --------------------------- */
+    function extractQuizzes(blurb) {
+      const lines = normLines(blurb);
 
-  // Find "Información adicional" block
-  const infoStart = lines.findIndex(l => /información adicional\b/i.test(l));
-  if (infoStart === -1) return [];
+      const infoStart = lines.findIndex(l => /información adicional\b/i.test(l));
+      if (infoStart === -1) return [];
 
-  // End block at "Ayuda con la vida" / "Viaje" (if present)
-  let infoEnd = lines.length;
-  for (let i = infoStart + 1; i < lines.length; i++) {
-    if (/^(ayuda con la vida|viaje)\b/i.test(lines[i])) { infoEnd = i; break; }
-  }
-  const infoBlock = lines.slice(infoStart + 1, infoEnd);
+      let infoEnd = lines.length;
+      for (let i = infoStart + 1; i < lines.length; i++) {
+        if (/^(ayuda con la vida|viaje)\b/i.test(lines[i])) { infoEnd = i; break; }
+      }
+      const infoBlock = lines.slice(infoStart + 1, infoEnd);
 
-  // Inside that, find "Evaluaciones"
-  const evalIdx = infoBlock.findIndex(l => /^evaluaciones\b/i.test(l));
-  if (evalIdx === -1) return [];
+      const evalIdx = infoBlock.findIndex(l => /^evaluaciones\b/i.test(l));
+      if (evalIdx === -1) return [];
 
-  // Gather lines after "Evaluaciones" until:
-  //  - a blank line
-  //  - a Tarea(s) header
-  //  - "Ayuda con la vida" or "Viaje"
-  const list = [];
-  for (let i = evalIdx + 1; i < infoBlock.length; i++) {
-    const line = infoBlock[i];
-    if (!line) break; // stop at blank
-    if (/^tareas?\b/i.test(line)) break;
-    if (/^(ayuda con la vida|viaje)\b/i.test(line)) break;
-    list.push(line);
-  }
+      const list = [];
+      for (let i = evalIdx + 1; i < infoBlock.length; i++) {
+        const line = infoBlock[i];
+        if (!line) break; // stop at blank
+        if (/^tareas?\b/i.test(line)) break;
+        if (/^(ayuda con la vida|viaje)\b/i.test(line)) break;
+        list.push(line);
+      }
+      if (!list.length) return [];
 
-  if (!list.length) return [];
+      // Skip ONLY first item, then take next two valid
+      const upcoming = list.slice(1);
+      const valid = upcoming.filter(l =>
+        /[:\-]/.test(l) || /^nada(?:\b|[\s:-])/i.test(l)
+      );
+      return valid.slice(0, 2);
+    }
 
-  // Skip ONLY the first item (today's quiz), then take next two valid items
-  const upcoming = list.slice(1);
-
-  // Valid lines: "Title - When" / "Title: When" OR a "Nada..." line
-  const valid = upcoming.filter(l =>
-    /[:\-]/.test(l) || /^nada(?:\b|[\s:-])/i.test(l)
-  );
-
-  return valid.slice(0, 2); // strings (renderer expects strings)
-}
-    // Multiple tareas (up to 5) between "Tarea:" and "Conversación"
+    /* ---------------------------
+       Tareas (up to 5)
+       - Handles "Tema: fecha Tema: fecha ..." on one line
+       - Accepts ":" or "-" separators
+       - Dates: 11/30, 30-11-2025, 30 de noviembre, hoy/mañana/próxima clase
+    --------------------------- */
     function extractTareas(blurb) {
       const lines = normLines(blurb);
+
+      // Find "Tarea:" (or "Tareas:")
       const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
       if (tareaStartIdx === -1) return [];
 
-      const block = sliceBetween(
-        lines.slice(tareaStartIdx),
-        /^tareas?\s*:/i,
-        [/^conversación\b/i, /^información adicional\b/i, /^práctica\b/i]
+      // Collect text from "Tarea:" until next major header
+      const collected = [];
+      const firstLineAfterColon = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
+      if (firstLineAfterColon) collected.push(firstLineAfterColon);
+
+      for (let i = tareaStartIdx + 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
+        collected.push(line);
+      }
+
+      // Join into one blob to extract many pairs even if all on one line
+      const blob = collected.join(" ").replace(/\s+/g, " ").trim();
+      if (!blob) return [];
+
+      const dateSlash  = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`;
+      const dateDeMes  = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;
+      const dateWords  = String.raw`hoy|mañana|próxima clase|la próxima clase`;
+
+      // Global pair matcher: (Tema) :|– (Fecha)
+      const pairRe = new RegExp(
+        String.raw`([^:]+?)\s*[:\-]\s*(${dateSlash}|${dateDeMes}|${dateWords})`,
+        "gi"
       );
 
-      const rawItems = [];
-      const firstLine = lines[tareaStartIdx];
-      const afterColon = firstLine.replace(/^tareas?\s*:/i, "").trim();
-      if (afterColon) rawItems.push(afterColon);
-      block.forEach(l => { if (l) rawItems.push(l); });
+      const tareas = [];
+      let m;
+      while ((m = pairRe.exec(blob)) !== null) {
+        let tema  = m[1].trim().replace(/[-:]\s*$/,"").trim();
+        let fecha = m[2].trim();
+        if (tema) tareas.push({ tema, fecha });
+        if (tareas.length >= 5) break;
+      }
 
-      const dateSlash = /\b\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?\b/;    // 11/30 or 30-11-2025
-      const dateDeMes = /\b\d{1,2}\s+de\s+[a-záéíóúñü]+/i;               // 30 de noviembre
-      const dateWords = /\b(hoy|mañana|próxima clase|la próxima clase)\b/i;
-
-      const tareas = rawItems.map(raw => {
-        let tema = raw, fecha = "";
-        const sepIdx = raw.search(/[:\-]/);
-        if (sepIdx !== -1) {
-          tema = raw.slice(0, sepIdx).trim();
-          const rhs = raw.slice(sepIdx + 1).trim();
-          const m = rhs.match(dateSlash) || rhs.match(dateDeMes) || rhs.match(dateWords);
-          if (m) fecha = m[0].trim(); else if (rhs) fecha = rhs; // keep extra info if no clear date
-        } else {
-          const m = raw.match(dateSlash) || raw.match(dateDeMes) || raw.match(dateWords);
-          if (m) { fecha = m[0].trim(); tema = raw.replace(m[0], "").trim().replace(/[:\-]$/, "").trim(); }
+      // Fallback: if nothing matched, try line-by-line
+      if (!tareas.length) {
+        const dateAny = new RegExp(`(?:${dateSlash}|${dateDeMes}|${dateWords})`, "i");
+        for (const raw of collected) {
+          let tema = raw, fecha = "";
+          const sepIdx = raw.search(/[:\-]/);
+          if (sepIdx !== -1) {
+            tema = raw.slice(0, sepIdx).trim();
+            const rhs = raw.slice(sepIdx + 1).trim();
+            const dm = rhs.match(dateAny);
+            if (dm) fecha = dm[0].trim(); else if (rhs) fecha = rhs;
+          } else {
+            const dm = raw.match(dateAny);
+            if (dm) { fecha = dm[0].trim(); tema = raw.replace(dm[0], "").trim().replace(/[:\-]$/, "").trim(); }
+          }
+          if (tema) tareas.push({ tema, fecha });
+          if (tareas.length >= 5) break;
         }
-        if (!tema) tema = "Tarea";
-        return { tema, fecha };
-      });
+      }
 
       return tareas.slice(0, 5);
     }
@@ -218,28 +236,22 @@ function extractQuizzes(blurb) {
       const blurb = document.getElementById("blurbInput").value.trim();
       const course = document.getElementById("courseSelect").value;
 
-      const quizzes = extractQuizzes(blurb);   // strings: next two (skipping only today's)
-      const tareas  = extractTareas(blurb);    // [{tema, fecha}, ...]
+      const quizzes = extractQuizzes(blurb);
+      const tareas  = extractTareas(blurb);
 
       const evalLink = course === "IV"
         ? "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
         : "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones";
 
-      // Evaluaciones (header autolinks to the right page)
       const quizzesHtml = `
         <h4 class="font-semibold">
           <a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
         </h4>
         <ul class="list-disc list-inside">
-          ${
-            (quizzes.length ? quizzes : ["—"])
-              .map(q => `<li>${q}</li>`)
-              .join("")
-          }
+          ${ (quizzes.length ? quizzes : ["—"]).map(q => `<li>${q}</li>`).join("") }
         </ul>
       `;
 
-      // Tareas (show only if present)
       let tareasHtml = "";
       if (tareas.length) {
         tareasHtml = `
@@ -277,7 +289,7 @@ function extractQuizzes(blurb) {
         vocabHtml += `</ul>`;
       }
 
-      // Trip
+      // Trip (optional)
       let tripHtml = "";
       if (document.getElementById("tripOption").checked) {
         tripHtml = `
