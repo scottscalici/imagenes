@@ -27,7 +27,7 @@
       <div class="p-4 text-gray-800 space-y-4">
         <p id="curCaption" class="font-semibold text-lg"></p>
         <figure id="curFigure" class="hidden">
-          <img id="curImage" class="rounded-lg shadow-md mx-auto" alt="">
+          <img id="curImage" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto" alt="">
         </figure>
       </div>
     </section>
@@ -88,7 +88,7 @@
     ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
     ${imgUrl ? `
     <figure>
-      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto">
+      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
     </figure>` : ""}
   </div>
 </section>`.trim();
