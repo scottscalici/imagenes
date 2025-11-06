@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mandatos con nosotros</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md rounded-2xl border-l-4 border-emerald-500 px-6 py-4 space-y-1">
+      <h1 class="text-2xl md:text-3xl font-bold text-emerald-700">
+        Mandatos con <span class="italic">nosotros</span>
+      </h1>
+      <p class="text-gray-700">
+        Usamos los mandatos con <span class="italic">nosotros</span> para dar órdenes o sugerencias
+        que <span class="font-semibold">nos incluyen a nosotros mismos</span>.
+        Equivalen a <span class="font-semibold">let’s + verbo</span> en inglés.
+      </p>
+      <p class="text-sm text-gray-500">
+        Esta página es solo para <span class="italic">nosotros</span>. Los mandatos con
+        <span class="italic">tú, usted, ustedes, vosotros</span> aparecen en páginas separadas.
+      </p>
+    </header>
+
+    <!-- 1. Cuándo se usan -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-slate-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-slate-700">1. ¿Cuándo usamos mandatos con <span class="italic">nosotros</span>?</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>Para proponer algo en grupo: <span class="italic">Estudiemos juntos.</span></li>
+        <li>Para invitar de forma inclusiva: <span class="italic">Bailemos.</span></li>
+        <li>Para organizar acciones colectivas: <span class="italic">Hablemos con el profesor.</span></li>
+      </ul>
+      <p class="text-sm text-gray-600">
+        Importante: No es mandar a otros; es <span class="italic">incluirse</span> en la acción.
+      </p>
+    </section>
+
+    <!-- 2. Formación general -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-indigo-600">2. Formación: regla general</h2>
+      <p class="text-gray-800">
+        Los mandatos con <span class="italic">nosotros</span> (afirmativos y negativos) se forman
+        como el <span class="font-semibold">presente del subjuntivo, nosotros</span>.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 space-y-1">
+        <li>Toma la forma de <span class="font-semibold">yo</span> del presente.</li>
+        <li>Quita la <span class="font-semibold">-o</span>.</li>
+        <li>Añade:
+          <span class="font-semibold text-indigo-700">-emos</span> para verbos <span class="font-semibold">-AR</span>,
+          <span class="font-semibold text-indigo-700">-amos</span> para verbos <span class="font-semibold">-ER / -IR</span>.
+        </li>
+        <li>Para el negativo, solo añade <span class="font-semibold">no</span> antes.</li>
+      </ol>
+
+      <div class="grid md:grid-cols-3 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">-AR</h3>
+          <p><span class="font-semibold">hablar</span> → hablemos</p>
+          <p class="italic text-sm">Hablemos con ella. / No hablemos ahora.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">-ER</h3>
+          <p><span class="font-semibold">comer</span> → comamos</p>
+          <p class="italic text-sm">Comamos aquí. / No comamos en clase.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">-IR</h3>
+          <p><span class="font-semibold">escribir</span> → escribamos</p>
+          <p class="italic text-sm">Escribamos el correo. / No escribamos eso.</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-700">
+        Regla rápida: <span class="font-semibold">Subjuntivo nosotros = mandato con nosotros (afirmativo y negativo con “no”).</span>
+      </p>
+    </section>
+
+    <!-- 3. Ir, irse y detalles especiales -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-rose-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-rose-600">3. Atención: <span class="italic">ir</span> y <span class="italic">irse</span></h2>
+      <p class="text-gray-800">
+        El verbo <span class="font-semibold">ir</span> tiene dos opciones en el afirmativo, pero solo una en el negativo.
+      </p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>
+          <span class="font-semibold">Afirmativo:</span>
+          <span class="font-semibold">vamos</span> (más común) o <span class="font-semibold">vayamos</span>.
+          <span class="text-sm text-gray-600">(En la práctica: “Vamos” = let’s go.)</span>
+        </li>
+        <li>
+          <span class="font-semibold">Negativo:</span>
+          solo <span class="font-semibold">no vayamos</span>.
+        </li>
+      </ul>
+
+      <div class="bg-rose-50 border border-rose-200 rounded-xl px-4 py-2 text-sm text-rose-800">
+        <p>
+          <span class="font-semibold">Ejemplos:</span><br>
+          Vamos al cine. / Vayamos al cine. / No vayamos al cine hoy.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. Pronombres: nos / se y la -s -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-purple-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-purple-600">4. Pronombres con mandatos de nosotros</h2>
+      <p class="text-gray-800">
+        Aquí viene la parte “técnica” importante:
+      </p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>
+          En <span class="font-semibold">afirmativos</span>, los pronombres
+          (OD, OI, reflexivos) se <span class="font-semibold">unen al final</span> del verbo.
+        </li>
+        <li>
+          En <span class="font-semibold">negativos</span>, los pronombres van
+          <span class="font-semibold">antes</span> del verbo, después de <span class="italic">no</span>.
+        </li>
+      </ul>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3 space-y-2">
+          <p class="font-semibold text-purple-600">Con <span class="italic">nos</span> o <span class="italic">se</span> (regla de la -s)</p>
+          <p class="text-sm">
+            Cuando añadimos <span class="font-semibold">nos</span> o <span class="font-semibold">se</span>
+            a un mandato afirmativo de nosotros, se <span class="font-semibold">pierde la -s final</span> del verbo.
+          </p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li><span class="italic">sentar</span> → sentemos + nos → <span class="font-semibold">sentémonos</span></li>
+            <li><span class="italic">ir</span> → vamos + nos → <span class="font-semibold">vámonos</span></li>
+            <li><span class="italic">dar</span> → demos + se + lo → <span class="font-semibold">démoselo</span></li>
+          </ul>
+        </div>
+
+        <div class="border rounded-xl p-3 space-y-2">
+          <p class="font-semibold text-purple-600">Negativos</p>
+          <p class="text-sm">
+            En negativo, No + pronombre(s) + verbo (con la forma completa de nosotros, sin quitar la -s).
+          </p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>No nos sentemos aquí.</li>
+            <li>No nos vayamos tarde.</li>
+            <li>No se lo demos mañana.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-200 rounded-xl px-4 py-2 text-sm text-purple-800">
+        <p class="font-semibold">Acentos:</p>
+        <p>
+          Cuando añadimos pronombres al final, ponemos tilde para mantener el acento:
+          <span class="font-semibold">sentemos</span> → sentémonos;
+          <span class="font-semibold">demos</span> → démoselo;
+          <span class="font-semibold">vamos</span> → vámonos.
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. Resumen visual rápido -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-teal-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-teal-600">5. Resumen esencial</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li><span class="font-semibold">Subjuntivo nosotros</span> = mandato con nosotros.</li>
+        <li><span class="font-semibold">Afirmativo</span>: verbo solo o con pronombres unidos al final.</li>
+        <li><span class="font-semibold">Negativo</span>: <span class="italic">no</span> + pronombre(s) + verbo.</li>
+        <li>Con <span class="italic">nos / se</span> en afirmativo: quita la <span class="font-semibold">-s</span> final.</li>
+        <li><span class="font-semibold">Vamos / vayamos</span>, pero solo <span class="font-semibold">no vayamos</span> en negativo.</li>
+      </ul>
+    </section>
+
+    <!-- 6. Práctica rápida -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-indigo-600">6. Práctica rápida</h2>
+      <p class="text-gray-800">
+        Escribe el mandato con <span class="italic">nosotros</span>. Usa afirmativo o negativo según el contexto.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 space-y-1">
+        <li>(let’s) estudiar más → ____________________</li>
+        <li>(let’s not) llegar tarde → ____________________</li>
+        <li>(let’s) escribirle un mensaje → ____________________</li>
+        <li>(let’s) sentarnos aquí → ____________________</li>
+        <li>(let’s not) ir a ese restaurante → ____________________</li>
+        <li>(let’s) dárselo mañana → ____________________</li>
+      </ol>
+      <details class="mt-2 text-sm text-gray-700">
+        <summary class="cursor-pointer text-indigo-500 underline">Ver respuestas sugeridas</summary>
+        <p class="mt-1">
+          1. Estudiemos más.<br>
+          2. No lleguemos tarde.<br>
+          3. Escribámosle un mensaje. / Le escribamos un mensaje.<br>
+          4. Sentémonos aquí.<br>
+          5. No vayamos a ese restaurante.<br>
+          6. Démoselo mañana.
+        </p>
+      </details>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-xs text-gray-500 pt-2">
+      Mandatos con <span class="italic">nosotros</span>.
+      Consulta también las páginas de mandatos con <span class="italic">tú</span>, <span class="italic">usted/es</span> y
+      la futura página de <span class="italic">vosotros</span> para ver el sistema completo.
+    </footer>
+
+  </div>
+</body>
+</html>
