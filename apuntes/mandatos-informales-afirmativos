@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Preterite Flowchart (Guided Questions)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mandatos familiares: Afirmativos con tú</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md rounded-2xl border-l-4 border-blue-500 px-6 py-4 flex flex-col gap-1">
+      <h1 class="text-2xl md:text-3xl font-bold text-blue-700">
+        Mandatos familiares: Afirmativos con <span class="italic">tú</span>
+      </h1>
+      <p class="text-gray-700">
+        Usa estos mandatos para dar órdenes, instrucciones o consejos a personas con las que hablas de <span class="font-semibold">tú</span>:
+        amigos, familia, compañeros, etc.
+      </p>
+      <p class="text-sm text-gray-500">
+        (Los mandatos negativos y otros tipos de mandatos estarán en páginas separadas.)
+      </p>
+    </header>
+
+    <!-- Section 1: Cuándo se usan -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-teal-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-teal-600">1. ¿Cuándo usamos los mandatos afirmativos con <span class="italic">tú</span>?</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>Dar instrucciones directas: <span class="italic">Abre el libro.</span></li>
+        <li>Dar consejos: <span class="italic">Descansa un poco.</span></li>
+        <li>Dar invitaciones informales: <span class="italic">Ven a mi casa.</span></li>
+        <li>Dar recordatorios: <span class="italic">Llama a tu mamá.</span></li>
+      </ul>
+      <p class="text-sm text-gray-600">
+        Ojo: Son directos. El tono de voz y el contexto los hacen amables o mandones.
+      </p>
+    </section>
+
+    <!-- Section 2: Formación regular -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-green-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-green-600">2. Formación de los mandatos afirmativos regulares</h2>
+      <p class="text-gray-800">
+        La forma afirmativa de <span class="font-semibold">tú</span> normalmente es igual a la forma de
+        <span class="font-semibold">él / ella</span> del presente indicativo.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-green-600 mb-1">-AR</h3>
+          <p><span class="font-semibold">hablar</span> → él/ella <span class="font-semibold">habla</span></p>
+          <p class="italic">→ ¡Habla más despacio!</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-green-600 mb-1">-ER</h3>
+          <p><span class="font-semibold">comer</span> → él/ella <span class="font-semibold">come</span></p>
+          <p class="italic">→ ¡Come tus verduras!</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-green-600 mb-1">-IR</h3>
+          <p><span class="font-semibold">escribir</span> → él/ella <span class="font-semibold">escribe</span></p>
+          <p class="italic">→ ¡Escribe la respuesta!</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-700">
+        ➜ Regla rápida: <span class="font-semibold">Presente él/ella = mandato afirmativo de tú.</span>
+      </p>
+    </section>
+
+    <!-- Section 3: Irregulares esenciales -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-red-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-red-600">3. Mandatos afirmativos irregulares</h2>
+      <p class="text-gray-800">
+        Estos verbos tienen forma especial. Memorízalos con la frase:
+        <span class="font-semibold">«Vin Diesel has ten weapons»</span>.
+      </p>
+
+      <div class="grid md:grid-cols-4 gap-3 text-gray-800">
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">venir</span> → <span class="font-semibold text-red-600">ven</span></p>
+          <p class="italic text-sm">Ven aquí.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">decir</span> → <span class="font-semibold text-red-600">di</span></p>
+          <p class="italic text-sm">Di la verdad.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">salir</span> → <span class="font-semibold text-red-600">sal</span></p>
+          <p class="italic text-sm">Sal ahora.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">hacer</span> → <span class="font-semibold text-red-600">haz</span></p>
+          <p class="italic text-sm">Haz la tarea.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">tener</span> → <span class="font-semibold text-red-600">ten</span></p>
+          <p class="italic text-sm">Ten paciencia.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">ir</span> → <span class="font-semibold text-red-600">ve</span></p>
+          <p class="italic text-sm">Ve al médico.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">poner</span> → <span class="font-semibold text-red-600">pon</span></p>
+          <p class="italic text-sm">Pon la mesa.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <p><span class="font-semibold">ser</span> → <span class="font-semibold text-red-600">sé</span></p>
+          <p class="italic text-sm">Sé amable.</p>
+        </div>
+      </div>
+
+      <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-2 text-sm text-red-700">
+        <p class="font-semibold">Nota sobre <span class="italic">ve</span>:</p>
+        <p><span class="font-semibold">ve</span> puede significar <span class="italic">ir</span> o <span class="italic">ver</span>.
+           El contexto aclara: <span class="italic">Ve al cine</span> (ir) vs. <span class="italic">Ve la foto</span> (ver).
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: Pronombres con mandatos afirmativos -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-purple-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-purple-600">4. Pronombres con mandatos afirmativos</h2>
+      <p class="text-gray-800">
+        Con mandatos afirmativos, los pronombres de objeto directo, indirecto y reflexivo
+        se <span class="font-semibold">pegan al final</span> del verbo.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Objeto directo</p>
+          <p><span class="italic">Comprar el libro</span> → Cómpralo.</p>
+          <p><span class="italic">Hacer la tarea</span> → Hazla.</p>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Objeto indirecto / doble pronombre</p>
+          <p><span class="italic">Dar el libro a Ana</span> → Dáselo.</p>
+          <p><span class="italic">Explicar la tarea a ellos</span> → Explícasela.</p>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Reflexivos</p>
+          <p><span class="italic">levantarse</span> → Levántate.</p>
+          <p><span class="italic">sentarse</span> → Siéntate.</p>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Regla práctica</p>
+          <p>1 verbo + 1 o 2 pronombres = todo junto al final.</p>
+          <p class="italic text-sm">Dime. Escríbeme. Dímelo.</p>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-200 rounded-xl px-4 py-2 text-sm text-purple-800 space-y-1">
+        <p class="font-semibold">Acentos con pronombres</p>
+        <ul class="list-disc list-inside">
+          <li>Si el mandato + pronombre(s) tiene <span class="font-semibold">dos o más sílabas</span>, añade tilde para mantener el estrés original.</li>
+        </ul>
+        <p>
+          <span class="italic">borra</span> → <span class="font-semibold">bórralo</span><br>
+          <span class="italic">prende</span> → <span class="font-semibold">préndela</span><br>
+          <span class="italic">imprime</span> → <span class="font-semibold">imprímelo</span><br>
+          <span class="italic">levanta</span> → <span class="font-semibold">levántate</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 5: Errores comunes -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-yellow-400 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-yellow-500">5. Errores comunes a evitar</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>No usar la forma <span class="font-semibold">negativa</span> para afirmativos. ❌ <span class="italic">*Hablo la tarea.</span></li>
+        <li>No olvidar las formas irregulares: ❌ <span class="italic">*Sale</span> → ✅ <span class="font-semibold">Sal</span>.</li>
+        <li>No separar los pronombres: ❌ <span class="italic">*Haz lo</span> → ✅ <span class="font-semibold">Hazlo</span>.</li>
+        <li>No olvidar la tilde cuando sea necesaria: ❌ <span class="italic">*Sientate</span> → ✅ <span class="font-semibold">Siéntate</span>.</li>
+      </ul>
+    </section>
+
+    <!-- Section 6: Mini práctica -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-indigo-600">6. Práctica rápida</h2>
+      <p class="text-gray-800">
+        Escribe el mandato afirmativo de <span class="italic">tú</span> para cada frase.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 space-y-1">
+        <li>(tú) abrir la ventana → ____________________</li>
+        <li>(tú) venir aquí → ____________________</li>
+        <li>(tú) hacer la tarea → ____________________</li>
+        <li>(tú) poner la mesa → ____________________</li>
+        <li>(tú) leer el mensaje → ____________________</li>
+        <li>(tú) levantarse temprano → ____________________</li>
+        <li>(tú) decir la verdad → ____________________</li>
+      </ol>
+      <details class="mt-2 text-sm text-gray-700">
+        <summary class="cursor-pointer text-indigo-500 underline">Ver respuestas</summary>
+        <p class="mt-1">
+          1. Abre la ventana. 2. Ven aquí. 3. Haz la tarea. 4. Pon la mesa.
+          5. Lee el mensaje. 6. Levántate temprano. 7. Di la verdad.
+        </p>
+      </details>
+    </section>
+
+    <!-- Link/placeholder for other pages -->
+    <footer class="text-xs text-gray-500 pt-2">
+      Página dedicada solo a mandatos afirmativos con <span class="italic">tú</span>.
+      Los mandatos negativos, usted/ustedes, nosotros y pronombres con mandatos negativos aparecerán en páginas separadas.
+    </footer>
+  </div>
+</body>
+</html>
+
+
+
+</body>
+</html>
