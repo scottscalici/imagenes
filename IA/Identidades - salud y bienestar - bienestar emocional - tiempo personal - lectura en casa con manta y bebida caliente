@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>plan de clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">
+  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">Identidades – salud y bienestar</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <img src="https://github.com/scottscalici/imagenes/blob/main/IA/fotos/Identidades%20-%20%20salud%20y%20bienestar%20-%20bienestar%20emocional%20-%20tiempo%20personal%20%20-%20lectura%20en%20casa%20con%20manta%20y%20bebida%20caliente.png?raw=true" alt="Identidades – salud y bienestar" class="rounded-lg shadow-md max-h-64 object-cover">
+    <p class="whitespace-pre-line">🎯 Meta: 60 segundos (pero animo que hables más)
+
+💬 Usa:
+Tiempos verbales: presente (de indicativo y <strong>subjuntivo</strong>, pretérito, imperfecto, y presente progresivo (al menos una vez cada uno)
+Conectores: porque / ya que · por eso · además
+Opiniones: para mí · en mi opinión · creo que · pienso que
+Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
+Ideas útiles: se representa la cultura… · muestra… · hay… · la gente está… · en países como… · en mi país…
+
+✅ Incluye:
+Qué ves (primer plano / fondo)
+Qué pasa
+Qué emociones transmite
+Qué podría pasar después</p>
+    <div class="flex items-center gap-3 mt-4">
+      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>
+      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+      <span class="font-mono" data-timer>00:00</span>
+    </div>
+  </div>
+</section>
+
+
+
+
+ 
+  <!-- Shared JavaScript -->
+  <script>
+
+  // Conversación timer
+ let timerInterval;
+let seconds = 0;
+
+function startTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+}
+
+function resetTimer(btn) {
+  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+  clearInterval(timerInterval);
+  seconds = 0;
+  timerDisplay.textContent = "00:00";
+}
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
