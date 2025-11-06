@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mandatos familiares: Negativos con tú</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md rounded-2xl border-l-4 border-rose-500 px-6 py-4 flex flex-col gap-1">
+      <h1 class="text-2xl md:text-3xl font-bold text-rose-600">
+        Mandatos familiares: Negativos con <span class="italic">tú</span>
+      </h1>
+      <p class="text-gray-700">
+        Usa estos mandatos para decirle a <span class="font-semibold">tú</span> (amigos, hermanos, etc.) lo que
+        <span class="font-semibold">NO</span> debe hacer.
+      </p>
+      <p class="text-sm text-gray-500">
+        Esta página es solo para mandatos negativos con <span class="italic">tú</span>. Los afirmativos y otros tipos de mandatos se explican en páginas aparte.
+      </p>
+    </header>
+
+    <!-- 1. Cuándo se usan -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-slate-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-slate-700">1. ¿Cuándo usamos mandatos negativos con <span class="italic">tú</span>?</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>Para prohibir: <span class="italic">No comas en la clase.</span></li>
+        <li>Para advertir: <span class="italic">No abras ese enlace.</span></li>
+        <li>Para dar consejos de protección: <span class="italic">No manejes tan rápido.</span></li>
+      </ul>
+      <p class="text-sm text-gray-600">
+        Siguen una regla diferente a los mandatos afirmativos: aquí sí cambiamos la terminación.
+      </p>
+    </section>
+
+    <!-- 2. Formación básica -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-indigo-600">2. Formación: regla general</h2>
+      <p class="text-gray-800">
+        Los mandatos negativos con <span class="italic">tú</span> usan la forma de
+        <span class="font-semibold">yo</span> del presente, con terminaciones
+        <span class="font-semibold">opuestas</span>. Es básicamente el
+        <span class="font-semibold">presente del subjuntivo (tú)</span>.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 space-y-1">
+        <li>Toma la forma de <span class="font-semibold">yo</span> del presente.</li>
+        <li>Quita la <span class="font-semibold">-o</span>.</li>
+        <li>Añade la terminación opuesta:
+          <span class="font-semibold">-ES</span> para verbos -AR,
+          <span class="font-semibold">-AS</span> para verbos -ER/-IR.</li>
+        <li>Escribe <span class="font-semibold">no</span> antes del verbo.</li>
+      </ol>
+
+      <div class="grid md:grid-cols-3 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">Verbos -AR</h3>
+          <p>hablar → yo hablo → habl- → <span class="font-semibold">no hables</span></p>
+          <p class="italic text-sm">No hables tan rápido.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">Verbos -ER</h3>
+          <p>comer → yo como → com- → <span class="font-semibold">no comas</span></p>
+          <p class="italic text-sm">No comas aquí.</p>
+        </div>
+        <div class="border rounded-xl p-3">
+          <h3 class="font-semibold text-indigo-600 mb-1">Verbos -IR</h3>
+          <p>escribir → yo escribo → escrib- → <span class="font-semibold">no escribas</span></p>
+          <p class="italic text-sm">No escribas en la pared.</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-700">
+        Regla rápida: <span class="font-semibold">No + (yo sin -o) + terminación opuesta de tú.</span>
+      </p>
+    </section>
+
+    <!-- 3. Verbos con cambios ortográficos y de raíz -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-emerald-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-emerald-600">3. Verbos con cambios ortográficos y de raíz</h2>
+      <p class="text-gray-800">
+        Como usamos la forma de yo, se conservan cambios de ortografía y de raíz.
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 text-gray-800">
+
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-emerald-600">Cambios ortográficos</p>
+          <p><span class="font-semibold">buscar</span> → yo busco → busqu- → <span class="font-semibold">no busques</span></p>
+          <p><span class="font-semibold">llegar</span> → yo llego → llegu- → <span class="font-semibold">no llegues</span></p>
+          <p><span class="font-semibold">empezar</span> → yo empiezo → empiez- → <span class="font-semibold">no empieces</span></p>
+        </div>
+
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-emerald-600">Cambios de raíz (e→ie, o→ue, e→i)</p>
+          <p><span class="font-semibold">pensar</span> → yo pienso → <span class="font-semibold">no pienses</span></p>
+          <p><span class="font-semibold">volver</span> → yo vuelvo → <span class="font-semibold">no vuelvas</span></p>
+          <p><span class="font-semibold">pedir</span> → yo pido → <span class="font-semibold">no pidas</span></p>
+        </div>
+
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-emerald-600">Verbos de yo irregular</p>
+          <p><span class="font-semibold">poner</span> → yo pongo → <span class="font-semibold">no pongas</span></p>
+          <p><span class="font-semibold">salir</span> → yo salgo → <span class="font-semibold">no salgas</span></p>
+          <p><span class="font-semibold">tener</span> → yo tengo → <span class="font-semibold">no tengas</span></p>
+          <p><span class="font-semibold">hacer</span> → yo hago → <span class="font-semibold">no hagas</span></p>
+          <p><span class="font-semibold">decir</span> → yo digo → <span class="font-semibold">no digas</span></p>
+          <p><span class="font-semibold">venir</span> → yo vengo → <span class="font-semibold">no vengas</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Irregulares totales -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-red-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-red-600">4. Irregulares importantes</h2>
+      <p class="text-gray-800">
+        Algunos verbos son irregulares en el mandato negativo de <span class="italic">tú</span>. Memorízalos:
+      </p>
+      <div class="grid md:grid-cols-5 gap-3 text-gray-800">
+        <div class="border rounded-xl p-3 text-center">
+          <p class="font-semibold">dar</p>
+          <p class="font-semibold text-red-600">no des</p>
+        </div>
+        <div class="border rounded-xl p-3 text-center">
+          <p class="font-semibold">estar</p>
+          <p class="font-semibold text-red-600">no estés</p>
+        </div>
+        <div class="border rounded-xl p-3 text-center">
+          <p class="font-semibold">ir</p>
+          <p class="font-semibold text-red-600">no vayas</p>
+        </div>
+        <div class="border rounded-xl p-3 text-center">
+          <p class="font-semibold">ser</p>
+          <p class="font-semibold text-red-600">no seas</p>
+        </div>
+        <div class="border rounded-xl p-3 text-center">
+          <p class="font-semibold">saber</p>
+          <p class="font-semibold text-red-600">no sepas</p>
+        </div>
+      </div>
+      <p class="text-sm text-gray-700">
+        Truco: son casi los mismos irregulares del subjuntivo.
+      </p>
+    </section>
+
+    <!-- 5. Pronombres con mandatos negativos -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-purple-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-purple-600">5. Pronombres con mandatos negativos</h2>
+      <p class="text-gray-800">
+        A diferencia de los afirmativos, con mandatos negativos los pronombres van
+        <span class="font-semibold">ANTES</span> del verbo y después de <span class="font-semibold">no</span>.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Objeto directo / indirecto</p>
+          <p>No lo compres. (OD)</p>
+          <p>No me hables así. (OI)</p>
+          <p>No se lo des. (OI + OD)</p>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Reflexivos</p>
+          <p>No te levantes tarde.</p>
+          <p>No se sienten allí.</p>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-200 rounded-xl px-4 py-2 text-sm text-purple-800">
+        <p class="font-semibold">Regla clave:</p>
+        <p>
+          Afirmativo: <span class="italic">Hazlo / Levántate</span><br>
+          Negativo: <span class="italic">No lo hagas / No te levantes</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 6. Errores comunes -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-amber-400 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-amber-500">6. Errores comunes a evitar</h2>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>Usar forma de él/ella como en los afirmativos: ❌ <span class="italic">*No habla</span> → ✅ <span class="font-semibold">No hables</span>.</li>
+        <li>Olvidar la forma de yo: ❌ <span class="italic">*No ponas</span> → ✅ <span class="font-semibold">No pongas</span>.</li>
+        <li>Poner el pronombre al final: ❌ <span class="italic">*No hazlo</span> → ✅ <span class="font-semibold">No lo hagas</span>.</li>
+        <li>Olvidar cambios ortográficos: ❌ <span class="italic">*No busques</span> con C dura / suave mal escrita, etc.</li>
+      </ul>
+    </section>
+
+    <!-- 7. Práctica rápida -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-indigo-600">7. Práctica rápida</h2>
+      <p class="text-gray-800">
+        Escribe el mandato negativo correcto de <span class="italic">tú</span>.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 space-y-1">
+        <li>(tú) hablar → ____________________</li>
+        <li>(tú) comer → ____________________</li>
+        <li>(tú) escribir → ____________________</li>
+        <li>(tú) poner la música → ____________________</li>
+        <li>(tú) salir tarde → ____________________</li>
+        <li>(tú) decir mentiras → ____________________</li>
+        <li>(tú) ir allí → ____________________</li>
+        <li>(tú) levantarse tarde → ____________________</li>
+        <li>(tú) hacerlo → ____________________</li>
+      </ol>
+      <details class="mt-2 text-sm text-gray-700">
+        <summary class="cursor-pointer text-indigo-500 underline">Ver respuestas</summary>
+        <p class="mt-1">
+          1. No hables. 2. No comas. 3. No escribas.
+          4. No pongas la música. 5. No salgas tarde.
+          6. No digas mentiras. 7. No vayas allí.
+          8. No te levantes tarde. 9. No lo hagas.
+        </p>
+      </details>
+    </section>
+
+    <!-- Footer / nav hint -->
+    <footer class="text-xs text-gray-500 pt-2">
+      Mandatos negativos con <span class="italic">tú</span>.
+      Consulta la página de mandatos afirmativos con <span class="italic">tú</span> y las páginas de mandatos formales/nosotros/vosotros para el panorama completo.
+    </footer>
+  </div>
+</body>
+</html>
