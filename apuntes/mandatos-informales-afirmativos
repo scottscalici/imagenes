@@ -76,28 +76,31 @@
       </p>
     </section>
 
-    <!-- Section 3: Irregulares esenciales -->
-   <!-- Vin Diesel mnemonic card -->
-<div class="mt-4">
-  <div class="relative bg-black rounded-2xl overflow-hidden shadow-lg">
+<!-- Vin Diesel mnemonic card (portrait-friendly) -->
+<div class="mt-4 flex justify-center">
+  <div class="relative bg-black rounded-2xl overflow-hidden shadow-lg max-w-xs md:max-w-sm w-full">
+    <!-- Portrait image: no weird horizontal stretch -->
     <img
       src="https://github.com/scottscalici/imagenes/blob/main/apuntes/imagenes/vin.png?raw=true"
       alt="Vin Diesel te tiene cubierto con los mandatos irregulares"
-      class="w-full h-64 object-cover opacity-80"
+      class="w-full h-auto object-contain bg-black"
     />
-    <div class="absolute inset-0 flex flex-col justify-end p-4 space-y-1">
-      <p class="text-xs tracking-widest text-gray-200 uppercase">
+
+    <!-- Text overlay at the bottom -->
+    <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent px-3 py-2 space-y-0.5">
+      <p class="text-[0.6rem] tracking-[0.15em] text-gray-300 uppercase">
         Mandatos irregulares con tú
       </p>
-      <p class="text-2xl md:text-3xl font-extrabold text-white drop-shadow">
+      <p class="text-lg md:text-xl font-extrabold text-white leading-tight">
         Vin Diesel te tiene cubierto
       </p>
-      <p class="text-sm md:text-base text-gray-100 font-semibold">
+      <p class="text-[0.75rem] md:text-sm text-gray-100 font-semibold">
         Ven · Di · Sal · Haz · Ten · Ve · Pon · Sé
       </p>
     </div>
   </div>
 </div>
+
  <section class="bg-white rounded-2xl shadow-sm border-l-4 border-red-500 px-6 py-4 space-y-3">
       <h2 class="text-xl font-semibold text-red-600">3. Mandatos afirmativos irregulares</h2>
       <p class="text-gray-800">
