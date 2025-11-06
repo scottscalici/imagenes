@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mandatos en español – Resumen general</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md rounded-2xl border-l-4 border-indigo-500 px-6 py-5 space-y-2">
+      <h1 class="text-2xl md:text-3xl font-bold text-indigo-700">
+        Mandatos en español – Resumen general
+      </h1>
+      <p class="text-gray-700">
+        Usa esta página como mapa global de los mandatos en español:
+        quién, cómo se forma, cómo se niega, y dónde van los pronombres.
+      </p>
+      <p class="text-xs text-gray-500">
+        Para explicaciones completas y más ejemplos, haz clic en las tarjetas de cada sección.
+      </p>
+    </header>
+
+    <!-- Quick visual map -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-200 px-6 py-5 space-y-3">
+      <h2 class="text-lg md:text-xl font-semibold text-gray-800">
+        1. Vista rápida de las formas
+      </h2>
+      <div class="overflow-x-auto text-sm">
+        <table class="min-w-full border-collapse">
+          <thead>
+            <tr class="bg-gray-50 text-[11px] uppercase tracking-wide text-gray-500">
+              <th class="border-b py-2 px-2 text-left">Sujeto</th>
+              <th class="border-b py-2 px-2 text-left">Uso típico</th>
+              <th class="border-b py-2 px-2 text-left">Afirmativo</th>
+              <th class="border-b py-2 px-2 text-left">Negativo</th>
+            </tr>
+          </thead>
+          <tbody class="align-top">
+            <tr class="hover:bg-gray-50">
+              <td class="border-b py-2 px-2 font-semibold text-blue-700">tú</td>
+              <td class="border-b py-2 px-2">Informal, 1 persona</td>
+              <td class="border-b py-2 px-2">
+                Forma de <span class="font-semibold">él/ella</span><br>
+                <span class="text-xs text-gray-500">habla, come, escribe</span><br>
+                Irregulares: <span class="text-xs">Ven, Di, Sal, Haz, Ten, Ve, Pon, Sé</span>
+              </td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">No + subjuntivo (tú)</span><br>
+                no hables, no comas, no escribas
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="border-b py-2 px-2 font-semibold text-sky-700">usted / ustedes</td>
+              <td class="border-b py-2 px-2">Formal, singular / plural</td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">Subjuntivo</span><br>
+                hable / hablen, coma / coman, escriba / escriban
+              </td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">No + misma forma</span><br>
+                no hable, no coman, etc.
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="border-b py-2 px-2 font-semibold text-emerald-700">nosotros</td>
+              <td class="border-b py-2 px-2">“Let’s…” – inclusivo</td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">Subjuntivo nosotros</span><br>
+                hablemos, comamos, escribamos<br>
+                vamos / vayamos; vámonos
+              </td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">No + subj. nosotros</span><br>
+                no hablemos, no comamos, no vayamos
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="border-b py-2 px-2 font-semibold text-orange-700">vosotros</td>
+              <td class="border-b py-2 px-2">Informal plural (España)</td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">Infinitivo - r + d</span><br>
+                hablad, comed, vivid<br>
+                con <span class="italic">os</span>: levantaos, sentaos
+              </td>
+              <td class="border-b py-2 px-2">
+                <span class="font-semibold">No + subj. vosotros</span><br>
+                no habléis, no comáis, no viváis
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-[11px] text-gray-500">
+        Todos los negativos y los mandatos formales se basan en el <span class="font-semibold">presente del subjuntivo</span>.
+      </p>
+    </section>
+
+    <!-- Pronouns & accents summary -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-purple-400 px-6 py-5 space-y-3">
+      <h2 class="text-lg md:text-xl font-semibold text-purple-700">
+        2. Pronombres & tildes – reglas globales
+      </h2>
+      <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-800">
+        <div class="space-y-2">
+          <h3 class="font-semibold text-purple-600">A. ¿Dónde van los pronombres?</h3>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="font-semibold">Afirmativos</span>:
+              pronombres (OD, OI, reflexivos) se UNEN al final del verbo.
+              <br><span class="text-xs">Hazlo, dime, siéntate, hágalo, háganlo, sentémonos, decidme, levantaos</span>
+            </li>
+            <li><span class="font-semibold">Negativos</span>:
+              <span class="italic">no + pronombre(s) + verbo</span>.
+              <br><span class="text-xs">No lo hagas, no me hables, no se sienten, no nos vayamos</span>
+            </li>
+          </ul>
+        </div>
+        <div class="space-y-2">
+          <h3 class="font-semibold text-purple-600">B. Tildes importantes</h3>
+          <ul class="list-disc list-inside space-y-1">
+            <li>Si añades 1–2 pronombres y la sílaba tónica se mueve, pon tilde:
+              <span class="text-xs">háblame, cómpralo, dímelo, cómpramelo</span>.
+            </li>
+            <li>Con <span class="italic">nosotros</span> + pronombres:
+              casi siempre tilde:
+              <span class="text-xs">sentémonos, démoselo, vámonos</span>.
+            </li>
+            <li>Con <span class="italic">vosotros + os</span>:
+              quita la -d:
+              <span class="text-xs">levantaos, sentaos</span> (normalmente sin tilde).</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-[11px] text-gray-500">
+        Si dudas: di la palabra en voz alta. Si la sílaba fuerte ya no coincide con las reglas normales, necesita tilde.
+      </p>
+      <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6"
+         class="inline-flex mt-1 text-xs px-3 py-1 rounded-full bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-900 transition">
+        Ver guía completa de pronombres y tildes →
+      </a>
+    </section>
+
+    <!-- Cards linking to each detailed page -->
+    <section class="space-y-3">
+      <h2 class="text-lg md:text-xl font-semibold text-gray-800">
+        3. Elige la página según la situación
+      </h2>
+
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3 text-sm">
+
+        <!-- Tú aff -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1"
+           class="group bg-white rounded-2xl shadow-sm border border-blue-100 hover:border-blue-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-blue-700">Tú – afirmativos</h3>
+            <p class="text-[10px] uppercase tracking-wide text-blue-400 mb-1">“Haz la tarea”</p>
+            <p class="text-gray-700">
+              Forma de él/ella; incluye los 8 irregulares (Ven, Di, Sal, Haz, Ten, Ve, Pon, Sé) y ejemplos con pronombres.
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-blue-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la explicación completa →
+          </div>
+        </a>
+
+        <!-- Tú neg -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2"
+           class="group bg-white rounded-2xl shadow-sm border border-rose-100 hover:border-rose-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-rose-700">Tú – negativos</h3>
+            <p class="text-[10px] uppercase tracking-wide text-rose-400 mb-1">“No hables”</p>
+            <p class="text-gray-700">
+              Basados en subjuntivo: no hables, no pongas, no salgas, no lo hagas; con cambios de raíz y ortografía.
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-rose-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la explicación completa →
+          </div>
+        </a>
+
+        <!-- Ud/Uds -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3"
+           class="group bg-white rounded-2xl shadow-sm border border-sky-100 hover:border-sky-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-sky-700">Usted / Ustedes</h3>
+            <p class="text-[10px] uppercase tracking-wide text-sky-400 mb-1">“Hable / Hablen”</p>
+            <p class="text-gray-700">
+              Formales basados en subjuntivo; mismos para afirmativo/negativo con o sin “no”; pronombres al final o antes.
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-sky-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la explicación completa →
+          </div>
+        </a>
+
+        <!-- Nosotros -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4"
+           class="group bg-white rounded-2xl shadow-sm border border-emerald-100 hover:border-emerald-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-emerald-700">Nosotros</h3>
+            <p class="text-[10px] uppercase tracking-wide text-emerald-400 mb-1">“Let’s…”</p>
+            <p class="text-gray-700">
+              Hablemos, comamos, escribamos; vámonos / no vayamos; reglas de -s con nos/se y acentos.
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-emerald-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la explicación completa →
+          </div>
+        </a>
+
+        <!-- Vosotros -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5"
+           class="group bg-white rounded-2xl shadow-sm border border-orange-100 hover:border-orange-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-orange-700">Vosotros</h3>
+            <p class="text-[10px] uppercase tracking-wide text-orange-400 mb-1">España</p>
+            <p class="text-gray-700">
+              Afirmativo: infinitivo -r + d; negativo: subjuntivo vosotros; reflexivos: levantaos, sentaos; no os vayáis.
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-orange-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la explicación completa →
+          </div>
+        </a>
+
+        <!-- Pronombres & tildes -->
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6"
+           class="group bg-white rounded-2xl shadow-sm border border-purple-100 hover:border-purple-400 hover:shadow-md transition p-4 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-purple-700">Pronombres & tildes</h3>
+            <p class="text-[10px] uppercase tracking-wide text-purple-400 mb-1">Colocación correcta</p>
+            <p class="text-gray-700">
+              Resumen de dónde van los pronombres y cómo acentuar: házmelo, dígales, sentémonos, decidme, démoselo, vámonos…
+            </p>
+          </div>
+          <div class="mt-2 text-[10px] text-purple-500 opacity-0 group-hover:opacity-100 transition">
+            Ir a la guía completa →
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Small study tips -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-gray-300 px-6 py-4">
+      <h2 class="text-base md:text-lg font-semibold text-gray-800 mb-1">
+        4. Cómo estudiar este mapa
+      </h2>
+      <ul class="list-disc list-inside text-[12px] text-gray-700 space-y-1">
+        <li>Primero, identifica <span class="font-semibold">a quién</span> hablas (tú / usted / ustedes / nosotros / vosotros).</li>
+        <li>Luego, decide si el mandato es <span class="font-semibold">afirmativo o negativo</span>.</li>
+        <li>Aplica la regla de formación correspondiente.</li>
+        <li>Por último, coloca pronombres y tildes usando la guía de “Pronombres & tildes”.</li>
+      </ul>
+    </section>
+
+    <!-- Footer Nav (same style as others, with this page as hub) -->
+    <footer class="mt-4 pt-4 border-t border-gray-200 text-[10px] text-gray-500">
+      <div class="flex flex-wrap gap-2 items-center">
+        <span class="uppercase tracking-wide text-gray-400 mr-1">Navega:</span>
+
+        <span class="px-2 py-1 rounded-full bg-indigo-600 text-white font-semibold">
+          Resumen general
+        </span>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1"
+           class="px-2 py-1 rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-900 transition">
+          Tú – afirmativos
+        </a>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2"
+           class="px-2 py-1 rounded-full bg-rose-50 text-rose-700 hover:bg-rose-100 hover:text-rose-900 transition">
+          Tú – negativos
+        </a>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3"
+           class="px-2 py-1 rounded-full bg-sky-50 text-sky-700 hover:bg-sky-100 hover:text-sky-900 transition">
+          Ud / Uds
+        </a>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4"
+           class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-900 transition">
+          Nosotros
+        </a>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5"
+           class="px-2 py-1 rounded-full bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-900 transition">
+          Vosotros
+        </a>
+
+        <a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6"
+           class="px-2 py-1 rounded-full bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-900 transition">
+          Pronombres & tildes
+        </a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
