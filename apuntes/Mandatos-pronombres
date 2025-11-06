@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tildes en los mandatos con pronombres</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md rounded-2xl border-l-4 border-pink-500 px-6 py-4 space-y-1">
+      <h1 class="text-2xl md:text-3xl font-bold text-pink-600">
+        Tildes en los mandatos con pronombres
+      </h1>
+      <p class="text-gray-700">
+        Cuando unimos pronombres a los mandatos, muchas formas necesitan tilde.
+        El objetivo siempre es <span class="font-semibold">mantener la sílaba tónica original</span> del mandato.
+      </p>
+      <p class="text-sm text-gray-500">
+        Esta página resume las reglas para <span class="italic">tú</span>, <span class="italic">usted / ustedes</span>,
+        <span class="italic">nosotros</span> y <span class="italic">vosotros</span>.
+      </p>
+    </header>
+
+    <!-- 1. Idea clave -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-slate-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-slate-700">1. Idea clave</h2>
+      <p class="text-gray-800">
+        1️⃣ Escribe el mandato sin pronombres. <br>
+        2️⃣ Añade el/los pronombre(s). <br>
+        3️⃣ Si la sílaba tónica cambia o la palabra deja de seguir las reglas normales de acentuación,
+        pon una <span class="font-semibold text-pink-600">tilde</span> para conservar el acento original.
+      </p>
+      <p class="text-sm text-gray-600">
+        Regla general de ortografía: palabras terminadas en vocal, <span class="italic">n</span> o <span class="italic">s</span>
+        se acentúan en la penúltima sílaba; las demás, en la última. Si no coincide con eso, lleva tilde.
+      </p>
+    </section>
+
+    <!-- 2. Mandatos con tú (afirmativos) -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-indigo-600">2. Tildes con mandatos afirmativos de <span class="italic">tú</span></h2>
+      <p class="text-gray-800">
+        Base: mandato afirmativo de <span class="italic">tú</span> (forma de él/ella).
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800">
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-indigo-600">Con 1 pronombre</p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>Si el mandato es <span class="font-semibold">monosílabo</span> (di, haz, pon, ven, sal, ten, ve, sé):
+              normalmente <span class="font-semibold">sin tilde</span> con 1 pronombre.
+              <br><span class="italic">di</span> → dime
+              (<span class="text-gray-500 text-xs">estrés sigue en "di"</span>)
+            </li>
+            <li>Si el mandato tiene <span class="font-semibold">2+ sílabas</span>,
+              casi siempre lleva tilde con 1 pronombre:
+              <br><span class="italic">habla</span> → <span class="font-semibold">háblame</span>
+              <br><span class="italic">cierra</span> → <span class="font-semibold">ciérrala</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-indigo-600">Con 2 pronombres</p>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>Casi siempre necesitan tilde.</li>
+            <li><span class="italic">di</span> → dímelo</li>
+            <li><span class="italic">haz</span> → házmelo</li>
+            <li><span class="italic">compra</span> → <span class="font-semibold">cómpramelo</span></li>
+            <li><span class="italic">di</span> → díselo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-2 text-sm text-indigo-900">
+        <p class="font-semibold">En resumen (para clase):</p>
+        <p>
+          🔹 Con 2 pronombres → pon tilde casi siempre.<br>
+          🔹 Con 1 pronombre → revisa: si la palabra se alarga y la sílaba fuerte cambia, pon tilde.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Usted / Ustedes -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-emerald-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-emerald-600">3. Tildes con <span class="italic">usted / ustedes</span></h2>
+      <p class="text-gray-800">
+        Los mandatos formales ya suelen ser llanos o agudos regulares.
+        Al añadir pronombres, coloca la tilde para conservar la sílaba tónica original.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800 text-sm">
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-emerald-600">Ejemplos con 1 pronombre</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="italic">haga</span> → hágalo</li>
+            <li><span class="italic">pase</span> → pásenos</li>
+            <li><span class="italic">escriba</span> → escríbame</li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-emerald-600">Ejemplos con 2 pronombres</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="italic">dé</span> → démelo / dénoslo</li>
+            <li><span class="italic">digan</span> → díganmelo</li>
+            <li><span class="italic">sirvan</span> → sírvanselo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2 text-sm text-emerald-900">
+        <p>Cuenta sílabas desde el final: si la sílaba tónica ya no es la misma, añade tilde.</p>
+      </div>
+    </section>
+
+    <!-- 4. Nosotros -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-purple-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-purple-600">4. Tildes con mandatos de <span class="italic">nosotros</span></h2>
+      <p class="text-gray-800">
+        Aquí casi siempre verás tildes cuando añades pronombres.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-gray-800 text-sm">
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Con 1 pronombre</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="italic">escribamos</span> → escribámosle</li>
+            <li><span class="italic">sentemos</span> → sentémonos</li>
+            <li><span class="italic">demos</span> → démosle</li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-3 space-y-1">
+          <p class="font-semibold text-purple-600">Con 2 pronombres</p>
+          <ul class="list-disc list-inside space-y-1">
+            <li><span class="italic">demos</span> → démoselo</li>
+            <li><span class="italic">pongamos</span> → pongámosela</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-purple-50 border border-purple-200 rounded-xl px-4 py-2 text-sm text-purple-900">
+        <p>
+          Ojo: <span class="font-semibold">vamos + nos</span> → <span class="font-semibold">vámonos</span>
+          (tilde para mantener el acento en VA).
+        </p>
+      </div>
+    </section>
+
+    <!-- 5. Vosotros -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-orange-500 px-6 py-4 space-y-3">
+      <h2 class="text-xl font-semibold text-orange-600">5. Tildes con mandatos de <span class="italic">vosotros</span></h2>
+      <p class="text-gray-800">
+        Aquí hay dos puntos clave:
+      </p>
+      <ul class="list-disc list-inside text-gray-800 text-sm space-y-1">
+        <li>Afirmativos con OD / OI: a veces llevan tilde para mantener el acento:
+          <br><span class="italic">decid</span> → decidme (sin tilde),
+          pero → <span class="font-semibold">decídmelo</span> (para conservar DE-cid).
+        </li>
+        <li>Con reflexivo <span class="italic">os</span>, se quita la <span class="font-semibold">-d</span> del mandato:
+          <br><span class="italic">levanta<span class="font-semibold">d</span></span> → <span class="font-semibold">levantaos</span>,
+          <span class="italic">senta<span class="font-semibold">d</span></span> → <span class="font-semibold">sentaos</span>.
+          <span class="text-gray-600">(Normalmente <strong>sin</strong> tilde.)</span>
+        </li>
+        <li><span class="italic">irse</span>: forma tradicional → <span class="font-semibold">idos</span>;
+          en uso coloquial también <span class="italic">iros</span>.
+        </li>
+      </ul>
+    </section>
+
+    <!-- 6. Mini mapa rápido (para tus alumnos) -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-teal-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-teal-600">6. Mapa rápido para recordar</h2>
+      <ul class="list-disc list-inside text-gray-800 text-sm space-y-1">
+        <li><span class="font-semibold">Siempre</span> escribe la forma correcta del mandato <em>antes</em> de añadir pronombres.</li>
+        <li>Con <span class="font-semibold">2 pronombres</span> → casi siempre habrá tilde. ✔️</li>
+        <li>Con <span class="font-semibold">nosotros</span> + pronombres → suele haber tilde. ✔️</li>
+        <li>Con <span class="font-semibold">vosotros + os</span> → quita la <span class="font-semibold">-d</span> (levantaos, sentaos) sin tilde.</li>
+        <li>Si dudas: pronuncia la palabra; si la sílaba fuerte no coincide con las reglas normales, pon tilde.</li>
+      </ul>
+    </section>
+
+    <!-- 7. Práctica rápida -->
+    <section class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-6 py-4 space-y-2">
+      <h2 class="text-xl font-semibold text-indigo-600">7. Práctica: coloca la tilde donde corresponda</h2>
+      <p class="text-gray-800">
+        Corrige los mandatos si falta la tilde.
+      </p>
+      <ol class="list-decimal list-inside text-gray-800 text-sm space-y-1">
+        <li>Hazlo ahora.</li>
+        <li>Hablame mañana.</li>
+        <li>Compramelo hoy.</li>
+        <li>Escribanos pronto.</li>
+        <li>Diganmelo sinceramente.</li>
+        <li>Vamonos ya.</li>
+        <li>Demoselo a ella.</li>
+      </ol>
+      <details class="mt-2 text-sm text-gray-700">
+        <summary class="cursor-pointer text-indigo-500 underline">Ver respuestas</summary>
+        <p class="mt-1">
+          1. Hazlo ahora. (correcto)<br>
+          2. Háblame mañana.<br>
+          3. Cómpramelo hoy.<br>
+          4. Escríbanos pronto. / Escríbanos (según contexto formal).<br>
+          5. Díganmelo sinceramente.<br>
+          6. Vámonos ya.<br>
+          7. Démoselo a ella.
+        </p>
+      </details>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-xs text-gray-500 pt-2">
+      Página de referencia sobre tildes en los mandatos con pronombres.
+      Úsala junto con las páginas de mandatos de <span class="italic">tú</span>, <span class="italic">usted / ustedes</span>,
+      <span class="italic">nosotros</span> y <span class="italic">vosotros</span>.
+    </footer>
+
+  </div>
+</body>
+</html>
