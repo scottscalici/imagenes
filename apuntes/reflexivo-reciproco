@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.3 Los reflexivos recíprocos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script defer src="/assets/js/include.js"></script>
+  <style>
+    .ok { background:#d1fae5; }
+    .no { background:#fee2e2; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header data-include="/components/nav.html"></header>
+
+  <main class="container mx-auto px-4 py-10 max-w-4xl">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-6">Los reflexivos recíprocos</h1>
+
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100 space-y-8">
+
+      <!-- 1. Definition -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">¿Qué son los reflexivos recíprocos?</h2>
+        <p class="text-sm text-gray-700">
+          Ya sabes que los verbos reflexivos indican que el sujeto hace la acción <strong>a sí mismo</strong>.
+          Los <strong>reflexivos recíprocos</strong> expresan una acción
+          <strong>compartida</strong> entre dos o más personas o cosas:
+          el pronombre significa <em>(a) cada uno</em>, <em>(el) uno al otro</em>,
+          <em>(las) unas a las otras</em>, etc.
+        </p>
+        <div class="mt-3 grid md:grid-cols-2 gap-4 text-sm">
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">Reflexivo (no recíproco)</p>
+            <p>Laura <strong>se peina</strong>.</p>
+            <p class="text-xs text-gray-600">Ella hace la acción a sí misma.</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">Recíproco</p>
+            <p>Laura y Ana <strong>se abrazan</strong>.</p>
+            <p class="text-xs text-gray-600">Se abrazan <strong>la una a la otra</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Only plural pronouns -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Pronombres usados</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Como la acción tiene que ser entre <strong>dos o más</strong> personas o cosas,
+          solo se usan las formas <strong>plurales</strong> de los pronombres reflexivos:
+        </p>
+        <table class="min-w-full max-w-md text-left border border-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2">Persona</th>
+              <th class="px-3 py-2">Pronombre</th>
+              <th class="px-3 py-2">Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-3 py-2">Nosotros/as</td>
+              <td class="px-3 py-2 font-semibold">nos</td>
+              <td class="px-3 py-2">Nos ayudamos.</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">Vosotros/as</td>
+              <td class="px-3 py-2 font-semibold">os</td>
+              <td class="px-3 py-2">Os escribís.</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">Ellos/Ellas/Uds.</td>
+              <td class="px-3 py-2 font-semibold">se</td>
+              <td class="px-3 py-2">Ellos se llaman.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-xs text-gray-600 mt-1">
+          Importante: la forma del pronombre es igual que en los reflexivos;
+          el <strong>contexto plural</strong> nos dice que la acción es recíproca.
+        </p>
+      </div>
+
+      <!-- 3. Common verbs from notes -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Verbos frecuentes con uso recíproco</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Estos verbos aparecen mucho como reflexivos recíprocos (según el contexto):
+        </p>
+        <ul class="grid md:grid-cols-2 gap-x-6 list-disc ml-6 text-sm space-y-1">
+          <li><strong>abrazar(se)</strong> – to hug; embrace (each other)</li>
+          <li><strong>ayudar(se)</strong> – to help (each other)</li>
+          <li><strong>besar(se)</strong> – to kiss (each other)</li>
+          <li><strong>encontrar(se)</strong> – to meet; run into (each other)</li>
+          <li><strong>saludar(se)</strong> – to greet (each other)</li>
+        </ul>
+        <p class="text-xs text-gray-600 mt-1">
+          No siempre tienen que ser recíprocos; depende de si el sujeto es plural y del significado en la oración.
+        </p>
+      </div>
+
+      <!-- 4. Present vs Preterite examples -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Ejemplos en el presente y el pretérito</h2>
+        <p class="text-sm text-gray-700 mb-1">
+          Igual que otros verbos, los reflexivos recíprocos se conjugan en diferentes tiempos.
+          Observa:
+        </p>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">Presente</p>
+            <p>Los novios <strong>se escriben</strong> todos los días.</p>
+            <p>Nosotros <strong>nos ayudamos</strong> con la tarea.</p>
+            <p>Ellos <strong>se saludan</strong> en el pasillo.</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">Pretérito</p>
+            <p>Los novios <strong>se escribieron</strong> el verano pasado.</p>
+            <p>Ellos <strong>se encontraron</strong> en Madrid.</p>
+            <p>Mis vecinos <strong>se saludaron</strong> esta mañana.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Practice modeled on notes -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Práctica: completa con el reflexivo recíproco</h2>
+        <p class="text-sm text-gray-600 mb-2">
+          Usa <strong>nos, os</strong> o <strong>se</strong> y conjuga el verbo en
+          <strong>presente</strong> o <strong>pretérito</strong> según el contexto.
+        </p>
+
+        <div class="space-y-2 text-sm">
+          <p><strong>1.</strong> (escribirse)</p>
+          <ul class="ml-6 list-disc space-y-1">
+            <li>Los novios __________ todos los días.</li>
+            <li>Nosotros __________ con frecuencia.</li>
+            <li>Ana y Ernesto __________ el año pasado cuando él estaba en otro país.</li>
+          </ul>
+
+          <p class="mt-2"><strong>2.</strong> (saludarse)</p>
+          <ul class="ml-6 list-disc space-y-1">
+            <li>Nicolás y tú __________ en la cafetería todas las mañanas.</li>
+            <li>Nuestros vecinos __________ ayer en el pasillo.</li>
+            <li>Nosotros siempre __________ antes de clase.</li>
+          </ul>
+
+          <p class="mt-2"><strong>3.</strong> (encontrarse)</p>
+          <ul class="ml-6 list-disc space-y-1">
+            <li>Ana y Javier __________ en el centro comercial el sábado.</li>
+            <li>Los primos __________ cada verano.</li>
+            <li>Mi hermana y yo __________ en la biblioteca para estudiar.</li>
+          </ul>
+        </div>
+
+        <details class="mt-3 text-xs text-gray-700">
+          <summary class="cursor-pointer underline">Ver respuestas sugeridas</summary>
+          <div class="mt-1 space-y-1">
+            <p><strong>1. escribirse</strong></p>
+            <p>Los novios <strong>se escriben</strong> todos los días. (presente)</p>
+            <p>Nosotros <strong>nos escribimos</strong> con frecuencia. (presente)</p>
+            <p>Ana y Ernesto <strong>se escribieron</strong> el año pasado. (pretérito)</p>
+
+            <p class="mt-2"><strong>2. saludarse</strong></p>
+            <p>Nicolás y tú <strong>se saludan</strong> en la cafetería. (presente, Uds.)</p>
+            <p>Nuestros vecinos <strong>se saludaron</strong> ayer. (pretérito)</p>
+            <p>Nosotros siempre <strong>nos saludamos</strong> antes de clase. (presente)</p>
+
+            <p class="mt-2"><strong>3. encontrarse</strong></p>
+            <p>Ana y Javier <strong>se encontraron</strong> en el centro comercial. (pretérito)</p>
+            <p>Los primos <strong>se encuentran</strong> cada verano. (presente)</p>
+            <p>Mi hermana y yo <strong>nos encontramos</strong> en la biblioteca. (presente)</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- 6. Quick reminder -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Resumen clave</h2>
+        <ul class="list-disc ml-6 text-sm space-y-1">
+          <li>Los reflexivos recíprocos expresan acciones de <strong>uno al otro</strong>.</li>
+          <li>Solo usan las formas plurales: <strong>nos, os, se</strong>.</li>
+          <li>Se forman igual que otros reflexivos; el <strong>sujeto plural</strong> indica la reciprocidad.</li>
+        </ul>
+      </div>
+
+    </section>
+  </main>
+
+  <footer data-include="/components/footer.html"></footer>
+</body>
+</html>
