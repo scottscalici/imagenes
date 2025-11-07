@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verbos reflexivos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script defer src="/assets/js/include.js"></script>
+  <style>
+    .ok { background:#d1fae5; }
+    .no { background:#fee2e2; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header data-include="/components/nav.html"></header>
+
+  <main class="container mx-auto px-4 py-10 max-w-4xl">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-6">Verbos reflexivos</h1>
+
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100 space-y-8">
+
+      <!-- 1. What is a reflexive verb -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">¿Qué es un verbo reflexivo?</h2>
+        <p class="text-gray-700">
+          En una construcción reflexiva, el sujeto <strong>realiza</strong> y
+          <strong>recibe</strong> la acción del verbo. El verbo reflexivo siempre usa un
+          <strong>pronombre reflexivo</strong>:
+          <span class="font-semibold">me, te, se, nos, os, se</span>.
+        </p>
+        <div class="mt-3 grid md:grid-cols-2 gap-4 text-sm">
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">Reflexivo</p>
+            <p>Elena <strong>se lava</strong> la cara.</p>
+            <p class="text-xs text-gray-600">Elena lava la cara de sí misma.</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p class="font-semibold text-gray-900 mb-1">No reflexivo</p>
+            <p>Elena <strong>lava</strong> los platos.</p>
+            <p class="text-xs text-gray-600">La acción va a otra cosa.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Reflexive pronouns & placement -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Pronombres reflexivos y colocación</h2>
+
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <!-- Table -->
+          <div>
+            <table class="min-w-full text-left border border-gray-200 text-sm">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-3 py-2">Persona</th>
+                  <th class="px-3 py-2">Pronombre</th>
+                  <th class="px-3 py-2">Ejemplo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="px-3 py-2">yo</td>
+                  <td class="px-3 py-2 font-semibold">me</td>
+                  <td class="px-3 py-2">Me levanto.</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="px-3 py-2">tú</td>
+                  <td class="px-3 py-2 font-semibold">te</td>
+                  <td class="px-3 py-2">Te duchas.</td>
+                </tr>
+                <tr>
+                  <td class="px-3 py-2">él/ella/Ud.</td>
+                  <td class="px-3 py-2 font-semibold">se</td>
+                  <td class="px-3 py-2">Se viste.</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="px-3 py-2">nosotros/as</td>
+                  <td class="px-3 py-2 font-semibold">nos</td>
+                  <td class="px-3 py-2">Nos acostamos.</td>
+                </tr>
+                <tr>
+                  <td class="px-3 py-2">vosotros/as</td>
+                  <td class="px-3 py-2 font-semibold">os</td>
+                  <td class="px-3 py-2">Os laváis las manos.</td>
+                </tr>
+                <tr class="bg-gray-50">
+                  <td class="px-3 py-2">ellos/ellas/Uds.</td>
+                  <td class="px-3 py-2 font-semibold">se</td>
+                  <td class="px-3 py-2">Se despiertan.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Placement rules -->
+          <div>
+            <h3 class="font-semibold mb-1">¿Dónde va el pronombre?</h3>
+            <ul class="list-disc ml-5 space-y-1">
+              <li>
+                <strong>Antes</strong> de un verbo conjugado:
+                <span class="text-xs">Me despierto temprano.</span>
+              </li>
+              <li>
+                <strong>Infinitivo</strong>: unido o antes del verbo auxiliar
+                <div class="text-xs ml-4">
+                  Voy a <strong>levantarme</strong> / <strong>Me</strong> voy a levantar.
+                </div>
+              </li>
+              <li>
+                <strong>Gerundio</strong>: unido o antes
+                <div class="text-xs ml-4">
+                  Estoy <strong>duchándome</strong> / <strong>Me</strong> estoy duchando.
+                </div>
+              </li>
+              <li>
+                <strong>Mandatos afirmativos</strong>: se adjunta
+                <div class="text-xs ml-4">
+                  ¡Levántate! / ¡Siéntense!
+                </div>
+              </li>
+              <li>
+                <strong>Mandatos negativos</strong>: antes del verbo
+                <div class="text-xs ml-4">
+                  No <strong>te</strong> levantes. / No <strong>se</strong> sienten.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Daily routine & common reflexives -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Verbos reflexivos comunes (rutina diaria)</h2>
+        <p class="text-gray-700 text-sm mb-1">
+          Muchos verbos de la rutina diaria se usan reflexivamente cuando la acción recae en la misma persona:
+        </p>
+        <p class="text-sm">
+          <strong>despertarse</strong>, levantarse, bañarse, ducharse, lavarse, afeitarse,
+          cepillarse, maquillarse, vestirse, ponerse la ropa, acostarse, dormirse, quitarse, etc.
+        </p>
+        <p class="text-xs text-gray-600 mt-1">
+          Ej.: <strong>Me ducho</strong> a las 7. / <strong>Se acuestan</strong> tarde.
+        </p>
+      </div>
+
+      <!-- 4. Reflexive vs non-reflexive & meaning changes -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Reflexivo vs. no reflexivo & cambios de significado</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Algunos verbos pueden usarse con o sin pronombre y el significado cambia:
+        </p>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p><strong>acostar</strong>: Ana acuesta a los niños.</p>
+            <p><strong>acostarse</strong>: Ana se acuesta tarde.</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p><strong>divertir</strong>: Félix divierte a los invitados.</p>
+            <p><strong>divertirse</strong>: Félix se divierte en la fiesta.</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p><strong>ir</strong>: Voy al cine.</p>
+            <p><strong>irse</strong>: Me voy. (I’m leaving.)</p>
+          </div>
+          <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+            <p><strong>dormir</strong>: Duermo ocho horas.</p>
+            <p><strong>dormirse</strong>: Me duermo en clase. (I fall asleep.)</p>
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 mt-2">
+          Atención: el pronombre puede cambiar el enfoque o el significado; no es “decoración”.
+        </p>
+      </div>
+
+      <!-- 5. Verbs that are (often) inherently reflexive -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Verbos que suelen ser reflexivos</h2>
+        <p class="text-sm text-gray-700">
+          Algunos verbos casi siempre aparecen con pronombre en español, aunque en inglés no:
+        </p>
+        <ul class="list-disc ml-6 text-sm space-y-1">
+          <li><strong>quejarse de</strong> – to complain about</li>
+          <li><strong>mudarse</strong> – to move (change residence)</li>
+          <li><strong>irse</strong> – to go away / leave</li>
+          <li><strong>arrepentirse de</strong> – to regret</li>
+          <li><strong>darse cuenta de</strong> – to realize</li>
+          <li><strong>enojarse</strong>, <strong>aburrirse</strong>, <strong>preocuparse</strong>, etc.</li>
+        </ul>
+        <p class="text-xs text-gray-600 mt-1">
+          Aprende estas expresiones como unidades: el pronombre es parte del verbo.
+        </p>
+      </div>
+
+      <!-- 6. Reciprocal actions -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Acciones recíprocas (nos / se)</h2>
+        <p class="text-sm text-gray-700">
+          En plural, los pronombres reflexivos pueden expresar acciones <strong>mutuas</strong>:
+        </p>
+        <ul class="list-disc ml-6 text-sm space-y-1">
+          <li>Nos vemos todos los días. (We see each other.)</li>
+          <li>Ellos se ayudan mucho. (They help each other.)</li>
+        </ul>
+      </div>
+
+      <!-- 7. Ponerse + adjetivo -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Ponerse + adjetivo</h2>
+        <p class="text-sm text-gray-700">
+          <strong>Ponerse + adjetivo</strong> se usa mucho con el sentido de “ponerse / volverse”:
+        </p>
+        <ul class="list-disc ml-6 text-sm space-y-1">
+          <li>Me pongo nervioso antes de un examen.</li>
+          <li>Se pone feliz cuando llegan sus amigos.</li>
+        </ul>
+      </div>
+
+      <!-- 8. Orden con otros pronombres -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Reflexivos con otros pronombres</h2>
+        <p class="text-sm text-gray-700">
+          Cuando hay pronombre reflexivo y de objeto directo juntos:
+          el reflexivo va <strong>primero</strong>.
+        </p>
+        <p class="text-sm ml-4">
+          ¿Te comiste el pastel? — Sí, <strong>me lo</strong> comí todo.
+        </p>
+        <p class="text-xs text-gray-600 ml-4">
+          (se/te/me + lo/la/los/las)
+        </p>
+      </div>
+
+      <!-- 9. Practice -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">Práctica rápida</h2>
+        <p class="text-sm text-gray-600 mb-2">
+          Completa con la forma correcta del verbo reflexivo o no reflexivo según el contexto.
+        </p>
+        <ol class="list-decimal ml-6 text-sm space-y-1">
+          <li>Yo ______ (levantar) a las 6:30 todos los días.</li>
+          <li>Mi hermana ______ (maquillar) antes de salir.</li>
+          <li>Los niños ______ (dormir) a las nueve, pero hoy no ______ (dormir) temprano.</li>
+          <li>Juan ______ (probar) el postre y ______ (sentir) feliz.</li>
+          <li>Nosotros ______ (ver) con nuestros amigos los fines de semana; siempre ______ (abrazar) al llegar.</li>
+        </ol>
+        <details class="mt-3 text-xs text-gray-700">
+          <summary class="cursor-pointer underline">Ver posibles respuestas</summary>
+          <p class="mt-1">
+            1. me levanto<br>
+            2. se maquilla<br>
+            3. se duermen / duermen<br>
+            4. prueba / se siente<br>
+            5. nos vemos / nos abrazamos
+          </p>
+        </details>
+      </div>
+
+    </section>
+  </main>
+
+  <footer data-include="/components/footer.html"></footer>
+</body>
+</html>
