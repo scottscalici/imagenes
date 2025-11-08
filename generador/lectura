@@ -22,15 +22,28 @@
     <label class="block font-semibold mb-1">Texto de la lectura (pega con saltos de línea / párrafos):</label>
     <textarea id="readingText" class="w-full border rounded p-2 mb-4" rows="6" placeholder="Pega el texto aquí..."></textarea>
 
+    <!-- Bulk import -->
+    <div class="mt-4 mb-2">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold">Pegar cuestionario completo (modo rápido)</h2>
+        <button id="bulkBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-sm">
+          Procesar cuestionario
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mt-1 mb-2">
+        Formato sugerido:<br>
+        <code>2. ¿Pregunta...?<br>Opción 1<br>*Opción 2 (correcta)<br>Opción 3<br><br>3. Otra pregunta...<br>A) Opción A<br>B) Opción B</code><br>
+        Usa <strong>*</strong> delante de la(s) opción(es) correcta(s).<br>
+        Las opciones siempre serán visibles; la(s) respuesta(s) se ocultan en un &lt;details&gt;.
+      </p>
+      <textarea id="bulkQA" class="w-full border rounded p-2 mb-4" rows="8" placeholder="Pega aquí todas las preguntas con sus opciones..."></textarea>
+    </div>
+
     <!-- Q&A dynamic builder -->
     <div class="flex items-center justify-between mt-2 mb-2">
-      <h2 class="text-lg font-semibold">Preguntas y respuestas</h2>
-      <button id="addQA" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded">➕ Añadir pregunta</button>
+      <h2 class="text-lg font-semibold">Preguntas y respuestas (edición manual / ajuste fino)</h2>
+      <button id="addQA" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1.5 rounded">➕ Añadir pregunta</button>
     </div>
-    <p class="text-xs text-gray-500 mb-2">
-      Tip: Puedes pegar una pregunta con opciones en este formato:<br>
-      <code>¿Quién es el protagonista?<br>A) Juan<br>B) Ana<br>C) Luis</code>
-    </p>
     <div id="qaContainer" class="space-y-4 mb-6"></div>
 
     <!-- Enlace final -->
@@ -109,28 +122,114 @@
       const trimmed = raw.trim();
       if (!trimmed) return '';
       const paragraphs = trimmed
-        .split(/\n\s*\n/) // blank line = new paragraph
+        .split(/\n\s*\n/)
         .map(p => p.trim())
         .filter(Boolean);
 
       return paragraphs
-        .map(p => {
-          // single line breaks inside paragraph -> <br>
-          const withBreaks = p.replace(/\n/g, '<br>');
-          return `<p>${withBreaks}</p>`;
-        })
+        .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
         .join('\n');
     }
 
-    // Parse question text into stem + MC options (lines starting with A) B) C) D))
+    // Parse question textarea for generateHTML
     function parseQuestion(raw) {
       const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-      if (lines.length === 0) {
-        return { stem: '', options: [] };
-      }
+      if (!lines.length) return { stem: '', options: [] };
+
       const stem = lines[0];
-      const options = lines.slice(1).filter(line => /^[A-D]\)/i.test(line));
+      const options = lines.slice(1).filter(Boolean);
       return { stem, options };
+    }
+
+    // --- BULK PARSER ---
+    function parseBulkQuestions(raw) {
+      const allLines = raw.split('\n');
+      const blocks = [];
+      let current = [];
+
+      for (let line of allLines) {
+        const isQStart = /^\s*\d+[\).]/.test(line.trim());
+        if (isQStart && current.length) {
+          blocks.push(current);
+          current = [line];
+        } else {
+          if (line.trim() || current.length) current.push(line);
+        }
+      }
+      if (current.length) blocks.push(current);
+
+      return blocks
+        .map(block => {
+          let lines = block.map(l => l.replace(/\r/g, ''));
+          while (lines.length && !lines[0].trim()) lines.shift();
+          while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+          if (!lines.length) return null;
+
+          // If first line is only "3." etc, drop it
+          if (/^\s*\d+[\).]?\s*$/.test(lines[0])) lines.shift();
+
+          // Remove leading "3. " if inline
+          if (lines[0]) {
+            lines[0] = lines[0].replace(/^\s*\d+[\).]?\s*/, '');
+          }
+
+          // Build stem until first line with "?"
+          let stemLines = [];
+          let optionLines = [];
+          let hasQ = false;
+
+          for (let line of lines) {
+            const t = line.trim();
+            if (!t) continue;
+            if (!hasQ) {
+              stemLines.push(t);
+              if (t.includes('?')) hasQ = true;
+            } else {
+              optionLines.push(t);
+            }
+          }
+
+          if (!stemLines.length) return null;
+          const stem = stemLines.join(' ').replace(/\s+/g, ' ').trim();
+          if (!stem) return null;
+
+          const cleanOptions = [];
+          const correctAnswers = [];
+
+          optionLines.forEach(opt => {
+            let text = opt.trim();
+            if (!text) return;
+
+            let isCorrect = false;
+            if (/^\*/.test(text)) {
+              isCorrect = true;
+              text = text.replace(/^\*\s*/, '');
+            }
+
+            // Keep A)/B) if present; otherwise plain
+            if (/^[A-D]\)/i.test(text)) {
+              const withoutLetter = text.replace(/^[A-D]\)\s*/, '');
+              cleanOptions.push(text);
+              if (isCorrect) correctAnswers.push(withoutLetter);
+            } else {
+              cleanOptions.push(text);
+              if (isCorrect) correctAnswers.push(text);
+            }
+          });
+
+          // Add A) B) C) if none of the options start with letters
+          const anyHasLetter = cleanOptions.some(o => /^[A-D]\)/i.test(o));
+          const letteredOptions = anyHasLetter
+            ? cleanOptions
+            : cleanOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}) ${opt}`);
+
+          return {
+            stem,
+            options: letteredOptions,
+            answers: correctAnswers
+          };
+        })
+        .filter(Boolean);
     }
 
     // Add a new Q/A block
@@ -141,16 +240,17 @@
       wrap.innerHTML = `
         <div class="flex items-center justify-between mb-2">
           <span class="font-semibold">Pregunta #<span class="qa-number">${idx}</span></span>
-          <button type="button" class="removeQA text-red-600 hover:underline">Eliminar</button>
+          <button type="button" class="removeQA text-red-600 hover:underline text-sm">Eliminar</button>
         </div>
-        <label class="block text-sm font-medium">Pregunta (puedes incluir opciones en líneas nuevas con A), B), C)...):</label>
-        <textarea class="q-text w-full border rounded p-2 mb-3" rows="3" placeholder="Escribe o pega la pregunta aquí...">${initialQ}</textarea>
-        <label class="block text-sm font-medium">Respuesta (opcional):</label>
-        <textarea class="a-text w-full border rounded p-2" rows="2" placeholder="Escribe la respuesta o deja vacío para solo mostrar la pregunta.">${initialA}</textarea>
+        <label class="block text-sm font-medium">Pregunta (puede incluir opciones en líneas nuevas):</label>
+        <textarea class="q-text w-full border rounded p-2 mb-2" rows="3"
+          placeholder="Escribe o ajusta la pregunta aquí...">${initialQ}</textarea>
+        <label class="block text-sm font-medium">Respuesta (opcional, se mostrará oculta):</label>
+        <textarea class="a-text w-full border rounded p-2" rows="2"
+          placeholder="Respuesta correcta o explicación.">${initialA}</textarea>
       `;
       document.getElementById('qaContainer').appendChild(wrap);
       attachQAHandlers(wrap);
-      generateHTML();
     }
 
     function attachQAHandlers(wrap) {
@@ -171,6 +271,29 @@
       });
     }
 
+    // Bulk import handler
+    function handleBulkImport() {
+      const raw = document.getElementById('bulkQA').value.trim();
+      if (!raw) return;
+
+      const parsed = parseBulkQuestions(raw);
+      if (!parsed.length) return;
+
+      document.getElementById('qaContainer').innerHTML = '';
+
+      parsed.forEach(item => {
+        const qLines = [item.stem, ...item.options];
+        const qText = qLines.join('\n');
+        const aText = item.answers && item.answers.length
+          ? item.answers.join(' / ')
+          : '';
+        addQA(qText, aText);
+      });
+
+      renumberQuestions();
+      generateHTML();
+    }
+
     // Build HTML output
     function generateHTML() {
       const title = (document.getElementById('title').value.trim() || 'Lectura');
@@ -189,7 +312,6 @@
       let appliedBorderColor = `border-${borderColor}`;
       let inlineBorderStyle = '';
 
-      // HEX detection
       if (customColor.startsWith('#')) {
         inlineBorderStyle = ` style="border-color: ${customColor};"`;
         appliedTextColor = '';
@@ -202,6 +324,7 @@
       let html = `<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 ${appliedBorderColor}"${inlineBorderStyle}>\n`;
       html += `  <h2 class="${appliedTextColor} font-semibold text-lg px-4 pt-4">${title}</h2>\n`;
       html += `  <div class="p-4 text-gray-800 space-y-4">\n`;
+
       if (imageUrl) {
         html += `    <img src="${imageUrl}" alt="imagen lectura" class="rounded-lg shadow mb-4">\n`;
       }
@@ -209,46 +332,40 @@
         html += `    ${readingHTML}\n`;
       }
 
-      // Q/A blocks
+      // Q&A blocks
       const qaItems = Array.from(document.querySelectorAll('.qa-item'));
       qaItems.forEach((item, i) => {
         const qRaw = item.querySelector('.q-text').value.trim();
         const aRaw = item.querySelector('.a-text').value.trim();
         if (!qRaw) return;
         const n = i + 1;
+
         const { stem, options } = parseQuestion(qRaw);
 
+        // Always show question
+        html += `    <p><strong>${n}.</strong> ${stem}</p>\n`;
+
+        // Always show options (if any)
+        if (options.length) {
+          html += `    <div class="ml-6 -mt-1 mb-2 space-y-1">\n`;
+          options.forEach(opt => {
+            html += `      <div>${opt}</div>\n`;
+          });
+          html += `    </div>\n`;
+        }
+
+        // If there is an answer, show it hidden in details
         if (aRaw) {
-          // Question + answer (collapsible)
-          html += `    <details class="mb-2">\n`;
-          html += `      <summary><strong>${n}.</strong> ${stem}</summary>\n`;
-
-          if (options.length) {
-            html += `      <div class="mt-1 space-y-1">\n`;
-            options.forEach(opt => {
-              html += `        <div>${opt}</div>\n`;
-            });
-            html += `      </div>\n`;
-          }
-
           const answerLines = aRaw
             .split('\n')
             .map(line => line.trim())
             .filter(Boolean)
             .map(line => `<p>${line}</p>`)
             .join('');
+          html += `    <details class="mb-2 ml-6">\n`;
+          html += `      <summary class="cursor-pointer text-sm text-gray-600">Mostrar respuesta</summary>\n`;
           html += `      ${answerLines}\n`;
           html += `    </details>\n`;
-        } else {
-          // Question only
-          html += `    <p><strong>${n}.</strong> ${stem}</p>\n`;
-          if (options.length) {
-            html += `    <div class="ml-6 -mt-2 mb-2 space-y-1">\n`;
-            options.forEach(opt => {
-              html += `      <div>${opt}</div>\n`;
-            });
-            html += `    </div>\n`;
-          }
         }
       });
 
@@ -264,21 +381,27 @@
     }
 
     // Events
-    document.getElementById('addQA').addEventListener('click', () => addQA());
+    document.getElementById('addQA').addEventListener('click', () => {
+      addQA();
+      generateHTML();
+    });
+
+    document.getElementById('bulkBtn').addEventListener('click', handleBulkImport);
     document.getElementById('generateBtn').addEventListener('click', generateHTML);
+
     document.getElementById('copyBtn').addEventListener('click', () => {
       const output = document.getElementById('output');
       output.select();
       document.execCommand('copy');
     });
 
-    // Live preview for base fields
     ['title','imageUrl','readingText','url','linkText','color','customColor'].forEach(id => {
       document.getElementById(id).addEventListener('input', generateHTML);
     });
 
-    // Start with one empty Q
+    // Start
     addQA();
+    generateHTML();
   </script>
 </body>
 </html>
