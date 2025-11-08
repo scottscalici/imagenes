@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador: Lectura con Preguntas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-6">
+  <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-6 border border-gray-100">
+    <h1 class="text-2xl font-bold text-indigo-600 mb-4">Generador de Sección: Lectura con Preguntas</h1>
+
+    <!-- Título -->
+    <label class="block font-semibold mb-1">Título (por defecto "Lectura"):</label>
+    <input id="title" type="text" class="w-full border rounded p-2 mb-4" placeholder="Ej. La arquitectura de Gaudí" />
+
+    <!-- Imagen -->
+    <label class="block font-semibold mb-1">Imagen (URL desde GitHub o similar):</label>
+    <input id="imageUrl" type="text" class="w-full border rounded p-2 mb-4" placeholder="https://raw.githubusercontent.com/..." />
+
+    <!-- Texto principal -->
+    <label class="block font-semibold mb-1">Texto de la lectura (pega con saltos de línea / párrafos):</label>
+    <textarea id="readingText" class="w-full border rounded p-2 mb-4" rows="6" placeholder="Pega el texto aquí..."></textarea>
+
+    <!-- Q&A dynamic builder -->
+    <div class="flex items-center justify-between mt-2 mb-2">
+      <h2 class="text-lg font-semibold">Preguntas y respuestas</h2>
+      <button id="addQA" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded">➕ Añadir pregunta</button>
+    </div>
+    <p class="text-xs text-gray-500 mb-2">
+      Tip: Puedes pegar una pregunta con opciones en este formato:<br>
+      <code>¿Quién es el protagonista?<br>A) Juan<br>B) Ana<br>C) Luis</code>
+    </p>
+    <div id="qaContainer" class="space-y-4 mb-6"></div>
+
+    <!-- Enlace final -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-semibold mb-1">Enlace (URL) al final:</label>
+        <input id="url" type="text" class="w-full border rounded p-2" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="block font-semibold mb-1">Texto visible del enlace:</label>
+        <input id="linkText" type="text" class="w-full border rounded p-2" placeholder="Ej. Leer más / Fuente" />
+      </div>
+    </div>
+
+    <!-- Colores -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block font-semibold mb-1">Color de la sección:</label>
+        <select id="color" class="w-full border rounded p-2 mb-4">
+          <option value="indigo">Índigo (por defecto)</option>
+          <option value="amber">Ámbar</option>
+          <option value="azul">Azul</option>
+          <option value="verde">Verde</option>
+          <option value="rojo">Rojo</option>
+          <option value="gris">Gris</option>
+          <option value="rosa">Rosa</option>
+          <option value="morado">Morado</option>
+          <option value="teal">Verde azulado (Teal)</option>
+          <option value="cyan">Cian</option>
+          <option value="lime">Lima</option>
+          <option value="naranja">Naranja</option>
+          <option value="pizarra">Pizarra (Slate)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-semibold mb-1">Color personalizado (Tailwind o HEX opcional):</label>
+        <input id="customColor" type="text" class="w-full border rounded p-2 mb-4" placeholder="Ej. #1E90FF o text-indigo-600" />
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex gap-4 mb-6">
+      <button id="generateBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">Generar HTML</button>
+      <button id="copyBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Copiar HTML</button>
+    </div>
+
+    <!-- Resultado -->
+    <h2 class="text-xl font-semibold mt-4 mb-2">Código generado:</h2>
+    <textarea id="output" class="w-full border rounded p-2 h-56 font-mono mb-6" readonly></textarea>
+
+    <!-- Vista previa -->
+    <h2 class="text-xl font-semibold mb-2">Vista previa:</h2>
+    <div id="preview" class="border rounded p-4 bg-gray-50"></div>
+  </div>
+
+  <script>
+    // Color mapping
+    const colorMap = {
+      indigo: ['indigo-500', 'indigo-600'],
+      amber: ['amber-500', 'amber-600'],
+      azul: ['blue-500', 'blue-600'],
+      verde: ['green-500', 'green-600'],
+      rojo: ['red-500', 'red-600'],
+      gris: ['gray-500', 'gray-600'],
+      rosa: ['pink-500', 'pink-600'],
+      morado: ['purple-500', 'purple-600'],
+      teal: ['teal-500', 'teal-600'],
+      cyan: ['cyan-500', 'cyan-600'],
+      lime: ['lime-500', 'lime-600'],
+      naranja: ['orange-500', 'orange-600'],
+      pizarra: ['slate-500', 'slate-600']
+    };
+
+    // Format lectura text with paragraphs / line breaks
+    function formatReadingText(raw) {
+      const trimmed = raw.trim();
+      if (!trimmed) return '';
+      const paragraphs = trimmed
+        .split(/\n\s*\n/) // blank line = new paragraph
+        .map(p => p.trim())
+        .filter(Boolean);
+
+      return paragraphs
+        .map(p => {
+          // single line breaks inside paragraph -> <br>
+          const withBreaks = p.replace(/\n/g, '<br>');
+          return `<p>${withBreaks}</p>`;
+        })
+        .join('\n');
+    }
+
+    // Parse question text into stem + MC options (lines starting with A) B) C) D))
+    function parseQuestion(raw) {
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if (lines.length === 0) {
+        return { stem: '', options: [] };
+      }
+      const stem = lines[0];
+      const options = lines.slice(1).filter(line => /^[A-D]\)/i.test(line));
+      return { stem, options };
+    }
+
+    // Add a new Q/A block
+    function addQA(initialQ = '', initialA = '') {
+      const idx = document.querySelectorAll('.qa-item').length + 1;
+      const wrap = document.createElement('div');
+      wrap.className = 'qa-item border rounded p-3';
+      wrap.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-semibold">Pregunta #<span class="qa-number">${idx}</span></span>
+          <button type="button" class="removeQA text-red-600 hover:underline">Eliminar</button>
+        </div>
+        <label class="block text-sm font-medium">Pregunta (puedes incluir opciones en líneas nuevas con A), B), C)...):</label>
+        <textarea class="q-text w-full border rounded p-2 mb-3" rows="3" placeholder="Escribe o pega la pregunta aquí...">${initialQ}</textarea>
+        <label class="block text-sm font-medium">Respuesta (opcional):</label>
+        <textarea class="a-text w-full border rounded p-2" rows="2" placeholder="Escribe la respuesta o deja vacío para solo mostrar la pregunta.">${initialA}</textarea>
+      `;
+      document.getElementById('qaContainer').appendChild(wrap);
+      attachQAHandlers(wrap);
+      generateHTML();
+    }
+
+    function attachQAHandlers(wrap) {
+      wrap.querySelector('.removeQA').addEventListener('click', () => {
+        wrap.remove();
+        renumberQuestions();
+        generateHTML();
+      });
+      wrap.querySelectorAll('textarea').forEach(t =>
+        t.addEventListener('input', generateHTML)
+      );
+    }
+
+    function renumberQuestions() {
+      document.querySelectorAll('.qa-item').forEach((el, i) => {
+        const numEl = el.querySelector('.qa-number');
+        if (numEl) numEl.textContent = i + 1;
+      });
+    }
+
+    // Build HTML output
+    function generateHTML() {
+      const title = (document.getElementById('title').value.trim() || 'Lectura');
+      const imageUrl = document.getElementById('imageUrl').value.trim();
+      const readingRaw = document.getElementById('readingText').value;
+      const readingHTML = formatReadingText(readingRaw);
+
+      const url = document.getElementById('url').value.trim();
+      const linkText = document.getElementById('linkText').value.trim();
+      const color = document.getElementById('color').value || 'indigo';
+      const customColor = document.getElementById('customColor').value.trim();
+
+      const [borderColor, textColor] = colorMap[color] || colorMap['indigo'];
+
+      let appliedTextColor = `text-${textColor}`;
+      let appliedBorderColor = `border-${borderColor}`;
+      let inlineBorderStyle = '';
+
+      // HEX detection
+      if (customColor.startsWith('#')) {
+        inlineBorderStyle = ` style="border-color: ${customColor};"`;
+        appliedTextColor = '';
+        appliedBorderColor = 'border-l-4';
+      } else if (customColor) {
+        appliedTextColor = customColor;
+        appliedBorderColor = customColor.replace('text-', 'border-');
+      }
+
+      let html = `<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 ${appliedBorderColor}"${inlineBorderStyle}>\n`;
+      html += `  <h2 class="${appliedTextColor} font-semibold text-lg px-4 pt-4">${title}</h2>\n`;
+      html += `  <div class="p-4 text-gray-800 space-y-4">\n`;
+      if (imageUrl) {
+        html += `    <img src="${imageUrl}" alt="imagen lectura" class="rounded-lg shadow mb-4">\n`;
+      }
+      if (readingHTML) {
+        html += `    ${readingHTML}\n`;
+      }
+
+      // Q/A blocks
+      const qaItems = Array.from(document.querySelectorAll('.qa-item'));
+      qaItems.forEach((item, i) => {
+        const qRaw = item.querySelector('.q-text').value.trim();
+        const aRaw = item.querySelector('.a-text').value.trim();
+        if (!qRaw) return;
+        const n = i + 1;
+        const { stem, options } = parseQuestion(qRaw);
+
+        if (aRaw) {
+          // Question + answer (collapsible)
+          html += `    <details class="mb-2">\n`;
+          html += `      <summary><strong>${n}.</strong> ${stem}</summary>\n`;
+
+          if (options.length) {
+            html += `      <div class="mt-1 space-y-1">\n`;
+            options.forEach(opt => {
+              html += `        <div>${opt}</div>\n`;
+            });
+            html += `      </div>\n`;
+          }
+
+          const answerLines = aRaw
+            .split('\n')
+            .map(line => line.trim())
+            .filter(Boolean)
+            .map(line => `<p>${line}</p>`)
+            .join('');
+          html += `      ${answerLines}\n`;
+          html += `    </details>\n`;
+        } else {
+          // Question only
+          html += `    <p><strong>${n}.</strong> ${stem}</p>\n`;
+          if (options.length) {
+            html += `    <div class="ml-6 -mt-2 mb-2 space-y-1">\n`;
+            options.forEach(opt => {
+              html += `      <div>${opt}</div>\n`;
+            });
+            html += `    </div>\n`;
+          }
+        }
+      });
+
+      if (url) {
+        const link = linkText || url;
+        html += `    <p class="pt-2"><a href="${url}" target="_blank" class="${appliedTextColor} hover:underline">${link}</a></p>\n`;
+      }
+
+      html += `  </div>\n</section>`;
+
+      document.getElementById('output').value = html;
+      document.getElementById('preview').innerHTML = html;
+    }
+
+    // Events
+    document.getElementById('addQA').addEventListener('click', () => addQA());
+    document.getElementById('generateBtn').addEventListener('click', generateHTML);
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const output = document.getElementById('output');
+      output.select();
+      document.execCommand('copy');
+    });
+
+    // Live preview for base fields
+    ['title','imageUrl','readingText','url','linkText','color','customColor'].forEach(id => {
+      document.getElementById(id).addEventListener('input', generateHTML);
+    });
+
+    // Start with one empty Q
+    addQA();
+  </script>
+</body>
+</html>
