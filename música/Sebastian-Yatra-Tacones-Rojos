@@ -55,6 +55,67 @@
     <li>I took (you)</li>
   </ol>
 </section>
+<section class="bg-white rounded-xl shadow p-6 border border-l-4 border-pink-600 bg-rose-50">
+  <h2 class="font-semibold text-lg px-4 pt-4 text-pink-700">Preguntas de comprensión</h2>
+  <div class="p-4  space-y-4">
+    <p><strong>1.</strong> ¿Cómo se siente el cantante cuando está con la chica de los “tacones rojos”?</p>
+    <div class="ml-6 -mt-1 mb-2 space-y-1">
+      <div>a) Triste</div>
+      <div>b) Muy feliz</div>
+      <div>c) Enojado</div>
+      <div>d) Cansado</div>
+    </div>
+    <details class="mb-2 ml-6">
+      <summary class="cursor-pointer text-sm ">Mostrar respuesta</summary>
+      <p>b) Muy feliz</p>
+    </details>
+    <p><strong>2.</strong> ¿Qué parte del cuerpo menciona para decir que ella es importante para él?</p>
+    <div class="ml-6 -mt-1 mb-2 space-y-1">
+      <div>a) La cabeza</div>
+      <div>b) La mano</div>
+      <div>c) El corazón</div>
+      <div>d) La espalda</div>
+    </div>
+    <details class="mb-2 ml-6">
+      <summary class="cursor-pointer text-sm ">Mostrar respuesta</summary>
+      <p>c) El corazón</p>
+    </details>
+    <p><strong>3.</strong> ¿Qué hace la chica cuando baila con sus tacones rojos?</p>
+    <div class="ml-6 -mt-1 mb-2 space-y-1">
+      <div>a) Se esconde</div>
+      <div>b) Ignora a todos</div>
+      <div>c) Ilumina o llena el lugar de alegría</div>
+      <div>d) Se duerme</div>
+    </div>
+    <details class="mb-2 ml-6">
+      <summary class="cursor-pointer text-sm ">Mostrar respuesta</summary>
+      <p>c) Ilumina o llena el lugar de alegría</p>
+    </details>
+    <p><strong>4.</strong> ¿Qué tipo de relación describe la canción?</p>
+    <div class="ml-6 -mt-1 mb-2 space-y-1">
+      <div>a) Entre hermanos</div>
+      <div>b) De trabajo</div>
+      <div>c) De amor/romántica</div>
+      <div>d) De estudio</div>
+    </div>
+    <details class="mb-2 ml-6">
+      <summary class="cursor-pointer text-sm ">Mostrar respuesta</summary>
+      <p>c) De amor/romántica</p>
+    </details>
+    <p><strong>5.</strong> ¿Qué imagen representa mejor a la chica en la canción?</p>
+    <div class="ml-6 -mt-1 mb-2 space-y-1">
+      <div>a) Una persona tímida y callada</div>
+      <div>b) Una persona alegre que destaca cuando baila</div>
+      <div>c) Un cantante famoso</div>
+      <div>d) Un profesor serio</div>
+    </div>
+    <details class="mb-2 ml-6">
+      <summary class="cursor-pointer text-sm ">Mostrar respuesta</summary>
+      <p>b) Una persona alegre que destaca cuando baila</p>
+    </details>
+  </div>
+</section>
+
 <script>
 (function(){
   const sect = document.currentScript.previousElementSibling;
