@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adjetivos y Pronombres Posesivos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script defer src="/assets/js/include.js"></script>
+  <style>
+    .ok { background:#d1fae5; }
+    .no { background:#fee2e2; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header data-include="/components/nav.html"></header>
+
+  <main class="container mx-auto px-4 py-10 max-w-4xl">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-6">
+      Adjetivos posesivos &amp; pronombres posesivos
+    </h1>
+
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100 space-y-8">
+      <!-- 1. What they do -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">1. ¿Para qué sirven?</h2>
+        <p class="text-gray-700 text-sm">
+          Los posesivos indican <strong>posesión o relación</strong>:
+          quién es el dueño de algo o con quién está relacionada una persona o cosa.
+          En español tenemos:
+        </p>
+        <ul class="list-disc ml-6 mt-2 text-sm text-gray-700 space-y-1">
+          <li><strong>Adjetivos posesivos cortos</strong> (antes del sustantivo)</li>
+          <li><strong>Adjetivos posesivos largos</strong> (después del sustantivo, con énfasis)</li>
+          <li><strong>Pronombres posesivos</strong> (reemplazan al sustantivo)</li>
+        </ul>
+      </div>
+
+      <!-- 2. Short possessive adjectives -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">2. Adjetivos posesivos cortos (unstressed)</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Van <strong>antes</strong> del sustantivo y concuerdan en
+          <strong>número</strong> (y a veces en género) con el sustantivo, no con el poseedor.
+        </p>
+
+        <table class="min-w-full text-left border border-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2">Persona</th>
+              <th class="px-3 py-2">Singular</th>
+              <th class="px-3 py-2">Plural</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-3 py-2">yo</td>
+              <td class="px-3 py-2">mi</td>
+              <td class="px-3 py-2">mis</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">tú</td>
+              <td class="px-3 py-2">tu</td>
+              <td class="px-3 py-2">tus</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">él / ella / Ud.</td>
+              <td class="px-3 py-2">su</td>
+              <td class="px-3 py-2">sus</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">nosotros/as</td>
+              <td class="px-3 py-2">nuestro/a</td>
+              <td class="px-3 py-2">nuestros/as</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">vosotros/as</td>
+              <td class="px-3 py-2">vuestro/a</td>
+              <td class="px-3 py-2">vuestros/as</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">ellos / ellas / Uds.</td>
+              <td class="px-3 py-2">su</td>
+              <td class="px-3 py-2">sus</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="text-sm text-gray-700 mt-2">
+          <strong>Ejemplos:</strong> mi libro, tus amigos, nuestros cuadernos, sus clases.
+        </p>
+
+        <div class="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3 text-xs text-gray-700">
+          <p class="font-semibold text-gray-900 mb-1">Cuidado con <strong>su / sus</strong></p>
+          <p>
+            <strong>su / sus</strong> puede significar <em>his, her, its, your (Ud./Uds.), their</em>.
+            Para evitar confusión, usa:
+          </p>
+          <p class="mt-1">
+            <strong>el / la / los / las + sustantivo + de + pronombre</strong><br>
+            Es su libro. → Es <strong>el libro de ella</strong> / <strong>el libro de ellos</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Long (stressed) possessive adjectives -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">3. Adjetivos posesivos largos (stressed)</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Se usan para <strong>énfasis</strong> o con el significado
+          “<strong>mío, tuyo, suyo</strong>” = <em>of mine / of yours / of his…</em>.
+          Van <strong>después</strong> del sustantivo y concuerdan en género y número con él.
+        </p>
+
+        <table class="min-w-full text-left border border-gray-200 text-sm">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2">Persona</th>
+              <th class="px-3 py-2">Formas</th>
+              <th class="px-3 py-2">Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-3 py-2">yo</td>
+              <td class="px-3 py-2">mío/a, míos/as</td>
+              <td class="px-3 py-2">el libro <strong>mío</strong></td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">tú</td>
+              <td class="px-3 py-2">tuyo/a, tuyos/as</td>
+              <td class="px-3 py-2">la casa <strong>tuya</strong></td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">él / ella / Ud.</td>
+              <td class="px-3 py-2">suyo/a, suyos/as</td>
+              <td class="px-3 py-2">los hijos <strong>suyos</strong></td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">nosotros/as</td>
+              <td class="px-3 py-2">nuestro/a, nuestros/as</td>
+              <td class="px-3 py-2">el coche <strong>nuestro</strong></td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">vosotros/as</td>
+              <td class="px-3 py-2">vuestro/a, vuestros/as</td>
+              <td class="px-3 py-2">los amigos <strong>vuestros</strong></td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">ellos / ellas / Uds.</td>
+              <td class="px-3 py-2">suyo/a, suyos/as</td>
+              <td class="px-3 py-2">la casa <strong>suya</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul class="list-disc ml-6 mt-2 text-sm text-gray-700 space-y-1">
+          <li>Normalmente van con un artículo o demostrativo:
+            <span class="text-xs">la casa mía, este libro tuyo, unos amigos nuestros</span>.
+          </li>
+          <li>
+            Para evitar la ambigüedad de <strong>suyo</strong>, también puedes usar:
+            <span class="text-xs">la casa de él / de ella / de ustedes / de ellos</span>.
+          </li>
+        </ul>
+      </div>
+
+      <!-- 4. Possessive pronouns -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">4. Pronombres posesivos</h2>
+        <p class="text-sm text-gray-700 mb-2">
+          Los pronombres posesivos <strong>reemplazan</strong> al sustantivo +
+          adjetivo posesivo. Tienen las mismas formas que los posesivos largos,
+          pero siempre van con un <strong>artículo definido</strong>.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <h3 class="font-semibold mb-1">Formas</h3>
+            <ul class="list-disc ml-5 space-y-1">
+              <li><strong>el / la / los / las mío/a/os/as</strong></li>
+              <li><strong>el / la / los / las tuyo/a/os/as</strong></li>
+              <li><strong>el / la / los / las suyo/a/os/as</strong></li>
+              <li><strong>el / la / los / las nuestro/a/os/as</strong></li>
+              <li><strong>el / la / los / las vuestro/a/os/as</strong></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-semibold mb-1">Ejemplos</h3>
+            <ul class="list-disc ml-5 space-y-1">
+              <li>Mi coche es viejo; <strong>el tuyo</strong> es nuevo.</li>
+              <li>Su casa es grande; <strong>la nuestra</strong> es pequeña.</li>
+              <li>Mis padres y <strong>los suyos</strong> son amigos.</li>
+            </ul>
+            <p class="text-xs text-gray-600 mt-1">
+              Deben concordar con el <strong>sustantivo que reemplazan</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3 text-xs text-gray-700">
+          <p class="font-semibold text-gray-900 mb-1">Otra vez: suyo/suya/suyos/suyas</p>
+          <p>
+            Como son ambiguos, puedes aclarar:
+            <strong>el suyo</strong> → <strong>el de él / el de ella / el de usted / el de ellos</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- 5. Quick combined practice -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">5. Práctica rápida</h2>
+        <p class="text-sm text-gray-600 mb-2">
+          Completa con la forma correcta: adjetivo posesivo corto, largo o pronombre posesivo.
+        </p>
+        <ol class="list-decimal ml-6 text-sm space-y-1">
+          <li>Es ______ (my) libro. → Es ______ libro.</li>
+          <li>Son ______ (our) cuadernos. → Son cuadernos ______.</li>
+          <li>Es la computadora de Ana. → Es ______ computadora. (her)</li>
+          <li>Este no es tu teléfono; es ______. (mine)</li>
+          <li>Son los coches ______. (their) / Son ______ coches.</li>
+        </ol>
+        <details class="mt-3 text-xs text-gray-700">
+          <summary class="cursor-pointer underline">Ver respuestas sugeridas</summary>
+          <p class="mt-1">
+            1. mi<br>
+            2. nuestros / nuestros<br>
+            3. su computadora / la computadora suya<br>
+            4. el mío<br>
+            5. sus / los suyos (o: los coches de ellos)
+          </p>
+        </details>
+      </div>
+
+      <!-- 6. Resumen visual -->
+      <div>
+        <h2 class="text-xl font-semibold mb-2">6. Resumen rápido</h2>
+        <ul class="list-disc ml-6 text-sm text-gray-700 space-y-1">
+          <li><strong>Cortos:</strong> mi, tu, su, nuestro, vuestro, su + sustantivo (antes del nombre).</li>
+          <li><strong>Largos:</strong> sustantivo + mío/tuyo/suyo/nuestro/vuestro (énfasis / de mine-yours).</li>
+          <li><strong>Pronombres:</strong> el/la/los/las mío/tuyo/suyo/nuestro/vuestro (reemplazan al nombre).</li>
+          <li>Para aclarar <strong>su / suyo</strong> usa:
+            <span class="text-xs">el libro de ella, la casa de ellos, etc.</span>
+          </li>
+        </ul>
+      </div>
+
+    </section>
+  </main>
+
+  <footer data-include="/components/footer.html"></footer>
+</body>
+</html>
