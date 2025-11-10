@@ -1,96 +1,274 @@
-<!-- STYLE GENERATOR DEMO -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>Style Generator</title>
-</head>
-<body class="min-h-screen bg-white text-gray-800 p-6">
+  <title>Tailwind Snippet Restyler v5.3</title>
 
-  <div class="max-w-4xl mx-auto space-y-6">
+  <!-- Tailwind config (MUST load before Tailwind itself) -->
+  <script>
+    tailwind = {
+      config: {
+        safelist: [
+          {
+            pattern: /(border|text|bg)-(emerald|sky|rose|amber|indigo|teal|violet|slate|gray|stone|cyan|blue|purple|lime|pink|yellow|fuchsia|neutral|gold)-(50|100|200|300|400|500|600|700|800|900)/,
+          },
+        ],
+      },
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; }
+    #palette::-webkit-scrollbar { height: 6px; }
+    #palette::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .disabled { opacity: 0.5; pointer-events: none; }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
     <!-- Controls -->
-    <div class="bg-gray-100 p-4 rounded-xl shadow">
-      <h2 class="text-lg font-bold mb-2">🎨 Choose Your Style</h2>
-      <form id="styleForm" class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block font-medium">Primary Color:</label>
-          <input type="color" name="primary" value="#f87171" class="w-full h-10 rounded border" />
-        </div>
-        <div>
-          <label class="block font-medium">Secondary Color:</label>
-          <input type="color" name="secondary" value="#facc15" class="w-full h-10 rounded border" />
-        </div>
-        <div>
-          <label class="block font-medium">Background:</label>
-          <select name="background" class="w-full rounded border h-10">
-            <option value="white">White</option>
-            <option value="gray-100">Gray</option>
-            <option value="gradient">Tomato Gradient</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-medium">Icon:</label>
-          <select name="icon" class="w-full rounded border h-10">
-            <option value="🍅">Tomato</option>
-            <option value="🎭">Drama</option>
-            <option value="🌹">Romance</option>
-            <option value="🔥">Fire</option>
-            <option value="📖">Book</option>
-            <option value="🎧">Music</option>
-          </select>
-        </div>
-      </form>
-      <button onclick="applyStyle()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600">Apply Style</button>
+    <div class="flex flex-wrap items-center gap-4">
+      <!-- Quick Palette -->
+      <div id="palette" class="flex overflow-x-auto gap-2"></div>
+
+      <!-- Primary Controls -->
+      <select id="colorSelect" class="border rounded p-2">
+        <option>emerald</option><option>sky</option><option>rose</option><option>amber</option>
+        <option>indigo</option><option>teal</option><option>violet</option><option>slate</option>
+        <option>gray</option><option>stone</option><option>cyan</option><option>blue</option>
+        <option>purple</option><option>lime</option><option>pink</option><option>yellow</option>
+        <option>fuchsia</option><option>neutral</option><option>gold</option>
+      </select>
+
+      <label class="text-sm">Shade:
+        <input id="shadeInput" type="number" value="600" min="50" max="900" step="50" class="w-20 border rounded p-1 text-center">
+      </label>
+
+      <label class="text-sm flex items-center gap-1">
+        <input id="matchTitle" type="checkbox" checked> Match Title Color
+      </label>
+
+      <label class="text-sm flex items-center gap-1">
+        <input id="addTint" type="checkbox"> Add Background Tint
+      </label>
     </div>
 
-    <!-- Styled Output Preview -->
-    <div id="output" class="p-6 rounded-xl border border-gray-200 bg-white">
-      <h1 id="title" class="text-2xl font-bold mb-4">📖 Sample Lesson Plan</h1>
-      <p class="mb-2">Esta clase cubrirá los usos del pretérito y del imperfecto con ejemplos y práctica guiada.</p>
-      <ul class="list-disc list-inside">
-        <li>Introducción con imágenes 📸</li>
-        <li>Discusión en grupos pequeños 👥</li>
-        <li>Práctica independiente ✍️</li>
-      </ul>
+    <!-- Secondary color controls -->
+    <div class="flex flex-wrap items-center gap-4 pl-8">
+      <label class="text-sm flex items-center gap-1">
+        <input id="useSecondary" type="checkbox"> Use Secondary Color for Background
+      </label>
+
+      <select id="secondaryColor" class="border rounded p-2 disabled">
+        <option>emerald</option><option>sky</option><option>rose</option><option>amber</option>
+        <option>indigo</option><option>teal</option><option>violet</option><option>slate</option>
+        <option>gray</option><option>stone</option><option>cyan</option><option>blue</option>
+        <option>purple</option><option>lime</option><option>pink</option><option>yellow</option>
+        <option>fuchsia</option><option>neutral</option><option>gold</option>
+      </select>
+
+      <label class="text-sm">Shade:
+        <input id="secondaryShade" type="number" value="300" min="50" max="900" step="50" class="w-20 border rounded p-1 text-center disabled">
+      </label>
+
+      <button id="copyBtn" class="ml-auto bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700">Copy Styled HTML</button>
+    </div>
+
+    <!-- Input -->
+    <div>
+      <label class="text-sm font-semibold">Paste Your Section or Div Snippet:
+<p>🎓 Classroom + Practice Icons
+<br>
+🎯 Meta – goal setting or speaking time targets
+<br>
+💬 Conversación – speaking prompts, dialogue tasks
+<br>
+✏️ Práctica – grammar or vocabulary practice
+<br>
+📚 Lectura – reading assignments
+<br>
+🎵 Música – song-based activities
+<br>
+🎧 Audio / 🔊 – listening tasks
+<br>
+🌀 Se – used for “se” structures (e.g., se impersonal)
+<br>
+🧠 Gramática – for deep-dive grammar explanations
+<br>
+🎲 Juego – games or randomness, often for review
+<br>
+📅 Time + Schedule
+<br>
+⏱️ Timer – countdowns for speaking or writing tasks
+<br>
+🗓️ Calendar – date references or planning
+<br>
+🕒 Duración – duration of an activity
+<br>
+🗂️ Organization + Tasks
+<br>
+✅ Done – marking a completed task
+<br>
+🛠️ Pending – something still being worked on
+<br>
+📌 Reminder – flagged to return to
+<br>
+🔗 Link – clickable or copy-paste resource
+<br>
+🌎 IB Theme / Cultural Context
+<br>
+🌍 / 🌎 Compartimos el planeta
+<br>
+🧬 Identidades
+<br>
+🧠 Ingenio humano
+<br>
+🏠 Organización social
+<br>
+🧳 Experiencias
+<br>
+🎭 Cultura or artistic tasks
+<br>
+💡 Tone / Mood
+<br>
+🔋 Energy / Motivation
+<br>
+😳 Awkward / Embarrassment
+<br>
+🤯 Frustration / Chaos
+<br>
+🤪 Wild / Funny
+<br>
+💡 Tip / Idea
+<br>
+⚠️ Warning / Don’t forget
+<br>
+😴 Fatigue / Lazy moments</label>
+      <textarea id="inputHtml" rows="8" class="w-full border rounded p-3 font-mono text-sm" placeholder="Paste your HTML section or div snippet here..."></textarea>
+    </div>
+
+    <!-- Preview -->
+    <div>
+      <h2 class="text-sm font-semibold text-gray-600 mb-2">Preview:</h2>
+      <div id="previewArea" class="bg-white border rounded-xl p-4 min-h-[150px] text-gray-500 italic">
+        Paste a snippet above and choose a color...
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div>
+      <h2 class="text-sm font-semibold text-gray-600 mb-2">Styled HTML Output:</h2>
+      <textarea id="outputHtml" rows="8" readonly class="w-full border rounded p-3 font-mono text-xs bg-gray-50"></textarea>
     </div>
   </div>
 
   <script>
-    function applyStyle() {
-      const form = document.forms["styleForm"];
-      const primary = form["primary"].value;
-      const secondary = form["secondary"].value;
-      const background = form["background"].value;
-      const icon = form["icon"].value;
+    const paletteColors = [
+      {name:'emerald',hex:'#059669'},{name:'sky',hex:'#0ea5e9'},{name:'rose',hex:'#e11d48'},{name:'amber',hex:'#f59e0b'},
+      {name:'indigo',hex:'#4338ca'},{name:'teal',hex:'#0d9488'},{name:'violet',hex:'#7c3aed'},{name:'slate',hex:'#475569'},
+      {name:'gray',hex:'#6b7280'},{name:'stone',hex:'#78716c'},{name:'cyan',hex:'#06b6d4'},{name:'blue',hex:'#2563eb'},
+      {name:'purple',hex:'#9333ea'},{name:'lime',hex:'#84cc16'},{name:'pink',hex:'#db2777'},{name:'yellow',hex:'#eab308'},
+      {name:'fuchsia',hex:'#c026d3'},{name:'neutral',hex:'#737373'},{name:'gold',hex:'#d4af37'}
+    ];
 
-      const output = document.getElementById("output");
-      const title = document.getElementById("title");
+    const palette=document.getElementById('palette');
+    paletteColors.forEach(c=>{
+      const swatch=document.createElement('button');
+      swatch.className='w-6 h-6 rounded-full border border-gray-300 flex-shrink-0';
+      swatch.style.background=c.hex;
+      swatch.title=c.name;
+      swatch.addEventListener('click',()=>{
+        document.getElementById('colorSelect').value=c.name;
+        applyColor();
+      });
+      palette.appendChild(swatch);
+    });
 
-      // Apply background
-      output.className = "p-6 rounded-xl border";
-      if (background === "white") {
-        output.classList.add("bg-white");
-      } else if (background === "gray-100") {
-        output.classList.add("bg-gray-100");
+    const secColor = document.getElementById('secondaryColor');
+    const secShade = document.getElementById('secondaryShade');
+    document.getElementById('useSecondary').addEventListener('change',(e)=>{
+      if(e.target.checked){
+        secColor.classList.remove('disabled');
+        secShade.classList.remove('disabled');
       } else {
-        output.style.background = "linear-gradient(to right, #f87171, #facc15)";
+        secColor.classList.add('disabled');
+        secShade.classList.add('disabled');
+      }
+      applyColor();
+    });
+
+    function applyColor(){
+      const input=document.getElementById('inputHtml').value;
+      if(!input.trim()){document.getElementById('previewArea').innerHTML='Paste a section or div first.';return;}
+      let updated=input;
+
+      // clean previous color classes
+      updated=updated
+        .replace(/border-[a-z]+-[0-9]+/g,'')
+        .replace(/text-[a-z]+-[0-9]+/g,'')
+        .replace(/bg-[a-z]+-[0-9]+/g,'');
+
+      const color=document.getElementById('colorSelect').value;
+      const shade=parseInt(document.getElementById('shadeInput').value);
+      const match=document.getElementById('matchTitle').checked;
+      const tintOn=document.getElementById('addTint').checked;
+      const tint=(shade>=600)?100:50;
+
+      // secondary
+      const useSecondary=document.getElementById('useSecondary').checked;
+      const color2=document.getElementById('secondaryColor').value;
+      const shade2=parseInt(document.getElementById('secondaryShade').value);
+      const tint2=(shade2>=600)?100:50;
+
+      // container recolor
+      updated=updated.replace(/<(section|div)([^>]*)class=\"([^\"]*)\"/,(m,tag,before,classes)=>{
+        return `<${tag}${before}class="${classes.trim()} border-l-4 border-${color}-${shade}"`;
+      });
+
+      // text recolor
+      if(match){
+        const next=shade+100;
+        updated=updated.replace(/<(h2|p)([^>]*)class=\"([^\"]*)\"/,(m,tag,before,classes)=>{
+          return `<${tag}${before}class="${classes.trim()} text-${color}-${next}"`;
+        });
       }
 
-      // Apply border
-      output.style.borderColor = primary;
+      // background recolor
+      if(tintOn){
+        if(useSecondary){
+          updated=updated.replace(/<(section|div)([^>]*)class=\"([^\"]*)\"/,(m,tag,before,classes)=>{
+            return `<${tag}${before}class="${classes.trim()} bg-${color2}-${tint2}"`;
+          });
+        } else {
+          updated=updated.replace(/<(section|div)([^>]*)class=\"([^\"]*)\"/,(m,tag,before,classes)=>{
+            return `<${tag}${before}class="${classes.trim()} bg-${color}-${tint}"`;
+          });
+        }
+      }
 
-      // Apply icon
-      title.textContent = `${icon} Sample Lesson Plan`;
+      // recolor inline spans if secondary active
+      if(useSecondary){
+        updated=updated.replace(/<span([^>]*)class=\"([^\"]*)\"/g,(m,before,classes)=>{
+          return `<span${before}class="${classes.trim()} bg-${color2}-${shade2} text-${color2}-${shade2+200}"`;
+        });
+      }
 
-      // Apply color scheme
-      title.style.color = primary;
-      const items = output.querySelectorAll("li");
-      items.forEach((li, i) => {
-        li.style.color = i % 2 === 0 ? primary : secondary;
-      });
+      document.getElementById('previewArea').innerHTML=updated;
+      document.getElementById('outputHtml').value=updated;
     }
-  </script>
 
+    document.querySelectorAll('#colorSelect,#shadeInput,#matchTitle,#addTint,#secondaryColor,#secondaryShade').forEach(el=>{
+      el.addEventListener('input',applyColor);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click',()=>{
+      navigator.clipboard.writeText(document.getElementById('outputHtml').value);
+      alert('✅ Styled HTML copied to clipboard');
+    });
+  </script>
 </body>
 </html>
