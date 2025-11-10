@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ir vs. Venir – Notas de gramática</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-5 py-4 space-y-1">
+      <p class="text-xs uppercase tracking-wide text-gray-500">
+        Español II / IV · Palabras problemáticas
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+        Ir vs. Venir
+      </h1>
+      <p class="text-sm text-gray-600">
+        Dos verbos sencillos que causan problemas porque dependen del punto de vista del hablante.
+        Aquí tienes una guía clara, con reglas, ejemplos y errores típicos.
+      </p>
+    </header>
+
+    <!-- Resumen rápido -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-2">
+      <h2 class="text-lg font-semibold text-indigo-600">Resumen rápido</h2>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><span class="font-semibold">Ir</span>: movimiento <span class="font-semibold">desde aquí hacia otro lugar</span>.</li>
+        <li><span class="font-semibold">Venir</span>: movimiento <span class="font-semibold">hacia donde está el hablante</span> o la persona de referencia.</li>
+        <li>En inglés muchas veces se usa <em>to come</em> donde en español se usa <span class="font-semibold">ir</span>.</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Pregunta clave: ¿la acción se mueve hacia mí / hacia “aquí”? → <span class="font-semibold">venir</span>.  
+        ¿Se aleja de mí / de “aquí”? → <span class="font-semibold">ir</span>.
+      </p>
+    </section>
+
+    <!-- Explicación detallada -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-4">
+      <h2 class="text-xl font-semibold text-gray-800">1. Idea central</h2>
+      <p class="text-sm text-gray-700">
+        La diferencia entre <span class="font-semibold">ir</span> y <span class="font-semibold">venir</span> no es el medio de transporte
+        ni la distancia, sino el <span class="font-semibold">punto de vista</span>.
+      </p>
+
+      <div class="grid gap-4 md:grid-cols-2 text-sm">
+        <div class="bg-indigo-50 border-l-4 border-indigo-400 rounded-xl p-3">
+          <p class="font-semibold text-indigo-800 mb-1">Ir</p>
+          <p>
+            El sujeto se mueve desde el lugar donde está ahora
+            hacia otro lugar distinto.
+          </p>
+          <ul class="list-disc list-inside mt-1 space-y-1">
+            <li><em>Voy al cine.</em> (Ahora estoy aquí, destino = cine.)</li>
+            <li><em>Ellos van a México mañana.</em></li>
+          </ul>
+        </div>
+
+        <div class="bg-emerald-50 border-l-4 border-emerald-400 rounded-xl p-3">
+          <p class="font-semibold text-emerald-800 mb-1">Venir</p>
+          <p>
+            El movimiento termina donde está el hablante
+            o la persona/sitio que usamos como referencia.
+          </p>
+          <ul class="list-disc list-inside mt-1 space-y-1">
+            <li><em>¿Vienes a mi casa esta noche?</em> (Destino = donde estoy yo.)</li>
+            <li><em>Mis padres vienen a la universidad el sábado.</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-500">
+        Nota: En muchas explicaciones se destaca que con <span class="font-semibold">venir</span> la parte importante es
+        el lugar de llegada (aquí / con nosotros), mientras que con <span class="font-semibold">ir</span> simplemente salimos
+        hacia otro lugar.
+      </p>
+    </section>
+
+    <!-- Comparación práctica -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">2. Comparación práctica con ejemplos</h2>
+
+      <div class="overflow-x-auto text-sm">
+        <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden text-left">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-3 py-2 font-semibold text-gray-700">Situación</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Forma correcta</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Comentario</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-3 py-2">Estás en casa. Más tarde vas al gimnasio.</td>
+              <td class="px-3 py-2"><span class="font-semibold">Voy</span> al gimnasio a las seis.</td>
+              <td class="px-3 py-2">Te alejas de donde estás ahora → <span class="font-semibold">ir</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">Estás en la escuela y tu amigo también llegará allí.</td>
+              <td class="px-3 py-2">¿A qué hora <span class="font-semibold">vienes</span> a la escuela?</td>
+              <td class="px-3 py-2">Se mueve hacia el lugar donde estás tú → <span class="font-semibold">venir</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">Por teléfono, tú estás en casa; tu amigo está en el centro comercial.</td>
+              <td class="px-3 py-2">Si quieres que él vaya a tu casa: <span class="font-semibold">¿Vienes</span> a mi casa?</td>
+              <td class="px-3 py-2">Destino = tu casa (tu punto de vista).</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">Planean ir juntos a una fiesta en otro lugar.</td>
+              <td class="px-3 py-2"><span class="font-semibold">¿Vas</span> a la fiesta esta noche?</td>
+              <td class="px-3 py-2">Ni tú ni la otra persona están allí ahora → se usa normalmente <span class="font-semibold">ir</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">El profesor habla desde el aula sobre la visita de los padres al colegio.</td>
+              <td class="px-3 py-2">Sus padres <span class="font-semibold">vienen</span> al colegio mañana.</td>
+              <td class="px-3 py-2">Llegan al lugar donde está el profesor / “nosotros”.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Expresiones frecuentes -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">3. Construcciones y expresiones frecuentes</h2>
+      <div class="grid gap-4 md:grid-cols-2 text-sm">
+
+        <div>
+          <h3 class="font-semibold text-indigo-700 mb-1">Con <span class="font-semibold">ir</span></h3>
+          <ul class="list-disc list-inside space-y-1 text-gray-700">
+            <li><span class="font-semibold">Ir a + lugar</span>: <em>Voy al médico.</em></li>
+            <li><span class="font-semibold">Ir a + infinitivo</span> (futuro inmediato): <em>Voy a estudiar.</em></li>
+            <li><span class="font-semibold">Irse</span> (marcharse): <em>Me voy.</em></li>
+            <li><span class="font-semibold">¿Cómo te va?</span> (expresión fija).</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-emerald-700 mb-1">Con <span class="font-semibold">venir</span></h3>
+          <ul class="list-disc list-inside space-y-1 text-gray-700">
+            <li><span class="font-semibold">Venir a + lugar</span>: movimiento hacia “aquí”. <em>Mis amigos vienen a casa.</em></li>
+            <li><span class="font-semibold">Venir de + lugar</span>: origen. <em>Vengo de la biblioteca.</em></li>
+            <li><span class="font-semibold">Venir + gerundio</span> (proceso que se desarrolla hasta ahora): <em>Viene mejorando.</em></li>
+            <li><span class="font-semibold">¡Ven!</span> (mandato hacia donde estoy yo).</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Errores típicos -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">4. Errores típicos de angloparlantes</h2>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li>
+          Decir <em>*¿Vienes a la fiesta?</em> cuando ni el hablante ni el oyente están allí.
+          En este caso es más natural <span class="font-semibold">¿Vas a la fiesta?</span>.
+        </li>
+        <li>
+          Traducir literalmente <em>“I’m coming!”</em> cuando alguien toca la puerta.
+          En español normalmente se dice <span class="font-semibold">“¡Ya voy!”</span>, no <em>*“Ya vengo”</em> (salvo en algunos dialectos
+          donde tiene otro matiz).
+        </li>
+        <li>
+          Usar siempre <span class="font-semibold">venir</span> para “come” sin considerar el punto de llegada.
+          Recuerda: si el destino no es “aquí” ni “con nosotros”, suele ser <span class="font-semibold">ir</span>.
+        </li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Truco: imagina un mapa. Marca “aquí”. Si la flecha termina en “aquí”, usa <span class="font-semibold">venir</span>.
+        Si la flecha sale de “aquí” hacia otro punto, usa <span class="font-semibold">ir</span>.
+      </p>
+    </section>
+
+    <!-- Mini práctica -->
+    <section class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 space-y-2 text-sm text-gray-800">
+      <h2 class="text-lg font-semibold text-indigo-700">5. Mini práctica (para clase o tarea)</h2>
+      <p class="text-xs text-gray-600 mb-1">Completa con <span class="font-semibold">ir</span> o <span class="font-semibold">venir</span> en la forma correcta.</p>
+      <ol class="list-decimal list-inside space-y-1">
+        <li>—¿A qué hora __________ tus amigos a tu casa? —A las siete.</li>
+        <li>Mañana nosotros __________ al museo con la clase de arte.</li>
+        <li>Si quieres hablar conmigo, __________ a mi oficina después de clase.</li>
+        <li>Mis padres __________ de Colombia el lunes; llegan al aeropuerto a las 8.</li>
+        <li>—¿__________ al concierto esta noche? —Sí, nos vemos allí.</li>
+      </ol>
+      <p class="text-xs text-gray-500 mt-2">
+        (Puedes añadir las respuestas debajo con un botón “mostrar soluciones” en otra versión de la página.)
+      </p>
+    </section>
+
+  </div>
+</body>
+</html>
