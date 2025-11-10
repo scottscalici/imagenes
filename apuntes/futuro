@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El futuro – Notas de gramática</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-5 py-4 space-y-1">
+      <p class="text-xs uppercase tracking-wide text-gray-500">
+        Español IV / IB · Estructuras verbales
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+        El futuro
+      </h1>
+      <p class="text-sm text-gray-600">
+        Cómo formar el futuro en español y cuándo usarlo (más allá del típico “will”).
+      </p>
+    </header>
+
+    <!-- Resumen rápido -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-2">
+      <h2 class="text-lg font-semibold text-indigo-600">Resumen rápido</h2>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>Un solo set de terminaciones para -AR, -ER, -IR, añadidas al infinitivo.</li>
+        <li>Varios verbos tienen raíz irregular pero usan las mismas terminaciones.</li>
+        <li>Usos clave: acciones futuras, probabilidad/conjetura en el presente, y en combinación con conjunciones de tiempo.</li>
+        <li>“Will (willingness)” muchas veces se expresa con <span class="font-semibold">querer + infinitivo</span>, no con el futuro.</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Piénsalo como: <span class="font-semibold">forma sencilla</span>, <span class="font-semibold">usos muy ricos</span>.
+      </p>
+    </section>
+
+    <!-- Formación: regulares -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">1. Formación del futuro: verbos regulares</h2>
+      <p class="text-sm text-gray-700">
+        Para los verbos regulares, añade estas terminaciones al infinitivo completo:
+      </p>
+
+      <div class="overflow-x-auto text-sm">
+        <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden text-center">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-3 py-2 font-semibold text-gray-700">Persona</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Term.</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Hablar</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Comer</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Vivir</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-3 py-2">yo</td>
+              <td class="px-3 py-2">-é</td>
+              <td class="px-3 py-2">hablaré</td>
+              <td class="px-3 py-2">comeré</td>
+              <td class="px-3 py-2">viviré</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">tú</td>
+              <td class="px-3 py-2">-ás</td>
+              <td class="px-3 py-2">hablarás</td>
+              <td class="px-3 py-2">comerás</td>
+              <td class="px-3 py-2">vivirás</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">él/ella/usted</td>
+              <td class="px-3 py-2">-á</td>
+              <td class="px-3 py-2">hablará</td>
+              <td class="px-3 py-2">comerá</td>
+              <td class="px-3 py-2">vivirá</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">nosotros/as</td>
+              <td class="px-3 py-2">-emos</td>
+              <td class="px-3 py-2">hablaremos</td>
+              <td class="px-3 py-2">comeremos</td>
+              <td class="px-3 py-2">viviremos</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">vosotros/as</td>
+              <td class="px-3 py-2">-éis</td>
+              <td class="px-3 py-2">hablaréis</td>
+              <td class="px-3 py-2">comeréis</td>
+              <td class="px-3 py-2">viviréis</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">ellos/ellas/ustedes</td>
+              <td class="px-3 py-2">-án</td>
+              <td class="px-3 py-2">hablarán</td>
+              <td class="px-3 py-2">comerán</td>
+              <td class="px-3 py-2">vivirán</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-xs text-gray-500">
+        Todas las terminaciones llevan tilde excepto <span class="font-semibold">nosotros</span>. :contentReference[oaicite:1]{index=1}
+      </p>
+    </section>
+
+    <!-- Formación: irregulares -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">2. Futuro con raíz irregular</h2>
+      <p class="text-sm text-gray-700">
+        Algunos verbos cambian la raíz, pero conservan las mismas terminaciones del futuro:
+      </p>
+
+      <div class="grid gap-3 md:grid-cols-2 text-sm text-gray-800">
+        <ul class="list-disc list-inside space-y-1">
+          <li><span class="font-semibold">tener</span> → tendr- (tendré)</li>
+          <li><span class="font-semibold">poner</span> → pondr- (pondrás)</li>
+          <li><span class="font-semibold">salir</span> → saldr-</li>
+          <li><span class="font-semibold">venir</span> → vendr-</li>
+          <li><span class="font-semibold">poder</span> → podr-</li>
+        </ul>
+        <ul class="list-disc list-inside space-y-1">
+          <li><span class="font-semibold">querer</span> → querr-</li>
+          <li><span class="font-semibold">saber</span> → sabr-</li>
+          <li><span class="font-semibold">haber</span> → habr- (habrá)</li>
+          <li><span class="font-semibold">hacer</span> → har-</li>
+          <li><span class="font-semibold">decir</span> → dir-</li>
+        </ul>
+      </div>
+
+      <p class="text-xs text-gray-500">
+        Patrón: muchas raíces pierden vocal o añaden <span class="font-semibold">-dr-</span>. :contentReference[oaicite:2]{index=2}
+      </p>
+    </section>
+
+    <!-- Usos: futuro real -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">3. Uso 1 – Acciones futuras</h2>
+      <p class="text-sm text-gray-700">
+        Se usa para hablar de acciones que ocurrirán más adelante, muchas veces con marcadores de tiempo:
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>Mañana hablaremos sobre el medio ambiente.</em></li>
+        <li><em>El año que viene estudiaré en la universidad.</em></li>
+        <li><em>Pronto verás los resultados.</em></li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        En la conversación diaria, el español también usa mucho el presente o <span class="font-semibold">ir a + infinitivo</span> para el futuro:
+        <em>Mañana voy a estudiar</em>, <em>Mañana estudio</em>. El futuro simple suena un poco más formal o enfático.
+      </p>
+    </section>
+
+    <!-- Usos: voluntad vs will -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">4. Uso 2 – “Will” de voluntad</h2>
+      <p class="text-sm text-gray-700">
+        En inglés, <em>will</em> puede indicar futuro o disposición/voluntad. En español, para expresar <span class="font-semibold">voluntad</span>
+        usamos normalmente <span class="font-semibold">querer + infinitivo</span>, no el futuro:
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>¿Quieres ayudar?</em> (Will you help?)</li>
+        <li><em>Quiero participar.</em> (I’ll help / I’m willing.)</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        El futuro aquí sonaría raro: <em>*Ayudaré</em> como respuesta directa a una petición suena distante o solemne.
+        :contentReference[oaicite:3]{index=3}
+      </p>
+    </section>
+
+    <!-- Usos: conjetura/probabilidad -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">5. Uso 3 – Conjetura o probabilidad (presente)</h2>
+      <p class="text-sm text-gray-700">
+        Muy típico en español: el futuro expresa duda, suposición o probabilidad sobre el presente.
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>¿Qué hora será?</em> → I wonder what time it is.</li>
+        <li><em>Estará en casa.</em> → He’s probably at home.</li>
+        <li><em>Tendrán unos 16 años.</em> → They’re probably about 16.</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Idea: “Supongo que ahora…” se codifica con el futuro. :contentReference[oaicite:4]{index=4}
+      </p>
+    </section>
+
+    <!-- Usos: con conjunciones de tiempo -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">6. Uso 4 – Futuro + conjunciones de tiempo</h2>
+      <p class="text-sm text-gray-700">
+        Cuando hablamos del futuro después de ciertas conjunciones de tiempo, el español prefiere:
+        <span class="font-semibold">futuro en la cláusula principal</span> +
+        <span class="font-semibold">presente de subjuntivo</span> en la cláusula con:
+        <em>cuando, después (de) que, en cuanto, hasta que, tan pronto como</em>.
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>Nos quedaremos aquí hasta que termine la reunión.</em></li>
+        <li><em>Te llamaré cuando llegue a casa.</em></li>
+        <li><em>Tan pronto como tengamos resultados, los publicaremos.</em></li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Ojo: en estas cláusulas de tiempo, evita usar <em>futuro</em> o <em>ir a</em> después de la conjunción. :contentReference[oaicite:5]{index=5}
+      </p>
+    </section>
+
+    <!-- Mini práctica -->
+    <section class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 space-y-2 text-sm text-gray-800">
+      <h2 class="text-lg font-semibold text-indigo-700">7. Mini práctica</h2>
+      <p class="text-xs text-gray-600 mb-1">
+        Completa con la forma correcta del futuro:
+      </p>
+      <ol class="list-decimal list-inside space-y-1">
+        <li>Mañana nosotros __________ (salir) temprano para el aeropuerto.</li>
+        <li>¿Qué hora __________ (ser)? Ya no hay nadie en el pasillo.</li>
+        <li>Tan pronto como ellos __________ (terminar), te __________ (enviar) el informe.</li>
+        <li>El año que viene __________ (haber) más oportunidades de intercambio.</li>
+        <li>Creo que mis amigos __________ (llegar) sobre las ocho.</li>
+      </ol>
+      <p class="text-xs text-gray-500 mt-2">
+      </p>
+    </section>
+
+  </div>
+</body>
+</html>
