@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El condicional simple – Notas de gramática</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-white rounded-2xl shadow-sm border-l-4 border-indigo-500 px-5 py-4 space-y-1">
+      <p class="text-xs uppercase tracking-wide text-gray-500">
+        Español IV / IB · Estructuras verbales
+      </p>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+        El condicional simple
+      </h1>
+      <p class="text-sm text-gray-600">
+        El tiempo de las hipótesis, la cortesía y las consecuencias posibles. Muy conectado con el futuro.
+      </p>
+    </header>
+
+    <!-- Resumen rápido -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-2">
+      <h2 class="text-lg font-semibold text-indigo-600">Resumen rápido</h2>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>Un solo set de terminaciones para -AR, -ER, -IR, añadidas al infinitivo.</li>
+        <li>Las mismas raíces irregulares que el futuro.</li>
+        <li>Usos clave: hipótesis con <em>si</em>, cortesía, deseos, consejos y probabilidad en el pasado.</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Pregunta: “En esa situación, ¿qué <span class="font-semibold">pasaría</span>?” → condicional.
+      </p>
+    </section>
+
+    <!-- Formación -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">1. Formación: verbos regulares</h2>
+      <p class="text-sm text-gray-700">
+        Añade estas terminaciones al infinitivo completo:
+      </p>
+
+      <div class="overflow-x-auto text-sm">
+        <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden text-center">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-3 py-2 font-semibold text-gray-700">Persona</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Term.</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Hablar</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Comer</th>
+              <th class="px-3 py-2 font-semibold text-gray-700">Vivir</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-3 py-2">yo</td>
+              <td class="px-3 py-2">-ía</td>
+              <td class="px-3 py-2">hablaría</td>
+              <td class="px-3 py-2">comería</td>
+              <td class="px-3 py-2">viviría</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">tú</td>
+              <td class="px-3 py-2">-ías</td>
+              <td class="px-3 py-2">hablarías</td>
+              <td class="px-3 py-2">comerías</td>
+              <td class="px-3 py-2">vivirías</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">él/ella/usted</td>
+              <td class="px-3 py-2">-ía</td>
+              <td class="px-3 py-2">hablaría</td>
+              <td class="px-3 py-2">comería</td>
+              <td class="px-3 py-2">viviría</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">nosotros/as</td>
+              <td class="px-3 py-2">-íamos</td>
+              <td class="px-3 py-2">hablaríamos</td>
+              <td class="px-3 py-2">comeríamos</td>
+              <td class="px-3 py-2">viviríamos</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">vosotros/as</td>
+              <td class="px-3 py-2">-íais</td>
+              <td class="px-3 py-2">hablaríais</td>
+              <td class="px-3 py-2">comeríais</td>
+              <td class="px-3 py-2">viviríais</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">ellos/ellas/ustedes</td>
+              <td class="px-3 py-2">-ían</td>
+              <td class="px-3 py-2">hablarían</td>
+              <td class="px-3 py-2">comerían</td>
+              <td class="px-3 py-2">vivirían</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-xs text-gray-500">
+        Todas las formas llevan tilde en la <span class="font-semibold">í</span>.
+      </p>
+    </section>
+
+    <!-- Irregulares -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">2. Raíces irregulares (igual que el futuro)</h2>
+      <p class="text-sm text-gray-700">
+        Los mismos verbos irregulares del futuro usan la misma raíz + terminaciones del condicional:
+      </p>
+      <div class="grid gap-3 md:grid-cols-2 text-sm text-gray-800">
+        <ul class="list-disc list-inside space-y-1">
+          <li><span class="font-semibold">tener</span> → tendr- (tendría)</li>
+          <li><span class="font-semibold">poner</span> → pondr- (pondrías)</li>
+          <li><span class="font-semibold">salir</span> → saldr-</li>
+          <li><span class="font-semibold">venir</span> → vendr-</li>
+          <li><span class="font-semibold">poder</span> → podr-</li>
+        </ul>
+        <ul class="list-disc list-inside space-y-1">
+          <li><span class="font-semibold">querer</span> → querr-</li>
+          <li><span class="font-semibold">saber</span> → sabr-</li>
+          <li><span class="font-semibold">haber</span> → habr- (habría)</li>
+          <li><span class="font-semibold">hacer</span> → har-</li>
+          <li><span class="font-semibold">decir</span> → dir-</li>
+        </ul>
+      </div>
+      <p class="text-xs text-gray-500">
+        Truco: si ya sabes el futuro (<em>tendré</em>), solo cambias las terminaciones (<em>tendría</em>).
+      </p>
+    </section>
+
+    <!-- Uso 1: hipótesis con si -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">3. Uso 1 – Hipótesis con <em>si</em> (condicionales reales e irreales)</h2>
+      <p class="text-sm text-gray-700">
+        En las oraciones condicionales típicas:
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><span class="font-semibold">Si + imperfecto de subjuntivo</span> → <span class="font-semibold">condicional</span></li>
+      </ul>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 ml-5">
+        <li><em>Si tuviera más tiempo, viajaría más.</em></li>
+        <li><em>Si estudiaras cada día, sacarías mejores notas.</em></li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Expresa situaciones poco probables o irreales en el presente.
+      </p>
+    </section>
+
+    <!-- Uso 2: cortesía, deseos, consejos -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">4. Uso 2 – Cortesía, deseos y consejos suaves</h2>
+      <p class="text-sm text-gray-700">
+        El condicional suaviza el mensaje; suena más educado o menos directo.
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>¿Podrías ayudarme, por favor?</em></li>
+        <li><em>Me gustaría hablar con usted.</em></li>
+        <li><em>En tu lugar, yo hablaría con el profesor.</em></li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Úsalo para pedir cosas, expresar deseos o dar recomendaciones sin sonar mandón.
+      </p>
+    </section>
+
+    <!-- Uso 3: probabilidad en el pasado -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">5. Uso 3 – Probabilidad o conjetura en el pasado</h2>
+      <p class="text-sm text-gray-700">
+        También puede expresar suposición sobre algo ya pasado (similar al uso del futuro para el presente).
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li><em>Serían las diez cuando llegó.</em> (Probablemente eran las diez.)</li>
+        <li><em>Aquella llamada sería de Ana.</em> (Supongo que fue Ana.)</li>
+      </ul>
+      <p class="text-xs text-gray-500">
+        Observa que muchas veces va sin <em>si</em>; es pura interpretación del hablante.
+      </p>
+    </section>
+
+    <!-- Uso 4: estilo indirecto desde el pasado -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+      <h2 class="text-xl font-semibold text-gray-800">6. Uso 4 – Estilo indirecto (reported speech)</h2>
+      <p class="text-sm text-gray-700">
+        Cuando se reportan promesas o planes desde un punto de vista en el pasado, el condicional muestra “futuro en el pasado”:
+      </p>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+        <li>Directo: <em>“Mañana te llamaré.”</em></li>
+        <li>Indirecto: <em>Dijo que me llamaría al día siguiente.</em></li>
+      </ul>
+    </section>
+
+    <!-- Mini práctica -->
+    <section class="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5 space-y-2 text-sm text-gray-800">
+      <h2 class="text-lg font-semibold text-indigo-700">7. Mini práctica</h2>
+      <p class="text-xs text-gray-600 mb-1">
+        Completa con la forma correcta del condicional simple:
+      </p>
+      <ol class="list-decimal list-inside space-y-1">
+        <li>Si yo tuviera más dinero, __________ (viajar) por todo el mundo.</li>
+        <li>¿__________ (poder) decirme la hora, por favor?</li>
+        <li>En tu lugar, no __________ (hacer) eso.</li>
+        <li>Nos prometieron que nos __________ (llamar) ayer.</li>
+        <li>Cuando eran jóvenes, siempre decían que algún día __________ (vivir) en la playa.</li>
+      </ol>
+      <p class="text-xs text-gray-500 mt-2">
+        (Puedes añadir un botón “Mostrar respuestas” para versión interactiva y enlazar con la página del futuro para comparar.) 
+      </p>
+    </section>
+
+  </div>
+</body>
+</html>
