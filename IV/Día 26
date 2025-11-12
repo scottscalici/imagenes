@@ -15,28 +15,91 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 26</h1>
+    <p class="text-lg italic drop-shadow">13/14 de noviembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Vocabulario 5.2</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Presente de subjuntivo 2 - la próxima clase</li><li>Vocabulario 5.3 - Día 28</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Presente de subjuntivo 4</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 5 - 2</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> la ducha</p><p><span class="font-semibold">2.</span> trabajador(a)</p><p><span class="font-semibold">3.</span> gustar</p><p><span class="font-semibold">4.</span> Buenas tardes.</p><p><span class="font-semibold">5.</span> ir de excursión</p><p><span class="font-semibold">6.</span> tonto/a</p><p><span class="font-semibold">7.</span> la lección</p><p><span class="font-semibold">8.</span> porque</p><p><span class="font-semibold">9.</span> la excursión</p><p><span class="font-semibold">10.</span> caro/a</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> folclórico/a</p><p><span class="font-semibold">12.</span> el crimen</p><p><span class="font-semibold">13.</span> puro/a</p><p><span class="font-semibold">14.</span> la cultura</p><p><span class="font-semibold">15.</span> el ama (m., f.) de casa</p><p><span class="font-semibold">16.</span> en cuanto</p><p><span class="font-semibold">17.</span> sacar(se) un diente</p><p><span class="font-semibold">18.</span> el oficio</p><p><span class="font-semibold">19.</span> (no) es probable</p><p><span class="font-semibold">20.</span> el/la consejero/a</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> la habitación doble</p><p><span class="font-semibold">22.</span> la vacuna</p><p><span class="font-semibold">23.</span> cancelar</p><p><span class="font-semibold">24.</span> preocupado/a (por)</p><p><span class="font-semibold">25.</span> permisivo/a</p><p><span class="font-semibold">26.</span> recorrer</p><p><span class="font-semibold">27.</span> alquilar una película</p><p><span class="font-semibold">28.</span> al considerar</p><p><span class="font-semibold">29.</span> Quiero decir que…</p><p><span class="font-semibold">30.</span> menos</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Emoción en cláusulas sustantivas</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Verbos de comunicación</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Presente de subjuntivo</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="text-blue-600 hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="text-blue-600 hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="text-blue-600 hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 26</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">EmparejArte: Música, Deporte y Patrimonio</p>
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/elquijote.png?raw=true" alt="EmparejArte: Música, Deporte y Patrimonio" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+    </figure>
+  </div>
+</section>
 
 
 
@@ -52,6 +115,138 @@
 
 <!--Práctica de verbos-->
 
+<div id="prev-t6xdm8q"></div>
+<script>
+(function(){
+  const TENSETEXT = `Presente del subjuntivo`;
+
+  const normalize=(s)=>s.normalize("NFC").toLowerCase().trim();
+  function parseInput(text){
+    const lines=text.split("\n").map(l=>l.trim()).filter(Boolean);
+    let currentVerb=null,temp=[],data={},personStart=/^(yo|tú|él|nosotros|vosotros|ellos)/i;
+    for(const line of lines){
+      if(personStart.test(line)){
+        const form=line.split(/\s+/).slice(1).join(" ");
+        temp.push(form);
+        if(temp.length===6 && currentVerb){data[currentVerb]=temp;temp=[];}
+      } else { currentVerb=line.replace(/[:→].*$/,"").trim(); }
+    }
+    return data;
+  }
+  const answers=parseInput(`ser (to be)
+yo sea
+tú seas
+él sea
+nosotros seamos
+vosotros seáis
+ellos sean
+
+comenzar (to begin, start)
+yo comience
+tú comiences
+él comience
+nosotros comencemos
+vosotros comencéis
+ellos comiencen
+
+jugar (to play)
+yo juegue
+tú juegues
+él juegue
+nosotros juguemos
+vosotros juguéis
+ellos jueguen
+
+dormir (to sleep)
+yo duerma
+tú duermas
+él duerma
+nosotros durmamos
+vosotros durmáis
+ellos duerman
+
+divertirse (to have fun)
+yo me divierta
+tú te diviertas
+él se divierta
+nosotros nos divirtamos
+vosotros os divirtáis
+ellos se diviertan`);
+  let totalCells=0;
+  const container=document.getElementById("prev-t6xdm8q");
+  const tenseBadge = TENSETEXT
+    ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-pink-100 text-pink-700 align-middle">'+TENSETEXT+'</span>'
+    : '';
+
+  container.innerHTML=`
+<section class="bg-white shadow rounded-xl border-l-4 border-pink-500 overflow-hidden">
+  <div class="px-4 pt-4 flex items-center gap-2">
+    <h2 class="text-pink-600 font-semibold text-lg">Práctica de las conjugaciones</h2>${tenseBadge}
+  </div>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border border-gray-200 rounded-lg">
+        <thead>
+          <tr class="bg-pink-50 text-gray-800">
+            <th class="px-3 py-2 text-left">Verbo</th>
+            <th class="px-3 py-2 text-left">yo</th>
+            <th class="px-3 py-2 text-left">tú</th>
+            <th class="px-3 py-2 text-left">él/ella/ud.</th>
+            <th class="px-3 py-2 text-left">nosotros</th>
+            <th class="px-3 py-2 text-left">vosotros</th>
+            <th class="px-3 py-2 text-left">ellos/uds.</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex gap-3">
+      <button class="checkBtn bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">Comprobar</button>
+      <button class="revealBtn bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg">Revelar</button>
+      <button class="resetBtn bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>
+    </div>
+    <p class="progress font-semibold text-pink-600"></p>
+  </div>
+</section>`;
+
+  const tbody=container.querySelector("tbody");
+  Object.keys(answers).forEach(verb=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="px-3 py-2 font-semibold">${verb}</td>`;
+    answers[verb].forEach((ans,i)=>{
+      const td=document.createElement("td");
+      td.className="px-3 py-2";
+      td.innerHTML=`<div class="flex items-center">
+        <input type="text" data-verb="${verb}" data-index="${i}" class="border rounded px-2 py-1 w-28 focus:ring-2 focus:ring-pink-400">
+        <span class="checkmark"></span>
+      </div>`;
+      tr.appendChild(td); totalCells++;
+    });
+    tbody.appendChild(tr);
+  });
+
+  const progress=container.querySelector(".progress");
+  function updateProgress(){
+    const c=container.querySelectorAll(".checkmark.correct").length;
+    progress.textContent=(c===totalCells && totalCells>0)?`🎉 ¡Completado! (${c} / ${totalCells} correct)`:`✅ ${c} / ${totalCells} correct`;
+  }
+  function checkInput(inp){
+    const v=inp.dataset.verb,i=+inp.dataset.index,val=normalize(inp.value),correct=normalize(answers[v][i]);
+    const mark=inp.nextElementSibling;
+    if(val===correct){mark.textContent="✓";mark.className="checkmark correct";}
+    else{mark.textContent="✗";mark.className="checkmark incorrect";}
+    updateProgress();
+  }
+  function checkAll(){container.querySelectorAll("input").forEach(checkInput);}
+  function revealAll(){container.querySelectorAll("input").forEach(inp=>{const v=inp.dataset.verb,i=+inp.dataset.index;inp.value=answers[v][i];const m=inp.nextElementSibling;m.textContent="✓";m.className="checkmark correct";});updateProgress();}
+  function resetAll(){container.querySelectorAll("input").forEach(inp=>{inp.value="";const m=inp.nextElementSibling;m.textContent="";m.className="checkmark";});updateProgress();}
+  container.querySelectorAll("input").forEach(inp=>{inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();checkInput(inp);}});});
+  container.querySelector(".checkBtn").addEventListener("click",checkAll);
+  container.querySelector(".revealBtn").addEventListener("click",revealAll);
+  container.querySelector(".resetBtn").addEventListener("click",resetAll);
+  updateProgress();
+})();
+</script>
 
 
 
@@ -93,7 +288,29 @@
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+        <h4 class="font-semibold">
+          <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
+        </h4>
+        <ul class="list-disc list-inside">
+          <li>Presente de subjuntivo 2 - la próxima clase</li><li>Vocabulario 5.3 - Día 28</li>
+        </ul>
+      
+  
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            <li><span class="font-semibold">Tarea auditiva 2</span> 📅 11/16</li><li><span class="font-semibold">Usos del subjuntivo - Influencia 11/17 Usos del subjuntivo - Emoción</span> 📅 11/24</li><li><span class="font-semibold">Presente de subjuntivo</span> 📅 12/1</li>
+          </ul>
+        
+  <h4 class="font-semibold">Presente de subjuntivo</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul>
+  
+  <p><span class="font-semibold">Ayuda con la vida</span> –
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+</section>
 
   </div>
 
