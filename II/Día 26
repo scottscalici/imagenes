@@ -15,28 +15,91 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 26</h1>
+    <p class="text-lg italic drop-shadow">14 de noviembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Nada</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 2.1 - la próxima clase</li><li>Mandatos informales afirmativos (+) - Día 28</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Mandatos informales afirmativos 1</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 2-1-11</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> la escuela</p><p><span class="font-semibold">2.</span> la mesa</p><p><span class="font-semibold">3.</span> la cafetería</p><p><span class="font-semibold">4.</span> sobre</p><p><span class="font-semibold">5.</span> necesitar (+ inf.)</p><p><span class="font-semibold">6.</span> el/la esposo/a</p><p><span class="font-semibold">7.</span> gran, grande</p><p><span class="font-semibold">8.</span> chino/a</p><p><span class="font-semibold">9.</span> escribir una carta</p><p><span class="font-semibold">10.</span> el ciclismo</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> querer (e:ie)</p><p><span class="font-semibold">12.</span> traer</p><p><span class="font-semibold">13.</span> la playa</p><p><span class="font-semibold">14.</span> equivocado/a</p><p><span class="font-semibold">15.</span> primer, primero/a</p><p><span class="font-semibold">16.</span> las sandalias</p><p><span class="font-semibold">17.</span> la tarjeta de crédito</p><p><span class="font-semibold">18.</span> colores</p><p><span class="font-semibold">19.</span> prestar</p><p><span class="font-semibold">20.</span> peinarse</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> el inodoro</p><p><span class="font-semibold">22.</span> el plato (principal)</p><p><span class="font-semibold">23.</span> la cebolla</p><p><span class="font-semibold">24.</span> la mayonesa</p><p><span class="font-semibold">25.</span> merendar (e:ie)</p><p><span class="font-semibold">26.</span> reírse (e:i)</p><p><span class="font-semibold">27.</span> soltero/a</p><p><span class="font-semibold">28.</span> el/la enfermero/a</p><p><span class="font-semibold">29.</span> dañar</p><p><span class="font-semibold">30.</span> grave</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Mandatos informales afirmativos<p>Reflexivos recíprocos</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Cultura:</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Mandatos</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="text-blue-600 hover:underline">Mandatos familiares afirmativos (tú +)</a></li>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 <!--Curiosidad-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 26</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <p class="font-semibold text-lg">EmparejArte: Música, Deporte y Patrimonio</p>
+    
+    <figure>
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/elquijote.png?raw=true" alt="EmparejArte: Música, Deporte y Patrimonio" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+    </figure>
+  </div>
+</section>
 
 
 
@@ -93,7 +156,32 @@
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+        <h4 class="font-semibold">
+          <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
+        </h4>
+        <ul class="list-disc list-inside">
+          <li>Vocabulario 2.1 - la próxima clase</li><li>Mandatos informales + - Día 28</li>
+        </ul>
+      
+  
+          <h4 class="font-semibold">Tareas (Dominio)</h4>
+          <ul class="list-disc list-inside text-red-700">
+            <li><span class="font-semibold">Reflexivos recíprocos</span> 📅 2 de dic</li><li><span class="font-semibold">. Vocabulario (Leccion 2)</span> 📅 10 de dic</li><li><span class="font-semibold">. Mandatos</span> 📅 12 de dic</li>
+          </ul>
+        
+  <h4 class="font-semibold">Mandatos</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos" target="_blank" class="hover:underline">Mandatos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4" target="_blank" class="hover:underline">Mandatos con nosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5" target="_blank" class="hover:underline">Mandatos con vosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul>
+  <h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700"><li>Lección 2: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/2" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-2-español-2/2/flashcards" target="_blank" class="hover:underline">Flashcards</a></li></ul>
+  <p><span class="font-semibold">Ayuda con la vida</span> –
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+          <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
+        
+</section>
 
   </div>
 
