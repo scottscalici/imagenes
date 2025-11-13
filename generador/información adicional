@@ -329,46 +329,37 @@ if (tareas.length) {
 
       // Vocab links (supports multiple sets like vocabulario2, vocabulario3)
       const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked"))
-        .map(cb => cb.value); // e.g., "vocabulario2||Lección 3"
+  .map(cb => cb.value); // e.g., "vocabulario2||Lección 3"
 
-      let vocabHtml = "";
-      if (selectedVocab.length) {
-        // group selections by set
-        const bySet = {};
-        selectedVocab.forEach(val => {
-          const [setKey, chapter] = val.split("||");
-          if (!bySet[setKey]) bySet[setKey] = [];
-          bySet[setKey].push(chapter);
-        });
+let vocabHtml = "";
+if (selectedVocab.length) {
+  const items = [];
+  const seen = new Set(); // avoid accidental duplicates
 
-        vocabHtml += `<h4 class="font-semibold">Vocabulario</h4>`;
-        vocabHtml += `<div class="space-y-1">`;
+  selectedVocab.forEach(val => {
+    const [setKey, chapter] = val.split("||");
+    const set = jsonData[setKey];
+    const data = set?.chapters?.[chapter];
+    if (!data) return;
 
-        Object.entries(bySet).forEach(([setKey, chapters]) => {
-          const set = jsonData[setKey];
-          if (!set || !set.chapters) return;
-          const title = set.title || setKey;
+    const links = [];
+    if (data.listas)     links.push(`<a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>`);
+    if (data.flashcards) links.push(`<a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a>`);
 
-          vocabHtml += `<div><div class="font-medium">${title}</div>`;
-          vocabHtml += `<ul class="list-disc list-inside text-purple-700">`;
+    const linkText = links.length ? links.join(", ") : `<span class="text-gray-500">Sin enlaces</span>`;
+    const li = `<li>${chapter}: ${linkText}</li>`;
+    if (!seen.has(li)) { seen.add(li); items.push(li); }
+  });
 
-          chapters.forEach(ch => {
-            const data = set.chapters?.[ch];
-            if (!data) return;
-            const links = [];
-            if (data.listas)     links.push(`<a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>`);
-            if (data.flashcards) links.push(`<a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a>`);
-            // graceful if only one exists
-            const linkText = links.length ? links.join(", ") : `<span class="text-gray-500">Sin enlaces</span>`;
-            vocabHtml += `<li>${ch}: ${linkText}</li>`;
-          });
-
-          vocabHtml += `</ul></div>`;
-        });
-
-        vocabHtml += `</div>`;
-      }
-
+  if (items.length) {
+    vocabHtml = `
+      <h4 class="font-semibold">Vocabulario</h4>
+      <ul class="list-disc list-inside text-purple-700">
+        ${items.join("")}
+      </ul>
+    `;
+  }
+}
       // Trip (optional)
       let tripHtml = "";
       if (document.getElementById("tripOption").checked) {
