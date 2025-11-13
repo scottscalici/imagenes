@@ -8,7 +8,9 @@
   <style>
     .info-section h4 { margin-top: .25rem; margin-bottom: .25rem; }
     .info-section ul { margin-top: .1rem; margin-bottom: .5rem; }
-  </style>
+.icon-cal { width: 1em; height: 1em; vertical-align: -0.15em; display: inline-block; }
+
+</style>
 </head>
 <body class="bg-gray-100 p-6">
   <div class="max-w-4xl mx-auto space-y-6">
@@ -207,64 +209,69 @@
     }
 
     // Tareas (up to 5)
-    function extractTareas(blurb) {
-      const lines = normLines(blurb);
+function extractTareas(blurb) {
+  const lines = normLines(blurb);
 
-      // Find "Tarea:" or "Tareas:"
-      const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
-      if (tareaStartIdx === -1) return [];
+  const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
+  if (tareaStartIdx === -1) return [];
 
-      // Collect everything from Tarea: to the next section header
-      const collected = [];
-      const first = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
-      if (first) collected.push(first);
+  const collected = [];
+  const first = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
+  if (first) collected.push(first);
 
-      for (let i = tareaStartIdx + 1; i < lines.length; i++) {
-        const line = lines[i];
-        if (!line) continue;
-        if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
-        collected.push(line);
-      }
+  for (let i = tareaStartIdx + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+    if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
+    collected.push(line);
+  }
 
-      // One blob so we can match many "Tema : fecha" pairs on a single line
-      const blob = collected.join(" ").replace(/\s+/g, " ").trim();
-      if (!blob) return [];
+  const blob = collected.join(" ").replace(/\s+/g, " ").trim();
+  if (!blob) return [];
 
-      // Date patterns
-      const dateSlash = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`; // 11/16, 12-1, 30-11-2025
-      const dateDeMes = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;           // 17 de noviembre
-      const dateWords = String.raw`hoy|mañana|próxima clase|la próxima clase`;
-      const DATE = `${dateSlash}|${dateDeMes}|${dateWords}`;
+  const dateSlash = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`;
+  const dateDeMes = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;
+  const dateWords = String.raw`hoy|mañana|próxima clase|la próxima clase`;
+  const DATE = `${dateSlash}|${dateDeMes}|${dateWords}`;
 
-      // Separator is ":" OR "-" ONLY if immediately followed by a date
-      const pairRe = new RegExp(
-        String.raw`([^:]+?)\s*(?::\s*(${DATE})|-\s*(${DATE}))`,
-        "gi"
-      );
+  const pairRe = new RegExp(
+    String.raw`([^:]+?)\s*(?::\s*(${DATE})|-\s*(${DATE}))`,
+    "gi"
+  );
 
-      const tareas = [];
-      let m;
-      while ((m = pairRe.exec(blob)) !== null) {
-        const tema  = m[1].trim().replace(/[-:]\s*$/,"").trim();
-        const fecha = (m[2] || m[3] || "").trim();
-        if (tema) tareas.push({ tema, fecha });
-        if (tareas.length >= 5) break;
-      }
+  const tareas = [];
+  let m;
+  while ((m = pairRe.exec(blob)) !== null) {
+    const tema = m[1]
+      .replace(/[-:]\s*$/,"")
+      .replace(/^[\s.\-–—•·]+/, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
-      // Fallback
-      if (!tareas.length) {
-        const mini = new RegExp(`([^:]+?)\\s*:\\s*(${DATE})`, "gi");
-        let mm;
-        while ((mm = mini.exec(blob)) !== null) {
-          const tema = mm[1].trim();
-          const fecha = mm[2].trim();
-          if (tema) tareas.push({ tema, fecha });
-          if (tareas.length >= 5) break;
-        }
-      }
+    const fecha = (m[2] || m[3] || "").trim(); // <-- RESTORED
 
-      return tareas.slice(0, 5);
+    if (tema) tareas.push({ tema, fecha });
+    if (tareas.length >= 5) break;
+  }
+
+  if (!tareas.length) {
+    const mini = new RegExp(`([^:]+?)\\s*:\\s*(${DATE})`, "gi");
+    let mm;
+    while ((mm = mini.exec(blob)) !== null) {
+      const tema = mm[1].trim();
+      const fecha = mm[2].trim();
+      if (tema) tareas.push({ tema, fecha });
+      if (tareas.length >= 5) break;
     }
+  }
+
+  return tareas.slice(0, 5);
+}
+const calSVG = `
+<svg class="icon-cal" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg>`.trim();
 
     function generateInfo() {
       const blurb = document.getElementById("blurbInput").value.trim();
@@ -286,18 +293,21 @@
         </ul>
       `;
 
-      let tareasHtml = "";
-      if (tareas.length) {
-        tareasHtml = `
-          <h4 class="font-semibold">Tareas (Dominio)</h4>
-          <ul class="list-disc list-inside text-red-700">
-            ${tareas.map(t => {
-              const fecha = t.fecha ? ` 📅 ${t.fecha}` : "";
-              return `<li><span class="font-semibold">${t.tema}</span>${fecha}</li>`;
-            }).join("")}
-          </ul>
-        `;
-      }
+    let tareasHtml = "";
+if (tareas.length) {
+  tareasHtml = `
+    <h4 class="font-semibold">Tareas (Dominio)</h4>
+    <ul class="list-disc list-inside text-red-700">
+      ${tareas.map(t => {
+        const fecha = t.fecha
+          ? ` <span class="ml-1 text-red-800">${calSVG} ${t.fecha}</span>`
+          : "";
+        return `<li><span class="font-semibold">${t.tema}</span>${fecha}</li>`;
+      }).join("")}
+    </ul>
+  `;
+}
+
 
       // Grammar links
       const selectedGrammar = Array.from(document.querySelectorAll(".grammar-check:checked")).map(cb => cb.value);
