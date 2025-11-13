@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Práctica de Vocabulario (Tipo y Comprueba)</title>
+  <title>Práctica de Vocabulario (Descubre 2 · Lección 1)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
@@ -11,20 +11,13 @@
     <header class="rounded-2xl overflow-hidden shadow">
       <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-6 px-6">
         <h1 class="text-2xl font-bold">Práctica de vocabulario</h1>
-        <p class="text-white/80 text-sm">Selecciona lección(es), el modo y escribe tus respuestas.</p>
+        <p class="text-white/80 text-sm">Descubre 2 · Lección 1</p>
       </div>
     </header>
 
-    <!-- Controls -->
+    <!-- Controls (no URL field) -->
     <section class="bg-white rounded-xl shadow p-5 space-y-4">
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="md:col-span-2">
-          <label class="block font-semibold mb-1">URL del JSON (GitHub /blob/ OK):</label>
-          <input id="jsonUrl" class="w-full border rounded px-3 py-2"
-                 value="https://github.com/scottscalici/imagenes/blob/main/vocabulario/desc2lec1.json" />
-          <p class="text-xs text-gray-500 mt-1">Se convierte automáticamente a <code>raw.githubusercontent.com</code>.</p>
-        </div>
-
         <div>
           <label class="block font-semibold mb-1">Modo</label>
           <div class="flex items-center gap-4">
@@ -43,18 +36,17 @@
         <div>
           <label class="block font-semibold mb-1">Lección(es)</label>
           <div id="lessonFilters" class="flex flex-wrap gap-2 text-sm"></div>
-          <p class="text-xs text-gray-500 mt-1">Solo se incluyen entradas con <code>"evaluacion": true</code>.</p>
+          <p class="text-xs text-gray-500 mt-1">Filtra por lección</code>).</p>
         </div>
       </div>
 
       <div class="flex gap-3">
-        <button id="loadBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">Cargar</button>
-        <button id="startBtn" class="bg-purple-600 hover:bg-purple-700 text-white rounded px-4 py-2">Empezar práctica</button>
+        <button id="restartBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">Reiniciar práctica</button>
       </div>
     </section>
 
     <!-- Practice card -->
-    <section id="practiceSection" class="hidden bg-white rounded-xl shadow p-6 space-y-4">
+    <section id="practiceSection" class="bg-white rounded-xl shadow p-6 space-y-4 hidden">
       <div class="flex justify-between items-center">
         <div class="text-sm text-gray-600">
           <span id="counter">0/0</span> · Aciertos: <span id="correctCount">0</span>
@@ -64,7 +56,7 @@
       </div>
 
       <div class="border rounded-xl p-4">
-        <div class="text-gray-500 text-xs mb-1" id="promptLabel">Definición</div>
+        <div class="text-gray-500 text-xs mb-1" id="promptLabel">Definición (EN)</div>
         <div id="prompt" class="text-xl font-semibold">—</div>
       </div>
 
@@ -84,6 +76,9 @@
   </div>
 
   <script>
+    // ---------- Config ----------
+    const DEFAULT_BLOB = 'https://github.com/scottscalici/imagenes/blob/main/vocabulario/desc2lec1.json';
+
     // ---------- Helpers ----------
     const $ = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
@@ -103,7 +98,7 @@
       } catch { return url; }
     }
 
-    // Strip parentheses and their content, punctuation, normalize spaces.
+    // Strip parentheses & punctuation, keep accents
     function stripPunctAndParens(s) {
       return s
         .replace(/\([^)]*\)/g, ' ')
@@ -111,77 +106,47 @@
         .replace(/\s+/g, ' ')
         .trim();
     }
-
-    // Lowercase (accent-sensitive): DO NOT remove diacritics.
     function lc(s){ return (s||'').toLocaleLowerCase(); }
+    function stripArticlesEs(s){ return s.replace(/^\s*(el|la|los|las)\s+/i, ''); }
+    function stripToEn(s){ return s.replace(/^\s*to\s+/i, ''); }
 
-    // Ignore leading Spanish articles
-    function stripArticlesEs(s){
-      return s.replace(/^\s*(el|la|los|las)\s+/i, '');
-    }
-    // Ignore leading "to " in English side
-    function stripToEn(s){
-      return s.replace(/^\s*to\s+/i, '');
-    }
-
-    // Expand gender/number + slash variants: "pobrecito/a" -> pobrecito, pobrecita
-    // Works inside multiword phrases.
+    // Handle gender/number slash variants (e.g., "roto/a")
     function expandSlashVariants(term){
-      // e.g., "el/la enfermero/a" -> handle per token
       const tokens = term.split(/\s+/);
       const choices = tokens.map(tok => {
         if (tok.includes('/')) {
-          // keep punctuation removed already
           const parts = tok.split('/');
-          // Rebuild root from the first part (e.g., "pobrecito")
           const first = parts[0];
-          // For patterns like "enfermero/a" -> ["enfermero","enfermera"]
-          if (parts.length === 2 && first && parts[1] && !first.includes(parts[1])) {
+          if (parts.length === 2 && first) {
             const base = first;
-            const endA = base.replace(/o\b/, 'a');
-            return [base, endA];
+            const alt = base.endsWith('o') ? base.slice(0, -1) + 'a' : parts[1];
+            return [base, alt];
           }
-          // Generic fall-back: each part as its own option
           return parts;
         }
         return [tok];
       });
-
-      // Cartesian product
-      const build = (idx, acc, out) => {
-        if (idx === choices.length) { out.push(acc.join(' ')); return; }
-        for (const c of choices[idx]) build(idx+1, acc.concat(c), out);
-      };
       const out = [];
-      build(0, [], out);
-      // Add plural variants of single-word adjectives like "roto/rota" -> rotos/rotas
+      (function build(i, acc){
+        if (i === choices.length) { out.push(acc.join(' ')); return; }
+        for (const c of choices[i]) build(i+1, acc.concat(c));
+      })(0, []);
       const plusPlurals = new Set(out);
       out.forEach(w => {
         const last = w.split(' ').pop();
-        if (/a|o$/.test(last)) {
-          plusPlurals.add(w + 's');
-        }
+        if (/[ao]$/.test(last)) plusPlurals.add(w + 's');
       });
       return Array.from(plusPlurals);
     }
 
-    // Build acceptable answers (array) from a canonical string on the target side
-    function buildAcceptables(target, lang){ // lang: 'es' or 'en' (target language)
+    function buildAcceptables(target, lang){
       const base = stripPunctAndParens(target);
       let core = lc(base);
       core = lang === 'es' ? stripArticlesEs(core) : stripToEn(core);
-
-      // Split on "/" only after punctuation removal handled; expand gender variants.
-      let variants = expandSlashVariants(core);
-
-      // For Spanish, also accept with/without leading articles (already stripped),
-      // so add forms with articles removed only (we already compare after stripping articles,
-      // so this is mainly to include any tokens left)
-      variants = variants.map(v => v.replace(/\s+/g,' ').trim());
+      let variants = expandSlashVariants(core).map(v => v.replace(/\s+/g,' ').trim());
       return Array.from(new Set(variants));
     }
 
-    // Compare user input to acceptable list with the required rules
     function matches(userInput, acceptList, lang) {
       let ui = stripPunctAndParens(lc(userInput));
       ui = lang === 'es' ? stripArticlesEs(ui) : stripToEn(ui);
@@ -189,7 +154,6 @@
       return acceptList.some(acc => ui === acc);
     }
 
-    // First letter (of target after normalization + articles removed)
     function firstLetter(target, lang){
       const acc = buildAcceptables(target, lang);
       const c = acc[0]?.trim();
@@ -197,18 +161,15 @@
     }
 
     // ---------- App state ----------
-    let allItems = [];     // full JSON (filtered to evaluacion:true)
-    let pool = [];         // filtered by lesson + mode rules
-    let index = -1;        // current index in pool
+    let allItems = [];     // full JSON (ALL entries)
+    let pool = [];         // filtered by lesson + mode
+    let index = -1;
     let correct = 0;
     let streak = 0;
-    let mode = 'en2es';    // en2es | es2en
+    let mode = 'en2es';
 
     const els = {
-      url: $('#jsonUrl'),
       filters: $('#lessonFilters'),
-      loadBtn: $('#loadBtn'),
-      startBtn: $('#startBtn'),
       practice: $('#practiceSection'),
       prompt: $('#prompt'),
       promptLabel: $('#promptLabel'),
@@ -221,10 +182,10 @@
       right: $('#rightBtn'),
       hint: $('#hintBtn'),
       skip: $('#skipBtn'),
+      restartBtn: $('#restartBtn'),
     };
 
     function uniqueLessons(data){
-      // Take digits+dots prefix from leccion (e.g., "1.1*" -> "1.1")
       const set = new Set();
       data.forEach(d => {
         const m = String(d.leccion||'').match(/^(\d+(?:\.\d+)?)/);
@@ -240,23 +201,19 @@
         els.filters.innerHTML = '<span class="text-gray-500">No hay lecciones en este archivo.</span>';
         return;
       }
-      lessons.forEach((L,i)=>{
+      // Check ALL by default so practice starts with everything
+      lessons.forEach((L)=>{
         const id = 'L_'+L.replace('.','_');
         const wrapper = document.createElement('label');
         wrapper.className = 'inline-flex items-center gap-2 bg-gray-100 rounded px-2 py-1';
-        wrapper.innerHTML = `<input type="checkbox" id="${id}" value="${L}" ${i===0?'checked':''}><span>${L}</span>`;
+        wrapper.innerHTML = `<input type="checkbox" id="${id}" value="${L}" checked><span>${L}</span>`;
         els.filters.appendChild(wrapper);
       });
-    }
 
-    async function loadJson(){
-      const url = toRaw(els.url.value);
-      const res = await fetch(url);
-      const data = await res.json();
-      // Keep only evaluacion:true for practice set
-      const evals = data.filter(x => x && x.evaluacion === true);
-      allItems = evals;
-      renderLessonCheckboxes(evals);
+      // When lessons change, rebuild immediately & continue
+      els.filters.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+        cb.addEventListener('change', ()=>{ buildPool(); nextCard(); });
+      });
     }
 
     function currentMode(){
@@ -285,7 +242,6 @@
 
     function buildPool(){
       const base = pickLessons();
-      // Map into prompt/answer pairs depending on mode
       pool = base.map(item=>{
         return (mode === 'en2es')
           ? { prompt: item.definicion, answer: item.palabra, item, targetLang:'es' }
@@ -296,6 +252,8 @@
       correct = 0;
       streak = 0;
       updateHud();
+      // Show section once we have items
+      if (pool.length) els.practice.classList.remove('hidden');
     }
 
     function updateHud(){
@@ -328,7 +286,7 @@
       const cur = pool[index];
       if (!cur) return;
       const user = els.input.value;
-      const accepts = buildAcceptables(cur.answer, cur.targetLang); // ES or EN per target
+      const accepts = buildAcceptables(cur.answer, cur.targetLang);
       const ok = manualCorrect ? true : matches(user, accepts, cur.targetLang);
 
       if (ok){
@@ -354,32 +312,38 @@
       els.input.focus();
     }
 
-    // ---------- Events ----------
-    els.loadBtn.addEventListener('click', loadJson);
+    // ---------- Flow ----------
+    async function init(){
+      // Load default JSON automatically and start
+      const url = toRaw(DEFAULT_BLOB);
+      const res = await fetch(url);
+      allItems = await res.json(); // include ALL entries (eval true/false)
+
+      renderLessonCheckboxes(allItems);
+      currentMode();
+      buildPool();
+      nextCard();
+    }
+
+    // Events
     $$('input[name="mode"]').forEach(r =>
       r.addEventListener('change', ()=> {
         currentMode();
         if (pool.length) { buildPool(); nextCard(); }
       })
     );
+    els.restartBtn.addEventListener('click', ()=>{ currentMode(); buildPool(); nextCard(); });
 
-    els.startBtn.addEventListener('click', ()=>{
-      currentMode();
-      buildPool();
-      els.practice.classList.remove('hidden');
-      nextCard();
-    });
-
-    els.check.addEventListener('click', ()=>checkAnswer(false));
-    els.right.addEventListener('click', ()=>checkAnswer(true));
-    els.hint.addEventListener('click', showHint);
-    els.skip.addEventListener('click', ()=>{ streak = 0; nextCard(); });
-    els.input.addEventListener('keydown', (e)=>{
+    $('#checkBtn').addEventListener('click', ()=>checkAnswer(false));
+    $('#rightBtn').addEventListener('click', ()=>checkAnswer(true));
+    $('#hintBtn').addEventListener('click', showHint);
+    $('#skipBtn').addEventListener('click', ()=>{ streak = 0; nextCard(); });
+    $('#answerInput').addEventListener('keydown', (e)=>{
       if (e.key === 'Enter') checkAnswer(false);
     });
 
-    // Auto-load on first paint
-    loadJson();
+    // Go!
+    init();
   </script>
 </body>
 </html>
