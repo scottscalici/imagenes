@@ -268,10 +268,15 @@ function extractTareas(blurb) {
   return tareas.slice(0, 5);
 }
 const calSVG = `
-<svg class="icon-cal" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
   <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
   <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
 </svg>`.trim();
+
 
     function generateInfo() {
       const blurb = document.getElementById("blurbInput").value.trim();
