@@ -131,11 +131,9 @@
       if (!s) return "";
       try {
         const url = new URL(s);
-        // already raw
         if (url.hostname === "raw.githubusercontent.com") return s;
-        // classic github blob: https://github.com/user/repo/blob/branch/path/to/file.png
         if (url.hostname === "github.com" && url.pathname.includes("/blob/")) {
-          const parts = url.pathname.split("/").filter(Boolean); // [user, repo, 'blob', branch, ...path]
+          const parts = url.pathname.split("/").filter(Boolean);
           const i = parts.indexOf("blob");
           if (i > 1 && i < parts.length - 1) {
             const user = parts[0];
@@ -145,9 +143,8 @@
             return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${rest}`;
           }
         }
-        // sometimes folks paste ?raw=1; keep it but prefer raw host if present
         if (url.searchParams.get("raw") === "1") return s;
-      } catch(e) { /* fallthrough */ }
+      } catch(e) { /* ignore */ }
       return s;
     }
 
@@ -165,27 +162,24 @@
       const title = sanitize(computeTitle());
       const subtitle = sanitize(subtitleEl.value.trim());
       const icon = sanitize(iconEl.value.trim());
-      const img = normalizeImageURL(imageEl.value); // ensure raw here, too
+      const img = normalizeImageURL(imageEl.value);
       const href = state.url.trim() || "#";
 
       if (typeEl.value === "text" || !img) {
-        // Text-only link (still themed)
         return `
-<a href="${href}" class="block bg-white rounded-xl shadow p-3 border-l-4 ${border} hover:shadow-md transition">
-  <span class="font-semibold ${accent}">${icon? icon+" " : ""}${title}</span>
-  ${subtitle ? `<span class="block text-sm text-gray-600 mt-0.5">${subtitle}</span>` : ""}
+<a href="${href}" class="block bg-white rounded-2xl shadow p-4 border-l-4 ${border} hover:shadow-lg transition">
+  <span class="font-semibold ${accent} text-lg leading-snug">${icon? icon+" " : ""}${title}</span>
+  ${subtitle ? `<span class="block text-base text-gray-600 mt-0.5">${subtitle}</span>` : ""}
 </a>`.trim();
       }
 
-      // Image card
       return `
 <a href="${href}" class="block bg-white rounded-xl shadow border-l-4 ${border} hover:shadow-lg hover:${ring} hover:ring-2 transition">
   <div class="flex items-center gap-5 p-5">
     <img src="${img}" alt="${title}" class="max-h-36 w-auto object-cover rounded-md">
     <div class="min-w-0">
-     <h3 class="font-semibold ${accent} text-lg leading-snug truncate">${icon? icon+" " : ""}${title}</h3>
-
-    <p class="text-base text-gray-600 mt-0.5 line-clamp-2">${subtitle}</p>` : ""}
+      <h3 class="font-semibold ${accent} text-lg leading-snug truncate">${icon? icon+" " : ""}${title}</h3>
+      ${subtitle ? `<p class="text-base text-gray-600 mt-0.5 line-clamp-2">${subtitle}</p>` : ""}
     </div>
   </div>
 </a>`.trim();
@@ -206,14 +200,13 @@
       try {
         const res = await fetch(url, { mode: 'cors' });
         const text = await res.text();
-        // Find <!-- music-meta { ... } -->
         const match = text.match(/<!--\s*music-meta\s*(\{[\s\S]*?\})\s*-->/i);
         if (match && match[1]) {
           try {
             const meta = JSON.parse(match[1]);
             if (meta.artist) state.artist = String(meta.artist);
             if (meta.song)   state.song   = String(meta.song);
-            if (meta.image)  imageEl.value = normalizeImageURL(String(meta.image)); // normalize here
+            if (meta.image)  imageEl.value = normalizeImageURL(String(meta.image));
             if (meta.theme && THEMES[meta.theme]) state.theme = meta.theme;
 
             if (!titleEl.value.trim()) {
@@ -224,26 +217,22 @@
           } catch { /* ignore bad JSON */ }
         }
       } catch {
-        // If CORS or fetch fails, just keep manual mode.
+        // If CORS or fetch fails, manual mode is fine.
       }
       renderPreviewAndOutput();
     }
 
-    // Elements + events
+    // Events
     const $on = (el, ev, fn) => el.addEventListener(ev, fn);
-
     $on(urlEl, 'input', e => fetchMetadataIfAny(e.target.value));
     $on(titleEl, 'input', renderPreviewAndOutput);
     $on(subtitleEl, 'input', renderPreviewAndOutput);
     $on(iconEl, 'input', renderPreviewAndOutput);
-
-    // Normalize image URLs live as you type/paste
     $on(imageEl, 'input', () => {
       const norm = normalizeImageURL(imageEl.value);
       if (norm !== imageEl.value) imageEl.value = norm;
       renderPreviewAndOutput();
     });
-
     $on(themeEl, 'change', e => { state.theme = e.target.value; renderPreviewAndOutput(); });
     $on(typeEl, 'change', renderPreviewAndOutput);
 
@@ -255,8 +244,8 @@
       alert('¡HTML copiado!');
     });
 
-    // Defaults for quick testing
-    urlEl.value = ""; // paste a URL to auto-fetch meta
+    // Defaults
+    urlEl.value = "";
     themeEl.value = "Genérico";
     renderPreviewAndOutput();
   </script>
