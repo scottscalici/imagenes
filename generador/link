@@ -43,8 +43,8 @@
         </div>
         <div>
           <label class="block font-medium mb-1">Miniatura (URL) (opcional)</label>
-          <input id="image" class="w-full border rounded px-3 py-2" placeholder="https://raw.githubusercontent.com/...jpg" />
-          <p class="text-xs text-gray-500 mt-1">Si se detecta en metadatos, se rellena sola.</p>
+          <input id="image" class="w-full border rounded px-3 py-2" placeholder="https://github.com/usuario/repo/blob/main/imagen.jpg" />
+          <p class="text-xs text-gray-500 mt-1">Si pegas un enlace de GitHub con <code>/blob/</code>, lo convertimos automáticamente a <code>raw.githubusercontent.com</code>.</p>
         </div>
 
         <div>
@@ -123,9 +123,32 @@
     let state = { url:"", artist:"", song:"", theme:"Genérico", image:"", title:"", subtitle:"", icon:"", type:"card" };
 
     function sanitize(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function getThemeParts(name){ return THEMES[name] || THEMES["Genérico"]; }
 
-    function getThemeParts(name){
-      return THEMES[name] || THEMES["Genérico"];
+    // --- GitHub blob -> raw normalizer ---
+    function normalizeImageURL(u) {
+      const s = (u || "").trim();
+      if (!s) return "";
+      try {
+        const url = new URL(s);
+        // already raw
+        if (url.hostname === "raw.githubusercontent.com") return s;
+        // classic github blob: https://github.com/user/repo/blob/branch/path/to/file.png
+        if (url.hostname === "github.com" && url.pathname.includes("/blob/")) {
+          const parts = url.pathname.split("/").filter(Boolean); // [user, repo, 'blob', branch, ...path]
+          const i = parts.indexOf("blob");
+          if (i > 1 && i < parts.length - 1) {
+            const user = parts[0];
+            const repo = parts[1];
+            const branch = parts[i + 1];
+            const rest = parts.slice(i + 2).join("/");
+            return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${rest}`;
+          }
+        }
+        // sometimes folks paste ?raw=1; keep it but prefer raw host if present
+        if (url.searchParams.get("raw") === "1") return s;
+      } catch(e) { /* fallthrough */ }
+      return s;
     }
 
     function computeTitle(){
@@ -142,7 +165,7 @@
       const title = sanitize(computeTitle());
       const subtitle = sanitize(subtitleEl.value.trim());
       const icon = sanitize(iconEl.value.trim());
-      const img = imageEl.value.trim();
+      const img = normalizeImageURL(imageEl.value); // ensure raw here, too
       const href = state.url.trim() || "#";
 
       if (typeEl.value === "text" || !img) {
@@ -154,7 +177,7 @@
 </a>`.trim();
       }
 
-      // Image card (full-width, thumbnail left, dynamic aspect with cap)
+      // Image card
       return `
 <a href="${href}" class="block bg-white rounded-xl shadow border-l-4 ${border} hover:shadow-lg hover:${ring} hover:ring-2 transition">
   <div class="flex items-center gap-4 p-4">
@@ -187,14 +210,15 @@
         if (match && match[1]) {
           try {
             const meta = JSON.parse(match[1]);
-            // Apply if present
             if (meta.artist) state.artist = String(meta.artist);
             if (meta.song)   state.song   = String(meta.song);
-            if (meta.image)  imageEl.value = String(meta.image);
+            if (meta.image)  imageEl.value = normalizeImageURL(String(meta.image)); // normalize here
             if (meta.theme && THEMES[meta.theme]) state.theme = meta.theme;
 
-            // Push into form for visibility/override
-            if (!titleEl.value.trim()) titleEl.placeholder = `${state.artist||""}${(state.artist&&state.song)?" – ":""}${state.song||""}`.trim();
+            if (!titleEl.value.trim()) {
+              const ph = `${state.artist||""}${(state.artist&&state.song)?" – ":""}${state.song||""}`.trim();
+              titleEl.placeholder = ph || titleEl.placeholder;
+            }
             themeEl.value = state.theme;
           } catch { /* ignore bad JSON */ }
         }
@@ -204,18 +228,27 @@
       renderPreviewAndOutput();
     }
 
-    // Events
-    urlEl.addEventListener('input', e => fetchMetadataIfAny(e.target.value));
-    titleEl.addEventListener('input', renderPreviewAndOutput);
-    subtitleEl.addEventListener('input', renderPreviewAndOutput);
-    iconEl.addEventListener('input', renderPreviewAndOutput);
-    imageEl.addEventListener('input', renderPreviewAndOutput);
-    themeEl.addEventListener('change', e => { state.theme = e.target.value; renderPreviewAndOutput(); });
-    typeEl.addEventListener('change', renderPreviewAndOutput);
+    // Elements + events
+    const $on = (el, ev, fn) => el.addEventListener(ev, fn);
+
+    $on(urlEl, 'input', e => fetchMetadataIfAny(e.target.value));
+    $on(titleEl, 'input', renderPreviewAndOutput);
+    $on(subtitleEl, 'input', renderPreviewAndOutput);
+    $on(iconEl, 'input', renderPreviewAndOutput);
+
+    // Normalize image URLs live as you type/paste
+    $on(imageEl, 'input', () => {
+      const norm = normalizeImageURL(imageEl.value);
+      if (norm !== imageEl.value) imageEl.value = norm;
+      renderPreviewAndOutput();
+    });
+
+    $on(themeEl, 'change', e => { state.theme = e.target.value; renderPreviewAndOutput(); });
+    $on(typeEl, 'change', renderPreviewAndOutput);
 
     // Buttons
-    document.getElementById('generate').addEventListener('click', renderPreviewAndOutput);
-    document.getElementById('copy').addEventListener('click', ()=>{
+    $on(document.getElementById('generate'), 'click', renderPreviewAndOutput);
+    $on(document.getElementById('copy'), 'click', ()=>{
       outputEl.select();
       document.execCommand('copy');
       alert('¡HTML copiado!');
