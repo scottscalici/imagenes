@@ -71,52 +71,95 @@
   <script>
     let jsonData = {};
 
+    // --- Detect and gather vocab sets (vocabulario2, vocabulario3, etc.) ---
+    function getVocabSets(data){
+      const out = [];
+      for (const k of Object.keys(data)) {
+        const v = data[k];
+        if (v && typeof v === 'object' && v.chapters && typeof v.chapters === 'object') {
+          // treat as vocab set if key starts with "vocab" OR title mentions "Vocabulario"
+          const looksLikeVocab =
+            k.toLowerCase().startsWith('vocab') ||
+            (typeof v.title === 'string' && /vocabulario/i.test(v.title));
+          if (looksLikeVocab) {
+            out.push({ key: k, title: v.title || k, chapters: v.chapters });
+          }
+        }
+      }
+      return out;
+    }
+
     async function loadJSON() {
-      const url = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/apuntes.json";
+      const base = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/apuntes.json";
+      // cache-buster for testing
+      const url = `${base}?v=${Date.now()}`;
       const res = await fetch(url);
       jsonData = await res.json();
       renderOptions();
     }
 
     function renderOptions() {
+      // Build a set of keys that are vocab sets so we can exclude them from grammar
+      const vocabSets = getVocabSets(jsonData);
+      const vocabKeys = new Set(vocabSets.map(s => s.key));
+
+      // --- Grammar options (exclude vocab sets) ---
       const grammarDiv = document.getElementById("grammarOptions");
       grammarDiv.innerHTML = "";
       Object.keys(jsonData).forEach(key => {
-        if (key !== "vocabulario") {
+        if (!vocabKeys.has(key)) {
+          const group = jsonData[key];
+          if (!group || !group.title || !group.links) return;
           const label = document.createElement("label");
           label.className = "flex items-center space-x-2";
-          label.innerHTML = `<input type="checkbox" value="${key}" class="grammar-check"> <span>${jsonData[key].title}</span>`;
+          label.innerHTML = `<input type="checkbox" value="${key}" class="grammar-check"> <span>${group.title}</span>`;
           grammarDiv.appendChild(label);
         }
       });
 
+      // --- Vocab options (support multiple sets) ---
       const vocabDiv = document.getElementById("vocabOptions");
       vocabDiv.innerHTML = "";
-      Object.keys(jsonData.vocabulario.chapters).forEach(ch => {
-        const label = document.createElement("label");
-          label.className = "flex items-center space-x-2";
-          label.innerHTML = `<input type="checkbox" value="${ch}" class="vocab-check"> <span>${ch}</span>`;
-          vocabDiv.appendChild(label);
-      });
+
+      if (!vocabSets.length) {
+        vocabDiv.innerHTML = `<p class="text-sm text-gray-600 col-span-2">No se encontraron conjuntos de vocabulario.</p>`;
+      } else {
+        vocabSets.forEach(set => {
+          // Subheading per set
+          const head = document.createElement("div");
+          head.className = "col-span-2 mt-2 font-semibold text-gray-800";
+          head.textContent = set.title;
+          vocabDiv.appendChild(head);
+
+          // Chapters
+          Object.keys(set.chapters).forEach(ch => {
+            const label = document.createElement("label");
+            label.className = "flex items-center space-x-2";
+            // value encodes setKey and chapter
+            label.innerHTML = `<input type="checkbox" value="${set.key}||${ch}" class="vocab-check">
+                               <span>${ch}</span>`;
+            vocabDiv.appendChild(label);
+          });
+        });
+      }
     }
 
     /* ---------------------------
-       Parsing helpers
+       Parsing helpers (your originals with upgrades)
     --------------------------- */
-// 1) Replace normLines with this
-function normLines(blurb) {
-  return blurb
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/\r/g, "\n")
-    // normalize unicode spaces & punctuation
-    .replace(/\u00A0/g, " ")        // NBSP -> space
-    .replace(/\u2007|\u202F/g, " ") // figure space, narrow NBSP
-    .replace(/\uFF1A/g, ":")        // full-width colon -> :
-    .replace(/[–—]/g, "-")          // en/em dashes -> hyphen
-    // collapse any run of whitespace to a single space/newline friendly
-    .split("\n")
-    .map(s => s.replace(/\s+/g, " ").trim());
-}
+    function normLines(blurb) {
+      return blurb
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/\r/g, "\n")
+        // normalize unicode spaces & punctuation
+        .replace(/\u00A0/g, " ")        // NBSP -> space
+        .replace(/\u2007|\u202F/g, " ") // figure space, narrow NBSP
+        .replace(/\uFF1A/g, ":")        // full-width colon -> :
+        .replace(/[–—]/g, "-")          // en/em dashes -> hyphen
+        // collapse any run of whitespace to a single space/newline friendly
+        .split("\n")
+        .map(s => s.replace(/\s+/g, " ").trim());
+    }
 
     function sliceBetween(lines, startPat, stopPats = []) {
       const startIdx = lines.findIndex(l => startPat.test(l));
@@ -129,11 +172,7 @@ function normLines(blurb) {
       return lines.slice(startIdx + 1, endIdx);
     }
 
-    /* ---------------------------
-       Evaluaciones (next two)
-       - skip ONLY the first item (today's quiz)
-       - keep upcoming "Nada ..." if it appears
-    --------------------------- */
+    // Evaluaciones (up to 2 upcoming, skip today's first item)
     function extractQuizzes(blurb) {
       const lines = normLines(blurb);
 
@@ -167,73 +206,65 @@ function normLines(blurb) {
       return valid.slice(0, 2);
     }
 
-    /* ---------------------------
-       Tareas (up to 5)
-       - Handles "Tema: fecha Tema: fecha ..." on one line
-       - Accepts ":" or "-" separators
-       - Dates: 11/30, 30-11-2025, 30 de noviembre, hoy/mañana/próxima clase
-    --------------------------- */
-// 2) Replace extractTareas with this
-function extractTareas(blurb) {
-  const lines = normLines(blurb);
+    // Tareas (up to 5)
+    function extractTareas(blurb) {
+      const lines = normLines(blurb);
 
-  // Find "Tarea:" or "Tareas:"
-  const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
-  if (tareaStartIdx === -1) return [];
+      // Find "Tarea:" or "Tareas:"
+      const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
+      if (tareaStartIdx === -1) return [];
 
-  // Collect everything from Tarea: to the next section header
-  const collected = [];
-  const first = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
-  if (first) collected.push(first);
+      // Collect everything from Tarea: to the next section header
+      const collected = [];
+      const first = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
+      if (first) collected.push(first);
 
-  for (let i = tareaStartIdx + 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line) continue;
-    if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
-    collected.push(line);
-  }
+      for (let i = tareaStartIdx + 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
+        collected.push(line);
+      }
 
-  // One blob so we can match many "Tema : fecha" pairs on a single line
-  const blob = collected.join(" ").replace(/\s+/g, " ").trim();
-  if (!blob) return [];
+      // One blob so we can match many "Tema : fecha" pairs on a single line
+      const blob = collected.join(" ").replace(/\s+/g, " ").trim();
+      if (!blob) return [];
 
-  // Date patterns
-  const dateSlash = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`; // 11/16, 12-1, 30-11-2025
-  const dateDeMes = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;           // 17 de noviembre
-  const dateWords = String.raw`hoy|mañana|próxima clase|la próxima clase`;
-  const DATE = `${dateSlash}|${dateDeMes}|${dateWords}`;
+      // Date patterns
+      const dateSlash = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`; // 11/16, 12-1, 30-11-2025
+      const dateDeMes = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;           // 17 de noviembre
+      const dateWords = String.raw`hoy|mañana|próxima clase|la próxima clase`;
+      const DATE = `${dateSlash}|${dateDeMes}|${dateWords}`;
 
-  // Separator is ":" OR "-" ONLY if immediately followed by a date (hyphens inside titles are safe)
-  // m[1] = tema, m[2] or m[3] = fecha
-  const pairRe = new RegExp(
-    String.raw`([^:]+?)\s*(?::\s*(${DATE})|-\s*(${DATE}))`,
-    "gi"
-  );
+      // Separator is ":" OR "-" ONLY if immediately followed by a date
+      const pairRe = new RegExp(
+        String.raw`([^:]+?)\s*(?::\s*(${DATE})|-\s*(${DATE}))`,
+        "gi"
+      );
 
-  const tareas = [];
-  let m;
-  while ((m = pairRe.exec(blob)) !== null) {
-    const tema  = m[1].trim().replace(/[-:]\s*$/,"").trim();
-    const fecha = (m[2] || m[3] || "").trim();
-    if (tema) tareas.push({ tema, fecha });
-    if (tareas.length >= 5) break;
-  }
+      const tareas = [];
+      let m;
+      while ((m = pairRe.exec(blob)) !== null) {
+        const tema  = m[1].trim().replace(/[-:]\s*$/,"").trim();
+        const fecha = (m[2] || m[3] || "").trim();
+        if (tema) tareas.push({ tema, fecha });
+        if (tareas.length >= 5) break;
+      }
 
-  // Fallback: if nothing matched (very rare), try a conservative split on " <Title> : <Date> "
-  if (!tareas.length) {
-    const mini = new RegExp(`([^:]+?)\\s*:\\s*(${DATE})`, "gi");
-    let mm;
-    while ((mm = mini.exec(blob)) !== null) {
-      const tema = mm[1].trim();
-      const fecha = mm[2].trim();
-      if (tema) tareas.push({ tema, fecha });
-      if (tareas.length >= 5) break;
+      // Fallback
+      if (!tareas.length) {
+        const mini = new RegExp(`([^:]+?)\\s*:\\s*(${DATE})`, "gi");
+        let mm;
+        while ((mm = mini.exec(blob)) !== null) {
+          const tema = mm[1].trim();
+          const fecha = mm[2].trim();
+          if (tema) tareas.push({ tema, fecha });
+          if (tareas.length >= 5) break;
+        }
+      }
+
+      return tareas.slice(0, 5);
     }
-  }
-
-  return tareas.slice(0, 5);
-}
-
 
     function generateInfo() {
       const blurb = document.getElementById("blurbInput").value.trim();
@@ -273,6 +304,7 @@ function extractTareas(blurb) {
       let grammarHtml = "";
       selectedGrammar.forEach(key => {
         const group = jsonData[key];
+        if (!group || !group.links) return;
         grammarHtml += `<h4 class="font-semibold">${group.title}</h4><ul class="list-disc list-inside text-purple-700">`;
         group.links.forEach(link => {
           grammarHtml += `<li><a href="${link.url}" target="_blank" class="hover:underline">${link.title}</a></li>`;
@@ -280,16 +312,46 @@ function extractTareas(blurb) {
         grammarHtml += `</ul>`;
       });
 
-      // Vocab links
-      const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked")).map(cb => cb.value);
+      // Vocab links (supports multiple sets like vocabulario2, vocabulario3)
+      const selectedVocab = Array.from(document.querySelectorAll(".vocab-check:checked"))
+        .map(cb => cb.value); // e.g., "vocabulario2||Lección 3"
+
       let vocabHtml = "";
       if (selectedVocab.length) {
-        vocabHtml += `<h4 class="font-semibold">Vocabulario</h4><ul class="list-disc list-inside text-purple-700">`;
-        selectedVocab.forEach(ch => {
-          const data = jsonData.vocabulario.chapters[ch];
-          vocabHtml += `<li>${ch}: <a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>, <a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a></li>`;
+        // group selections by set
+        const bySet = {};
+        selectedVocab.forEach(val => {
+          const [setKey, chapter] = val.split("||");
+          if (!bySet[setKey]) bySet[setKey] = [];
+          bySet[setKey].push(chapter);
         });
-        vocabHtml += `</ul>`;
+
+        vocabHtml += `<h4 class="font-semibold">Vocabulario</h4>`;
+        vocabHtml += `<div class="space-y-1">`;
+
+        Object.entries(bySet).forEach(([setKey, chapters]) => {
+          const set = jsonData[setKey];
+          if (!set || !set.chapters) return;
+          const title = set.title || setKey;
+
+          vocabHtml += `<div><div class="font-medium">${title}</div>`;
+          vocabHtml += `<ul class="list-disc list-inside text-purple-700">`;
+
+          chapters.forEach(ch => {
+            const data = set.chapters?.[ch];
+            if (!data) return;
+            const links = [];
+            if (data.listas)     links.push(`<a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>`);
+            if (data.flashcards) links.push(`<a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a>`);
+            // graceful if only one exists
+            const linkText = links.length ? links.join(", ") : `<span class="text-gray-500">Sin enlaces</span>`;
+            vocabHtml += `<li>${ch}: ${linkText}</li>`;
+          });
+
+          vocabHtml += `</ul></div>`;
+        });
+
+        vocabHtml += `</div>`;
       }
 
       // Trip (optional)
