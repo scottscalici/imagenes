@@ -117,6 +117,24 @@
       pizarra: ['slate-500', 'slate-600']
     };
 
+    // ---- helper: normalizar URLs de imágenes de GitHub ----
+    function normalizeImageUrl(url) {
+      if (!url) return '';
+      let result = url.trim();
+
+      // github.com/.../blob/... -> raw.githubusercontent.com/.../...
+      if (result.includes('github.com') && result.includes('/blob/')) {
+        result = result
+          .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+          .replace('/blob/', '/');
+      }
+
+      // quitar ?raw=true (si aparece)
+      result = result.replace(/\?raw=true.*$/i, '');
+
+      return result;
+    }
+
     // Format lectura text with paragraphs / line breaks
     function formatReadingText(raw) {
       const trimmed = raw.trim();
@@ -297,7 +315,15 @@
     // Build HTML output
     function generateHTML() {
       const title = (document.getElementById('title').value.trim() || 'Lectura');
-      const imageUrl = document.getElementById('imageUrl').value.trim();
+
+      // --- normalizar URL de imagen (GitHub -> raw) ---
+      const imageUrlInput = document.getElementById('imageUrl');
+      const imageUrl = normalizeImageUrl(imageUrlInput.value);
+      // opcional: actualizar el campo con la versión "raw"
+      if (imageUrlInput.value !== imageUrl) {
+        imageUrlInput.value = imageUrl;
+      }
+
       const readingRaw = document.getElementById('readingText').value;
       const readingHTML = formatReadingText(readingRaw);
 
@@ -312,11 +338,15 @@
       let appliedBorderColor = `border-${borderColor}`;
       let inlineBorderStyle = '';
 
-      if (customColor.startsWith('#')) {
-        inlineBorderStyle = ` style="border-color: ${customColor};"`;
-        appliedTextColor = '';
-        appliedBorderColor = 'border-l-4';
+      // --- HEX personalizado: limpiar (#RRGGBB) y evitar el punto extra ---
+      const hexMatch = customColor.match(/^#[0-9a-fA-F]{3,8}/);
+      if (hexMatch) {
+        const hex = hexMatch[0]; // solo la parte válida del HEX
+        inlineBorderStyle = ` style="border-color: ${hex};"`;
+        appliedTextColor = '';      // sin clase de texto especial
+        appliedBorderColor = '';    // usamos solo border-l-4 + style
       } else if (customColor) {
+        // Tailwind class personalizada (ej. text-indigo-600)
         appliedTextColor = customColor;
         appliedBorderColor = customColor.replace('text-', 'border-');
       }
