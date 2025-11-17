@@ -19,6 +19,58 @@
 <p>Idiomas: español (oficial), lenguas indígenas</p>
   </div>
 </section>
+<section class="bg-white shadow rounded-xl border-l-4 border-teal-500">
+  <h2 class=" font-semibold text-lg px-4 pt-4" style="color:#6CACE4;">Más de la Argentina</h2>
+  <div class="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 p-4">
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Artes • El tango">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/tango.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">El tango es uno de los símbolos culturales más importantes de Argentina. Este género (genre) musical es una mezcla de ritmos de origen africano, italiano y español, y se originó a finales del siglo XIX entre los porteños (people of Buenos Aires). Poco después se hizo popular entre el resto de los argentinos y su fama llegó hasta París. Como baile, el tango en un principio (at first) era provocativo y violento, pero se hizo más romántico durante los años 30. Hoy día, este estilo musical tiene adeptos (followers) en muchas partes del mundo (world).</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Economía • La soja, el maíz y los camiones">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/vacas.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">La economía de Argentina es la tercera más importante de América Latina, después de las de Brasil y México. Sus productos más emblemáticos son la carne, el vino y el mate, cuyas industrias se asociaron en 2017 para consolidarse internacionalmente. Los principales productos de exportación de Argentina son los derivados de la soja°, el maíz°, el trigo° y los camiones de reparto°.</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Lugares • Las Cataratas del Iguazú">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/iguazu.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">Las famosas cataratas° del Iguazú se encuentran entre las fronteras de Argentina, Paraguay y Brasil, al norte de Buenos Aires. Cerca de ellas confluyen° los ríos Iguazú y Paraná. Estas extensas caídas de agua tienen hasta 80 metros (262 pies) de altura° y en época° de lluvias llegan a medir 4 kilómetros (2,5 millas) de ancho. Situadas en el Parque Nacional Iguazú, las cataratas son un destino° turístico muy visitado.</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Historia • Inmigración europea">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/inmigracion.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">Se dice que Argentina es el país más “europeo” de toda Latinoamérica. Después del año 1880, inmigrantes italianos, alemanes, españoles e ingleses llegaron para establecerse en esta nación. Esta diversidad cultural ha dejado° una profunda huella° en la música, el cine y la arquitectura argentinos.</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Andrés Calamaro (1961–)">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/calamaro.jpg" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">Lugar de nacimiento:
+Buenos Aires, Argentina
 
+Andrés Calamaro es uno de los rockeros más influyentes de Latinoamérica. Formó parte de Los Abuelos de la Nada y de Los Rodríguez.</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Monte Fitz Roy (Chaltén)">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/Monte%20Fitz%20Roy%20(Chalt%C3%A9n).png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">Monte Fitz Roy (Chaltén)</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="San Carlos de Bariloche">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/San%20Carlos%20de%20Bariloche.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">San Carlos de Bariloche</p>
+    </figure>
+    <figure class="relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64" title="Gaucho de las pampas">
+      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/cultura/argentina/gaucho.png" alt="" class="w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable">
+      <p class="text-xs text-gray-600 px-2 pb-1">Gaucho de las pampas</p>
+    </figure>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<dialog id="lightbox" class="p-0 bg-transparent">
+  <img id="lightbox-img" alt="" class="max-h-[90vh] max-w-[95vw] rounded-xl shadow-xl" />
+</dialog>
+
+<script>
+  const dlg=document.getElementById('lightbox');
+  const big=document.getElementById('lightbox-img');
+  document.addEventListener('click',e=>{const img=e.target.closest('.previewable');if(img){big.src=img.src;big.alt=img.alt||'';dlg.showModal();}});
+  dlg.addEventListener('click',()=>dlg.close());
+  document.addEventListener('keydown',e=>e.key==='Escape'&&dlg.close());
+</script>
 </body>
 </html>
