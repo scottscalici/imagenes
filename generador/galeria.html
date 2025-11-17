@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador: Galería Cultural</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-50 p-6">
+  <div class="max-w-5xl mx-auto bg-white rounded-xl shadow p-6 border border-gray-100">
+    <h1 class="text-2xl font-bold text-teal-600 mb-4">Generador de Sección: Galería Cultural</h1>
+
+    <!-- Título -->
+    <label class="block font-semibold mb-1">Título (por defecto "Galería"):</label>
+    <input id="title" type="text" class="w-full border rounded p-2 mb-4" placeholder="Ej. Obras de Gaudí" />
+
+    <!-- Texto introductorio -->
+    <label class="block font-semibold mb-1">Texto introductorio (opcional):</label>
+    <textarea id="intro" class="w-full border rounded p-2 mb-4" rows="3" placeholder="Escribe una breve introducción..."></textarea>
+
+    <!-- Enlace final -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-semibold mb-1">Enlace (URL) al final:</label>
+        <input id="url" type="text" class="w-full border rounded p-2" placeholder="https://..." />
+      </div>
+      <div>
+        <label class="block font-semibold mb-1">Texto visible del enlace:</label>
+        <input id="linkText" type="text" class="w-full border rounded p-2" placeholder="Ej. Leer más / Fuente" />
+      </div>
+    </div>
+
+    <!-- Diseño -->
+    <label class="block font-semibold mb-1">Diseño de la galería:</label>
+    <select id="layout" class="w-full border rounded p-2 mb-4">
+      <option value="grid">🧱 Cuadrícula (por defecto)</option>
+      <option value="scroll">🖼️ Fila desplazable (scroll horizontal con auto-snap)</option>
+    </select>
+
+    <!-- Colores -->
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-semibold mb-1">Color del borde:</label>
+        <select id="borderColor" class="w-full border rounded p-2 mb-2">
+          <option value="teal">Teal (por defecto)</option>
+          <option value="indigo">Índigo</option>
+          <option value="amber">Ámbar</option>
+          <option value="azul">Azul</option>
+          <option value="verde">Verde</option>
+          <option value="rojo">Rojo</option>
+          <option value="gris">Gris</option>
+          <option value="rosa">Rosa</option>
+          <option value="morado">Morado</option>
+          <option value="cyan">Cian</option>
+          <option value="lime">Lima</option>
+          <option value="naranja">Naranja</option>
+          <option value="pizarra">Pizarra</option>
+        </select>
+        <input id="customBorder" type="text" class="w-full border rounded p-2" placeholder="Color HEX o clase Tailwind (opcional)" />
+      </div>
+      <div>
+        <label class="block font-semibold mb-1">Color del texto:</label>
+        <select id="textColor" class="w-full border rounded p-2 mb-2">
+          <option value="teal">Teal (por defecto)</option>
+          <option value="indigo">Índigo</option>
+          <option value="amber">Ámbar</option>
+          <option value="azul">Azul</option>
+          <option value="verde">Verde</option>
+          <option value="rojo">Rojo</option>
+          <option value="gris">Gris</option>
+          <option value="rosa">Rosa</option>
+          <option value="morado">Morado</option>
+          <option value="cyan">Cian</option>
+          <option value="lime">Lima</option>
+          <option value="naranja">Naranja</option>
+          <option value="pizarra">Pizarra</option>
+        </select>
+        <input id="customText" type="text" class="w-full border rounded p-2" placeholder="Color HEX o clase Tailwind (opcional)" />
+      </div>
+    </div>
+
+    <!-- Galería dinámica -->
+    <div class="flex items-center justify-between mt-2 mb-2">
+      <h2 class="text-lg font-semibold">Imágenes de la galería</h2>
+      <button id="addImg" class="bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded">➕ Añadir imagen</button>
+    </div>
+    <div id="imgContainer" class="space-y-4 mb-6"></div>
+
+    <!-- Botones -->
+    <div class="flex gap-4 mb-6">
+      <button id="generateBtn" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded">Generar HTML</button>
+      <button id="copyBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Copiar HTML</button>
+    </div>
+
+    <!-- Resultado -->
+    <h2 class="text-xl font-semibold mt-4 mb-2">Código generado:</h2>
+    <textarea id="output" class="w-full border rounded p-2 h-56 font-mono mb-6" readonly></textarea>
+
+    <!-- Vista previa -->
+    <h2 class="text-xl font-semibold mb-2">Vista previa:</h2>
+    <div id="preview" class="border rounded p-4 bg-gray-50"></div>
+  </div>
+
+  <script>
+    const colorMap = {
+      indigo: ['indigo-500', 'indigo-600'],
+      amber: ['amber-500', 'amber-600'],
+      azul: ['blue-500', 'blue-600'],
+      verde: ['green-500', 'green-600'],
+      rojo: ['red-500', 'red-600'],
+      gris: ['gray-500', 'gray-600'],
+      rosa: ['pink-500', 'pink-600'],
+      morado: ['purple-500', 'purple-600'],
+      teal: ['teal-500', 'teal-600'],
+      cyan: ['cyan-500', 'cyan-600'],
+      lime: ['lime-500', 'lime-600'],
+      naranja: ['orange-500', 'orange-600'],
+      pizarra: ['slate-500', 'slate-600']
+    };
+
+    function addImg() {
+      const idx = document.querySelectorAll('.img-item').length + 1;
+      const div = document.createElement('div');
+      div.className = 'img-item border rounded p-3';
+      div.innerHTML = `
+        <div class='flex items-center justify-between mb-2'>
+          <span class='font-semibold'>Imagen #${idx}</span>
+          <button type='button' class='removeImg text-red-600 hover:underline'>Eliminar</button>
+        </div>
+        <input class='img-url w-full border rounded p-2 mb-2' placeholder='URL de la imagen (GitHub o similar)' />
+        <input class='img-alt w-full border rounded p-2 mb-2' placeholder='Texto alternativo (alt)' />
+        <input class='img-cap w-full border rounded p-2 mb-2' placeholder='Pie de foto / título visible' />
+        <textarea class='img-desc w-full border rounded p-2 mb-2' rows='2' placeholder='Descripción adicional (opcional)'></textarea>
+        <input class='img-title w-full border rounded p-2 mb-2' placeholder='Texto del tooltip (title opcional)' />
+      `;
+      document.getElementById('imgContainer').appendChild(div);
+      div.querySelector('.removeImg').addEventListener('click', () => { div.remove(); generateHTML(); });
+      div.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', generateHTML));
+      generateHTML();
+    }
+
+    function generateHTML() {
+      const title = document.getElementById('title').value.trim() || 'Galería';
+      const intro = document.getElementById('intro').value.trim();
+      const url = document.getElementById('url').value.trim();
+      const linkText = document.getElementById('linkText').value.trim();
+      const layout = document.getElementById('layout').value;
+      const borderColor = document.getElementById('borderColor').value;
+      const textColor = document.getElementById('textColor').value;
+      const customBorder = document.getElementById('customBorder').value.trim();
+      const customText = document.getElementById('customText').value.trim();
+
+      const [borderBase, textBase] = colorMap[borderColor] || colorMap['teal'];
+      const [textBaseColor] = colorMap[textColor] || colorMap['teal'];
+
+      let appliedBorderColor = `border-${borderBase}`;
+      let appliedTextColor = `text-${textBaseColor}`;
+      let inlineBorderStyle = '';
+      let inlineTextStyle = '';
+
+      if (customBorder.startsWith('#')) {
+        inlineBorderStyle = ` style=\"border-color:${customBorder};\"`;
+        appliedBorderColor = 'border-l-4';
+      } else if (customBorder) {
+        appliedBorderColor = customBorder.replace('text-', 'border-');
+      }
+      if (customText.startsWith('#')) {
+        inlineTextStyle = ` style=\"color:${customText};\"`;
+        appliedTextColor = '';
+      } else if (customText) {
+        appliedTextColor = customText;
+      }
+
+      let html = `<section class=\"bg-white shadow rounded-xl border-l-4 ${appliedBorderColor}\"${inlineBorderStyle}>\n`;
+      html += `  <h2 class=\"${appliedTextColor} font-semibold text-lg px-4 pt-4\"${inlineTextStyle}>${title}</h2>\n`;
+      if (intro) html += `  <div class=\"p-4 text-gray-800\"><p>${intro}</p></div>\n`;
+
+      html += layout === 'scroll'
+        ? `  <div class=\"flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar p-4\">\n`
+        : `  <div class=\"grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 p-4\">\n`;
+
+      const imgs = document.querySelectorAll('.img-item');
+      imgs.forEach(img => {
+        const url = img.querySelector('.img-url').value.trim();
+        const alt = img.querySelector('.img-alt').value.trim();
+        const cap = img.querySelector('.img-cap').value.trim();
+        const desc = img.querySelector('.img-desc').value.trim();
+        const title = img.querySelector('.img-title').value.trim();
+        if (!url) return;
+        html += `    <figure class=\"relative group rounded-xl overflow-hidden border snap-center shrink-0 w-64\"${title ? ` title=\"${title}\"` : ''}>\n`;
+        html += `      <img src=\"${url}\" alt=\"${alt}\" class=\"w-full h-40 object-cover transition-transform duration-200 group-hover:scale-105 cursor-zoom-in previewable\">\n`;
+        if (cap) html += `      <figcaption class=\"absolute bottom-0 inset-x-0 bg-black/50 text-white text-xs px-2 py-1\">${cap}</figcaption>\n`;
+        if (desc) html += `      <p class=\"text-xs text-gray-600 px-2 pb-1\">${desc}</p>\n`;
+        html += `    </figure>\n`;
+      });
+      html += `  </div>\n`;
+      if (url) html += `  <p class=\"pt-2 px-4\"><a href=\"${url}\" target=\"_blank\" class=\"${appliedTextColor} hover:underline\">${linkText || url}</a></p>\n`;
+      html += `</section>\n\n`;
+
+      html += `<!-- Lightbox -->\n<dialog id=\"lightbox\" class=\"p-0 bg-transparent\">\n  <img id=\"lightbox-img\" alt=\"\" class=\"max-h-[90vh] max-w-[95vw] rounded-xl shadow-xl\" />\n</dialog>\n\n<script>\n  const dlg=document.getElementById('lightbox');\n  const big=document.getElementById('lightbox-img');\n  document.addEventListener('click',e=>{const img=e.target.closest('.previewable');if(img){big.src=img.src;big.alt=img.alt||'';dlg.showModal();}});\n  dlg.addEventListener('click',()=>dlg.close());\n  document.addEventListener('keydown',e=>e.key==='Escape'&&dlg.close());\n<\/script>`;
+
+      document.getElementById('output').value = html;
+      document.getElementById('preview').innerHTML = html;
+    }
+
+    document.getElementById('addImg').addEventListener('click', addImg);
+    document.getElementById('generateBtn').addEventListener('click', generateHTML);
+    document.getElementById('copyBtn').addEventListener('click', ()=>{
+      const output=document.getElementById('output');output.select();document.execCommand('copy');});
+
+    ['title','intro','url','linkText','layout','borderColor','textColor','customBorder','customText'].forEach(id=>{
+      document.getElementById(id).addEventListener('input', generateHTML);
+    });
+
+    addImg();
+  </script>
+</body>
+</html>
