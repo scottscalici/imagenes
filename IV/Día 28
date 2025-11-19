@@ -15,23 +15,82 @@
 
 
 <!--Día-->
-
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día 28</h1>
+    <p class="text-lg italic drop-shadow">19/20 de noviembre</p>
+  </div>
+</header>
 
 
 
 <!--Evaluación-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>Vocabulario 5.3</p>
+    
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1"><li>Nada - la próxima clase</li><li>Vocabulario 6.1 - Día 30</li></ul>
+          
+  </div>
+</section>
 
 
 
 <!--Calentamiento-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>Presente de subjuntivo 6</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 5 - 4</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div class="space-y-1"><p><span class="font-semibold">1.</span> caro/a</p><p><span class="font-semibold">2.</span> sobre</p><p><span class="font-semibold">3.</span> el maquillaje</p><p><span class="font-semibold">4.</span> equivocado/a</p><p><span class="font-semibold">5.</span> triste</p><p><span class="font-semibold">6.</span> la niñez</p><p><span class="font-semibold">7.</span> conmigo</p><p><span class="font-semibold">8.</span> el/la joven</p><p><span class="font-semibold">9.</span> estar lleno/a</p><p><span class="font-semibold">10.</span> recomendable</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> la paz</p><p><span class="font-semibold">12.</span> es ridículo</p><p><span class="font-semibold">13.</span> publicar</p><p><span class="font-semibold">14.</span> el/la locutor(a)</p><p><span class="font-semibold">15.</span> el choque</p><p><span class="font-semibold">16.</span> la oficina</p><p><span class="font-semibold">17.</span> la estampilla, el sello</p><p><span class="font-semibold">18.</span> el/la carpintero/a</p><p><span class="font-semibold">19.</span> talentoso/a</p><p><span class="font-semibold">20.</span> ... de vaqueros</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> desmayarse</p><p><span class="font-semibold">22.</span> la tarjeta de débito</p><p><span class="font-semibold">23.</span> la costumbre</p><p><span class="font-semibold">24.</span> freír (e:i)</p><p><span class="font-semibold">25.</span> la alimentación</p><p><span class="font-semibold">26.</span> el/la médico/a</p><p><span class="font-semibold">27.</span> quitarse el cinturón</p><p><span class="font-semibold">28.</span> según</p><p><span class="font-semibold">29.</span> en conclusión</p><p><span class="font-semibold">30.</span> resulta que</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
 
 <!--Estructura-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>Mandatos (tú, usted, ustedes)</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>Subjuntivo en cláusulas sustantivas (WEIRDO)</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        
+            <div>
+              <p class="font-semibold mt-4">Presente de subjuntivo</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="text-blue-600 hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="text-blue-600 hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="text-blue-600 hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="text-blue-600 hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul>
+            </div>
+          
+            <div>
+              <p class="font-semibold mt-4">Mandatos (todos)</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos" target="_blank" class="text-blue-600 hover:underline">Mandatos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="text-blue-600 hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="text-blue-600 hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="text-blue-600 hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4" target="_blank" class="text-blue-600 hover:underline">Mandatos con nosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5" target="_blank" class="text-blue-600 hover:underline">Mandatos con vosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="text-blue-600 hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul>
+            </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
 
 
 
@@ -93,7 +152,69 @@
 
 
 <!--Información adicional-->
-
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  
+        <h4 class="font-semibold">
+          <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
+        </h4>
+        <ul class="list-disc list-inside">
+          <li>Nada - la próxima clase</li><li>Vocabulario 6.1 - Día 30</li>
+        </ul>
+      
+  
+    <h4 class="font-semibold">Tareas (Dominio)</h4>
+    <ul class="list-disc list-inside text-red-700">
+      <li><span class="font-semibold">Tarea auditiva 3</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg> 11/23</span></li><li><span class="font-semibold">Usos del subjuntivo - Emoción</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg> 11/24</span></li><li><span class="font-semibold">Usos del subjuntivo - Duda</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg> 11/24</span></li><li><span class="font-semibold">Presente de subjuntivo</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg> 12/1</span></li><li><span class="font-semibold">Usos del subjuntivo - cláuslas sustantivas</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg> 12/2</span></li>
+    </ul>
+  
+  <h4 class="font-semibold">Presente de subjuntivo</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul><h4 class="font-semibold">Mandatos (todos)</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos" target="_blank" class="hover:underline">Mandatos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4" target="_blank" class="hover:underline">Mandatos con nosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5" target="_blank" class="hover:underline">Mandatos con vosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul>
+  
+      <h4 class="font-semibold">Vocabulario</h4>
+      <ul class="list-disc list-inside text-purple-700">
+        <li>Lección 5: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5/flashcards" target="_blank" class="hover:underline">Flashcards</a></li>
+      </ul>
+    
+  <p><span class="font-semibold">Ayuda con la vida</span> –
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  
+</section>
 
   </div>
 
