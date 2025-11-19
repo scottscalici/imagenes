@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pronombres relativos: que, quien(es), lo que</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- ENCABEZADO -->
+    <header class="bg-white rounded-2xl shadow p-6 border-l-4 border-l-emerald-500">
+      <h1 class="text-3xl font-bold mb-2">
+        Pronombres relativos: <span class="text-emerald-600">que, quien(es), lo que</span>
+      </h1>
+      <p class="text-slate-700">
+        Los <strong>pronombres relativos</strong> unen dos oraciones que comparten un elemento
+        (un sustantivo o pronombre) y evitan la repetición. En esta lección repasamos
+        <strong>que, quien(es) y lo que</strong> y practicamos su uso en contexto.
+      </p>
+      <p class="mt-2 text-sm text-slate-600">
+        Ojo: las palabras interrogativas (<em>qué, quién, cómo</em>, etc.) llevan tilde;
+        los pronombres relativos (<em>que, quien, lo que</em>) <strong>nunca</strong> llevan tilde.
+      </p>
+    </header>
+
+    <!-- QUE -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-3">
+      <h2 class="text-2xl font-semibold mb-2 text-emerald-700">El relativo <em>que</em></h2>
+      <p>
+        <strong>Que</strong> es el relativo más frecuente. Puede referirse
+        a <strong>personas</strong> o <strong>cosas</strong> y en español
+        <u>no se omite nunca</u>, aunque en inglés a veces se deje fuera
+        (<em>the book I bought</em> → <em>el libro <span class="underline">que</span> compré</em>).
+      </p>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><em>Este es el libro <strong>que</strong> uso para la clase.</em></li>
+        <li><em>No encuentro las llaves <strong>que</strong> dejé en la mesa.</em></li>
+        <li><em>La profesora <strong>que</strong> vive cerca de la escuela es de México.</em></li>
+      </ul>
+      <p class="text-sm text-slate-600">
+        Funciona como “que/that/which/who” en inglés, según el contexto.
+      </p>
+    </section>
+
+    <!-- QUIEN(ES) -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-3">
+      <h2 class="text-2xl font-semibold mb-2 text-sky-700">El relativo <em>quien / quienes</em></h2>
+      <p>
+        <strong>Quien</strong> (singular) y <strong>quienes</strong> (plural) se usan
+        <strong>solo para personas</strong>. Son muy comunes:
+      </p>
+      <ul class="list-disc ml-6 space-y-1">
+        <li>Después de una <strong>preposición</strong>: <em>La estudiante con <strong>quien</strong> hablé…</em></li>
+        <li>Después de la <strong>a personal</strong>: <em>El señor a <strong>quien</strong> saludaste…</em></li>
+      </ul>
+      <p>
+        En oraciones entre comas, a veces se puede usar <strong>quien(es)</strong> en lugar de
+        <strong>que</strong> para hablar de personas.
+      </p>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><em>Mis vecinos, <strong>quienes</strong> son muy amables, siempre saludan.</em></li>
+        <li><em>Mi abuela, <strong>quien</strong> vive en otro país, me llama cada semana.</em></li>
+      </ul>
+    </section>
+
+    <!-- LO QUE -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-3">
+      <h2 class="text-2xl font-semibold mb-2 text-fuchsia-700">El relativo <em>lo que</em></h2>
+      <p>
+        A diferencia de <em>que</em> y <em>quien(es)</em>, <strong>lo que</strong> no se refiere
+        a un sustantivo específico. Se refiere a <strong>ideas, situaciones o acciones completas</strong>.
+      </p>
+      <p>Equivale a “lo que / aquello que / the thing that / what”.</p>
+      <ul class="list-disc ml-6 space-y-1">
+        <li><em>No entiendo <strong>lo que</strong> dices.</em></li>
+        <li><em><strong>Lo que</strong> más me gusta de la película es el final.</em></li>
+        <li><em>No voy a repetir <strong>lo que</strong> hice ayer.</em></li>
+      </ul>
+    </section>
+
+    <!-- RESUMEN VISUAL -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2">Resumen rápido</h2>
+      <div class="grid gap-4 md:grid-cols-3 text-sm">
+        <div class="border border-emerald-100 bg-emerald-50 rounded-xl p-4">
+          <h3 class="font-semibold text-emerald-700 mb-1"><em>que</em></h3>
+          <ul class="list-disc ml-5 space-y-1">
+            <li>Personas o cosas</li>
+            <li>Más frecuente</li>
+            <li>Nunca se omite</li>
+          </ul>
+        </div>
+        <div class="border border-sky-100 bg-sky-50 rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-1"><em>quien / quienes</em></h3>
+          <ul class="list-disc ml-5 space-y-1">
+            <li>Solo personas</li>
+            <li>Después de preposición o <em>a</em> personal</li>
+            <li>A veces entre comas en vez de <em>que</em></li>
+          </ul>
+        </div>
+        <div class="border border-fuchsia-100 bg-fuchsia-50 rounded-xl p-4">
+          <h3 class="font-semibold text-fuchsia-700 mb-1"><em>lo que</em></h3>
+          <ul class="list-disc ml-5 space-y-1">
+            <li>Ideas, situaciones, acciones</li>
+            <li>“lo que / aquello que / the thing that”</li>
+            <li>No va con sustantivo específico</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRÁCTICA A -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-2xl font-semibold mb-2 text-slate-800">
+        Práctica A: Completa con <em>que</em>, <em>quien(es)</em> o <em>lo que</em>
+      </h2>
+      <p class="text-sm text-slate-700">
+        Escribe el pronombre relativo correcto en cada espacio.
+      </p>
+      <ol class="list-decimal ml-6 space-y-1 text-sm">
+        <li>Voy a usar los platos ____ me regaló mi abuela.</li>
+        <li>Ana comparte apartamento con la chica a ____ conocimos en la fiesta.</li>
+        <li>Esta oficina tiene todo ____ necesitamos para trabajar.</li>
+        <li>Puedes estudiar en el dormitorio ____ está al lado de la cocina.</li>
+        <li>Los señores ____ viven en esa casa acaban de llegar de Centroamérica.</li>
+        <li>Los niños a ____ viste en el jardín son mis primos.</li>
+        <li>La piscina ____ ves desde la ventana es de mis vecinos.</li>
+        <li>Úrsula, ____ ayudó a mamá a limpiar el refrigerador, es muy simpática.</li>
+      </ol>
+
+      <details class="mt-3 border border-slate-200 rounded-xl p-3 text-sm">
+        <summary class="cursor-pointer font-semibold text-slate-800">
+          Mostrar respuestas
+        </summary>
+        <div class="mt-2 space-y-1">
+          <p>1. <strong>que</strong></p>
+          <p>2. <strong>quien</strong></p>
+          <p>3. <strong>lo que</strong></p>
+          <p>4. <strong>que</strong></p>
+          <p>5. <strong>que</strong></p>
+          <p>6. <strong>quienes</strong></p>
+          <p>7. <strong>que</strong></p>
+          <p>8. <strong>quien</strong></p>
+        </div>
+      </details>
+    </section>
+
+    <!-- PRÁCTICA B -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 mb-8">
+      <h2 class="text-2xl font-semibold mb-2 text-slate-800">
+        Práctica B: Más oraciones
+      </h2>
+      <p class="text-sm text-slate-700">
+        Completa con <em>que</em>, <em>quien(es)</em> o <em>lo que</em>.
+      </p>
+      <ol class="list-decimal ml-6 space-y-1 text-sm">
+        <li>El hombre de ____ te hablé es mi padre.</li>
+        <li>____ te dijo Pablo no es completamente cierto.</li>
+        <li>Tengo que limpiar los muebles ____ están en el altillo.</li>
+        <li>No entiendo por qué no lavaste los vasos ____ te pedí.</li>
+        <li>La mujer a ____ saludaste vive en las afueras.</li>
+        <li>¿Sabes ____ necesita este dormitorio? ¡Unas cortinas!</li>
+        <li>No quiero repetir ____ hice ayer.</li>
+      </ol>
+
+      <details class="mt-3 border border-slate-200 rounded-xl p-3 text-sm">
+        <summary class="cursor-pointer font-semibold text-slate-800">
+          Mostrar respuestas
+        </summary>
+        <div class="mt-2 space-y-1">
+          <p>1. <strong>quien</strong></p>
+          <p>2. <strong>Lo que</strong></p>
+          <p>3. <strong>que</strong></p>
+          <p>4. <strong>que</strong></p>
+          <p>5. <strong>quien</strong></p>
+          <p>6. <strong>lo que</strong></p>
+          <p>7. <strong>lo que</strong></p>
+        </div>
+      </details>
+    </section>
+
+  </div>
+</body>
+</html>
