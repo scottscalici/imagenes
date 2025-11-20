@@ -6,282 +6,268 @@
   <title>plan de clase</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
+<body class="font-sans min-h-screen p-6 bg-gradient-to-b from-orange-50 via-amber-50 to-stone-100">
   <div class="max-w-5xl mx-auto space-y-6">
 
-<!--Aviso o Anuncio-->
-<section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#D97706;">
-  <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-    🦃 <span style="color:#B45309;">Feliz Día de Acción de Gracias</span>
-  </h2>
+    <!--Aviso o Anuncio-->
+   
+    <!--Día-->
+    <header class="shadow rounded-xl overflow-hidden">
+      <div class="bg-gradient-to-r from-amber-700 via-orange-600 to-amber-500 text-white flex justify-between items-center py-6 px-6">
+        <h1 class="text-3xl font-bold drop-shadow">Día 29</h1>
+        <p class="text-lg italic drop-shadow">21/24 de noviembre</p>
+      </div>
+    </header>
+ <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#D97706;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        🦃 <span style="color:#B45309;">Feliz Día de Acción de Gracias</span>
+      </h2>
 
-  <div class="space-y-4 text-gray-700">
-    <img 
-      src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/thanksgiving.png" 
-      alt="Acción de Gracias" 
-      class="w-full max-w-sm mx-auto rounded-xl shadow-lg border border-yellow-600"
-    >
+      <div class="space-y-4 text-gray-700">
+        <img 
+          src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/thanksgiving.png" 
+          alt="Acción de Gracias" 
+          class="w-full max-w-sm mx-auto rounded-xl shadow-lg border border-yellow-600"
+        >
 
-    <p class="text-lg" style="color:#92400E;">
-      Que tengas un día lleno de gratitud, buena comida y momentos especiales.
-    </p>
+        <p class="text-lg" style="color:#92400E;">
+          Que tengas un día lleno de gratitud, buena comida y momentos especiales.
+        </p>
 
-    <p class="italic" style="color:#78350F;">
-      ¡Espero que disfrutes un día cálido y feliz con tus seres queridos!
-    </p>
-  </div>
-</section>
+        <p class="italic" style="color:#78350F;">
+          ¡Espero que disfrutes un día cálido y feliz con tus seres queridos!
+        </p>
+      </div>
+    </section>
 
+    <!--Evaluación-->
+    <section class="bg-white shadow rounded-xl border-l-4 border-amber-600 overflow-hidden">
+      <h2 class="text-amber-700 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+      <div class="p-4 text-gray-800">
+        <p>Nada</p>
+        
+        <p class="font-semibold mt-2 text-amber-800">Próximas pruebas</p>
+        <ul class="list-disc ml-6 mt-1 text-amber-900">
+          <li>Vocabulario 6.1 - la próxima clase</li>
+          <li>Mandatos - Día 31</li>
+        </ul>
+      </div>
+    </section>
 
-
-
-<!--Día-->
-<header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
-    <h1 class="text-3xl font-bold drop-shadow">Día 29</h1>
-    <p class="text-lg italic drop-shadow">21/24 de noviembre</p>
-  </div>
-</header>
-
-
-
-<!--Evaluación-->
-<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
-  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
-  <div class="p-4 text-gray-800">
-    <p>Nada</p>
-    
-            <p class="font-semibold mt-2">Próximas pruebas</p>
-            <ul class="list-disc ml-6 mt-1"><li>Vocabulario 6.1 - la próxima clase</li><li>Mandatos - Día 31</li></ul>
-          
-  </div>
-</section>
-
-
-
-<!--Calentamiento-->
-<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
-  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Schoology:</p>
-      <p>Mandatos 2</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repaso de vocabulario: Descubre 3 - 5 - 5</p>
-      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
-      <div id="vocabBox" class="hidden">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="space-y-1"><p><span class="font-semibold">1.</span> ecuatoriano/a</p><p><span class="font-semibold">2.</span> las humanidades</p><p><span class="font-semibold">3.</span> por la tarde</p><p><span class="font-semibold">4.</span> ir en avión (m.)</p><p><span class="font-semibold">5.</span> el hotel</p><p><span class="font-semibold">6.</span> la camisa</p><p><span class="font-semibold">7.</span> el pasaporte</p><p><span class="font-semibold">8.</span> la madre</p><p><span class="font-semibold">9.</span> la despedida</p><p><span class="font-semibold">10.</span> anotar/marcar (un gol/un punto)</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> las bellas artes</p><p><span class="font-semibold">12.</span> el antibiótico</p><p><span class="font-semibold">13.</span> (no) es probable</p><p><span class="font-semibold">14.</span> el/la dentista</p><p><span class="font-semibold">15.</span> poner, prender</p><p><span class="font-semibold">16.</span> la comedia</p><p><span class="font-semibold">17.</span> el teatro</p><p><span class="font-semibold">18.</span> así</p><p><span class="font-semibold">19.</span> el premio</p><p><span class="font-semibold">20.</span> el programa de entrevistas/realidad</p></div><div class="space-y-1"><p><span class="font-semibold">21.</span> permisivo/a</p><p><span class="font-semibold">22.</span> relajarse</p><p><span class="font-semibold">23.</span> la televisión</p><p><span class="font-semibold">24.</span> el/la turista</p><p><span class="font-semibold">25.</span> la seguridad</p><p><span class="font-semibold">26.</span> incluido/a</p><p><span class="font-semibold">27.</span> la taquilla</p><p><span class="font-semibold">28.</span> las razones por las que</p><p><span class="font-semibold">29.</span> así que</p><p><span class="font-semibold">30.</span> del mismo modo</p></div>
+    <!--Calentamiento-->
+    <section class="bg-white shadow rounded-xl border-l-4 border-orange-600 overflow-hidden">
+      <h2 class="text-orange-700 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold text-amber-800">Schoology:</p>
+          <p>Mandatos 2</p>
+        </div>
+        <div>
+          <p class="font-semibold text-amber-800">Repaso de vocabulario: Descubre 3 - 5 - 5</p>
+          <button id="toggleBtn" onclick="toggleVocab()" class="text-orange-700 hover:underline mb-2">
+            Expandir/Reducir
+          </button>
+          <div id="vocabBox" class="hidden">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="space-y-1">
+                <p><span class="font-semibold">1.</span> ecuatoriano/a</p>
+                <p><span class="font-semibold">2.</span> las humanidades</p>
+                <p><span class="font-semibold">3.</span> por la tarde</p>
+                <p><span class="font-semibold">4.</span> ir en avión (m.)</p>
+                <p><span class="font-semibold">5.</span> el hotel</p>
+                <p><span class="font-semibold">6.</span> la camisa</p>
+                <p><span class="font-semibold">7.</span> el pasaporte</p>
+                <p><span class="font-semibold">8.</span> la madre</p>
+                <p><span class="font-semibold">9.</span> la despedida</p>
+                <p><span class="font-semibold">10.</span> anotar/marcar (un gol/un punto)</p>
+              </div>
+              <div class="space-y-1">
+                <p><span class="font-semibold">11.</span> las bellas artes</p>
+                <p><span class="font-semibold">12.</span> el antibiótico</p>
+                <p><span class="font-semibold">13.</span> (no) es probable</p>
+                <p><span class="font-semibold">14.</span> el/la dentista</p>
+                <p><span class="font-semibold">15.</span> poner, prender</p>
+                <p><span class="font-semibold">16.</span> la comedia</p>
+                <p><span class="font-semibold">17.</span> el teatro</p>
+                <p><span class="font-semibold">18.</span> así</p>
+                <p><span class="font-semibold">19.</span> el premio</p>
+                <p><span class="font-semibold">20.</span> el programa de entrevistas/realidad</p>
+              </div>
+              <div class="space-y-1">
+                <p><span class="font-semibold">21.</span> permisivo/a</p>
+                <p><span class="font-semibold">22.</span> relajarse</p>
+                <p><span class="font-semibold">23.</span> la televisión</p>
+                <p><span class="font-semibold">24.</span> el/la turista</p>
+                <p><span class="font-semibold">25.</span> la seguridad</p>
+                <p><span class="font-semibold">26.</span> incluido/a</p>
+                <p><span class="font-semibold">27.</span> la taquilla</p>
+                <p><span class="font-semibold">28.</span> las razones por las que</p>
+                <p><span class="font-semibold">29.</span> así que</p>
+                <p><span class="font-semibold">30.</span> del mismo modo</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-
-
-
-<!--Curiosidad-->
-<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
-  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 29</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <p class="font-semibold text-lg">Evaluación interna</p>
-    
-    <figure>
-      <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/IB.png?raw=true" alt="Evaluación interna" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
-    </figure>
-  </div>
-</section>
-
-
-
-<!--Estructura-->
-<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
-  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Introducir:</p>
-      <p>Mandatos (Nosotros y Vosotros)</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repasar:</p>
-      <p>Mandatos (tú, usted, ustedes)</p>
-    </div>
-    <div>
-      <p class="font-semibold">Apuntes:</p>
-      <div class="space-y-6">
-        
-            <div>
-              <p class="font-semibold mt-4">Mandatos (todos)</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos" target="_blank" class="text-blue-600 hover:underline">Mandatos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="text-blue-600 hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="text-blue-600 hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="text-blue-600 hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4" target="_blank" class="text-blue-600 hover:underline">Mandatos con nosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5" target="_blank" class="text-blue-600 hover:underline">Mandatos con vosotros</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="text-blue-600 hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul>
-            </div>
-          
+    <!--Curiosidad-->
+    <section class="bg-white shadow rounded-xl border-l-4 border-amber-500 overflow-hidden">
+      <h2 class="text-amber-700 font-semibold text-lg px-4 pt-4">Curiosidad 29</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <p class="font-semibold text-amber-800 text-lg">Evaluación interna</p>
+        <figure class="bg-amber-50 rounded-lg p-3">
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/IB.png?raw=true" alt="Evaluación interna" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+        </figure>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
+    <!--Estructura-->
+    <section class="bg-white shadow rounded-xl border-l-4 border-orange-700 overflow-hidden">
+      <h2 class="text-orange-700 font-semibold text-lg px-4 pt-4">Estructura</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold text-amber-800">Introducir:</p>
+          <p>Mandatos (Nosotros y Vosotros)</p>
+        </div>
+        <div>
+          <p class="font-semibold text-amber-800">Repasar:</p>
+          <p>Mandatos (tú, usted, ustedes)</p>
+        </div>
+        <div>
+          <p class="font-semibold text-amber-800">Apuntes:</p>
+          <div class="space-y-6">
+            <div>
+              <p class="font-semibold mt-4 text-amber-900">Mandatos (todos)</p>
+              <ul class="list-disc ml-6">
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos" target="_blank" class="text-orange-700 hover:underline">Mandatos</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="text-orange-700 hover:underline">Mandatos familiares afirmativos (tú +)</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="text-orange-700 hover:underline">Mandatos familiares negativos (tú -)</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="text-orange-700 hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/4" target="_blank" class="text-orange-700 hover:underline">Mandatos con nosotros</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/5" target="_blank" class="text-orange-700 hover:underline">Mandatos con vosotros</a></li>
+                <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="text-orange-700 hover:underline">Mandatos con pronombres (acentos escritos)</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!--Señor+-->
+    <section class="bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 shadow-lg rounded-2xl border-l-4 border-amber-600 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+      <div class="flex items-center space-x-4 p-6">
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/robot-turkey-79801.jpg" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
+        <div>
+          <h2 class="text-amber-800 font-bold text-xl tracking-tight">💬 Señor+</h2>
+          <p class="text-amber-700 text-sm italic">Tu asistente de gramática y conversación</p>
+        </div>
+      </div>
 
+      <div class="bg-white p-6 border-t border-amber-200 text-gray-800 text-center">
+        <p class="mb-4">Practica español con tu coach personal:</p>
+        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" 
+           class="inline-block px-6 py-2 text-white bg-gradient-to-r from-amber-700 to-orange-600 rounded-full font-semibold shadow hover:from-amber-800 hover:to-orange-700 transition">
+          🚀 Iniciar Chat con Señor+
+        </a>
+      </div>
+    </section>
 
-
-
-<!--Cultura-->
-
-
-
-
-<!--Enlace-->
-
-
-
-
-<!--Práctica de verbos-->
-
-
-
-
-<!--Práctica general-->
-
-
-
-
-<!--Video-->
-
-
-
-
-<!--Conversacion-->
-
-
-
-
-<!--Señor+-->
-<section class="bg-gradient-to-br from-sky-50 to-blue-100 shadow-lg rounded-2xl border-l-4 border-blue-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
-  <div class="flex items-center space-x-4 p-6">
-    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
-    <div>
-      <h2 class="text-blue-700 font-bold text-xl tracking-tight">💬 Señor+</h2>
-      <p class="text-gray-600 text-sm italic">Tu asistente de gramática y conversación</p>
-    </div>
-  </div>
-
-  <div class="bg-white p-6 border-t border-blue-200 text-gray-800 text-center">
-    <p class="mb-4">Practica español con tu coach personal:</p>
-    <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" 
-       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full font-semibold shadow hover:from-blue-700 hover:to-sky-600 transition">
-      🚀 Iniciar Chat con Señor+
-    </a>
-  </div>
-</section>
-
-
-
-
-<!--Información adicional-->
-<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
-  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
-  
-        <h4 class="font-semibold">
-          <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
-        </h4>
-        <ul class="list-disc list-inside">
-          <li>Vocabulario 6.1 - la próxima clase</li><li>Mandatos - Día 31</li>
-        </ul>
+    <!--Información adicional-->
+    <section class="bg-white shadow rounded-xl border-l-4 border-amber-500 p-4 space-y-1 info-section">
+      <h2 class="text-amber-700 font-semibold text-lg">Información adicional</h2>
       
-  
-    <h4 class="font-semibold">Tareas (Dominio)</h4>
-    <ul class="list-disc list-inside text-red-700">
-      <li><span class="font-semibold">Tarea auditiva 3</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
-     width="14" height="14"
-     viewBox="0 0 24 24"
-     style="vertical-align:-0.2em;display:inline-block"
-     fill="currentColor" aria-hidden="true" role="img">
-  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
-  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
-</svg> 11/23</span></li><li><span class="font-semibold">Usos del subjuntivo - Emoción</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
-     width="14" height="14"
-     viewBox="0 0 24 24"
-     style="vertical-align:-0.2em;display:inline-block"
-     fill="currentColor" aria-hidden="true" role="img">
-  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
-  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
-</svg> 11/24</span></li><li><span class="font-semibold">Usos del subjuntivo - Duda</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
-     width="14" height="14"
-     viewBox="0 0 24 24"
-     style="vertical-align:-0.2em;display:inline-block"
-     fill="currentColor" aria-hidden="true" role="img">
-  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
-  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
-</svg> 11/24</span></li><li><span class="font-semibold">Presente de subjuntivo</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
-     width="14" height="14"
-     viewBox="0 0 24 24"
-     style="vertical-align:-0.2em;display:inline-block"
-     fill="currentColor" aria-hidden="true" role="img">
-  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
-  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
-</svg> 12/1</span></li><li><span class="font-semibold">Usos del subjuntivo - cláuslas sustantivas</span> <span class="ml-1 text-red-800"><svg xmlns="http://www.w3.org/2000/svg"
-     width="14" height="14"
-     viewBox="0 0 24 24"
-     style="vertical-align:-0.2em;display:inline-block"
-     fill="currentColor" aria-hidden="true" role="img">
-  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
-  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
-</svg> 12/2</span></li>
-    </ul>
-  
-  <h4 class="font-semibold">Presente de subjuntivo</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="hover:underline">Conjugaciones del presente de subjuntivo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="hover:underline">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="hover:underline">Cláusulas sustantivas (Influencia)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="hover:underline">Cláusulas sustantivas (Emoción)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="hover:underline">Cláusulas sustantivas (Duda)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="hover:underline">Cláusulas sustantivas (Frases impersonales)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Presente de subjuntivo)</a></li></ul><h4 class="font-semibold">Mandatos (familiares)</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul>
-  
-      <h4 class="font-semibold">Vocabulario</h4>
-      <ul class="list-disc list-inside text-purple-700">
-        <li>Lección 5: <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5" target="_blank" class="hover:underline">Listas</a>, <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5/flashcards" target="_blank" class="hover:underline">Flashcards</a></li>
+      <h4 class="font-semibold">
+        <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="text-amber-800 hover:underline">Evaluaciones</a>
+      </h4>
+      <ul class="list-disc list-inside text-amber-900">
+        <li>Vocabulario 6.1 - la próxima clase</li>
+        <li>Mandatos - Día 31</li>
       </ul>
     
-  <p><span class="font-semibold">Ayuda con la vida</span> –
-    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
-  </p>
-  
-</section>
+      <h4 class="font-semibold text-amber-800">Tareas (Dominio)</h4>
+      <ul class="list-disc list-inside text-red-700">
+        <li><span class="font-semibold">Tarea auditiva 3</span> <span class="ml-1 text-red-800">
+          <!-- calendar icon -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14"
+              viewBox="0 0 24 24"
+              style="vertical-align:-0.2em;display:inline-block"
+              fill="currentColor" aria-hidden="true" role="img">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+            <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+          </svg> 11/23</span></li>
+        <li><span class="font-semibold">Usos del subjuntivo - Emoción</span> <span class="ml-1 text-red-800">
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14"
+              viewBox="0 0 24 24"
+              style="vertical-align:-0.2em;display:inline-block"
+              fill="currentColor" aria-hidden="true" role="img">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+            <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+          </svg> 11/24</span></li>
+        <li><span class="font-semibold">Usos del subjuntivo - Duda</span> <span class="ml-1 text-red-800">
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14"
+              viewBox="0 0 24 24"
+              style="vertical-align:-0.2em;display:inline-block"
+              fill="currentColor" aria-hidden="true" role="img">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+            <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+          </svg> 11/24</span></li>
+        <li><span class="font-semibold">Presente de subjuntivo</span> <span class="ml-1 text-red-800">
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14"
+              viewBox="0 0 24 24"
+              style="vertical-align:-0.2em;display:inline-block"
+              fill="currentColor" aria-hidden="true" role="img">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+            <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+          </svg> 12/1</span></li>
+        <li><span class="font-semibold">Usos del subjuntivo - cláuslas sustantivas</span> <span class="ml-1 text-red-800">
+          <svg xmlns="http://www.w3.org/2000/svg"
+              width="14" height="14"
+              viewBox="0 0 24 24"
+              style="vertical-align:-0.2em;display:inline-block"
+              fill="currentColor" aria-hidden="true" role="img">
+            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+            <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+          </svg> 12/2</span></li>
+      </ul>
+    
+      <h4 class="font-semibold text-amber-800">Presente de subjuntivo</h4>
+      <ul class="list-disc list-inside text-amber-900">
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/1" target="_blank" class="hover:underline text-orange-700">Conjugaciones del presente de subjuntivo</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/2" target="_blank" class="hover:underline text-orange-700">WEIRDO (usos de subjuntivo en cláusulas sustantivas)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/3" target="_blank" class="hover:underline text-orange-700">Cláusulas sustantivas (Influencia)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/4" target="_blank" class="hover:underline text-orange-700">Cláusulas sustantivas (Emoción)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/5" target="_blank" class="hover:underline text-orange-700">Cláusulas sustantivas (Duda)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/subjuntivo/6" target="_blank" class="hover:underline text-orange-700">Cláusulas sustantivas (Frases impersonales)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente-de-subjuntivo/0" target="_blank" class="hover:underline text-orange-700">Conjugatrón 3000 (Presente de subjuntivo)</a></li>
+      </ul>
+
+      <h4 class="font-semibold text-amber-800">Mandatos (familiares)</h4>
+      <ul class="list-disc list-inside text-amber-900">
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline text-orange-700">Mandatos familiares afirmativos (tú +)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline text-orange-700">Mandatos familiares negativos (tú -)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline text-orange-700">Mandatos formales y plurales (Ud. y Uds.)</a></li>
+        <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline text-orange-700">Mandatos con pronombres (acentos escritos)</a></li>
+      </ul>
+    
+      <h4 class="font-semibold text-amber-800">Vocabulario</h4>
+      <ul class="list-disc list-inside text-amber-900">
+        <li>Lección 5: 
+          <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5" target="_blank" class="hover:underline text-orange-700">Listas</a>, 
+          <a href="https://sites.google.com/view/srscalici/vocabulario/descubre-3-ib-español/5/flashcards" target="_blank" class="hover:underline text-orange-700">Flashcards</a>
+        </li>
+      </ul>
+    
+      <p><span class="font-semibold text-amber-900">Ayuda con la vida</span> –
+        <a href="https://connection.misd.net/index.html" target="_blank" class="text-orange-700 hover:underline">recursos de MISD</a>
+      </p>
+    </section>
 
   </div>
 
- 
-  <!-- Shared JavaScript -->
-  <script>
-
-  // Conversación timer
- let timerInterval;
-let seconds = 0;
-
-function startTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    seconds++;
-    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    timerDisplay.textContent = `${mins}:${secs}`;
-  }, 1000);
-}
-
-function resetTimer(btn) {
-  const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-  clearInterval(timerInterval);
-  seconds = 0;
-  timerDisplay.textContent = "00:00";
-}
-    function toggleVocab() {
-      const box = document.getElementById("vocabBox");
-      const btn = document.getElementById("toggleBtn");
-      if (box.classList.contains("hidden")) {
-        box.classList.remove("hidden");
-        btn.innerText = "Reducir";
-      } else {
-        box.classList.add("hidden");
-        btn.innerText = "Expandir";
-      }
-    }
-  </script>
 </body>
 </html>
