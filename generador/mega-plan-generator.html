@@ -410,21 +410,21 @@ ${introHtml}${repHtml}
       return url;
     }
 
-function buildCuriosidadSection(input, imgUrlRaw) {
-  const imgUrl = cleanImageUrl(imgUrlRaw.trim());
-  const lines = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    function buildCuriosidadSection(input, imgUrlRaw) {
+      const imgUrl = cleanImageUrl(imgUrlRaw.trim());
+      const lines = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
-  const curMatch = input.match(/Curiosidad\s*(\d+)/i);
-  const curNum = curMatch ? curMatch[1] : "";
+      const curMatch = input.match(/Curiosidad\s*(\d+)/i);
+      const curNum = curMatch ? curMatch[1] : "";
 
-  const curIndex = lines.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
-  const caption = (curIndex !== -1 && lines[curIndex + 1]) ? lines[curIndex + 1] : "";
+      const curIndex = lines.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
+      const caption = (curIndex !== -1 && lines[curIndex + 1]) ? lines[curIndex + 1] : "";
 
-  if (!curNum && !caption && !imgUrl) {
-    return "";
-  }
+      if (!curNum && !caption && !imgUrl) {
+        return "";
+      }
 
-  return `
+      return `
 <!--Curiosidad-->
 <section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
   <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad ${curNum}</h2>
@@ -432,12 +432,11 @@ function buildCuriosidadSection(input, imgUrlRaw) {
     ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
     ${imgUrl ? `
     <figure>
-      <img src="${imgUrl}" alt="${caption || ('Curiosidad ' + curNum)}" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+      <img src="${imgUrl}" alt="${caption || ("Curiosidad " + curNum)}" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
     </figure>` : ""}
   </div>
 </section>`;
-}
-
+    }
 
     /* =======================
        INFO ADICIONAL
@@ -684,7 +683,7 @@ function buildCuriosidadSection(input, imgUrlRaw) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>plan de clase</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"><\/script>
 </head>
 <body class="font-sans bg-gray-100 min-h-screen p-6">
   <div class="max-w-5xl mx-auto space-y-6">
@@ -732,7 +731,7 @@ ${infoSection}
         box.classList.add("hidden");
       }
     }
-  </script>
+  <\/script>
 </body>
 </html>`.trim();
 
@@ -755,7 +754,10 @@ ${infoSection}
     }
 
     // Cargar JSON al inicio
-    window.addEventListener("load", loadApuntesJSON);
+    window.addEventListener("load", () => {
+      document.getElementById("debug").textContent = "Inicializando...\n";
+      loadApuntesJSON();
+    });
   </script>
 </body>
 </html>
