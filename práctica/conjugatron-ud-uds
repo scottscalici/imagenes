@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Conjugatrón 3000</title>
+  <title>Conjugatrón 3000 – Mandatos formales y plurales</title>
 
   <style>
     body {
@@ -30,7 +30,7 @@
   </style>
 </head>
 <body>
-  <h1>🤖 Conjugatrón 3000 (Mandatos formales y plurales</h1>
+  <h1>🤖 Conjugatrón 3000 (Mandatos formales y plurales)</h1>
 
   <div style="margin-bottom: 1rem;">
     <p id="score-display" style="font-size: 1.1rem;">Puntuación: 0 aciertos de 0 (0%)</p>
@@ -41,75 +41,49 @@
 
   <script>
     let verbos = [];
-    let sujetos = [];
     let esperandoRespuesta = false;
     let currentCorrectAnswer = "";
     let totalIntentos = 0;
     let respuestasCorrectas = 0;
 
-    // Cargar los JSON
-    Promise.all([
-      fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/mandatos-formales-y-plurales.json').then(res => res.json()),
-      fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/sujetos.json').then(res => res.json())
-    ])
-    .then(([verbosData, sujetosData]) => {
-      verbos = verbosData;
-      sujetos = sujetosData;
-      mostrarPregunta();
-    })
-    .catch(err => {
-      document.getElementById("resultado").innerHTML = "❌ Error al cargar los archivos JSON.";
-      console.error(err);
-    });
+    // Cargar SOLO el JSON de mandatos formales/plurales
+    fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/mandatos-formales-y-plurales.json')
+      .then(res => res.json())
+      .then(data => {
+        verbos = data;
+        mostrarPregunta();
+      })
+      .catch(err => {
+        document.getElementById("resultado").innerHTML = "❌ Error al cargar el archivo JSON.";
+        console.error(err);
+      });
 
     function randomItem(array) {
       return array[Math.floor(Math.random() * array.length)];
     }
 
- function generarPregunta() {
-  if (!verbos.length || !sujetos.length) return null;
+    function generarPregunta() {
+      if (!verbos.length) return null;
 
-  const verbo = randomItem(verbos);
-  if (!verbo || !verbo.sujeto) return null;
+      const verbo = randomItem(verbos);
+      if (!verbo || !verbo.contexto || !verbo.forma) return null;
 
-  // "tú (afirmativo)" → "tú"
-  // "usted (afirmativo)" → "él/ella/usted"
-  // "ustedes (afirmativo)" → "ellos/ellas/ustedes"
-  const base = verbo.sujeto.split(" ")[0]; // tú / usted / ustedes
-  let claveGrupo = base;
+      // Usamos el contexto tal cual con el ___
+      const fraseConHueco = verbo.contexto;
+      const traduccion = verbo.traducción;
 
-  if (base === "usted") {
-    claveGrupo = "él/ella/usted";
-  } else if (base === "ustedes") {
-    claveGrupo = "ellos/ellas/ustedes";
-  }
+      // persona = "usted" o "ustedes" (primer token del campo sujeto)
+      const persona = verbo.sujeto ? verbo.sujeto.split(" ")[0] : "";
 
-  const grupoSujetos = sujetos.find(grupo => grupo.grupo === claveGrupo);
-  if (!grupoSujetos || !grupoSujetos.sujetos || !grupoSujetos.sujetos.length) {
-    console.warn("No se encontró grupo de sujetos para:", verbo.sujeto, "→", claveGrupo);
-    return null;
-  }
-
-  const sujeto = randomItem(grupoSujetos.sujetos);
-  if (!sujeto || !sujeto.es || !sujeto.en) {
-    console.warn("Sujeto inválido:", sujeto);
-    return null;
-  }
-
-  const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
-  const traduccion = `${sujeto.en} ${verbo.traducción}.`;
-
-  return {
-    spanish: fraseConHueco,
-    correct: verbo.forma,
-    english: traduccion,
-    pronombre: grupoSujetos.pronombre,
-    infinitivo: verbo.infinitivo,
-    tiempo: verbo.tiempo
-  };
-}
-
-  
+      return {
+        spanish: fraseConHueco,
+        correct: verbo.forma,
+        english: traduccion,
+        persona: persona,
+        infinitivo: verbo.infinitivo,
+        tiempo: verbo.tiempo
+      };
+    }
 
     function mostrarClave() {
       const claveBox = document.getElementById("clave");
@@ -125,8 +99,7 @@
     }
 
     function mostrarPregunta() {
-      // Evitar que se genere una pregunta antes de tener datos
-      if (!verbos.length || !sujetos.length) {
+      if (!verbos.length) {
         document.getElementById("resultado").innerHTML =
           "🔄 Cargando datos… intenta de nuevo en un momento.";
         return;
@@ -135,7 +108,7 @@
       const pregunta = generarPregunta();
       if (!pregunta) {
         document.getElementById("resultado").innerHTML =
-          "❌ No se pudo generar una pregunta. Revisa los archivos JSON.";
+          "❌ No se pudo generar una pregunta. Revisa el archivo JSON.";
         return;
       }
 
@@ -156,9 +129,9 @@
         <div id="feedback"></div>
       `;
 
-      // Inyectar contenido de la pista
+      // Clave: usted/ustedes + infinitivo + tiempo
       document.getElementById("clave-content").textContent =
-        `${pregunta.pronombre}, ${pregunta.infinitivo}, ${pregunta.tiempo}`;
+        `${pregunta.persona}, ${pregunta.infinitivo}, ${pregunta.tiempo}`;
 
       document.getElementById("respuestaInput").focus();
     }
