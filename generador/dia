@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Título</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="titleInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Pega aquí el blurb con Día y Fecha...&#10;&#10;Ejemplo:&#10;Día 11 30 de septiembre"></textarea>
+      <button onclick="generateTitle()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Título
+      </button>
+    </section>
+
+    <!-- Title Section Preview -->
+    <header id="titleSection" class="shadow rounded-xl overflow-hidden hidden mb-6">
+      <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+        <h1 id="dia" class="text-3xl font-bold drop-shadow">Día ___</h1>
+        <p id="fecha" class="text-lg italic drop-shadow">___</p>
+      </div>
+    </header>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-40 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateTitle() {
+      const input = document.getElementById("titleInput").value;
+
+      const diaLine = input.match(/D[ií]a\s*(\d+)(.*)/i);
+
+      let diaText = "___";
+      let fechaText = "___";
+
+      if (diaLine) {
+        diaText = diaLine[1];
+        if (diaLine[2] && diaLine[2].trim() !== "") {
+          fechaText = diaLine[2].trim();
+        }
+      }
+
+      if (fechaText === "___") {
+        const fechaMatch = input.match(/Fecha[:\s]*([^\n\r]+)/i);
+        if (fechaMatch) {
+          fechaText = fechaMatch[1].trim();
+        }
+      }
+
+      document.getElementById("dia").innerText = "Día " + diaText;
+      document.getElementById("fecha").innerText = fechaText;
+
+      document.getElementById("titleSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate the reusable HTML snippet
+      const htmlSnippet = `
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día ${diaText}</h1>
+    <p class="text-lg italic drop-shadow">${fechaText}</p>
+  </div>
+</header>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
