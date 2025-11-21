@@ -66,40 +66,50 @@
       return array[Math.floor(Math.random() * array.length)];
     }
 
-    function generarPregunta() {
-      // Seguridad extra por si se llama antes de tiempo
-      if (!verbos.length || !sujetos.length) return null;
+ function generarPregunta() {
+  if (!verbos.length || !sujetos.length) return null;
 
-      const verbo = randomItem(verbos);
-      if (!verbo || !verbo.sujeto) return null;
+  const verbo = randomItem(verbos);
+  if (!verbo || !verbo.sujeto) return null;
 
-      // "tú (afirmativo)" → "tú"
-      const claveGrupo = verbo.sujeto.split(" ")[0];
+  // "tú (afirmativo)" → "tú"
+  // "usted (afirmativo)" → "él/ella/usted"
+  // "ustedes (afirmativo)" → "ellos/ellas/ustedes"
+  const base = verbo.sujeto.split(" ")[0]; // tú / usted / ustedes
+  let claveGrupo = base;
 
-      const grupoSujetos = sujetos.find(grupo => grupo.grupo === claveGrupo);
-      if (!grupoSujetos || !grupoSujetos.sujetos || !grupoSujetos.sujetos.length) {
-        console.warn("No se encontró grupo de sujetos para:", verbo.sujeto);
-        return null;
-      }
+  if (base === "usted") {
+    claveGrupo = "él/ella/usted";
+  } else if (base === "ustedes") {
+    claveGrupo = "ellos/ellas/ustedes";
+  }
 
-      const sujeto = randomItem(grupoSujetos.sujetos);
-      if (!sujeto || !sujeto.es || !sujeto.en) {
-        console.warn("Sujeto inválido:", sujeto);
-        return null;
-      }
+  const grupoSujetos = sujetos.find(grupo => grupo.grupo === claveGrupo);
+  if (!grupoSujetos || !grupoSujetos.sujetos || !grupoSujetos.sujetos.length) {
+    console.warn("No se encontró grupo de sujetos para:", verbo.sujeto, "→", claveGrupo);
+    return null;
+  }
 
-      const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
-      const traduccion = `${sujeto.en} ${verbo.traducción}.`;
+  const sujeto = randomItem(grupoSujetos.sujetos);
+  if (!sujeto || !sujeto.es || !sujeto.en) {
+    console.warn("Sujeto inválido:", sujeto);
+    return null;
+  }
 
-      return {
-        spanish: fraseConHueco,
-        correct: verbo.forma,
-        english: traduccion,
-        pronombre: grupoSujetos.pronombre,
-        infinitivo: verbo.infinitivo,
-        tiempo: verbo.tiempo
-      };
-    }
+  const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
+  const traduccion = `${sujeto.en} ${verbo.traducción}.`;
+
+  return {
+    spanish: fraseConHueco,
+    correct: verbo.forma,
+    english: traduccion,
+    pronombre: grupoSujetos.pronombre,
+    infinitivo: verbo.infinitivo,
+    tiempo: verbo.tiempo
+  };
+}
+
+  
 
     function mostrarClave() {
       const claveBox = document.getElementById("clave");
