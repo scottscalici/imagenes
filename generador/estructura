@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Estructura con Checkboxes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Input Area -->
+    <section class="mb-10 space-y-4">
+      <textarea id="estrInput" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Pega aquí el blurb con Introducir y Repasar..."></textarea>
+
+      <!-- Checkboxes for Apuntes -->
+      <div>
+        <label class="font-semibold block mb-2">Elige apuntes:</label>
+        <div class="flex items-center gap-4 mb-2">
+          <button type="button" onclick="toggleAll(true)" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow">Seleccionar todo</button>
+          <button type="button" onclick="toggleAll(false)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow">Deseleccionar todo</button>
+        </div>
+        <div id="apuntesCheckboxes" class="grid grid-cols-2 gap-2"></div>
+      </div>
+
+      <button onclick="generateEstructura()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Estructura
+      </button>
+    </section>
+
+    <!-- Estructura Preview -->
+    <section id="estrSection" class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden hidden mb-6">
+      <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Introducir:</p>
+          <p id="estrIntroducir"></p>
+        </div>
+        <div>
+          <p class="font-semibold">Repasar:</p>
+          <p id="estrRepasar"></p>
+        </div>
+        <div>
+          <p class="font-semibold">Apuntes:</p>
+          <div id="estrApuntes" class="space-y-6"></div> <!-- extra space between groups -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+    <!-- Debug -->
+    <pre id="debug" class="bg-gray-200 text-sm p-2 rounded mt-4"></pre>
+
+  </div>
+
+  <script>
+    let apuntesData = {};
+
+    // Load JSON into checkboxes
+    async function loadApuntes() {
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json");
+        apuntesData = await res.json();
+
+        const container = document.getElementById("apuntesCheckboxes");
+        container.innerHTML = "";
+
+        Object.keys(apuntesData).forEach(group => {
+          const id = "chk_" + group.replace(/\s+/g, "_");
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <label class="inline-flex items-center">
+              <input type="checkbox" value="${group}" id="${id}" class="mr-2">
+              ${apuntesData[group].title || group}
+            </label>
+          `;
+          container.appendChild(div);
+        });
+
+        document.getElementById("debug").textContent =
+          "Cargado apuntes.json con grupos:\n" +
+          Object.keys(apuntesData).join(", ");
+      } catch (err) {
+        document.getElementById("debug").textContent =
+          "Error al cargar apuntes.json: " + err;
+        console.error(err);
+      }
+    }
+
+    // Toggle all checkboxes
+    function toggleAll(checked) {
+      document.querySelectorAll("#apuntesCheckboxes input[type=checkbox]").forEach(cb => {
+        cb.checked = checked;
+      });
+    }
+
+    async function generateEstructura() {
+      const input = document.getElementById("estrInput").value;
+
+      // Parse Introducir
+      const introMatch = input.match(/Introducir[:\s]*([^\n\r]*)/i);
+      const introducir = introMatch ? introMatch[1].trim() : "";
+
+      // Parse Repasar
+      const repMatch = input.match(/Repasar[:\s]*([^\n\r]*)/i);
+      const repasar = repMatch ? repMatch[1].trim() : "";
+
+      // Get checked Apuntes groups
+      const selectedGroups = Array.from(
+        document.querySelectorAll("#apuntesCheckboxes input:checked")
+      ).map(cb => cb.value);
+
+      let apHtml = "";
+      selectedGroups.forEach(groupKey => {
+        const group = apuntesData[groupKey];
+        if (group && group.links) {
+          const links = group.links
+            .map(
+              l =>
+                `<li><a href="${l.url}" target="_blank" class="text-blue-600 hover:underline">${l.title}</a></li>`
+            )
+            .join("");
+          apHtml += `
+            <div>
+              <p class="font-semibold mt-4">${group.title}</p> <!-- extra line before group -->
+              <ul class="list-disc ml-6">${links}</ul>
+            </div>
+          `;
+        } else {
+          apHtml += `<p class="text-red-600">No se encontró el grupo: ${groupKey}</p>`;
+        }
+      });
+
+      // Update preview
+      document.getElementById("estrIntroducir").innerText = introducir;
+      document.getElementById("estrRepasar").innerText = repasar;
+      document.getElementById("estrApuntes").innerHTML = apHtml;
+
+      document.getElementById("estrSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>${introducir}</p>
+    </div>
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>${repasar}</p>
+    </div>
+    <div>
+      <p class="font-semibold">Apuntes:</p>
+      <div class="space-y-6">
+        ${apHtml}
+      </div>
+    </div>
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+      document.getElementById("debug").textContent +=
+        "\nSeleccionado: " + selectedGroups.join(", ");
+    }
+
+    // Load checkboxes on page load
+    loadApuntes();
+  </script>
+</body>
+</html>
