@@ -1,0 +1,89 @@
+<!--Evaluación-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Evaluación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="evalInput" class="w-full h-48 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Pega aquí el blurb completo..."></textarea>
+      <button onclick="generateEvaluacion()" class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Evaluación
+      </button>
+    </section>
+
+    <!-- Evaluación Preview -->
+    <section id="evalSection" class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden hidden mb-6">
+      <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+      <div class="p-4 text-gray-800">
+        <p id="evalCurrent"></p>
+        <div id="evalUpcoming" class="mt-4"></div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-56 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateEvaluacion() {
+      const input = document.getElementById("evalInput").value;
+
+      // Get today's quiz (Evaluación:)
+      const currentMatch = input.match(/Evaluación[:\s]*([^\n\r]*)/i);
+      const currentQuiz = currentMatch ? currentMatch[1].trim() : "Nada";
+
+      // Look for "Evaluaciones" under Información Adicional
+      const evalBlockMatch = input.match(/Evaluaciones([\s\S]*?)(?=\n\s*\n|$)/i);
+      let upcomingHtml = "";
+      if (evalBlockMatch) {
+        const lines = evalBlockMatch[1].split(/\r?\n/).map(l => l.trim()).filter(l => l);
+
+        // Take the next two after "hoy"
+        const upcoming = lines.filter(l => !l.toLowerCase().includes("hoy")).slice(0, 2);
+
+        if (upcoming.length > 0) {
+          const items = upcoming.map(line => `<li>${line}</li>`).join("");
+          upcomingHtml = `
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1">${items}</ul>
+          `;
+        }
+      }
+
+      // Insert into preview
+      document.getElementById("evalCurrent").innerText = currentQuiz;
+      document.getElementById("evalUpcoming").innerHTML = upcomingHtml;
+
+      document.getElementById("evalSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate reusable HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>${currentQuiz}</p>
+    ${upcomingHtml}
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+  </script>
+</body>
+</html>
+
+
+
+
