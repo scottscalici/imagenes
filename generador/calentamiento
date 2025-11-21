@@ -1,0 +1,129 @@
+<!--calentamiento-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador de Calentamiento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto">
+    
+    <!-- Input Area -->
+    <section class="mb-10">
+      <textarea id="calInput" class="w-full h-48 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="Pega aquí el blurb con sección de Calentamiento..."></textarea>
+      <button onclick="generateCalentamiento()" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar Calentamiento
+      </button>
+    </section>
+
+    <!-- Calentamiento Preview -->
+    <section id="calSection" class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden hidden mb-6">
+      <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+      <div class="p-4 text-gray-800 space-y-4">
+        <div>
+          <p class="font-semibold">Schoology:</p>
+          <p id="calSchoology"></p>
+        </div>
+        <div>
+          <p id="calRepasoHeading" class="font-semibold"></p>
+          <button onclick="toggleVocab()" id="toggleBtn" class="text-blue-600 hover:underline mb-2">Expandir</button>
+          <div id="vocabBox" class="hidden">
+            <div id="calVocab" class="grid grid-cols-3 gap-4"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Output -->
+    <section id="codeOutput" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
+      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
+    </section>
+
+  </div>
+
+  <script>
+    function generateCalentamiento() {
+      const input = document.getElementById("calInput").value;
+
+      // Schoology line
+      const schoologyMatch = input.match(/Schoology[:\s]*([^\n\r]*)/i);
+      const schoology = schoologyMatch ? schoologyMatch[1].trim() : "—";
+
+      // Grab block of repaso de vocabulario
+      const repasoBlockMatch = input.match(/Repaso de vocabulario[:\s]*([^\n\r]*)[\r\n]+([\s\S]*?)(?=\n[A-ZÁÉÍÓÚÑ]|$)/i);
+
+      let repasoHeading = "Repaso de vocabulario";
+      let vocabContent = [];
+
+      if (repasoBlockMatch) {
+        repasoHeading = "Repaso de vocabulario: " + repasoBlockMatch[1].trim();
+
+        // only take numbered lines inside this block
+        const vocabMatches = [...repasoBlockMatch[2].matchAll(/(\d+)\s+([^\n\r]+)/g)].map(m => ({
+          num: parseInt(m[1], 10),
+          word: m[2].trim()
+        }));
+
+        vocabMatches.sort((a, b) => a.num - b.num);
+        vocabContent = vocabMatches;
+      }
+
+      // Build columns of 10
+      const columns = [[], [], []];
+      vocabContent.forEach((item) => {
+        const colIndex = Math.floor((item.num - 1) / 10);
+        columns[colIndex].push(`<p><span class="font-semibold">${item.num}.</span> ${item.word}</p>`);
+      });
+
+      const vocabHtml = columns.map(col => `<div class="space-y-1">${col.join("")}</div>`).join("");
+
+      // Update preview
+      document.getElementById("calSchoology").innerText = schoology;
+      document.getElementById("calRepasoHeading").innerText = repasoHeading;
+      document.getElementById("calVocab").innerHTML = vocabHtml;
+
+      document.getElementById("calSection").classList.remove("hidden");
+      document.getElementById("codeOutput").classList.remove("hidden");
+
+      // Generate HTML snippet
+      const htmlSnippet = `
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>${schoology}</p>
+    </div>
+    <div>
+      <p class="font-semibold">${repasoHeading}</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          ${vocabHtml}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`.trim();
+
+      document.getElementById("htmlCode").value = htmlSnippet;
+    }
+
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      const btn = document.getElementById("toggleBtn");
+      if (box.classList.contains("hidden")) {
+        box.classList.remove("hidden");
+        btn.innerText = "Reducir";
+      } else {
+        box.classList.add("hidden");
+        btn.innerText = "Expandir";
+      }
+    }
+  </script>
+</body>
+</html>
+
