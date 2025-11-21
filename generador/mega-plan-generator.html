@@ -24,13 +24,13 @@
           placeholder="Pega aquí TODO el blurb (Día, Evaluación, Calentamiento, Estructura, Curiosidad, Información adicional, etc.)"></textarea>
       </div>
 
-      <!-- Curiosidad extras -->
+      <!-- Curiosidad / Curso -->
       <div class="grid md:grid-cols-2 gap-4">
         <div>
           <label class="block font-semibold mb-1">Imagen de Curiosidad (opcional):</label>
           <input id="curioImgUrl" type="text"
                  class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400"
-                 placeholder="Pega aquí la URL (GitHub &#39;blob&#39; o raw, o cualquier imagen)">
+                 placeholder="Pega aquí la URL (GitHub 'blob' o raw, o cualquier imagen)">
           <p class="text-xs text-gray-500 mt-1">
             Si pegas un enlace de GitHub con <code>/blob/</code>, se convierte automáticamente a <code>raw</code>.
           </p>
@@ -62,7 +62,7 @@
         <div id="estrApuntesCheckboxes" class="grid md:grid-cols-2 gap-2 text-sm"></div>
       </div>
 
-      <!-- Gramática / Vocabulario para Información adicional -->
+      <!-- Gramática / Vocabulario -->
       <div class="grid md:grid-cols-2 gap-6">
         <div>
           <h2 class="font-semibold mb-2 text-purple-700">Gramática para Información adicional</h2>
@@ -120,7 +120,7 @@
       cont.innerHTML = "";
       Object.keys(apuntesData).forEach(key => {
         const group = apuntesData[key];
-        if (!group || !group.links || !group.title) return; // sólo grupos con links/título
+        if (!group || !group.links || !group.title) return;
         const label = document.createElement("label");
         label.className = "inline-flex items-center space-x-2";
         label.innerHTML = `
@@ -211,7 +211,7 @@
         .map(s => s.replace(/\s+/g, " ").trim());
     }
 
-    // Dia + fecha
+    // Día + fecha
     function buildDiaSection(input) {
       const diaLine = input.match(/D[ií]a\s*(\d+)(.*)/i);
       let diaText = "___";
@@ -241,7 +241,7 @@
 </header>`;
     }
 
-    // Evaluación (card)
+    // Evaluación
     function buildEvaluacionSection(input) {
       const currentMatch = input.match(/Evaluación[:\s]*([^\n\r]*)/i);
       const currentQuiz = currentMatch ? currentMatch[1].trim() : "Nada";
@@ -324,7 +324,7 @@
 </section>`;
     }
 
-    // Helper: línea Introducir / Repasar
+    // Helper: Introducir / Repasar
     function getLineValue(label, text) {
       const lines = text.split(/\r?\n/);
       const target = label.toLowerCase() + ":";
@@ -396,7 +396,7 @@ ${introHtml}${repHtml}
 </section>`;
     }
 
-    // Curiosidad helpers
+    // Curiosidad
     function cleanImageUrl(url) {
       if (!url) return "";
       if (url.includes("github.com") && url.includes("/blob/")) {
@@ -748,12 +748,13 @@ ${infoSection}
       document.getElementById("previewSection").classList.remove("hidden");
 
       document.getElementById("debug").textContent +=
-        "\nGenerado plan con Estructura = [" + selectedEstrKeys.join(", ") + "], Gramática = [" +
-        selectedGrammarKeys.join(", ") + "], Vocab = [" + selectedVocabVals.join(", ") + "]";
+        "\nGenerado plan con Estructura = [" + selectedEstrKeys.join(", ") +
+        "], Gramática = [" + selectedGrammarKeys.join(", ") +
+        "], Vocab = [" + selectedVocabVals.join(", ") + "]";
     }
 
     // Cargar JSON al inicio
-    loadApuntesJSON();
+    window.addEventListener("load", loadApuntesJSON);
   </script>
 </body>
 </html>
