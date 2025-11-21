@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Subjuntivo en cláusulas adverbiales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- Encabezado -->
+    <header class="shadow rounded-xl overflow-hidden">
+      <div class="bg-emerald-500 text-white py-6 px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <h1 class="text-3xl font-bold drop-shadow">Subjuntivo en cláusulas adverbiales</h1>
+          <p class="italic text-sm sm:text-base opacity-90">
+            cuando, antes de que, para que, hasta que…
+          </p>
+        </div>
+        <div class="bg-white/15 rounded-xl px-4 py-2 text-sm sm:text-base">
+          <p class="font-semibold">Meta:</p>
+          <p>Usar el subjuntivo después de ciertas conjunciones para hablar de acciones futuras o hipotéticas.</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- 1. Qué es una cláusula adverbial -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#10B981;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">1. ¿Qué es una cláusula adverbial?</h2>
+      <p class="text-gray-800 mb-2">
+        Una <span class="font-semibold">cláusula adverbial</span> es una oración subordinada que explica
+        <span class="font-semibold">cómo, cuándo, dónde, por qué o bajo qué condición</span> ocurre la acción del verbo principal.
+      </p>
+      <p class="text-gray-800 mb-2">
+        Muchas cláusulas adverbiales empiezan con una <span class="font-semibold">conjunción</span> (palabra que conecta oraciones),
+        por ejemplo: <span class="italic">cuando, antes de que, para que, a menos que</span>. :contentReference[oaicite:1]{index=1}
+      </p>
+      <p class="text-gray-800">
+        Con ciertas conjunciones usamos el <span class="font-semibold">subjuntivo</span> para expresar situaciones hipotéticas,
+        inciertas o condiciones que tal vez se cumplan… o tal vez no. :contentReference[oaicite:2]{index=2}
+      </p>
+    </section>
+
+    <!-- 2. Conjunciones que SIEMPRE van con subjuntivo -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#F97316;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">2. Conjunciones que SIEMPRE llevan subjuntivo</h2>
+      <p class="mb-4 text-gray-800">
+        Después de estas conjunciones, normalmente usamos el <span class="font-semibold">subjuntivo</span> porque introducen
+        condición, propósito o posibilidad:
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-emerald-50">
+            <tr class="text-left">
+              <th class="px-4 py-2 font-semibold">Conjunción</th>
+              <th class="px-4 py-2 font-semibold">Significado</th>
+              <th class="px-4 py-2 font-semibold">Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-4 py-2 italic">a menos que</td>
+              <td class="px-4 py-2">unless</td>
+              <td class="px-4 py-2">No saldremos <span class="italic">a menos que</span> <span class="font-semibold">deje</span> de llover.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">antes de que</td>
+              <td class="px-4 py-2">before</td>
+              <td class="px-4 py-2">Voy a llamar a mi abuela <span class="italic">antes de que</span> ella <span class="font-semibold">se acueste</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">con tal (de) que</td>
+              <td class="px-4 py-2">provided that, as long as</td>
+              <td class="px-4 py-2">Te ayudo <span class="italic">con tal de que</span> tú también <span class="font-semibold">estudies</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">en caso de que</td>
+              <td class="px-4 py-2">in case</td>
+              <td class="px-4 py-2">Lleva paraguas <span class="italic">en caso de que</span> <span class="font-semibold">llueva</span>.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">para que</td>
+              <td class="px-4 py-2">so that</td>
+              <td class="px-4 py-2">Te explico esto <span class="italic">para que</span> lo <span class="font-semibold">entiendas</span> bien.</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">sin que</td>
+              <td class="px-4 py-2">without</td>
+              <td class="px-4 py-2">Salió de la casa <span class="italic">sin que</span> sus padres lo <span class="font-semibold">vieran</span>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-4 text-gray-800 text-sm">
+        💡 Idea clave: después de estas conjunciones, “esperamos” la acción, no la describimos como un hecho.
+      </p>
+    </section>
+
+    <!-- 3. Mismo sujeto: infinitivo (antes de / para / sin) -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#6366F1;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">3. Mismo sujeto: <span class="italic">antes de, para, sin</span> + infinitivo</h2>
+      <p class="text-gray-800 mb-2">
+        Cuando NO hay cambio de sujeto, en vez de <span class="italic">antes de que / para que / sin que</span> + subjuntivo,
+        usamos simplemente <span class="font-semibold">antes de / para / sin</span> + infinitivo. :contentReference[oaicite:3]{index=3}
+      </p>
+
+      <div class="grid gap-4 md:grid-cols-2 mt-3">
+        <!-- Cambio de sujeto -->
+        <div class="border rounded-xl p-4 bg-indigo-50/60">
+          <p class="font-semibold mb-1 text-indigo-900">Con cambio de sujeto → subjuntivo</p>
+          <p class="text-sm text-gray-800">
+            Yo preparo la presentación <span class="italic">para que</span> ustedes <span class="font-semibold">puedan</span> estudiar.
+          </p>
+          <p class="text-xs text-gray-700 mt-1">
+            (Yo preparo / ustedes pueden → sujetos diferentes → subjuntivo)
+          </p>
+        </div>
+
+        <!-- Mismo sujeto -->
+        <div class="border rounded-xl p-4 bg-indigo-50/60">
+          <p class="font-semibold mb-1 text-indigo-900">Mismo sujeto → infinitivo</p>
+          <p class="text-sm text-gray-800">
+            Yo preparo la presentación <span class="italic">para</span> <span class="font-semibold">estudiar</span> mejor.
+          </p>
+          <p class="text-xs text-gray-700 mt-1">
+            (Solo “yo” hace las dos acciones → infinitivo)
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-4 text-gray-800 text-sm">
+        ❗ En español NO usamos gerundio en estas estructuras (*antes de estudiando* ❌). Usamos infinitivo: <span class="italic">antes de estudiar</span>. :contentReference[oaicite:4]{index=4}
+      </p>
+    </section>
+
+    <!-- 4. Conjunciones con subjuntivo O indicativo -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#F59E0B;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">4. Conjunciones con subjuntivo <span class="italic">o</span> indicativo</h2>
+      <p class="text-gray-800 mb-3">
+        Hay conjunciones que pueden usar <span class="font-semibold">subjuntivo</span> o <span class="font-semibold">indicativo</span>,
+        según el contexto:
+      </p>
+
+      <div class="overflow-x-auto mb-4">
+        <table class="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-amber-50">
+            <tr class="text-left">
+              <th class="px-4 py-2 font-semibold">Conjunción</th>
+              <th class="px-4 py-2 font-semibold">Significado</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="px-4 py-2 italic">cuando</td>
+              <td class="px-4 py-2">when</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">después de que</td>
+              <td class="px-4 py-2">after</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">en cuanto</td>
+              <td class="px-4 py-2">as soon as</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">tan pronto como</td>
+              <td class="px-4 py-2">as soon as</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 italic">hasta que</td>
+              <td class="px-4 py-2">until</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Regla visual -->
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="border border-emerald-200 bg-emerald-50 rounded-xl p-4">
+          <p class="font-semibold text-emerald-900 mb-1">
+            a) Acción futura / mandato → Subjuntivo
+          </p>
+          <p class="text-sm text-gray-800 mb-1">
+            Estudiaré más <span class="italic">cuando</span> <span class="font-semibold">empiece</span> el nuevo semestre.
+          </p>
+          <p class="text-xs text-gray-700">
+            (Todavía no empieza → es futuro → subjuntivo) :contentReference[oaicite:5]{index=5}
+          </p>
+        </div>
+
+        <div class="border border-sky-200 bg-sky-50 rounded-xl p-4">
+          <p class="font-semibold text-sky-900 mb-1">
+            b) Acción habitual o pasada → Indicativo
+          </p>
+          <p class="text-sm text-gray-800 mb-1">
+            Siempre estudio <span class="italic">cuando</span> <span class="font-semibold">empieza</span> el semestre.
+          </p>
+          <p class="text-xs text-gray-700">
+            (Hábito / descripción de lo que pasa normalmente → indicativo) :contentReference[oaicite:6]{index=6}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Nota para niveles avanzados: pasado del subjuntivo -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#0EA5E9;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">5. Conexión con el pasado (imperfecto del subjuntivo)</h2>
+      <p class="text-gray-800 mb-2">
+        En niveles más avanzados, cuando el verbo principal está en pasado, la cláusula adverbial también puede ir en
+        <span class="font-semibold">subjuntivo del pasado</span> (imperfecto del subjuntivo), pero la lógica es la misma:
+      </p>
+      <ul class="list-disc ml-6 text-gray-800 text-sm space-y-1">
+        <li>Acción vista como futura desde ese punto en el pasado → subjuntivo del pasado.</li>
+        <li>Acción habitual o ya realizada → indicativo (en pasado).</li>
+      </ul>
+      <p class="mt-2 text-gray-800 text-sm">
+        Ejemplo: <span class="italic">Pensé que, cuando <span class="font-semibold">terminara</span> el año, 
+        iba a estar menos cansado.</span> :contentReference[oaicite:7]{index=7}
+      </p>
+    </section>
+
+    <!-- 6. Práctica rápida con "Mostrar respuesta" -->
+    <section class="bg-white rounded-xl shadow p-6 border-l-4" style="border-color:#EC4899;">
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">6. Práctica rápida</h2>
+      <p class="text-gray-800 mb-4">
+        Completa las oraciones con la forma correcta del verbo entre paréntesis. Piensa si la acción es futura / mandato
+        (subjuntivo) o habitual / pasada (indicativo).
+      </p>
+
+      <ol class="space-y-4 text-gray-800 list-decimal ml-5">
+        <li>
+          Voy a reciclar más <span class="italic">cuando</span> ________ (tener) tiempo.
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">tenga &rarr; acción futura → subjuntivo.</p>
+          </details>
+        </li>
+
+        <li>
+          Siempre apagamos las luces <span class="italic">cuando</span> ________ (salir) de la clase.
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">salimos &rarr; hábito → indicativo.</p>
+          </details>
+        </li>
+
+        <li>
+          No voy al cibercafé <span class="italic">a menos que</span> ________ (necesitar) imprimir algo.
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">necesite &rarr; conjunción que siempre exige subjuntivo.</p>
+          </details>
+        </li>
+
+        <li>
+          Vamos a salir temprano <span class="italic">para</span> ________ (evitar) el tráfico.
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">evitar &rarr; mismo sujeto (nosotros) → infinitivo.</p>
+          </details>
+        </li>
+
+        <li>
+          El profe explicó la actividad <span class="italic">después de que</span> los estudiantes ________ (llegar).
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">llegaron &rarr; acción completada en el pasado → indicativo.</p>
+          </details>
+        </li>
+
+        <li>
+          El gobierno va a tomar medidas <span class="italic">hasta que</span> la contaminación ________ (ser) un problema muy grave.
+          <details class="mt-1 text-sm">
+            <summary class="cursor-pointer text-pink-600 font-semibold">Mostrar respuesta</summary>
+            <p class="mt-1">sea &rarr; desde ahora lo vemos como futuro / posible → subjuntivo.</p>
+          </details>
+        </li>
+      </ol>
+    </section>
+
+  </div>
+</body>
+</html>
