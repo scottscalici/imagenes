@@ -41,8 +41,9 @@
           <p id="estrRepasar"></p>
         </div>
         <div>
-          <p class="font-semibold">Apuntes:</p>
-          <div id="estrApuntes" class="space-y-6"></div> <!-- extra space between groups -->
+          <p class="font-semibold underline">Apuntes</p>
+<div id="estrApuntes" class="space-y-6"></div>
+
         </div>
       </div>
     </section>
@@ -140,11 +141,12 @@ function getLineValue(label, text) {
             )
             .join("");
           apHtml += `
-            <div>
-              <p class="font-semibold mt-4">${group.title}</p> <!-- extra line before group -->
-              <ul class="list-disc ml-6">${links}</ul>
-            </div>
-          `;
+  <div>
+    <p class="font-semibold italic mt-4">${group.title}</p> <!-- extra line before group -->
+    <ul class="list-disc ml-6">${links}</ul>
+  </div>
+`;
+
         } else {
           apHtml += `<p class="text-red-600">No se encontró el grupo: ${groupKey}</p>`;
         }
@@ -198,13 +200,13 @@ function getLineValue(label, text) {
   <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
   <div class="p-4 text-gray-800 space-y-4">
 ${introHtml}${repHtml}
-    <div>
-      <p class="font-semibold">Apuntes:</p>
+        <div>
+      <p class="font-semibold underline">Apuntes</p>
       <div class="space-y-6">
         ${apHtml}
       </div>
     </div>
-  </div>
+
 </section>`.trim();
 
       document.getElementById("htmlCode").value = htmlSnippet;
