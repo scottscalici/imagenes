@@ -29,14 +29,14 @@
     </section>
 
     <!-- Estructura Preview -->
-    <section id="estrSection" class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden hidden mb-6">
+ <section id="estrSection" class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden hidden mb-6">
       <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
       <div class="p-4 text-gray-800 space-y-4">
-        <div>
+        <div id="introWrapper" class="hidden">
           <p class="font-semibold">Introducir:</p>
           <p id="estrIntroducir"></p>
         </div>
-        <div>
+        <div id="repWrapper" class="hidden">
           <p class="font-semibold">Repasar:</p>
           <p id="estrRepasar"></p>
         </div>
@@ -58,7 +58,7 @@
 
   </div>
 
-  <script>
+   <script>
     let apuntesData = {};
 
     // Load JSON into checkboxes
@@ -99,16 +99,30 @@
       });
     }
 
+   
+// Helper: get the text on the same line as a label (e.g. "Introducir:" or "Repasar:")
+function getLineValue(label, text) {
+  const lines = text.split(/\r?\n/); // split into lines
+  const target = label.toLowerCase() + ":";
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+    if (trimmed.toLowerCase().startsWith(target)) {
+      // take everything *after* the first colon on that line
+      const afterColon = rawLine.split(":")[1] || "";
+      return afterColon.trim();
+    }
+  }
+  return "";
+}
+
+
     async function generateEstructura() {
       const input = document.getElementById("estrInput").value;
 
-      // Parse Introducir
-      const introMatch = input.match(/Introducir[:\s]*([^\n\r]*)/i);
-      const introducir = introMatch ? introMatch[1].trim() : "";
-
-      // Parse Repasar
-      const repMatch = input.match(/Repasar[:\s]*([^\n\r]*)/i);
-      const repasar = repMatch ? repMatch[1].trim() : "";
+      // Parse line-based values (won't steal "Cultura", etc.)
+      const introducir = getLineValue("Introducir", input);
+      const repasar = getLineValue("Repasar", input);
 
       // Get checked Apuntes groups
       const selectedGroups = Array.from(
@@ -136,27 +150,54 @@
         }
       });
 
-      // Update preview
-      document.getElementById("estrIntroducir").innerText = introducir;
-      document.getElementById("estrRepasar").innerText = repasar;
-      document.getElementById("estrApuntes").innerHTML = apHtml;
+      // --- Update preview (show/hide intro/rep) ---
+      const introWrapper = document.getElementById("introWrapper");
+      const repWrapper = document.getElementById("repWrapper");
 
+      if (introducir) {
+        document.getElementById("estrIntroducir").innerText = introducir;
+        introWrapper.classList.remove("hidden");
+      } else {
+        document.getElementById("estrIntroducir").innerText = "";
+        introWrapper.classList.add("hidden");
+      }
+
+      if (repasar) {
+        document.getElementById("estrRepasar").innerText = repasar;
+        repWrapper.classList.remove("hidden");
+      } else {
+        document.getElementById("estrRepasar").innerText = "";
+        repWrapper.classList.add("hidden");
+      }
+
+      document.getElementById("estrApuntes").innerHTML = apHtml;
       document.getElementById("estrSection").classList.remove("hidden");
       document.getElementById("codeOutput").classList.remove("hidden");
 
-      // Generate HTML snippet
+      // --- Generate HTML snippet conditionally ---
+      let introHtml = "";
+      if (introducir) {
+        introHtml = `
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>${introducir}</p>
+    </div>`;
+      }
+
+      let repHtml = "";
+      if (repasar) {
+        repHtml = `
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>${repasar}</p>
+    </div>`;
+      }
+
       const htmlSnippet = `
 <section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
   <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
   <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Introducir:</p>
-      <p>${introducir}</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repasar:</p>
-      <p>${repasar}</p>
-    </div>
+${introHtml}${repHtml}
     <div>
       <p class="font-semibold">Apuntes:</p>
       <div class="space-y-6">
@@ -174,5 +215,6 @@
     // Load checkboxes on page load
     loadApuntes();
   </script>
+
 </body>
 </html>
