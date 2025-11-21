@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mega Generador de Plan de Clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .info-section h4 { margin-top: .25rem; margin-bottom: .25rem; }
+    .info-section ul { margin-top: .1rem; margin-bottom: .5rem; }
+  </style>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- PANEL DE CONTROL -->
+    <section class="bg-white shadow rounded-xl p-6 space-y-4">
+      <h1 class="text-2xl font-bold text-gray-800 mb-2">Mega Generador de Plan de Clase</h1>
+
+      <!-- Blurb -->
+      <div>
+        <label class="block font-semibold mb-1">Blurb del día:</label>
+        <textarea id="mainBlurb" class="w-full h-48 p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-sky-400"
+          placeholder="Pega aquí TODO el blurb (Día, Evaluación, Calentamiento, Estructura, Curiosidad, Información adicional, etc.)"></textarea>
+      </div>
+
+      <!-- Curiosidad extras -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold mb-1">Imagen de Curiosidad (opcional):</label>
+          <input id="curioImgUrl" type="text"
+                 class="w-full p-2 border rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400"
+                 placeholder="Pega aquí la URL (GitHub &#39;blob&#39; o raw, o cualquier imagen)">
+          <p class="text-xs text-gray-500 mt-1">
+            Si pegas un enlace de GitHub con <code>/blob/</code>, se convierte automáticamente a <code>raw</code>.
+          </p>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Curso para Evaluaciones / Info adicional:</label>
+          <select id="courseSelect" class="w-full border rounded-xl p-2 shadow-sm focus:ring-2 focus:ring-purple-400">
+            <option value="II">Español II (sophomores)</option>
+            <option value="IV" selected>Español IV (seniors)</option>
+          </select>
+          <label class="flex items-center space-x-2 mt-2">
+            <input type="checkbox" id="tripOption" checked>
+            <span>Incluir viaje a Costa Rica</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Apuntes para Estructura -->
+      <div>
+        <h2 class="font-semibold mb-2 text-blue-700">Apuntes para la sección de Estructura</h2>
+        <div class="flex items-center gap-4 mb-2 text-sm">
+          <button type="button" onclick="toggleAllEstr(true)" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded shadow">
+            Seleccionar todo
+          </button>
+          <button type="button" onclick="toggleAllEstr(false)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow">
+            Deseleccionar todo
+          </button>
+        </div>
+        <div id="estrApuntesCheckboxes" class="grid md:grid-cols-2 gap-2 text-sm"></div>
+      </div>
+
+      <!-- Gramática / Vocabulario para Información adicional -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <h2 class="font-semibold mb-2 text-purple-700">Gramática para Información adicional</h2>
+          <div id="grammarOptions" class="grid grid-cols-1 gap-2 text-sm"></div>
+        </div>
+        <div>
+          <h2 class="font-semibold mb-2 text-purple-700">Vocabulario para Información adicional</h2>
+          <div id="vocabOptions" class="grid grid-cols-2 gap-2 text-sm"></div>
+        </div>
+      </div>
+
+      <button onclick="generateFullPlan()" class="mt-4 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
+        Generar plan completo
+      </button>
+    </section>
+
+    <!-- PREVIEW -->
+    <section id="previewSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
+      <iframe id="previewFrame" class="w-full h-[600px] border rounded-xl bg-white"></iframe>
+    </section>
+
+    <!-- CÓDIGO HTML -->
+    <section id="codeSection" class="hidden">
+      <h2 class="text-xl font-semibold mb-2">Código HTML completo:</h2>
+      <textarea id="htmlCode" class="w-full h-96 p-4 border rounded-xl font-mono text-xs bg-gray-50"></textarea>
+    </section>
+
+    <pre id="debug" class="bg-gray-200 text-xs p-2 rounded mt-4 whitespace-pre-wrap"></pre>
+
+  </div>
+
+  <script>
+    let apuntesData = {};
+    let vocabSets = [];
+
+    /* =======================
+       CARGA DE apuntes.json
+    ======================== */
+    async function loadApuntesJSON() {
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json");
+        apuntesData = await res.json();
+        setupEstrApuntesCheckboxes();
+        setupGrammarAndVocabOptions();
+        document.getElementById("debug").textContent =
+          "Cargado apuntes.json con claves:\n" + Object.keys(apuntesData).join(", ");
+      } catch (err) {
+        document.getElementById("debug").textContent = "Error al cargar apuntes.json: " + err;
+      }
+    }
+
+    function setupEstrApuntesCheckboxes() {
+      const cont = document.getElementById("estrApuntesCheckboxes");
+      cont.innerHTML = "";
+      Object.keys(apuntesData).forEach(key => {
+        const group = apuntesData[key];
+        if (!group || !group.links || !group.title) return; // sólo grupos con links/título
+        const label = document.createElement("label");
+        label.className = "inline-flex items-center space-x-2";
+        label.innerHTML = `
+          <input type="checkbox" value="${key}" class="estr-apuntes-check">
+          <span>${group.title}</span>
+        `;
+        cont.appendChild(label);
+      });
+    }
+
+    function toggleAllEstr(checked) {
+      document.querySelectorAll(".estr-apuntes-check").forEach(cb => cb.checked = checked);
+    }
+
+    /* =======================
+       Opciones Gramática / Vocab
+    ======================== */
+
+    function detectVocabSets(data) {
+      const out = [];
+      for (const k of Object.keys(data)) {
+        const v = data[k];
+        if (v && typeof v === "object" && v.chapters && typeof v.chapters === "object") {
+          const looksLikeVocab =
+            k.toLowerCase().startsWith("vocab") ||
+            (typeof v.title === "string" && /vocabulario/i.test(v.title));
+          if (looksLikeVocab) {
+            out.push({ key: k, title: v.title || k, chapters: v.chapters });
+          }
+        }
+      }
+      return out;
+    }
+
+    function setupGrammarAndVocabOptions() {
+      vocabSets = detectVocabSets(apuntesData);
+      const vocabKeys = new Set(vocabSets.map(s => s.key));
+
+      // Gramática
+      const grammarDiv = document.getElementById("grammarOptions");
+      grammarDiv.innerHTML = "";
+      Object.keys(apuntesData).forEach(key => {
+        if (vocabKeys.has(key)) return;
+        const group = apuntesData[key];
+        if (!group || !group.title || !group.links) return;
+        const label = document.createElement("label");
+        label.className = "flex items-center space-x-2";
+        label.innerHTML = `<input type="checkbox" value="${key}" class="grammar-check"> <span>${group.title}</span>`;
+        grammarDiv.appendChild(label);
+      });
+
+      // Vocabulario
+      const vocabDiv = document.getElementById("vocabOptions");
+      vocabDiv.innerHTML = "";
+      if (!vocabSets.length) {
+        vocabDiv.innerHTML = `<p class="text-xs text-gray-600 col-span-2">No se encontraron conjuntos de vocabulario.</p>`;
+      } else {
+        vocabSets.forEach(set => {
+          const head = document.createElement("div");
+          head.className = "col-span-2 mt-2 font-semibold text-gray-800";
+          head.textContent = set.title;
+          vocabDiv.appendChild(head);
+
+          Object.keys(set.chapters).forEach(ch => {
+            const label = document.createElement("label");
+            label.className = "flex items-center space-x-2";
+            label.innerHTML = `<input type="checkbox" value="${set.key}||${ch}" class="vocab-check">
+                               <span>${ch}</span>`;
+            vocabDiv.appendChild(label);
+          });
+        });
+      }
+    }
+
+    /* =======================
+       HELPERS GENERALES
+    ======================== */
+
+    function normLines(blurb) {
+      return blurb
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/\r/g, "\n")
+        .replace(/\u00A0/g, " ")
+        .replace(/\u2007|\u202F/g, " ")
+        .replace(/\uFF1A/g, ":")
+        .replace(/[–—]/g, "-")
+        .split("\n")
+        .map(s => s.replace(/\s+/g, " ").trim());
+    }
+
+    // Dia + fecha
+    function buildDiaSection(input) {
+      const diaLine = input.match(/D[ií]a\s*(\d+)(.*)/i);
+      let diaText = "___";
+      let fechaText = "___";
+
+      if (diaLine) {
+        diaText = diaLine[1];
+        if (diaLine[2] && diaLine[2].trim() !== "") {
+          fechaText = diaLine[2].trim();
+        }
+      }
+
+      if (fechaText === "___") {
+        const fechaMatch = input.match(/Fecha[:\s]*([^\n\r]+)/i);
+        if (fechaMatch) {
+          fechaText = fechaMatch[1].trim();
+        }
+      }
+
+      return `
+<!--Día-->
+<header class="shadow rounded-xl overflow-hidden">
+  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
+    <h1 class="text-3xl font-bold drop-shadow">Día ${diaText}</h1>
+    <p class="text-lg italic drop-shadow">${fechaText}</p>
+  </div>
+</header>`;
+    }
+
+    // Evaluación (card)
+    function buildEvaluacionSection(input) {
+      const currentMatch = input.match(/Evaluación[:\s]*([^\n\r]*)/i);
+      const currentQuiz = currentMatch ? currentMatch[1].trim() : "Nada";
+
+      const evalBlockMatch = input.match(/Evaluaciones([\s\S]*?)(?=\n\s*\n|$)/i);
+      let upcomingHtml = "";
+      if (evalBlockMatch) {
+        const lines = evalBlockMatch[1].split(/\r?\n/).map(l => l.trim()).filter(l => l);
+        const upcoming = lines.filter(l => !l.toLowerCase().includes("hoy")).slice(0, 2);
+
+        if (upcoming.length > 0) {
+          const items = upcoming.map(line => `<li>${line}</li>`).join("");
+          upcomingHtml = `
+            <p class="font-semibold mt-2">Próximas pruebas</p>
+            <ul class="list-disc ml-6 mt-1">${items}</ul>
+          `;
+        }
+      }
+
+      return `
+<!--Evaluación-->
+<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
+  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
+  <div class="p-4 text-gray-800">
+    <p>${currentQuiz}</p>
+    ${upcomingHtml}
+  </div>
+</section>`;
+    }
+
+    // Calentamiento
+    function buildCalentamientoSection(input) {
+      const schoologyMatch = input.match(/Schoology[:\s]*([^\n\r]*)/i);
+      const schoology = schoologyMatch ? schoologyMatch[1].trim() : "—";
+
+      const repasoBlockMatch = input.match(/Repaso de vocabulario[:\s]*([^\n\r]*)[\r\n]+([\s\S]*?)(?=\n[A-ZÁÉÍÓÚÑ]|$)/i);
+
+      let repasoHeading = "Repaso de vocabulario";
+      let vocabContent = [];
+
+      if (repasoBlockMatch) {
+        repasoHeading = "Repaso de vocabulario: " + repasoBlockMatch[1].trim();
+        const vocabMatches = [...repasoBlockMatch[2].matchAll(/(\d+)\s+([^\n\r]+)/g)].map(m => ({
+          num: parseInt(m[1], 10),
+          word: m[2].trim()
+        }));
+        vocabMatches.sort((a, b) => a.num - b.num);
+        vocabContent = vocabMatches;
+      }
+
+      const columns = [[], [], []];
+      vocabContent.forEach((item) => {
+        const colIndex = Math.floor((item.num - 1) / 10);
+        if (colIndex >= 0 && colIndex < 3) {
+          columns[colIndex].push(`<p><span class="font-semibold">${item.num}.</span> ${item.word}</p>`);
+        }
+      });
+
+      const vocabHtml = columns.map(col => `<div class="space-y-1">${col.join("")}</div>`).join("");
+
+      return `
+<!--Calentamiento-->
+<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
+  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    <div>
+      <p class="font-semibold">Schoology:</p>
+      <p>${schoology}</p>
+    </div>
+    <div>
+      <p class="font-semibold">${repasoHeading}</p>
+      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
+      <div id="vocabBox" class="hidden">
+        <div class="grid grid-cols-3 gap-4">
+          ${vocabHtml}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+    }
+
+    // Helper: línea Introducir / Repasar
+    function getLineValue(label, text) {
+      const lines = text.split(/\r?\n/);
+      const target = label.toLowerCase() + ":";
+      for (const rawLine of lines) {
+        const trimmed = rawLine.trim();
+        if (trimmed.toLowerCase().startsWith(target)) {
+          const afterColon = rawLine.split(":")[1] || "";
+          return afterColon.trim();
+        }
+      }
+      return "";
+    }
+
+    // Estructura
+    function buildEstructuraSection(input, selectedEstrKeys) {
+      const introducir = getLineValue("Introducir", input);
+      const repasar = getLineValue("Repasar", input);
+
+      let apHtml = "";
+      selectedEstrKeys.forEach(groupKey => {
+        const group = apuntesData[groupKey];
+        if (group && group.links) {
+          const links = group.links
+            .map(l =>
+              `<li><a href="${l.url}" target="_blank" class="text-blue-600 hover:underline">${l.title}</a></li>`
+            )
+            .join("");
+          apHtml += `
+            <div>
+              <p class="font-semibold italic mt-4">${group.title}</p>
+              <ul class="list-disc ml-6">${links}</ul>
+            </div>`;
+        } else {
+          apHtml += `<p class="text-red-600">No se encontró el grupo: ${groupKey}</p>`;
+        }
+      });
+
+      let introHtml = "";
+      if (introducir) {
+        introHtml = `
+    <div>
+      <p class="font-semibold">Introducir:</p>
+      <p>${introducir}</p>
+    </div>`;
+      }
+
+      let repHtml = "";
+      if (repasar) {
+        repHtml = `
+    <div>
+      <p class="font-semibold">Repasar:</p>
+      <p>${repasar}</p>
+    </div>`;
+      }
+
+      return `
+<!--Estructura-->
+<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
+  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+${introHtml}${repHtml}
+    <div>
+      <p class="font-semibold underline">Apuntes</p>
+      <div class="space-y-6">
+        ${apHtml}
+      </div>
+    </div>
+  </div>
+</section>`;
+    }
+
+    // Curiosidad helpers
+    function cleanImageUrl(url) {
+      if (!url) return "";
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      if (url.includes("?raw=1") || url.includes("?raw=true")) {
+        return url.split("?")[0];
+      }
+      return url;
+    }
+
+    function buildCuriosidadSection(input, imgUrlRaw) {
+      const imgUrl = cleanImageUrl(imgUrlRaw.trim());
+      const lines = input.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+      const curMatch = input.match(/Curiosidad\s*(\d+)/i);
+      const curNum = curMatch ? curMatch[1] : "";
+
+      const curIndex = lines.findIndex(l => l.toLowerCase().startsWith("curiosidad"));
+      const caption = (curIndex !== -1 && lines[curIndex + 1]) ? lines[curIndex + 1] : "";
+
+      if (!curNum && !caption && !imgUrl) {
+        return "";
+      }
+
+      return `
+<!--Curiosidad-->
+<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
+  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad ${curNum}</h2>
+  <div class="p-4 text-gray-800 space-y-4">
+    ${caption ? `<p class="font-semibold text-lg">${caption}</p>` : ""}
+    ${imgUrl ? `
+    <figure>
+      <img src="${imgUrl}" alt="${caption || `Curiosidad ${curNum}`}" class="rounded-lg shadow-md mx-auto max-h-[500px] h-auto w-auto">
+    </figure>` : ""}
+  </div>
+</section>`;
+    }
+
+    /* =======================
+       INFO ADICIONAL
+    ======================== */
+
+    function extractQuizzesForInfo(blurb) {
+      const lines = normLines(blurb);
+      const infoStart = lines.findIndex(l => /información adicional\b/i.test(l));
+      if (infoStart === -1) return [];
+      let infoEnd = lines.length;
+      for (let i = infoStart + 1; i < lines.length; i++) {
+        if (/^(ayuda con la vida|viaje)\b/i.test(lines[i])) { infoEnd = i; break; }
+      }
+      const infoBlock = lines.slice(infoStart + 1, infoEnd);
+
+      const evalIdx = infoBlock.findIndex(l => /^evaluaciones\b/i.test(l));
+      if (evalIdx === -1) return [];
+      const list = [];
+      for (let i = evalIdx + 1; i < infoBlock.length; i++) {
+        const line = infoBlock[i];
+        if (!line) break;
+        if (/^tareas?\b/i.test(line)) break;
+        if (/^(ayuda con la vida|viaje)\b/i.test(line)) break;
+        list.push(line);
+      }
+      if (!list.length) return [];
+      const upcoming = list.slice(1);
+      const valid = upcoming.filter(l =>
+        /[:\-]/.test(l) || /^nada(?:\b|[\s:-])/i.test(l)
+      );
+      return valid.slice(0, 2);
+    }
+
+    function extractTareas(blurb) {
+      const lines = normLines(blurb);
+      const tareaStartIdx = lines.findIndex(l => /^tareas?\s*:/i.test(l));
+      if (tareaStartIdx === -1) return [];
+      const collected = [];
+      const first = lines[tareaStartIdx].replace(/^tareas?\s*:/i, "").trim();
+      if (first) collected.push(first);
+      for (let i = tareaStartIdx + 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        if (/^(conversación|información adicional|práctica|cultura|estructura)\b/i.test(line)) break;
+        collected.push(line);
+      }
+      const blob = collected.join(" ").replace(/\s+/g, " ").trim();
+      if (!blob) return [];
+
+      const dateSlash = String.raw`\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?`;
+      const dateDeMes = String.raw`\d{1,2}\s+de\s+[a-záéíóúñü]+`;
+      const dateWords = String.raw`hoy|mañana|próxima clase|la próxima clase`;
+      const DATE = `${dateSlash}|${dateDeMes}|${dateWords}`;
+      const pairRe = new RegExp(
+        String.raw`([^:]+?)\s*(?::\s*(${DATE})|-\s*(${DATE}))`,
+        "gi"
+      );
+
+      const tareas = [];
+      let m;
+      while ((m = pairRe.exec(blob)) !== null) {
+        const tema = m[1]
+          .replace(/[-:]\s*$/,"")
+          .replace(/^[\s.\-–—•·]+/, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        const fecha = (m[2] || m[3] || "").trim();
+        if (tema) tareas.push({ tema, fecha });
+        if (tareas.length >= 5) break;
+      }
+
+      if (!tareas.length) {
+        const mini = new RegExp(`([^:]+?)\\s*:\\s*(${DATE})`, "gi");
+        let mm;
+        while ((mm = mini.exec(blob)) !== null) {
+          const tema = mm[1].trim();
+          const fecha = mm[2].trim();
+          if (tema) tareas.push({ tema, fecha });
+          if (tareas.length >= 5) break;
+        }
+      }
+      return tareas.slice(0, 5);
+    }
+
+    const calSVG = `
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="14" height="14"
+     viewBox="0 0 24 24"
+     style="vertical-align:-0.2em;display:inline-block"
+     fill="currentColor" aria-hidden="true" role="img">
+  <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2h1V3a1 1 0 1 1 2 0v1z"></path>
+  <path d="M2 10h20v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8zm5 3h3v3H7v-3z"></path>
+</svg>`.trim();
+
+    function buildInfoAdicionalSection(blurb, course, selectedGrammarKeys, selectedVocabVals, includeTrip) {
+      const quizzes = extractQuizzesForInfo(blurb);
+      const tareas  = extractTareas(blurb);
+
+      const evalLink = course === "IV"
+        ? "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
+        : "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones";
+
+      const quizzesHtml = `
+        <h4 class="font-semibold">
+          <a href="${evalLink}" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
+        </h4>
+        <ul class="list-disc list-inside">
+          ${(quizzes.length ? quizzes : ["—"]).map(q => `<li>${q}</li>`).join("")}
+        </ul>`;
+
+      let tareasHtml = "";
+      if (tareas.length) {
+        tareasHtml = `
+    <h4 class="font-semibold">Tareas (Dominio)</h4>
+    <ul class="list-disc list-inside text-red-700">
+      ${tareas.map(t => {
+        const fecha = t.fecha
+          ? ` <span class="ml-1 text-red-800">${calSVG} ${t.fecha}</span>`
+          : "";
+        return `<li><span class="font-semibold">${t.tema}</span>${fecha}</li>`;
+      }).join("")}
+    </ul>`;
+      }
+
+      // Gramática
+      let grammarHtml = "";
+      selectedGrammarKeys.forEach(key => {
+        const group = apuntesData[key];
+        if (!group || !group.links) return;
+        grammarHtml += `<h4 class="font-semibold">${group.title}</h4><ul class="list-disc list-inside text-purple-700">`;
+        group.links.forEach(link => {
+          grammarHtml += `<li><a href="${link.url}" target="_blank" class="hover:underline">${link.title}</a></li>`;
+        });
+        grammarHtml += `</ul>`;
+      });
+
+      // Vocabulario
+      let vocabHtml = "";
+      if (selectedVocabVals.length) {
+        const items = [];
+        const seen = new Set();
+        selectedVocabVals.forEach(val => {
+          const [setKey, chapter] = val.split("||");
+          const set = apuntesData[setKey];
+          const data = set?.chapters?.[chapter];
+          if (!data) return;
+          const links = [];
+          if (data.listas)     links.push(`<a href="${data.listas}" target="_blank" class="hover:underline">Listas</a>`);
+          if (data.flashcards) links.push(`<a href="${data.flashcards}" target="_blank" class="hover:underline">Flashcards</a>`);
+          const linkText = links.length ? links.join(", ") : `<span class="text-gray-500">Sin enlaces</span>`;
+          const li = `<li>${chapter}: ${linkText}</li>`;
+          if (!seen.has(li)) { seen.add(li); items.push(li); }
+        });
+        if (items.length) {
+          vocabHtml = `
+      <h4 class="font-semibold">Vocabulario</h4>
+      <ul class="list-disc list-inside text-purple-700">
+        ${items.join("")}
+      </ul>`;
+        }
+      }
+
+      let tripHtml = "";
+      if (includeTrip) {
+        tripHtml = `
+          <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">`;
+      }
+
+      return `
+<!--Información adicional-->
+<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
+  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
+  ${quizzesHtml}
+  ${tareasHtml}
+  ${grammarHtml}
+  ${vocabHtml}
+  <p><span class="font-semibold">Ayuda con la vida</span> –
+    <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
+  </p>
+  ${tripHtml}
+</section>`;
+    }
+
+    // Señor+
+    const SENOR_PLUS_HTML = `
+<!--Señor+-->
+<section class="bg-gradient-to-br from-sky-50 to-blue-100 shadow-lg rounded-2xl border-l-4 border-blue-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
+  <div class="flex items-center space-x-4 p-6">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
+    <div>
+      <h2 class="text-blue-700 font-bold text-xl tracking-tight">💬 Señor+</h2>
+      <p class="text-gray-600 text-sm italic">Tu asistente de gramática y conversación</p>
+    </div>
+  </div>
+  <div class="bg-white p-6 border-t border-blue-200 text-gray-800 text-center">
+    <p class="mb-4">Practica español con tu coach personal:</p>
+    <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank"
+       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full font-semibold shadow hover:from-blue-700 hover:to-sky-600 transition">
+      🚀 Iniciar Chat con Señor+
+    </a>
+  </div>
+</section>`;
+
+    /* =======================
+       GENERAR PLAN COMPLETO
+    ======================== */
+
+    function generateFullPlan() {
+      const blurb = document.getElementById("mainBlurb").value || "";
+      const imgUrl = document.getElementById("curioImgUrl").value || "";
+      const course = document.getElementById("courseSelect").value;
+      const includeTrip = document.getElementById("tripOption").checked;
+
+      const selectedEstrKeys = Array.from(
+        document.querySelectorAll(".estr-apuntes-check:checked")
+      ).map(cb => cb.value);
+
+      const selectedGrammarKeys = Array.from(
+        document.querySelectorAll(".grammar-check:checked")
+      ).map(cb => cb.value);
+
+      const selectedVocabVals = Array.from(
+        document.querySelectorAll(".vocab-check:checked")
+      ).map(cb => cb.value);
+
+      const diaSection        = buildDiaSection(blurb);
+      const evalSection       = buildEvaluacionSection(blurb);
+      const calSection        = buildCalentamientoSection(blurb);
+      const curioSection      = buildCuriosidadSection(blurb, imgUrl);
+      const estructuraSection = buildEstructuraSection(blurb, selectedEstrKeys);
+      const infoSection       = buildInfoAdicionalSection(
+        blurb,
+        course,
+        selectedGrammarKeys,
+        selectedVocabVals,
+        includeTrip
+      );
+
+      const fullHtml = `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>plan de clase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+${diaSection}
+
+<!--Aviso o Anuncio-->
+
+${evalSection}
+
+${calSection}
+
+${curioSection}
+
+${estructuraSection}
+
+<!--Objetos-->
+
+<!--Cultura-->
+
+<!--Enlace-->
+
+<!--Práctica de verbos-->
+
+<!--Práctica general-->
+
+<!--Video-->
+
+<!--Conversacion-->
+
+${SENOR_PLUS_HTML}
+
+${infoSection}
+
+  </div>
+
+  <script>
+    function toggleVocab() {
+      const box = document.getElementById("vocabBox");
+      if (!box) return;
+      const isHidden = box.classList.contains("hidden");
+      if (isHidden) {
+        box.classList.remove("hidden");
+      } else {
+        box.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>`.trim();
+
+      // Mostrar código
+      const codeBox = document.getElementById("htmlCode");
+      codeBox.value = fullHtml;
+      document.getElementById("codeSection").classList.remove("hidden");
+
+      // Preview en iframe
+      const iframe = document.getElementById("previewFrame");
+      const blob = new Blob([fullHtml], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      iframe.src = url;
+      document.getElementById("previewSection").classList.remove("hidden");
+
+      document.getElementById("debug").textContent +=
+        "\nGenerado plan con Estructura = [" + selectedEstrKeys.join(", ") + "], Gramática = [" +
+        selectedGrammarKeys.join(", ") + "], Vocab = [" + selectedVocabVals.join(", ") + "]";
+    }
+
+    // Cargar JSON al inicio
+    loadApuntesJSON();
+  </script>
+</body>
+</html>
