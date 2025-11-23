@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>El pretérito perfecto del indicativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- Encabezado -->
+    <header class="bg-sky-300 text-white rounded-2xl shadow flex flex-col md:flex-row md:items-center md:justify-between px-6 py-5">
+      <div>
+        <h1 class="text-3xl font-bold drop-shadow">El pretérito perfecto del indicativo</h1>
+        <p class="italic text-lg drop-shadow">haber + participio pasado</p>
+      </div>
+    </header>
+
+    <!-- Qué es y para qué se usa -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#6CACE4;">
+      <h2 class="text-2xl font-bold mb-3">¿Para qué sirve?</h2>
+      <p class="mb-3">
+        El <strong>pretérito perfecto del indicativo</strong> se usa para hablar de
+        <strong>lo que alguien ha hecho</strong> o de <strong>lo que ha ocurrido</strong>, normalmente
+        con relación al <strong>presente</strong> o a un pasado muy reciente. :contentReference[oaicite:0]{index=0}
+      </p>
+      <ul class="list-disc list-inside space-y-1 mb-3">
+        <li><em>Hoy he estudiado mucho.</em> (acción terminada, efecto en el hoy)</li>
+        <li><em>Últimamente hemos visto muchas películas.</em></li>
+        <li><em>¿Alguna vez has visitado México?</em></li>
+      </ul>
+    </section>
+
+    <!-- Formación -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#D97706;">
+      <h2 class="text-2xl font-bold mb-3">Formación</h2>
+      <p class="mb-3">
+        Se forma con el <strong>presente de <span class="font-mono">haber</span></strong> +
+        el <strong>participio pasado</strong> del verbo principal. :contentReference[oaicite:1]{index=1}
+      </p>
+
+      <div class="overflow-x-auto mb-4">
+        <table class="min-w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold">Persona</th>
+              <th class="px-3 py-2 text-left font-semibold">Haber</th>
+              <th class="px-3 py-2 text-left font-semibold">Ejemplo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t">
+              <td class="px-3 py-1">yo</td>
+              <td class="px-3 py-1">he</td>
+              <td class="px-3 py-1"><em>he hablado</em></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-3 py-1">tú</td>
+              <td class="px-3 py-1">has</td>
+              <td class="px-3 py-1"><em>has comido</em></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-3 py-1">él / ella / usted</td>
+              <td class="px-3 py-1">ha</td>
+              <td class="px-3 py-1"><em>ha vivido</em></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-3 py-1">nosotros/as</td>
+              <td class="px-3 py-1">hemos</td>
+              <td class="px-3 py-1"><em>hemos estudiado</em></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-3 py-1">vosotros/as</td>
+              <td class="px-3 py-1">habéis</td>
+              <td class="px-3 py-1"><em>habéis leído</em></td>
+            </tr>
+            <tr class="border-t">
+              <td class="px-3 py-1">ellos / ellas / ustedes</td>
+              <td class="px-3 py-1">han</td>
+              <td class="px-3 py-1"><em>han salido</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-sm text-gray-700 mb-1">
+        El participio pasado es el mismo que ya viste (<strong>-ado, -ido</strong> e irregulares como
+        <em>abierto, visto, escrito…</em>).
+      </p>
+      <p class="text-sm text-gray-600">
+        Importante: <strong>el participio NO cambia con la persona</strong> en esta construcción; solo cambia cuando funciona como adjetivo
+        (<em>las puertas están abiertas</em>). :contentReference[oaicite:2]{index=2}
+      </p>
+    </section>
+
+    <!-- Colocación de no y pronombres -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#16A34A;">
+      <h2 class="text-2xl font-bold mb-3">Colocación de <em>no</em> y de los pronombres</h2>
+      <p class="mb-3">
+        En español, <strong>haber y el participio no se separan</strong>. Ninguna palabra puede ir entre ellos. :contentReference[oaicite:3]{index=3}
+      </p>
+      <p class="mb-3">
+        La palabra <strong>no</strong> y los pronombres de objeto o reflexivos se colocan
+        <strong>justo antes de haber</strong>. :contentReference[oaicite:4]{index=4}
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Negación</h3>
+          <ul class="space-y-1">
+            <li>✔ <em>No he terminado la tarea.</em></li>
+            <li>✘ <em>He no terminado la tarea.</em></li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Pronombres</h3>
+          <ul class="space-y-1">
+            <li>✔ <em>Ya <strong>lo</strong> he visto.</em></li>
+            <li>✔ <em><strong>Me</strong> he levantado tarde.</em></li>
+            <li>✘ <em>He lo visto.</em></li>
+            <li>✘ <em>He me levantado.</em></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- hay -> ha habido -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#F97316;">
+      <h2 class="text-2xl font-bold mb-3"><em>Hay</em> en pretérito perfecto</h2>
+      <p class="mb-2">
+        Para decir <strong>“there has been / there have been”</strong> se usa:
+      </p>
+      <p class="font-semibold mb-2">
+        <span class="font-mono">ha habido</span>  =  pretérito perfecto de <em>hay</em> :contentReference[oaicite:5]{index=5}
+      </p>
+      <ul class="list-disc list-inside space-y-1 text-sm">
+        <li><em>Ha habido muchos cambios este año.</em></li>
+        <li><em>No ha habido problemas con el examen.</em></li>
+      </ul>
+    </section>
+
+    <!-- Tener vs haber -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#4B5563;">
+      <h2 class="text-2xl font-bold mb-3"><em>Tener</em> vs. <em>haber</em></h2>
+      <p class="mb-3">
+        En inglés, <em>to have</em> puede ser verbo principal (<em>to have a car</em>) o auxiliar
+        (<em>has eaten</em>). En español se separan las funciones: :contentReference[oaicite:6]{index=6}
+      </p>
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Verbo principal</h3>
+          <p><strong>tener</strong> = to have (posesión)</p>
+          <p class="mt-1"><em>Tengo un examen mañana.</em></p>
+        </div>
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Auxiliar</h3>
+          <p><strong>haber</strong> = auxiliar del pretérito perfecto</p>
+          <p class="mt-1"><em>He tenido mucha tarea.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Práctica rápida -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#0EA5E9;">
+      <h2 class="text-2xl font-bold mb-3">Práctica rápida</h2>
+      <p class="mb-3">
+        Forma el pretérito perfecto con los verbos indicados. Haz clic para ver una posible respuesta.
+      </p>
+
+      <div class="space-y-3 text-sm">
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            1. (yo) disfrutar, comer, vivir
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>He disfrutado, he comido, he vivido.</em> :contentReference[oaicite:7]{index=7}
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            2. (tú) traer, adelgazar, compartir
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Has traído, has adelgazado, has compartido.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            3. (usted) venir, estar, correr
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Ha venido, ha estado, ha corrido.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            4. (ella) leer, resolver, poner
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Ha leído, ha resuelto, ha puesto.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            5. (ellos) decir, romper, hacer
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Han dicho, han roto, han hecho.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            6. (nosotros) mantenerse, dormirse
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Nos hemos mantenido, nos hemos dormido.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            7. (yo) estar, escribir, ver
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>He estado, he escrito, he visto.</em>
+          </p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            8. (él) vivir, correr, morir
+          </summary>
+          <p class="mt-2">
+            <strong>Respuesta posible:</strong> <em>Ha vivido, ha corrido, ha muerto.</em>
+          </p>
+        </details>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
