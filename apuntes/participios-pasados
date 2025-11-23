@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Participios pasados como adjetivos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- Encabezado -->
+    <header class="bg-sky-300 text-white rounded-2xl shadow flex flex-col md:flex-row md:items-center md:justify-between px-6 py-5">
+      <div>
+        <h1 class="text-3xl font-bold drop-shadow">Participios pasados como adjetivos</h1>
+        <p class="italic text-lg drop-shadow">Formación, uso y patrones irregulares</p>
+      </div>
+    </header>
+
+    <!-- Qué es un participio pasado -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#6CACE4;">
+      <h2 class="text-2xl font-bold mb-3">¿Qué es un participio pasado?</h2>
+      <p class="mb-3">
+        El <strong>participio pasado</strong> es una forma del verbo que puede funcionar como
+        <strong>adjetivo</strong>. Se usa mucho con verbos de estado como <strong>estar, quedar, seguir, parecer</strong>:
+      </p>
+      <ul class="list-disc list-inside space-y-1 mb-3">
+        <li><em>La puerta está cerrada.</em></li>
+        <li><em>Los estudiantes siguen motivados.</em></li>
+        <li><em>Las ventanas quedaron abiertas.</em></li>
+      </ul>
+      <p class="text-sm text-gray-600">
+        El participio describe el resultado de una acción, igual que un adjetivo describe una característica.
+      </p>
+    </section>
+
+    <!-- Formación regular -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#D97706;">
+      <h2 class="text-2xl font-bold mb-3">Formación de participios regulares</h2>
+      <p class="mb-3">
+        Para la mayoría de los verbos, el participio pasado se forma así:
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold mb-1 text-sky-700">Verbos -ar</h3>
+          <p><strong>-ar → -ado</strong></p>
+          <ul class="list-disc list-inside mt-2 text-sm">
+            <li><em>hablar → hablado</em></li>
+            <li><em>visitar → visitado</em></li>
+            <li><em>estudiar → estudiado</em></li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold mb-1 text-sky-700">Verbos -er</h3>
+          <p><strong>-er → -ido</strong></p>
+          <ul class="list-disc list-inside mt-2 text-sm">
+            <li><em>comer → comido</em></li>
+            <li><em>aprender → aprendido</em></li>
+            <li><em>beber → bebido</em></li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold mb-1 text-sky-700">Verbos -ir</h3>
+          <p><strong>-ir → -ido</strong></p>
+          <ul class="list-disc list-inside mt-2 text-sm">
+            <li><em>vivir → vivido</em></li>
+            <li><em>asistir → asistido</em></li>
+            <li><em>decidir → decidido</em></li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-sm text-gray-600">
+        Estos participios se comportan como adjetivos y deben concordar con el sustantivo: <em>carta enviada, cartas enviadas</em>.
+      </p>
+    </section>
+
+    <!-- Participios con tilde -ído -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#16A34A;">
+      <h2 class="text-2xl font-bold mb-3">Participios con tilde en -ído</h2>
+      <p class="mb-3">
+        Los verbos -er / -ir cuyo lexema termina en vocal usan <strong>-ído</strong> con tilde para mantener dos sílabas:
+      </p>
+      <div class="grid md:grid-cols-2 gap-4 mb-3">
+        <ul class="list-disc list-inside space-y-1">
+          <li><em>caer → caído</em></li>
+          <li><em>creer → creído</em></li>
+          <li><em>leer → leído</em></li>
+          <li><em>oír → oído</em></li>
+        </ul>
+        <ul class="list-disc list-inside space-y-1">
+          <li><em>traer → traído</em></li>
+          <li><em>reír → reído</em></li>
+          <li><em>poseer → poseído</em></li>
+          <li><em>proveer → proveído</em></li>
+        </ul>
+      </div>
+      <p class="text-sm text-gray-600">
+        Ejemplo: <em>Los libros ya están leídos.</em>
+      </p>
+    </section>
+
+    <!-- Grupos de irregulares -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#EF4444;">
+      <h2 class="text-2xl font-bold mb-4">Patrones de participios irregulares</h2>
+      <p class="mb-4">
+        Muchos participios irregulares se organizan en grupos con formas parecidas. Ver los patrones ayuda a recordarlos.
+      </p>
+
+      <!-- Grupo -ierto -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold text-sky-700 mb-2">Grupo <span class="font-mono">-ierto</span></h3>
+        <p class="mb-2 text-sm text-gray-700">
+          Varios verbos que terminan en <strong>-brir</strong> o relacionados usan el patrón <strong>-ierto</strong>.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold">Infinitivo</th>
+                <th class="px-3 py-2 text-left font-semibold">Participio</th>
+                <th class="px-3 py-2 text-left font-semibold">Ejemplo adjetival</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="px-3 py-1">abrir</td>
+                <td class="px-3 py-1">abierto</td>
+                <td class="px-3 py-1"><em>La tienda está abierta.</em></td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">cubrir</td>
+                <td class="px-3 py-1">cubierto</td>
+                <td class="px-3 py-1"><em>La mesa está cubierta.</em></td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">descubrir</td>
+                <td class="px-3 py-1">descubierto</td>
+                <td class="px-3 py-1"><em>El secreto está descubierto.</em></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Grupo -to -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold text-sky-700 mb-2">Grupo <span class="font-mono">-to</span></h3>
+        <p class="mb-2 text-sm text-gray-700">
+          Este grupo incluye varios participios muy frecuentes que terminan en <strong>-to</strong>.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold">Infinitivo</th>
+                <th class="px-3 py-2 text-left font-semibold">Participio</th>
+                <th class="px-3 py-2 text-left font-semibold">Significado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="px-3 py-1">escribir</td>
+                <td class="px-3 py-1">escrito</td>
+                <td class="px-3 py-1">written</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">describir</td>
+                <td class="px-3 py-1">descrito</td>
+                <td class="px-3 py-1">described</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">morir</td>
+                <td class="px-3 py-1">muerto</td>
+                <td class="px-3 py-1">dead</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">poner</td>
+                <td class="px-3 py-1">puesto</td>
+                <td class="px-3 py-1">put, placed</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">romper</td>
+                <td class="px-3 py-1">roto</td>
+                <td class="px-3 py-1">broken</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">resolver</td>
+                <td class="px-3 py-1">resuelto</td>
+                <td class="px-3 py-1">resolved</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">ver</td>
+                <td class="px-3 py-1">visto</td>
+                <td class="px-3 py-1">seen</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">volver</td>
+                <td class="px-3 py-1">vuelto</td>
+                <td class="px-3 py-1">returned</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">freír</td>
+                <td class="px-3 py-1">frito</td>
+                <td class="px-3 py-1">fried</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">imprimir</td>
+                <td class="px-3 py-1">impreso</td>
+                <td class="px-3 py-1">printed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Grupo -cho -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold text-sky-700 mb-2">Grupo <span class="font-mono">-cho</span></h3>
+        <p class="mb-2 text-sm text-gray-700">
+          Estos participios terminan en <strong>-cho</strong>.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold">Infinitivo</th>
+                <th class="px-3 py-2 text-left font-semibold">Participio</th>
+                <th class="px-3 py-2 text-left font-semibold">Significado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="px-3 py-1">decir</td>
+                <td class="px-3 py-1">dicho</td>
+                <td class="px-3 py-1">said, told</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">hacer</td>
+                <td class="px-3 py-1">hecho</td>
+                <td class="px-3 py-1">done, made</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">satisfacer</td>
+                <td class="px-3 py-1">satisfecho</td>
+                <td class="px-3 py-1">satisfied</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Verbos con doble forma -->
+      <div>
+        <h3 class="text-xl font-semibold text-sky-700 mb-2">Verbos con doble participio</h3>
+        <p class="mb-2 text-sm text-gray-700">
+          Algunos verbos tienen <strong>dos formas de participio</strong>. En el uso adjetival, suelen preferirse las formas
+          <strong>irregulares</strong> (las de la izquierda).
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold">Infinitivo</th>
+                <th class="px-3 py-2 text-left font-semibold">Forma adjetival frecuente</th>
+                <th class="px-3 py-2 text-left font-semibold">Otra forma</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t">
+                <td class="px-3 py-1">freír</td>
+                <td class="px-3 py-1">frito</td>
+                <td class="px-3 py-1">freído</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">elegir</td>
+                <td class="px-3 py-1">electo</td>
+                <td class="px-3 py-1">elegido</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">imprimir</td>
+                <td class="px-3 py-1">impreso</td>
+                <td class="px-3 py-1">imprimido</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">bendecir</td>
+                <td class="px-3 py-1">bendito</td>
+                <td class="px-3 py-1">bendecido</td>
+              </tr>
+              <tr class="border-t">
+                <td class="px-3 py-1">maldecir</td>
+                <td class="px-3 py-1">maldito</td>
+                <td class="px-3 py-1">maldecido</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Uso adjetival y concordancia -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#4F46E5;">
+      <h2 class="text-2xl font-bold mb-3">Participios pasados como adjetivos</h2>
+      <p class="mb-3">
+        Cuando el participio funciona como adjetivo, debe <strong>concordar en género y número</strong> con el sustantivo.
+        Normalmente aparece con <strong>estar</strong> u otro verbo de estado.
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Concordancia</h3>
+          <ul class="space-y-1 text-sm">
+            <li><em>El libro está abierto.</em></li>
+            <li><em>La tienda está abierta.</em></li>
+            <li><em>Los museos están abiertos.</em></li>
+            <li><em>Las ventanas están abiertas.</em></li>
+          </ul>
+        </div>
+        <div class="border rounded-xl p-4">
+          <h3 class="font-semibold text-sky-700 mb-2">Resultado de una acción</h3>
+          <ul class="space-y-1 text-sm">
+            <li><em>Las cartas están escritas.</em> (ya están listas)</li>
+            <li><em>El problema está resuelto.</em></li>
+            <li><em>Las manos están mojadas.</em></li>
+            <li><em>Los huevos ya están fritos.</em></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Práctica rápida -->
+    <section class="bg-white rounded-2xl shadow p-6 border-l-4" style="border-color:#0EA5E9;">
+      <h2 class="text-2xl font-bold mb-3">Práctica rápida</h2>
+      <p class="mb-3">Completa con el participio pasado correcto. Haz clic para ver una posible respuesta.</p>
+
+      <div class="space-y-3 text-sm">
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            1. La puerta está ________. (abrir)
+          </summary>
+          <p class="mt-2"><strong>Respuesta:</strong> La puerta está <em>abierta</em>.</p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            2. Las ventanas están ________ por el viento. (romper)
+          </summary>
+          <p class="mt-2"><strong>Respuesta:</strong> Las ventanas están <em>rotas</em> por el viento.</p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            3. Los problemas ya están ________. (resolver)
+          </summary>
+          <p class="mt-2"><strong>Respuesta:</strong> Los problemas ya están <em>resueltos</em>.</p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            4. La mesa está ________ con un mantel blanco. (cubrir)
+          </summary>
+          <p class="mt-2"><strong>Respuesta:</strong> La mesa está <em>cubierta</em> con un mantel blanco.</p>
+        </details>
+
+        <details class="border rounded-xl p-3">
+          <summary class="cursor-pointer font-semibold">
+            5. Las papas están ________ y listas para comer. (freír)
+          </summary>
+          <p class="mt-2"><strong>Respuesta:</strong> Las papas están <em>fritas</em> y listas para comer.</p>
+        </details>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
