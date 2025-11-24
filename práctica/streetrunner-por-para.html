@@ -1,0 +1,606 @@
+<!doctype doctype>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Por vs Para Runner</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial Black', Arial, sans-serif;
+      background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%);
+      overflow: hidden;
+      height: 100%;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #game-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    #game-title {
+      font-size: 28px;
+      color: #FF6B35;
+      text-shadow: 2px 2px 0px #FFD700;
+      margin: 0;
+    }
+
+    #score-display {
+      font-size: 24px;
+      color: #2E86AB;
+      font-weight: bold;
+    }
+
+    #game-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .lane-line {
+      position: absolute;
+      width: 4px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      top: 0;
+    }
+
+    #player {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      bottom: 120px;
+      transition: left 0.2s ease;
+      z-index: 50;
+      font-size: 50px;
+    }
+
+    .obstacle {
+      position: absolute;
+      width: 200px;
+      padding: 15px 20px;
+      background: white;
+      border: 4px solid #2E86AB;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .obstacle:hover {
+      transform: scale(1.05);
+    }
+
+    .obstacle.correct {
+      border-color: #06D6A0;
+      background: #E8FFF5;
+    }
+
+    .obstacle.wrong {
+      border-color: #EF476F;
+      background: #FFE8ED;
+    }
+
+    #start-screen, #game-over-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    #start-screen h1 {
+      font-size: 48px;
+      margin: 0 0 20px 0;
+      color: #FFD700;
+      text-shadow: 3px 3px 0px #FF6B35;
+    }
+
+    #instructions {
+      font-size: 20px;
+      margin: 20px 0 30px 0;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      font-size: 24px;
+      font-weight: bold;
+      background: #06D6A0;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #048B6B;
+      transition: transform 0.1s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #048B6B;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #048B6B;
+    }
+
+    #final-score {
+      font-size: 36px;
+      margin: 20px 0;
+      color: #FFD700;
+    }
+
+    .explanation {
+      font-size: 16px;
+      margin: 10px 0;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      max-width: 500px;
+    }
+
+    #ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: #8B4513;
+      border-top: 5px solid #654321;
+    }
+
+    .building {
+      position: absolute;
+      bottom: 100px;
+      background: #A8DADC;
+      border: 3px solid #457B9D;
+      border-radius: 5px 5px 0 0;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    #player {
+      animation: float 1s ease-in-out infinite;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div id="game-container">
+   <div id="game-header">
+    <h1 id="game-title">Por vs Para Runner 🏃</h1>
+    <div id="score-display">
+      Puntos: <span id="score">0</span>
+    </div>
+   </div>
+   <div id="game-canvas">
+    <div class="lane-line" style="left: 33.33%;"></div>
+    <div class="lane-line" style="left: 66.66%;"></div>
+    <div id="ground"></div>
+    <div id="player">
+     🏃
+    </div>
+   </div>
+   <div id="start-screen">
+    <h1 id="start-title">Por vs Para Runner</h1>
+    <p id="instructions">¡Corre y elige la palabra correcta! Usa las flechas ← → para moverte entre carriles. Haz clic en la respuesta correcta para seguir corriendo. ¡Cuidado con las respuestas incorrectas!</p><button class="btn" id="start-btn">¡Empezar! 🚀</button>
+   </div>
+   <div id="game-over-screen" style="display: none;">
+    <h1>¡Juego Terminado!</h1>
+    <div id="final-score"></div>
+    <div id="explanation-container"></div><button class="btn" id="restart-btn">Jugar de Nuevo 🔄</button>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      game_title: "Por vs Para Runner 🏃",
+      instructions_text: "¡Corre y elige la palabra correcta! Usa las flechas ← → para moverte entre carriles. Haz clic en la respuesta correcta para seguir corriendo. ¡Cuidado con las respuestas incorrectas!",
+      background_color: "#87CEEB",
+      surface_color: "#FFFFFF",
+      text_color: "#2E86AB",
+      primary_action_color: "#06D6A0",
+      secondary_action_color: "#FF6B35"
+    };
+
+    let config = {};
+
+    async function onConfigChange(newConfig) {
+      config = newConfig;
+      
+      const gameTitle = newConfig.game_title || defaultConfig.game_title;
+      const instructions = newConfig.instructions_text || defaultConfig.instructions_text;
+      const bgColor = newConfig.background_color || defaultConfig.background_color;
+      const surfaceColor = newConfig.surface_color || defaultConfig.surface_color;
+      const textColor = newConfig.text_color || defaultConfig.text_color;
+      const primaryColor = newConfig.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = newConfig.secondary_action_color || defaultConfig.secondary_action_color;
+
+      document.getElementById('game-title').textContent = gameTitle;
+      document.getElementById('start-title').textContent = gameTitle;
+      document.getElementById('instructions').textContent = instructions;
+      document.getElementById('game-container').style.background = `linear-gradient(180deg, ${bgColor} 0%, ${bgColor}dd 100%)`;
+      document.getElementById('game-header').style.background = `${surfaceColor}e6`;
+      document.getElementById('score-display').style.color = textColor;
+      
+      const startBtn = document.getElementById('start-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      startBtn.style.background = primaryColor;
+      restartBtn.style.background = primaryColor;
+      
+      document.getElementById('game-title').style.color = secondaryColor;
+      document.getElementById('start-title').style.color = secondaryColor;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              window.elementSdk.setConfig({ primary_action_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              config.secondary_action_color = value;
+              window.elementSdk.setConfig({ secondary_action_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["game_title", config.game_title || defaultConfig.game_title],
+        ["instructions_text", config.instructions_text || defaultConfig.instructions_text]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    const questions = [
+      // Original Questions (Retained)
+      { sentence: "Estudio ___ tres horas cada día", correct: "por", explanation: "Use 'por' for **duration** of time" },
+      { sentence: "Este regalo es ___ mi mamá", correct: "para", explanation: "Use 'para' to indicate **recipient** or **destination**" },
+      { sentence: "Viajamos ___ avión", correct: "por", explanation: "Use 'por' for **means** of transportation" },
+      { sentence: "Trabajo ___ ganar dinero", correct: "para", explanation: "Use 'para' to express **purpose/goal** ('in order to')" },
+      { sentence: "Caminamos ___ el parque", correct: "por", explanation: "Use 'por' for **movement through/along** a place" },
+      { sentence: "La tarea es ___ mañana", correct: "para", explanation: "Use 'para' for **deadlines**" },
+      { sentence: "Pagué 20 dólares ___ el libro", correct: "por", explanation: "Use 'por' for **price/exchange**" },
+      { sentence: "Estudio español ___ ser profesor", correct: "para", explanation: "Use 'para' to express **purpose/goal**" },
+      { sentence: "Gracias ___ tu ayuda", correct: "por", explanation: "Use 'por' in fixed expressions like 'gracias por'" },
+      { sentence: "Salimos ___ Madrid mañana", correct: "para", explanation: "Use 'para' for **destination**" },
+      { sentence: "Lo hice ___ ti", correct: "por", explanation: "Use 'por' for **'on behalf of'** or **'because of'**" },
+      { sentence: "Necesito el informe ___ el viernes", correct: "para", explanation: "Use 'para' for **deadlines**" },
+      { sentence: "___ lo general, me gusta", correct: "Por", explanation: "Use 'por' in fixed expressions like 'por lo general'" },
+      { sentence: "Esta carta es ___ el director", correct: "para", explanation: "Use 'para' to indicate **recipient**" },
+      { sentence: "Hablamos ___ teléfono", correct: "por", explanation: "Use 'por' for **means** of communication" },
+      { sentence: "Voy a la tienda ___ comprar pan", correct: "para", explanation: "Use 'para' to express **purpose**" },
+      { sentence: "Corro ___ el vecindario", correct: "por", explanation: "Use 'por' for **movement through** an area" },
+      { sentence: "Este proyecto es ___ el lunes", correct: "para", explanation: "Use 'para' for **deadlines**" },
+      { sentence: "Fue escrito ___ Cervantes", correct: "por", explanation: "Use 'por' for the **agent** in passive voice ('by')" },
+      { sentence: "Cambié mi carro viejo ___ uno nuevo", correct: "por", explanation: "Use 'por' for **exchange**" },
+      { sentence: "Estudiamos ___ ser doctores", correct: "para", explanation: "Use 'para' to express **purpose/goal**" },
+      { sentence: "Viajo ___ la mañana", correct: "por", explanation: "Use 'por' for general time periods (**time of day**)" },
+      { sentence: "Este libro es ___ niños", correct: "para", explanation: "Use 'para' to indicate **intended recipient** (who it is for)" },
+      { sentence: "___ mí, es difícil", correct: "Para", explanation: "Use 'para' for **opinions/comparison** ('for me,' 'in my opinion')" },
+      { sentence: "Pasamos ___ tu casa", correct: "por", explanation: "Use 'por' for **movement by/past** a place" },
+      { sentence: "Necesito agua ___ beber", correct: "para", explanation: "Use 'para' to express **purpose**" },
+      { sentence: "Te llamo ___ la tarde", correct: "por", explanation: "Use 'por' for general time periods (**time of day**)" },
+      { sentence: "Este regalo es ___ ti", correct: "para", explanation: "Use 'para' to indicate **recipient**" },
+      { sentence: "Enviamos el paquete ___ correo", correct: "por", explanation: "Use 'por' for **means** of sending" },
+      { sentence: "Trabajo ___ una empresa grande", correct: "para", explanation: "Use 'para' for **employer** ('employed by')" },
+      { sentence: "Corremos ___ la playa", correct: "por", explanation: "Use 'por' for **movement along/through**" },
+      { sentence: "Tengo tarea ___ el martes", correct: "para", explanation: "Use 'para' for **deadlines**" },
+      { sentence: "___ favor, ayúdame", correct: "Por", explanation: "Use 'por' in fixed expressions like 'por favor'" },
+      { sentence: "Vamos ___ el bosque", correct: "por", explanation: "Use 'por' for **movement through** a place" },
+      { sentence: "Compré flores ___ mi abuela", correct: "para", explanation: "Use 'para' to indicate **recipient**" },
+      { sentence: "Pagué 50 euros ___ la cena", correct: "por", explanation: "Use 'por' for **price/cost**" },
+      { sentence: "Ahorro dinero ___ viajar", correct: "para", explanation: "Use 'para' to express **purpose**" },
+      { sentence: "Fue construido ___ arquitectos famosos", correct: "por", explanation: "Use 'por' for the **agent** (who did it)" },
+      { sentence: "Salgo ___ Chicago el domingo", correct: "para", explanation: "Use 'para' for **destination**" },
+      { sentence: "Hablo ___ Zoom con mis amigos", correct: "por", explanation: "Use 'por' for **means** of communication" },
+
+      // New Expanded Questions 
+      { sentence: "Ella está emocionada ___ la fiesta", correct: "por", explanation: "Use 'por' to express **reason/cause** ('because of')" },
+      { sentence: "Necesito un taxi ___ el aeropuerto", correct: "para", explanation: "Use 'para' for **destination**" },
+      { sentence: "Mi jefe me contrató ___ mi experiencia", correct: "por", explanation: "Use 'por' for **reason/cause** ('due to')" },
+      { sentence: "El vaso es ___ agua fría", correct: "para", explanation: "Use 'para' to indicate **intended use/function** ('suitable for')" },
+      { sentence: "Tengo que terminar esto ___ el final del día", correct: "para", explanation: "Use 'para' for **deadlines**" },
+      { sentence: "Me gusta pasear ___ la orilla del mar", correct: "por", explanation: "Use 'por' for **movement along** ('along the shore')" },
+      { sentence: "Hice la presentación ___ mi compañero enfermo", correct: "por", explanation: "Use 'por' for **'on behalf of'**" },
+      { sentence: "La medicina es mala ___ el hígado", correct: "para", explanation: "Use 'para' to indicate **standard/comparison** ('in relation to')" },
+      { sentence: "Ella canta ___ la radio", correct: "por", explanation: "Use 'por' for **means** ('via the radio')" },
+      { sentence: "El tren sale ___ Valencia", correct: "para", explanation: "Use 'para' for **destination**" },
+      { sentence: "Me quedaré aquí ___ un rato", correct: "por", explanation: "Use 'por' for **duration** of time ('for a while')" },
+      { sentence: "El profesor es muy estricto ___ sus estudiantes", correct: "para", explanation: "Use 'para' to indicate **standard/comparison** ('in relation to')" },
+      { sentence: "Ella se cayó ___ accidente", correct: "por", explanation: "Use 'por' in fixed expressions like 'por accidente' (**reason**)" },
+      { sentence: "Compramos carne ___ asar", correct: "para", explanation: "Use 'para' to express **purpose** ('in order to roast')" },
+      { sentence: "La casa está ___ vender", correct: "para", explanation: "Use 'para' to indicate **imminent action** ('about to be sold')" },
+      { sentence: "El ladrón entró ___ la ventana", correct: "por", explanation: "Use 'por' for **movement through** ('through the window')" },
+      { sentence: "No tengo tiempo ___ ir al cine", correct: "para", explanation: "Use 'para' to express **purpose** ('for the purpose of')" },
+      { sentence: "___ aquí no se ve bien", correct: "Por", explanation: "Use 'por' for **place** ('around here')" },
+      { sentence: "Yo no puedo vivir ___ aire", correct: "por", explanation: "Use 'por' for **reason/cause** or **'lack of'**" },
+      { sentence: "Lo hicimos solo ___ diversión", correct: "por", explanation: "Use 'por' for **reason/motive** ('for fun')" },
+      { sentence: "Este clima es frío ___ la época del año", correct: "para", explanation: "Use 'para' for **comparison** ('in comparison with')" },
+      { sentence: "Dimos un paseo ___ la ciudad", correct: "por", explanation: "Use 'por' for **movement through/around** an area" },
+      { sentence: "Necesitas permiso ___ entrar", correct: "para", explanation: "Use 'para' to express **purpose/goal**" },
+      { sentence: "Se lo di ___ su cumpleaños", correct: "por", explanation: "Use 'por' to express **reason/motive** (on account of his birthday)" },
+      { sentence: "El libro es importante ___ la historia", correct: "para", explanation: "Use 'para' to indicate **standard/comparison** ('important in relation to history')" },
+    ];
+
+    let score = 0;
+    let currentLane = 1;
+    let gameActive = false;
+    let obstacles = [];
+    let lastQuestionIndex = -1; // Keep track of the index of the last question used
+
+    const lanes = [
+      { center: window.innerWidth * 0.1667 },
+      { center: window.innerWidth * 0.5 },
+      { center: window.innerWidth * 0.8333 }
+    ];
+
+    function updatePlayerPosition() {
+      const player = document.getElementById('player');
+      player.style.left = (lanes[currentLane].center - 30) + 'px';
+    }
+
+    // New/Simplified Obstacle Creation Logic
+    function createObstacle() {
+      // 1. Select a new question (make sure it's not the last one)
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * questions.length);
+      } while (randomIndex === lastQuestionIndex);
+      
+      const mainQuestion = questions[randomIndex];
+      lastQuestionIndex = randomIndex;
+
+      const correctAnswer = mainQuestion.correct;
+      const wrongAnswer = correctAnswer === 'por' ? 'para' : 'por';
+      
+      // 2. Define the options for the three lanes
+      // We will shuffle the options: [Correct, Wrong, Duplicate (Correct or Wrong)]
+      const optionPool = [
+          { word: correctAnswer, isCorrect: true },
+          { word: wrongAnswer, isCorrect: false },
+          { word: Math.random() < 0.5 ? correctAnswer : wrongAnswer, isCorrect: (Math.random() < 0.5 ? correctAnswer : wrongAnswer) === correctAnswer }
+      ];
+      
+      // Shuffle the pool to randomize lane placement
+      optionPool.sort(() => Math.random() - 0.5);
+
+      // 3. Create the obstacles
+      for (let i = 0; i < 3; i++) {
+        const obstacle = document.createElement('div');
+        obstacle.className = 'obstacle';
+        
+        const option = optionPool[i];
+        
+        // Ensure all obstacles show the same sentence but different answers (Por/Para)
+        obstacle.innerHTML = `<div style="font-size: 14px; color: #666; margin-bottom: 5px;">${mainQuestion.sentence.replace('___', '<span style="color: #FF6B35;">___</span>')}</div><div style="font-size: 24px; color: #2E86AB;">${option.word}</div>`;
+        obstacle.style.left = (lanes[i].center - 100) + 'px';
+        obstacle.style.top = '-150px';
+        
+        obstacle.dataset.correct = option.isCorrect;
+        obstacle.dataset.explanation = mainQuestion.explanation;
+
+        obstacle.addEventListener('click', () => handleObstacleClick(obstacle));
+        
+        document.getElementById('game-canvas').appendChild(obstacle);
+        obstacles.push({ element: obstacle, speed: 1 + (score * 0.05) });
+      }
+    }
+
+    function handleObstacleClick(obstacle) {
+      if (!gameActive) return;
+      
+      const isCorrect = obstacle.dataset.correct === 'true';
+      
+      // Get all obstacles from the current set
+      const currentObstacles = obstacles.filter(obs => parseFloat(obs.element.style.top) < window.innerHeight);
+
+      if (isCorrect) {
+        obstacle.classList.add('correct');
+        score += 10;
+        document.getElementById('score').textContent = score;
+        
+        setTimeout(() => {
+          // Remove all obstacles from this set after correct answer
+          currentObstacles.forEach(obs => {
+            if (obs.element.parentNode) {
+              obs.element.parentNode.removeChild(obs.element);
+            }
+          });
+          // Update the main obstacles array
+          obstacles = obstacles.filter(obs => currentObstacles.indexOf(obs) === -1);
+          if (gameActive) {
+            setTimeout(createObstacle, 500);
+          }
+        }, 300);
+      } else {
+        obstacle.classList.add('wrong');
+        // Visually mark the correct one
+        currentObstacles.forEach(obs => {
+            if (obs.element.dataset.correct === 'true') {
+                obs.element.classList.add('correct');
+            }
+        });
+        endGame(obstacle.dataset.explanation);
+      }
+    }
+
+    function gameLoop() {
+      if (!gameActive) return;
+      
+      // Use a fixed array copy to avoid issues with splice
+      const currentObstacles = [...obstacles];
+      let nextObstacleSetPassed = true; // Assume the current set is clear
+
+      currentObstacles.forEach((obs) => {
+        const currentTop = parseFloat(obs.element.style.top);
+        const newTop = currentTop + obs.speed;
+        obs.element.style.top = newTop + 'px';
+        
+        // If any obstacle is still above the bottom, the set hasn't fully passed
+        if (newTop < window.innerHeight) {
+            nextObstacleSetPassed = false;
+        }
+
+        if (newTop > window.innerHeight + 50) { // +50 to ensure it's completely off-screen
+          if (obs.element.parentNode) {
+            obs.element.parentNode.removeChild(obs.element);
+          }
+          // Remove from the main obstacles array
+          const indexInMainArray = obstacles.indexOf(obs);
+          if (indexInMainArray > -1) {
+              obstacles.splice(indexInMainArray, 1);
+          }
+        }
+      });
+      
+      // If the obstacle list is empty AND the game is active, create a new set
+      // This is a safety check; usually new ones are created after a correct click.
+      if (obstacles.length === 0 && gameActive) {
+          createObstacle();
+      }
+      
+      requestAnimationFrame(gameLoop);
+    }
+
+
+    function startGame() {
+      score = 0;
+      currentLane = 1;
+      gameActive = true;
+      obstacles = [];
+      lastQuestionIndex = -1;
+      
+      document.getElementById('score').textContent = score;
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('game-over-screen').style.display = 'none';
+      
+      const oldObstacles = document.querySelectorAll('.obstacle');
+      oldObstacles.forEach(obs => obs.remove());
+      
+      updatePlayerPosition();
+      createObstacle();
+      gameLoop();
+    }
+
+    function endGame(explanation) {
+      gameActive = false;
+      
+      document.getElementById('final-score').textContent = `Puntos Finales: ${score}`;
+      
+      const explanationContainer = document.getElementById('explanation-container');
+      explanationContainer.innerHTML = `<div class="explanation">💡 La respuesta correcta es el uso de **Por** o **Para** que se indica en la frase. Recuerda: ${explanation}</div>`;
+      
+      document.getElementById('game-over-screen').style.display = 'flex';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!gameActive) return;
+      
+      if (e.key === 'ArrowLeft' && currentLane > 0) {
+        currentLane--;
+        updatePlayerPosition();
+      } else if (e.key === 'ArrowRight' && currentLane < 2) {
+        currentLane++;
+        updatePlayerPosition();
+      }
+    });
+
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('restart-btn').addEventListener('click', startGame);
+
+    window.addEventListener('resize', () => {
+      lanes[0].center = window.innerWidth * 0.1667;
+      lanes[1].center = window.innerWidth * 0.5;
+      lanes[2].center = window.innerWidth * 0.8333;
+      updatePlayerPosition();
+    });
+
+    updatePlayerPosition();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a38d8f4d3d86af6',t:'MTc2Mzk4NjY5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
