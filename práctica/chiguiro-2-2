@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capybara Quest Spanish</title>
+  
+    <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    .game-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .game-header {
+      padding: 2%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .score-display {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .level-display {
+      font-size: 1.2em;
+    }
+
+    .game-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .capybara {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      bottom: 20%;
+      transition: left 0.3s ease;
+      z-index: 5;
+    }
+
+    .word-card {
+      position: absolute;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      /* FIX: Slower animation for reliable collision */
+      animation: float-down 8s linear; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      /* FIX: Ensure cards render above the background */
+      z-index: 20; 
+    }
+
+    .word-card:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes float-down {
+      from {
+        top: -10%;
+      }
+      to {
+        top: 110%;
+      }
+    }
+
+    .start-screen, .game-over-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 5%;
+      text-align: center;
+    }
+
+    .start-screen h1, .game-over-screen h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    .start-screen p, .game-over-screen p {
+      font-size: 1.3em;
+      margin-bottom: 30px;
+      max-width: 600px;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      font-size: 1.3em;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 10px;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .feedback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3em;
+      font-weight: bold;
+      animation: fade-out 1s ease;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+      }
+    }
+
+    .question-display {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2em;
+      font-weight: bold;
+      padding: 20px 40px;
+      border-radius: 15px;
+      text-align: center;
+      z-index: 10;
+      max-width: 80%;
+    }
+
+    .leaderboard {
+      margin-top: 30px;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .leaderboard h3 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+    }
+
+    .leaderboard-entry {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .name-input {
+      padding: 12px 20px;
+      font-size: 1.2em;
+      border: 3px solid;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      width: 300px;
+      max-width: 90%;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+   </head>
+ <body>
+  <div class="game-container">
+   <div id="startScreen" class="start-screen">
+    <h1 id="gameTitle">🌴 Capybara Quest: Spanish Adventure 🌴</h1>
+    <p id="welcomeMessage">Help the capybara collect the correct Spanish words! Move left and right with arrow keys or A/D keys to catch the falling words.</p><input type="text" id="playerName" class="name-input" placeholder="Enter your name"> <button id="startBtn" class="btn">Start Adventure</button>
+    <div class="leaderboard" id="startLeaderboard">
+     <h3>Top Adventurers</h3>
+     <div id="startLeaderboardList"></div>
+    </div>
+   </div>
+   <div id="gameScreen" class="hidden">
+    <div class="game-header">
+     <div class="level-display">
+      Level: <span id="levelNum">1</span>
+     </div>
+     <div class="score-display">
+      Score: <span id="score">0</span>
+     </div>
+     <div class="score-display">
+      Words: <span id="wordCount">0</span>/75
+     </div>
+    </div>
+    <div class="game-area" id="gameArea">
+     <div id="questionDisplay" class="question-display"></div>
+     <div class="capybara" id="capybara" style="left: 45%;">
+      <svg viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="60" rx="35" ry="25" fill="#8B6914" /> <ellipse cx="50" cy="40" rx="30" ry="22" fill="#A0826D" /> <circle cx="42" cy="35" r="3" fill="#000" /> <circle cx="58" cy="35" r="3" fill="#000" /> <ellipse cx="50" cy="42" rx="4" ry="3" fill="#000" /> <ellipse cx="30" cy="35" rx="8" ry="12" fill="#8B6914" /> <ellipse cx="70" cy="35" rx="8" ry="12" fill="#8B6914" /> <rect x="20" y="75" width="8" height="15" rx="3" fill="#654321" /> <rect x="40" y="75" width="8" height="15" rx="3" fill="#654321" /> <rect x="52" y="75" width="8" height="15" rx="3" fill="#654321" /> <rect x="72" y="75" width="8" height="15" rx="3" fill="#654321" />
+      </svg>
+     </div>
+    </div>
+   </div>
+   <div id="gameOverScreen" class="game-over-screen hidden">
+    <h1>🎉 Adventure Complete! 🎉</h1>
+    <p id="finalScore"></p>
+    <p id="finalWords"></p><button id="playAgainBtn" class="btn">Play Again</button>
+    <div class="leaderboard">
+     <h3>Top Adventurers</h3>
+     <div id="leaderboardList"></div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#87CEEB",
+      surface_color: "#90EE90",
+      text_color: "#2C3E50", // Dark color for contrast
+      primary_action_color: "#FF6B6B",
+      secondary_action_color: "#4ECDC4",
+      game_title: "🌴 Capybara Quest: Spanish Adventure 🌴",
+      welcome_message: "Help the capybara collect the correct Spanish words! Move left and right with arrow keys or A/D keys to catch the falling words.",
+      start_button_text: "Start Adventure",
+      font_family: "Comic Sans MS",
+      font_size: 16
+    };
+
+    const vocabularyWords = [
+      {spanish: "la tecnología", english: "technology", category: "tech"},
+      {spanish: "la aplicación", english: "application", category: "tech"},
+      {spanish: "la cámara digital", english: "digital camera", category: "tech"},
+      {spanish: "el canal", english: "TV channel", category: "tech"},
+      {spanish: "el cargador", english: "charger", category: "tech"},
+      {spanish: "el control remoto", english: "remote control", category: "tech"},
+      {spanish: "el correo de voz", english: "voice mail", category: "tech"},
+      {spanish: "el disco compacto", english: "CD", category: "tech"},
+      {spanish: "el estéreo", english: "stereo", category: "tech"},
+      {spanish: "la pantalla táctil", english: "touch screen", category: "tech"},
+      {spanish: "el radio", english: "radio set", category: "tech"},
+      {spanish: "el reproductor de CD", english: "CD player", category: "tech"},
+      {spanish: "el reproductor de MP3", english: "MP3 player", category: "tech"},
+      {spanish: "el teléfono celular", english: "cell phone", category: "tech"},
+      {spanish: "el televisor", english: "television set", category: "tech"},
+      {spanish: "apagar", english: "to turn off", category: "tech"},
+      {spanish: "funcionar", english: "to work", category: "tech"},
+      {spanish: "llamar", english: "to call", category: "tech"},
+      {spanish: "poner", english: "to turn on", category: "tech"},
+      {spanish: "sonar", english: "to ring", category: "tech"},
+      {spanish: "descompuesto", english: "not working", category: "tech"},
+      {spanish: "lento", english: "slow", category: "tech"},
+      {spanish: "lleno", english: "full", category: "tech"},
+      {spanish: "el archivo", english: "file", category: "computer"},
+      {spanish: "la arroba", english: "@ symbol", category: "computer"},
+      {spanish: "el blog", english: "blog", category: "computer"},
+      {spanish: "el buscador", english: "browser", category: "computer"},
+      {spanish: "la computadora portátil", english: "laptop", category: "computer"},
+      {spanish: "la conexión inalámbrica", english: "wireless connection", category: "computer"},
+      {spanish: "la dirección electrónica", english: "e-mail address", category: "computer"},
+      {spanish: "la impresora", english: "printer", category: "computer"},
+      {spanish: "Internet", english: "Internet", category: "computer"},
+      {spanish: "el mensaje de texto", english: "text message", category: "computer"},
+      {spanish: "el monitor", english: "computer monitor", category: "computer"},
+      {spanish: "la página principal", english: "home page", category: "computer"},
+      {spanish: "la pantalla", english: "screen", category: "computer"},
+      {spanish: "el programa de computación", english: "software", category: "computer"},
+      {spanish: "el ratón", english: "mouse", category: "computer"},
+      {spanish: "la red", english: "network", category: "computer"},
+      {spanish: "el reproductor de DVD", english: "DVD player", category: "computer"},
+      {spanish: "el sitio web", english: "website", category: "computer"},
+      {spanish: "el teclado", english: "keyboard", category: "computer"},
+      {spanish: "borrar", english: "to erase", category: "computer"},
+      {spanish: "chatear", english: "to chat", category: "computer"},
+      {spanish: "descargar", english: "to download", category: "computer"},
+      {spanish: "escanear", english: "to scan", category: "computer"},
+      {spanish: "grabar", english: "to record", category: "computer"},
+      {spanish: "guardar", english: "to save", category: "computer"},
+      {spanish: "imprimir", english: "to print", category: "computer"},
+      {spanish: "navegar en Internet", english: "to surf the Internet", category: "computer"},
+      {spanish: "la autopista", english: "highway", category: "car"},
+      {spanish: "el baúl", english: "trunk", category: "car"},
+      {spanish: "la calle", english: "street", category: "car"},
+      {spanish: "el capó", english: "hood", category: "car"},
+      {spanish: "el carro", english: "car", category: "car"},
+      {spanish: "la circulación", english: "traffic", category: "car"},
+      {spanish: "el garaje", english: "garage", category: "car"},
+      {spanish: "la gasolina", english: "gasoline", category: "car"},
+      {spanish: "la gasolinera", english: "gas station", category: "car"},
+      {spanish: "la licencia de conducir", english: "driver's license", category: "car"},
+      {spanish: "la llanta", english: "tire", category: "car"},
+      {spanish: "el mecánico", english: "mechanic", category: "car"},
+      {spanish: "el navegador GPS", english: "GPS", category: "car"},
+      {spanish: "el parabrisas", english: "windshield", category: "car"},
+      {spanish: "la policía", english: "police", category: "car"},
+      {spanish: "la velocidad máxima", english: "speed limit", category: "car"},
+      {spanish: "el volante", english: "steering wheel", category: "car"},
+      {spanish: "arrancar", english: "to start", category: "car"},
+      {spanish: "arreglar", english: "to fix", category: "car"},
+      {spanish: "bajar de", english: "to get off of", category: "car"},
+      {spanish: "conducir", english: "to drive", category: "car"},
+      {spanish: "estacionar", english: "to park", category: "car"},
+      {spanish: "llenar el tanque", english: "to fill the tank", category: "car"},
+      {spanish: "parar", english: "to stop", category: "car"},
+      {spanish: "revisar el aceite", english: "to check the oil", category: "car"}
+    ];
+
+    let gameState = {
+      score: 0,
+      level: 1,
+      wordsCompleted: 0,
+      playerPosition: 50,
+      currentQuestion: null,
+      activeWords: [],
+      isPlaying: false,
+      playerName: ""
+    };
+
+    let leaderboardData = [];
+    let animationFrameId = null; 
+
+    const dataHandler = {
+      onDataChanged(data) {
+        leaderboardData = data.sort((a, b) => b.score - a.score).slice(0, 10);
+        updateLeaderboards();
+      }
+    };
+
+    // --- Utility and Display Functions ---
+
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.backgroundColor = '#333';
+      toast.style.color = '#fff';
+      toast.style.padding = '15px 30px';
+      toast.style.borderRadius = '8px';
+      toast.style.zIndex = '1000';
+      toast.style.fontSize = '1.1em';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function showFeedback(text, color) {
+      const gameArea = document.getElementById('gameArea');
+      if (!gameArea) return;
+      
+      const feedback = document.createElement('div');
+      feedback.className = 'feedback';
+      feedback.textContent = text;
+      feedback.style.color = color;
+      gameArea.appendChild(feedback);
+      setTimeout(() => feedback.remove(), 1000);
+    }
+
+    function updateDisplay() {
+      document.getElementById('score').textContent = gameState.score;
+      document.getElementById('levelNum').textContent = gameState.level;
+      document.getElementById('wordCount').textContent = gameState.wordsCompleted;
+    }
+
+    function updateLeaderboards() {
+      const config = window.elementSdk?.config || defaultConfig;
+      const startList = document.getElementById('startLeaderboardList');
+      const endList = document.getElementById('leaderboardList');
+
+      const leaderboardHTML = leaderboardData.map((entry, index) => `
+        <div class="leaderboard-entry" style="background-color: ${config.surface_color || defaultConfig.surface_color}; color: ${config.text_color || defaultConfig.text_color}">
+          <span>${index + 1}. ${entry.player_name}</span>
+          <span>${entry.score} pts (${entry.completed_words} words)</span>
+        </div>
+      `).join('');
+
+      startList.innerHTML = leaderboardHTML || '<p style="color: ' + (config.text_color || defaultConfig.text_color) + '">No scores yet!</p>';
+      endList.innerHTML = leaderboardHTML || '<p style="color: ' + (config.text_color || defaultConfig.text_color) + '">No scores yet!</p>';
+    }
+
+    // --- Game Mechanics Functions ---
+
+    function moveCapybara(delta) {
+      // Keep player position between 10% and 90%
+      gameState.playerPosition = Math.max(10, Math.min(90, gameState.playerPosition + delta));
+      const capybara = document.getElementById('capybara');
+      // Capybara width is 80px (approx 8% of area). We use (position - 4) to center the element using the position %
+      capybara.style.left = (gameState.playerPosition - 5) + '%'; 
+    }
+
+    function checkCollision(rect1, rect2) {
+      return !(rect1.right < rect2.left || 
+               rect1.left > rect2.right || 
+               rect1.bottom < rect2.top || 
+               rect1.top > rect2.bottom);
+    }
+
+    function handleWordClick(wordData) {
+      if (!gameState.isPlaying || !wordData.element.parentElement) return;
+
+      // Determine if a word related to the current question was caught
+      const isCorrect = wordData.isCorrect && wordData.text === gameState.currentQuestion.spanish;
+      const isTargetWord = wordData.text === gameState.currentQuestion.spanish;
+
+      if (isTargetWord) {
+        if (isCorrect) {
+          gameState.score += 10 * gameState.level;
+          gameState.wordsCompleted++;
+          showFeedback('✓', '#4CAF50');
+          if (gameState.wordsCompleted % 10 === 0) {
+            gameState.level++;
+          }
+        } else {
+          // This scenario should only happen if the user clicks a decoy card, not catches one by collision
+          gameState.score = Math.max(0, gameState.score - 5);
+          showFeedback('✗', '#F44336');
+        }
+
+        // Collision logic means a word was caught, so clear and start next question
+        gameState.activeWords.forEach(w => w.element.remove());
+        gameState.activeWords = [];
+        updateDisplay();
+        setTimeout(() => nextQuestion(), 1000); 
+        
+      } else {
+        // If user clicks a wrong decoy word
+        gameState.score = Math.max(0, gameState.score - 5);
+        showFeedback('✗', '#F44336');
+        updateDisplay();
+
+        // Remove only the clicked word
+        wordData.element.remove();
+        gameState.activeWords = gameState.activeWords.filter(w => w !== wordData);
+      }
+    }
+
+    function spawnWord(text, isCorrect) {
+      if (!gameState.isPlaying) return;
+
+      const config = window.elementSdk?.config || defaultConfig;
+      const gameArea = document.getElementById('gameArea');
+      
+      if (!gameArea) return;
+
+      const wordCard = document.createElement('div');
+      wordCard.className = 'word-card';
+      wordCard.textContent = text;
+      wordCard.style.left = Math.random() * 80 + 10 + '%';
+      wordCard.style.backgroundColor = isCorrect 
+        ? (config.primary_action_color || defaultConfig.primary_action_color)
+        : (config.secondary_action_color || defaultConfig.secondary_action_color);
+      
+      // FIX: Set text color to the theme's text color for high contrast
+      wordCard.style.color = config.text_color || defaultConfig.text_color; 
+
+      const wordData = { element: wordCard, isCorrect, text: text, startTime: Date.now() };
+      gameState.activeWords.push(wordData);
+
+      // Append the new element to the DOM
+      gameArea.appendChild(wordCard); 
+
+      wordCard.addEventListener('click', () => {
+        if (gameState.isPlaying && gameState.currentQuestion) {
+          handleWordClick(wordData);
+        }
+      });
+    }
+
+    function generateWordChoices() {
+      // Ensure all previous cards are cleared before new ones spawn
+      gameState.activeWords.forEach(w => w.element.remove());
+      gameState.activeWords = [];
+
+      const correctAnswer = gameState.currentQuestion.spanish;
+      const wrongAnswers = vocabularyWords
+        .filter(w => w.spanish !== correctAnswer)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 2)
+        .map(w => w.spanish);
+
+      const allChoices = [
+        { text: correctAnswer, isCorrect: true },
+        { text: wrongAnswers[0], isCorrect: false },
+        { text: wrongAnswers[1], isCorrect: false }
+      ].sort(() => Math.random() - 0.5);
+
+      // CRITICAL FIX: Calling spawnWord directly instead of using setTimeout
+      allChoices.forEach((choice) => {
+        spawnWord(choice.text, choice.isCorrect); 
+      });
+    }
+
+    function nextQuestion() {
+      if (gameState.wordsCompleted >= 75) {
+        endGame();
+        return;
+      }
+
+      const randomWord = vocabularyWords[Math.floor(Math.random() * vocabularyWords.length)];
+      gameState.currentQuestion = randomWord;
+
+      const questionDisplay = document.getElementById('questionDisplay');
+      questionDisplay.textContent = 'Catch the word for: "' + randomWord.english + '"';
+
+      generateWordChoices();
+    }
+    
+    function gameLoop() {
+      if (!gameState.isPlaying) {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+        return;
+      }
+
+      const capybara = document.getElementById('capybara');
+      const capybaraRect = capybara.getBoundingClientRect();
+
+      gameState.activeWords = gameState.activeWords.filter(wordData => {
+        const wordRect = wordData.element.getBoundingClientRect();
+
+        // 1. Check if word fell off screen (past the capybara's capture zone)
+        if (wordRect.top > capybaraRect.bottom) { 
+          wordData.element.remove();
+          
+          // If the missed word was the correct answer for the current question
+          if (wordData.isCorrect && wordData.text === gameState.currentQuestion?.spanish) {
+            showFeedback('Missed Correct Word!', '#FF0000');
+            gameState.score = Math.max(0, gameState.score - 10);
+            updateDisplay();
+
+            // Clear all remaining words and move to next question
+            gameState.activeWords.forEach(w => w.element.remove());
+            gameState.activeWords = [];
+            setTimeout(() => nextQuestion(), 1000);
+          }
+          return false; // Remove this word from active list
+        }
+
+        // 2. Check for collision with capybara
+        if (checkCollision(capybaraRect, wordRect)) {
+            handleWordClick(wordData);
+          return false; // Word is handled, filter it out
+        }
+
+        return true; // Keep word active
+      });
+
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    // --- Game Flow Functions ---
+
+    function startGame() {
+      const nameInput = document.getElementById('playerName');
+      if (!nameInput || !nameInput.value.trim()) {
+        showToast("Please enter your name!");
+        return;
+      }
+
+      // Reset game state
+      gameState.playerName = nameInput.value.trim();
+      gameState.score = 0;
+      gameState.level = 1;
+      gameState.wordsCompleted = 0;
+      gameState.playerPosition = 50;
+      gameState.isPlaying = true;
+      gameState.activeWords.forEach(w => w.element.remove());
+      gameState.activeWords = [];
+
+
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('gameScreen').classList.remove('hidden');
+
+      updateDisplay();
+      nextQuestion();
+
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(gameLoop);
+      }
+    }
+
+    async function endGame() {
+      gameState.isPlaying = false;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+      gameState.activeWords.forEach(w => w.element.remove());
+      gameState.activeWords = [];
+
+      document.getElementById('finalScore').textContent = `Final Score: ${gameState.score}`;
+      document.getElementById('finalWords').textContent = `Words Completed: ${gameState.wordsCompleted}/75`;
+
+      document.getElementById('gameScreen').classList.add('hidden');
+      document.getElementById('gameOverScreen').classList.remove('hidden');
+
+      if (leaderboardData.length >= 999) {
+        showToast("Leaderboard limit reached. Your score wasn't saved.");
+        return;
+      }
+
+      const createResult = await window.dataSdk.create({
+        player_name: gameState.playerName,
+        current_level: gameState.level,
+        score: gameState.score,
+        completed_words: gameState.wordsCompleted,
+        timestamp: new Date().toISOString()
+      });
+
+      if (!createResult.isOk) {
+        showToast("Failed to save score to leaderboard");
+      }
+    }
+
+    function resetGame() {
+      document.getElementById('gameOverScreen').classList.add('hidden');
+      document.getElementById('startScreen').classList.remove('hidden');
+      document.getElementById('playerName').value = gameState.playerName;
+    }
+
+
+    // --- Initialization and Event Listeners ---
+
+    function setupEventListeners() {
+      // Ensure startBtn exists before attaching listener
+      const startBtn = document.getElementById('startBtn');
+      if (startBtn) {
+        startBtn.addEventListener('click', startGame);
+      }
+      
+      // Ensure playAgainBtn exists before attaching listener
+      const playAgainBtn = document.getElementById('playAgainBtn');
+      if (playAgainBtn) {
+        playAgainBtn.addEventListener('click', resetGame);
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (!gameState.isPlaying) return;
+
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+          moveCapybara(-5); 
+        } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+          moveCapybara(5);
+        }
+      });
+    }
+
+
+   async function initGame() {
+    // SDK Initialization skipped due to persistent 404 errors.
+    console.log("SDK Initialization skipped due to persistent 404 errors.");
+}
+
+      await window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          // Apply theme configurations (omitted internal logic for brevity)
+          const customFont = config.font_family || defaultConfig.font_family;
+          const baseFontStack = 'cursive, sans-serif';
+          const baseSize = config.font_size || defaultConfig.font_size;
+          document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+          document.body.style.backgroundColor = config.background_color || defaultConfig.background_color;
+
+          // Apply theme to all elements... (This block is kept as is from your original code)
+          const gameContainer = document.querySelector('.game-container');
+          gameContainer.style.backgroundColor = config.background_color || defaultConfig.background_color;
+          const startScreen = document.getElementById('startScreen');
+          startScreen.style.backgroundColor = config.background_color || defaultConfig.background_color;
+          startScreen.style.color = config.text_color || defaultConfig.text_color;
+          const gameOverScreen = document.getElementById('gameOverScreen');
+          gameOverScreen.style.backgroundColor = config.background_color || defaultConfig.background_color;
+          gameOverScreen.style.color = config.text_color || defaultConfig.text_color;
+          const gameTitle = document.getElementById('gameTitle');
+          gameTitle.textContent = config.game_title || defaultConfig.game_title;
+          gameTitle.style.fontSize = `${baseSize * 1.875}px`;
+          gameTitle.style.color = config.text_color || defaultConfig.text_color;
+          const welcomeMessage = document.getElementById('welcomeMessage');
+          welcomeMessage.textContent = config.welcome_message || defaultConfig.welcome_message;
+          welcomeMessage.style.fontSize = `${baseSize * 0.8125}px`;
+          const startBtn = document.getElementById('startBtn');
+          startBtn.textContent = config.start_button_text || defaultConfig.start_button_text;
+          startBtn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+          startBtn.style.color = config.background_color || defaultConfig.background_color;
+          startBtn.style.fontSize = `${baseSize * 0.8125}px`;
+          const playAgainBtn = document.getElementById('playAgainBtn');
+          playAgainBtn.style.backgroundColor = config.primary_action_color || defaultConfig.primary_action_color;
+          playAgainBtn.style.color = config.background_color || defaultConfig.background_color;
+          playAgainBtn.style.fontSize = `${baseSize * 0.8125}px`;
+          const nameInput = document.getElementById('playerName');
+          nameInput.style.borderColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+          nameInput.style.fontSize = `${baseSize * 0.75}px`;
+          nameInput.style.color = config.text_color || defaultConfig.text_color;
+          const scoreDisplays = document.querySelectorAll('.score-display, .level-display');
+          scoreDisplays.forEach(display => {
+            display.style.color = config.text_color || defaultConfig.text_color;
+          });
+          const questionDisplay = document.getElementById('questionDisplay');
+          questionDisplay.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+          questionDisplay.style.color = config.text_color || defaultConfig.text_color;
+          questionDisplay.style.fontSize = `${baseSize * 1.25}px`;
+          const leaderboardEntries = document.querySelectorAll('.leaderboard-entry');
+          leaderboardEntries.forEach(entry => {
+            entry.style.backgroundColor = config.surface_color || defaultConfig.surface_color;
+            entry.style.color = config.text_color || defaultConfig.text_color;
+          });
+          const leaderboardTitles = document.querySelectorAll('.leaderboard h3');
+          leaderboardTitles.forEach(title => {
+            title.style.color = config.text_color || defaultConfig.text_color;
+            title.style.fontSize = `${baseSize * 0.9375}px`;
+          });
+        },
+        // mapToCapabilities is omitted for brevity, keeping your original logic intact.
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                window.elementSdk.config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                window.elementSdk.config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                window.elementSdk.config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                window.elementSdk.config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => {
+                window.elementSdk.config.secondary_action_color = value;
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              window.elementSdk.config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              window.elementSdk.config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["game_title", config.game_title || defaultConfig.game_title],
+          ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+          ["start_button_text", config.start_button_text || defaultConfig.start_button_text]
+        ])
+      });
+    }
+
+    // Start initialization and set up listeners AFTER the entire HTML structure is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        setupEventListeners();
+        initGame(); 
+    });
+  </script>
+</body>
+</html>
