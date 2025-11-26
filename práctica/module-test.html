@@ -212,66 +212,67 @@
 
     // Handle quiz in module 1
     document.getElementById('btn-check-module-1').addEventListener('click', () => {
-      const items = document.querySelectorAll('#module-1 .quiz-item');
-      let correct = 0;
+  const items = document.querySelectorAll('#module-1 .quiz-item');
+  let correct = 0;
 
-      items.forEach(item => {
-        const answer = (item.dataset.answer || '').trim().toLowerCase();
-        const input = item.querySelector('input');
-        const feedback = item.querySelector('.feedback');
-        const userValue = (input.value || '').trim().toLowerCase();
+  items.forEach(item => {
+    const rawAnswer = (item.dataset.answer || '').trim();
+    const answer = rawAnswer.toLowerCase();
+    const input = item.querySelector('input');
+    const feedback = item.querySelector('.feedback');
+    const userValue = (input.value || '').trim().toLowerCase();
 
-        if (userValue === answer) {
-          correct++;
-          input.classList.remove('border-red-400');
-          input.classList.add('border-emerald-400');
-          feedback.textContent = '✅ Correcto';
-          feedback.classList.remove('hidden', 'text-red-500');
-          feedback.classList.add('text-emerald-600');
-        } else {
-          input.classList.remove('border-emerald-400');
-          input.classList.add('border-red-400');
-          feedback.textContent = `❌ Correcto: ${answer}`;
-          feedback.classList.remove('hidden', 'text-emerald-600');
-          feedback.classList.add('text-red-500');
-        }
-      });
+    if (userValue === answer) {
+      correct++;
+      input.classList.remove('border-red-400');
+      input.classList.add('border-emerald-400');
+      // ✅ Show correct form explicitly
+      feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+      feedback.classList.remove('hidden', 'text-red-500');
+      feedback.classList.add('text-emerald-600');
+    } else {
+      input.classList.remove('border-emerald-400');
+      input.classList.add('border-red-400');
+      // ❌ Also show the correct form
+      feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+      feedback.classList.remove('hidden', 'text-emerald-600');
+      feedback.classList.add('text-red-500');
+    }
+  });
 
-      const total = items.length;
-      const score = total > 0 ? correct / total : 0;
-      const resultEl = document.getElementById('module-1-result');
-      resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+  const total = items.length;
+  const score = total > 0 ? correct / total : 0;
+  const resultEl = document.getElementById('module-1-result');
+  resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
 
-      const nextBtn = document.getElementById('btn-next-from-1');
+  const nextBtn = document.getElementById('btn-next-from-1');
 
-      if (score >= PASS_THRESHOLD) {
-        resultEl.classList.remove('text-red-600');
-        resultEl.classList.add('text-emerald-700');
-        nextBtn.disabled = false;
-        nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
-        nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+  if (score >= PASS_THRESHOLD) {
+    resultEl.classList.remove('text-red-600');
+    resultEl.classList.add('text-emerald-700');
+    nextBtn.disabled = false;
+    nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+    nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
 
-        if (!module1Passed) {
-          module1Passed = true;
-          completedModules = Math.max(completedModules, 1);
-          updateProgress();
+    if (!module1Passed) {
+      module1Passed = true;
+      completedModules = Math.max(completedModules, 1);
+      updateProgress();
 
-          // Unlock module 2 in sidebar
-          const tab2 = document.querySelector('.module-tab[data-module="2"]');
-          const badge2 = document.getElementById('badge-2');
-          if (tab2 && badge2) {
-            tab2.disabled = false;
-            tab2.classList.remove('text-slate-500');
-            badge2.textContent = '✔';
-          }
-          module2Unlocked = true;
-        }
-      } else {
-        resultEl.classList.remove('text-emerald-700');
-        resultEl.classList.add('text-red-600');
-        // keep next button locked
+      const tab2 = document.querySelector('.module-tab[data-module="2"]');
+      const badge2 = document.getElementById('badge-2');
+      if (tab2 && badge2) {
+        tab2.disabled = false;
+        tab2.classList.remove('text-slate-500');
+        badge2.textContent = '✔';
       }
-    });
+      module2Unlocked = true;
+    }
+  } else {
+    resultEl.classList.remove('text-emerald-700');
+    resultEl.classList.add('text-red-600');
+  }
+});
 
     // Next from module 1 → module 2
     document.getElementById('btn-next-from-1').addEventListener('click', () => {
