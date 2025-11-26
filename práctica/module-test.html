@@ -211,8 +211,42 @@
     }
 
     // Handle quiz in module 1
-    document.getElementById('btn-check-module-1').addEventListener('click', () => {
+ document.getElementById('btn-check-module-1').addEventListener('click', () => {
   const items = document.querySelectorAll('#module-1 .quiz-item');
+  const resultEl = document.getElementById('module-1-result');
+
+  // 1) First pass: check for any empty fields
+  let missing = false;
+
+  items.forEach(item => {
+    const input = item.querySelector('input');
+    const feedback = item.querySelector('.feedback');
+
+    if (!input) return;
+
+    const value = (input.value || '').trim();
+
+    if (value === '') {
+      missing = true;
+      // Highlight empty fields
+      input.classList.remove('border-emerald-400', 'border-red-400');
+      input.classList.add('border-yellow-400');
+      // Hide any old feedback while they still haven't answered
+      if (feedback) {
+        feedback.classList.add('hidden');
+      }
+    }
+  });
+
+  if (missing) {
+    // Warn and exit early: NO answers, NO correct forms yet
+    resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
+    resultEl.classList.remove('text-emerald-700');
+    resultEl.classList.add('text-red-600');
+    return;
+  }
+
+  // 2) Second pass: grade & show correct answers (now we know all are attempted)
   let correct = 0;
 
   items.forEach(item => {
@@ -222,18 +256,18 @@
     const feedback = item.querySelector('.feedback');
     const userValue = (input.value || '').trim().toLowerCase();
 
+    if (!input) return;
+
     if (userValue === answer) {
       correct++;
-      input.classList.remove('border-red-400');
+      input.classList.remove('border-red-400', 'border-yellow-400');
       input.classList.add('border-emerald-400');
-      // ✅ Show correct form explicitly
       feedback.textContent = `✅ Correcto: ${rawAnswer}`;
       feedback.classList.remove('hidden', 'text-red-500');
       feedback.classList.add('text-emerald-600');
     } else {
-      input.classList.remove('border-emerald-400');
+      input.classList.remove('border-emerald-400', 'border-yellow-400');
       input.classList.add('border-red-400');
-      // ❌ Also show the correct form
       feedback.textContent = `❌ Correcto: ${rawAnswer}`;
       feedback.classList.remove('hidden', 'text-emerald-600');
       feedback.classList.add('text-red-500');
@@ -242,7 +276,6 @@
 
   const total = items.length;
   const score = total > 0 ? correct / total : 0;
-  const resultEl = document.getElementById('module-1-result');
   resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
 
   const nextBtn = document.getElementById('btn-next-from-1');
