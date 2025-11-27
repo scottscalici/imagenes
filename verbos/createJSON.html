@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Constructor de JSON – Verbos presente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-lg sm:text-xl font-bold text-slate-800">
+          Constructor de conjuntos – Verbos (presente)
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500">
+          Carga <code>verbos/presente.json</code>, selecciona hasta 20 ítems y genera un JSON
+          (por ej. <code>presente1.json</code>, <code>presente2.json</code>).
+        </p>
+      </div>
+      <div class="flex flex-col items-end gap-1 text-right">
+        <p id="status" class="text-xs text-slate-500">Cargando datos…</p>
+        <p id="countInfo" class="text-xs text-slate-700 font-semibold">0 seleccionados (máx. 20)</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <!-- Controls -->
+    <section class="bg-white rounded-2xl shadow p-4 space-y-3">
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div class="flex-1 space-y-2">
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
+            Buscar (infinitivo, sujeto o contexto)
+          </label>
+          <input id="searchInput"
+                 type="text"
+                 class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
+                 placeholder="ej. hablar, yo, supermercado, quedarse…" />
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <button id="btnClear"
+                  class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
+            Limpiar selección
+          </button>
+          <button id="btnGenerate"
+                  class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs sm:text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled>
+            Generar JSON (máx. 20)
+          </button>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500">
+        ✔ Sugerencia: piensa en este conjunto como <strong>presente1</strong> (día 1),
+        luego crea otro para <strong>presente2</strong> (día 2), etc.
+      </p>
+    </section>
+
+    <!-- List + Output -->
+    <div class="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
+      <!-- List of items -->
+      <section class="bg-white rounded-2xl shadow p-4 flex flex-col min-h-[300px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-slate-700">
+            Ítems disponibles
+          </h2>
+          <p id="listInfo" class="text-xs text-slate-500"></p>
+        </div>
+
+        <div id="itemsContainer"
+             class="flex-1 min-h-[200px] max-h-[520px] overflow-auto space-y-2 text-sm">
+          <!-- dynamically filled -->
+        </div>
+      </section>
+
+      <!-- Output JSON -->
+      <section class="bg-white rounded-2xl shadow p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-slate-700">
+            Resultado JSON (para guardar como presente1.json, presente2.json, etc.)
+          </h2>
+          <button id="btnCopy"
+                  class="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled>
+            Copiar al portapapeles
+          </button>
+        </div>
+
+        <textarea id="outputJson"
+                  class="w-full h-72 border rounded-lg px-3 py-2 text-xs font-mono bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  placeholder="Selecciona hasta 20 ítems y haz clic en “Generar JSON”."
+                  readonly></textarea>
+
+        <p class="text-xs text-slate-500">
+          Paso siguiente: crea un archivo como <code>presente1.json</code> en tu repositorio
+          (por ejemplo en <code>verbos/sets/</code>) y pega este contenido.
+          Luego el módulo de práctica solo necesita la URL de ese archivo.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const MASTER_JSON_URL =
+      'https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/presente.json';
+
+    let masterItems = [];
+    let filteredItems = [];
+    const selectedIndices = new Set(); // indices relative to masterItems
+
+    const statusEl = document.getElementById('status');
+    const countInfoEl = document.getElementById('countInfo');
+    const listInfoEl = document.getElementById('listInfo');
+    const itemsContainer = document.getElementById('itemsContainer');
+    const searchInput = document.getElementById('searchInput');
+    const btnGenerate = document.getElementById('btnGenerate');
+    const btnClear = document.getElementById('btnClear');
+    const btnCopy = document.getElementById('btnCopy');
+    const outputJson = document.getElementById('outputJson');
+
+    function updateCountInfo() {
+      const count = selectedIndices.size;
+      countInfoEl.textContent = `${count} seleccionados (máx. 20)`;
+      btnGenerate.disabled = (count === 0 || count > 20);
+      btnCopy.disabled = !outputJson.value.trim();
+    }
+
+    function renderList() {
+      itemsContainer.innerHTML = '';
+
+      if (!filteredItems.length) {
+        itemsContainer.innerHTML =
+          '<p class="text-xs text-slate-500">No hay ítems que coincidan con la búsqueda.</p>';
+        listInfoEl.textContent = '';
+        return;
+      }
+
+      filteredItems.forEach(({ item, indexInMaster }, i) => {
+        const key = `${item.infinitivo}-${item.sujeto}`;
+        const isSelected = selectedIndices.has(indexInMaster);
+
+        const row = document.createElement('label');
+        row.className =
+          'flex items-start gap-2 border rounded-lg px-3 py-2 cursor-pointer hover:bg-slate-50 text-xs sm:text-sm';
+
+        row.innerHTML = `
+          <input type="checkbox"
+                 class="mt-1 h-4 w-4 text-sky-600 border-slate-300 rounded"
+                 data-master-index="${indexInMaster}"
+                 ${isSelected ? 'checked' : ''} />
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="font-semibold text-slate-800">${item.sujeto}</span>
+              <span class="text-slate-800">${item.contexto}</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-0.5">
+              ${item.infinitivo} · forma correcta: <code>${item.forma}</code>
+              · traducción: ${item.traducción || ''}
+            </div>
+          </div>
+        `;
+
+        itemsContainer.appendChild(row);
+      });
+
+      listInfoEl.textContent = `${filteredItems.length} ítems visibles`;
+      updateCountInfo();
+
+      // re-bind checkbox events
+      itemsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const idx = Number(cb.dataset.masterIndex);
+          if (cb.checked) {
+            if (selectedIndices.size >= 20) {
+              // don't allow more than 20
+              cb.checked = false;
+              return;
+            }
+            selectedIndices.add(idx);
+          } else {
+            selectedIndices.delete(idx);
+          }
+          updateCountInfo();
+        });
+      });
+    }
+
+    function applyFilter() {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) {
+        filteredItems = masterItems.map((item, indexInMaster) => ({ item, indexInMaster }));
+      } else {
+        filteredItems = masterItems
+          .map((item, indexInMaster) => ({ item, indexInMaster }))
+          .filter(({ item }) => {
+            const haystack = (
+              (item.infinitivo || '') + ' ' +
+              (item.sujeto || '') + ' ' +
+              (item.contexto || '')
+            ).toLowerCase();
+            return haystack.includes(q);
+          });
+      }
+      renderList();
+    }
+
+    async function loadMasterJson() {
+      try {
+        const res = await fetch(MASTER_JSON_URL);
+        const data = await res.json();
+        // You can filter by tiempo if needed:
+        masterItems = data.filter(x => x.tiempo === 'presente');
+        statusEl.textContent = `Cargados ${masterItems.length} ítems de presente.`;
+        applyFilter();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent =
+          'Error al cargar el JSON maestro. Revisa la URL de MASTER_JSON_URL.';
+        itemsContainer.innerHTML =
+          '<p class="text-xs text-red-500">No se pudo cargar el archivo JSON.</p>';
+      }
+    }
+
+    // Generate JSON for selected items
+    btnGenerate.addEventListener('click', () => {
+      if (!selectedIndices.size || selectedIndices.size > 20) return;
+
+      const indicesSorted = Array.from(selectedIndices).sort((a, b) => a - b);
+      const selectedItems = indicesSorted.map(i => masterItems[i]);
+
+      const jsonString = JSON.stringify(selectedItems, null, 2);
+      outputJson.value = jsonString;
+      btnCopy.disabled = false;
+    });
+
+    // Clear selection
+    btnClear.addEventListener('click', () => {
+      selectedIndices.clear();
+      updateCountInfo();
+      renderList();
+      outputJson.value = '';
+      btnCopy.disabled = true;
+    });
+
+    // Filter on typing
+    searchInput.addEventListener('input', () => {
+      applyFilter();
+    });
+
+    // Copy to clipboard
+    btnCopy.addEventListener('click', async () => {
+      const text = outputJson.value;
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        btnCopy.textContent = '¡Copiado!';
+        setTimeout(() => (btnCopy.textContent = 'Copiar al portapapeles'), 1500);
+      } catch {
+        btnCopy.textContent = 'Error al copiar';
+        setTimeout(() => (btnCopy.textContent = 'Copiar al portapapeles'), 1500);
+      }
+    });
+
+    // Init
+    loadMasterJson();
+  </script>
+</body>
+</html>
