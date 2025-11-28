@@ -38,6 +38,16 @@
                  class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
                  placeholder="ej. hablar, yo, supermercado, quedarse…" />
         </div>
+<!-- Tag Filters -->
+<div class="border-t pt-3 mt-3">
+  <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
+    Filtrar por etiquetas
+  </label>
+
+  <div id="tagFilters" class="flex flex-wrap gap-2 text-xs">
+    <!-- JS will dynamically populate all available tags -->
+  </div>
+</div>
 
         <div class="flex flex-wrap gap-2 items-center">
           <button id="btnClear"
@@ -108,6 +118,8 @@
     let masterItems = [];
     let filteredItems = [];
     const selectedIndices = new Set(); // indices relative to masterItems
+let allTags = new Set();
+let activeTags = new Set();
 
     const statusEl = document.getElementById('status');
     const countInfoEl = document.getElementById('countInfo');
@@ -125,6 +137,43 @@
       btnGenerate.disabled = (count === 0 || count > 20);
       btnCopy.disabled = !outputJson.value.trim();
     }
+
+function extractTagsFromYoEntries(items) {
+  items.forEach(v => {
+    // Only yo entry contains tags:
+    if (v.sujeto?.trim().toLowerCase() === "yo" && Array.isArray(v.tags)) {
+      v.tags.forEach(t => allTags.add(t));
+    }
+  });
+}
+
+function renderTagFilters() {
+  const container = document.getElementById("tagFilters");
+  container.innerHTML = "";
+
+  Array.from(allTags).sort().forEach(tag => {
+    const id = `tag-${tag}`;
+    const wrapper = document.createElement("label");
+    wrapper.className = "flex items-center gap-1 bg-slate-100 px-2 py-1 rounded cursor-pointer";
+
+    wrapper.innerHTML = `
+      <input type="checkbox" id="${id}" data-tag="${tag}" class="h-3 w-3">
+      <span>${tag}</span>
+    `;
+
+    container.appendChild(wrapper);
+  });
+
+  // Add listeners
+  container.querySelectorAll("input[type='checkbox']").forEach(cb => {
+    cb.addEventListener("change", () => {
+      const tag = cb.dataset.tag;
+      if (cb.checked) activeTags.add(tag);
+      else activeTags.delete(tag);
+      applyFilter();
+    });
+  });
+}
 
     function renderList() {
       itemsContainer.innerHTML = '';
@@ -186,24 +235,42 @@
       });
     }
 
-    function applyFilter() {
-      const q = searchInput.value.trim().toLowerCase();
-      if (!q) {
-        filteredItems = masterItems.map((item, indexInMaster) => ({ item, indexInMaster }));
-      } else {
-        filteredItems = masterItems
-          .map((item, indexInMaster) => ({ item, indexInMaster }))
-          .filter(({ item }) => {
-            const haystack = (
-              (item.infinitivo || '') + ' ' +
-              (item.sujeto || '') + ' ' +
-              (item.contexto || '')
-            ).toLowerCase();
-            return haystack.includes(q);
-          });
+  function applyFilter() {
+  const q = searchInput.value.trim().toLowerCase();
+
+  filteredItems = masterItems
+    .map((item, indexInMaster) => ({ item, indexInMaster }))
+    .filter(({ item }) => {
+      const haystack = (
+        (item.infinitivo || '') + ' ' +
+        (item.sujeto || '') + ' ' +
+        (item.contexto || '')
+      ).toLowerCase();
+
+      // TEXT FILTER
+      const passText = !q || haystack.includes(q);
+
+      // TAG FILTER — only check yo entries
+      let passTags = true;
+      if (activeTags.size) {
+        if (item.sujeto.trim().toLowerCase() === "yo") {
+          const tags = item.tags || [];
+          passTags = Array.from(activeTags).every(t => tags.includes(t));
+        } else {
+          // non-yo forms are included only if their yo form passed
+          const yo = masterItems.find(
+            x => x.infinitivo === item.infinitivo && x.sujeto.toLowerCase() === "yo"
+          );
+          const yoTags = yo?.tags || [];
+          passTags = Array.from(activeTags).every(t => yoTags.includes(t));
+        }
       }
-      renderList();
-    }
+
+      return passText && passTags;
+    });
+
+  renderList();
+}
 
     async function loadMasterJson() {
       try {
@@ -211,6 +278,9 @@
         const data = await res.json();
         // You can filter by tiempo if needed:
         masterItems = data.filter(x => x.tiempo === 'presente');
+        extractTagsFromYoEntries(masterItems);
+renderTagFilters();
+
         statusEl.textContent = `Cargados ${masterItems.length} ítems de presente.`;
         applyFilter();
       } catch (err) {
