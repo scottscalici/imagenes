@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generador – Pasaje literario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6 font-sans">
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <header class="shadow rounded-xl overflow-hidden">
+      <div class="bg-purple-700 text-white py-5 px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold drop-shadow">
+            Generador de Pasaje Literario
+          </h1>
+          <p class="text-sm md:text-base italic opacity-90">
+            Pega el texto del pasaje y tus preguntas para crear una página de práctica.
+          </p>
+        </div>
+        <div class="text-xs md:text-sm text-purple-100">
+          <p>1. Copia el texto del PDF</p>
+          <p>2. Escribe las preguntas (una por línea)</p>
+          <p>3. Haz clic en <span class="font-semibold">Generar HTML</span></p>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- Panel de entrada -->
+      <section class="bg-white rounded-xl shadow border border-gray-200 p-5 space-y-4">
+        <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+          <span>✍️ Datos del pasaje</span>
+        </h2>
+
+        <div class="space-y-3 text-sm">
+          <div>
+            <label for="tituloObra" class="block font-semibold mb-1 text-gray-700">
+              Título de la obra (opcional)
+            </label>
+            <input
+              id="tituloObra"
+              type="text"
+              class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Como agua para chocolate"
+            />
+          </div>
+
+          <div>
+            <label for="autorObra" class="block font-semibold mb-1 text-gray-700">
+              Autor(a) (opcional)
+            </label>
+            <input
+              id="autorObra"
+              type="text"
+              class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Laura Esquivel"
+            />
+          </div>
+
+          <div>
+            <label for="extracto" class="block font-semibold mb-1 text-gray-700">
+              Texto del pasaje literario
+            </label>
+            <textarea
+              id="extracto"
+              rows="10"
+              class="w-full border rounded-lg px-3 py-2 text-sm font-serif leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Pega aquí el fragmento de la obra…"
+            ></textarea>
+            <p class="text-xs text-gray-500 mt-1">
+              Se respetan los saltos de línea. Puedes dejar líneas en blanco para separar párrafos.
+            </p>
+          </div>
+
+          <div>
+            <label for="preguntas" class="block font-semibold mb-1 text-gray-700">
+              Preguntas (una por línea)
+            </label>
+            <textarea
+              id="preguntas"
+              rows="8"
+              class="w-full border rounded-lg px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="¿Qué relación tiene este pasaje con el tema principal de la obra?&#10;¿Qué recursos literarios reconoce el lector en este fragmento?&#10;…"
+            ></textarea>
+            <p class="text-xs text-gray-500 mt-1">
+              Las líneas vacías se ignoran.
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button
+              id="generateBtn"
+              class="w-full md:w-auto px-4 py-2 text-sm font-semibold rounded-lg bg-purple-700 text-white hover:bg-purple-800 transition"
+            >
+              Generar HTML
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel de salida -->
+      <section class="bg-white rounded-xl shadow border border-gray-200 p-5 space-y-4">
+        <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+          <span>📄 Código HTML generado</span>
+        </h2>
+        <p class="text-xs text-gray-500">
+          Copia este código y pégalo en tu página (por ejemplo, dentro del cuerpo de tu plan de clase o en un archivo HTML independiente).
+        </p>
+        <textarea
+          id="output"
+          rows="24"
+          class="w-full border rounded-lg px-3 py-2 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
+          readonly
+        ></textarea>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const titulo = document.getElementById('tituloObra').value.trim();
+      const autor = document.getElementById('autorObra').value.trim();
+      const extractoRaw = document.getElementById('extracto').value.trim();
+      const preguntasRaw = document.getElementById('preguntas').value.trim();
+
+      // Manejar extracto: respetar saltos de línea
+      const extractoEscapado = escapeHtml(extractoRaw);
+
+      // Manejar preguntas: una por línea, sin líneas vacías
+      const preguntas = preguntasRaw
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+      const preguntasLis = preguntas
+        .map(q => `            <li>${escapeHtml(q)}</li>`)
+        .join('\n');
+
+      const headerObra =
+        titulo || autor
+          ? `
+        <div class="text-sm md:text-base text-right md:text-right">
+          ${titulo ? `<p class="font-semibold">Obra: <span class="font-normal">${escapeHtml(titulo)}</span></p>` : ''}
+          ${autor ? `<p class="font-semibold">Autor(a): <span class="font-normal">${escapeHtml(autor)}</span></p>` : ''}
+        </div>`
+          : '';
+
+      const html = `<!-- ===== Pasaje literario generado ===== -->
+<section class="space-y-6">
+
+  <!-- Encabezado del pasaje -->
+  <header class="shadow rounded-xl overflow-hidden">
+    <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+      <div>
+        <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
+        <p class="italic text-sm md:text-base opacity-90">
+          Práctica independiente para el oral individual
+        </p>
+      </div>${headerObra}
+    </div>
+  </header>
+
+  <!-- Instrucciones -->
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
+    <div class="p-6 space-y-3">
+      <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+        <span>🧭 Instrucciones</span>
+      </h2>
+      <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
+        <li>Lee el pasaje literario con atención.</li>
+        <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
+        <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
+        <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Pasaje -->
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#10B981;">
+    <div class="p-6 space-y-4">
+      <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+        <span>📖 Pasaje literario</span>
+      </h2>
+      <p class="text-sm text-gray-500 italic">
+        Lee este fragmento con calma. Puedes subrayar, anotar ideas clave, y pensar en la relación con la obra completa.
+      </p>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 whitespace-pre-wrap">
+${extractoEscapado}
+      </div>
+    </div>
+  </section>
+
+  <!-- Preguntas -->
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#F59E0B;">
+    <div class="p-6 space-y-4">
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <span>🎤 Preguntas de práctica</span>
+        </h2>
+        <button
+          id="toggleQuestionsBtn"
+          class="px-4 py-2 text-sm font-semibold rounded-full border border-amber-500 text-amber-700 hover:bg-amber-50 transition"
+        >
+          Mostrar preguntas
+        </button>
+      </div>
+      <p class="text-sm text-gray-500 italic">
+        Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
+      </p>
+
+      <div id="questionsBlock" class="space-y-3 hidden">
+        <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
+${preguntasLis || '          <!-- (Aún no se han añadido preguntas) -->'}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<script>
+  (function () {
+    const btn = document.getElementById('toggleQuestionsBtn');
+    const block = document.getElementById('questionsBlock');
+    if (!btn || !block) return;
+    btn.addEventListener('click', () => {
+      const isHidden = block.classList.contains('hidden');
+      if (isHidden) {
+        block.classList.remove('hidden');
+        btn.textContent = 'Ocultar preguntas';
+      } else {
+        block.classList.add('hidden');
+        btn.textContent = 'Mostrar preguntas';
+      }
+    });
+  })();
+</script>
+<!-- ===== Fin del pasaje literario ===== -->`;
+
+      document.getElementById('output').value = html;
+    });
+  </script>
+</body>
+</html>
