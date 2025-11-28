@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Generador – Pasaje literario</title>
+  <title>Generador – Pasaje Literario</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-6 font-sans">
   <div class="max-w-6xl mx-auto space-y-6">
 
+    <!-- Header -->
     <header class="shadow rounded-xl overflow-hidden">
       <div class="bg-purple-700 text-white py-5 px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
@@ -16,53 +17,59 @@
             Generador de Pasaje Literario
           </h1>
           <p class="text-sm md:text-base italic opacity-90">
-            Pega el texto del pasaje y tus preguntas para crear una página de práctica.
+            Crea la página del estudiante y la ficha del profesor a partir de un solo formulario.
           </p>
         </div>
         <div class="text-xs md:text-sm text-purple-100">
-          <p>1. Copia el texto del PDF</p>
-          <p>2. Escribe las preguntas (una por línea)</p>
-          <p>3. Haz clic en <span class="font-semibold">Generar HTML</span></p>
+          <p>1. Elige la obra</p>
+          <p>2. Pega el pasaje y las preguntas</p>
+          <p>3. (Opcional) Pega tus notas de profesor</p>
+          <p>4. Haz clic en <span class="font-semibold">Generar HTML</span></p>
         </div>
       </div>
     </header>
 
     <div class="grid md:grid-cols-2 gap-6">
 
-      <!-- Panel de entrada -->
+      <!-- INPUT PANEL -->
       <section class="bg-white rounded-xl shadow border border-gray-200 p-5 space-y-4">
         <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-          <span>✍️ Datos del pasaje</span>
+          ✍️ Datos del pasaje
         </h2>
 
         <div class="space-y-3 text-sm">
+          <!-- Obra -->
           <div>
-            <label for="tituloObra" class="block font-semibold mb-1 text-gray-700">
-              Título de la obra (opcional)
+            <label for="obraSelect" class="block font-semibold mb-1 text-gray-700">
+              Obra
+            </label>
+            <select
+              id="obraSelect"
+              class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="">— Selecciona una obra —</option>
+              <option value="Como agua para chocolate">Como agua para chocolate (Laura Esquivel)</option>
+              <option value="Marina">Marina (Carlos Ruiz Zafón)</option>
+            </select>
+          </div>
+
+          <!-- Título/descripción del pasaje -->
+          <div>
+            <label for="tituloPasaje" class="block font-semibold mb-1 text-gray-700">
+              Título o descripción del pasaje (opcional)
             </label>
             <input
-              id="tituloObra"
+              id="tituloPasaje"
               type="text"
               class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Como agua para chocolate"
+              placeholder="Capítulo 1 – La cebolla / Pasaje de la azotea, etc."
             />
           </div>
 
-          <div>
-            <label for="autorObra" class="block font-semibold mb-1 text-gray-700">
-              Autor(a) (opcional)
-            </label>
-            <input
-              id="autorObra"
-              type="text"
-              class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Laura Esquivel"
-            />
-          </div>
-
+          <!-- Extracto -->
           <div>
             <label for="extracto" class="block font-semibold mb-1 text-gray-700">
-              Texto del pasaje literario
+              Texto del pasaje literario (en español)
             </label>
             <textarea
               id="extracto"
@@ -75,18 +82,35 @@
             </p>
           </div>
 
+          <!-- Preguntas (estudiante) -->
           <div>
             <label for="preguntas" class="block font-semibold mb-1 text-gray-700">
-              Preguntas (una por línea)
+              Preguntas para el estudiante (una por línea)
             </label>
             <textarea
               id="preguntas"
-              rows="8"
+              rows="6"
               class="w-full border rounded-lg px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="¿Qué relación tiene este pasaje con el tema principal de la obra?&#10;¿Qué recursos literarios reconoce el lector en este fragmento?&#10;…"
             ></textarea>
             <p class="text-xs text-gray-500 mt-1">
               Las líneas vacías se ignoran.
+            </p>
+          </div>
+
+          <!-- Notas del profesor -->
+          <div>
+            <label for="notasProfe" class="block font-semibold mb-1 text-gray-700">
+              Bloque de notas del profesor (solo para la página de profesor)
+            </label>
+            <textarea
+              id="notasProfe"
+              rows="10"
+              class="w-full border rounded-lg px-3 py-2 text-xs md:text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Aquí puedes pegar TODO tu documento para este pasaje: temas, traducción al inglés, posibles respuestas, observaciones, etc."
+            ></textarea>
+            <p class="text-xs text-gray-500 mt-1">
+              Este bloque aparecerá solo en la ficha del profesor. Los estudiantes no lo verán.
             </p>
           </div>
 
@@ -101,18 +125,43 @@
         </div>
       </section>
 
-      <!-- Panel de salida -->
+      <!-- OUTPUT PANEL -->
       <section class="bg-white rounded-xl shadow border border-gray-200 p-5 space-y-4">
-        <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-          <span>📄 Código HTML generado</span>
+        <h2 class="text-lg font-bold text-gray-800">
+          📄 Código HTML generado
         </h2>
+
         <p class="text-xs text-gray-500">
-          Copia este código y pégalo en tu página (por ejemplo, dentro del cuerpo de tu plan de clase o en un archivo HTML independiente).
+          Copia el código de cada pestaña y pégalo en la página correspondiente.
         </p>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 text-xs font-semibold">
+          <button
+            id="tabStudent"
+            class="px-3 py-1 rounded-full border border-purple-700 text-purple-700 bg-purple-50"
+          >
+            Página del estudiante
+          </button>
+          <button
+            id="tabTeacher"
+            class="px-3 py-1 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50"
+          >
+            Página del profesor
+          </button>
+        </div>
+
         <textarea
-          id="output"
-          rows="24"
+          id="outputStudent"
+          rows="20"
           class="w-full border rounded-lg px-3 py-2 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500"
+          readonly
+        ></textarea>
+
+        <textarea
+          id="outputTeacher"
+          rows="20"
+          class="w-full border rounded-lg px-3 py-2 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500 hidden"
           readonly
         ></textarea>
       </section>
@@ -128,38 +177,24 @@
         .replace(/>/g, "&gt;");
     }
 
-    document.getElementById('generateBtn').addEventListener('click', () => {
-      const titulo = document.getElementById('tituloObra').value.trim();
-      const autor = document.getElementById('autorObra').value.trim();
-      const extractoRaw = document.getElementById('extracto').value.trim();
-      const preguntasRaw = document.getElementById('preguntas').value.trim();
+    function buildStudentHtml(obra, titulo, extracto, preguntas) {
+      const obraLine = obra
+        ? `<p class="font-semibold">Obra: <span class="font-normal">${escapeHtml(obra)}</span></p>`
+        : "";
+      const tituloLine = titulo
+        ? `<p class="font-semibold">Pasaje: <span class="font-normal">${escapeHtml(titulo)}</span></p>`
+        : "";
 
-      // Manejar extracto: respetar saltos de línea
-      const extractoEscapado = escapeHtml(extractoRaw);
+      const preguntasLis = preguntas.length
+        ? preguntas.map(q => `          <li>${escapeHtml(q)}</li>`).join("\n")
+        : "          <!-- (Aún no se han añadido preguntas) -->";
 
-      // Manejar preguntas: una por línea, sin líneas vacías
-      const preguntas = preguntasRaw
-        .split(/\r?\n/)
-        .map(l => l.trim())
-        .filter(l => l.length > 0);
+      const extractoEscapado = escapeHtml(extracto);
 
-      const preguntasLis = preguntas
-        .map(q => `            <li>${escapeHtml(q)}</li>`)
-        .join('\n');
-
-      const headerObra =
-        titulo || autor
-          ? `
-        <div class="text-sm md:text-base text-right md:text-right">
-          ${titulo ? `<p class="font-semibold">Obra: <span class="font-normal">${escapeHtml(titulo)}</span></p>` : ''}
-          ${autor ? `<p class="font-semibold">Autor(a): <span class="font-normal">${escapeHtml(autor)}</span></p>` : ''}
-        </div>`
-          : '';
-
-      const html = `<!-- ===== Pasaje literario generado ===== -->
+      // IMPORTANT: note the <\/script> to avoid closing the outer script
+      return `<!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
 <section class="space-y-6">
 
-  <!-- Encabezado del pasaje -->
   <header class="shadow rounded-xl overflow-hidden">
     <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
       <div>
@@ -167,11 +202,14 @@
         <p class="italic text-sm md:text-base opacity-90">
           Práctica independiente para el oral individual
         </p>
-      </div>${headerObra}
+      </div>
+      <div class="text-sm md:text-base text-right md:text-right space-y-1">
+        ${obraLine}
+        ${tituloLine}
+      </div>
     </div>
   </header>
 
-  <!-- Instrucciones -->
   <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
     <div class="p-6 space-y-3">
       <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
@@ -186,14 +224,13 @@
     </div>
   </section>
 
-  <!-- Pasaje -->
   <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#10B981;">
     <div class="p-6 space-y-4">
       <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
         <span>📖 Pasaje literario</span>
       </h2>
       <p class="text-sm text-gray-500 italic">
-        Lee este fragmento con calma. Puedes subrayar, anotar ideas clave, y pensar en la relación con la obra completa.
+        Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
       </p>
       <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 whitespace-pre-wrap">
 ${extractoEscapado}
@@ -201,7 +238,6 @@ ${extractoEscapado}
     </div>
   </section>
 
-  <!-- Preguntas -->
   <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#F59E0B;">
     <div class="p-6 space-y-4">
       <div class="flex items-center justify-between gap-4">
@@ -221,7 +257,7 @@ ${extractoEscapado}
 
       <div id="questionsBlock" class="space-y-3 hidden">
         <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-${preguntasLis || '          <!-- (Aún no se han añadido preguntas) -->'}
+${preguntasLis}
         </ul>
       </div>
     </div>
@@ -234,7 +270,7 @@ ${preguntasLis || '          <!-- (Aún no se han añadido preguntas) -->'}
     const btn = document.getElementById('toggleQuestionsBtn');
     const block = document.getElementById('questionsBlock');
     if (!btn || !block) return;
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function () {
       const isHidden = block.classList.contains('hidden');
       if (isHidden) {
         block.classList.remove('hidden');
@@ -245,10 +281,121 @@ ${preguntasLis || '          <!-- (Aún no se han añadido preguntas) -->'}
       }
     });
   })();
-</script>
-<!-- ===== Fin del pasaje literario ===== -->`;
+<\/script>
+<!-- ===== Fin página del estudiante ===== -->`;
+    }
 
-      document.getElementById('output').value = html;
+    function buildTeacherHtml(obra, titulo, extracto, preguntas, notas) {
+      const extractoEscapado = escapeHtml(extracto);
+      const notasEscapadas = escapeHtml(notas);
+      const preguntasLis = preguntas.length
+        ? preguntas.map(q => `          <li>${escapeHtml(q)}</li>`).join("\n")
+        : "          <!-- (Aún no se han añadidos preguntas) -->";
+
+      return `<!-- ===== Pasaje literario – FICHA DEL PROFESOR ===== -->
+<section class="space-y-6">
+
+  <header class="shadow rounded-xl overflow-hidden">
+    <div class="bg-indigo-900 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+      <div>
+        <h1 class="text-3xl font-bold drop-shadow">Pasaje literario – Profesor</h1>
+        <p class="italic text-sm md:text-base opacity-90">
+          Ficha de preparación para el oral individual.
+        </p>
+      </div>
+      <div class="text-sm md:text-base text-right md:text-right space-y-1">
+        ${obra ? `<p class="font-semibold">Obra: <span class="font-normal">${escapeHtml(obra)}</span></p>` : ""}
+        ${titulo ? `<p class="font-semibold">Pasaje: <span class="font-normal">${escapeHtml(titulo)}</span></p>` : ""}
+      </div>
+    </div>
+  </header>
+
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#4F46E5;">
+    <div class="p-6 space-y-3 text-sm md:text-base">
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Resumen rápido</h2>
+      <ul class="list-disc list-inside space-y-1 text-gray-800">
+        <li>Obra: ${obra ? escapeHtml(obra) : "(no especificada)"}</li>
+        <li>Pasaje: ${titulo ? escapeHtml(titulo) : "(no especificado)"}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#10B981;">
+    <div class="p-6 space-y-4">
+      <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Pasaje (texto en español)</h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 whitespace-pre-wrap text-sm md:text-base">
+${extractoEscapado}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#F59E0B;">
+    <div class="p-6 space-y-3">
+      <h2 class="text-xl font-bold text-gray-800 mb-2">🎤 Preguntas previstas</h2>
+      <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
+${preguntasLis}
+      </ul>
+    </div>
+  </section>
+
+  ${notas.trim() ? `
+  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#EC4899;">
+    <div class="p-6 space-y-3">
+      <h2 class="text-xl font-bold text-gray-800 mb-2">📝 Notas del profesor</h2>
+      <p class="text-xs text-gray-500 italic mb-2">
+        Puedes pegar aquí temas, traducciones al inglés, posibles respuestas modelo, observaciones de evaluación, etc.
+      </p>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 whitespace-pre-wrap text-xs md:text-sm text-gray-900 leading-relaxed">
+${notasEscapadas}
+      </div>
+    </div>
+  </section>
+  ` : ""}
+
+</section>
+<!-- ===== Fin ficha del profesor ===== -->`;
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", function () {
+      const obra = document.getElementById("obraSelect").value.trim();
+      const titulo = document.getElementById("tituloPasaje").value.trim();
+      const extracto = document.getElementById("extracto").value.trim();
+      const preguntasRaw = document.getElementById("preguntas").value.trim();
+      const notas = document.getElementById("notasProfe").value;
+
+      const preguntas = preguntasRaw
+        ? preguntasRaw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0)
+        : [];
+
+      const studentHtml = buildStudentHtml(obra, titulo, extracto, preguntas);
+      const teacherHtml = buildTeacherHtml(obra, titulo, extracto, preguntas, notas);
+
+      document.getElementById("outputStudent").value = studentHtml;
+      document.getElementById("outputTeacher").value = teacherHtml;
+    });
+
+    // Tab switching
+    const tabStudent = document.getElementById("tabStudent");
+    const tabTeacher = document.getElementById("tabTeacher");
+    const outputStudent = document.getElementById("outputStudent");
+    const outputTeacher = document.getElementById("outputTeacher");
+
+    tabStudent.addEventListener("click", function () {
+      tabStudent.classList.add("border-purple-700", "text-purple-700", "bg-purple-50");
+      tabStudent.classList.remove("border-gray-300", "text-gray-600");
+      tabTeacher.classList.remove("border-purple-700", "text-purple-700", "bg-purple-50");
+      tabTeacher.classList.add("border-gray-300", "text-gray-600");
+      outputStudent.classList.remove("hidden");
+      outputTeacher.classList.add("hidden");
+    });
+
+    tabTeacher.addEventListener("click", function () {
+      tabTeacher.classList.add("border-purple-700", "text-purple-700", "bg-purple-50");
+      tabTeacher.classList.remove("border-gray-300", "text-gray-600");
+      tabStudent.classList.remove("border-purple-700", "text-purple-700", "bg-purple-50");
+      tabStudent.classList.add("border-gray-300", "text-gray-600");
+      outputTeacher.classList.remove("hidden");
+      outputStudent.classList.add("hidden");
     });
   </script>
 </body>
