@@ -53,6 +53,22 @@
             </select>
           </div>
 
+          <!-- Número de práctica (para el PDF y el ENLACE) -->
+          <div>
+            <label for="practicaNumero" class="block font-semibold mb-1 text-gray-700">
+              Número de práctica (para el PDF y el enlace)
+            </label>
+            <input
+              id="practicaNumero"
+              type="text"
+              class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="01"
+            />
+            <p class="text-xs text-gray-500 mt-1">
+              Se usará para el enlace de descarga del PDF y el enlace oculto (por ejemplo: 01, 02, 03…).
+            </p>
+          </div>
+
           <!-- Título/descripción del pasaje -->
           <div>
             <label for="tituloPasaje" class="block font-semibold mb-1 text-gray-700">
@@ -78,7 +94,7 @@
               placeholder="Pega aquí el fragmento de la obra…"
             ></textarea>
             <p class="text-xs text-gray-500 mt-1">
-              Se respetan los saltos de línea. Puedes dejar líneas en blanco para separar párrafos.
+              Se respetan los saltos de línea. Deja una línea en blanco para separar párrafos.
             </p>
           </div>
 
@@ -177,117 +193,334 @@
         .replace(/>/g, "&gt;");
     }
 
-    function buildStudentHtml(obra, titulo, extracto, preguntas) {
+    // Convert text with blank lines into <p>...</p>, preserving inner line breaks with <br>
+    function convertTextToHtmlParagraphs(text) {
+      if (!text) return "";
+      const paragraphs = text.split(/\n\s*\n/); // blank line = new paragraph
+      return paragraphs
+        .map(p => p.trim())
+        .filter(p => p.length > 0)
+        .map(p => {
+          const escaped = escapeHtml(p);
+          const withBr = escaped.replace(/\n/g, "<br>");
+          return `            <p class="mb-4">${withBr}</p>`;
+        })
+        .join("\n");
+    }
+
+    // Construye la URL del PDF según la obra y el número de práctica
+    function buildPdfUrl(obra, practicaNumero) {
+      if (!obra || !practicaNumero) return "";
+
+      let num = practicaNumero.trim();
+      if (!num) return "";
+      // normalizar a dos dígitos si es 1–9
+      if (/^\d$/.test(num)) {
+        num = "0" + num;
+      }
+
+      let base = "";
+
+      if (obra === "Como agua para chocolate") {
+        base = "https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%20";
+      } else if (obra === "Marina") {
+        base = "https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Marina%20-%20pr%C3%A1ctica%20";
+      } else {
+        return "";
+      }
+
+      // add ?raw=1 so it behaves like a direct file
+      return `${base}${num}.pdf?raw=1`;
+    }
+
+    // Devuelve src y alt de la imagen según la obra
+    function buildImageData(obra) {
+      if (obra === "Como agua para chocolate") {
+        return {
+          src: "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg",
+          alt: "Como agua para chocolate"
+        };
+      } else if (obra === "Marina") {
+        return {
+          src: "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/marina.jpg",
+          alt: "Marina"
+        };
+      }
+      return { src: "", alt: "" };
+    }
+
+    // ENLACE oculto para la página de índice
+    function buildEnlaceBlock(obra, practicaNumero) {
+      if (!obra || !practicaNumero) return "";
+
+      const raw = practicaNumero.trim();
+      if (!/^\d+$/.test(raw)) return "";
+
+      const numInt = parseInt(raw, 10);
+      if (!Number.isFinite(numInt)) return "";
+
+      const numSlug = String(numInt);          // 01 -> "1"
+      const numLabel = numInt < 10 ? "0" + numInt : String(numInt); // "01" para el texto
+
+      let hrefBase = "";
+      let slugPrefix = "";
+
+      if (obra === "Como agua para chocolate") {
+        hrefBase = "https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/";
+        slugPrefix = "como";
+      } else if (obra === "Marina") {
+        hrefBase = "https://sites.google.com/view/srscalici/conversaci%C3%B3n/marina/";
+        slugPrefix = "marina";
+      } else {
+        return "";
+      }
+
+      const { src: imageSrc, alt: imageAlt } = buildImageData(obra);
+      if (!imageSrc) return "";
+
+      const href = `${hrefBase}${slugPrefix}${numSlug}`;
+      const subtitle = `📖 Pasaje literario – práctica ${numLabel}`;
+
+      return `
+    <!--ENLACE
+    <a href="${href}" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
+      <div class="flex items-center gap-4 p-4">
+        <img src="${imageSrc}" alt="${escapeHtml(imageAlt)}" class="max-h-24 w-auto object-cover rounded-md">
+        <div class="min-w-0">
+          <h3 class="font-semibold text-amber-600 truncate">${escapeHtml(obra)}</h3>
+          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">${subtitle}</p>
+        </div>
+      </div>
+    </a>
+    -->`;
+    }
+
+    function buildStudentHtml(obra, titulo, extracto, preguntas, pdfUrl, practicaNumero) {
       const obraLine = obra
         ? `<p class="font-semibold">Obra: <span class="font-normal">${escapeHtml(obra)}</span></p>`
         : "";
       const tituloLine = titulo
         ? `<p class="font-semibold">Pasaje: <span class="font-normal">${escapeHtml(titulo)}</span></p>`
         : "";
+      const pageTitle = obra ? `Pasaje literario – ${obra}` : "Pasaje literario";
 
       const preguntasLis = preguntas.length
-        ? preguntas.map(q => `          <li>${escapeHtml(q)}</li>`).join("\n")
-        : "          <!-- (Aún no se han añadido preguntas) -->";
+        ? preguntas.map(q => `              <li>${escapeHtml(q)}</li>`).join("\n")
+        : "              <!-- (Aún no se han añadido preguntas) -->";
 
-      const extractoEscapado = escapeHtml(extracto);
+      const extractoHtml = convertTextToHtmlParagraphs(extracto);
+
+      const { src: imageSrc, alt: imageAlt } = buildImageData(obra);
+
+      const headerImageBlock = imageSrc
+        ? `
+        <!-- Imagen + PDF -->
+        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
+          <img
+            src="${imageSrc}"
+            alt="${escapeHtml(imageAlt)}"
+            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
+          >
+          <div class="space-y-3 text-gray-800">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span>📎 Descarga del pasaje</span>
+            </h2>
+            <p class="text-sm text-gray-600">
+              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
+            </p>
+            ${pdfUrl ? `
+            <a
+              href="${pdfUrl}"
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
+            >
+              📥 Descargar PDF del pasaje
+            </a>` : ""}
+          </div>
+        </div>`
+        : "";
+
+      const enlaceBlock = buildEnlaceBlock(obra, practicaNumero);
 
       // IMPORTANT: note the <\/script> to avoid closing the outer script
-      return `<!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-<section class="space-y-6">
+      return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(pageTitle)}</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+</head>
 
-  <header class="shadow rounded-xl overflow-hidden">
-    <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-      <div>
-        <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-        <p class="italic text-sm md:text-base opacity-90">
-          Práctica independiente para el oral individual
-        </p>
-      </div>
-      <div class="text-sm md:text-base text-right md:text-right space-y-1">
-        ${obraLine}
-        ${tituloLine}
-      </div>
-    </div>
-  </header>
+<body class="font-sans bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto space-y-6">
 
-  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-    <div class="p-6 space-y-3">
-      <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-        <span>🧭 Instrucciones</span>
-      </h2>
-      <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-        <li>Lee el pasaje literario con atención.</li>
-        <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-        <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-        <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-      </ol>
-    </div>
-  </section>
+    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
+    <section class="space-y-6">
 
-  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#10B981;">
-    <div class="p-6 space-y-4">
-      <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-        <span>📖 Pasaje literario</span>
-      </h2>
-      <p class="text-sm text-gray-500 italic">
-        Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-      </p>
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 whitespace-pre-wrap">
-${extractoEscapado}
-      </div>
-    </div>
-  </section>
+      <!-- HEADER + IMAGEN + PDF -->
+      <header class="shadow rounded-xl overflow-hidden bg-white">
+        <!-- Banda morada -->
+        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+          <div>
+            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
+            <p class="italic text-sm md:text-base opacity-90">
+              Práctica independiente para el oral individual
+            </p>
+          </div>
+          <div class="text-sm md:text-base text-right space-y-1">
+            ${obraLine}
+            ${tituloLine}
+          </div>
+        </div>${headerImageBlock}
+      </header>
 
-  <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#F59E0B;">
-    <div class="p-6 space-y-4">
-      <div class="flex items-center justify-between gap-4">
-        <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-          <span>🎤 Preguntas de práctica</span>
-        </h2>
-        <button
-          id="toggleQuestionsBtn"
-          class="px-4 py-2 text-sm font-semibold rounded-full border border-amber-500 text-amber-700 hover:bg-amber-50 transition"
-        >
-          Mostrar preguntas
-        </button>
-      </div>
-      <p class="text-sm text-gray-500 italic">
-        Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-      </p>
+      <!-- INSTRUCCIONES -->
+      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
+        <div class="p-6 space-y-3">
+          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <span>🧭 Instrucciones</span>
+          </h2>
+          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
+            <li>Lee el pasaje literario con atención.</li>
+            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
+            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
+            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
+          </ol>
+        </div>
+      </section>
 
-      <div id="questionsBlock" class="space-y-3 hidden">
-        <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
+      <!-- PASAJE -->
+      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
+        <div class="p-6 space-y-4">
+          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+            <span>📖 Pasaje literario</span>
+          </h2>
+          <p class="text-sm text-gray-500 italic">
+            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
+          </p>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
+${extractoHtml}
+          </div>
+        </div>
+      </section>
+
+      <!-- META + IDEAS ÚTILES + TIMER -->
+      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
+        <div class="p-6 space-y-4">
+          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
+🎯 Meta: 2 minutos 😱 (y animo que hables más)
+
+💬 Usa:
+Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
+Conectores: porque / ya que · por eso · además
+Opiniones: para mí · en mi opinión · creo que · pienso que
+Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
+Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
+
+✅ Incluye:
+Qué ves en el pasaje
+Qué está pasando en ese momento de la historia
+Qué emociones transmite el pasaje
+Qué anticipa el pasaje
+También puedo mencionar que...
+          </p>
+
+          <div class="flex items-center gap-3">
+            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+              Iniciar
+            </button>
+            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
+              Reiniciar
+            </button>
+            <span class="font-mono text-lg" data-timer>00:00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PREGUNTAS DE PRÁCTICA -->
+      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
+        <div class="p-6 space-y-4">
+          <div class="flex items-center justify-between gap-4">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span>🎤 Preguntas de práctica</span>
+            </h2>
+            <button
+              id="toggleQuestionsBtn"
+              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
+            >
+              Mostrar preguntas
+            </button>
+          </div>
+          <p class="text-sm text-gray-500 italic">
+            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
+          </p>
+
+          <div id="questionsBlock" class="space-y-3" style="display:none;">
+            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
 ${preguntasLis}
-        </ul>
-      </div>
-    </div>
-  </section>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-</section>
+    </section>
+    <!-- ===== Fin página del estudiante ===== -->
 
-<script>
-  (function () {
-    const btn = document.getElementById('toggleQuestionsBtn');
-    const block = document.getElementById('questionsBlock');
-    if (!btn || !block) return;
-    btn.addEventListener('click', function () {
-      const isHidden = block.classList.contains('hidden');
-      if (isHidden) {
-        block.classList.remove('hidden');
-        btn.textContent = 'Ocultar preguntas';
-      } else {
-        block.classList.add('hidden');
-        btn.textContent = 'Mostrar preguntas';
-      }
-    });
-  })();
-<\/script>
-<!-- ===== Fin página del estudiante ===== -->`;
+${enlaceBlock}
+
+  </div>
+
+  <!-- Shared JavaScript -->
+  <script>
+    // Toggle preguntas
+    (function () {
+      const btn = document.getElementById('toggleQuestionsBtn');
+      const block = document.getElementById('questionsBlock');
+      if (!btn || !block) return;
+      btn.addEventListener('click', function () {
+        const isHidden = block.style.display === 'none' || block.style.display === '';
+        if (isHidden) {
+          block.style.display = 'block';
+          btn.textContent = 'Ocultar preguntas';
+        } else {
+          block.style.display = 'none';
+          btn.textContent = 'Mostrar preguntas';
+        }
+      });
+    })();
+
+    // Conversación timer
+    let timerInterval;
+    let seconds = 0;
+
+    function startTimer(btn) {
+      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        seconds++;
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        timerDisplay.textContent = mins + ":" + secs;
+      }, 1000);
+    }
+
+    function resetTimer(btn) {
+      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+      clearInterval(timerInterval);
+      seconds = 0;
+      timerDisplay.textContent = "00:00";
+    }
+  <\/script>
+</body>
+</html>`;
     }
 
     function buildTeacherHtml(obra, titulo, extracto, preguntas, notas) {
-      const extractoEscapado = escapeHtml(extracto);
-      const notasEscapadas = escapeHtml(notas);
+      const extractoHtml = convertTextToHtmlParagraphs(extracto);
+      const notasHtml = convertTextToHtmlParagraphs(notas);
       const preguntasLis = preguntas.length
         ? preguntas.map(q => `          <li>${escapeHtml(q)}</li>`).join("\n")
         : "          <!-- (Aún no se han añadidos preguntas) -->";
@@ -323,8 +556,8 @@ ${preguntasLis}
   <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#10B981;">
     <div class="p-6 space-y-4">
       <h2 class="text-xl font-bold text-gray-800 mb-2">📖 Pasaje (texto en español)</h2>
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 whitespace-pre-wrap text-sm md:text-base">
-${extractoEscapado}
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
+${extractoHtml}
       </div>
     </div>
   </section>
@@ -343,10 +576,10 @@ ${preguntasLis}
     <div class="p-6 space-y-3">
       <h2 class="text-xl font-bold text-gray-800 mb-2">📝 Notas del profesor</h2>
       <p class="text-xs text-gray-500 italic mb-2">
-        Puedes pegar aquí temas, traducciones al inglés, posibles respuestas modelo, observaciones de evaluación, etc.
+        Aquí puedes incluir temas, traducciones al inglés, posibles respuestas modelo, observaciones de evaluación, etc.
       </p>
-      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 whitespace-pre-wrap text-xs md:text-sm text-gray-900 leading-relaxed">
-${notasEscapadas}
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-xs md:text-sm text-gray-900 leading-relaxed">
+${notasHtml}
       </div>
     </div>
   </section>
@@ -362,12 +595,16 @@ ${notasEscapadas}
       const extracto = document.getElementById("extracto").value.trim();
       const preguntasRaw = document.getElementById("preguntas").value.trim();
       const notas = document.getElementById("notasProfe").value;
+      const practicaNumero = document.getElementById("practicaNumero").value.trim();
 
       const preguntas = preguntasRaw
-        ? preguntasRaw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0)
-        : [];
+      ? preguntasRaw.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0)
+      : [];
 
-      const studentHtml = buildStudentHtml(obra, titulo, extracto, preguntas);
+
+      const pdfUrl = buildPdfUrl(obra, practicaNumero);
+
+      const studentHtml = buildStudentHtml(obra, titulo, extracto, preguntas, pdfUrl, practicaNumero);
       const teacherHtml = buildTeacherHtml(obra, titulo, extracto, preguntas, notas);
 
       document.getElementById("outputStudent").value = studentHtml;
