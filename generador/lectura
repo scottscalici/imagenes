@@ -16,7 +16,7 @@
 
     <!-- Imagen -->
     <label class="block font-semibold mb-1">Imagen (URL desde GitHub o similar):</label>
-    <input id="imageUrl" type="text" class="w-full border rounded p-2 mb-4" placeholder="https://raw.githubusercontent.com/..." />
+    <input id="imageUrl" type="text" class="w-full border rounded p-2 mb-4" placeholder="https://raw.githubusercontent.com/... o https://github.com/.../blob/..." />
 
     <!-- Texto principal -->
     <label class="block font-semibold mb-1">Texto de la lectura (pega con saltos de línea / párrafos):</label>
@@ -45,6 +45,17 @@
       <button id="addQA" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1.5 rounded">➕ Añadir pregunta</button>
     </div>
     <div id="qaContainer" class="space-y-4 mb-6"></div>
+
+    <!-- Notas del profesor -->
+    <div class="mt-4 mb-6">
+      <label class="block font-semibold mb-1">Notas del profesor / traducciones (solo para la página del profesor):</label>
+      <textarea
+        id="teacherNotes"
+        class="w-full border rounded p-2"
+        rows="6"
+        placeholder="Ideas clave, traducciones al inglés, respuestas modelo, observaciones, etc."
+      ></textarea>
+    </div>
 
     <!-- Enlace final -->
     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -91,11 +102,41 @@
     </div>
 
     <!-- Resultado -->
-    <h2 class="text-xl font-semibold mt-4 mb-2">Código generado:</h2>
-    <textarea id="output" class="w-full border rounded p-2 h-56 font-mono mb-6" readonly></textarea>
+    <h2 class="text-xl font-semibold mt-4 mb-1">Código HTML generado:</h2>
+    <p class="text-xs text-gray-500 mb-2">
+      Usa las pestañas para ver el código de la página del estudiante o la ficha del profesor.
+    </p>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 text-xs font-semibold mb-2">
+      <button
+        id="tabStudent"
+        class="px-3 py-1 rounded-full border border-indigo-600 text-indigo-600 bg-indigo-50"
+      >
+        Página del estudiante
+      </button>
+      <button
+        id="tabTeacher"
+        class="px-3 py-1 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50"
+      >
+        Página del profesor
+      </button>
+    </div>
+
+    <textarea
+      id="outputStudent"
+      class="w-full border rounded p-2 h-56 font-mono mb-4"
+      readonly
+    ></textarea>
+
+    <textarea
+      id="outputTeacher"
+      class="w-full border rounded p-2 h-56 font-mono mb-4 hidden"
+      readonly
+    ></textarea>
 
     <!-- Vista previa -->
-    <h2 class="text-xl font-semibold mb-2">Vista previa:</h2>
+    <h2 class="text-xl font-semibold mb-2">Vista previa (estudiante):</h2>
     <div id="preview" class="border rounded p-4 bg-gray-50"></div>
   </div>
 
@@ -117,22 +158,28 @@
       pizarra: ['slate-500', 'slate-600']
     };
 
-    // ---- helper: normalizar URLs de imágenes de GitHub ----
-    function normalizeImageUrl(url) {
+    // Normaliza URLs de GitHub a raw (para imágenes)
+    function normalizeGithubImageUrl(url) {
       if (!url) return '';
-      let result = url.trim();
+      const trimmed = url.trim();
 
-      // github.com/.../blob/... -> raw.githubusercontent.com/.../...
-      if (result.includes('github.com') && result.includes('/blob/')) {
-        result = result
-          .replace('https://github.com/', 'https://raw.githubusercontent.com/')
-          .replace('/blob/', '/');
+      // https://github.com/user/repo/blob/branch/path/to/file.png
+      const blobRegex = /^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^]+)$/i;
+      const m = trimmed.match(blobRegex);
+      if (m) {
+        const owner = m[1];
+        const repo = m[2];
+        const rest = m[3]; // branch/path
+        return `https://raw.githubusercontent.com/${owner}/${repo}/${rest}`;
       }
 
-      // quitar ?raw=true (si aparece)
-      result = result.replace(/\?raw=true.*$/i, '');
+      // Cualquier otro link de github -> añade ?raw=1 si no lo tiene
+      if (/^https?:\/\/github\.com\//i.test(trimmed) && !/[?&]raw=1/.test(trimmed)) {
+        return trimmed + (trimmed.includes('?') ? '&raw=1' : '?raw=1');
+      }
 
-      return result;
+      // Otros dominios se quedan igual
+      return trimmed;
     }
 
     // Format lectura text with paragraphs / line breaks
@@ -312,20 +359,16 @@
       generateHTML();
     }
 
-    // Build HTML output
     function generateHTML() {
       const title = (document.getElementById('title').value.trim() || 'Lectura');
-
-      // --- normalizar URL de imagen (GitHub -> raw) ---
-      const imageUrlInput = document.getElementById('imageUrl');
-      const imageUrl = normalizeImageUrl(imageUrlInput.value);
-      // opcional: actualizar el campo con la versión "raw"
-      if (imageUrlInput.value !== imageUrl) {
-        imageUrlInput.value = imageUrl;
-      }
+      const rawImageUrl = document.getElementById('imageUrl').value.trim();
+      const imageUrl = normalizeGithubImageUrl(rawImageUrl);
 
       const readingRaw = document.getElementById('readingText').value;
       const readingHTML = formatReadingText(readingRaw);
+
+      const notesRaw = document.getElementById('teacherNotes').value || '';
+      const notesHTML = formatReadingText(notesRaw);
 
       const url = document.getElementById('url').value.trim();
       const linkText = document.getElementById('linkText').value.trim();
@@ -338,32 +381,30 @@
       let appliedBorderColor = `border-${borderColor}`;
       let inlineBorderStyle = '';
 
-      // --- HEX personalizado: limpiar (#RRGGBB) y evitar el punto extra ---
-      const hexMatch = customColor.match(/^#[0-9a-fA-F]{3,8}/);
-      if (hexMatch) {
-        const hex = hexMatch[0]; // solo la parte válida del HEX
-        inlineBorderStyle = ` style="border-color: ${hex};"`;
-        appliedTextColor = '';      // sin clase de texto especial
-        appliedBorderColor = '';    // usamos solo border-l-4 + style
+      if (customColor.startsWith('#')) {
+        inlineBorderStyle = ` style="border-color: ${customColor};"`;
+        appliedTextColor = '';
+        appliedBorderColor = 'border-l-4';
       } else if (customColor) {
-        // Tailwind class personalizada (ej. text-indigo-600)
         appliedTextColor = customColor;
         appliedBorderColor = customColor.replace('text-', 'border-');
       }
 
-      let html = `<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 ${appliedBorderColor}"${inlineBorderStyle}>\n`;
-      html += `  <h2 class="${appliedTextColor} font-semibold text-lg px-4 pt-4">${title}</h2>\n`;
-      html += `  <div class="p-4 text-gray-800 space-y-4">\n`;
+      // ======== STUDENT HTML SECTION ========
+      let studentHtml = `<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 ${appliedBorderColor}"${inlineBorderStyle}>\n`;
+      studentHtml += `  <h2 class="${appliedTextColor} font-semibold text-lg px-4 pt-4">${title}</h2>\n`;
+      studentHtml += `  <div class="p-4 text-gray-800 space-y-4">\n`;
 
       if (imageUrl) {
-        html += `    <img src="${imageUrl}" alt="imagen lectura" class="rounded-lg shadow mb-4">\n`;
+        studentHtml += `    <img src="${imageUrl}" alt="imagen lectura" class="rounded-lg shadow mb-4">\n`;
       }
       if (readingHTML) {
-        html += `    ${readingHTML}\n`;
+        studentHtml += `    ${readingHTML}\n`;
       }
 
-      // Q&A blocks
       const qaItems = Array.from(document.querySelectorAll('.qa-item'));
+      let teacherQuestionsHtml = '';
+
       qaItems.forEach((item, i) => {
         const qRaw = item.querySelector('.q-text').value.trim();
         const aRaw = item.querySelector('.a-text').value.trim();
@@ -372,19 +413,19 @@
 
         const { stem, options } = parseQuestion(qRaw);
 
-        // Always show question
-        html += `    <p><strong>${n}.</strong> ${stem}</p>\n`;
+        // STUDENT: Always show question
+        studentHtml += `    <p><strong>${n}.</strong> ${stem}</p>\n`;
 
-        // Always show options (if any)
+        // STUDENT: Always show options (if any)
         if (options.length) {
-          html += `    <div class="ml-6 -mt-1 mb-2 space-y-1">\n`;
+          studentHtml += `    <div class="ml-6 -mt-1 mb-2 space-y-1">\n`;
           options.forEach(opt => {
-            html += `      <div>${opt}</div>\n`;
+            studentHtml += `      <div>${opt}</div>\n`;
           });
-          html += `    </div>\n`;
+          studentHtml += `    </div>\n`;
         }
 
-        // If there is an answer, show it hidden in details
+        // STUDENT: Answer in <details> if provided
         if (aRaw) {
           const answerLines = aRaw
             .split('\n')
@@ -392,22 +433,74 @@
             .filter(Boolean)
             .map(line => `<p>${line}</p>`)
             .join('');
-          html += `    <details class="mb-2 ml-6">\n`;
-          html += `      <summary class="cursor-pointer text-sm text-gray-600">Mostrar respuesta</summary>\n`;
-          html += `      ${answerLines}\n`;
-          html += `    </details>\n`;
+          studentHtml += `    <details class="mb-2 ml-6">\n`;
+          studentHtml += `      <summary class="cursor-pointer text-sm text-gray-600">Mostrar respuesta</summary>\n`;
+          studentHtml += `      ${answerLines}\n`;
+          studentHtml += `    </details>\n`;
+        }
+
+        // TEACHER: build questions + options
+        teacherQuestionsHtml += `      <li><strong>${n}.</strong> ${stem}</li>\n`;
+        if (options.length) {
+          teacherQuestionsHtml += `      <ul class="list-disc list-inside ml-6 space-y-0.5 text-sm md:text-base">\n`;
+          options.forEach(opt => {
+            teacherQuestionsHtml += `        <li>${opt}</li>\n`;
+          });
+          teacherQuestionsHtml += `      </ul>\n`;
         }
       });
 
       if (url) {
         const link = linkText || url;
-        html += `    <p class="pt-2"><a href="${url}" target="_blank" class="${appliedTextColor} hover:underline">${link}</a></p>\n`;
+        studentHtml += `    <p class="pt-2"><a href="${url}" target="_blank" class="${appliedTextColor} hover:underline">${link}</a></p>\n`;
       }
 
-      html += `  </div>\n</section>`;
+      studentHtml += `  </div>\n</section>`;
 
-      document.getElementById('output').value = html;
-      document.getElementById('preview').innerHTML = html;
+      // ======== TEACHER HTML SECTION ========
+      let teacherHtml = `<section class="bg-white rounded-xl shadow p-6 border border-gray-100 border-l-4 ${appliedBorderColor}"${inlineBorderStyle}>\n`;
+      teacherHtml += `  <h2 class="${appliedTextColor} font-semibold text-lg px-4 pt-4">${title} – Profesor</h2>\n`;
+      teacherHtml += `  <div class="p-4 text-gray-800 space-y-4">\n`;
+
+      if (imageUrl) {
+        teacherHtml += `    <img src="${imageUrl}" alt="imagen lectura" class="rounded-lg shadow mb-4">\n`;
+      }
+
+      if (readingHTML) {
+        teacherHtml += `    <h3 class="font-semibold text-gray-800">Texto de la lectura (español)</h3>\n`;
+        teacherHtml += `    <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 space-y-2 text-sm md:text-base">\n`;
+        teacherHtml += `      ${readingHTML}\n`;
+        teacherHtml += `    </div>\n`;
+      }
+
+      teacherHtml += `    <h3 class="font-semibold text-gray-800 pt-2">Preguntas previstas</h3>\n`;
+
+      if (teacherQuestionsHtml.trim()) {
+        teacherHtml += `    <ol class="list-decimal list-inside space-y-2 text-sm md:text-base">\n`;
+        teacherHtml += teacherQuestionsHtml;
+        teacherHtml += `    </ol>\n`;
+      } else {
+        teacherHtml += `    <p class="text-sm text-gray-500 italic">Todavía no has añadido preguntas.</p>\n`;
+      }
+
+      if (notesHTML.trim()) {
+        teacherHtml += `    <h3 class="font-semibold text-gray-800 pt-2">Notas del profesor / traducciones</h3>\n`;
+        teacherHtml += `    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 space-y-2 text-xs md:text-sm leading-relaxed text-gray-900">\n`;
+        teacherHtml += `      ${notesHTML}\n`;
+        teacherHtml += `    </div>\n`;
+      }
+
+      if (url) {
+        const link = linkText || url;
+        teacherHtml += `    <p class="pt-2"><a href="${url}" target="_blank" class="${appliedTextColor} hover:underline">${link}</a></p>\n`;
+      }
+
+      teacherHtml += `  </div>\n</section>`;
+
+      // Set outputs
+      document.getElementById('outputStudent').value = studentHtml;
+      document.getElementById('outputTeacher').value = teacherHtml;
+      document.getElementById('preview').innerHTML = studentHtml;
     }
 
     // Events
@@ -419,14 +512,45 @@
     document.getElementById('bulkBtn').addEventListener('click', handleBulkImport);
     document.getElementById('generateBtn').addEventListener('click', generateHTML);
 
+    let currentTab = 'student';
+
     document.getElementById('copyBtn').addEventListener('click', () => {
-      const output = document.getElementById('output');
-      output.select();
+      const studentOutput = document.getElementById('outputStudent');
+      const teacherOutput = document.getElementById('outputTeacher');
+      const target = currentTab === 'teacher' ? teacherOutput : studentOutput;
+      target.focus();
+      target.select();
       document.execCommand('copy');
     });
 
-    ['title','imageUrl','readingText','url','linkText','color','customColor'].forEach(id => {
+    ['title','imageUrl','readingText','url','linkText','color','customColor','teacherNotes'].forEach(id => {
       document.getElementById(id).addEventListener('input', generateHTML);
+    });
+
+    // Tabs
+    const tabStudent = document.getElementById('tabStudent');
+    const tabTeacher = document.getElementById('tabTeacher');
+    const outputStudent = document.getElementById('outputStudent');
+    const outputTeacher = document.getElementById('outputTeacher');
+
+    tabStudent.addEventListener('click', () => {
+      currentTab = 'student';
+      tabStudent.classList.add('border-indigo-600','text-indigo-600','bg-indigo-50');
+      tabStudent.classList.remove('border-gray-300','text-gray-600');
+      tabTeacher.classList.remove('border-indigo-600','text-indigo-600','bg-indigo-50');
+      tabTeacher.classList.add('border-gray-300','text-gray-600');
+      outputStudent.classList.remove('hidden');
+      outputTeacher.classList.add('hidden');
+    });
+
+    tabTeacher.addEventListener('click', () => {
+      currentTab = 'teacher';
+      tabTeacher.classList.add('border-indigo-600','text-indigo-600','bg-indigo-50');
+      tabTeacher.classList.remove('border-gray-300','text-gray-600');
+      tabStudent.classList.remove('border-indigo-600','text-indigo-600','bg-indigo-50');
+      tabStudent.classList.add('border-gray-300','text-gray-600');
+      outputTeacher.classList.remove('hidden');
+      outputStudent.classList.add('hidden');
     });
 
     // Start
