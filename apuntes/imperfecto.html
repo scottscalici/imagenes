@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imperfecto – Notas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script defer src="/assets/js/include.js"></script>
+  <style>
+    .ok { background:#d1fae5; }
+    .no { background:#fee2e2; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header data-include="/components/nav.html"></header>
+
+  <main class="container mx-auto px-4 py-10 max-w-4xl">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-6">Imperfecto – Notas generales</h1>
+
+    <section class="bg-white rounded-xl shadow p-6 border border-gray-100 space-y-6">
+      <!-- Intro -->
+      <div id="uso">
+        <h2 class="text-xl font-semibold mb-2">Cuándo se usa</h2>
+
+        <!-- Frases clave (bilingual anchor list) -->
+        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded">
+          <p class="font-semibold text-indigo-700 mb-2">Frases clave (Key phrases)</p>
+          <ul class="list-disc ml-6 space-y-1 text-gray-700">
+            <li><strong>Descripción / contexto</strong> – background, setting, description</li>
+            <li><strong>Edad, hora, tiempo</strong> – age, telling time, weather</li>
+            <li><strong>Acciones habituales / repetidas</strong> – habitual or repeated actions</li>
+            <li><strong>Estados mentales, físicos, emocionales</strong> – mental / physical / emotional states</li>
+            <li><strong>Acciones en progreso</strong> – actions in progress</li>
+          </ul>
+        </div>
+
+        <ul class="list-disc ml-6 space-y-2">
+          <li>Para <strong>describir</strong> personas, lugares o situaciones en el pasado: <em>La casa era grande y tenía un jardín.</em></li>
+          <li>Para <strong>acciones habituales</strong>: <em>Siempre jugábamos en el parque.</em></li>
+          <li>Para <strong>acciones en curso</strong> sin indicar ni principio ni fin: <em>Estudiaba cuando me llamaste.</em></li>
+        </ul>
+      </div>
+
+      <!-- Forms -->
+      <div id="formas">
+        <h2 class="text-xl font-semibold mb-2">Formación regular</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-4 bg-indigo-50 rounded-lg">
+            <p class="font-medium">-AR</p>
+            <p><em>hablar</em> → hablaba, hablabas, hablaba, hablábamos, hablabais, hablaban</p>
+          </div>
+          <div class="p-4 bg-green-50 rounded-lg">
+            <p class="font-medium">-ER / -IR</p>
+            <p><em>comer</em> → comía, comías, comía, comíamos, comíais, comían</p>
+            <p><em>vivir</em> → vivía, vivías, vivía, vivíamos, vivíais, vivían</p>
+          </div>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">⚠️ Irregulares: <em>ir → iba…</em>; <em>ser → era…</em>; <em>ver → veía…</em></p>
+      </div>
+
+      <!-- Examples -->
+      <div id="ejemplos">
+        <h2 class="text-xl font-semibold mb-2">Ejemplos</h2>
+        <ul class="list-disc ml-6 space-y-2">
+          <li>Cuando <em>era</em> niño, <em>jugaba</em> con mis amigos.</li>
+          <li>Siempre <em>veíamos</em> la tele por la noche.</li>
+          <li><em>Hacía</em> calor y <em>estábamos</em> cansados.</li>
+        </ul>
+      </div>
+
+      <!-- Mini practice (lightly interactive, optional) -->
+      <div id="practica">
+        <h2 class="text-xl font-semibold mb-2">Práctica rápida: presente vs. imperfecto</h2>
+        <table class="min-w-full text-left border border-gray-200">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-3 py-2">Presente</th>
+              <th class="px-3 py-2">Imperfecto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-3 py-2">yo <strong>hablo</strong></td>
+              <td class="px-3 py-2">
+                yo <input class="border-b border-gray-300 focus:border-indigo-600 outline-none px-1 w-24" data-answer="hablaba" placeholder="—">
+              </td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="px-3 py-2">yo <strong>como</strong></td>
+              <td class="px-3 py-2">
+                yo <input class="border-b border-gray-300 focus:border-indigo-600 outline-none px-1 w-24" data-answer="comía" placeholder="—">
+              </td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2">yo <strong>vivo</strong></td>
+              <td class="px-3 py-2">
+                yo <input class="border-b border-gray-300 focus:border-indigo-600 outline-none px-1 w-24" data-answer="vivía" placeholder="—">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-3 flex gap-2">
+          <button id="btn-check" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-4 rounded">Verificar</button>
+          <button id="btn-reveal" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-1.5 px-4 rounded">Revelar</button>
+          <button id="btn-reset" class="bg-red-100 hover:bg-red-200 text-red-800 font-medium py-1.5 px-4 rounded">Reiniciar</button>
+        </div>
+        <p class="mt-2 text-sm text-gray-600">Observa la diferencia: el presente describe lo que hago ahora; el imperfecto describe lo que <em>solía hacer</em> o lo que <em>estaba haciendo</em>.</p>
+      </div>
+
+      <!-- Links to subpages -->
+      <div id="enlaces">
+        <h2 class="text-xl font-semibold mb-2">Más sobre el imperfecto</h2>
+        <ul class="list-disc ml-6 space-y-1 text-indigo-700">
+          <li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" class="underline" target="_blank" rel="noopener">Conjugaciones</a></li>
+        </ul>
+      </div>
+    </section>
+    <!-- Presentación incrustada -->
+<iframe
+  src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fscottscalici%2Fimagenes%2Frefs%2Fheads%2Fmain%2Fapuntes%2Farchivos2%2F2.3-reflexivos%2520rec%25C3%25ADprocos.ppt"
+  width="100%"
+  height="600"
+  frameborder="0">
+  Este es un archivo de PowerPoint incrustado, pero tu navegador no lo puede mostrar.
+</iframe>
+
+  </main>
+
+  <footer data-include="/components/footer.html"></footer>
+
+  <!-- Tiny, optional script for the 3-input check -->
+  <script>
+    function equalAccentSensitive(a,b){
+      return a.localeCompare(b, undefined, {sensitivity:'accent'})===0 ||
+             a.toLowerCase().localeCompare(b.toLowerCase(), undefined, {sensitivity:'accent'})===0;
+    }
+    const inputs = Array.from(document.querySelectorAll('#practica input[data-answer]'));
+    document.getElementById('btn-check').addEventListener('click', ()=>{
+      inputs.forEach(inp=>{
+        const ok = equalAccentSensitive(inp.value.trim(), inp.dataset.answer);
+        inp.classList.remove('ok','no');
+        if(inp.value.trim().length){ inp.classList.add(ok?'ok':'no'); }
+      });
+    });
+    document.getElementById('btn-reveal').addEventListener('click', ()=>{
+      inputs.forEach(inp=>{ inp.value = inp.dataset.answer; inp.classList.remove('no'); inp.classList.add('ok'); });
+    });
+    document.getElementById('btn-reset').addEventListener('click', ()=>{
+      inputs.forEach(inp=>{ inp.value=''; inp.classList.remove('ok','no'); });
+    });
+  </script>
+</body>
+</html>
