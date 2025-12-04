@@ -262,14 +262,37 @@
       </div>
 
     </section>
-<!-- Presentación incrustada -->
-<iframe
-  src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fscottscalici%2Fimagenes%2Frefs%2Fheads%2Fmain%2Fapuntes%2Farchivos2%2F2.4-posesivos.ppt"
-  width="100%"
-  height="600"
-  frameborder="0">
-  Este es un archivo de PowerPoint incrustado, pero tu navegador no lo puede mostrar.
-</iframe>
+    <!-- Presentación incrustada -->
+    <section class="mt-8 bg-white rounded-xl shadow p-6 border border-gray-100">
+      <h2 class="text-xl font-semibold text-indigo-700 mb-3">
+        Presentación: Posesivos
+      </h2>
+      <p class="text-sm text-gray-600 mb-4">
+        Usa las flechas para avanzar por las diapositivas. También puedes abrir la presentación en una pestaña nueva si lo prefieres.
+      </p>
+
+      <div class="relative w-full" style="padding-top: 56.25%;">
+        <iframe
+          class="absolute inset-0 w-full h-full rounded-lg border border-gray-200"
+          src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fscottscalici%2Fimagenes%2Frefs%2Fheads%2Fmain%2Fapuntes%2Farchivos2%2F2.4-posesivos.ppt"
+          frameborder="0"
+          loading="lazy">
+          Este es un archivo de PowerPoint incrustado, pero tu navegador no lo puede mostrar.
+        </iframe>
+      </div>
+
+      <p class="mt-3 text-sm">
+        <a
+          href="https://raw.githubusercontent.com%2Fscottscalici%2Fimagenes%2Frefs%2Fheads%2Fmain%2Fapuntes%2Farchivos2%2F2.4-posesivos.ppt"
+          target="_blank"
+          rel="noopener"
+          class="text-indigo-600 hover:text-indigo-800 underline"
+        >
+          Abrir / descargar la presentación (PPT)
+        </a>
+      </p>
+    </section>
+
 
   </main>
 
