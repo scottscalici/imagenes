@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vocabulario — prueba 2.4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<main class="container mx-auto px-4 py-8 max-w-4xl space-y-8">
+
+  <!-- 2.4 only -->
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-amber-600">
+    <h2 class="text-xl font-semibold text-amber-700 mb-2">
+      prueba 2.4 · los verbos, otras expresiones
+    </h2>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm">
+        <tbody id="list-24" class="divide-y"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  const data24 = [
+    ["abrazar(se)","to hug; to embrace (each other)"],
+    ["ayudar(se)","to help (each other)"],
+    ["besar(se)","to kiss (each other)"],
+    ["encontrar(se) (o:ue)","to meet (each other); to run into (each other)"],
+    ["saludar(se)","to greet (each other)"],
+    ["por aquí","around here"],
+    ["por ejemplo","for example"],
+    ["por eso","that’s why; therefore"],
+    ["por fin","finally"],
+    ["aunque","although"],
+    ];
+
+  function renderTable(id, rows) {
+    const tb = document.getElementById(id);
+    if (!tb) return;
+    tb.innerHTML = rows
+      .map(([es, en]) =>
+        `<tr><td class="py-1 pr-3">${es}</td><td class="py-1">${en}</td></tr>`
+      )
+      .join("");
+  }
+
+  renderTable("list-24", data24);
+})();
+</script>
+
+</body>
+</html>
