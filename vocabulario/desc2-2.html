@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vocabulario — Lección 2 (pruebas 2.1–2.4)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<main class="container mx-auto px-4 py-8 max-w-4xl space-y-8">
+
+  <!-- Header -->
+  <header>
+    <h1 class="text-2xl sm:text-3xl font-bold">Vocabulario — Lección 2</h1>
+    <p class="text-gray-600">Listas para 2.1, 2.2, 2.3 y 2.4</p>
+  </header>
+
+  <!-- 2.1 -->
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-600">
+    <h2 class="text-xl font-semibold text-sky-700 mb-2">prueba 2.1 · la tecnología</h2>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm">
+        <tbody id="list-21" class="divide-y"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2.2 -->
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-emerald-600">
+    <h2 class="text-xl font-semibold text-emerald-700 mb-2">prueba 2.2 · la computadora</h2>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm">
+        <tbody id="list-22" class="divide-y"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2.3 -->
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-purple-600">
+    <h2 class="text-xl font-semibold text-purple-700 mb-2">prueba 2.3 · el carro</h2>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm">
+        <tbody id="list-23" class="divide-y"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2.4 -->
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-amber-600">
+    <h2 class="text-xl font-semibold text-amber-700 mb-2">prueba 2.4 · los verbos, otras expresiones, fotonovela</h2>
+    <div class="overflow-auto">
+      <table class="min-w-full text-sm">
+        <tbody id="list-24" class="divide-y"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== Práctica (una palabra a la vez) ===================== -->
+  <section class="mt-8 border-t pt-6">
+    <h2 class="text-xl font-semibold mb-3">Práctica — una palabra a la vez</h2>
+
+    <!-- Controls -->
+    <div class="flex flex-wrap gap-3 items-center mb-3">
+      <label class="text-sm">
+        Conjunto:
+        <select id="set-select" class="border rounded px-2 py-1">
+          <option value="2.1">2.1</option>
+          <option value="2.2">2.2</option>
+          <option value="2.3">2.3</option>
+          <option value="2.4">2.4</option>
+          <option value="mix">Mezcla (2.1–2.4)</option>
+        </select>
+      </label>
+
+      <label class="text-sm">
+        Dirección:
+        <select id="dir-select" class="border rounded px-2 py-1">
+          <option value="EStoEN">ES → EN</option>
+          <option value="ENtoES">EN → ES</option>
+        </select>
+      </label>
+
+      <label class="text-sm inline-flex items-center gap-2">
+        <input type="checkbox" id="hide-lists" class="accent-sky-600">
+        Ocultar listas mientras practico
+      </label>
+
+      <button id="start-quiz" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-md px-3 py-2">Empezar / Reiniciar</button>
+    </div>
+
+    <!-- Card -->
+    <div class="rounded-lg border p-4 bg-gray-50">
+      <div class="text-sm text-gray-600 mb-1" id="progress">—</div>
+      <div>
+        <div class="text-sm uppercase tracking-wide text-gray-500" id="prompt-label">Palabra</div>
+        <div id="prompt" class="text-xl font-semibold mb-3">—</div>
+
+        <input id="response" class="border rounded px-3 py-2 w-full max-w-md" placeholder="escribe aquí…">
+        <div class="mt-3 flex gap-2">
+          <button id="check" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-md px-3 py-2">Comprobar</button>
+          <button id="reveal" class="bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md px-3 py-2">Mostrar</button>
+          <button id="next" class="bg-sky-100 hover:bg-sky-200 text-sky-800 rounded-md px-3 py-2">Siguiente</button>
+        </div>
+
+        <div id="feedback" class="mt-3 text-sm"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  // --------- Data ---------
+  const data21 = [
+    ["la tecnología","technology"],["la aplicación","application"],
+    ["la cámara digital/de video","digital/video camera"],["el canal","(TV) channel"],
+    ["el cargador","charger"],["el cibercafé","cybercafé"],["el control remoto","remote control"],
+    ["el correo de voz","voice mail"],["el disco compacto","CD"],["el estéreo","stereo"],
+    ["la pantalla táctil","touch screen"],["el radio","radio (set)"],
+    ["el reproductor de CD","CD player"],["el reproductor de MP3","MP3 player"],
+    ["el (teléfono) celular","cell phone"],["el televisor","television set"],
+    ["apagar","to turn off"],["funcionar","to work"],["llamar","to call"],
+    ["poner, prender","to turn on"],["sonar (o:ue)","to ring"],
+    ["descompuesto/a","not working; out of order"],["lento/a","slow"],["lleno/a","full"]
+  ];
+  const data22 = [
+    ["el archivo","file"],["la arroba","@ symbol"],["el blog","blog"],["el buscador","browser"],
+    ["la computadora (portátil)","(portable) computer; (laptop)"],["la conexión inalámbrica","wireless (connection)"],
+    ["la dirección electrónica","e-mail address"],["la impresora","printer"],["Internet","Internet"],
+    ["el mensaje de texto","text message"],["el monitor","(computer) monitor"],["la página principal","home page"],
+    ["la pantalla","screen"],["el programa de computación","software"],["el ratón","mouse"],
+    ["la red","network; Web"],["el reproductor de DVD","DVD player"],["el sitio web","website"],
+    ["el teclado","keyboard"],["borrar","to erase"],["chatear","to chat"],["descargar","to download"],
+    ["escanear","to scan"],["grabar","to record"],["guardar","to save"],["imprimir","to print"],
+    ["navegar (en Internet)","to surf (the Internet)"]
+  ];
+  const data23 = [
+    ["la autopista, la carretera","highway"],["el baúl","trunk"],["la calle","street"],
+    ["el capó, el cofre","hood"],["el carro, el coche","car"],
+    ["la circulación, el tráfico","traffic"],["el garaje, el taller (mecánico)","garage; (mechanic's) repair shop"],
+    ["la gasolina","gasoline"],["la gasolinera","gas station"],["la licencia de conducir","driver’s license"],
+    ["la llanta","tire"],["el/la mecánico/a","mechanic"],["el navegador GPS","GPS"],
+    ["el parabrisas","windshield"],["la policía","police (force)"],["la velocidad máxima","speed limit"],
+    ["el volante","steering wheel"],["arrancar","to start"],["arreglar","to fix; to arrange"],
+    ["bajar(se) de","to get off of/out of (a vehicle)"],["conducir, manejar","to drive"],
+    ["estacionar","to park"],["llenar (el tanque)","to fill (the tank)"],["parar","to stop"],
+    ["revisar (el aceite)","to check (the oil)"],["subir(se) a","to get on/into (a vehicle)"]
+  ];
+  const data24 = [
+    ["abrazar(se)","to hug; to embrace (each other)"],["ayudar(se)","to help (each other)"],
+    ["besar(se)","to kiss (each other)"],["encontrar(se) (o:ue)","to meet (each other); to run into (each other)"],
+    ["saludar(se)","to greet (each other)"],["por aquí","around here"],["por ejemplo","for example"],
+    ["por eso","that’s why; therefore"],["por fin","finally"],["el asiento delantero","front seat"],
+    ["el asiento trasero","back seat"],["aunque","although"],["bajar","to lower; to reduce"],
+    ["chocar","to crash"],["el cinturón de seguridad","seat belt"],["la culpa","blame; fault"],
+    ["dar un paseo","to go for a ride"],["empujar","to push"],["la multa","fine; ticket"],
+    ["la sirena","siren"],["sobrepasar","to exceed"]
+  ];
+  const bySet = { "2.1": data21, "2.2": data22, "2.3": data23, "2.4": data24 };
+
+  // Render visible lists from arrays
+  const renderTable = (id, rows) => {
+    const tb = document.getElementById(id);
+    tb.innerHTML = rows.map(([es,en]) =>
+      `<tr><td class="py-1 pr-3">${es}</td><td class="py-1">${en}</td></tr>`).join("");
+  };
+  renderTable("list-21", data21);
+  renderTable("list-22", data22);
+  renderTable("list-23", data23);
+  renderTable("list-24", data24);
+
+  // --------- Elements ---------
+  const $ = (s)=>document.querySelector(s);
+  const setSel = $("#set-select");
+  const dirSel = $("#dir-select");
+  const hideLists = $("#hide-lists");
+  const listsBox = document.querySelectorAll("section.bg-white.rounded-xl.shadow.p-6");
+  const startBtn = $("#start-quiz");
+  const prompt = $("#prompt");
+  const promptLabel = $("#prompt-label");
+  const response = $("#response");
+  const checkBtn = $("#check");
+  const revealBtn = $("#reveal");
+  const nextBtn = $("#next");
+  const feedback = $("#feedback");
+  const progress = $("#progress");
+
+  // --------- State ---------
+  let deck = []; let idx = 0; let order = [];
+
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function buildDeck(){
+    const choose = setSel.value === "mix"
+      ? [...data21, ...data22, ...data23, ...data24]
+      : [...bySet[setSel.value]];
+    deck = choose;
+    order = shuffle([...Array(deck.length).keys()]);
+    idx = 0;
+  }
+  function currentPair(){ if (!deck.length) return null; return deck[ order[idx] ]; }
+
+  function renderCard(){
+    const pair = currentPair(); if (!pair){ prompt.textContent="—"; progress.textContent="—"; return; }
+    const [es,en] = pair; const dir = dirSel.value;
+    if (dir === "EStoEN"){ promptLabel.textContent="ES → EN"; prompt.textContent=es; response.placeholder="traducción en inglés…"; }
+    else { promptLabel.textContent="EN → ES"; prompt.textContent=en; response.placeholder="traducción en español…"; }
+    response.value=""; response.classList.remove("ok","no"); feedback.textContent="";
+    progress.textContent = `Ítem ${idx+1} de ${deck.length}`; response.focus();
+  }
+
+  // --------- Matching ---------
+  const ARTICLES = ["el","la","los","las","un","una","unos","unas"];
+  const IGNORE_ACCENTS = false;
+  const stripAccents = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  function baseNorm(s){ let t=(s||"").trim().toLowerCase(); if(IGNORE_ACCENTS) t=stripAccents(t); return t.replace(/[.;,:]+$/g,"").replace(/\s+/g," "); }
+  function expandSpanishVariants(span){
+    const out = new Set();
+    const add = v => { const n=baseNorm(v); if(!n) return; out.add(n); const parts=n.split(" "); if(ARTICLES.includes(parts[0])) out.add(parts.slice(1).join(" ")); };
+    add(span);
+    const noParen = span.replace(/\s*\([^()]*\)\s*/g," ").replace(/\s+/g," ").trim(); add(noParen);
+
+    const expandOptionals = txt => { let vs=[txt], changed=true, re=/([a-záéíóúñü]+)\(([^()]+)\)/i;
+      while(changed){ changed=false; const next=[]; for(const v of vs){ const m=v.match(re);
+        if(m){ changed=true; const [_,stem,tail]=m; next.push(v.replace(re,stem)); next.push(v.replace(re,stem+tail)); } else next.push(v); }
+        vs=next; } return vs; };
+
+    const expandSlashes = txt => { let vs=[txt], re=/([a-záéíóúñü]+)\/([a-záéíóúñü]+)/i, changed=true;
+      while(changed){ changed=false; const next=[]; for(const v of vs){ const m=v.match(re);
+        if(m){ changed=true; next.push(v.replace(re,m[1])); next.push(v.replace(re,m[2])); } else next.push(v); }
+        vs=next; } return vs; };
+
+    for (const seed of [span,noParen]) for (const v1 of expandOptionals(seed)) for (const v2 of expandSlashes(v1)){
+      add(v2); add(v2.replace(/\s*\([^()]*\)\s*/g," "));
+    }
+    const m = baseNorm(span).match(/^(el\/la|la\/el)\s+(.+)/);
+    if(m){ const noun=m[2]; add("el "+noun); add("la "+noun); add(noun); }
+    return [...out];
+  }
+  const acceptableAnswers = (pair, dir) => dir==="EStoEN" ? [baseNorm(pair[1])] : expandSpanishVariants(pair[0]).map(baseNorm);
+  const isCorrect = (user, expected) => expected.includes(baseNorm(user));
+
+  function check(){
+    const pair = currentPair(); if(!pair) return;
+    const dir = dirSel.value; const answers = acceptableAnswers(pair, dir);
+    const ok = isCorrect(response.value, answers);
+    response.classList.remove("ok","no"); response.classList.add(ok ? "ok" : "no");
+    const canonical = (dir==="EStoEN") ? pair[1] : expandSpanishVariants(pair[0])[0];
+    feedback.textContent = ok ? "✅ Correcto" : `❌ Correcto: ${canonical}`;
+  }
+  function reveal(){ const p=currentPair(); if(!p) return; const dir=dirSel.value; response.value = (dir==="EStoEN") ? p[1] : p[0]; response.classList.remove("no"); response.classList.add("ok"); }
+  function next(){ if(!deck.length) return; idx=(idx+1)%deck.length; renderCard(); }
+
+  // --------- Events ---------
+  startBtn.addEventListener("click", ()=>{ buildDeck(); renderCard(); });
+  checkBtn.addEventListener("click", check);
+  revealBtn.addEventListener("click", reveal);
+  nextBtn.addEventListener("click", next);
+  response.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ check(); } });
+  document.getElementById("hide-lists").addEventListener("change", (e)=>{
+    listsBox.forEach(sec=>{
+      sec.style.filter = e.target.checked ? "blur(5px)" : "none";
+      sec.style.pointerEvents = e.target.checked ? "none" : "auto";
+    });
+  });
+})();
+</script>
+
+<style>
+#response.ok{ outline:2px solid #10b981; }
+#response.no{ outline:2px solid #ef4444; }
+</style>
+
+</body>
+</html>
