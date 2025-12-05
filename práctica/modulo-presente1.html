@@ -476,6 +476,9 @@ const vocabState = {
 function normalizeVocabPiece(str) {
   let s = (str || '').toLowerCase().trim();
 
+  // Remove anything in parentheses: (money), (up with), etc.
+  s = s.replace(/\([^)]*\)/g, ' ').trim();
+
   // Strip leading "to / the / a / an"
   while (/^(to|the|a|an)\s+/.test(s)) {
     s = s.replace(/^(to|the|a|an)\s+/, '');
@@ -485,6 +488,7 @@ function normalizeVocabPiece(str) {
   s = s.replace(/\s+/g, ' ');
   return s;
 }
+
 
 // Simple Levenshtein distance for small typos
 function levenshtein(a, b) {
