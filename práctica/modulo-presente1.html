@@ -500,7 +500,7 @@ if (resetVocabBtn) {
 function normalizeVocabPiece(str) {
   let s = (str || '').toLowerCase().trim();
 
-  // Strip leading articles / "to"
+  // Strip leading "to / the / a / an"
   while (/^(to|the|a|an)\s+/.test(s)) {
     s = s.replace(/^(to|the|a|an)\s+/, '');
   }
@@ -510,12 +510,39 @@ function normalizeVocabPiece(str) {
   return s;
 }
 
+// Simple Levenshtein distance
+function levenshtein(a, b) {
+  a = a || '';
+  b = b || '';
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,      // deletion
+        dp[i][j - 1] + 1,      // insertion
+        dp[i - 1][j - 1] + cost // substitution
+      );
+    }
+  }
+  return dp[m][n];
+}
+
 function isVocabCorrect(userRaw, answerRaw) {
   const user = (userRaw || '').trim();
   const ans = (answerRaw || '').trim();
   if (!ans) return false;
 
-  // Split on ; , or /
+  // Split on common separators: ; , /
   const answerParts = ans
     .split(/[;,/]/)
     .map(normalizeVocabPiece)
@@ -530,12 +557,29 @@ function isVocabCorrect(userRaw, answerRaw) {
   if (!answerParts.length) {
     return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
   }
-
   if (!userParts.length) return false;
 
-  // Correct if ANY of the user's parts matches ANY of the answer parts
-  return userParts.some(up => answerParts.includes(up));
+  // Consider user correct if any user piece matches any answer piece
+  // either exactly OR within a small Levenshtein distance.
+  for (const up of userParts) {
+    for (const ap of answerParts) {
+      if (!ap) continue;
+      if (up === ap) return true;
+
+      // Allow small typo margin (stricter for short words)
+      const dist = levenshtein(up, ap);
+      const len = Math.max(up.length, ap.length);
+      const maxAllowed = Math.min(2, Math.floor(len * 0.25)); // e.g. 1 error for 4–7 letters, max 2
+
+      if (dist > 0 && dist <= maxAllowed) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
+
 
 function extractVocabPairs(data) {
   // existing function...
