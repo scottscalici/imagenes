@@ -141,158 +141,158 @@
     // --------------------------------------------------------------------
     // 1. Lista de fuentes: tus archivos de vocabulario en GitHub
     // --------------------------------------------------------------------
-    const VOCAB_SOURCES = [
-      // Descubre 1
-      {
-        id: "d1_l1",
-        label: "Descubre 1 – Lección 1",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec1.json"
-      },
-      {
-        id: "d1_l2",
-        label: "Descubre 1 – Lección 2",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec2.json"
-      },
-      {
-        id: "d1_l3",
-        label: "Descubre 1 – Lección 3",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec3.json"
-      },
-      {
-        id: "d1_l4",
-        label: "Descubre 1 – Lección 4",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec4.json"
-      },
-      {
-        id: "d1_l5",
-        label: "Descubre 1 – Lección 5",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec5.json"
-      },
-      {
-        id: "d1_l6",
-        label: "Descubre 1 – Lección 6",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec6.json"
-      },
-      {
-        id: "d1_l7",
-        label: "Descubre 1 – Lección 7",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec7.json"
-      },
-      {
-        id: "d1_l8",
-        label: "Descubre 1 – Lección 8",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec8.json"
-      },
-      {
-        id: "d1_l9",
-        label: "Descubre 1 – Lección 9",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec9.json"
-      },
-      {
-        id: "d1_l10",
-        label: "Descubre 1 – Lección 10",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec10.json"
-      },
+   const VOCAB_SOURCES = [
+  // Descubre 1
+  {
+    id: "d1_l1",
+    label: "Descubre 1 – Lección 1",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec1.json"
+  },
+  {
+    id: "d1_l2",
+    label: "Descubre 1 – Lección 2",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec2.json"
+  },
+  {
+    id: "d1_l3",
+    label: "Descubre 1 – Lección 3",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec3.json"
+  },
+  {
+    id: "d1_l4",
+    label: "Descubre 1 – Lección 4",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec4.json"
+  },
+  {
+    id: "d1_l5",
+    label: "Descubre 1 – Lección 5",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec5.json"
+  },
+  {
+    id: "d1_l6",
+    label: "Descubre 1 – Lección 6",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec6.json"
+  },
+  {
+    id: "d1_l7",
+    label: "Descubre 1 – Lección 7",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec7.json"
+  },
+  {
+    id: "d1_l8",
+    label: "Descubre 1 – Lección 8",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec8.json"
+  },
+  {
+    id: "d1_l9",
+    label: "Descubre 1 – Lección 9",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec9.json"
+  },
+  {
+    id: "d1_l10",
+    label: "Descubre 1 – Lección 10",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc1lec10.json"
+  },
 
-      // Descubre 2
-      {
-        id: "d2_l1",
-        label: "Descubre 2 – Lección 1",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec1.json"
-      },
-      {
-        id: "d2_l2",
-        label: "Descubre 2 – Lección 2",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec2.json"
-      },
-      {
-        id: "d2_l3",
-        label: "Descubre 2 – Lección 3",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec3.json"
-      },
-      {
-        id: "d2_l4",
-        label: "Descubre 2 – Lección 4",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec4.json"
-      },
-      {
-        id: "d2_l5",
-        label: "Descubre 2 – Lección 5",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec5.json"
-      },
-      {
-        id: "d2_l6",
-        label: "Descubre 2 – Lección 6",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec6.json"
-      },
-      {
-        id: "d2_l7",
-        label: "Descubre 2 – Lección 7",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec7.json"
-      },
-      {
-        id: "d2_l8",
-        label: "Descubre 2 – Lección 8",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec8.json"
-      },
-      {
-        id: "d2_l9",
-        label: "Descubre 2 – Lección 9",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec9.json"
-      },
+  // Descubre 2
+  {
+    id: "d2_l1",
+    label: "Descubre 2 – Lección 1",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec1.json"
+  },
+  {
+    id: "d2_l2",
+    label: "Descubre 2 – Lección 2",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec2.json"
+  },
+  {
+    id: "d2_l3",
+    label: "Descubre 2 – Lección 3",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec3.json"
+  },
+  {
+    id: "d2_l4",
+    label: "Descubre 2 – Lección 4",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec4.json"
+  },
+  {
+    id: "d2_l5",
+    label: "Descubre 2 – Lección 5",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec5.json"
+  },
+  {
+    id: "d2_l6",
+    label: "Descubre 2 – Lección 6",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec6.json"
+  },
+  {
+    id: "d2_l7",
+    label: "Descubre 2 – Lección 7",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec7.json"
+  },
+  {
+    id: "d2_l8",
+    label: "Descubre 2 – Lección 8",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec8.json"
+  },
+  {
+    id: "d2_l9",
+    label: "Descubre 2 – Lección 9",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc2lec9.json"
+  },
 
-      // Descubre 3
-      {
-        id: "d3_l1",
-        label: "Descubre 3 – Lección 1",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec01.json"
-      },
-      {
-        id: "d3_l2",
-        label: "Descubre 3 – Lección 2",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec02.json"
-      },
-      {
-        id: "d3_l3",
-        label: "Descubre 3 – Lección 3",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec03.json"
-      },
-      {
-        id: "d3_l4",
-        label: "Descubre 3 – Lección 4",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec04.json"
-      },
-      {
-        id: "d3_l5",
-        label: "Descubre 3 – Lección 5",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec05.json"
-      },
-      {
-        id: "d3_l6",
-        label: "Descubre 3 – Lección 6",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec06.json"
-      },
-      {
-        id: "d3_l7",
-        label: "Descubre 3 – Lección 7",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec07.json"
-      },
-      {
-        id: "d3_l8",
-        label: "Descubre 3 – Lección 8",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec08.json"
-      },
-      {
-        id: "d3_l9",
-        label: "Descubre 3 – Lección 9",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec09.json"
-      },
-      {
-        id: "d3_l10",
-        label: "Descubre 3 – Lección 10",
-        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec10.json"
-      }
-    ];
+  // Descubre 3
+  {
+    id: "d3_l1",
+    label: "Descubre 3 – Lección 1",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec01.json"
+  },
+  {
+    id: "d3_l2",
+    label: "Descubre 3 – Lección 2",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec02.json"
+  },
+  {
+    id: "d3_l3",
+    label: "Descubre 3 – Lección 3",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec03.json"
+  },
+  {
+    id: "d3_l4",
+    label: "Descubre 3 – Lección 4",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec04.json"
+  },
+  {
+    id: "d3_l5",
+    label: "Descubre 3 – Lección 5",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec05.json"
+  },
+  {
+    id: "d3_l6",
+    label: "Descubre 3 – Lección 6",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec06.json"
+  },
+  {
+    id: "d3_l7",
+    label: "Descubre 3 – Lección 7",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec07.json"
+  },
+  {
+    id: "d3_l8",
+    label: "Descubre 3 – Lección 8",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec08.json"
+  },
+  {
+    id: "d3_l9",
+    label: "Descubre 3 – Lección 9",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec09.json"
+  },
+  {
+    id: "d3_l10",
+    label: "Descubre 3 – Lección 10",
+    url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/desc3lec10.json"
+  }
+];
 
     // --------------------------------------------------------------------
     // 2. Helpers
