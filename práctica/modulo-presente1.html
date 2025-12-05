@@ -216,17 +216,24 @@
           <div id="vocab-block-container" class="space-y-4 mt-4"></div>
           <p id="vocab-global-status" class="text-xs text-slate-500"></p>
 
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="4">
-              ← Volver a 1.4
-            </button>
-            <button id="btn-next-from-5"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Ir al Módulo 3 →
-            </button>
-          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-100 mt-4">
+  <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+          data-go-module="4">
+    ← Volver a 1.4
+  </button>
+
+  <button id="btn-reset-vocab"
+          class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold">
+    Reiniciar vocabulario
+  </button>
+
+  <button id="btn-next-from-5"
+          class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+          disabled>
+    Ir al Módulo 3 →
+  </button>
+</div>
+
         </div>
 
         <!-- Module 3 – curiosidad placeholder -->
@@ -454,43 +461,76 @@
     const vocabBlockContainer = document.getElementById('vocab-block-container');
     const vocabGlobalStatus = document.getElementById('vocab-global-status');
     const nextFrom5Btn = document.getElementById('btn-next-from-5');
+const resetVocabBtn = document.getElementById('btn-reset-vocab');
 
-    const vocabState = {
-      blocks: [],       // [{ items: [{spanish, english}], index }]
-      currentIndex: 0,  // 0,1,2
-      completedBlocks: 0
-    };
+if (resetVocabBtn) {
+  resetVocabBtn.addEventListener('click', () => {
+    if (!vocabState.pairs.length) {
+      // If something went weird, just reload from JSON
+      loadVocabSet();
+      return;
+    }
+    vocabState.currentIndex = 0;
+    vocabState.completedBlocks = 0;
+    vocabState.scores = [];
+    vocabGlobalStatus.textContent =
+      'Módulo reiniciado. Empieza de nuevo con el Bloque 1 de 3.';
+    vocabGlobalStatus.classList.remove('text-emerald-700', 'text-red-600');
+    vocabGlobalStatus.classList.add('text-slate-500');
+
+    // Put the "next to Módulo 3" button back into locked state
+    if (nextFrom5Btn) {
+      nextFrom5Btn.disabled = true;
+      nextFrom5Btn.classList.add('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+      nextFrom5Btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+    }
+
+    buildTypingStage(0);
+  });
+}
+
+   const vocabState = {
+  blocks: [],        // [{ items: [{spanish, english}], index }]
+  currentIndex: 0,   // 0,1,2
+  completedBlocks: 0,
+  scores: [],        // [{correct, total}] per block
+  pairs: []          // full list of 30 words (for reset)
+};
+
 
     function extractVocabPairs(data) {
-      // Try to be flexible with JSON structure
-      let raw = [];
-      if (Array.isArray(data)) {
-        raw = data;
-      } else if (Array.isArray(data.items)) {
-        raw = data.items;
-      } else if (Array.isArray(data.vocabulario)) {
-        raw = data.vocabulario;
-      }
+  // Try to be flexible with JSON structure
+  let raw = [];
+  if (Array.isArray(data)) {
+    raw = data;
+  } else if (Array.isArray(data.items)) {
+    raw = data.items;
+  } else if (Array.isArray(data.vocabulario)) {
+    raw = data.vocabulario;
+  }
 
-      return raw.map(entry => {
-        const spanish =
-          entry.es ||
-          entry.espanol ||
-          entry.español ||
-          entry.palabra ||
-          entry.termino ||
-          entry.vocabulario ||
-          '';
-        const english =
-          entry.en ||
-          entry.ingles ||
-          entry.english ||
-          entry.traduccion ||
-          entry.definicion ||
-          '';
-        return { spanish, english };
-      }).filter(p => p.spanish && p.english);
-    }
+  return raw.map(entry => {
+    const spanish =
+      entry.spanish ||          
+      entry.es ||
+      entry.espanol ||
+      entry.español ||
+      entry.palabra ||
+      entry.termino ||
+      entry.vocabulario ||
+      '';
+    const english =
+      entry.english ||          
+      entry.en ||
+      entry.ingles ||
+      entry.englishText ||
+      entry.traduccion ||
+      entry.definicion ||
+      '';
+    return { spanish, english };
+  }).filter(p => p.spanish && p.english);
+}
+
 
     function buildTypingStage(blockIdx) {
       const totalBlocks = vocabState.blocks.length;
@@ -763,24 +803,39 @@
 
       btn.addEventListener('click', () => {
         vocabState.completedBlocks++;
-        if (isLast) {
-          vocabGlobalStatus.textContent = '✔ Has completado los 3 bloques de vocabulario.';
-          vocabGlobalStatus.classList.add('text-emerald-700');
-          // Marcar módulo 5 como completado y desbloquear módulo 6
-          markModuleCompleted(5);
-          unlockModuleBtn(6);
-          if (nextFrom5Btn) {
-            nextFrom5Btn.disabled = false;
-            nextFrom5Btn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
-            nextFrom5Btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-          }
-        } else {
-          vocabState.currentIndex = blockIdx + 1;
-          buildTypingStage(vocabState.currentIndex);
-          vocabGlobalStatus.textContent =
-            `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
-        }
-      });
+       if (isLast) {
+  // Compute overall resumen
+  let totalCorrect = 0;
+  let totalQs = 0;
+  (vocabState.scores || []).forEach(s => {
+    if (!s) return;
+    totalCorrect += s.correct || 0;
+    totalQs += s.total || 0;
+  });
+  const overallPct = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
+
+  vocabGlobalStatus.innerHTML =
+    `✔ Has completado los 3 bloques de vocabulario. ` +
+    `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+    `${overallPct}&nbsp;%).`;
+  vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
+  vocabGlobalStatus.classList.add('text-emerald-700');
+
+  // Marcar módulo 5 como completado y desbloquear módulo 6
+  markModuleCompleted(5);
+  unlockModuleBtn(6);
+  if (nextFrom5Btn) {
+    nextFrom5Btn.disabled = false;
+    nextFrom5Btn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+    nextFrom5Btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+  }
+} else {
+  vocabState.currentIndex = blockIdx + 1;
+  buildTypingStage(vocabState.currentIndex);
+  vocabGlobalStatus.textContent =
+    `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+}
+
 
       wrapper.appendChild(btn);
       vocabBlockContainer.appendChild(wrapper);
@@ -795,6 +850,10 @@
 
         // Usa solo los 30 primeros para este módulo
         pairs = pairs.slice(0, 30);
+vocabState.pairs = pairs;
+vocabState.scores = [];
+vocabState.currentIndex = 0;
+vocabState.completedBlocks = 0;
 
         if (!pairs.length) {
           vocabBlockContainer.innerHTML =
