@@ -15,7 +15,7 @@
           Presente – Módulo de práctica 
         </h1>
         <p class="text-xs sm:text-sm text-slate-500">
-          Este módulo usa un conjunto fijo de hasta 20 ítems de un archivo JSON (presente1.json).
+          Calentamiento
         </p>
       </div>
       <div class="w-40 sm:w-64">
@@ -357,91 +357,86 @@
       }
     }
 
-    function attachQuizHandler(moduleNumber) {
-      const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
-      if (!btnCheck) return;
+   function attachQuizHandler(moduleNumber) {
+  const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
+  if (!btnCheck) return;
 
-      btnCheck.addEventListener('click', () => {
-        const selector = '#module-' + moduleNumber + ' .quiz-item';
-        const items = document.querySelectorAll(selector);
-        const resultEl = document.getElementById('module-' + moduleNumber + '-result');
+  btnCheck.addEventListener('click', () => {
+    const selector = '#module-' + moduleNumber + ' .quiz-item';
+    const items = document.querySelectorAll(selector);
+    const resultEl = document.getElementById('module-' + moduleNumber + '-result');
 
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const value = (input.value || '').trim();
-          if (value === '') {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
-          }
-        });
+    let missing = false;
+    items.forEach(item => {
+      const input = item.querySelector('input');
+      const feedback = item.querySelector('.feedback');
+      if (!input) return;
+      const value = (input.value || '').trim();
+      if (value === '') {
+        missing = true;
+        input.classList.remove('border-emerald-400', 'border-red-400');
+        input.classList.add('border-yellow-400');
+        if (feedback) feedback.classList.add('hidden');
+      }
+    });
 
-        if (missing) {
-          resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-          return;
-        }
-
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim();
-          const answer = rawAnswer.toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const userValue = (input.value || '').trim().toLowerCase();
-
-          if (userValue === answer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-red-500');
-            feedback.classList.add('text-emerald-600');
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-emerald-600');
-            feedback.classList.add('text-red-500');
-          }
-        });
-
-        const total = items.length;
-const score = total ? correct / total : 0;
-
-// Guarda el resultado de este bloque para el resumen final
-vocabState.scores[blockIdx] = { correct, total };
-
-resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-
-        const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
-
-        if (score >= PASS_THRESHOLD) {
-          resultEl.classList.remove('text-red-600');
-          resultEl.classList.add('text-emerald-700');
-
-          if (nextBtn) {
-            nextBtn.disabled = false;
-            nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
-            nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-          }
-
-          markModuleCompleted(moduleNumber);
-          const nextModule = moduleNumber + 1;
-          if (nextModule <= 6) unlockModuleBtn(nextModule);
-        } else {
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-        }
-      });
+    if (missing) {
+      resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
+      resultEl.classList.remove('text-emerald-700');
+      resultEl.classList.add('text-red-600');
+      return;
     }
+
+    let correct = 0;
+    items.forEach(item => {
+      const rawAnswer = (item.dataset.answer || '').trim();
+      const answer = rawAnswer.toLowerCase();
+      const input = item.querySelector('input');
+      const feedback = item.querySelector('.feedback');
+      if (!input) return;
+      const userValue = (input.value || '').trim().toLowerCase();
+
+      if (userValue === answer) {
+        correct++;
+        input.classList.remove('border-red-400', 'border-yellow-400');
+        input.classList.add('border-emerald-400');
+        feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+        feedback.classList.remove('hidden', 'text-red-500');
+        feedback.classList.add('text-emerald-600');
+      } else {
+        input.classList.remove('border-emerald-400', 'border-yellow-400');
+        input.classList.add('border-red-400');
+        feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+        feedback.classList.remove('hidden', 'text-emerald-600');
+        feedback.classList.add('text-red-500');
+      }
+    });
+
+    const total = items.length;
+    const score = total ? correct / total : 0;
+    resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+    const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
+
+    if (score >= PASS_THRESHOLD) {
+      resultEl.classList.remove('text-red-600');
+      resultEl.classList.add('text-emerald-700');
+
+      if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+        nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+      }
+
+      markModuleCompleted(moduleNumber);
+      const nextModule = moduleNumber + 1;
+      if (nextModule <= 6) unlockModuleBtn(nextModule);
+    } else {
+      resultEl.classList.remove('text-emerald-700');
+      resultEl.classList.add('text-red-600');
+    }
+  });
+}
 
     async function loadPracticeSet() {
       try {
