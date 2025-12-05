@@ -702,15 +702,20 @@ if (resetVocabBtn) {
         leftCol.appendChild(btn);
       });
 
-      shuffledEnglish.forEach((item, idx) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className =
-          'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
-        btn.dataset.spanish = item.spanish;
-        btn.dataset.english = item.english;
-        rightCol.appendChild(btn);
-      });
+shuffledEnglish.forEach((item, idx) => {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className =
+    'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
+  btn.dataset.spanish = item.spanish;
+  btn.dataset.english = item.english;
+
+  // 👇 This was missing
+  btn.textContent = item.english;
+
+  rightCol.appendChild(btn);
+});
+
 
       columns.appendChild(leftCol);
       columns.appendChild(rightCol);
