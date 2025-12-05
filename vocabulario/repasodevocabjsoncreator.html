@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generador de JSON – Repaso de Vocabulario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white rounded-2xl shadow-lg p-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold">
+          Generador de JSON – Repaso de Vocabulario
+        </h1>
+        <p class="text-sm md:text-base text-indigo-100">
+          Crea listas diarias (30 palabras) a partir de tus archivos de vocabulario de Descubre.
+        </p>
+      </div>
+      <div class="text-xs md:text-sm text-indigo-100">
+        <p>🧩 Paso 1: Escoge lecciones (fuentes)</p>
+        <p>🎯 Paso 2: Configura y genera sets</p>
+      </div>
+    </header>
+
+    <!-- Sources section -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Paso 1: Seleccionar lecciones de vocabulario</h2>
+      <p class="text-sm text-slate-600">
+        Marca las lecciones que quieras incluir. Opcionalmente, indica cuántas palabras por set
+        debe aportar cada una. Si dejas el campo vacío, se reparte automáticamente.
+      </p>
+
+      <div id="sourcesList" class="grid md:grid-cols-2 gap-4">
+        <!-- JS will populate this with VOCAB_SOURCES -->
+      </div>
+    </section>
+
+    <!-- Config section -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Paso 2: Configurar sets de repaso</h2>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Palabras totales por set
+          </label>
+          <input
+            id="totalPerSetInput"
+            type="number"
+            value="30"
+            min="1"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Lo habitual: 30 palabras por JSON de repaso.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Número de sets a generar
+          </label>
+          <input
+            id="numSetsInput"
+            type="number"
+            value="3"
+            min="1"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Por ejemplo, 10 si quieres D2-3-1 hasta D2-3-10.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Etiqueta base del set
+          </label>
+          <input
+            id="baseLabelInput"
+            type="text"
+            value="D2-3"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Se usará como prefijo: <code>BASE-1</code>, <code>BASE-2</code>, etc.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Índice inicial
+          </label>
+          <input
+            id="startIndexInput"
+            type="number"
+            value="1"
+            min="0"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Útil si ya existen D2-3-1, D2-3-2… y quieres continuar en D2-3-11, etc.
+          </p>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-200 pt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <p class="text-sm text-slate-600">
+          El generador intenta distribuir palabras de forma uniforme si no indicas cuotas
+          específicas por lección.
+        </p>
+        <button
+          id="generateBtn"
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        >
+          🚀 Generar sets
+        </button>
+      </div>
+
+      <p id="statusMessage" class="text-sm mt-2 text-slate-600"></p>
+    </section>
+
+    <!-- Results -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Resultados – Sets generados</h2>
+      <p class="text-sm text-slate-600">
+        Cada bloque corresponde a un JSON independiente (solo el array). Puedes copiarlo o descargarlo
+        como archivo <code>.json</code>.
+      </p>
+
+      <div id="resultsContainer" class="space-y-6">
+        <!-- Generated sets go here -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --------------------------------------------------------------------
+    // 1. Lista de fuentes: tus archivos de vocabulario en GitHub
+    // --------------------------------------------------------------------
+    const VOCAB_SOURCES = [
+      // Descubre 1
+      {
+        id: "d1_l1",
+        label: "Descubre 1 – Lección 1",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec1.json"
+      },
+      {
+        id: "d1_l2",
+        label: "Descubre 1 – Lección 2",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec2.json"
+      },
+      {
+        id: "d1_l3",
+        label: "Descubre 1 – Lección 3",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec3.json"
+      },
+      {
+        id: "d1_l4",
+        label: "Descubre 1 – Lección 4",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec4.json"
+      },
+      {
+        id: "d1_l5",
+        label: "Descubre 1 – Lección 5",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec5.json"
+      },
+      {
+        id: "d1_l6",
+        label: "Descubre 1 – Lección 6",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec6.json"
+      },
+      {
+        id: "d1_l7",
+        label: "Descubre 1 – Lección 7",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec7.json"
+      },
+      {
+        id: "d1_l8",
+        label: "Descubre 1 – Lección 8",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec8.json"
+      },
+      {
+        id: "d1_l9",
+        label: "Descubre 1 – Lección 9",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec9.json"
+      },
+      {
+        id: "d1_l10",
+        label: "Descubre 1 – Lección 10",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc1lec10.json"
+      },
+
+      // Descubre 2
+      {
+        id: "d2_l1",
+        label: "Descubre 2 – Lección 1",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec1.json"
+      },
+      {
+        id: "d2_l2",
+        label: "Descubre 2 – Lección 2",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec2.json"
+      },
+      {
+        id: "d2_l3",
+        label: "Descubre 2 – Lección 3",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec3.json"
+      },
+      {
+        id: "d2_l4",
+        label: "Descubre 2 – Lección 4",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec4.json"
+      },
+      {
+        id: "d2_l5",
+        label: "Descubre 2 – Lección 5",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec5.json"
+      },
+      {
+        id: "d2_l6",
+        label: "Descubre 2 – Lección 6",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec6.json"
+      },
+      {
+        id: "d2_l7",
+        label: "Descubre 2 – Lección 7",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec7.json"
+      },
+      {
+        id: "d2_l8",
+        label: "Descubre 2 – Lección 8",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec8.json"
+      },
+      {
+        id: "d2_l9",
+        label: "Descubre 2 – Lección 9",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc2lec9.json"
+      },
+
+      // Descubre 3
+      {
+        id: "d3_l1",
+        label: "Descubre 3 – Lección 1",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec01.json"
+      },
+      {
+        id: "d3_l2",
+        label: "Descubre 3 – Lección 2",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec02.json"
+      },
+      {
+        id: "d3_l3",
+        label: "Descubre 3 – Lección 3",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec03.json"
+      },
+      {
+        id: "d3_l4",
+        label: "Descubre 3 – Lección 4",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec04.json"
+      },
+      {
+        id: "d3_l5",
+        label: "Descubre 3 – Lección 5",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec05.json"
+      },
+      {
+        id: "d3_l6",
+        label: "Descubre 3 – Lección 6",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec06.json"
+      },
+      {
+        id: "d3_l7",
+        label: "Descubre 3 – Lección 7",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec07.json"
+      },
+      {
+        id: "d3_l8",
+        label: "Descubre 3 – Lección 8",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec08.json"
+      },
+      {
+        id: "d3_l9",
+        label: "Descubre 3 – Lección 9",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec09.json"
+      },
+      {
+        id: "d3_l10",
+        label: "Descubre 3 – Lección 10",
+        url: "https://github.com/scottscalici/imagenes/raw/main/vocabulario/desc3lec10.json"
+      }
+    ];
+
+    // --------------------------------------------------------------------
+    // 2. Helpers
+    // --------------------------------------------------------------------
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function downloadJSON(filename, data) {
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function loadAndNormalizeVocabSource(source) {
+      const res = await fetch(source.url);
+      if (!res.ok) {
+        throw new Error("Error al cargar " + source.label);
+      }
+      const raw = await res.json();
+      const topKey = Object.keys(raw)[0];
+      const items = raw[topKey];
+
+      return items
+        .filter(item => item.evaluacion !== false) // solo los que usas para evaluación
+        .map(item => ({
+          spanish: item.palabra,
+          english: item.definicion,
+          leccion: item.leccion,
+          seccion: item.seccion
+        }));
+    }
+
+    // --------------------------------------------------------------------
+    // 3. UI wiring
+    // --------------------------------------------------------------------
+    const sourcesList = document.getElementById("sourcesList");
+    const generateBtn = document.getElementById("generateBtn");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const statusMessage = document.getElementById("statusMessage");
+    const totalPerSetInput = document.getElementById("totalPerSetInput");
+    const numSetsInput = document.getElementById("numSetsInput");
+    const baseLabelInput = document.getElementById("baseLabelInput");
+    const startIndexInput = document.getElementById("startIndexInput");
+
+    function renderSources() {
+      sourcesList.innerHTML = "";
+      VOCAB_SOURCES.forEach((src, idx) => {
+        const card = document.createElement("div");
+        card.className =
+          "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2";
+
+        card.innerHTML = `
+          <label class="flex items-start gap-2">
+            <input type="checkbox" class="src-enabled mt-1 rounded border-slate-300 text-indigo-600" data-id="${src.id}" />
+            <div>
+              <div class="text-sm font-medium text-slate-800">${src.label}</div>
+              <div class="text-xs text-slate-500 break-all">${src.url}</div>
+            </div>
+          </label>
+          <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-700">
+              Palabras por set de esta fuente (opcional)
+            </label>
+            <input
+              type="number"
+              min="0"
+              class="src-quota w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-1.5"
+              placeholder="Ej. 10 (si lo dejas vacío se reparte automáticamente)"
+              data-id="${src.id}"
+            />
+          </div>
+        `;
+
+        sourcesList.appendChild(card);
+      });
+    }
+
+    renderSources();
+
+    // --------------------------------------------------------------------
+    // 4. Generar sets
+    // --------------------------------------------------------------------
+    generateBtn.addEventListener("click", async () => {
+      statusMessage.textContent = "";
+      statusMessage.className = "text-sm mt-2 text-slate-600";
+      resultsContainer.innerHTML = "";
+
+      const totalPerSet = parseInt(totalPerSetInput.value, 10) || 30;
+      const numSets = parseInt(numSetsInput.value, 10) || 1;
+      const baseLabel = baseLabelInput.value.trim() || "SET";
+      const startIndex = parseInt(startIndexInput.value, 10) || 1;
+
+      // Collect selected sources + quotas
+      const enabledCheckboxes = Array.from(
+        document.querySelectorAll(".src-enabled")
+      ).filter(cb => cb.checked);
+
+      if (!enabledCheckboxes.length) {
+        statusMessage.textContent =
+          "❌ No has seleccionado ninguna lección. Marca al menos una.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      const selectedSources = enabledCheckboxes.map(cb => {
+        const id = cb.getAttribute("data-id");
+        const src = VOCAB_SOURCES.find(s => s.id === id);
+        const quotaInput = document.querySelector(
+          `.src-quota[data-id="${id}"]`
+        );
+        const quota = quotaInput.value
+          ? Math.max(0, parseInt(quotaInput.value, 10) || 0)
+          : null;
+        return { ...src, quotaPerSet: quota };
+      });
+
+      // Load vocab for each selected source
+      statusMessage.textContent = "⏳ Cargando vocabulario de las fuentes seleccionadas…";
+
+      let logicalSources;
+      try {
+        const loadedArrays = await Promise.all(
+          selectedSources.map(src => loadAndNormalizeVocabSource(src))
+        );
+        logicalSources = selectedSources.map((src, idx) => ({
+          label: src.label,
+          items: loadedArrays[idx],
+          quotaPerSet: src.quotaPerSet
+        }));
+      } catch (e) {
+        console.error(e);
+        statusMessage.textContent =
+          "❌ Error al cargar uno o más archivos de vocabulario. Revisa la consola del navegador para más detalles.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      // Check there is at least some vocab
+      const totalItemsAvailable = logicalSources
+        .map(s => s.items.length)
+        .reduce((a, b) => a + b, 0);
+
+      if (!totalItemsAvailable) {
+        statusMessage.textContent =
+          "❌ Las fuentes seleccionadas no tienen vocabulario disponible (o todo tiene evaluacion=false).";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      // Quotas
+      const fixedTotal = logicalSources
+        .map(s => s.quotaPerSet || 0)
+        .reduce((a, b) => a + b, 0);
+
+      if (fixedTotal > totalPerSet) {
+        statusMessage.textContent =
+          "❌ La suma de las cuotas fijas por fuente es mayor que las palabras totales por set.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      const remaining = totalPerSet - fixedTotal;
+      const autoSources = logicalSources.filter(s => s.quotaPerSet === null);
+
+      if (autoSources.length === 0 && remaining > 0) {
+        statusMessage.textContent =
+          "⚠️ Algunas palabras por set quedarán sin asignar porque todas las fuentes tienen cuota fija.";
+        statusMessage.className = "text-sm mt-2 text-amber-600";
+      }
+
+      if (autoSources.length > 0 && remaining > 0) {
+        const baseAuto = Math.floor(remaining / autoSources.length);
+        let leftover = remaining % autoSources.length;
+        for (const s of autoSources) {
+          s.quotaPerSet = baseAuto + (leftover > 0 ? 1 : 0);
+          leftover--;
+        }
+      } else {
+        for (const s of autoSources) {
+          s.quotaPerSet = 0;
+        }
+      }
+
+      const finalTotal = logicalSources
+        .map(s => s.quotaPerSet || 0)
+        .reduce((a, b) => a + b, 0);
+
+      if (finalTotal !== totalPerSet) {
+        statusMessage.textContent =
+          "⚠️ Aviso: el total asignado por set (" +
+          finalTotal +
+          ") no coincide exactamente con el solicitado (" +
+          totalPerSet +
+          "). Se usará " +
+          finalTotal +
+          " por set.";
+        statusMessage.className = "text-sm mt-2 text-amber-600";
+      } else {
+        statusMessage.textContent =
+          "✅ Cuotas por fuente calculadas. Generando sets…";
+        statusMessage.className = "text-sm mt-2 text-emerald-700";
+      }
+
+      // Build pools per source
+      const sourcePools = logicalSources.map((s, sIndex) => {
+        const entries = s.items.map((item, idx) => ({
+          sourceIndex: sIndex,
+          itemIndex: idx,
+          item
+        }));
+        return shuffle(entries);
+      });
+
+      let lastSetKeys = new Set();
+      const allResults = [];
+
+      for (let setIdx = 0; setIdx < numSets; setIdx++) {
+        const setItems = [];
+        const usedKeysThisSet = new Set();
+
+        logicalSources.forEach((s, sIndex) => {
+          const quota = s.quotaPerSet || 0;
+          if (quota <= 0) return;
+
+          let pool = sourcePools[sIndex];
+          if (!pool.length) return;
+
+          let picksNeeded = quota;
+
+          // Prefer not to reuse items from last set
+          let candidates = pool.filter(entry => {
+            const key = sIndex + "|" + entry.itemIndex;
+            return !lastSetKeys.has(key);
+          });
+
+          if (candidates.length < picksNeeded) {
+            candidates = pool.slice();
+          }
+
+          shuffle(candidates);
+
+          const chosen = [];
+          for (let i = 0; i < candidates.length && picksNeeded > 0; i++) {
+            const entry = candidates[i];
+            const key = sIndex + "|" + entry.itemIndex;
+            if (usedKeysThisSet.has(key)) continue;
+            chosen.push(entry);
+            usedKeysThisSet.add(key);
+            picksNeeded--;
+          }
+
+          const chosenKeys = new Set(
+            chosen.map(e => sIndex + "|" + e.itemIndex)
+          );
+          pool = pool.filter(
+            e => !chosenKeys.has(sIndex + "|" + e.itemIndex)
+          );
+          sourcePools[sIndex] = pool;
+
+          chosen.forEach(entry => setItems.push(entry.item));
+        });
+
+        if (!setItems.length) {
+          statusMessage.textContent =
+            "⚠️ Sin suficientes palabras para generar más sets. Se generaron " +
+            setIdx +
+            " sets antes de agotar las fuentes.";
+          statusMessage.className = "text-sm mt-2 text-amber-600";
+          break;
+        }
+
+        shuffle(setItems);
+
+        const labelIndex = startIndex + setIdx;
+        const setLabel = baseLabel + "-" + labelIndex;
+
+        allResults.push({ label: setLabel, items: setItems });
+        lastSetKeys = usedKeysThisSet;
+      }
+
+      if (!allResults.length) return;
+
+      resultsContainer.innerHTML = "";
+      allResults.forEach(set => {
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2";
+
+        const header = document.createElement("div");
+        header.className =
+          "flex flex-col md:flex-row md:items-center md:justify-between gap-2";
+
+        const title = document.createElement("div");
+        title.innerHTML = `
+          <h3 class="text-sm font-semibold text-slate-800">
+            Set: <span class="font-mono">${set.label}</span>
+          </h3>
+          <p class="text-xs text-slate-500">
+            Elementos: ${set.items.length}
+          </p>
+        `;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400";
+        btn.textContent = "⬇️ Descargar JSON";
+        btn.addEventListener("click", () => {
+          const data = JSON.stringify(set.items, null, 2);
+          downloadJSON(set.label + ".json", data);
+        });
+
+        header.appendChild(title);
+        header.appendChild(btn);
+
+        const textarea = document.createElement("textarea");
+        textarea.className =
+          "w-full h-40 rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-2 font-mono";
+        textarea.readOnly = true;
+        textarea.value = JSON.stringify(set.items, null, 2);
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(textarea);
+        resultsContainer.appendChild(wrapper);
+      });
+
+      statusMessage.textContent +=
+        "  ✅ Sets generados: " + allResults.length + ".";
+    });
+  </script>
+</body>
+</html>
