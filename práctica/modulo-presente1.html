@@ -413,8 +413,13 @@
         });
 
         const total = items.length;
-        const score = total ? correct / total : 0;
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+const score = total ? correct / total : 0;
+
+// Guarda el resultado de este bloque para el resumen final
+vocabState.scores[blockIdx] = { correct, total };
+
+resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
 
         const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
 
@@ -782,64 +787,66 @@ if (resetVocabBtn) {
       });
     }
 
-    function buildNextBlockButton(blockIdx) {
-      // Remove old "next block" if present
-      const existing = document.getElementById('vocab-next-block');
-      if (existing) existing.remove();
+function buildNextBlockButton(blockIdx) {
+  // Remove old "next block" if present
+  const existing = document.getElementById('vocab-next-block');
+  if (existing) existing.remove();
 
-      const totalBlocks = vocabState.blocks.length;
-      const wrapper = document.createElement('div');
-      wrapper.id = 'vocab-next-block';
-      wrapper.className = 'pt-4 flex justify-end';
+  const totalBlocks = vocabState.blocks.length;
+  const wrapper = document.createElement('div');
+  wrapper.id = 'vocab-next-block';
+  wrapper.className = 'pt-4 flex justify-end';
 
-      const isLast = blockIdx === totalBlocks - 1;
-      const label = isLast ? 'Terminar vocabulario' : 'Siguiente bloque de vocabulario →';
+  const isLast = blockIdx === totalBlocks - 1;
+  const label = isLast ? 'Terminar vocabulario' : 'Siguiente bloque de vocabulario →';
 
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className =
-        'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
-      btn.textContent = label;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className =
+    'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
+  btn.textContent = label;
 
-      btn.addEventListener('click', () => {
-        vocabState.completedBlocks++;
-       if (isLast) {
-  // Compute overall resumen
-  let totalCorrect = 0;
-  let totalQs = 0;
-  (vocabState.scores || []).forEach(s => {
-    if (!s) return;
-    totalCorrect += s.correct || 0;
-    totalQs += s.total || 0;
+  btn.addEventListener('click', () => {
+    vocabState.completedBlocks++;
+
+    if (isLast) {
+      // Compute overall resumen
+      let totalCorrect = 0;
+      let totalQs = 0;
+      (vocabState.scores || []).forEach(s => {
+        if (!s) return;
+        totalCorrect += s.correct || 0;
+        totalQs += s.total || 0;
+      });
+      const overallPct = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
+
+      vocabGlobalStatus.innerHTML =
+        `✔ Has completado los 3 bloques de vocabulario. ` +
+        `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+        `${overallPct}&nbsp;%).`;
+      vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
+      vocabGlobalStatus.classList.add('text-emerald-700');
+
+      // Marcar módulo 5 como completado y desbloquear módulo 6
+      markModuleCompleted(5);
+      unlockModuleBtn(6);
+      if (nextFrom5Btn) {
+        nextFrom5Btn.disabled = false;
+        nextFrom5Btn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+        nextFrom5Btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
+      }
+    } else {
+      vocabState.currentIndex = blockIdx + 1;
+      buildTypingStage(vocabState.currentIndex);
+      vocabGlobalStatus.textContent =
+        `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+    }
   });
-  const overallPct = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
 
-  vocabGlobalStatus.innerHTML =
-    `✔ Has completado los 3 bloques de vocabulario. ` +
-    `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
-    `${overallPct}&nbsp;%).`;
-  vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
-  vocabGlobalStatus.classList.add('text-emerald-700');
-
-  // Marcar módulo 5 como completado y desbloquear módulo 6
-  markModuleCompleted(5);
-  unlockModuleBtn(6);
-  if (nextFrom5Btn) {
-    nextFrom5Btn.disabled = false;
-    nextFrom5Btn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
-    nextFrom5Btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-  }
-} else {
-  vocabState.currentIndex = blockIdx + 1;
-  buildTypingStage(vocabState.currentIndex);
-  vocabGlobalStatus.textContent =
-    `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+  wrapper.appendChild(btn);
+  vocabBlockContainer.appendChild(wrapper);
 }
 
-
-      wrapper.appendChild(btn);
-      vocabBlockContainer.appendChild(wrapper);
-    }
 
     async function loadVocabSet() {
       if (!VOCAB_JSON_URL || !vocabBlockContainer) return;
