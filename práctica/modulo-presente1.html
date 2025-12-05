@@ -489,13 +489,58 @@ if (resetVocabBtn) {
   });
 }
 
-   const vocabState = {
+ const vocabState = {
   blocks: [],        // [{ items: [{spanish, english}], index }]
   currentIndex: 0,   // 0,1,2
   completedBlocks: 0,
   scores: [],        // [{correct, total}] per block
   pairs: []          // full list of 30 words (for reset)
 };
+
+function normalizeVocabPiece(str) {
+  let s = (str || '').toLowerCase().trim();
+
+  // Strip leading articles / "to"
+  while (/^(to|the|a|an)\s+/.test(s)) {
+    s = s.replace(/^(to|the|a|an)\s+/, '');
+  }
+
+  // Collapse extra spaces
+  s = s.replace(/\s+/g, ' ');
+  return s;
+}
+
+function isVocabCorrect(userRaw, answerRaw) {
+  const user = (userRaw || '').trim();
+  const ans = (answerRaw || '').trim();
+  if (!ans) return false;
+
+  // Split on ; , or /
+  const answerParts = ans
+    .split(/[;,/]/)
+    .map(normalizeVocabPiece)
+    .filter(Boolean);
+
+  const userParts = user
+    .split(/[;,/]/)
+    .map(normalizeVocabPiece)
+    .filter(Boolean);
+
+  // Fallback: compare whole thing
+  if (!answerParts.length) {
+    return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
+  }
+
+  if (!userParts.length) return false;
+
+  // Correct if ANY of the user's parts matches ANY of the answer parts
+  return userParts.some(up => answerParts.includes(up));
+}
+
+function extractVocabPairs(data) {
+  // existing function...
+}
+
 
 
     function extractVocabPairs(data) {
@@ -614,29 +659,29 @@ if (resetVocabBtn) {
 
         items.forEach(item => {
           const rawAnswer = (item.dataset.answer || '').trim();
-          const normalizedAnswer = rawAnswer.toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          const userVal = (input.value || '').trim().toLowerCase();
+const input = item.querySelector('input');
+const feedback = item.querySelector('.feedback');
+const userVal = (input.value || '').trim();
 
-          if (userVal === normalizedAnswer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-red-500');
-            feedback.classList.add('text-emerald-600');
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-emerald-600');
-            feedback.classList.add('text-red-500');
+const isCorrect = isVocabCorrect(userVal, rawAnswer);
 
-            const idx = Number(item.querySelector('label').textContent.split('.')[0]) - 1;
-            wrongItems.push(block.items[idx]);
-          }
-        });
+if (isCorrect) {
+  correct++;
+  input.classList.remove('border-red-400', 'border-yellow-400');
+  input.classList.add('border-emerald-400');
+  feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+  feedback.classList.remove('hidden', 'text-red-500');
+  feedback.classList.add('text-emerald-600');
+} else {
+  input.classList.remove('border-emerald-400', 'border-yellow-400');
+  input.classList.add('border-red-400');
+  feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+  feedback.classList.remove('hidden', 'text-emerald-600');
+  feedback.classList.add('text-red-500');
+
+  const idx = Number(item.querySelector('label').textContent.split('.')[0]) - 1;
+  wrongItems.push(block.items[idx]);
+}
 
         const total = items.length;
         const score = total ? correct / total : 0;
