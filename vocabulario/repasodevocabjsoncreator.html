@@ -317,24 +317,37 @@
       URL.revokeObjectURL(url);
     }
 
-    async function loadAndNormalizeVocabSource(source) {
-      const res = await fetch(source.url);
-      if (!res.ok) {
-        throw new Error("Error al cargar " + source.label);
-      }
-      const raw = await res.json();
-      const topKey = Object.keys(raw)[0];
-      const items = raw[topKey];
+   async function loadAndNormalizeVocabSource(source) {
+  const res = await fetch(source.url);
+  if (!res.ok) {
+    throw new Error("Error al cargar " + source.label);
+  }
 
-      return items
-        .filter(item => item.evaluacion !== false) // solo los que usas para evaluación
-        .map(item => ({
-          spanish: item.palabra,
-          english: item.definicion,
-          leccion: item.leccion,
-          seccion: item.seccion
-        }));
-    }
+  const raw = await res.json();
+
+  // ✅ Soporta tanto [ {...}, {...} ] como { "algo": [ {...}, {...} ] }
+  let items;
+  if (Array.isArray(raw)) {
+    items = raw;
+  } else {
+    const topKey = Object.keys(raw)[0];
+    items = raw[topKey];
+  }
+
+  if (!Array.isArray(items)) {
+    throw new Error("Formato inesperado en " + source.label);
+  }
+
+  return items
+    .filter(item => item.evaluacion !== false) // solo los que usas para evaluación
+    .map(item => ({
+      spanish: item.palabra,
+      english: item.definicion,
+      leccion: item.leccion,
+      // muchos ítems no tienen "seccion": no pasa nada si queda undefined
+      seccion: item.seccion
+    }));
+}
 
     // --------------------------------------------------------------------
     // 3. UI wiring
