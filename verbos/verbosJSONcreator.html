@@ -2,569 +2,399 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Generador de JSON – Verbos (Conjugatrón)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Constructor de JSON – Verbos (bancos presente / pretérito)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-    <!-- Header -->
-    <header class="bg-indigo-600 text-white rounded-2xl shadow-lg p-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+<body class="bg-slate-100 min-h-screen">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold">
-          Generador de JSON v3 – Verbos (Conjugatrón)
+        <h1 class="text-lg sm:text-xl font-bold text-slate-800">
+          Constructor de conjuntos – Verbos (bancos)
         </h1>
-        <p class="text-sm md:text-base text-indigo-100">
-          Crea sublistas de <strong>conjugaciones</strong> a partir de tus bancos grandes (presente, pretérito, etc.).
+        <p class="text-xs sm:text-sm text-slate-500">
+          Carga <code>banco_presente.json</code> o <code>banco_preterito.json</code>, filtra por tags y
+          selecciona hasta 20 conjugaciones (no todo el paradigma).
         </p>
       </div>
-      <div class="text-xs md:text-sm text-indigo-100">
-        <p>🧩 Paso 1: Escoge bancos de verbos (tiempos)</p>
-        <p>🎯 Paso 2: Filtra por tags y configura sets</p>
+      <div class="flex flex-col items-end gap-1 text-right">
+        <p id="status" class="text-xs text-slate-500">Cargando datos…</p>
+        <p id="countInfo" class="text-xs text-slate-700 font-semibold">0 seleccionados (máx. 20)</p>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <!-- Sources section -->
-    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
-      <h2 class="text-xl font-semibold">Paso 1: Seleccionar bancos de verbos</h2>
-      <p class="text-sm text-slate-600">
-        Marca los bancos (tiempos) que quieras incluir. Opcionalmente, indica cuántas
-        <strong>conjugaciones</strong> por set debe aportar cada banco. Si dejas el campo vacío,
-        se reparte automáticamente.
-      </p>
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <!-- Source / bank selection -->
+    <section class="bg-white rounded-2xl shadow p-4 space-y-3">
+      <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
+            Banco de verbos
+          </label>
+          <select id="bankSelect"
+                  class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
+            <option value="presente">Banco: Presente</option>
+            <option value="preterito">Banco: Pretérito</option>
+          </select>
+          <p class="text-[11px] text-slate-500">
+            Cambia de banco para construir conjuntos distintos. Más tarde podemos mezclar tiempos si quieres.
+          </p>
+        </div>
 
-      <div id="sourcesList" class="grid md:grid-cols-2 gap-4">
-        <!-- JS will populate this with VERB_SOURCES -->
+        <div class="flex-1 space-y-2">
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
+            Buscar (infinitivo, sujeto o contexto)
+          </label>
+          <input id="searchInput"
+                 type="text"
+                 class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
+                 placeholder="ej. hablar, yo, supermercado, quedarse…" />
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <button id="btnClear"
+                  class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
+            Limpiar selección
+          </button>
+          <button id="btnGenerate"
+                  class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-xs sm:text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled>
+            Generar JSON (máx. 20)
+          </button>
+        </div>
       </div>
-    </section>
 
-    <!-- Tag filter + config section -->
-    <section class="bg-white rounded-2xl shadow p-6 space-y-6 border border-slate-200">
-      <h2 class="text-xl font-semibold">Paso 2: Filtrar por tags y configurar sets</h2>
-
-      <!-- Tag filter -->
-      <div class="space-y-2">
-        <label class="block text-sm font-medium text-slate-700">
-          Filtrar por tags (<code>tipo_verбо</code>)
+      <!-- Tag Filters -->
+      <div class="border-t pt-3 mt-3">
+        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
+          Filtrar por etiquetas (tags)
         </label>
-        <textarea
-          id="tagFilterInput"
-          class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-2 font-mono h-16"
-          placeholder="Ej.: pret_gar, cambio_ortográfico, los_4_irregulares, uir&#10;Deja vacío para usar todos los verbos."
-        ></textarea>
+
+        <div id="tagFilters" class="flex flex-wrap gap-2 text-xs">
+          <!-- JS will dynamically populate all available tags -->
+        </div>
+
+        <p class="text-[11px] text-slate-500 mt-1">
+          Los tags se leen tanto de <code>tags</code> como de <code>tipo_verbo</code> / <code>tipo_verбо</code>.
+          Solo se muestran las conjugaciones cuyos tags (del verbo) incluyan todos los seleccionados.
+        </p>
+      </div>
+    </section>
+
+    <!-- List + Output -->
+    <div class="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
+      <!-- List of items -->
+      <section class="bg-white rounded-2xl shadow p-4 flex flex-col min-h-[300px]">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-semibold text-slate-700">
+            Ítems disponibles
+          </h2>
+          <p id="listInfo" class="text-xs text-slate-500"></p>
+        </div>
+
+        <div id="itemsContainer"
+             class="flex-1 min-h-[200px] max-h-[520px] overflow-auto space-y-2 text-sm">
+          <!-- dynamically filled -->
+        </div>
+      </section>
+
+      <!-- Output JSON -->
+      <section class="bg-white rounded-2xl shadow p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-slate-700">
+            Resultado JSON (para guardar como presente1.json, preterito1.json, etc.)
+          </h2>
+          <button id="btnCopy"
+                  class="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                  disabled>
+            Copiar al portapapeles
+          </button>
+        </div>
+
+        <textarea id="outputJson"
+                  class="w-full h-72 border rounded-lg px-3 py-2 text-xs font-mono bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-400"
+                  placeholder="Selecciona hasta 20 ítems y haz clic en “Generar JSON”."
+                  readonly></textarea>
+
         <p class="text-xs text-slate-500">
-          Solo se usarán las entradas cuyo array <code>tipo_verбо</code> contenga al menos uno de los tags indicados.
-          Puedes separarlos por comas, espacios o saltos de línea.
+          Paso siguiente: crea un archivo como <code>presente1.json</code> (o similar) en tu repositorio
+          y pega este contenido. Luego tu módulo de práctica solo necesita la URL de ese archivo.
         </p>
-      </div>
-
-      <!-- Numeric config -->
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-slate-700">
-            Conjugaciones por set
-          </label>
-          <input
-            id="formsPerSetInput"
-            type="number"
-            value="20"
-            min="1"
-            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
-          />
-          <p class="text-xs text-slate-500">
-            Ej.: 20 entradas individuales (como <code>llamar</code> – <code>yo</code>, no todo el paradigma).
-          </p>
-        </div>
-
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-slate-700">
-            Número de sets a generar
-          </label>
-          <input
-            id="numSetsInput"
-            type="number"
-            value="3"
-            min="1"
-            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
-          />
-          <p class="text-xs text-slate-500">
-            Por ejemplo, 5 si quieres <code>PRES-1</code> hasta <code>PRES-5</code>.
-          </p>
-        </div>
-
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-slate-700">
-            Etiqueta base del set
-          </label>
-          <input
-            id="baseLabelInput"
-            type="text"
-            value="presente"
-            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
-          />
-          <p class="text-xs text-slate-500">
-            Se usará como prefijo: <code>BASE-1</code>, <code>BASE-2</code>, etc.
-          </p>
-        </div>
-
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-slate-700">
-            Índice inicial
-          </label>
-          <input
-            id="startIndexInput"
-            type="number"
-            value="1"
-            min="0"
-            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
-          />
-          <p class="text-xs text-slate-500">
-            Útil si ya existen presente-1, presente-2… y quieres continuar en presente-6, etc.
-          </p>
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 pt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <p class="text-sm text-slate-600">
-          El generador reparte <strong>conjugaciones</strong> de forma uniforme entre los bancos seleccionados
-          si no indicas cuotas específicas.
-        </p>
-        <button
-          id="generateBtn"
-          type="button"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-        >
-          🚀 Generar sets
-        </button>
-      </div>
-
-      <p id="statusMessage" class="text-sm mt-2 text-slate-600"></p>
-    </section>
-
-    <!-- Results -->
-    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
-      <h2 class="text-xl font-semibold">Resultados – Sets generados</h2>
-      <p class="text-sm text-slate-600">
-        Cada bloque corresponde a un JSON independiente (solo el array de entradas de verbo).
-        Puedes copiarlo o descargarlo como archivo <code>.json</code>.
-      </p>
-
-      <div id="resultsContainer" class="space-y-6">
-        <!-- Generated sets go here -->
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   <script>
-    // --------------------------------------------------------------------
-    // 1. Fuentes de verbos en GitHub (usamos URLs "blob" pero las convertimos a "raw")
-    // --------------------------------------------------------------------
-    const VERB_SOURCES = [
-      {
-        id: "presente",
-        label: "Verbos – Presente",
-        url: "https://github.com/scottscalici/imagenes/blob/main/verbos/presente.json"
-      },
-      {
-        id: "preterito",
-        label: "Verbos – Pretérito",
-        url: "https://github.com/scottscalici/imagenes/blob/main/verbos/preterito.json"
-      }
-      // Más tiempos a futuro:
-      // { id: "imperfecto", label: "Verbos – Imperfecto", url: "https://github.com/.../imperfecto.json" }
-    ];
+    // Bancos disponibles
+    const VERB_BANKS = {
+      presente: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_presente.json",
+      preterito: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_preterito.json"
+    };
 
-    function toRawGithubUrl(url) {
-      if (url.includes("github.com") && url.includes("/blob/")) {
-        return url
-          .replace("github.com", "raw.githubusercontent.com")
-          .replace("/blob/", "/");
-      }
-      return url;
+    let currentBank = "presente";
+
+    let masterItems = [];
+    let filteredItems = [];
+    const selectedIndices = new Set(); // indices relative to masterItems
+    let allTags = new Set();
+    let activeTags = new Set();
+
+    const statusEl = document.getElementById("status");
+    const countInfoEl = document.getElementById("countInfo");
+    const listInfoEl = document.getElementById("listInfo");
+    const itemsContainer = document.getElementById("itemsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const bankSelect = document.getElementById("bankSelect");
+    const btnGenerate = document.getElementById("btnGenerate");
+    const btnClear = document.getElementById("btnClear");
+    const btnCopy = document.getElementById("btnCopy");
+    const outputJson = document.getElementById("outputJson");
+
+    function updateCountInfo() {
+      const count = selectedIndices.size;
+      countInfoEl.textContent = `${count} seleccionados (máx. 20)`;
+      btnGenerate.disabled = (count === 0 || count > 20);
+      btnCopy.disabled = !outputJson.value.trim();
     }
 
-    // --------------------------------------------------------------------
-    // 2. Helpers
-    // --------------------------------------------------------------------
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+    // Get tags from any entry, supporting multiple keys
+    function getRawTagsFromEntry(v) {
+      if (!v) return [];
+      if (Array.isArray(v.tags)) return v.tags;
+      if (Array.isArray(v["tipo_verbo"])) return v["tipo_verbo"];
+      if (Array.isArray(v["tipo_verбо"])) return v["tipo_verбо"]; // por si acaso con la "o" rara
+      return [];
     }
 
-    function downloadJSON(filename, data) {
-      const blob = new Blob([data], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+    function extractTagsFromYoEntries(items) {
+      allTags = new Set();
+      items.forEach(v => {
+        if (v.sujeto?.trim().toLowerCase() === "yo") {
+          const entryTags = getRawTagsFromEntry(v);
+          entryTags.forEach(t => allTags.add(t));
+        }
+      });
     }
 
-    // Carga un banco de verbos tal cual (lista plana de entradas)
-    async function loadVerbSource(source) {
-      const rawUrl = toRawGithubUrl(source.url);
-      const res = await fetch(rawUrl);
-      if (!res.ok) {
-        throw new Error("Error al cargar " + source.label);
+    function renderTagFilters() {
+      const container = document.getElementById("tagFilters");
+      container.innerHTML = "";
+      activeTags = new Set(); // reset selection when cambiamos de banco
+
+      if (!allTags.size) {
+        container.innerHTML =
+          '<span class="text-[11px] text-slate-400">Este banco no tiene tags detectables.</span>';
+        return;
       }
 
-      const raw = await res.json();
+      Array.from(allTags).sort().forEach(tag => {
+        const id = `tag-${tag}`;
+        const wrapper = document.createElement("label");
+        wrapper.className =
+          "flex items-center gap-1 bg-slate-100 px-2 py-1 rounded cursor-pointer";
 
-      let items;
-      if (Array.isArray(raw)) {
-        items = raw;
-      } else {
-        const topKey = Object.keys(raw)[0];
-        items = raw[topKey];
-      }
+        wrapper.innerHTML = `
+          <input type="checkbox" id="${id}" data-tag="${tag}" class="h-3 w-3">
+          <span>${tag}</span>
+        `;
 
-      if (!Array.isArray(items)) {
-        throw new Error("Formato inesperado en " + source.label);
-      }
+        container.appendChild(wrapper);
+      });
 
-      return items;
+      container.querySelectorAll("input[type='checkbox']").forEach(cb => {
+        cb.addEventListener("change", () => {
+          const tag = cb.dataset.tag;
+          if (cb.checked) activeTags.add(tag);
+          else activeTags.delete(tag);
+          applyFilter();
+        });
+      });
     }
 
-    // --------------------------------------------------------------------
-    // 3. UI wiring
-    // --------------------------------------------------------------------
-    const sourcesList = document.getElementById("sourcesList");
-    const generateBtn = document.getElementById("generateBtn");
-    const resultsContainer = document.getElementById("resultsContainer");
-    const statusMessage = document.getElementById("statusMessage");
-    const formsPerSetInput = document.getElementById("formsPerSetInput");
-    const numSetsInput = document.getElementById("numSetsInput");
-    const baseLabelInput = document.getElementById("baseLabelInput");
-    const startIndexInput = document.getElementById("startIndexInput");
-    const tagFilterInput = document.getElementById("tagFilterInput");
+    function renderList() {
+      itemsContainer.innerHTML = "";
 
-    function renderSources() {
-      sourcesList.innerHTML = "";
-      VERB_SOURCES.forEach(src => {
-        const card = document.createElement("div");
-        card.className =
-          "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2";
+      if (!filteredItems.length) {
+        itemsContainer.innerHTML =
+          '<p class="text-xs text-slate-500">No hay ítems que coincidan con la búsqueda/filtros.</p>';
+        listInfoEl.textContent = "";
+        return;
+      }
 
-        card.innerHTML = `
-          <label class="flex items-start gap-2">
-            <input type="checkbox" class="src-enabled mt-1 rounded border-slate-300 text-indigo-600" data-id="${src.id}" />
-            <div>
-              <div class="text-sm font-medium text-slate-800">${src.label}</div>
-              <div class="text-xs text-slate-500 break-all">${src.url}</div>
+      filteredItems.forEach(({ item, indexInMaster }) => {
+        const isSelected = selectedIndices.has(indexInMaster);
+
+        const row = document.createElement("label");
+        row.className =
+          "flex items-start gap-2 border rounded-lg px-3 py-2 cursor-pointer hover:bg-slate-50 text-xs sm:text-sm";
+
+        row.innerHTML = `
+          <input type="checkbox"
+                 class="mt-1 h-4 w-4 text-sky-600 border-slate-300 rounded"
+                 data-master-index="${indexInMaster}"
+                 ${isSelected ? "checked" : ""} />
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-1">
+              <span class="font-semibold text-slate-800">${item.sujeto}</span>
+              <span class="text-slate-800">${item.contexto || ""}</span>
             </div>
-          </label>
-          <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-700">
-              Conjugaciones por set de este banco (opcional)
-            </label>
-            <input
-              type="number"
-              min="0"
-              class="src-quota w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-1.5"
-              placeholder="Ej. 10 (si lo dejas vacío se reparte automáticamente)"
-              data-id="${src.id}"
-            />
+            <div class="text-[11px] text-slate-500 mt-0.5">
+              ${item.infinitivo} · forma correcta: <code>${item.forma}</code>
+              · traducción: ${item.traducción || ""} · tiempo: ${item.tiempo || ""}
+            </div>
           </div>
         `;
 
-        sourcesList.appendChild(card);
+        itemsContainer.appendChild(row);
+      });
+
+      listInfoEl.textContent = `${filteredItems.length} ítems visibles`;
+      updateCountInfo();
+
+      itemsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener("change", () => {
+          const idx = Number(cb.dataset.masterIndex);
+          if (cb.checked) {
+            if (selectedIndices.size >= 20) {
+              cb.checked = false;
+              return;
+            }
+            selectedIndices.add(idx);
+          } else {
+            selectedIndices.delete(idx);
+          }
+          updateCountInfo();
+        });
       });
     }
 
-    renderSources();
+    function applyFilter() {
+      const q = searchInput.value.trim().toLowerCase();
 
-    // --------------------------------------------------------------------
-    // 4. Generar sets (unidad = ENTRADA/CONJUGACIÓN)
-    // --------------------------------------------------------------------
-    generateBtn.addEventListener("click", async () => {
-      statusMessage.textContent = "";
-      statusMessage.className = "text-sm mt-2 text-slate-600";
-      resultsContainer.innerHTML = "";
+      filteredItems = masterItems
+        .map((item, indexInMaster) => ({ item, indexInMaster }))
+        .filter(({ item }) => {
+          const haystack = (
+            (item.infinitivo || "") + " " +
+            (item.sujeto || "") + " " +
+            (item.contexto || "")
+          ).toLowerCase();
 
-      const totalFormsPerSet = parseInt(formsPerSetInput.value, 10) || 20;
-      const numSets = parseInt(numSetsInput.value, 10) || 1;
-      const baseLabel = baseLabelInput.value.trim() || "SET";
-      const startIndex = parseInt(startIndexInput.value, 10) || 1;
+          // TEXT FILTER
+          const passText = !q || haystack.includes(q);
 
-      // Tag filter
-      const rawTagFilter = tagFilterInput.value.trim();
-      let activeTags = [];
-      if (rawTagFilter) {
-        activeTags = rawTagFilter
-          .split(/[,\s]+/)
-          .map(t => t.trim())
-          .filter(Boolean);
-      }
+          // TAG FILTER (basado en los tags del verbo, tomados del YO)
+          let passTags = true;
+          if (activeTags.size) {
+            const subjLower = (item.sujeto || "").trim().toLowerCase();
+            let tags = [];
 
-      // Selected sources
-      const enabledCheckboxes = Array.from(
-        document.querySelectorAll(".src-enabled")
-      ).filter(cb => cb.checked);
+            if (subjLower === "yo") {
+              tags = getRawTagsFromEntry(item);
+            } else {
+              const yo = masterItems.find(
+                x =>
+                  x.infinitivo === item.infinitivo &&
+                  (x.tiempo === item.tiempo || !x.tiempo || !item.tiempo) &&
+                  (x.sujeto || "").trim().toLowerCase() === "yo"
+              );
+              tags = getRawTagsFromEntry(yo);
+            }
 
-      if (!enabledCheckboxes.length) {
-        statusMessage.textContent =
-          "❌ No has seleccionado ningún banco de verbos. Marca al menos uno.";
-        statusMessage.className = "text-sm mt-2 text-red-600";
-        return;
-      }
+            if (!tags.length) {
+              passTags = false;
+            } else {
+              // exige que estén todos los tags activos presentes
+              passTags = Array.from(activeTags).every(t => tags.includes(t));
+            }
+          }
 
-      const selectedSources = enabledCheckboxes.map(cb => {
-        const id = cb.getAttribute("data-id");
-        const src = VERB_SOURCES.find(s => s.id === id);
-        const quotaInput = document.querySelector(
-          `.src-quota[data-id="${id}"]`
-        );
-        const quota = quotaInput.value
-          ? Math.max(0, parseInt(quotaInput.value, 10) || 0)
-          : null;
-        return { ...src, quotaPerSet: quota };
-      });
+          return passText && passTags;
+        });
 
-      // Load verb entries
-      statusMessage.textContent =
-        "⏳ Cargando conjugaciones de los bancos seleccionados…";
+      renderList();
+    }
 
-      let logicalSources;
+    async function loadMasterJson() {
       try {
-        const loadedArrays = await Promise.all(
-          selectedSources.map(src => loadVerbSource(src))
-        );
+        const url = VERB_BANKS[currentBank];
+        const res = await fetch(url);
+        const data = await res.json();
 
-        logicalSources = selectedSources.map((src, idx) => {
-          let items = loadedArrays[idx];
+        // data ya es la lista de entradas
+        masterItems = Array.isArray(data) ? data : [];
 
-          // Apply tag filter if any
-         if (activeTags.length > 0) {
-  items = items.filter(entry => {
-    // Soporta tanto "tipo_verbo" (normal) como "tipo_verбо" (con la o rara)
-    let tags = [];
+        extractTagsFromYoEntries(masterItems);
+        renderTagFilters();
 
-    if (Array.isArray(entry["tipo_verbo"])) {
-      tags = entry["tipo_verbo"];
-    } else if (Array.isArray(entry["tipo_verбо"])) {
-      tags = entry["tipo_verбо"];
+        selectedIndices.clear();
+        outputJson.value = "";
+        btnCopy.disabled = true;
+        updateCountInfo();
+
+        statusEl.textContent =
+          `Cargados ${masterItems.length} ítems del banco ${currentBank}.`;
+        applyFilter();
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent =
+          "Error al cargar el JSON del banco. Revisa la URL.";
+        itemsContainer.innerHTML =
+          '<p class="text-xs text-red-500">No se pudo cargar el archivo JSON.</p>';
+      }
     }
 
-    return tags.some(tag => activeTags.includes(tag));
-  });
-}
+    // Generate JSON for selected items
+    btnGenerate.addEventListener("click", () => {
+      if (!selectedIndices.size || selectedIndices.size > 20) return;
 
+      const indicesSorted = Array.from(selectedIndices).sort((a, b) => a - b);
+      const selectedItems = indicesSorted.map(i => masterItems[i]);
 
-          return {
-            label: src.label,
-            items,
-            quotaPerSet: src.quotaPerSet
-          };
-        });
-      } catch (e) {
-        console.error(e);
-        statusMessage.textContent =
-          "❌ Error al cargar uno o más bancos de verbos. Revisa la consola del navegador para más detalles.";
-        statusMessage.className = "text-sm mt-2 text-red-600";
-        return;
-      }
-
-      // Check availability
-      const totalItemsAvailable = logicalSources
-        .map(s => s.items.length)
-        .reduce((a, b) => a + b, 0);
-
-      if (!totalItemsAvailable) {
-        statusMessage.textContent =
-          "❌ No hay conjugaciones disponibles con los filtros actuales (revisa los tags o las fuentes seleccionadas).";
-        statusMessage.className = "text-sm mt-2 text-red-600";
-        return;
-      }
-
-      // Quotas (conjugaciones por set y por banco)
-      const fixedTotal = logicalSources
-        .map(s => s.quotaPerSet || 0)
-        .reduce((a, b) => a + b, 0);
-
-      if (fixedTotal > totalFormsPerSet) {
-        statusMessage.textContent =
-          "❌ La suma de las cuotas fijas por banco es mayor que las conjugaciones totales por set.";
-        statusMessage.className = "text-sm mt-2 text-red-600";
-        return;
-      }
-
-      const remaining = totalFormsPerSet - fixedTotal;
-      const autoSources = logicalSources.filter(s => s.quotaPerSet === null);
-
-      if (autoSources.length === 0 && remaining > 0) {
-        statusMessage.textContent =
-          "⚠️ Algunas conjugaciones por set quedarán sin asignar porque todos los bancos tienen cuota fija.";
-        statusMessage.className = "text-sm mt-2 text-amber-600";
-      }
-
-      if (autoSources.length > 0 && remaining > 0) {
-        const baseAuto = Math.floor(remaining / autoSources.length);
-        let leftover = remaining % autoSources.length;
-        for (const s of autoSources) {
-          s.quotaPerSet = baseAuto + (leftover > 0 ? 1 : 0);
-          leftover--;
-        }
-      } else {
-        for (const s of autoSources) {
-          s.quotaPerSet = 0;
-        }
-      }
-
-      const finalTotalForms = logicalSources
-        .map(s => s.quotaPerSet || 0)
-        .reduce((a, b) => a + b, 0);
-
-      if (finalTotalForms !== totalFormsPerSet) {
-        statusMessage.textContent =
-          "⚠️ Aviso: el total asignado por set (" +
-          finalTotalForms +
-          " conjugaciones) no coincide exactamente con el solicitado (" +
-          totalFormsPerSet +
-          "). Se usarán " +
-          finalTotalForms +
-          " conjugaciones por set.";
-        statusMessage.className = "text-sm mt-2 text-amber-600";
-      } else {
-        statusMessage.textContent =
-          "✅ Cuotas por banco calculadas. Generando sets…";
-        statusMessage.className = "text-sm mt-2 text-emerald-700";
-      }
-
-      // Build pools per source (cada entrada = 1 conjugación)
-      const sourcePools = logicalSources.map((s, sIndex) => {
-        const entries = s.items.map((item, idx) => ({
-          sourceIndex: sIndex,
-          itemIndex: idx,
-          item
-        }));
-        return shuffle(entries);
-      });
-
-      let lastSetKeys = new Set();
-      const allResults = [];
-
-      for (let setIdx = 0; setIdx < numSets; setIdx++) {
-        const setItems = [];
-        const usedKeysThisSet = new Set();
-
-        logicalSources.forEach((s, sIndex) => {
-          const quota = s.quotaPerSet || 0;
-          if (quota <= 0) return;
-
-          let pool = sourcePools[sIndex];
-          if (!pool.length) return;
-
-          let picksNeeded = quota;
-
-          // Preferir entradas que NO se usaron en el set anterior
-          let candidates = pool.filter(entry => {
-            const key = sIndex + "|" + entry.itemIndex;
-            return !lastSetKeys.has(key);
-          });
-
-          if (candidates.length < picksNeeded) {
-            candidates = pool.slice();
-          }
-
-          shuffle(candidates);
-
-          const chosen = [];
-          for (let i = 0; i < candidates.length && picksNeeded > 0; i++) {
-            const entry = candidates[i];
-            const key = sIndex + "|" + entry.itemIndex;
-            if (usedKeysThisSet.has(key)) continue;
-            chosen.push(entry);
-            usedKeysThisSet.add(key);
-            picksNeeded--;
-          }
-
-          const chosenKeys = new Set(
-            chosen.map(e => sIndex + "|" + e.itemIndex)
-          );
-          pool = pool.filter(
-            e => !chosenKeys.has(sIndex + "|" + e.itemIndex)
-          );
-          sourcePools[sIndex] = pool;
-
-          chosen.forEach(entry => setItems.push(entry.item));
-        });
-
-        if (!setItems.length) {
-          statusMessage.textContent =
-            "⚠️ Sin suficientes conjugaciones para generar más sets. Se generaron " +
-            setIdx +
-            " sets antes de agotar los bancos.";
-          statusMessage.className = "text-sm mt-2 text-amber-600";
-          break;
-        }
-
-        shuffle(setItems);
-
-        const labelIndex = startIndex + setIdx;
-        const setLabel = baseLabel + "-" + labelIndex;
-
-        allResults.push({
-          label: setLabel,
-          items: setItems
-        });
-        lastSetKeys = usedKeysThisSet;
-      }
-
-      if (!allResults.length) return;
-
-      resultsContainer.innerHTML = "";
-      allResults.forEach(set => {
-        const wrapper = document.createElement("div");
-        wrapper.className =
-          "border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2";
-
-        const header = document.createElement("div");
-        header.className =
-          "flex flex-col md:flex-row md:items-center md:justify-between gap-2";
-
-        const title = document.createElement("div");
-        title.innerHTML = `
-          <h3 class="text-sm font-semibold text-slate-800">
-            Set: <span class="font-mono">${set.label}</span>
-          </h3>
-          <p class="text-xs text-slate-500">
-            Conjugaciones: ${set.items.length}
-          </p>
-        `;
-
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className =
-          "inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400";
-        btn.textContent = "⬇️ Descargar JSON";
-        btn.addEventListener("click", () => {
-          const data = JSON.stringify(set.items, null, 2);
-          downloadJSON(set.label + ".json", data);
-        });
-
-        header.appendChild(title);
-        header.appendChild(btn);
-
-        const textarea = document.createElement("textarea");
-        textarea.className =
-          "w-full h-40 rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-2 font-mono";
-        textarea.readOnly = true;
-        textarea.value = JSON.stringify(set.items, null, 2);
-
-        wrapper.appendChild(header);
-        wrapper.appendChild(textarea);
-        resultsContainer.appendChild(wrapper);
-      });
-
-      statusMessage.textContent +=
-        "  ✅ Sets generados: " + allResults.length + ".";
+      const jsonString = JSON.stringify(selectedItems, null, 2);
+      outputJson.value = jsonString;
+      btnCopy.disabled = false;
     });
+
+    // Clear selection
+    btnClear.addEventListener("click", () => {
+      selectedIndices.clear();
+      updateCountInfo();
+      renderList();
+      outputJson.value = "";
+      btnCopy.disabled = true;
+    });
+
+    // Filter on typing
+    searchInput.addEventListener("input", () => {
+      applyFilter();
+    });
+
+    // Switch bank
+    bankSelect.addEventListener("change", () => {
+      currentBank = bankSelect.value;
+      statusEl.textContent = "Cargando datos…";
+      loadMasterJson();
+    });
+
+    // Copy to clipboard
+    btnCopy.addEventListener("click", async () => {
+      const text = outputJson.value;
+      if (!text.trim()) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        btnCopy.textContent = "¡Copiado!";
+        setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
+      } catch {
+        btnCopy.textContent = "Error al copiar";
+        setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
+      }
+    });
+
+    // Init
+    loadMasterJson();
   </script>
 </body>
 </html>
