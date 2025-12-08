@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generador de JSON – Verbos (Conjugatrón)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white rounded-2xl shadow-lg p-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold">
+          Generador de JSON – Verbos (Conjugatrón)
+        </h1>
+        <p class="text-sm md:text-base text-indigo-100">
+          Crea sublistas de verbos (por infinitivo) a partir de tus bancos grandes (presente, pretérito, etc.).
+        </p>
+      </div>
+      <div class="text-xs md:text-sm text-indigo-100">
+        <p>🧩 Paso 1: Escoge bancos de verbos (tiempos)</p>
+        <p>🎯 Paso 2: Configura y genera sets</p>
+      </div>
+    </header>
+
+    <!-- Sources section -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Paso 1: Seleccionar bancos de verbos</h2>
+      <p class="text-sm text-slate-600">
+        Marca los bancos (tiempos) que quieras incluir. Opcionalmente, indica cuántos
+        <strong>verbos (infinitivos)</strong> por set debe aportar cada banco. Si dejas el campo vacío,
+        se reparte automáticamente.
+      </p>
+
+      <div id="sourcesList" class="grid md:grid-cols-2 gap-4">
+        <!-- JS will populate this with VERB_SOURCES -->
+      </div>
+    </section>
+
+    <!-- Config section -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Paso 2: Configurar sets de verbos</h2>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Verbos (infinitivos) por set
+          </label>
+          <input
+            id="verbsPerSetInput"
+            type="number"
+            value="20"
+            min="1"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Lo habitual: 20 verbos (cada uno con todas sus formas) por JSON.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Número de sets a generar
+          </label>
+          <input
+            id="numSetsInput"
+            type="number"
+            value="3"
+            min="1"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Por ejemplo, 5 si quieres <code>PRET-1</code> hasta <code>PRET-5</code>.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Etiqueta base del set
+          </label>
+          <input
+            id="baseLabelInput"
+            type="text"
+            value="PRES"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Se usará como prefijo: <code>BASE-1</code>, <code>BASE-2</code>, etc.
+          </p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-slate-700">
+            Índice inicial
+          </label>
+          <input
+            id="startIndexInput"
+            type="number"
+            value="1"
+            min="0"
+            class="w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm px-3 py-2"
+          />
+          <p class="text-xs text-slate-500">
+            Útil si ya existen PRET-1, PRET-2… y quieres continuar en PRET-6, etc.
+          </p>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-200 pt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <p class="text-sm text-slate-600">
+          El generador reparte <strong>verbos</strong> (no formas individuales) de forma uniforme
+          si no indicas cuotas específicas por banco.
+        </p>
+        <button
+          id="generateBtn"
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        >
+          🚀 Generar sets
+        </button>
+      </div>
+
+      <p id="statusMessage" class="text-sm mt-2 text-slate-600"></p>
+    </section>
+
+    <!-- Results -->
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h2 class="text-xl font-semibold">Resultados – Sets generados</h2>
+      <p class="text-sm text-slate-600">
+        Cada bloque corresponde a un JSON independiente (solo el array de entradas de verbo).
+        Puedes copiarlo o descargarlo como archivo <code>.json</code>.
+      </p>
+
+      <div id="resultsContainer" class="space-y-6">
+        <!-- Generated sets go here -->
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --------------------------------------------------------------------
+    // 1. Lista de fuentes: tus archivos de verbos en GitHub
+    //    (usamos las URLs "blob", pero las convertimos a "raw" para fetch)
+    // --------------------------------------------------------------------
+    const VERB_SOURCES = [
+      {
+        id: "presente",
+        label: "Verbos – Presente",
+        url: "https://github.com/scottscalici/imagenes/blob/main/verbos/presente.json"
+      },
+      {
+        id: "preterito",
+        label: "Verbos – Pretérito",
+        url: "https://github.com/scottscalici/imagenes/blob/main/verbos/preterito.json"
+      }
+      // Más tiempos a futuro:
+      // { id: "imperfecto", label: "Verbos – Imperfecto", url: "https://github.com/..." }
+    ];
+
+    // Convierte enlaces tipo "github.com/.../blob/main/..." a "raw.githubusercontent.com/..."
+    function toRawGithubUrl(url) {
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        return url
+          .replace("github.com", "raw.githubusercontent.com")
+          .replace("/blob/", "/");
+      }
+      return url;
+    }
+
+    // --------------------------------------------------------------------
+    // 2. Helpers
+    // --------------------------------------------------------------------
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function downloadJSON(filename, data) {
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // Carga un banco de verbos y lo agrupa por infinitivo + tiempo
+    // Asumimos entradas tipo:
+    // {
+    //   "infinitivo": "hablar",
+    //   "tiempo": "presente",
+    //   "sujeto": "yo",
+    //   "persona_base": "yo",
+    //   "forma": "hablo",
+    //   "traducción": "I speak",
+    //   "tipo_verбо": [...]
+    // }
+    async function loadAndGroupVerbSource(source) {
+      const rawUrl = toRawGithubUrl(source.url);
+      const res = await fetch(rawUrl);
+      if (!res.ok) {
+        throw new Error("Error al cargar " + source.label);
+      }
+
+      const raw = await res.json();
+
+      let items;
+      if (Array.isArray(raw)) {
+        items = raw;
+      } else {
+        const topKey = Object.keys(raw)[0];
+        items = raw[topKey];
+      }
+
+      if (!Array.isArray(items)) {
+        throw new Error("Formato inesperado en " + source.label);
+      }
+
+      // Agrupar por infinitivo + tiempo para tratar cada verbo como un "paquete"
+      const groupMap = new Map();
+      for (const entry of items) {
+        const infinitivo = entry.infinitivo || "???";
+        const tiempo = entry.tiempo || "???";
+        const key = `${infinitivo}|||${tiempo}`;
+        if (!groupMap.has(key)) {
+          groupMap.set(key, {
+            infinitivo,
+            tiempo,
+            entries: []
+          });
+        }
+        groupMap.get(key).entries.push(entry);
+      }
+
+      return Array.from(groupMap.values());
+    }
+
+    // --------------------------------------------------------------------
+    // 3. UI wiring
+    // --------------------------------------------------------------------
+    const sourcesList = document.getElementById("sourcesList");
+    const generateBtn = document.getElementById("generateBtn");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const statusMessage = document.getElementById("statusMessage");
+    const verbsPerSetInput = document.getElementById("verbsPerSetInput");
+    const numSetsInput = document.getElementById("numSetsInput");
+    const baseLabelInput = document.getElementById("baseLabelInput");
+    const startIndexInput = document.getElementById("startIndexInput");
+
+    function renderSources() {
+      sourcesList.innerHTML = "";
+      VERB_SOURCES.forEach(src => {
+        const card = document.createElement("div");
+        card.className =
+          "border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2";
+
+        card.innerHTML = `
+          <label class="flex items-start gap-2">
+            <input type="checkbox" class="src-enabled mt-1 rounded border-slate-300 text-indigo-600" data-id="${src.id}" />
+            <div>
+              <div class="text-sm font-medium text-slate-800">${src.label}</div>
+              <div class="text-xs text-slate-500 break-all">${src.url}</div>
+            </div>
+          </label>
+          <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-700">
+              Verbos (infinitivos) por set de este banco (opcional)
+            </label>
+            <input
+              type="number"
+              min="0"
+              class="src-quota w-full rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-1.5"
+              placeholder="Ej. 10 (si lo dejas vacío se reparte automáticamente)"
+              data-id="${src.id}"
+            />
+          </div>
+        `;
+
+        sourcesList.appendChild(card);
+      });
+    }
+
+    renderSources();
+
+    // --------------------------------------------------------------------
+    // 4. Generar sets (a nivel de VERBO, no de forma suelta)
+    // --------------------------------------------------------------------
+    generateBtn.addEventListener("click", async () => {
+      statusMessage.textContent = "";
+      statusMessage.className = "text-sm mt-2 text-slate-600";
+      resultsContainer.innerHTML = "";
+
+      const totalVerbsPerSet = parseInt(verbsPerSetInput.value, 10) || 20;
+      const numSets = parseInt(numSetsInput.value, 10) || 1;
+      const baseLabel = baseLabelInput.value.trim() || "SET";
+      const startIndex = parseInt(startIndexInput.value, 10) || 1;
+
+      // Collect selected sources + quotas
+      const enabledCheckboxes = Array.from(
+        document.querySelectorAll(".src-enabled")
+      ).filter(cb => cb.checked);
+
+      if (!enabledCheckboxes.length) {
+        statusMessage.textContent =
+          "❌ No has seleccionado ningún banco de verbos. Marca al menos uno.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      const selectedSources = enabledCheckboxes.map(cb => {
+        const id = cb.getAttribute("data-id");
+        const src = VERB_SOURCES.find(s => s.id === id);
+        const quotaInput = document.querySelector(
+          `.src-quota[data-id="${id}"]`
+        );
+        const quota = quotaInput.value
+          ? Math.max(0, parseInt(quotaInput.value, 10) || 0)
+          : null;
+        return { ...src, quotaPerSet: quota };
+      });
+
+      // Load grouped verbs for each selected source
+      statusMessage.textContent = "⏳ Cargando verbos de los bancos seleccionados…";
+
+      let logicalSources;
+      try {
+        const loadedGroupArrays = await Promise.all(
+          selectedSources.map(src => loadAndGroupVerbSource(src))
+        );
+        logicalSources = selectedSources.map((src, idx) => ({
+          label: src.label,
+          groups: loadedGroupArrays[idx], // cada grupo = 1 verbo (todas sus formas)
+          quotaPerSet: src.quotaPerSet
+        }));
+      } catch (e) {
+        console.error(e);
+        statusMessage.textContent =
+          "❌ Error al cargar uno o más bancos de verbos. Revisa la consola del navegador para más detalles.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      // Check there is at least some verb groups
+      const totalGroupsAvailable = logicalSources
+        .map(s => s.groups.length)
+        .reduce((a, b) => a + b, 0);
+
+      if (!totalGroupsAvailable) {
+        statusMessage.textContent =
+          "❌ Los bancos seleccionados no tienen verbos disponibles.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      // Quotas (en número de VERBOS por set)
+      const fixedTotal = logicalSources
+        .map(s => s.quotaPerSet || 0)
+        .reduce((a, b) => a + b, 0);
+
+      if (fixedTotal > totalVerbsPerSet) {
+        statusMessage.textContent =
+          "❌ La suma de las cuotas fijas por banco es mayor que los verbos totales por set.";
+        statusMessage.className = "text-sm mt-2 text-red-600";
+        return;
+      }
+
+      const remaining = totalVerbsPerSet - fixedTotal;
+      const autoSources = logicalSources.filter(s => s.quotaPerSet === null);
+
+      if (autoSources.length === 0 && remaining > 0) {
+        statusMessage.textContent =
+          "⚠️ Algunos verbos por set quedarán sin asignar porque todos los bancos tienen cuota fija.";
+        statusMessage.className = "text-sm mt-2 text-amber-600";
+      }
+
+      if (autoSources.length > 0 && remaining > 0) {
+        const baseAuto = Math.floor(remaining / autoSources.length);
+        let leftover = remaining % autoSources.length;
+        for (const s of autoSources) {
+          s.quotaPerSet = baseAuto + (leftover > 0 ? 1 : 0);
+          leftover--;
+        }
+      } else {
+        for (const s of autoSources) {
+          s.quotaPerSet = 0;
+        }
+      }
+
+      const finalTotalVerbs = logicalSources
+        .map(s => s.quotaPerSet || 0)
+        .reduce((a, b) => a + b, 0);
+
+      if (finalTotalVerbs !== totalVerbsPerSet) {
+        statusMessage.textContent =
+          "⚠️ Aviso: el total asignado por set (" +
+          finalTotalVerbs +
+          " verbos) no coincide exactamente con el solicitado (" +
+          totalVerbsPerSet +
+          "). Se usarán " +
+          finalTotalVerbs +
+          " verbos por set.";
+        statusMessage.className = "text-sm mt-2 text-amber-600";
+      } else {
+        statusMessage.textContent =
+          "✅ Cuotas por banco calculadas. Generando sets…";
+        statusMessage.className = "text-sm mt-2 text-emerald-700";
+      }
+
+      // Build pools per source (cada entrada en el pool = 1 verbo/grupo)
+      const sourcePools = logicalSources.map((s, sIndex) => {
+        const entries = s.groups.map((group, idx) => ({
+          sourceIndex: sIndex,
+          groupIndex: idx,
+          group
+        }));
+        return shuffle(entries);
+      });
+
+      let lastSetKeys = new Set();
+      const allResults = [];
+
+      for (let setIdx = 0; setIdx < numSets; setIdx++) {
+        const setItems = [];
+        const usedKeysThisSet = new Set();
+        const selectedGroupsThisSet = [];
+
+        logicalSources.forEach((s, sIndex) => {
+          const quota = s.quotaPerSet || 0;
+          if (quota <= 0) return;
+
+          let pool = sourcePools[sIndex];
+          if (!pool.length) return;
+
+          let picksNeeded = quota;
+
+          // Preferir verbos que NO se usaron en el set anterior
+          let candidates = pool.filter(entry => {
+            const key = sIndex + "|" + entry.groupIndex;
+            return !lastSetKeys.has(key);
+          });
+
+          if (candidates.length < picksNeeded) {
+            candidates = pool.slice();
+          }
+
+          shuffle(candidates);
+
+          const chosen = [];
+          for (let i = 0; i < candidates.length && picksNeeded > 0; i++) {
+            const entry = candidates[i];
+            const key = sIndex + "|" + entry.groupIndex;
+            if (usedKeysThisSet.has(key)) continue;
+            chosen.push(entry);
+            usedKeysThisSet.add(key);
+            picksNeeded--;
+          }
+
+          const chosenKeys = new Set(
+            chosen.map(e => sIndex + "|" + e.groupIndex)
+          );
+          pool = pool.filter(
+            e => !chosenKeys.has(sIndex + "|" + e.groupIndex)
+          );
+          sourcePools[sIndex] = pool;
+
+          chosen.forEach(entry => {
+            selectedGroupsThisSet.push(entry.group);
+            entry.group.entries.forEach(item => setItems.push(item));
+          });
+        });
+
+        if (!setItems.length) {
+          statusMessage.textContent =
+            "⚠️ Sin suficientes verbos para generar más sets. Se generaron " +
+            setIdx +
+            " sets antes de agotar los bancos.";
+          statusMessage.className = "text-sm mt-2 text-amber-600";
+          break;
+        }
+
+        shuffle(setItems);
+
+        const labelIndex = startIndex + setIdx;
+        const setLabel = baseLabel + "-" + labelIndex;
+
+        const verbsCount = selectedGroupsThisSet.length;
+
+        allResults.push({
+          label: setLabel,
+          items: setItems,
+          verbsCount
+        });
+        lastSetKeys = usedKeysThisSet;
+      }
+
+      if (!allResults.length) return;
+
+      resultsContainer.innerHTML = "";
+      allResults.forEach(set => {
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2";
+
+        const header = document.createElement("div");
+        header.className =
+          "flex flex-col md:flex-row md:items-center md:justify-between gap-2";
+
+        const title = document.createElement("div");
+        title.innerHTML = `
+          <h3 class="text-sm font-semibold text-slate-800">
+            Set: <span class="font-mono">${set.label}</span>
+          </h3>
+          <p class="text-xs text-slate-500">
+            Verbos: ${set.verbsCount} · Entradas totales: ${set.items.length}
+          </p>
+        `;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-400";
+        btn.textContent = "⬇️ Descargar JSON";
+        btn.addEventListener("click", () => {
+          const data = JSON.stringify(set.items, null, 2);
+          downloadJSON(set.label + ".json", data);
+        });
+
+        header.appendChild(title);
+        header.appendChild(btn);
+
+        const textarea = document.createElement("textarea");
+        textarea.className =
+          "w-full h-40 rounded-xl border-slate-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-xs px-3 py-2 font-mono";
+        textarea.readOnly = true;
+        textarea.value = JSON.stringify(set.items, null, 2);
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(textarea);
+        resultsContainer.appendChild(wrapper);
+      });
+
+      statusMessage.textContent +=
+        "  ✅ Sets generados: " + allResults.length + ".";
+    });
+  </script>
+</body>
+</html>
