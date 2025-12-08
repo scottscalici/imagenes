@@ -317,34 +317,57 @@
       renderList();
     }
 
-    async function loadMasterJson() {
-      try {
-        const url = VERB_BANKS[currentBank];
-        const res = await fetch(url);
-        const data = await res.json();
+async function loadMasterJson() {
+  try {
+    const url = VERB_BANKS[currentBank];
+    const res = await fetch(url);
+    let data = await res.json();
 
-        // data ya es la lista de entradas
-        masterItems = Array.isArray(data) ? data : [];
-
-        extractTagsFromYoEntries(masterItems);
-        renderTagFilters();
-
-        selectedIndices.clear();
-        outputJson.value = "";
-        btnCopy.disabled = true;
-        updateCountInfo();
-
-        statusEl.textContent =
-          `Cargados ${masterItems.length} ítems del banco ${currentBank}.`;
-        applyFilter();
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent =
-          "Error al cargar el JSON del banco. Revisa la URL.";
-        itemsContainer.innerHTML =
-          '<p class="text-xs text-red-500">No se pudo cargar el archivo JSON.</p>';
+    // 🔍 1) If it's an object like { algo: [ ... ], otro: [ ... ] }
+    if (!Array.isArray(data) && typeof data === "object" && data !== null) {
+      const arrays = Object.values(data).filter(Array.isArray);
+      if (arrays.length) {
+        data = arrays.flat();
       }
     }
+
+    // 🔍 2) If it's an array-of-arrays, flatten one level (or more)
+    if (Array.isArray(data)) {
+      // flatten arbitrarily nested arrays into one big list
+      const flatten = (arr) =>
+        arr.reduce(
+          (acc, el) =>
+            Array.isArray(el) ? acc.concat(flatten(el)) : acc.concat(el),
+          []
+        );
+      data = flatten(data);
+    } else {
+      data = [];
+    }
+
+    // ✅ At this point, data should be the flat list of all conjugation objects
+    masterItems = data;
+
+    extractTagsFromYoEntries(masterItems);
+    renderTagFilters();
+
+    selectedIndices.clear();
+    outputJson.value = "";
+    btnCopy.disabled = true;
+    updateCountInfo();
+
+    statusEl.textContent =
+      `Cargados ${masterItems.length} ítems del banco ${currentBank}.`;
+    applyFilter();
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent =
+      "Error al cargar el JSON del banco. Revisa la URL.";
+    itemsContainer.innerHTML =
+      '<p class="text-xs text-red-500">No se pudo cargar el archivo JSON.</p>';
+  }
+}
+
 
     // Generate JSON for selected items
     btnGenerate.addEventListener("click", () => {
