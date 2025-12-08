@@ -30,17 +30,17 @@
     <section class="bg-white rounded-2xl shadow p-4 space-y-3">
       <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div class="space-y-2">
-          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
-            Banco de verbos
-          </label>
-          <select id="bankSelect"
-                  class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
-            <option value="presente">Banco: Presente</option>
-            <option value="preterito">Banco: Pretérito</option>
-          </select>
-          <p class="text-[11px] text-slate-500">
-            Cambia de banco para construir conjuntos distintos. Más tarde podemos mezclar tiempos si quieres.
-          </p>
+         <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
+  Banco de verbos
+</label>
+<select id="bankSelect"
+        class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400">
+  <!-- JS llenará las opciones -->
+</select>
+<p class="text-[11px] text-slate-500">
+  Cambia de banco para construir conjuntos distintos. Puedes mezclar tiempos más adelante si quieres.
+</p>
+
         </div>
 
         <div class="flex-1 space-y-2">
@@ -126,298 +126,397 @@
     </div>
   </main>
 
-  <script>
-    // Bancos disponibles
-    const VERB_BANKS = {
-      presente: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_presente.json",
-      preterito: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_preterito.json"
-    };
+<script>
+  // 🔹 Todos los bancos de verbos que vas a usar
+  const VERB_BANKS = {
+    presente: {
+      label: "Presente",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_presente.json",
+    },
+    preterito: {
+      label: "Pretérito",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_preterito.json",
+    },
+    imperfecto: {
+      label: "Imperfecto",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_imperfecto.json",
+    },
+    presentedesubjuntivo: {
+      label: "Presente de subjuntivo",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_presentedesubjuntivo.json",
+    },
+    futuro: {
+      label: "Futuro",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_futuro.json",
+    },
+    condicional: {
+      label: "Condicional",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_condicional.json",
+    },
+    participiospasados: {
+      label: "Participios pasados",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_participiospasados.json",
+    },
+    presenteprogresivo: {
+      label: "Presente progresivo",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_presenteprogresivo.json",
+    },
+    preteritoperfecto: {
+      label: "Pretérito perfecto",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_preteritoperfecto.json",
+    },
+    preteritoperfectodesubjuntivo: {
+      label: "Pretérito perfecto de subjuntivo",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_preteritoperfectodesubjuntivo.json",
+    },
+    pluscuamperfecto: {
+      label: "Pluscuamperfecto",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_pluscuamperfecto.json",
+    },
+    pluscuamperfectodesubjuntivo: {
+      label: "Pluscuamperfecto de subjuntivo",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_pluscuamperfectodesubjuntivo.json",
+    },
+    futuroperfecto: {
+      label: "Futuro perfecto",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_futuroperfecto.json",
+    },
+    condicionalperfecto: {
+      label: "Condicional perfecto",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_condicionalperfecto.json",
+    },
+    imperfectodesubjuntivo: {
+      label: "Imperfecto de subjuntivo",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_imperfectodesubjuntivo.json",
+    },
+    mandatosfamiliares: {
+      label: "Mandatos familiares",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_mandatosfamiliares.json",
+    },
+    mandatosformales: {
+      label: "Mandatos formales",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_mandatosformales.json",
+    },
+    mandatosplurales: {
+      label: "Mandatos plurales",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_mandatosplurales.json",
+    },
+    mandatosnosotros: {
+      label: "Mandatos nosotros",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_mandatosnosotros.json",
+    },
+    mandatosvosotros: {
+      label: "Mandatos vosotros",
+      url: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/banco_mandatosvosotros.json",
+    },
+  };
 
-    let currentBank = "presente";
+  let currentBank = "presente";
 
-    let masterItems = [];
-    let filteredItems = [];
-    const selectedIndices = new Set(); // indices relative to masterItems
-    let allTags = new Set();
-    let activeTags = new Set();
+  let masterItems = [];
+  let filteredItems = [];
+  const selectedIndices = new Set(); // indices relative to masterItems
+  let allTags = new Set();
+  let activeTags = new Set();
 
-    const statusEl = document.getElementById("status");
-    const countInfoEl = document.getElementById("countInfo");
-    const listInfoEl = document.getElementById("listInfo");
-    const itemsContainer = document.getElementById("itemsContainer");
-    const searchInput = document.getElementById("searchInput");
-    const bankSelect = document.getElementById("bankSelect");
-    const btnGenerate = document.getElementById("btnGenerate");
-    const btnClear = document.getElementById("btnClear");
-    const btnCopy = document.getElementById("btnCopy");
-    const outputJson = document.getElementById("outputJson");
+  const statusEl = document.getElementById("status");
+  const countInfoEl = document.getElementById("countInfo");
+  const listInfoEl = document.getElementById("listInfo");
+  const itemsContainer = document.getElementById("itemsContainer");
+  const searchInput = document.getElementById("searchInput");
+  const bankSelect = document.getElementById("bankSelect");
+  const btnGenerate = document.getElementById("btnGenerate");
+  const btnClear = document.getElementById("btnClear");
+  const btnCopy = document.getElementById("btnCopy");
+  const outputJson = document.getElementById("outputJson");
 
-    function updateCountInfo() {
-      const count = selectedIndices.size;
-      countInfoEl.textContent = `${count} seleccionados (máx. 20)`;
-      btnGenerate.disabled = (count === 0 || count > 20);
-      btnCopy.disabled = !outputJson.value.trim();
-    }
-
-    // Get tags from any entry, supporting multiple keys
-    function getRawTagsFromEntry(v) {
-      if (!v) return [];
-      if (Array.isArray(v.tags)) return v.tags;
-      if (Array.isArray(v["tipo_verbo"])) return v["tipo_verbo"];
-      if (Array.isArray(v["tipo_verбо"])) return v["tipo_verбо"]; // por si acaso con la "o" rara
-      return [];
-    }
-
-    function extractTagsFromYoEntries(items) {
-      allTags = new Set();
-      items.forEach(v => {
-        if (v.sujeto?.trim().toLowerCase() === "yo") {
-          const entryTags = getRawTagsFromEntry(v);
-          entryTags.forEach(t => allTags.add(t));
-        }
-      });
-    }
-
-    function renderTagFilters() {
-      const container = document.getElementById("tagFilters");
-      container.innerHTML = "";
-      activeTags = new Set(); // reset selection when cambiamos de banco
-
-      if (!allTags.size) {
-        container.innerHTML =
-          '<span class="text-[11px] text-slate-400">Este banco no tiene tags detectables.</span>';
-        return;
-      }
-
-      Array.from(allTags).sort().forEach(tag => {
-        const id = `tag-${tag}`;
-        const wrapper = document.createElement("label");
-        wrapper.className =
-          "flex items-center gap-1 bg-slate-100 px-2 py-1 rounded cursor-pointer";
-
-        wrapper.innerHTML = `
-          <input type="checkbox" id="${id}" data-tag="${tag}" class="h-3 w-3">
-          <span>${tag}</span>
-        `;
-
-        container.appendChild(wrapper);
-      });
-
-      container.querySelectorAll("input[type='checkbox']").forEach(cb => {
-        cb.addEventListener("change", () => {
-          const tag = cb.dataset.tag;
-          if (cb.checked) activeTags.add(tag);
-          else activeTags.delete(tag);
-          applyFilter();
-        });
-      });
-    }
-
-    function renderList() {
-      itemsContainer.innerHTML = "";
-
-      if (!filteredItems.length) {
-        itemsContainer.innerHTML =
-          '<p class="text-xs text-slate-500">No hay ítems que coincidan con la búsqueda/filtros.</p>';
-        listInfoEl.textContent = "";
-        return;
-      }
-
-      filteredItems.forEach(({ item, indexInMaster }) => {
-        const isSelected = selectedIndices.has(indexInMaster);
-
-        const row = document.createElement("label");
-        row.className =
-          "flex items-start gap-2 border rounded-lg px-3 py-2 cursor-pointer hover:bg-slate-50 text-xs sm:text-sm";
-
-        row.innerHTML = `
-          <input type="checkbox"
-                 class="mt-1 h-4 w-4 text-sky-600 border-slate-300 rounded"
-                 data-master-index="${indexInMaster}"
-                 ${isSelected ? "checked" : ""} />
-          <div class="flex-1">
-            <div class="flex flex-wrap items-center gap-1">
-              <span class="font-semibold text-slate-800">${item.sujeto}</span>
-              <span class="text-slate-800">${item.contexto || ""}</span>
-            </div>
-            <div class="text-[11px] text-slate-500 mt-0.5">
-              ${item.infinitivo} · forma correcta: <code>${item.forma}</code>
-              · traducción: ${item.traducción || ""} · tiempo: ${item.tiempo || ""}
-            </div>
-          </div>
-        `;
-
-        itemsContainer.appendChild(row);
-      });
-
-      listInfoEl.textContent = `${filteredItems.length} ítems visibles`;
-      updateCountInfo();
-
-      itemsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener("change", () => {
-          const idx = Number(cb.dataset.masterIndex);
-          if (cb.checked) {
-            if (selectedIndices.size >= 20) {
-              cb.checked = false;
-              return;
-            }
-            selectedIndices.add(idx);
-          } else {
-            selectedIndices.delete(idx);
-          }
-          updateCountInfo();
-        });
-      });
-    }
-
-    function applyFilter() {
-      const q = searchInput.value.trim().toLowerCase();
-
-      filteredItems = masterItems
-        .map((item, indexInMaster) => ({ item, indexInMaster }))
-        .filter(({ item }) => {
-          const haystack = (
-            (item.infinitivo || "") + " " +
-            (item.sujeto || "") + " " +
-            (item.contexto || "")
-          ).toLowerCase();
-
-          // TEXT FILTER
-          const passText = !q || haystack.includes(q);
-
-          // TAG FILTER (basado en los tags del verbo, tomados del YO)
-          let passTags = true;
-          if (activeTags.size) {
-            const subjLower = (item.sujeto || "").trim().toLowerCase();
-            let tags = [];
-
-            if (subjLower === "yo") {
-              tags = getRawTagsFromEntry(item);
-            } else {
-              const yo = masterItems.find(
-                x =>
-                  x.infinitivo === item.infinitivo &&
-                  (x.tiempo === item.tiempo || !x.tiempo || !item.tiempo) &&
-                  (x.sujeto || "").trim().toLowerCase() === "yo"
-              );
-              tags = getRawTagsFromEntry(yo);
-            }
-
-            if (!tags.length) {
-              passTags = false;
-            } else {
-              // exige que estén todos los tags activos presentes
-              passTags = Array.from(activeTags).every(t => tags.includes(t));
-            }
-          }
-
-          return passText && passTags;
-        });
-
-      renderList();
-    }
-
-async function loadMasterJson() {
-  try {
-    const url = VERB_BANKS[currentBank];
-    const res = await fetch(url);
-    let data = await res.json();
-
-    // 🔍 1) If it's an object like { algo: [ ... ], otro: [ ... ] }
-    if (!Array.isArray(data) && typeof data === "object" && data !== null) {
-      const arrays = Object.values(data).filter(Array.isArray);
-      if (arrays.length) {
-        data = arrays.flat();
-      }
-    }
-
-    // 🔍 2) If it's an array-of-arrays, flatten one level (or more)
-    if (Array.isArray(data)) {
-      // flatten arbitrarily nested arrays into one big list
-      const flatten = (arr) =>
-        arr.reduce(
-          (acc, el) =>
-            Array.isArray(el) ? acc.concat(flatten(el)) : acc.concat(el),
-          []
-        );
-      data = flatten(data);
-    } else {
-      data = [];
-    }
-
-    // ✅ At this point, data should be the flat list of all conjugation objects
-    masterItems = data;
-
-    extractTagsFromYoEntries(masterItems);
-    renderTagFilters();
-
-    selectedIndices.clear();
-    outputJson.value = "";
-    btnCopy.disabled = true;
-    updateCountInfo();
-
-    statusEl.textContent =
-      `Cargados ${masterItems.length} ítems del banco ${currentBank}.`;
-    applyFilter();
-  } catch (err) {
-    console.error(err);
-    statusEl.textContent =
-      "Error al cargar el JSON del banco. Revisa la URL.";
-    itemsContainer.innerHTML =
-      '<p class="text-xs text-red-500">No se pudo cargar el archivo JSON.</p>';
+  function updateCountInfo() {
+    const count = selectedIndices.size;
+    countInfoEl.textContent = `${count} seleccionados (máx. 20)`;
+    btnGenerate.disabled = (count === 0 || count > 20);
+    btnCopy.disabled = !outputJson.value.trim();
   }
-}
 
+  // 🔹 Tags desde distintas claves
+  function getRawTagsFromEntry(v) {
+    if (!v) return [];
+    if (Array.isArray(v.tags)) return v.tags;
+    if (Array.isArray(v["tipo_verbo"])) return v["tipo_verbo"];
+    if (Array.isArray(v["tipo_verбо"])) return v["tipo_verбо"]; // por si acaso con la "o" rara
+    return [];
+  }
 
-    // Generate JSON for selected items
-    btnGenerate.addEventListener("click", () => {
-      if (!selectedIndices.size || selectedIndices.size > 20) return;
+  function extractTagsFromYoEntries(items) {
+    allTags = new Set();
+    items.forEach(v => {
+      if (v.sujeto?.trim().toLowerCase() === "yo") {
+        const entryTags = getRawTagsFromEntry(v);
+        entryTags.forEach(t => allTags.add(t));
+      }
+    });
+  }
 
-      const indicesSorted = Array.from(selectedIndices).sort((a, b) => a - b);
-      const selectedItems = indicesSorted.map(i => masterItems[i]);
+  function renderTagFilters() {
+    const container = document.getElementById("tagFilters");
+    container.innerHTML = "";
+    activeTags = new Set(); // reset al cambiar de banco
 
-      const jsonString = JSON.stringify(selectedItems, null, 2);
-      outputJson.value = jsonString;
-      btnCopy.disabled = false;
+    if (!allTags.size) {
+      container.innerHTML =
+        '<span class="text-[11px] text-slate-400">Este banco no tiene tags detectables.</span>';
+      return;
+    }
+
+    Array.from(allTags).sort().forEach(tag => {
+      const id = `tag-${tag}`;
+      const wrapper = document.createElement("label");
+      wrapper.className =
+        "flex items-center gap-1 bg-slate-100 px-2 py-1 rounded cursor-pointer";
+
+      wrapper.innerHTML = `
+        <input type="checkbox" id="${id}" data-tag="${tag}" class="h-3 w-3">
+        <span>${tag}</span>
+      `;
+
+      container.appendChild(wrapper);
     });
 
-    // Clear selection
-    btnClear.addEventListener("click", () => {
+    container.querySelectorAll("input[type='checkbox']").forEach(cb => {
+      cb.addEventListener("change", () => {
+        const tag = cb.dataset.tag;
+        if (cb.checked) activeTags.add(tag);
+        else activeTags.delete(tag);
+        applyFilter();
+      });
+    });
+  }
+
+  function renderList() {
+    itemsContainer.innerHTML = "";
+
+    if (!filteredItems.length) {
+      itemsContainer.innerHTML =
+        '<p class="text-xs text-slate-500">No hay ítems que coincidan con la búsqueda/filtros.</p>';
+      listInfoEl.textContent = "";
+      return;
+    }
+
+    filteredItems.forEach(({ item, indexInMaster }) => {
+      const isSelected = selectedIndices.has(indexInMaster);
+
+      const row = document.createElement("label");
+      row.className =
+        "flex items-start gap-2 border rounded-lg px-3 py-2 cursor-pointer hover:bg-slate-50 text-xs sm:text-sm";
+
+      row.innerHTML = `
+        <input type="checkbox"
+               class="mt-1 h-4 w-4 text-sky-600 border-slate-300 rounded"
+               data-master-index="${indexInMaster}"
+               ${isSelected ? "checked" : ""} />
+        <div class="flex-1">
+          <div class="flex flex-wrap items-center gap-1">
+            <span class="font-semibold text-slate-800">${item.sujeto}</span>
+            <span class="text-slate-800">${item.contexto || ""}</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-0.5">
+            ${item.infinitivo} · forma correcta: <code>${item.forma}</code>
+            · traducción: ${item.traducción || ""} · tiempo: ${item.tiempo || ""}
+          </div>
+        </div>
+      `;
+
+      itemsContainer.appendChild(row);
+    });
+
+    listInfoEl.textContent = `${filteredItems.length} ítems visibles`;
+    updateCountInfo();
+
+    itemsContainer.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        const idx = Number(cb.dataset.masterIndex);
+        if (cb.checked) {
+          if (selectedIndices.size >= 20) {
+            cb.checked = false;
+            return;
+          }
+          selectedIndices.add(idx);
+        } else {
+          selectedIndices.delete(idx);
+        }
+        updateCountInfo();
+      });
+    });
+  }
+
+  function applyFilter() {
+    const q = searchInput.value.trim().toLowerCase();
+
+    filteredItems = masterItems
+      .map((item, indexInMaster) => ({ item, indexInMaster }))
+      .filter(({ item }) => {
+        const haystack = (
+          (item.infinitivo || "") + " " +
+          (item.sujeto || "") + " " +
+          (item.contexto || "")
+        ).toLowerCase();
+
+        const passText = !q || haystack.includes(q);
+
+        let passTags = true;
+        if (activeTags.size) {
+          const subjLower = (item.sujeto || "").trim().toLowerCase();
+          let tags = [];
+
+          if (subjLower === "yo") {
+            tags = getRawTagsFromEntry(item);
+          } else {
+            const yo = masterItems.find(
+              x =>
+                x.infinitivo === item.infinitivo &&
+                (x.tiempo === item.tiempo || !x.tiempo || !item.tiempo) &&
+                (x.sujeto || "").trim().toLowerCase() === "yo"
+            );
+            tags = getRawTagsFromEntry(yo);
+          }
+
+          if (!tags.length) {
+            passTags = false;
+          } else {
+            passTags = Array.from(activeTags).every(t => tags.includes(t));
+          }
+        }
+
+        return passText && passTags;
+      });
+
+    renderList();
+  }
+
+  async function loadMasterJson() {
+    try {
+      const bank = VERB_BANKS[currentBank];
+      const url = bank.url;
+
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      let data = await res.json();
+
+      // 1) Objeto con arrays dentro
+      if (!Array.isArray(data) && typeof data === "object" && data !== null) {
+        const arrays = Object.values(data).filter(Array.isArray);
+        if (arrays.length) {
+          data = arrays.flat();
+        }
+      }
+
+      // 2) Array de arrays → aplanar recursivamente
+      if (Array.isArray(data)) {
+        const flatten = (arr) =>
+          arr.reduce(
+            (acc, el) =>
+              Array.isArray(el) ? acc.concat(flatten(el)) : acc.concat(el),
+            []
+          );
+        data = flatten(data);
+      } else {
+        data = [];
+      }
+
+      masterItems = data;
+
+      extractTagsFromYoEntries(masterItems);
+      renderTagFilters();
+
       selectedIndices.clear();
+      outputJson.value = "";
+      btnCopy.disabled = true;
       updateCountInfo();
+
+      statusEl.textContent =
+        `Cargados ${masterItems.length} ítems del banco ${bank.label}.`;
+      applyFilter();
+    } catch (err) {
+      console.error(err);
+      masterItems = [];
+      filteredItems = [];
+      selectedIndices.clear();
+      extractTagsFromYoEntries(masterItems);
+      renderTagFilters();
       renderList();
       outputJson.value = "";
       btnCopy.disabled = true;
-    });
+      updateCountInfo();
 
-    // Filter on typing
-    searchInput.addEventListener("input", () => {
-      applyFilter();
-    });
+      statusEl.textContent =
+        "No se pudo cargar este banco (aún no creado o error de red).";
+    }
+  }
 
-    // Switch bank
-    bankSelect.addEventListener("change", () => {
-      currentBank = bankSelect.value;
-      statusEl.textContent = "Cargando datos…";
-      loadMasterJson();
-    });
+  // Generar JSON para los seleccionados
+  btnGenerate.addEventListener("click", () => {
+    if (!selectedIndices.size || selectedIndices.size > 20) return;
 
-    // Copy to clipboard
-    btnCopy.addEventListener("click", async () => {
-      const text = outputJson.value;
-      if (!text.trim()) return;
-      try {
-        await navigator.clipboard.writeText(text);
-        btnCopy.textContent = "¡Copiado!";
-        setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
-      } catch {
-        btnCopy.textContent = "Error al copiar";
-        setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
-      }
-    });
+    const indicesSorted = Array.from(selectedIndices).sort((a, b) => a - b);
+    const selectedItems = indicesSorted.map(i => masterItems[i]);
 
-    // Init
+    const jsonString = JSON.stringify(selectedItems, null, 2);
+    outputJson.value = jsonString;
+    btnCopy.disabled = false;
+  });
+
+  // Limpiar selección
+  btnClear.addEventListener("click", () => {
+    selectedIndices.clear();
+    updateCountInfo();
+    renderList();
+    outputJson.value = "";
+    btnCopy.disabled = true;
+  });
+
+  // Filtrar al escribir
+  searchInput.addEventListener("input", () => {
+    applyFilter();
+  });
+
+  // Copiar al portapapeles
+  btnCopy.addEventListener("click", async () => {
+    const text = outputJson.value;
+    if (!text.trim()) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      btnCopy.textContent = "¡Copiado!";
+      setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
+    } catch {
+      btnCopy.textContent = "Error al copiar";
+      setTimeout(() => (btnCopy.textContent = "Copiar al portapapeles"), 1500);
+    }
+  });
+
+  // 🔹 Poblar el <select> con todos los bancos
+  function populateBankSelect() {
+    bankSelect.innerHTML = "";
+    Object.entries(VERB_BANKS).forEach(([key, cfg]) => {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = cfg.label;
+      bankSelect.appendChild(opt);
+    });
+    bankSelect.value = currentBank;
+  }
+
+  bankSelect.addEventListener("change", () => {
+    currentBank = bankSelect.value;
+    statusEl.textContent = "Cargando datos…";
     loadMasterJson();
-  </script>
+  });
+
+  // Init
+  populateBankSelect();
+  loadMasterJson();
+</script>
+
 </body>
 </html>
