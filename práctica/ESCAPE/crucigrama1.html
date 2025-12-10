@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Crucigrama – Vocabulario: el cuerpo / la salud</title>
+  <title>Crucigrama – Examen del semestre</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -16,7 +16,7 @@
         </p>
       </div>
       <p class="text-sm text-slate-500">
-        Tema: partes del cuerpo / salud – contraseña secreta de tecnología
+        Tema: partes del cuerpo / salud – contraseña secreta de salud
       </p>
     </header>
 
@@ -73,8 +73,8 @@
         Tus letras secretas aparecerán aquí a medida que completes el crucigrama.
       </p>
       <p class="text-xs text-emerald-700">
-        Cuando todas aparezcan, piensa en el tema de <strong>tecnología</strong> y
-        forma la contraseña.
+        Cuando todas aparezcan (en orden desordenado), piensa en el tema de
+        <strong>la salud</strong> y forma la contraseña.
       </p>
       <div id="secret-letters"
            class="mt-2 flex flex-wrap gap-2 text-lg font-mono text-slate-900"></div>
@@ -83,7 +83,6 @@
 
   <script>
     // 15x15 grid. Letters = solution, "#" = black square.
-    // This matches the vocab you saw in the screenshot.
     const GRID_TEMPLATE = [
       "BOCA#####N#H#G#",
       "#########A#U#A#",
@@ -105,20 +104,19 @@
     const ROWS = GRID_TEMPLATE.length;
     const COLS = GRID_TEMPLATE[0].length;
 
-    // Secret word = INTERNET – choose 8 specific cells in the grid.
-    // (row, col) indices (0-based) where those letters live.
+    // Secret word = MEDICINA – 8 letters in the horizontal word MEDICINA (row 8, cols 0–7)
     const SECRET_CELLS = [
-      { row: 3, col: 9 },   // I
-      { row: 0, col: 9 },   // N
-      { row: 4, col: 2 },   // T
-      { row: 2, col: 11 },  // E
-      { row: 2, col: 1 },   // R
-      { row: 5, col: 13 },  // N
-      { row: 4, col: 0 },   // E
-      { row: 6, col: 13 }   // T
+      { row: 8, col: 0 }, // M
+      { row: 8, col: 1 }, // E
+      { row: 8, col: 2 }, // D
+      { row: 8, col: 3 }, // I
+      { row: 8, col: 4 }, // C
+      { row: 8, col: 5 }, // I
+      { row: 8, col: 6 }, // N
+      { row: 8, col: 7 }  // A
     ];
 
-    const SECRET_WORD = "INTERNET"; // just for your reference
+    const SECRET_WORD = "MEDICINA"; // solo referencia
 
     const gridContainer = document.getElementById("cw-grid");
     const statusEl = document.getElementById("cw-status");
@@ -127,29 +125,42 @@
     const clearBtn = document.getElementById("btn-clear");
     const secretLettersContainer = document.getElementById("secret-letters");
 
-    // Build CSS cols for 15 columns
+    // 15 columns
     gridContainer.style.gridTemplateColumns = "repeat(15, minmax(0, 1.8rem))";
 
-    // Map "row-col" -> secretIndex
+    // Map "row-col" -> secretIndex (0..7)
     const secretIndexByKey = new Map();
     SECRET_CELLS.forEach((cell, idx) => {
       secretIndexByKey.set(`${cell.row}-${cell.col}`, idx);
     });
 
-    // Track which secret letters have been revealed
+    // We'll display the secret letters in a scrambled order.
+    const displayIndexBySecret = [];
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
     const secretRevealed = Array(SECRET_CELLS.length).fill(false);
 
-    // Build the visual slots for the secret letters (start as •)
     function initSecretSlots() {
       secretLettersContainer.innerHTML = "";
-      SECRET_CELLS.forEach((_, idx) => {
+      const indices = shuffleArray([...Array(SECRET_CELLS.length).keys()]);
+      indices.forEach((secretIdx, displayIdx) => {
+        displayIndexBySecret[secretIdx] = displayIdx;
+      });
+
+      for (let displayIdx = 0; displayIdx < SECRET_CELLS.length; displayIdx++) {
         const span = document.createElement("span");
-        span.dataset.secretIndex = idx;
+        span.dataset.displayIndex = displayIdx;
         span.className =
           "inline-flex items-center justify-center w-8 h-8 rounded-md border border-emerald-300 bg-white shadow-sm";
         span.textContent = "•";
         secretLettersContainer.appendChild(span);
-      });
+      }
     }
 
     // Build crossword grid
@@ -177,7 +188,7 @@
               "bg-slate-100 text-slate-900 rounded-sm border border-slate-400 " +
               "focus:outline-none focus:ring-2 focus:ring-sky-400";
 
-            // Make secret cells visually slightly outlined from the start
+            // Mark secret cells with a subtle outline
             if (secretIndexByKey.has(`${r}-${c}`)) {
               inp.classList.add("border-emerald-400");
             }
@@ -199,8 +210,7 @@
             "bg-emerald-200",
             "bg-emerald-300",
             "bg-blue-300",
-            "bg-red-200",
-            "text-slate-900"
+            "bg-red-200"
           );
           inp.classList.add("bg-slate-100");
         });
@@ -217,12 +227,13 @@
     function revealSecretLetter(row, col, letter) {
       const key = `${row}-${col}`;
       if (!secretIndexByKey.has(key)) return;
-      const idx = secretIndexByKey.get(key);
-      if (secretRevealed[idx]) return; // already revealed
+      const secretIdx = secretIndexByKey.get(key);
+      if (secretRevealed[secretIdx]) return; // already revealed
 
-      secretRevealed[idx] = true;
+      secretRevealed[secretIdx] = true;
+      const displayIdx = displayIndexBySecret[secretIdx];
       const span = secretLettersContainer.querySelector(
-        `[data-secret-index="${idx}"]`
+        `[data-display-index="${displayIdx}"]`
       );
       if (span) {
         span.textContent = letter.toUpperCase();
@@ -286,7 +297,7 @@
       if (allSecret && correct === total) {
         summaryEl.textContent =
           "¡Crucigrama completado! Estas son tus letras secretas (desordenadas). " +
-          "Escríbelas, piensa en el tema de tecnología y forma la contraseña.";
+          "Escríbelas, piensa en el tema de la salud y forma la contraseña.";
         summaryEl.classList.remove("text-red-700");
         summaryEl.classList.add("text-emerald-800");
       } else if (allSecret) {
