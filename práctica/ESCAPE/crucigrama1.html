@@ -1,613 +1,316 @@
-<!doctype html>
-<html lang="es" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crucigrama Médico en Español</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crucigrama – El cuerpo y la salud</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      box-sizing: border-box;
-      /* Ensure the page uses the full height */
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .cw-grid {
+      border-collapse: collapse;
+      margin: 0 auto;
     }
-   
-    .crossword-cell {
-      width: 45px;
-      height: 45px;
-      border: 2px solid #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: bold;
-      text-transform: uppercase;
+    .cw-cell {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #111827; /* gray-900 */
       position: relative;
-      background: white;
+      background: #0f172a;       /* slate-900 for empty */
     }
-   
-    .crossword-cell.black {
-      background: #1a1a1a;
-      border: none;
+    .cw-cell-inner {
+      width: 100%;
+      height: 100%;
+      background: #e5f9ff;       /* light teal for default letter cell */
     }
-   
-    .crossword-cell input {
+    .cw-cell input {
       width: 100%;
       height: 100%;
       border: none;
       text-align: center;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 18px;
       text-transform: uppercase;
       background: transparent;
       outline: none;
-      caret-color: transparent;
     }
-   
-    .crossword-cell.active {
-      background: #fef3c7;
-    }
-   
-    .crossword-cell.highlighted {
-      background: #dbeafe;
-    }
-   
-    .crossword-cell.correct {
-      background: #d1fae5;
-    }
-   
-    .crossword-cell.secret-letter {
-      background: #fde68a;
-      box-shadow: inset 0 0 0 3px #f59e0b;
-    }
-   
-    .crossword-cell.secret-letter.correct {
-      background: #fde68a;
-    }
-   
-    .cell-number {
+    .cw-number {
       position: absolute;
-      top: 2px;
-      left: 3px;
-      font-size: 10px;
-      font-weight: bold;
-      color: #333;
+      top: 1px;
+      left: 2px;
+      font-size: 9px;
+      color: #4b5563;           /* gray-600 */
     }
-   
-    .clue-item {
-      padding: 8px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.2s;
+    .cw-correct {
+      background: #bbf7d0;      /* emerald-200 */
     }
-   
-    .clue-item:hover {
-      background: #f3f4f6;
+    .cw-secret-correct {
+      background: #bfdbfe;      /* blue-200 */
     }
-   
-    .clue-item.active {
-      background: #dbeafe;
-      font-weight: 600;
-    }
-   
-    .secret-word-display {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 16px;
-    }
-   
-    .secret-letter-box {
-      width: 40px;
-      height: 40px;
-      border: 2px solid #f59e0b;
-      background: #fef3c7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      border-radius: 6px;
+    .cw-incorrect {
+      background: #fecaca;      /* red-200 */
     }
   </style>
- </head>
- <body class="h-full">
-  <div id="app" class="w-full h-full bg-gradient-to-br from-rose-50 to-orange-50 overflow-auto">
-   <div class="max-w-7xl mx-auto p-8">
-    <div class="text-center mb-8">
-     <h1 id="puzzle-title" class="text-5xl font-bold text-gray-800 mb-2">Crucigrama Médico</h1>
-     <p class="text-gray-600">vocabulario del cuerpo humano y la salud</p>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <main class="max-w-5xl mx-auto p-4 sm:p-8 space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold text-slate-900">
+        Crucigrama – El cuerpo y la salud
+      </h1>
+      <p class="text-sm text-slate-600">
+        Completa el crucigrama. Haz clic en <strong>Comprobar respuestas</strong> para ver qué letras son correctas.
+        Las letras secretas correctas se marcarán en <span class="font-semibold text-sky-700">azul</span>.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-[minmax(0,2fr)_minmax(0,2fr)] gap-8">
+      <!-- Crossword grid -->
+      <section class="bg-white rounded-2xl shadow p-4 flex justify-center overflow-x-auto">
+        <table id="cw-grid" class="cw-grid"></table>
+      </section>
+
+      <!-- Clues -->
+      <section class="bg-white rounded-2xl shadow p-4 space-y-4 text-sm">
+        <div>
+          <h2 class="font-semibold text-slate-800 mb-1">Horizontales</h2>
+          <ol class="list-decimal list-inside space-y-1">
+            <li><strong>2.</strong> El órgano en el pecho que bombea la sangre.</li>
+            <li><strong>5.</strong> Parte de la cara que usas para hablar y comer.</li>
+            <li><strong>9.</strong> Parte del cuerpo que pones dentro del zapato.</li>
+            <li><strong>10.</strong> Órgano donde va la comida; te duele si comes algo malo.</li>
+            <li><strong>11.</strong> Extremidad superior del cuerpo conectada al hombro.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h2 class="font-semibold text-slate-800 mb-1">Verticales</h2>
+          <ol class="list-decimal list-inside space-y-1">
+            <li><strong>1.</strong> Parte interior del cuello; te duele cuando tienes tos o gripe.</li>
+            <li><strong>3.</strong> Órgano de la visión; lo usas para ver.</li>
+            <li><strong>4.</strong> Parte superior del cuerpo que tiene el cerebro, los ojos y la boca.</li>
+            <li><strong>6.</strong> Parte blanca y dura del esqueleto.</li>
+            <li><strong>7.</strong> Parte de la cara que usas para oler y respirar.</li>
+            <li><strong>8.</strong> Articulación en el medio de la pierna que se dobla.</li>
+          </ol>
+        </div>
+      </section>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-     <div class="lg:col-span-2">
-      <div class="bg-white rounded-xl shadow-lg p-6 w-fit mx-auto">
-       <div id="crossword-grid" class="grid gap-0"></div>
-       <div class="mt-6 bg-gradient-to-r from-yellow-100 to-orange-100 p-4 rounded-lg border-2 border-yellow-400">
-        <p class="text-center font-semibold text-gray-700 mb-2"><span id="secret-word-label">🔍 Palabra Secreta:</span> <span class="text-orange-600">SALUD</span></p>
-        <p class="text-sm text-center text-gray-600 mb-3">Las letras doradas en el crucigrama forman esta palabra</p>
-        <div id="secret-word-display" class="secret-word-display"></div>
-       </div>
-       <div class="mt-6 flex gap-3 flex-wrap">
-        <button id="check-btn" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-2 rounded-lg font-semibold transition"> Verificar Respuestas </button>
-        <button id="reveal-btn" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg font-semibold transition"> Mostrar Solución </button>
-        <button id="clear-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition"> Limpiar </button>
-       </div>
+
+    <!-- Controls + feedback -->
+    <section class="bg-white rounded-2xl shadow p-4 space-y-3 text-sm">
+      <div class="flex flex-wrap items-center gap-3">
+        <button id="btn-check"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold">
+          Comprobar respuestas
+        </button>
+        <button id="btn-clear"
+          class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold">
+          Borrar todo
+        </button>
       </div>
-     </div>
-     <div class="space-y-6">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-       <h2 id="across-header" class="text-2xl font-bold text-gray-800 mb-4">Horizontal</h2>
-       <div id="across-clues" class="space-y-2"></div>
+      <p id="cw-status" class="text-sm text-slate-700"></p>
+
+      <div class="mt-3 border-t border-slate-200 pt-3 space-y-1">
+        <p class="font-semibold text-slate-800">
+          Letras secretas (desordenadas):
+        </p>
+        <p id="secret-letters" class="font-mono tracking-[0.3em] text-lg text-sky-800">
+          —
+        </p>
+        <p class="text-xs text-slate-500">
+          Pista: piensa en el tema de <strong>salud</strong> para formar la contraseña.
+        </p>
       </div>
-      <div class="bg-white rounded-xl shadow-lg p-6">
-       <h2 id="down-header" class="text-2xl font-bold text-gray-800 mb-4">Vertical</h2>
-       <div id="down-clues" class="space-y-2"></div>
-      </div>
-     </div>
-    </div>
-   </div>
-  </div>
+    </section>
+  </main>
+
   <script>
-    // --- Configuration and Data ---
-    const GRID_ROWS = 7;
-    const GRID_COLS = 10;
-    
-    const puzzleData = {
-      // Grid is 7 rows x 10 columns
-      grid: [
-        ['C', 'A', 'B', 'E', 'Z', 'A', null, 'T', 'O', 'S'], // Row 0
-        ['O', null, 'R', null, null, null, null, 'O', null, null], // Row 1
-        ['R', 'O', 'D', 'I', 'L', 'L', 'A', 'B', null, 'N'], // Row 2
-        ['A', null, null, null, null, null, null, 'I', null, 'A'], // Row 3
-        ['Z', null, 'P', 'I', 'E', 'R', 'N', 'A', null, 'R'], // Row 4
-        ['O', null, 'I', null, null, null, null, null, null, 'I'], // Row 5
-        ['N', 'A', 'R', 'I', 'Z', null, 'D', 'O', 'L', 'O'] // Row 6 - Fixed DOLOR length issue
+    // ---------- Crossword definition ----------
+    const crossword = {
+      rows: 13,
+      cols: 13,
+      words: [
+        // number, dir, row, col, answer
+        { number: 2, dir: 'across', row: 3, col: 3, answer: 'CORAZON' },
+        { number: 5, dir: 'across', row: 5, col: 1, answer: 'BOCA' },
+        { number: 9, dir: 'across', row: 9, col: 1, answer: 'PIE' },
+        { number: 10, dir: 'across', row: 7, col: 3, answer: 'ESTOMAGO' },
+        { number: 11, dir: 'across', row: 11, col: 1, answer: 'BRAZO' },
+
+        { number: 1, dir: 'down', row: 1, col: 5, answer: 'GARGANTA' },
+        { number: 3, dir: 'down', row: 3, col: 8, answer: 'OJO' },
+        { number: 4, dir: 'down', row: 3, col: 1, answer: 'CABEZA' },
+        { number: 6, dir: 'down', row: 3, col: 10, answer: 'HUESO' },
+        { number: 7, dir: 'down', row: 6, col: 2, answer: 'NARIZ' },
+        { number: 8, dir: 'down', row: 6, col: 6, answer: 'RODILLA' },
       ],
-      secretWord: 'SALUD',
-      // Corrected coordinates for 'DOLOR' to use the 'O' at R6, C9
-      secretLetters: [
-        { letter: 'S', row: 0, col: 9 }, // TOS
-        { letter: 'A', row: 0, col: 5 }, // CABEZA
-        { letter: 'L', row: 2, col: 5 }, // RODILLA
-        { letter: 'U', row: 6, col: 8 }, // DOLOR (L->O was R6, C9)
-        { letter: 'D', row: 2, col: 2 }  // RODILLA
+      // Secret SALUD letters (0-based row/col)
+      secretCells: [
+        { row: 7, col: 4 },  // S in ESTOMAGO
+        { row: 2, col: 5 },  // A in GARGANTA
+        { row: 10, col: 6 }, // L in RODILLA
+        { row: 4, col: 10 }, // U in HUESO
+        { row: 8, col: 6 },  // D in RODILLA
       ],
-      clues: {
-        across: [
-          { number: 1, text: "Parte superior del cuerpo donde está el cerebro", answer: "CABEZA", row: 0, col: 0, length: 6 },
-          { number: 3, text: "Síntoma de resfriado; expulsar aire ruidosamente", answer: "TOS", row: 0, col: 7, length: 3 },
-          { number: 5, text: "Articulación que dobla la pierna", answer: "RODILLA", row: 2, col: 0, length: 7 },
-          { number: 8, text: "Extremidad inferior que usamos para caminar", answer: "PIERNA", row: 4, col: 2, length: 6 },
-          { number: 10, text: "Órgano para oler", answer: "NARIZ", row: 6, col: 1, length: 5 },
-          // Fixed DOLOR coordinates
-          { number: 12, text: "Sensación de sufrimiento físico", answer: "DOLOR", row: 6, col: 6, length: 5 } 
-        ],
-        down: [
-          { number: 1, text: "Órgano que bombea sangre", answer: "CORAZON", row: 0, col: 0, length: 7 },
-          { number: 2, text: "Extremidad superior del cuerpo", answer: "BRAZO", row: 0, col: 2, length: 5 },
-          { number: 4, text: "Articulación que conecta el pie con la pierna", answer: "TOBILLO", row: 0, col: 7, length: 7 },
-          { number: 6, text: "Órgano externo del oído", answer: "OREJA", row: 2, col: 7, length: 5 },
-          { number: 7, text: "Parte externa de la boca", answer: "LABIO", row: 2, col: 6, length: 5 },
-          { number: 9, text: "Órgano de la visión", answer: "OJO", row: 2, col: 9, length: 3 },
-          // Removed the duplicate NARIZ clue (was 11, R2, C9) as it overlapped OJO and had wrong starting row/col.
-          // Note: The original grid had an issue with NARIZ R6, C1 (across) and a down word starting at R2, C9 (OJO). R2, C9 is O.
-          // The word NARIZ at R6, C1 is correct. The conflicting R2, C9 (down) clue has been corrected to OJO.
-        ]
-      }
     };
 
-    let currentCell = null;
-    let currentDirection = 'across';
-    // Initialize userAnswers based on defined dimensions
-    let userAnswers = Array(GRID_ROWS).fill(null).map(() => Array(GRID_COLS).fill(''));
+    // ---------- Build board model ----------
+    const board = [];
+    for (let r = 0; r < crossword.rows; r++) {
+      const row = [];
+      for (let c = 0; c < crossword.cols; c++) {
+        row.push(null); // null = black / no cell
+      }
+      board.push(row);
+    }
 
-    // --- Core Functions ---
-    function createGrid() {
-      const grid = document.getElementById('crossword-grid');
-      // Set grid columns dynamically based on data
-      grid.style.gridTemplateColumns = `repeat(${GRID_COLS}, 45px)`;
-     
-      const cellNumbers = {};
-     
-      // Collect cell numbers from both across and down clues
-      [...puzzleData.clues.across, ...puzzleData.clues.down].forEach(clue => {
-        const key = `${clue.row}-${clue.col}`;
-        if (!cellNumbers[key]) {
-          cellNumbers[key] = clue.number;
+    // Fill letters and numbers
+    crossword.words.forEach(word => {
+      const { number, dir, row, col, answer } = word;
+      for (let i = 0; i < answer.length; i++) {
+        const r = row + (dir === 'down' ? i : 0);
+        const c = col + (dir === 'across' ? i : 0);
+        if (!board[r][c]) {
+          board[r][c] = {
+            row: r,
+            col: c,
+            solution: answer[i],
+            number: null,
+            secret: false,
+          };
+        } else {
+          // Already has same letter from crossing word
+          // nothing extra to do here
         }
+      }
+      // Mark starting cell with number
+      const startCell = board[row][col];
+      if (startCell) {
+        startCell.number = number;
+      }
+    });
+
+    // Mark secret SALUD cells
+    crossword.secretCells.forEach(({ row, col }) => {
+      if (board[row][col]) {
+        board[row][col].secret = true;
+      }
+    });
+
+    // ---------- Render grid ----------
+    const gridEl = document.getElementById('cw-grid');
+
+    board.forEach((row, r) => {
+      const tr = document.createElement('tr');
+      row.forEach((cell, c) => {
+        const td = document.createElement('td');
+        td.className = 'cw-cell';
+
+        if (cell) {
+          const inner = document.createElement('div');
+          inner.className = 'cw-cell-inner';
+          inner.dataset.row = r;
+          inner.dataset.col = c;
+
+          const input = document.createElement('input');
+          input.maxLength = 1;
+          input.autocomplete = 'off';
+          input.setAttribute('data-row', r);
+          input.setAttribute('data-col', c);
+          input.addEventListener('input', e => {
+            e.target.value = e.target.value.toUpperCase();
+          });
+
+          inner.appendChild(input);
+
+          if (cell.number !== null) {
+            const numSpan = document.createElement('span');
+            numSpan.className = 'cw-number';
+            numSpan.textContent = cell.number;
+            inner.appendChild(numSpan);
+          }
+
+          td.appendChild(inner);
+        }
+
+        tr.appendChild(td);
       });
-     
-      puzzleData.grid.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
-          const cellDiv = document.createElement('div');
-          cellDiv.className = 'crossword-cell';
-          cellDiv.dataset.row = rowIndex;
-          cellDiv.dataset.col = colIndex;
-         
-          if (cell === null) {
-            cellDiv.classList.add('black');
+      gridEl.appendChild(tr);
+    });
+
+    const statusEl = document.getElementById('cw-status');
+    const secretEl = document.getElementById('secret-letters');
+
+    function checkCrossword() {
+      let totalCells = 0;
+      let correctCells = 0;
+      const foundSecrets = [];
+
+      // Reset styles
+      document.querySelectorAll('.cw-cell-inner').forEach(div => {
+        div.classList.remove('cw-correct', 'cw-incorrect', 'cw-secret-correct');
+      });
+
+      for (let r = 0; r < crossword.rows; r++) {
+        for (let c = 0; c < crossword.cols; c++) {
+          const cell = board[r][c];
+          if (!cell) continue;
+          totalCells++;
+
+          const selector = `input[data-row="${r}"][data-col="${c}"]`;
+          const input = document.querySelector(selector);
+          const val = (input.value || '').toUpperCase().trim();
+          const correct = val === cell.solution.toUpperCase();
+
+          const wrapper = input.parentElement;
+
+          if (correct) {
+            correctCells++;
+            if (cell.secret) {
+              wrapper.classList.add('cw-secret-correct');
+              foundSecrets.push(cell.solution.toUpperCase());
+            } else {
+              wrapper.classList.add('cw-correct');
+            }
+          } else if (val === '') {
+            // leave as default color
           } else {
-            const isSecretLetter = puzzleData.secretLetters.some(
-              sl => sl.row === rowIndex && sl.col === colIndex
-            );
-           
-            if (isSecretLetter) {
-              cellDiv.classList.add('secret-letter');
-            }
-           
-            const key = `${rowIndex}-${colIndex}`;
-            if (cellNumbers[key]) {
-              const numSpan = document.createElement('span');
-              numSpan.className = 'cell-number';
-              numSpan.textContent = cellNumbers[key];
-              cellDiv.appendChild(numSpan);
-            }
-           
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.maxLength = 1;
-            input.dataset.row = rowIndex;
-            input.dataset.col = colIndex;
-            input.addEventListener('input', handleInput);
-            input.addEventListener('keydown', handleKeyDown);
-            input.addEventListener('click', handleCellClick);
-            cellDiv.appendChild(input);
-          }
-         
-          grid.appendChild(cellDiv);
-        });
-      });
-    }
-
-    function updateSecretWordDisplay() {
-      const display = document.getElementById('secret-word-display');
-      display.innerHTML = '';
-     
-      puzzleData.secretLetters.forEach(sl => {
-        const box = document.createElement('div');
-        box.className = 'secret-letter-box';
-        // Ensure userAnswers array index is checked against bounds
-        const userLetter = userAnswers[sl.row] && userAnswers[sl.row][sl.col] ? userAnswers[sl.row][sl.col] : '';
-        box.textContent = userLetter || '?';
-        display.appendChild(box);
-      });
-    }
-    
-    // --- Input and Navigation Handlers ---
-
-    function handleCellClick(e) {
-      const row = parseInt(e.target.dataset.row);
-      const col = parseInt(e.target.dataset.col);
-     
-      // Toggle direction if the same cell is clicked again
-      if (currentCell && currentCell.row === row && currentCell.col === col) {
-        // Only toggle if the cell is part of a word in the other direction
-        const otherDirection = currentDirection === 'across' ? 'down' : 'across';
-        const otherClues = puzzleData.clues[otherDirection];
-        
-        const isPartOfOtherWord = otherClues.some(clue => {
-            if (otherDirection === 'across') {
-              return clue.row === row && col >= clue.col && col < clue.col + clue.length;
-            } else {
-              return clue.col === col && row >= clue.row && row < clue.row + clue.length;
-            }
-        });
-
-        if (isPartOfOtherWord) {
-             currentDirection = otherDirection;
-        }
-      }
-     
-      currentCell = { row, col };
-      highlightWord();
-      highlightClue();
-    }
-
-    function handleInput(e) {
-      const value = e.target.value.toUpperCase();
-      const row = parseInt(e.target.dataset.row);
-      const col = parseInt(e.target.dataset.col);
-     
-      userAnswers[row][col] = value;
-      e.target.value = value;
-     
-      updateSecretWordDisplay();
-     
-      // Auto-advance if a letter was entered
-      if (value) {
-        moveToNextCell(row, col);
-      }
-    }
-
-    function handleKeyDown(e) {
-      const row = parseInt(e.target.dataset.row);
-      const col = parseInt(e.target.dataset.col);
-     
-      // Backspace functionality
-      if (e.key === 'Backspace') {
-        // If the cell is empty, move to the previous cell and clear its content
-        if (!e.target.value) {
-            e.preventDefault(); // Prevent default browser back navigation
-            moveToPreviousCell(row, col, true);
-        }
-      } 
-      // Arrow key navigation (Overriding browser defaults for grid movement)
-      else if (['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
-        e.preventDefault();
-        
-        if (e.key === 'ArrowRight') {
-          currentDirection = 'across';
-          moveToNextCell(row, col);
-        } else if (e.key === 'ArrowLeft') {
-          currentDirection = 'across';
-          moveToPreviousCell(row, col);
-        } else if (e.key === 'ArrowDown') {
-          currentDirection = 'down';
-          moveToNextCell(row, col);
-        } else if (e.key === 'ArrowUp') {
-          currentDirection = 'down';
-          moveToPreviousCell(row, col);
-        }
-      }
-    }
-
-    // Fixed boundary checks: use GRID_ROWS and GRID_COLS constants
-    function moveToNextCell(row, col) {
-      let nextRow = row;
-      let nextCol = col;
-     
-      if (currentDirection === 'across') {
-        nextCol++;
-        while (nextCol < GRID_COLS && puzzleData.grid[nextRow][nextCol] === null) {
-          nextCol++;
-        }
-        if (nextCol >= GRID_COLS) return;
-      } else { // down
-        nextRow++;
-        while (nextRow < GRID_ROWS && puzzleData.grid[nextRow][nextCol] === null) {
-          nextRow++;
-        }
-        if (nextRow >= GRID_ROWS) return;
-      }
-     
-      const nextInput = document.querySelector(`input[data-row="${nextRow}"][data-col="${nextCol}"]`);
-      if (nextInput) {
-        nextInput.focus();
-        currentCell = { row: nextRow, col: nextCol };
-        highlightWord();
-        highlightClue();
-      }
-    }
-
-    // Fixed boundary checks and added logic to clear previous cell on Backspace
-    function moveToPreviousCell(row, col, clearPrevious = false) {
-      let prevRow = row;
-      let prevCol = col;
-     
-      if (currentDirection === 'across') {
-        prevCol--;
-        while (prevCol >= 0 && puzzleData.grid[prevRow][prevCol] === null) {
-          prevCol--;
-        }
-        if (prevCol < 0) return;
-      } else { // down
-        prevRow--;
-        while (prevRow >= 0 && puzzleData.grid[prevRow][prevCol] === null) {
-          prevRow--;
-        }
-        if (prevRow < 0) return;
-      }
-     
-      const prevInput = document.querySelector(`input[data-row="${prevRow}"][data-col="${prevCol}"]`);
-      if (prevInput) {
-        if (clearPrevious) {
-            prevInput.value = '';
-            userAnswers[prevRow][prevCol] = '';
-            updateSecretWordDisplay();
-        }
-        prevInput.focus();
-        currentCell = { row: prevRow, col: prevCol };
-        highlightWord();
-        highlightClue();
-      }
-    }
-    
-    // --- Highlighting and Clues ---
-
-    function highlightWord() {
-      // Clear all previous highlights
-      document.querySelectorAll('.crossword-cell').forEach(cell => {
-        cell.classList.remove('active', 'highlighted');
-      });
-     
-      if (!currentCell) return;
-     
-      // Find the currently active word/clue
-      const clues = puzzleData.clues[currentDirection];
-      const activeClue = clues.find(clue => {
-        if (currentDirection === 'across') {
-          return clue.row === currentCell.row && 
-                 currentCell.col >= clue.col && 
-                 currentCell.col < clue.col + clue.length;
-        } else {
-          return clue.col === currentCell.col && 
-                 currentCell.row >= clue.row && 
-                 currentCell.row < clue.row + clue.length;
-        }
-      });
-     
-      // Highlight the cells belonging to the active word
-      if (activeClue) {
-        for (let i = 0; i < activeClue.length; i++) {
-          const highlightRow = currentDirection === 'across' ? activeClue.row : activeClue.row + i;
-          const highlightCol = currentDirection === 'across' ? activeClue.col + i : activeClue.col;
-          const cell = document.querySelector(`.crossword-cell[data-row="${highlightRow}"][data-col="${highlightCol}"]`);
-          
-          if (cell && !cell.classList.contains('black')) {
-            if (highlightRow === currentCell.row && highlightCol === currentCell.col) {
-              cell.classList.add('active'); // Current cell
-            } else {
-              cell.classList.add('highlighted'); // Other cells in the word
-            }
+            wrapper.classList.add('cw-incorrect');
           }
         }
       }
-    }
 
-    function highlightClue() {
-      // Clear all previous clue highlights
-      document.querySelectorAll('.clue-item').forEach(item => {
-        item.classList.remove('active');
-      });
-     
-      if (!currentCell) return;
-     
-      const clues = puzzleData.clues[currentDirection];
-      const activeClue = clues.find(clue => {
-        if (currentDirection === 'across') {
-          return clue.row === currentCell.row && 
-                 currentCell.col >= clue.col && 
-                 currentCell.col < clue.col + clue.length;
-        } else {
-          return clue.col === currentCell.col && 
-                 currentCell.row >= clue.row && 
-                 currentCell.row < clue.row + clue.length;
-        }
-      });
-     
-      if (activeClue) {
-        const clueElement = document.querySelector(`.clue-item[data-number="${activeClue.number}"][data-direction="${currentDirection}"]`);
-        if (clueElement) {
-          clueElement.classList.add('active');
-          // Scroll to the active clue
-          clueElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }
-    }
-
-    function createClues() {
-      const acrossDiv = document.getElementById('across-clues');
-      const downDiv = document.getElementById('down-clues');
-      
-      const clueClickHandler = (clue, direction) => {
-        currentDirection = direction;
-        currentCell = { row: clue.row, col: clue.col };
-        highlightWord();
-        highlightClue();
-       
-        const input = document.querySelector(`input[data-row="${clue.row}"][data-col="${clue.col}"]`);
-        if (input) {
-          input.focus();
-        }
-      };
-
-      puzzleData.clues.across.forEach(clue => {
-        const clueDiv = document.createElement('div');
-        clueDiv.className = 'clue-item';
-        clueDiv.dataset.number = clue.number;
-        clueDiv.dataset.direction = 'across';
-        clueDiv.innerHTML = `<strong>${clue.number}.</strong> ${clue.text}`;
-        clueDiv.addEventListener('click', () => clueClickHandler(clue, 'across'));
-        acrossDiv.appendChild(clueDiv);
-      });
-     
-      puzzleData.clues.down.forEach(clue => {
-        const clueDiv = document.createElement('div');
-        clueDiv.className = 'clue-item';
-        clueDiv.dataset.number = clue.number;
-        clueDiv.dataset.direction = 'down';
-        clueDiv.innerHTML = `<strong>${clue.number}.</strong> ${clue.text}`;
-        clueDiv.addEventListener('click', () => clueClickHandler(clue, 'down'));
-        downDiv.appendChild(clueDiv);
-      });
-    }
-
-    // --- Buttons and Game Logic ---
-
-    function checkAnswers() {
-      let allCorrect = true;
-     
-      puzzleData.grid.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
-          if (cell !== null) {
-            const input = document.querySelector(`input[data-row="${rowIndex}"][data-col="${colIndex}"]`);
-            const cellDiv = input.parentElement;
-            
-            if (userAnswers[rowIndex][colIndex] === cell) {
-              cellDiv.classList.add('correct');
-            } else {
-              cellDiv.classList.remove('correct');
-              allCorrect = false;
-            }
-          }
-        });
-      });
-     
-      if (allCorrect) {
-        showTemporaryMessage('🎉 ¡Felicidades! ¡Crucigrama completado!', 'bg-green-500');
+      // Status
+      if (correctCells === totalCells) {
+        statusEl.textContent = '✅ ¡Todo correcto! Has completado el crucigrama.';
+        statusEl.classList.remove('text-red-600');
+        statusEl.classList.add('text-emerald-700');
       } else {
-        showTemporaryMessage('⚠️ Hay errores. Sigue intentándolo.', 'bg-yellow-500');
+        statusEl.textContent = `Llevas ${correctCells} de ${totalCells} letras correctas.`;
+        statusEl.classList.remove('text-emerald-700');
+        statusEl.classList.add('text-slate-700');
+      }
+
+      // Secret letters (scrambled)
+      if (foundSecrets.length) {
+        secretEl.textContent = foundSecrets.join(' ');
+      } else {
+        secretEl.textContent = '—';
       }
     }
 
-    function revealSolution() {
-      puzzleData.grid.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
-          if (cell !== null) {
-            const input = document.querySelector(`input[data-row="${rowIndex}"][data-col="${colIndex}"]`);
-            input.value = cell;
-            userAnswers[rowIndex][colIndex] = cell;
-            input.parentElement.classList.add('correct');
-          }
-        });
+    function clearCrossword() {
+      document.querySelectorAll('#cw-grid input').forEach(input => {
+        input.value = '';
       });
-      updateSecretWordDisplay();
-      showTemporaryMessage('✅ Solución mostrada.', 'bg-blue-500');
-    }
-
-    function clearGrid() {
-      puzzleData.grid.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
-          if (cell !== null) {
-            const input = document.querySelector(`input[data-row="${rowIndex}"][data-col="${colIndex}"]`);
-            input.value = '';
-            userAnswers[rowIndex][colIndex] = '';
-            input.parentElement.classList.remove('correct');
-          }
-        });
+      document.querySelectorAll('.cw-cell-inner').forEach(div => {
+        div.classList.remove('cw-correct', 'cw-incorrect', 'cw-secret-correct');
       });
-      updateSecretWordDisplay();
-      showTemporaryMessage('🗑️ Crucigrama limpio.', 'bg-gray-500');
-    }
-    
-    function showTemporaryMessage(messageText, bgColor) {
-        const oldMessage = document.getElementById('temp-message');
-        if (oldMessage) oldMessage.remove();
-        
-        const message = document.createElement('div');
-        message.id = 'temp-message';
-        message.className = `fixed top-4 left-1/2 transform -translate-x-1/2 ${bgColor} text-white px-6 py-3 rounded-lg shadow-xl font-semibold z-50 transition-opacity duration-300`;
-        message.textContent = messageText;
-        document.body.appendChild(message);
-        setTimeout(() => {
-            message.style.opacity = 0;
-            setTimeout(() => message.remove(), 300);
-        }, 3000);
+      statusEl.textContent = '';
+      secretEl.textContent = '—';
     }
 
-    // --- Initialization ---
-
-    document.getElementById('check-btn').addEventListener('click', checkAnswers);
-    document.getElementById('reveal-btn').addEventListener('click', revealSolution);
-    document.getElementById('clear-btn').addEventListener('click', clearGrid);
-
-    // Initial setup calls
-    createGrid();
-    createClues();
-    // This function must run after the grid is created
-    updateSecretWordDisplay(); 
+    document.getElementById('btn-check').addEventListener('click', checkCrossword);
+    document.getElementById('btn-clear').addEventListener('click', clearCrossword);
   </script>
- </body>
+</body>
 </html>
