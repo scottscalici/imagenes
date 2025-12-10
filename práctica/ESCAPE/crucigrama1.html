@@ -2,92 +2,89 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <title>Crucigrama – Vocabulario: el cuerpo / la salud</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Crucigrama – Descubre 2 Lección 1 (Medicina)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 min-h-screen">
   <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
-    <header class="bg-white rounded-2xl shadow p-4 sm:p-6 border border-slate-200">
-      <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">
-        Crucigrama – Unidad: La medicina
-      </h1>
-      <p class="text-sm text-slate-600 mt-1">
-        Completa el crucigrama con el vocabulario de <strong>Descubre 2 – Lección 1</strong>.
-        Cuando todo esté correcto, recibirás unas letras secretas para descubrir la contraseña
-        del siguiente nivel (tema: <strong>tecnología</strong>).
+    <header class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-800">Crucigrama – Vocabulario</h1>
+        <p class="text-sm text-slate-600">
+          Completa el crucigrama. Usa mayúsculas o minúsculas (no importa).
+        </p>
+      </div>
+      <p class="text-sm text-slate-500">
+        Tema: partes del cuerpo / salud – contraseña secreta de tecnología
       </p>
     </header>
 
-    <section class="bg-white rounded-2xl shadow p-4 sm:p-6 border border-slate-200 grid gap-6 lg:grid-cols-[minmax(0,1.2fr),minmax(0,1fr)]">
-      <!-- Crossword grid -->
-      <div>
-        <h2 class="text-lg font-semibold text-slate-800 mb-3">Crucigrama</h2>
-        <div id="crossword-grid"
-             class="grid grid-cols-15 gap-0.5 bg-slate-300 p-0.5 rounded-xl overflow-auto max-w-full">
-          <!-- cells inserted by JS -->
-        </div>
+    <section class="grid md:grid-cols-[minmax(0,2fr),minmax(0,2fr)] gap-6">
+      <!-- GRID -->
+      <div class="bg-slate-900 rounded-2xl p-3 sm:p-4 shadow-inner">
+        <div id="cw-grid"
+             class="grid grid-cols-15 gap-0.5 sm:gap-1 justify-center"></div>
 
-        <div class="flex flex-wrap items-center gap-3 mt-4">
+        <div class="flex flex-wrap gap-3 mt-4 items-center">
           <button id="btn-check"
-                  class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                  class="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
             Comprobar respuestas
           </button>
           <button id="btn-clear"
-                  class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
+                  class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold">
             Borrar todo
           </button>
-          <p id="check-message" class="text-sm text-slate-700"></p>
-        </div>
-
-        <!-- Secret word box (hidden until puzzle completed) -->
-        <div id="secret-box"
-             class="mt-4 p-4 rounded-xl border border-emerald-300 bg-emerald-50 hidden">
-          <p class="text-sm font-semibold text-emerald-800 mb-1">
-            🎯 ¡Crucigrama completado!
-          </p>
-          <p class="text-sm text-emerald-800">
-            Estas son tus <strong>letras secretas</strong> (desordenadas). Escríbelas, piensa
-            en el tema de <strong>tecnología</strong> y
-            <strong>forma la contraseña</strong>:
-          </p>
-          <p id="secret-letters"
-             class="mt-2 text-lg font-mono tracking-[0.4em] text-emerald-900">
-            <!-- letras secretas -->
-          </p>
-          <p class="text-xs text-emerald-700 mt-2">
-            Cuando tengas la palabra, úsala como contraseña en la siguiente página.
-          </p>
+          <p id="cw-status" class="text-sm text-slate-200"></p>
         </div>
       </div>
 
-      <!-- Clues -->
-      <div class="space-y-4">
+      <!-- CLUES -->
+      <div class="bg-white rounded-2xl shadow p-4 sm:p-5 space-y-4 text-sm">
         <div>
-          <h3 class="text-md font-semibold text-slate-800 mb-2">Horizontales</h3>
-          <ol class="space-y-1 text-sm text-slate-700" id="across-list">
-            <!-- clues inserted by JS -->
+          <h2 class="text-base font-semibold text-slate-800 mb-2">Horizontales</h2>
+          <ol class="list-decimal ml-5 space-y-1 text-slate-700">
+            <li>Parte del cuerpo donde están la lengua y los dientes.</li>
+            <li>Parte del cuerpo que conecta la mano con el hombro.</li>
+            <li>Órgano donde se digiere la comida (el ___).</li>
+            <li>Lugar donde compras medicina y pastillas.</li>
+            <li>Sustancia que tomas para mejorar tu salud.</li>
+            <li>Estado general físico y mental de una persona.</li>
+            <li>Parte del cuerpo que usas para caminar (entre la cadera y el pie).</li>
           </ol>
         </div>
 
         <div>
-          <h3 class="text-md font-semibold text-slate-800 mb-2">Verticales</h3>
-          <ol class="space-y-1 text-sm text-slate-700" id="down-list">
-            <!-- clues inserted by JS -->
+          <h2 class="text-base font-semibold text-slate-800 mb-2">Verticales</h2>
+          <ol class="list-decimal ml-5 space-y-1 text-slate-700">
+            <li>Parte de la cara que usas para oler.</li>
+            <li>Parte del cuerpo que usas para ver (singular).</li>
+            <li>Parte del cuerpo al final de la pierna.</li>
+            <li>Parte dura dentro del cuerpo; tienes muchos de estos.</li>
+            <li>Parte del cuerpo que te duele cuando tienes faringitis.</li>
           </ol>
         </div>
       </div>
     </section>
+
+    <!-- SECRET WORD PANEL -->
+    <section class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 space-y-2">
+      <p id="cw-summary" class="text-sm text-emerald-800 font-semibold">
+        Tus letras secretas aparecerán aquí a medida que completes el crucigrama.
+      </p>
+      <p class="text-xs text-emerald-700">
+        Cuando todas aparezcan, piensa en el tema de <strong>tecnología</strong> y
+        forma la contraseña.
+      </p>
+      <div id="secret-letters"
+           class="mt-2 flex flex-wrap gap-2 text-lg font-mono text-slate-900"></div>
+    </section>
   </main>
 
   <script>
-    // ============ CONFIGURACIÓN PRINCIPAL ============
-
-    // 15x15 grid: letras = solución; # = casilla negra
-    const GRID_ROWS = 15;
-    const GRID_COLS = 15;
-
-    const GRID_ANSWERS = [
+    // 15x15 grid. Letters = solution, "#" = black square.
+    // This matches the vocab you saw in the screenshot.
+    const GRID_TEMPLATE = [
       "BOCA#####N#H#G#",
       "#########A#U#A#",
       "BRAZO####R#E#R#",
@@ -102,177 +99,90 @@
       "##########I####",
       "PIERNA####E####",
       "###############",
-      "###############",
+      "###############"
     ];
 
-    // Palabra secreta (tema tecnología) y versión desordenada para mostrar
-    const SECRET_WORD = "INTERNET";
-    const SECRET_SCRAMBLED = "RENTIENT"; // puedes cambiar el orden si quieres
+    const ROWS = GRID_TEMPLATE.length;
+    const COLS = GRID_TEMPLATE[0].length;
 
-    // Definición de palabras (coinciden con la cuadrícula de arriba)
-    const ACROSS_CLUES = [
-      {
-        number: 1,
-        row: 0,
-        col: 0,
-        answer: "BOCA",
-        clue: "Parte del cuerpo donde están la lengua y los dientes."
-      },
-      {
-        number: 2,
-        row: 2,
-        col: 0,
-        answer: "BRAZO",
-        clue: "Parte del cuerpo que conecta la mano con el hombro."
-      },
-      {
-        number: 3,
-        row: 4,
-        col: 0,
-        answer: "ESTOMAGO",
-        clue: "Órgano donde se digiere la comida (el ____)."
-      },
-      {
-        number: 4,
-        row: 6,
-        col: 0,
-        answer: "FARMACIA",
-        clue: "Lugar donde compras medicina y pastillas."
-      },
-      {
-        number: 5,
-        row: 8,
-        col: 0,
-        answer: "MEDICINA",
-        clue: "Sustancia que tomas para mejorar tu salud."
-      },
-      {
-        number: 6,
-        row: 10,
-        col: 0,
-        answer: "SALUD",
-        clue: "Estado general físico y mental de una persona."
-      },
-      {
-        number: 7,
-        row: 12,
-        col: 0,
-        answer: "PIERNA",
-        clue: "Parte del cuerpo que usas para caminar (entre la cadera y el pie)."
-      }
+    // Secret word = INTERNET – choose 8 specific cells in the grid.
+    // (row, col) indices (0-based) where those letters live.
+    const SECRET_CELLS = [
+      { row: 3, col: 9 },   // I
+      { row: 0, col: 9 },   // N
+      { row: 4, col: 2 },   // T
+      { row: 2, col: 11 },  // E
+      { row: 2, col: 1 },   // R
+      { row: 5, col: 13 },  // N
+      { row: 4, col: 0 },   // E
+      { row: 6, col: 13 }   // T
     ];
 
-    const DOWN_CLUES = [
-      {
-        number: 1,
-        row: 0,
-        col: 9,
-        answer: "NARIZ",
-        clue: "Parte de la cara que usas para oler."
-      },
-      {
-        number: 2,
-        row: 6,
-        col: 10,
-        answer: "OJO",
-        clue: "Parte del cuerpo que usas para ver (singular)."
-      },
-      {
-        number: 3,
-        row: 10,
-        col: 10,
-        answer: "PIE",
-        clue: "Parte del cuerpo al final de la pierna."
-      },
-      {
-        number: 4,
-        row: 0,
-        col: 11,
-        answer: "HUESO",
-        clue: "Parte dura dentro del cuerpo; tienes muchos de estos."
-      },
-      {
-        number: 5,
-        row: 0,
-        col: 13,
-        answer: "GARGANTA",
-        clue: "Parte del cuerpo que te duele cuando tienes faringitis."
-      }
-    ];
+    const SECRET_WORD = "INTERNET"; // just for your reference
 
-    // ============ CONSTRUCCIÓN DEL CRUCIGRAMA ============
+    const gridContainer = document.getElementById("cw-grid");
+    const statusEl = document.getElementById("cw-status");
+    const summaryEl = document.getElementById("cw-summary");
+    const checkBtn = document.getElementById("btn-check");
+    const clearBtn = document.getElementById("btn-clear");
+    const secretLettersContainer = document.getElementById("secret-letters");
 
-    const gridContainer = document.getElementById("crossword-grid");
-    const checkMessage = document.getElementById("check-message");
-    const secretBox = document.getElementById("secret-box");
-    const secretLettersEl = document.getElementById("secret-letters");
+    // Build CSS cols for 15 columns
+    gridContainer.style.gridTemplateColumns = "repeat(15, minmax(0, 1.8rem))";
 
-    const acrossList = document.getElementById("across-list");
-    const downList = document.getElementById("down-list");
-
-    // Tailwind doesn't know "grid-cols-15" by default; define via inline style
-    gridContainer.style.gridTemplateColumns = `repeat(${GRID_COLS}, minmax(1.8rem, 2.2rem))`;
-
-    // Mapa para saber si una celda es inicio de palabra (para numeritos)
-    const cellNumbers = {}; // key "r,c" -> number to display
-
-    ACROSS_CLUES.forEach(entry => {
-      const key = `${entry.row},${entry.col}`;
-      cellNumbers[key] = cellNumbers[key] || entry.number;
-    });
-    DOWN_CLUES.forEach(entry => {
-      const key = `${entry.row},${entry.col}`;
-      cellNumbers[key] = cellNumbers[key] || entry.number;
+    // Map "row-col" -> secretIndex
+    const secretIndexByKey = new Map();
+    SECRET_CELLS.forEach((cell, idx) => {
+      secretIndexByKey.set(`${cell.row}-${cell.col}`, idx);
     });
 
+    // Track which secret letters have been revealed
+    const secretRevealed = Array(SECRET_CELLS.length).fill(false);
+
+    // Build the visual slots for the secret letters (start as •)
+    function initSecretSlots() {
+      secretLettersContainer.innerHTML = "";
+      SECRET_CELLS.forEach((_, idx) => {
+        const span = document.createElement("span");
+        span.dataset.secretIndex = idx;
+        span.className =
+          "inline-flex items-center justify-center w-8 h-8 rounded-md border border-emerald-300 bg-white shadow-sm";
+        span.textContent = "•";
+        secretLettersContainer.appendChild(span);
+      });
+    }
+
+    // Build crossword grid
     function buildGrid() {
       gridContainer.innerHTML = "";
-
-      for (let r = 0; r < GRID_ROWS; r++) {
-        for (let c = 0; c < GRID_COLS; c++) {
-          const correctChar = GRID_ANSWERS[r][c];
-          const isBlock = correctChar === "#";
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const ch = GRID_TEMPLATE[r][c];
+          const isBlack = ch === "#";
 
           const cell = document.createElement("div");
-          cell.className =
-            "relative w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center";
+          cell.dataset.row = r;
+          cell.dataset.col = c;
 
-          if (isBlock) {
-            cell.classList.add("bg-slate-700", "rounded", "shadow-inner");
+          if (isBlack) {
+            cell.className = "w-7 h-7 sm:w-8 sm:h-8 bg-slate-800 rounded-sm";
           } else {
-            cell.classList.add(
-              "bg-white",
-              "rounded",
-              "border",
-              "border-slate-300",
-              "shadow-sm"
-            );
+            const inp = document.createElement("input");
+            inp.maxLength = 1;
+            inp.dataset.answer = ch;
+            inp.dataset.row = r;
+            inp.dataset.col = c;
+            inp.className =
+              "w-7 h-7 sm:w-8 sm:h-8 text-center uppercase text-sm font-semibold " +
+              "bg-slate-100 text-slate-900 rounded-sm border border-slate-400 " +
+              "focus:outline-none focus:ring-2 focus:ring-sky-400";
 
-            const input = document.createElement("input");
-            input.type = "text";
-            input.maxLength = 1;
-            input.className =
-              "w-full h-full text-center uppercase text-sm font-semibold text-slate-800 bg-transparent focus:outline-none";
-            input.dataset.row = r;
-            input.dataset.col = c;
-
-            input.addEventListener("input", (e) => {
-              e.target.value = e.target.value.toUpperCase();
-              // quitar colores cuando el estudiante edita
-              e.target.classList.remove("bg-emerald-100", "border-emerald-500", "text-emerald-900");
-              e.target.classList.remove("bg-rose-100", "border-rose-500", "text-rose-900");
-            });
-
-            cell.appendChild(input);
-
-            const key = `${r},${c}`;
-            if (cellNumbers[key]) {
-              const numberLabel = document.createElement("span");
-              numberLabel.textContent = cellNumbers[key];
-              numberLabel.className =
-                "absolute -top-1 -left-1 text-[0.55rem] text-slate-500";
-              cell.appendChild(numberLabel);
+            // Make secret cells visually slightly outlined from the start
+            if (secretIndexByKey.has(`${r}-${c}`)) {
+              inp.classList.add("border-emerald-400");
             }
+
+            cell.appendChild(inp);
           }
 
           gridContainer.appendChild(cell);
@@ -280,105 +190,119 @@
       }
     }
 
-    function buildClueLists() {
-      acrossList.innerHTML = "";
-      downList.innerHTML = "";
-
-      ACROSS_CLUES.forEach(entry => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span class="font-semibold">${entry.number}.</span> ${entry.clue}`;
-        acrossList.appendChild(li);
-      });
-
-      DOWN_CLUES.forEach(entry => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span class="font-semibold">${entry.number}.</span> ${entry.clue}`;
-        downList.appendChild(li);
-      });
+    function resetGrid() {
+      document
+        .querySelectorAll("#cw-grid input")
+        .forEach(inp => {
+          inp.value = "";
+          inp.classList.remove(
+            "bg-emerald-200",
+            "bg-emerald-300",
+            "bg-blue-300",
+            "bg-red-200",
+            "text-slate-900"
+          );
+          inp.classList.add("bg-slate-100");
+        });
+      statusEl.textContent = "";
+      summaryEl.textContent =
+        "Tus letras secretas aparecerán aquí a medida que completes el crucigrama.";
+      summaryEl.classList.remove("text-red-700");
+      summaryEl.classList.add("text-emerald-800");
+      secretRevealed.fill(false);
+      initSecretSlots();
     }
 
-    // ============ COMPROBAR RESPUESTAS ============
+    // Reveal a secret letter slot when its cell is correct
+    function revealSecretLetter(row, col, letter) {
+      const key = `${row}-${col}`;
+      if (!secretIndexByKey.has(key)) return;
+      const idx = secretIndexByKey.get(key);
+      if (secretRevealed[idx]) return; // already revealed
 
-    function checkCrossword() {
-      const inputs = gridContainer.querySelectorAll("input[data-row]");
-      let allFilled = true;
-      let allCorrect = true;
+      secretRevealed[idx] = true;
+      const span = secretLettersContainer.querySelector(
+        `[data-secret-index="${idx}"]`
+      );
+      if (span) {
+        span.textContent = letter.toUpperCase();
+        span.classList.remove("bg-white");
+        span.classList.add("bg-emerald-100");
+      }
+    }
 
-      inputs.forEach(input => {
-        const r = Number(input.dataset.row);
-        const c = Number(input.dataset.col);
-        const correctChar = GRID_ANSWERS[r][c].toUpperCase();
-        const userChar = (input.value || "").toUpperCase();
+    function checkAnswers() {
+      const inputs = Array.from(document.querySelectorAll("#cw-grid input"));
+      let total = 0;
+      let correct = 0;
+      let anyBlank = false;
 
-        if (!userChar) {
-          allFilled = false;
-          allCorrect = false;
-          input.classList.remove(
-            "bg-emerald-100",
-            "border-emerald-500",
-            "text-emerald-900",
-            "bg-rose-100",
-            "border-rose-500",
-            "text-rose-900"
+      inputs.forEach(inp => {
+        const ans = (inp.dataset.answer || "").toUpperCase();
+        const user = (inp.value || "").toUpperCase().trim();
+        const row = Number(inp.dataset.row);
+        const col = Number(inp.dataset.col);
+        const key = `${row}-${col}`;
+        const isSecret = secretIndexByKey.has(key);
+
+        if (!user) {
+          anyBlank = true;
+          inp.classList.remove(
+            "bg-emerald-200",
+            "bg-emerald-300",
+            "bg-blue-300",
+            "bg-red-200"
           );
+          inp.classList.add("bg-slate-100");
           return;
         }
 
-        if (userChar === correctChar) {
-          input.classList.remove("bg-rose-100", "border-rose-500", "text-rose-900");
-          input.classList.add("bg-emerald-100", "border-emerald-500", "text-emerald-900");
+        total++;
+        if (user === ans) {
+          correct++;
+          inp.classList.remove("bg-slate-100", "bg-red-200");
+          if (isSecret) {
+            inp.classList.add("bg-blue-300");
+          } else {
+            inp.classList.add("bg-emerald-200");
+          }
+          revealSecretLetter(row, col, ans);
         } else {
-          allCorrect = false;
-          input.classList.remove("bg-emerald-100", "border-emerald-500", "text-emerald-900");
-          input.classList.add("bg-rose-100", "border-rose-500", "text-rose-900");
+          inp.classList.remove("bg-slate-100", "bg-emerald-200", "bg-blue-300");
+          inp.classList.add("bg-red-200");
         }
       });
 
-      if (!allFilled) {
-        checkMessage.textContent = "Todavía hay casillas vacías… completa todo antes de comprobar.";
-        checkMessage.className = "text-sm text-amber-700 mt-1";
-        secretBox.classList.add("hidden");
+      if (anyBlank) {
+        statusEl.textContent =
+          "Llena todas las casillas antes de comprobar (las negras se dejan en blanco).";
         return;
       }
 
-      if (allCorrect) {
-        checkMessage.textContent = "✅ ¡Todo correcto! Has completado el crucigrama.";
-        checkMessage.className = "text-sm text-emerald-700 mt-1";
-        // mostrar letras secretas desordenadas
-        secretLettersEl.textContent = SECRET_SCRAMBLED.split("").join(" ");
-        secretBox.classList.remove("hidden");
+      const pct = total ? Math.round((correct / total) * 100) : 0;
+      statusEl.textContent = `Correctas: ${correct} de ${total} (${pct} %).`;
+
+      const allSecret = secretRevealed.every(v => v);
+      if (allSecret && correct === total) {
+        summaryEl.textContent =
+          "¡Crucigrama completado! Estas son tus letras secretas (desordenadas). " +
+          "Escríbelas, piensa en el tema de tecnología y forma la contraseña.";
+        summaryEl.classList.remove("text-red-700");
+        summaryEl.classList.add("text-emerald-800");
+      } else if (allSecret) {
+        summaryEl.textContent =
+          "Ya tienes todas las letras secretas. Corrige las casillas rojas para completar el crucigrama.";
       } else {
-        checkMessage.textContent = "Hay algunos errores. Las casillas rojas necesitan corrección.";
-        checkMessage.className = "text-sm text-rose-700 mt-1";
-        secretBox.classList.add("hidden");
+        summaryEl.textContent =
+          "Sigue completando el crucigrama. Cada vez que aciertes una letra secreta, aparecerá abajo.";
       }
     }
 
-    function clearCrossword() {
-      const inputs = gridContainer.querySelectorAll("input[data-row]");
-      inputs.forEach(input => {
-        input.value = "";
-        input.classList.remove(
-          "bg-emerald-100",
-          "border-emerald-500",
-          "text-emerald-900",
-          "bg-rose-100",
-          "border-rose-500",
-          "text-rose-900"
-        );
-      });
-      checkMessage.textContent = "";
-      secretBox.classList.add("hidden");
-    }
-
-    // ============ INIT ============
-
-    document.getElementById("btn-check").addEventListener("click", checkCrossword);
-    document.getElementById("btn-clear").addEventListener("click", clearCrossword);
-
+    // Init
     buildGrid();
-    buildClueLists();
+    initSecretSlots();
+    clearBtn.addEventListener("click", resetGrid);
+    checkBtn.addEventListener("click", checkAnswers);
   </script>
 </body>
 </html>
-
