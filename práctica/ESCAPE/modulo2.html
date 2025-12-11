@@ -2,10 +2,41 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Módulo 1 – Verbos presente + vocabulario</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Módulo – Nivel 2</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-slate-100 text-slate-800">
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- 🔐 PASSWORD GATE -->
+    <section id="password-gate"
+             class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+      <h1 class="text-2xl font-bold text-indigo-600 mb-2">
+        Acceso al siguiente nivel
+      </h1>
+      <p class="text-sm text-slate-600 mb-4">
+        Escribe la contraseña que encontraste en el módulo anterior.
+      </p>
+
+      <label for="passwordInput" class="block text-sm font-semibold text-slate-700 mb-1">
+        Contraseña:
+      </label>
+      <input id="passwordInput" type="text"
+             class="w-full border rounded-lg p-2 mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+             placeholder="Escribe la contraseña aquí">
+
+      <button type="button"
+              onclick="checkPassword()"
+              class="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition">
+        Entrar
+      </button>
+
+      <p id="password-error" class="text-xs text-red-600 mt-3 hidden">
+        Contraseña incorrecta. Inténtalo otra vez.
+      </p>
+    </section>
+
 <body class="bg-slate-100 min-h-screen">
   <!-- STICKY HEADER WITH PROGRESS -->
   <header class="sticky top-0 z-20 bg-white shadow-sm">
@@ -278,11 +309,11 @@
   <script>
     // 👉 Change this per day (VERBS):
     const PRACTICE_JSON_URL =
-      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos1.json';
+      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos2.json';
 
     // 👉 Change this per day (VOCAB):
     const VOCAB_JSON_URL =
-      'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/práctica/ESCAPE/vocab1.json';
+      'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/práctica/ESCAPE/vocab2.json';
 
     const TOTAL_MODULES = 6;
     const PASS_THRESHOLD = 1.0;
@@ -1060,6 +1091,35 @@ async function loadVocabSet() {
     showModule(1);
     loadPracticeSet();
     loadVocabSet();
+
+    
+    function checkPassword() {
+      const inputEl = document.getElementById("passwordInput");
+      const errorEl = document.getElementById("password-error");
+      const input = inputEl.value.trim();
+      const correct = "DESCANSOMENTAL25";
+
+      if (input.toUpperCase() === correct) {
+        // Oculta el gate y muestra el contenido
+        document.getElementById("password-gate").classList.add("hidden");
+        document.getElementById("protected-content").classList.remove("hidden");
+        errorEl.classList.add("hidden");
+      } else {
+        // Muestra mensaje de error
+        errorEl.classList.remove("hidden");
+        // Opcional: limpia el input
+        // inputEl.value = "";
+        inputEl.focus();
+      }
+    }
+
+    // Opcional: permitir Enter para enviar
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && document.activeElement.id === "passwordInput") {
+        checkPassword();
+      }
+    });
+  
   </script>
 </body>
 </html>
