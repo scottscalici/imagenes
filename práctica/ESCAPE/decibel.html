@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functional Decibel Meter (Web Audio API)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for the Gauge Visual */
+        #gauge-container {
+            width: 300px;
+            height: 150px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px auto;
+            border-radius: 150px 150px 0 0;
+            background: #e5e7eb; 
+        }
+        
+        #gauge-mask {
+            width: 300px;
+            height: 150px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+        #gauge-fill {
+            width: 300px;
+            height: 150px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* Green (quiet) to Yellow (moderate) to Red (loud) */
+            background: linear-gradient(to right, #10b981 0%, #facc15 50%, #ef4444 100%);
+            transform-origin: 50% 100%;
+            transform: rotate(-90deg);
+            transition: transform 0.1s linear; /* Faster transition for real-time feel */
+        }
+
+        #gauge-mask::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 280px;
+            height: 140px;
+            border-radius: 140px 140px 0 0;
+            background: white;
+        }
+
+        #needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 150px;
+            background: black;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotate(-90deg);
+            transition: transform 0.1s linear;
+            z-index: 10;
+        }
+
+        /* Styles for status messages */
+        .status-message {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center bg-gray-100">
+
+    <div class="bg-white p-8 rounded-xl shadow-2xl text-center w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Functional Decibel Meter</h1>
+        <p class="text-gray-500 mb-6">Measures real sound level using your microphone.</p>
+
+        <div id="gauge-container">
+            <div id="gauge-mask">
+                <div id="gauge-fill"></div>
+            </div>
+            <div id="needle"></div>
+        </div>
+
+        <div class="my-6">
+            <span id="decibel-value" class="text-6xl font-extrabold text-gray-800">
+                00.0
+            </span>
+            <span class="text-3xl font-bold text-gray-600">
+                dB
+            </span>
+        </div>
+        
+        <div id="status" class="status-message text-red-500">
+            Click 'Start' to request microphone access.
+        </div>
+
+        <button id="toggle-btn" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-200">
+            Start Measuring
+        </button>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const decibelValueEl = document.getElementById('decibel-value');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const needleEl = document.getElementById('needle');
+        const gaugeFillEl = document.getElementById('gauge-fill');
+        const statusEl = document.getElementById('status');
+
+        // --- Constants for Measurement ---
+        let audioContext = null;
+        let analyser = null;
+        let mediaStream = null;
+        let rafId = null; // Request Animation Frame ID
+
+        const MIN_DB = 0;
+        const MAX_DB = 120; // Maximum measurement limit for the visual gauge
+        const DB_RANGE = MAX_DB - MIN_DB;
+        const INITIAL_DB = 0.0;
+        
+        // Array to hold the audio data
+        let dataArray = null;
+
+        // --- Core Functions ---
+
+        /**
+         * Maps a decibel value to a rotation degree for the gauge.
+         * 0dB (MIN_DB) = -90deg (start of gauge)
+         * 120dB (MAX_DB) = 90deg (end of gauge)
+         * @param {number} db - The decibel value.
+         * @returns {number} The rotation in degrees (-90 to 90).
+         */
+        function mapDbToRotation(db) {
+            // Clamp DB value between MIN_DB and MAX_DB for visual representation
+            const clampedDb = Math.max(MIN_DB, Math.min(MAX_DB, db));
+            // Normalize to a 0-1 range
+            const normalized = (clampedDb - MIN_DB) / DB_RANGE;
+            // Map 0-1 range to -90deg to 90deg (total 180 degrees)
+            return normalized * 180 - 90;
+        }
+
+        /**
+         * Calculates the Root Mean Square (RMS) from the audio data.
+         * RMS is a proxy for the volume/loudness of the signal.
+         * @param {Float32Array} arr - The audio data array.
+         * @returns {number} The RMS value.
+         */
+        function calculateRMS(arr) {
+            let sumOfSquares = 0;
+            for (let i = 0; i < arr.length; i++) {
+                sumOfSquares += arr[i] * arr[i];
+            }
+            return Math.sqrt(sumOfSquares / arr.length);
+        }
+
+        /**
+         * Converts the RMS value to Decibels (dB).
+         * @param {number} rms - The calculated RMS value.
+         * @returns {number} The decibel value.
+         */
+        function rmsToDb(rms) {
+            // Standard reference is 1 (for 0dBFS - Decibels Full Scale)
+            const referenceRMS = 1; 
+            // The value 0.0000000001 is a tiny value to prevent log(0) which is -Infinity
+            const safeRms = rms > 0 ? rms : 0.0000000001; 
+            
+            // Formula: 20 * log10 (RMS / ReferenceRMS)
+            let db = 20 * Math.log10(safeRms / referenceRMS);
+
+            // Shift and scale: A quiet room usually lands around -60dB to -40dB 
+            // relative to the digital max (0dBFS). 
+            // We typically shift this scale up to map it to a physical sound level (SPL).
+            // This offset (e.g., 80) is a simplification/calibration needed for a real SPL meter.
+            const SPL_OFFSET = 95; 
+            db = db + SPL_OFFSET;
+            
+            return db;
+        }
+
+        /**
+         * Main animation loop to fetch and display the decibel level.
+         */
+        function update() {
+            // Fill the array with the current time-domain audio data
+            analyser.getFloatTimeDomainData(dataArray);
+
+            // Calculate RMS and convert to dB
+            const rms = calculateRMS(dataArray);
+            const db = rmsToDb(rms);
+            
+            // Update the display and gauge
+            const rotation = mapDbToRotation(db);
+            decibelValueEl.textContent = db.toFixed(1);
+            needleEl.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+            gaugeFillEl.style.transform = `rotate(${rotation}deg)`;
+
+            // Request the next frame
+            rafId = requestAnimationFrame(update);
+        }
+
+        /**
+         * Initializes the Web Audio API and starts reading the microphone.
+         */
+        async function startMeasuring() {
+            try {
+                statusEl.textContent = 'Requesting microphone access...';
+                
+                // 1. Get Microphone Stream (GUM)
+                mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // 2. Initialize Audio Context
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 3. Create Audio Nodes
+                const source = audioContext.createMediaStreamSource(mediaStream);
+                analyser = audioContext.createAnalyser();
+                
+                // Analyser setup
+                analyser.fftSize = 2048; // Fast Fourier Transform size (higher is more detailed but slower)
+                dataArray = new Float32Array(analyser.fftSize);
+
+                // 4. Connect the Graph: Source -> Analyser -> Destination (silent)
+                source.connect(analyser);
+                // analyser.connect(audioContext.destination); // Connect to speakers for monitoring (optional)
+                
+                // 5. Start the animation loop
+                rafId = requestAnimationFrame(update);
+                
+                // Update UI state
+                statusEl.textContent = 'Measuring! Start talking...';
+                statusEl.classList.remove('text-red-500');
+                statusEl.classList.add('text-green-600');
+                toggleBtn.textContent = 'Stop Measuring';
+                toggleBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                toggleBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+
+            } catch (err) {
+                // Handle denied permission or device not found
+                console.error('Error accessing microphone:', err);
+                statusEl.textContent = `Error: Microphone access denied or failed. (${err.name})`;
+                statusEl.classList.add('text-red-500');
+                toggleBtn.textContent = 'Retry Start';
+            }
+        }
+
+        /**
+         * Stops the measurement and cleans up resources.
+         */
+        function stopMeasuring() {
+            cancelAnimationFrame(rafId);
+            
+            // Stop the microphone track
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            // Close the audio context
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            // Reset UI
+            updateMeterVisual(INITIAL_DB);
+            decibelValueEl.textContent = INITIAL_DB.toFixed(1);
+            statusEl.textContent = 'Measurement stopped.';
+            statusEl.classList.remove('text-green-600');
+            statusEl.classList.add('text-red-500');
+            toggleBtn.textContent = 'Start Measuring';
+            toggleBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+            toggleBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        }
+        
+        function updateMeterVisual(db) {
+            const rotation = mapDbToRotation(db);
+            needleEl.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+            gaugeFillEl.style.transform = `rotate(${rotation}deg)`;
+        }
+
+        // --- Event Listener ---
+        toggleBtn.addEventListener('click', () => {
+            if (mediaStream) {
+                stopMeasuring();
+            } else {
+                startMeasuring();
+            }
+        });
+
+        // Initial visual setup
+        updateMeterVisual(INITIAL_DB);
+    </script>
+</body>
+</html>
