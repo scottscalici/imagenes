@@ -134,12 +134,12 @@
         function getPhraseForDb(db) {
             if (db >= 71) {
                 return '¡Ay, que se callen, por favor!';
-            } else if (db >= 60) {
-                return '¡Bruh?!';
             } else if (db >= 50) {
-                return 'Así, así (50-60 dB)';
-            } else if (db >= 40) {
-                return '¡Perfecto! (40-50 dB)';
+                return '¡¿Bruh?!';
+            } else if (db >= 30) {
+                return 'Está bien';
+            } else if (db >= 10) {
+                return '¡Perfecto!';
             } else { // Below 40 dB
                 return 'Ommm... (Silencio)';
             }
