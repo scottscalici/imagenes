@@ -1060,16 +1060,20 @@ async function loadVocabSet() {
     }
 
     // Module 5 → 6
-    if (nextFrom5Btn) {
-      nextFrom5Btn.addEventListener('click', () => {
-        // Solo marcar completado si aún no lo está (por si llegan aquí sin terminar todos los bloques)
-        markModuleCompleted(5);
-        unlockModuleBtn(6);
-        showModule(6);
-        markModuleCompleted(6);
-      });
-    }
+   // Module 5 → External Crossword URL
+if (nextFrom5Btn) {
+  nextFrom5Btn.addEventListener('click', () => {
+    // Mark Module 5 as completed in the progress tracker
+    markModuleCompleted(5);
 
+    // OPTIONAL: Mark Module 6 completed as well, so the progress bar shows 100%
+    // before redirection. Remove this line if you want it to show 5/6 complete.
+    markModuleCompleted(6); 
+
+    // FINAL ACTION: Redirect the user to the crossword page
+    window.location.href = 'https://scottscalici.github.io/imagenes/pr%C3%A1ctica/ESCAPE/crucigrama2.html';
+  });
+}
     // Sidebar tabs
     document.querySelectorAll('.module-tab').forEach(btn => {
       btn.addEventListener('click', () => {
