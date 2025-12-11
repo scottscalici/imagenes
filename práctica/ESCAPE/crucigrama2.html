@@ -99,17 +99,22 @@
         <p id="global-status" class="text-sm text-slate-200"></p>
       </div>
 
-      <div class="mt-2 p-3 rounded-xl bg-slate-800 border border-slate-700">
-        <h3 class="text-sm font-semibold mb-1">Letras secretas (desordenadas)</h3>
-        <p id="secret-letters" class="text-lg font-mono tracking-widest">
-          _ _ _ _ _
-        </p>
+      <p class="mt-4 text-sm text-slate-100">
+  Letras secretas: 
+  <span id="secret-letters">_ _ _ _ _</span>
+</p>
+
      
       </div>
     </section>
   </main>
 
   <script>
+const SCRAMBLED_SECRET = ['L', 'S', 'D', 'U', 'A'];
+
+// Track which positions have been “unlocked”
+const secretDiscovered = Array(SCRAMBLED_SECRET.length).fill(false);
+
     const GRID_ROWS = 12;
     const GRID_COLS = 13;
 
