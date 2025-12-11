@@ -110,10 +110,6 @@
   </main>
 
   <script>
-const SCRAMBLED_SECRET = ['L', 'S', 'D', 'U', 'A'];
-
-// Track which positions have been “unlocked”
-const secretDiscovered = Array(SCRAMBLED_SECRET.length).fill(false);
 
     const GRID_ROWS = 12;
     const GRID_COLS = 13;
@@ -351,7 +347,7 @@ const secretDiscovered = Array(SCRAMBLED_SECRET.length).fill(false);
       const pct = total ? Math.round((correct / total) * 100) : 0;
       globalStatus.textContent = `Respuestas correctas: ${correct} de ${total} (${pct} %).`;
 
-      // letras secretas
+     // letras secretas
       const pieces = SECRET_LETTERS.map(({ row, col, letter }) => {
         const input = boardEl.querySelector(
           `input[data-row="${row}"][data-col="${col}"]`
