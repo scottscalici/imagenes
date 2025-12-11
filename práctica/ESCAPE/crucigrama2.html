@@ -1,374 +1,370 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Crucigrama – El cuerpo y la salud</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .grid-board {
-      display: grid;
-      grid-template-columns: repeat(13, 2rem);
-      grid-auto-rows: 2rem;
-      gap: 2px;
-      background: #020617;
-      padding: 8px;
-      border-radius: 0.75rem;
-    }
-    .cell {
-      position: relative;
-      background: #0f172a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .cell-active {
-      background: #e5f2ff;
-    }
-    .cell input {
-      width: 100%;
-      height: 100%;
-      border: none;
-      outline: none;
-      text-align: center;
-      font-weight: 600;
-      text-transform: uppercase;
-      background: transparent;
-        color: #0f172a;       
-    }
-    .cell-number {
-      position: absolute;
-      top: 1px;
-      left: 2px;
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .cell-correct input {
-      background: #bbf7d0; /* verde */
-    }
-    .cell-incorrect input {
-      background: #fee2e2; /* rojo */
-    }
-    .cell-secret.cell-correct input {
-      background: #bfdbfe; /* azul para letras secretas */
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Crucigrama – El cuerpo y la salud</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .grid-board {
+      display: grid;
+      grid-template-columns: repeat(13, 2rem);
+      grid-auto-rows: 2rem;
+      gap: 2px;
+      background: #020617;
+      padding: 8px;
+      border-radius: 0.75rem;
+    }
+    .cell {
+      position: relative;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cell-active {
+      background: #e5f2ff;
+    }
+    .cell input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      text-align: center;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: transparent;
+        color: #0f172a;       
+    }
+    .cell-correct input {
+      background: #bbf7d0; /* verde */
+    }
+    .cell-incorrect input {
+      background: #fee2e2; /* rojo */
+    }
+    .cell-secret.cell-correct input {
+      background: #bfdbfe; /* azul para letras secretas */
+    }
+  </style>
 </head>
 <body class="bg-slate-900 text-slate-50 min-h-screen">
-  <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
-    <header class="space-y-2">
-      <h1 class="text-2xl font-bold">Crucigrama – El cuerpo y la salud</h1>
-      <ul class="text-sm list-disc list-inside text-slate-200 space-y-1">
-        <li>Sigue los números para contestar las pistas.</li>
-        <li>Cuando termines, haz clic en <strong>Comprobar respuestas</strong>.</li>
-        <li>Las letras especiales se pondrán <span class="font-semibold text-sky-300">azules</span>. Anótalas y forma una palabra secreta.</li>
-      </ul>
-    </header>
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold">Crucigrama – El cuerpo y la salud</h1>
+      <ul class="text-sm list-disc list-inside text-slate-200 space-y-1">
+        <li>Sigue los números para contestar las pistas.</li>
+        <li>Cuando termines, haz clic en <strong>Comprobar respuestas</strong>.</li>
+        <li>Las letras especiales se pondrán <span class="font-semibold text-sky-300">azules</span>. Anótalas y forma una palabra secreta.</li>
+      </ul>
+    </header>
 
-    <!-- Crucigrama -->
-    <section class="flex flex-col lg:flex-row gap-6">
-      <div id="board" class="grid-board"></div>
+        <section class="flex flex-col lg:flex-row gap-6">
+      <div id="board" class="grid-board"></div>
 
-      <!-- Pistas -->
-      <div class="flex-1 space-y-4">
-        <div>
-          <h2 class="font-semibold mb-2">Horizontales</h2>
-          <ol id="clues-across" class="list-decimal list-inside text-sm space-y-1"></ol>
-        </div>
-        <div>
-          <h2 class="font-semibold mb-2">Verticales</h2>
-          <ol id="clues-down" class="list-decimal list-inside text-sm space-y-1"></ol>
-        </div>
-      </div>
-    </section>
+            <div class="flex-1 space-y-4">
+        <div>
+          <h2 class="font-semibold mb-2">Horizontales</h2>
+          <ol id="clues-across" class="list-decimal list-inside text-sm space-y-1"></ol>
+        </div>
+        <div>
+          <h2 class="font-semibold mb-2">Verticales</h2>
+          <ol id="clues-down" class="list-decimal list-inside text-sm space-y-1"></ol>
+        </div>
+      </div>
+    </section>
 
-    <!-- Controles -->
-    <section class="space-y-3">
-      <div class="flex flex-wrap gap-3 items-center">
-        <button id="btn-check"
-                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-sm font-semibold">
-          Comprobar respuestas
-        </button>
-        <button id="btn-clear"
-                class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-sm font-semibold">
-          Borrar todo
-        </button>
-        <p id="global-status" class="text-sm text-slate-200"></p>
-      </div>
+        <section class="space-y-3">
+      <div class="flex flex-wrap gap-3 items-center">
+        <button id="btn-check"
+                class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-sm font-semibold">
+          Comprobar respuestas
+        </button>
+        <button id="btn-clear"
+                class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-800 text-sm font-semibold">
+          Borrar todo
+        </button>
+        <p id="global-status" class="text-sm text-slate-200"></p>
+      </div>
 
-      <p class="mt-4 text-sm text-slate-100">
-  Letras secretas: 
-  <span id="secret-letters">_ _ _ _ _</span>
+      <p class="mt-4 text-sm text-slate-100">
+  Letras secretas: 
+  <span id="secret-letters">_ _ _ _ _</span>
 </p>
 
-     
+      
+      <div class="flex justify-end pt-4 border-t border-slate-700 mt-4">
+          <a href="https://scottscalici.github.io/imagenes/pr%C3%A1ctica/ESCAPE/modulo3.html"
+             class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
+              Continuar al Módulo Final →
+          </a>
       </div>
-    </section>
-  </main>
+     
+      </div>
+    </section>
+  </main>
 
-  <script>
+  <script>
+// (The rest of the JavaScript remains unchanged)
+    const GRID_ROWS = 12;
+    const GRID_COLS = 13;
 
-    const GRID_ROWS = 12;
-    const GRID_COLS = 13;
+    const WORDS = [
+      {
+        id: 1,
+        answer: "GARGANTA",
+        direction: "down",
+        row: 1,
+        col: 8,
+        clue: "Parte interior del cuello; te duele cuando tienes tos o gripe."
+      },
+      {
+        id: 2,
+        answer: "CORAZON",
+        direction: "across",
+        row: 3,
+        col: 6,
+        clue: "El órgano en el pecho que bombea la sangre."
+      },
+      {
+        id: 3,
+        answer: "OJO",
+        direction: "down",
+        row: 3,
+        col: 2,
+        clue: "Órgano de la visión; lo usas para ver."
+      },
+      {
+        id: 4,
+        answer: "CABEZA",
+        direction: "down",
+        row: 4,
+        col: 4,
+        clue: "Parte superior del cuerpo que tiene el cerebro, los ojos y la boca."
+      },
+      {
+        id: 5,
+        answer: "BOCA",
+        direction: "across",
+        row: 5,
+        col: 1,
+        clue: "Parte de la cara que usas para hablar y comer."
+      },
+      {
+        id: 6,
+        answer: "HUESO",
+        direction: "down",
+        row: 5,
+        col: 6,
+        clue: "Parte blanca y dura del esqueleto."
+      },
+      {
+        id: 7,
+        answer: "NARIZ",
+        direction: "down",
+        row: 6,
+        col: 11,
+        clue: "Parte de la cara que usas para oler y respirar."
+      },
+      {
+        id: 8,
+        answer: "RODILLA",
+        direction: "down",
+        row: 6,
+        col: 13,
+        clue: "Articulación en el medio de la pierna que se dobla."
+      },
+      {
+        id: 9,
+        answer: "PIE",
+        direction: "across",
+        row: 7,
+        col: 2,
+        clue: "Parte del cuerpo que pones dentro del zapato."
+      },
+      {
+        id: 10,
+        answer: "ESTOMAGO",
+        direction: "across",
+        row: 7,
+        col: 6,
+        clue: "Órgano donde va la comida; te duele si comes algo malo."
+      },
+      {
+        id: 11,
+        answer: "BRAZO",
+        direction: "across",
+        row: 9,
+        col: 2,
+        clue: "Extremidad superior del cuerpo conectada al hombro."
+      }
+    ];
 
-    const WORDS = [
-      {
-        id: 1,
-        answer: "GARGANTA",
-        direction: "down",
-        row: 1,
-        col: 8,
-        clue: "Parte interior del cuello; te duele cuando tienes tos o gripe."
-      },
-      {
-        id: 2,
-        answer: "CORAZON",
-        direction: "across",
-        row: 3,
-        col: 6,
-        clue: "El órgano en el pecho que bombea la sangre."
-      },
-      {
-        id: 3,
-        answer: "OJO",
-        direction: "down",
-        row: 3,
-        col: 2,
-        clue: "Órgano de la visión; lo usas para ver."
-      },
-      {
-        id: 4,
-        answer: "CABEZA",
-        direction: "down",
-        row: 4,
-        col: 4,
-        clue: "Parte superior del cuerpo que tiene el cerebro, los ojos y la boca."
-      },
-      {
-        id: 5,
-        answer: "BOCA",
-        direction: "across",
-        row: 5,
-        col: 1,
-        clue: "Parte de la cara que usas para hablar y comer."
-      },
-      {
-        id: 6,
-        answer: "HUESO",
-        direction: "down",
-        row: 5,
-        col: 6,
-        clue: "Parte blanca y dura del esqueleto."
-      },
-      {
-        id: 7,
-        answer: "NARIZ",
-        direction: "down",
-        row: 6,
-        col: 11,
-        clue: "Parte de la cara que usas para oler y respirar."
-      },
-      {
-        id: 8,
-        answer: "RODILLA",
-        direction: "down",
-        row: 6,
-        col: 13,
-        clue: "Articulación en el medio de la pierna que se dobla."
-      },
-      {
-        id: 9,
-        answer: "PIE",
-        direction: "across",
-        row: 7,
-        col: 2,
-        clue: "Parte del cuerpo que pones dentro del zapato."
-      },
-      {
-        id: 10,
-        answer: "ESTOMAGO",
-        direction: "across",
-        row: 7,
-        col: 6,
-        clue: "Órgano donde va la comida; te duele si comes algo malo."
-      },
-      {
-        id: 11,
-        answer: "BRAZO",
-        direction: "across",
-        row: 9,
-        col: 2,
-        clue: "Extremidad superior del cuerpo conectada al hombro."
-      }
-    ];
+    // celdas que forman la palabra secreta SALUD
+    const SECRET_LETTERS = [
+      { row: 7, col: 7, letter: "S" }, // S de ESTOMAGO
+      { row: 2, col: 8, letter: "A" }, // A de GARGANTA
+      { row: 10, col: 13, letter: "L" }, // L de RODILLA
+      { row: 6, col: 6, letter: "U" }, // U de HUESO
+      { row: 8, col: 13, letter: "D" }  // D de RODILLA
+    ];
 
-    // celdas que forman la palabra secreta SALUD
-    const SECRET_LETTERS = [
-      { row: 7, col: 7, letter: "S" }, // S de ESTOMAGO
-      { row: 2, col: 8, letter: "A" }, // A de GARGANTA
-      { row: 10, col: 13, letter: "L" }, // L de RODILLA
-      { row: 6, col: 6, letter: "U" }, // U de HUESO
-      { row: 8, col: 13, letter: "D" }  // D de RODILLA
-    ];
+    const secretMap = new Map(
+      SECRET_LETTERS.map(l => [`${l.row}-${l.col}`, l.letter])
+    );
 
-    const secretMap = new Map(
-      SECRET_LETTERS.map(l => [`${l.row}-${l.col}`, l.letter])
-    );
+    // ---- construir modelo de rejilla ----
+    const cells = [];
+    for (let r = 1; r <= GRID_ROWS; r++) {
+      const row = [];
+      for (let c = 1; c <= GRID_COLS; c++) {
+        row.push({
+          solution: null,
+          starts: [] // ids de palabras que empiezan aquí
+        });
+      }
+      cells.push(row);
+    }
 
-    // ---- construir modelo de rejilla ----
-    const cells = [];
-    for (let r = 1; r <= GRID_ROWS; r++) {
-      const row = [];
-      for (let c = 1; c <= GRID_COLS; c++) {
-        row.push({
-          solution: null,
-          starts: [] // ids de palabras que empiezan aquí
-        });
-      }
-      cells.push(row);
-    }
+    WORDS.forEach(word => {
+      const { row, col, direction, answer, id } = word;
+      for (let i = 0; i < answer.length; i++) {
+        const r = row + (direction === "down" ? i : 0);
+        const c = col + (direction === "across" ? i : 0);
 
-    WORDS.forEach(word => {
-      const { row, col, direction, answer, id } = word;
-      for (let i = 0; i < answer.length; i++) {
-        const r = row + (direction === "down" ? i : 0);
-        const c = col + (direction === "across" ? i : 0);
+        const cell = cells[r - 1][c - 1];
+        const letter = answer[i];
 
-        const cell = cells[r - 1][c - 1];
-        const letter = answer[i];
+        if (cell.solution && cell.solution !== letter) {
+          console.warn("Conflicto en", r, c, cell.solution, letter);
+        }
+        cell.solution = letter;
 
-        if (cell.solution && cell.solution !== letter) {
-          console.warn("Conflicto en", r, c, cell.solution, letter);
-        }
-        cell.solution = letter;
+        if (i === 0) {
+          cell.starts.push(id);
+        }
+      }
+    });
 
-        if (i === 0) {
-          cell.starts.push(id);
-        }
-      }
-    });
+    // ---- renderizar tablero ----
+    const boardEl = document.getElementById("board");
 
-    // ---- renderizar tablero ----
-    const boardEl = document.getElementById("board");
+    for (let r = 1; r <= GRID_ROWS; r++) {
+      for (let c = 1; c <= GRID_COLS; c++) {
+        const cellData = cells[r - 1][c - 1];
+        const hasLetter = !!cellData.solution;
+        const div = document.createElement("div");
+        div.className = "cell" + (hasLetter ? " cell-active" : "");
 
-    for (let r = 1; r <= GRID_ROWS; r++) {
-      for (let c = 1; c <= GRID_COLS; c++) {
-        const cellData = cells[r - 1][c - 1];
-        const hasLetter = !!cellData.solution;
-        const div = document.createElement("div");
-        div.className = "cell" + (hasLetter ? " cell-active" : "");
+        if (hasLetter) {
+          if (cellData.starts.length) {
+            const num = Math.min(...cellData.starts);
+            const numEl = document.createElement("span");
+            numEl.className = "cell-number";
+            numEl.textContent = num;
+            div.appendChild(numEl);
+          }
 
-        if (hasLetter) {
-          if (cellData.starts.length) {
-            const num = Math.min(...cellData.starts);
-            const numEl = document.createElement("span");
-            numEl.className = "cell-number";
-            numEl.textContent = num;
-            div.appendChild(numEl);
-          }
+          const input = document.createElement("input");
+          input.maxLength = 1;
+          input.dataset.row = r;
+          input.dataset.col = c;
+          input.autocomplete = "off";
+          div.appendChild(input);
 
-          const input = document.createElement("input");
-          input.maxLength = 1;
-          input.dataset.row = r;
-          input.dataset.col = c;
-          input.autocomplete = "off";
-          div.appendChild(input);
+          if (secretMap.has(`${r}-${c}`)) {
+            div.classList.add("cell-secret");
+          }
+        }
 
-          if (secretMap.has(`${r}-${c}`)) {
-            div.classList.add("cell-secret");
-          }
-        }
+        boardEl.appendChild(div);
+      }
+    }
 
-        boardEl.appendChild(div);
-      }
-    }
+    // ---- pistas ----
+    const cluesAcrossEl = document.getElementById("clues-across");
+    const cluesDownEl = document.getElementById("clues-down");
 
-    // ---- pistas ----
-    const cluesAcrossEl = document.getElementById("clues-across");
-    const cluesDownEl = document.getElementById("clues-down");
+    WORDS.forEach(w => {
+      const li = document.createElement("li");
+      li.textContent = `${w.id}. ${w.clue}`;
+      if (w.direction === "across") {
+        cluesAcrossEl.appendChild(li);
+      } else {
+        cluesDownEl.appendChild(li);
+      }
+    });
 
-    WORDS.forEach(w => {
-      const li = document.createElement("li");
-      li.textContent = `${w.id}. ${w.clue}`;
-      if (w.direction === "across") {
-        cluesAcrossEl.appendChild(li);
-      } else {
-        cluesDownEl.appendChild(li);
-      }
-    });
+    // ---- helpers ----
+    function normalizeChar(ch) {
+      return ch
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""); // quitar tildes
+    }
 
-    // ---- helpers ----
-    function normalizeChar(ch) {
-      return ch
-        .toUpperCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, ""); // quitar tildes
-    }
+    // ---- comprobar respuestas ----
+    const btnCheck = document.getElementById("btn-check");
+    const btnClear = document.getElementById("btn-clear");
+    const globalStatus = document.getElementById("global-status");
+    const secretLettersEl = document.getElementById("secret-letters");
 
-    // ---- comprobar respuestas ----
-    const btnCheck = document.getElementById("btn-check");
-    const btnClear = document.getElementById("btn-clear");
-    const globalStatus = document.getElementById("global-status");
-    const secretLettersEl = document.getElementById("secret-letters");
+    btnCheck.addEventListener("click", () => {
+      const inputs = boardEl.querySelectorAll("input[data-row]");
+      let total = 0;
+      let correct = 0;
 
-    btnCheck.addEventListener("click", () => {
-      const inputs = boardEl.querySelectorAll("input[data-row]");
-      let total = 0;
-      let correct = 0;
+      // limpiar clases
+      boardEl.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("cell-correct", "cell-incorrect");
+      });
 
-      // limpiar clases
-      boardEl.querySelectorAll(".cell").forEach(cell => {
-        cell.classList.remove("cell-correct", "cell-incorrect");
-      });
+      inputs.forEach(input => {
+        const r = parseInt(input.dataset.row, 10);
+        const c = parseInt(input.dataset.col, 10);
+        const cell = cells[r - 1][c - 1];
+        const div = input.parentElement;
 
-      inputs.forEach(input => {
-        const r = parseInt(input.dataset.row, 10);
-        const c = parseInt(input.dataset.col, 10);
-        const cell = cells[r - 1][c - 1];
-        const div = input.parentElement;
+        if (!cell.solution) return;
 
-        if (!cell.solution) return;
+        total++;
+        const user = normalizeChar(input.value || "");
+        const sol = cell.solution;
 
-        total++;
-        const user = normalizeChar(input.value || "");
-        const sol = cell.solution;
+        if (user === sol) {
+          correct++;
+          div.classList.add("cell-correct");
+        } else if (user) {
+          div.classList.add("cell-incorrect");
+        }
+      });
 
-        if (user === sol) {
-          correct++;
-          div.classList.add("cell-correct");
-        } else if (user) {
-          div.classList.add("cell-incorrect");
-        }
-      });
+      const pct = total ? Math.round((correct / total) * 100) : 0;
+      globalStatus.textContent = `Respuestas correctas: ${correct} de ${total} (${pct} %).`;
 
-      const pct = total ? Math.round((correct / total) * 100) : 0;
-      globalStatus.textContent = `Respuestas correctas: ${correct} de ${total} (${pct} %).`;
+     // letras secretas
+      const pieces = SECRET_LETTERS.map(({ row, col, letter }) => {
+        const input = boardEl.querySelector(
+          `input[data-row="${row}"][data-col="${col}"]`
+        );
+        if (!input) return "_";
+        const user = normalizeChar(input.value || "");
+        return user === letter ? letter : "_";
+      });
 
-     // letras secretas
-      const pieces = SECRET_LETTERS.map(({ row, col, letter }) => {
-        const input = boardEl.querySelector(
-          `input[data-row="${row}"][data-col="${col}"]`
-        );
-        if (!input) return "_";
-        const user = normalizeChar(input.value || "");
-        return user === letter ? letter : "_";
-      });
+      secretLettersEl.textContent = pieces.join(" ");
+    });
 
-      secretLettersEl.textContent = pieces.join(" ");
-    });
-
-    // ---- borrar todo ----
-    btnClear.addEventListener("click", () => {
-      boardEl.querySelectorAll("input[data-row]").forEach(input => {
-        input.value = "";
-      });
-      boardEl.querySelectorAll(".cell").forEach(cell => {
-        cell.classList.remove("cell-correct", "cell-incorrect");
-      });
-      globalStatus.textContent = "";
-      secretLettersEl.textContent = "_ _ _ _ _";
-    });
-  </script>
+    // ---- borrar todo ----
+    btnClear.addEventListener("click", () => {
+      boardEl.querySelectorAll("input[data-row]").forEach(input => {
+        input.value = "";
+      });
+      boardEl.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("cell-correct", "cell-incorrect");
+      });
+      globalStatus.textContent = "";
+      secretLettersEl.textContent = "_ _ _ _ _";
+    });
+  </script>
 </body>
 </html>
