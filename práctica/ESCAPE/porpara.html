@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Escape – Por vs. Para (Código secreto)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white rounded-2xl shadow-lg p-6">
+      <h1 class="text-2xl md:text-3xl font-bold mb-2">
+        Por vs. Para – Código secreto
+      </h1>
+      <p class="text-sm md:text-base text-indigo-100">
+        Lee cada par de oraciones. 🥘 representa <strong>por</strong> y 💃 representa <strong>para</strong>.
+        Luego, introduce la secuencia correcta con los iconos para desbloquear la salida.
+      </p>
+    </header>
+
+    <!-- Sentences -->
+    <section class="bg-white rounded-xl shadow p-6 space-y-4">
+      <h2 class="text-xl font-semibold mb-2">Oraciones</h2>
+
+      <!-- 1 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>1.</p>
+        <p>🥘 Hice la tarea <strong>por</strong> dos horas. ✅</p>
+        <p>💃 Hice la tarea <strong>para</strong> dos horas.</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>2.</p>
+        <p>💃 Este regalo es <strong>para</strong> ti. ✅</p>
+        <p>🥘 Este regalo es <strong>por</strong> ti.</p>
+      </div>
+
+      <!-- 3 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>3.</p>
+        <p>🥘 Viajamos <strong>por</strong> avión. ✅</p>
+        <p>💃 Viajamos <strong>para</strong> avión.</p>
+      </div>
+
+      <!-- 4 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>4.</p>
+        <p>💃 <strong>Para</strong> mí, aprender otro idioma es importante. ✅</p>
+        <p>🥘 <strong>Por</strong> mí, aprender otro idioma es importante.</p>
+      </div>
+
+      <!-- 5 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>5.</p>
+        <p>💃 Estudié <strong>para</strong> el examen. ✅</p>
+        <p>🥘 Estudié <strong>por</strong> el examen.</p>
+      </div>
+
+      <!-- 6 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>6.</p>
+        <p>🥘 Gracias <strong>por</strong> tu ayuda. ✅</p>
+        <p>💃 Gracias <strong>para</strong> tu ayuda.</p>
+      </div>
+
+      <!-- 7 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>7.</p>
+        <p>💃 Trabajo <strong>para</strong> ganar dinero. ✅</p>
+        <p>🥘 Trabajo <strong>por</strong> ganar dinero.</p>
+      </div>
+
+      <!-- 8 -->
+      <div class="border-l-4 border-indigo-400 pl-3">
+        <p>8.</p>
+        <p>🥘 Fui <strong>por</strong> el pasillo <strong>por</strong> agua. ✅</p>
+        <p>💃 Fui <strong>para</strong> el pasillo <strong>para</strong> el agua.</p>
+      </div>
+    </section>
+
+    <!-- Code input area -->
+    <section class="bg-white rounded-xl shadow p-6 space-y-4">
+      <h2 class="text-xl font-semibold">
+        Introduce el código con los iconos
+      </h2>
+      <p class="text-sm text-slate-600">
+        Haz clic en 🥘 (por) y 💃 (para) en el orden correcto para desbloquear el siguiente módulo.
+      </p>
+
+      <!-- Buttons -->
+      <div class="flex gap-4">
+        <button
+          id="btn-por"
+          class="flex-1 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-xl py-4 flex items-center justify-center text-5xl md:text-6xl transition"
+          aria-label="Elegir POR (🥘)"
+        >
+          🥘
+        </button>
+        <button
+          id="btn-para"
+          class="flex-1 bg-pink-100 hover:bg-pink-200 border border-pink-300 rounded-xl py-4 flex items-center justify-center text-5xl md:text-6xl transition"
+          aria-label="Elegir PARA (💃)"
+        >
+          💃
+        </button>
+      </div>
+
+      <!-- Current sequence display -->
+      <div class="mt-4">
+        <p class="text-sm text-slate-600 mb-1">Tu secuencia:</p>
+        <div id="sequenceDisplay"
+             class="min-h-[3rem] bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-3xl tracking-wide">
+          <!-- Icons will appear here -->
+        </div>
+      </div>
+
+      <!-- Message -->
+      <p id="message" class="text-sm font-medium mt-2 h-5"></p>
+
+      <!-- Reset button -->
+      <button
+        id="resetBtn"
+        class="mt-3 inline-flex items-center px-3 py-1.5 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100"
+      >
+        Reiniciar secuencia
+      </button>
+    </section>
+  </main>
+
+  <script>
+    // Correct sequence: 🥘💃🥘💃💃🥘💃🥘
+    const correctPattern = ['🥘', '💃', '🥘', '💃', '💃', '🥘', '💃', '🥘'];
+    let currentPattern = [];
+
+    const btnPor = document.getElementById('btn-por');
+    const btnPara = document.getElementById('btn-para');
+    const sequenceDisplay = document.getElementById('sequenceDisplay');
+    const message = document.getElementById('message');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function updateDisplay() {
+      sequenceDisplay.textContent = currentPattern.join(' ');
+    }
+
+    function resetSequence(showMessage = '') {
+      currentPattern = [];
+      updateDisplay();
+      message.textContent = showMessage;
+      message.className = 'text-sm font-medium mt-2 h-5 text-red-600';
+    }
+
+    function handleChoice(icon) {
+      currentPattern.push(icon);
+      updateDisplay();
+      message.textContent = '';
+      message.className = 'text-sm font-medium mt-2 h-5';
+
+      if (currentPattern.length === correctPattern.length) {
+        const isCorrect = currentPattern.every((val, idx) => val === correctPattern[idx]);
+        if (isCorrect) {
+          message.textContent = '✅ ¡Código correcto! Abriendo el siguiente módulo...';
+          message.className = 'text-sm font-medium mt-2 h-5 text-emerald-600';
+
+          // Small delay so they see the success message
+          setTimeout(() => {
+            window.location.href = 'https://scottscalici.github.io/imagenes/pr%C3%A1ctica/ESCAPE/modulo4.html';
+          }, 800);
+        } else {
+          resetSequence('❌ Código incorrecto. Vuelve a intentarlo.');
+        }
+      }
+    }
+
+    btnPor.addEventListener('click', () => handleChoice('🥘'));
+    btnPara.addEventListener('click', () => handleChoice('💃'));
+    resetBtn.addEventListener('click', () => resetSequence(''));
+
+    // Initial state
+    resetSequence('');
+  </script>
+</body>
+</html>
