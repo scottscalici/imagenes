@@ -9,302 +9,296 @@
 <body class="bg-slate-100 text-slate-800 min-h-screen">
   <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
-  
-
-        <!-- STICKY HEADER WITH PROGRESS -->
-      <header class="sticky top-0 z-20 bg-white shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800">
-              Examen del semestre
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-500">
-              parte 2 · Nivel 2 (verbos)
-            </p>
-          </div>
-          <div class="w-40 sm:w-64">
-            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-              <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
-            </div>
-            <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
-              0 % completado
-            </p>
-          </div>
+    <!-- STICKY HEADER WITH PROGRESS -->
+    <header class="sticky top-0 z-20 bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-800">
+            Examen del semestre
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500">
+            parte 2 · Nivel 4
+          </p>
         </div>
-      </header>
+        <div class="w-40 sm:w-64">
+          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+          </div>
+          <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
+            0 % completado
+          </p>
+        </div>
+      </div>
+    </header>
 
-      <main class="max-w-6xl mx-auto px-4 py-6">
-        <div class="grid md:grid-cols-[230px,1fr] gap-6">
-          <!-- SIDEBAR -->
-          <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
-            <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-              Módulos
+    <main class="max-w-6xl mx-auto px-4 py-6">
+      <div class="grid md:grid-cols-[230px,1fr] gap-6">
+        <!-- SIDEBAR -->
+        <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
+          <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            Módulos
+          </h2>
+
+          <!-- 1.1–1.4 Verbos -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
+                  data-module="1">
+            <span>Módulo 1.1 · Verbos</span>
+            <span id="badge-1" class="text-xs">●</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="2" disabled>
+            <span>Módulo 1.2 · Verbos</span>
+            <span id="badge-2" class="text-xs">🔒</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="3" disabled>
+            <span>Módulo 1.3 · Verbos</span>
+            <span id="badge-3" class="text-xs">🔒</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="4" disabled>
+            <span>Módulo 1.4 · Verbos</span>
+            <span id="badge-4" class="text-xs">🔒</span>
+          </button>
+
+          <!-- 2.1 Lectura -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="5" disabled>
+            <span>Módulo 2.1 · Lectura</span>
+            <span id="badge-5" class="text-xs">🔒</span>
+          </button>
+
+          <!-- 3.1 Preguntas de comprensión -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="6" disabled>
+            <span>Módulo 3.1 · Preguntas</span>
+            <span id="badge-6" class="text-xs">🔒</span>
+          </button>
+        </aside>
+
+        <!-- MAIN PANEL -->
+        <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
+
+          <!-- Module 1.1 -->
+          <div id="module-1" class="module-view space-y-4">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.1 · Verbos (pretérito)
             </h2>
+            <p class="text-sm text-slate-600">
+              Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
+            </p>
 
-            <!-- Internal verb modules -->
-            <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
-                    data-module="1">
-              <span>Módulo 1.1 · Verbos</span>
-              <span id="badge-1" class="text-xs">●</span>
-            </button>
+            <div id="module-1-questions" class="space-y-3"></div>
 
-            <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                    data-module="2" disabled>
-              <span>Módulo 1.2 · Verbos</span>
-              <span id="badge-2" class="text-xs">🔒</span>
-            </button>
-
-            <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                    data-module="3" disabled>
-              <span>Módulo 1.3 · Verbos</span>
-              <span id="badge-3" class="text-xs">🔒</span>
-            </button>
-
-            <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                    data-module="4" disabled>
-              <span>Módulo 1.4 · Verbos</span>
-              <span id="badge-4" class="text-xs">🔒</span>
-            </button>
-
-            <!-- External pages for vocab + crucigrama -->
-            <a href="crucigrama1.html"
-               class="w-full block px-3 py-2 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-sm hover:bg-slate-100">
-              <div class="flex items-center justify-between gap-2">
-                <span>Módulo 2 · Repaso vocabulario</span>
-                <span class="text-xs">↗</span>
-              </div>
-            </a>
-
-           <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-        data-module="6" disabled>
-  <span>Módulo 3 · Lectura y preguntas</span>
-  <span id="badge-6" class="text-xs">🔒</span>
-</button>
-
-          </aside>
-
-          <!-- MAIN PANEL -->
-          <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
-            <!-- Module 1.1 -->
-            <div id="module-1" class="module-view space-y-4">
-              <h2 class="text-xl font-semibold text-slate-800">
-                Módulo 1.1 · Verbos (pretérito)
-              </h2>
-              <p class="text-sm text-slate-600">
-                Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
-              </p>
-
-              <div id="module-1-questions" class="space-y-3"></div>
-
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button id="btn-check-module-1"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                  Corregir respuestas
-                </button>
-                <p id="module-1-result" class="text-sm text-slate-700"></p>
-              </div>
-
-              <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
-                <button id="btn-next-from-1"
-                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                        disabled>
-                  Siguiente módulo (1.2) →
-                </button>
-              </div>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-1"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-1-result" class="text-sm text-slate-700"></p>
             </div>
 
-            <!-- Module 1.2 -->
-            <div id="module-2" class="module-view space-y-4 hidden">
-              <h2 class="text-xl font-semibold text-slate-800">
-                Módulo 1.2 · Verbos (presente)
-              </h2>
-              <p class="text-sm text-slate-600">
-                Segundo bloque de este conjunto de práctica.
-              </p>
+            <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+              <button id="btn-next-from-1"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.2) →
+              </button>
+            </div>
+          </div>
 
-              <div id="module-2-questions" class="space-y-3"></div>
+          <!-- Module 1.2 -->
+          <div id="module-2" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.2 · Verbos (presente)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Segundo bloque de este conjunto de práctica.
+            </p>
 
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button id="btn-check-module-2"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                  Corregir respuestas
-                </button>
-                <p id="module-2-result" class="text-sm text-slate-700"></p>
-              </div>
+            <div id="module-2-questions" class="space-y-3"></div>
 
-              <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-                <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                        data-go-module="1">
-                  ← Volver a 1.1
-                </button>
-                <button id="btn-next-from-2"
-                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                        disabled>
-                  Siguiente módulo (1.3) →
-                </button>
-              </div>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-2"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-2-result" class="text-sm text-slate-700"></p>
             </div>
 
-            <!-- Module 1.3 -->
-            <div id="module-3" class="module-view space-y-4 hidden">
-              <h2 class="text-xl font-semibold text-slate-800">
-                Módulo 1.3 · Verbos (presente)
-              </h2>
-              <p class="text-sm text-slate-600">
-                Tercer bloque de este conjunto de práctica.
-              </p>
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="1">
+                ← Volver a 1.1
+              </button>
+              <button id="btn-next-from-2"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.3) →
+              </button>
+            </div>
+          </div>
 
-              <div id="module-3-questions" class="space-y-3"></div>
+          <!-- Module 1.3 -->
+          <div id="module-3" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.3 · Verbos (presente)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Tercer bloque de este conjunto de práctica.
+            </p>
 
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button id="btn-check-module-3"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                  Corregir respuestas
-                </button>
-                <p id="module-3-result" class="text-sm text-slate-700"></p>
-              </div>
+            <div id="module-3-questions" class="space-y-3"></div>
 
-              <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-                <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                        data-go-module="2">
-                  ← Volver a 1.2
-                </button>
-                <button id="btn-next-from-3"
-                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                        disabled>
-                  Siguiente módulo (1.4) →
-                </button>
-              </div>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-3"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-3-result" class="text-sm text-slate-700"></p>
             </div>
 
-            <!-- Module 1.4 -->
-            <div id="module-4" class="module-view space-y-4 hidden">
-              <h2 class="text-xl font-semibold text-slate-800">
-                Módulo 1.4 · Verbos (pretérito)
-              </h2>
-              <p class="text-sm text-slate-600">
-                Último bloque de verbos de este conjunto.
-              </p>
-
-              <div id="module-4-questions" class="space-y-3"></div>
-
-              <div class="flex flex-wrap items-center gap-3 pt-2">
-                <button id="btn-check-module-4"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                  Corregir respuestas
-                </button>
-                <p id="module-4-result" class="text-sm text-slate-700"></p>
-              </div>
-
-              <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-                <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                        data-go-module="3">
-                  ← Volver a 1.3
-                </button>
-                <!-- After finishing verbs, send them to the vocab page -->
-                <a id="btn-next-from-4"
-                   href="modulo2_vocab.html"
-                   class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed pointer-events-none">
-                  Ir al Módulo 2 (lectura) →
-                </a>
-              </div>
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="2">
+                ← Volver a 1.2
+              </button>
+              <button id="btn-next-from-3"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.4) →
+              </button>
             </div>
-<!-- Module 3.1 – Lectura -->
-<div id="module-6" class="module-view space-y-4 hidden">
-  <h2 class="text-xl font-semibold text-slate-800">
-    Módulo 3.1 · Lectura
-  </h2>
-  <p class="text-sm text-slate-600">
-    Lee el siguiente texto con atención. Cuando termines, haz clic en el botón de abajo.
-  </p>
+          </div>
 
-  <!-- Aquí va tu lectura: puedes pegarla directamente o más tarde reemplazar por el texto real -->
-  <article class="prose max-w-none text-sm text-slate-800 bg-slate-50 rounded-lg p-4 border border-slate-200">
-    <p><em>(Aquí va la lectura – podemos cambiarla cuando la tengas lista.)</em></p>
-  </article>
+          <!-- Module 1.4 -->
+          <div id="module-4" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.4 · Verbos (pretérito)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Último bloque de verbos de este conjunto.
+            </p>
 
-  <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-            data-go-module="5">
-      ← Volver a vocabulario
-    </button>
-    <button id="btn-finish-reading"
-            class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
-      He terminado de leer
-    </button>
-  </div>
-</div>
+            <div id="module-4-questions" class="space-y-3"></div>
 
-<!-- Module 3.2 – Preguntas de comprensión -->
-<div id="module-7" class="module-view space-y-4 hidden">
-  <h2 class="text-xl font-semibold text-slate-800">
-    Módulo 3.2 · Comprensión de lectura
-  </h2>
-  <p class="text-sm text-slate-600">
-    Contesta las preguntas sobre la lectura. Necesitas <strong>100&nbsp;%</strong> para obtener la contraseña.
-  </p>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-4"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-4-result" class="text-sm text-slate-700"></p>
+            </div>
 
-  <div id="reading-questions" class="space-y-3">
-    <!-- Ejemplos de preguntas (puedes cambiarlas) -->
-    <div class="space-y-1 quiz-item" data-answer="respuesta1">
-      <label class="text-sm font-medium text-slate-800">
-        1. ¿Pregunta 1 sobre el texto?
-      </label>
-      <input type="text"
-             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-      <p class="text-xs text-slate-500 feedback hidden"></p>
-    </div>
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="3">
+                ← Volver a 1.3
+              </button>
+              <button id="btn-next-from-4"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Ir al Módulo 2.1 (lectura) →
+              </button>
+            </div>
+          </div>
 
-    <div class="space-y-1 quiz-item" data-answer="respuesta2">
-      <label class="text-sm font-medium text-slate-800">
-        2. ¿Pregunta 2 sobre el texto?
-      </label>
-      <input type="text"
-             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-      <p class="text-xs text-slate-500 feedback hidden"></p>
-    </div>
+          <!-- Module 2.1 – Lectura -->
+          <div id="module-5" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 2.1 · Lectura
+            </h2>
+            <p class="text-sm text-slate-600">
+              Lee el siguiente texto con atención. Cuando termines, haz clic en el botón de abajo.
+            </p>
 
-    <!-- Añade más preguntas según quieras -->
-  </div>
+            <article class="prose max-w-none text-sm text-slate-800 bg-slate-50 rounded-lg p-4 border border-slate-200">
+              <p><em>(Aquí va la lectura – podemos cambiarla cuando la tengas lista.)</em></p>
+            </article>
 
-  <div class="flex flex-wrap items-center gap-3 pt-2">
-    <button id="btn-check-reading"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-      Corregir respuestas
-    </button>
-    <p id="reading-result" class="text-sm text-slate-700"></p>
-  </div>
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="4">
+                ← Volver a 1.4
+              </button>
+              <button id="btn-finish-reading"
+                      class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+                He terminado de leer
+              </button>
+            </div>
+          </div>
 
-  <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-            data-go-module="6">
-      ← Volver a la lectura
-    </button>
-    <button id="btn-show-password"
-            class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-            disabled>
-      Mostrar contraseña del siguiente nivel
-    </button>
-  </div>
+          <!-- Module 3.1 – Preguntas de comprensión -->
+          <div id="module-6" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 3.1 · Comprensión de lectura
+            </h2>
+            <p class="text-sm text-slate-600">
+              Contesta las preguntas sobre la lectura. Necesitas <strong>100&nbsp;%</strong> para obtener la contraseña.
+            </p>
 
-  <p id="password-display" class="mt-3 text-sm font-semibold text-emerald-700 hidden">
-    Contraseña: <span class="font-mono">BRLAVT</span>
-  </p>
-</div>
+            <div id="reading-questions" class="space-y-3">
+              <!-- Ejemplos de preguntas (ajusta data-answer a lo que quieras aceptar) -->
+              <div class="space-y-1 quiz-item" data-answer="respuesta1">
+                <label class="text-sm font-medium text-slate-800">
+                  1. ¿Pregunta 1 sobre el texto?
+                </label>
+                <input type="text"
+                       class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+                <p class="text-xs text-slate-500 feedback hidden"></p>
+              </div>
 
-          </section>
-        </div>
-      </main>
-    </section>
+              <div class="space-y-1 quiz-item" data-answer="respuesta2">
+                <label class="text-sm font-medium text-slate-800">
+                  2. ¿Pregunta 2 sobre el texto?
+                </label>
+                <input type="text"
+                       class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+                <p class="text-xs text-slate-500 feedback hidden"></p>
+              </div>
+              <!-- añade más preguntas si quieres -->
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-reading"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="reading-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="5">
+                ← Volver a la lectura
+              </button>
+              <button id="btn-show-password"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Mostrar contraseña del siguiente nivel
+              </button>
+            </div>
+
+            <p id="password-display" class="mt-3 text-sm font-semibold text-emerald-700 hidden">
+              Contraseña: <span class="font-mono">BRLAVT</span>
+            </p>
+          </div>
+
+        </section>
+      </div>
+    </main>
   </main>
 
   <script>
-    // 👉 Change this per day (VERBS):
+    // 👉 JSON de verbos para esta página
     const PRACTICE_JSON_URL =
       'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos4.json';
 
-    // Now we only have 4 internal modules on this page
-    const TOTAL_MODULES = 7;
+    // 4 módulos de verbos + 1 de lectura + 1 de preguntas
+    const TOTAL_MODULES = 6;
     const PASS_THRESHOLD = 1.0;
 
     const progressFill = document.getElementById('progress-fill');
@@ -341,7 +335,9 @@
     }
 
     function showModule(n) {
-      document.querySelectorAll('.module-view').forEach(view => view.classList.add('hidden'));
+      document.querySelectorAll('.module-view').forEach(view =>
+        view.classList.add('hidden')
+      );
       const active = document.getElementById('module-' + n);
       if (active) active.classList.remove('hidden');
 
@@ -357,6 +353,7 @@
       });
     }
 
+    // ------- VERBOS 1–4 --------
     function buildVerbModule(moduleNumber, items) {
       const container = document.getElementById('module-' + moduleNumber + '-questions');
       if (!container) return;
@@ -458,14 +455,18 @@
           resultEl.classList.add('text-emerald-700');
 
           if (nextBtn) {
-            // enable next button
-            nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed', 'pointer-events-none');
-            nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-            if (nextBtn.tagName.toLowerCase() === 'a') {
-              nextBtn.removeAttribute('disabled');
-            } else {
-              nextBtn.disabled = false;
-            }
+            nextBtn.classList.remove(
+              'bg-slate-300',
+              'text-slate-600',
+              'cursor-not-allowed',
+              'pointer-events-none'
+            );
+            nextBtn.classList.add(
+              'bg-emerald-600',
+              'hover:bg-emerald-700',
+              'text-white'
+            );
+            nextBtn.disabled = false;
           }
 
           markModuleCompleted(moduleNumber);
@@ -483,7 +484,6 @@
         const res = await fetch(PRACTICE_JSON_URL);
         const data = await res.json();
         const items = data;
-
         buildAllVerbModules(items);
         [1, 2, 3, 4].forEach(attachQuizHandler);
       } catch (err) {
@@ -496,17 +496,16 @@
       }
     }
 
-    // Next buttons 1–3 (internal navigation)
-    for (let i = 1; i <= 3; i++) {
+    // Next buttons 1–4 (internal navigation)
+    for (let i = 1; i <= 4; i++) {
       const nextBtn = document.getElementById('btn-next-from-' + i);
       if (!nextBtn) continue;
       nextBtn.addEventListener('click', () => {
-        const target = i + 1;
+        const target = i + 1; // 1→2, 2→3, 3→4, 4→5
         const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
         if (tab && !tab.disabled) showModule(target);
       });
     }
-    // Note: btn-next-from-4 is now a link to the vocab page; we only enable it in attachQuizHandler.
 
     // Sidebar tabs
     document.querySelectorAll('.module-tab').forEach(btn => {
@@ -525,33 +524,115 @@
       });
     });
 
+    // ------- Lectura (module 5) -> desbloquea preguntas (module 6) ------
+    const finishReadingBtn = document.getElementById('btn-finish-reading');
+    if (finishReadingBtn) {
+      finishReadingBtn.addEventListener('click', () => {
+        markModuleCompleted(5);
+        unlockModuleBtn(6);
+        showModule(6);
+      });
+    }
+
+    // ------- Preguntas de comprensión (module 6) -------
+    const btnCheckReading = document.getElementById('btn-check-reading');
+    const readingResult = document.getElementById('reading-result');
+    const btnShowPassword = document.getElementById('btn-show-password');
+    const passwordDisplay = document.getElementById('password-display');
+
+    if (btnCheckReading) {
+      btnCheckReading.addEventListener('click', () => {
+        const items = document.querySelectorAll('#reading-questions .quiz-item');
+
+        let missing = false;
+        items.forEach(item => {
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          if (!input) return;
+          const val = (input.value || '').trim();
+          if (!val) {
+            missing = true;
+            input.classList.remove('border-emerald-400', 'border-red-400');
+            input.classList.add('border-yellow-400');
+            if (feedback) feedback.classList.add('hidden');
+          }
+        });
+
+        if (missing) {
+          readingResult.textContent = 'Responde todos los campos antes de corregir.';
+          readingResult.classList.remove('text-emerald-700');
+          readingResult.classList.add('text-red-600');
+          return;
+        }
+
+        let correct = 0;
+        items.forEach(item => {
+          const rawAnswer = (item.dataset.answer || '').trim().toLowerCase();
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          const userVal = (input.value || '').trim().toLowerCase();
+
+          if (userVal === rawAnswer) {
+            correct++;
+            input.classList.remove('border-red-400', 'border-yellow-400');
+            input.classList.add('border-emerald-400');
+            if (feedback) {
+              feedback.textContent = '';
+              feedback.classList.add('hidden');
+            }
+          } else {
+            input.classList.remove('border-emerald-400', 'border-yellow-400');
+            input.classList.add('border-red-400');
+            if (feedback) {
+              feedback.textContent = `❌ Respuesta esperada: ${rawAnswer}`;
+              feedback.classList.remove('hidden');
+              feedback.classList.add('text-red-500');
+            }
+          }
+        });
+
+        const total = items.length;
+        const score = total ? correct / total : 0;
+        readingResult.textContent =
+          `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        if (score >= PASS_THRESHOLD) {
+          readingResult.classList.remove('text-red-600');
+          readingResult.classList.add('text-emerald-700');
+
+          markModuleCompleted(6);
+
+          if (btnShowPassword) {
+            btnShowPassword.disabled = false;
+            btnShowPassword.classList.remove(
+              'bg-slate-300',
+              'text-slate-600',
+              'cursor-not-allowed'
+            );
+            btnShowPassword.classList.add(
+              'bg-emerald-600',
+              'hover:bg-emerald-700',
+              'text-white'
+            );
+          }
+        } else {
+          readingResult.classList.remove('text-emerald-700');
+          readingResult.classList.add('text-red-600');
+        }
+      });
+    }
+
+    if (btnShowPassword && passwordDisplay) {
+      btnShowPassword.addEventListener('click', () => {
+        passwordDisplay.classList.remove('hidden');
+        // aquí puedes también poner un link al siguiente nivel
+      });
+    }
+
     // Init
     updateProgress();
     showModule(1);
     loadPracticeSet();
-
-    // ----- PASSWORD LOGIC -----
-    function checkPassword() {
-      const inputEl = document.getElementById("passwordInput");
-      const errorEl = document.getElementById("password-error");
-      const input = inputEl.value.trim();
-      const correct = "SALUD";
-
-      if (input.toUpperCase() === correct) {
-        document.getElementById("password-gate").classList.add("hidden");
-        document.getElementById("protected-content").classList.remove("hidden");
-        errorEl.classList.add("hidden");
-      } else {
-        errorEl.classList.remove("hidden");
-        inputEl.focus();
-      }
-    }
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && document.activeElement.id === "passwordInput") {
-        checkPassword();
-      }
-    });
   </script>
 </body>
 </html>
