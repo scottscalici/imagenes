@@ -1,1 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Módulo – Nivel 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
 
+    <!-- STICKY HEADER WITH PROGRESS -->
+    <header class="sticky top-0 z-20 bg-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-800">
+            Examen del semestre
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500">
+            Nivel 4
+          </p>
+        </div>
+        <div class="w-40 sm:w-64">
+          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+          </div>
+          <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
+            0 % completado
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6">
+      <div class="grid md:grid-cols-[230px,1fr] gap-6">
+        <!-- SIDEBAR -->
+        <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
+          <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            Módulos
+          </h2>
+
+          <!-- 1.1–1.4 Verbos -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
+                  data-module="1">
+            <span>Módulo 1.1 · Verbos</span>
+            <span id="badge-1" class="text-xs">●</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="2" disabled>
+            <span>Módulo 1.2 · Verbos</span>
+            <span id="badge-2" class="text-xs">🔒</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="3" disabled>
+            <span>Módulo 1.3 · Verbos</span>
+            <span id="badge-3" class="text-xs">🔒</span>
+          </button>
+
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="4" disabled>
+            <span>Módulo 1.4 · Verbos</span>
+            <span id="badge-4" class="text-xs">🔒</span>
+          </button>
+
+          <!-- 2.1 Lectura -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="5" disabled>
+            <span>Módulo 2.1 · Lectura</span>
+            <span id="badge-5" class="text-xs">🔒</span>
+          </button>
+
+          <!-- 3.1 Preguntas de comprensión -->
+          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                  data-module="6" disabled>
+            <span>Módulo 3.1 · Preguntas</span>
+            <span id="badge-6" class="text-xs">🔒</span>
+          </button>
+        </aside>
+
+        <!-- MAIN PANEL -->
+        <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
+
+          <!-- Module 1.1 -->
+          <div id="module-1" class="module-view space-y-4">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.1 · Verbos (pretérito)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
+            </p>
+
+            <div id="module-1-questions" class="space-y-3"></div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-1"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-1-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+              <button id="btn-next-from-1"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.2) →
+              </button>
+            </div>
+          </div>
+
+          <!-- Module 1.2 -->
+          <div id="module-2" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.2 · Verbos (presente)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Segundo bloque de este conjunto de práctica.
+            </p>
+
+            <div id="module-2-questions" class="space-y-3"></div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-2"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-2-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="1">
+                ← Volver a 1.1
+              </button>
+              <button id="btn-next-from-2"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.3) →
+              </button>
+            </div>
+          </div>
+
+          <!-- Module 1.3 -->
+          <div id="module-3" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.3 · Verbos (presente)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Tercer bloque de este conjunto de práctica.
+            </p>
+
+            <div id="module-3-questions" class="space-y-3"></div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-3"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-3-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="2">
+                ← Volver a 1.2
+              </button>
+              <button id="btn-next-from-3"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Siguiente módulo (1.4) →
+              </button>
+            </div>
+          </div>
+
+          <!-- Module 1.4 -->
+          <div id="module-4" class="module-view space-y-4 hidden">
+            <h2 class="text-xl font-semibold text-slate-800">
+              Módulo 1.4 · Verbos (pretérito)
+            </h2>
+            <p class="text-sm text-slate-600">
+              Último bloque de verbos de este conjunto.
+            </p>
+
+            <div id="module-4-questions" class="space-y-3"></div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-module-4"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="module-4-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                      data-go-module="3">
+                ← Volver a 1.3
+              </button>
+              <button id="btn-next-from-4"
+                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                      disabled>
+                Ir al Módulo 2.1 (lectura) →
+              </button>
+            </div>
+          </div>
+
+         <!-- Module 2.1 – Lectura --> 
+<div id="module-5" class="module-view space-y-4 hidden">
+  <h2 class="text-xl font-semibold text-slate-800">
+    Módulo 2.1 · Lectura
+  </h2>
+  <p class="text-sm text-slate-600">
+    Lee el siguiente texto con atención. Cuando termines, haz clic en el botón de abajo.
+  </p>
+
+  <article class="prose max-w-none text-sm text-slate-800 bg-slate-50 rounded-lg p-4 border border-slate-200">
+    <p>
+      Terra.com es el sitio web favorito entre los hispanos que viven en los Estados Unidos. 
+      El 66% (per cent) de los hispanos que conocen este sitio lo visitan por lo menos una vez al mes.
+    </p>
+
+    <p>
+      Otros sitios web muy populares entre los hispanos que navegan en Internet son latino.msn.com, 
+      espanol.yahoo.com y el sitio de viajes despegar.com.
+    </p>
+
+    <p>
+      La preferencia por estos sitios web tiene un motivo (cause, reason) claro: aunque (although) 
+      vivan en los Estados Unidos, los hispanos prefieren el español a la hora de navegar en Internet. 
+      El número de personas que prefieren esta lengua al inglés se ha disparado (has shot up) en los 
+      últimos años, pasando del 33% en el 2000 al 68% actual.
+    </p>
+
+    <p>
+      La edad promedio (average) de los usuarios (users) hispanos es de treinta años y más de la mitad 
+      (half) son bilingües. Además, la brecha (gap) digital que separa a hombres y mujeres es muy poca; 
+      existe una pequeña mayoría de hombres (52%) frente a un 48% de mujeres.
+    </p>
+
+    <p>
+      Se trata, definitivamente, de personas que disfrutan de (enjoy) acceso a Internet con cierta facilidad 
+      (with some ease) (el 78% tiene una computadora en casa).
+    </p>
+
+    <p>
+      El poder (power) de seducción que Internet tiene sobre la población hispana de los Estados Unidos 
+      se refleja en sus usos y costumbres. El usuario hispano visita la red 6,6 veces por semana y cada vez 
+      que lo hace permanece (remains) conectado un promedio de 58 minutos. Entra a Internet para consultar 
+      información, escuchar música, buscar información específica para su formación profesional, enviar y 
+      recibir correo electrónico y comunicarse a través de los chats.
+    </p>
+  </article>
+
+  <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+            data-go-module="4">
+      ← Volver a 1.4
+    </button>
+    <button id="btn-finish-reading"
+            class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+      He terminado de leer
+    </button>
+  </div>
+</div>
+
+
+          <!-- Module 3.1 – Preguntas de comprensión -->
+  <div id="module-6" class="module-view space-y-4 hidden">
+    <h2 class="text-xl font-semibold text-slate-800">
+      Módulo 3.1 · Comprensión de lectura
+    </h2>
+    <p class="text-sm text-slate-600">
+      Contesta las preguntas sobre la lectura. Necesitas <strong>100&nbsp;%</strong> para obtener la contraseña.
+    </p>
+
+   <!-- ✅ MÓDULO: Orden de colores (arrastrar y soltar) -->
+<section id="module-colores" class="space-y-6">
+
+  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+    <h2 class="text-xl font-semibold text-slate-800">Módulo · Orden secreto</h2>
+    <p class="text-sm text-slate-600 mt-1">
+      Arrastra los colores al orden correcto. (Pista: el “primer paso” de cada respuesta…)
+    </p>
+  </div>
+
+  <!-- PALETA -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+    <h3 class="text-sm font-semibold text-slate-700 mb-3">Paleta</h3>
+
+    <div id="palette"
+         class="flex flex-wrap gap-3 items-center"
+         aria-label="Paleta de colores">
+
+      <!-- Cada swatch tiene data-color con el nombre -->
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="amarillo"
+           alt="amarillo"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/amarillo.png" />
+
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="anaranjado"
+           alt="anaranjado"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/anaranjado.png" />
+
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="azul"
+           alt="azul"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/azul.png" />
+
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="rojo"
+           alt="rojo"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/rojo.png" />
+
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="verde"
+           alt="verde"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/verde.png" />
+
+      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+           draggable="true"
+           data-color="morado"
+           alt="morado"
+           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/morado.png" />
+    </div>
+
+    <p class="text-xs text-slate-500 mt-3">
+      Puedes usar un color más de una vez.
+    </p>
+  </div>
+
+  <!-- SLOTS -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+    <div class="flex items-center justify-between gap-4 flex-wrap">
+      <h3 class="text-sm font-semibold text-slate-700">Orden (1–10)</h3>
+
+      <div class="flex gap-2">
+        <button id="checkBtn"
+                class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+          Comprobar
+        </button>
+        <button id="resetBtn"
+                class="px-4 py-2 rounded-xl bg-slate-200 text-slate-800 text-sm font-semibold hover:bg-slate-300">
+          Reiniciar
+        </button>
+      </div>
+    </div>
+
+    <div id="slots"
+         class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <!-- 10 drop zones -->
+      <!-- Each slot holds exactly 1 swatch -->
+      <div class="slot" data-slot="1"></div>
+      <div class="slot" data-slot="2"></div>
+      <div class="slot" data-slot="3"></div>
+      <div class="slot" data-slot="4"></div>
+      <div class="slot" data-slot="5"></div>
+      <div class="slot" data-slot="6"></div>
+      <div class="slot" data-slot="7"></div>
+      <div class="slot" data-slot="8"></div>
+      <div class="slot" data-slot="9"></div>
+      <div class="slot" data-slot="10"></div>
+    </div>
+
+    <p id="feedback" class="text-sm mt-4 font-medium"></p>
+
+    <!-- PASSWORD REVEAL -->
+    <div id="passwordBox" class="hidden mt-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
+      <p class="text-sm text-emerald-900">
+        ✅ ¡Correcto! Tu contraseña es:
+        <span id="passwordText" class="font-bold"></span>
+      </p>
+    </div>
+  </div>
+
+</section>
+
+
+    </main>
+  </main>
+
+  <script>
+    // 👉 JSON de verbos para esta página
+    const PRACTICE_JSON_URL =
+      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos4.json';
+
+    // 4 módulos de verbos + 1 de lectura + 1 de preguntas
+    const TOTAL_MODULES = 6;
+    const PASS_THRESHOLD = 1.0;
+
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const modulePassed = {};
+    let completedModules = 0;
+
+    function updateProgress() {
+      const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
+      progressFill.style.width = percent + '%';
+      progressLabel.textContent = percent + '% completado';
+    }
+
+    function markModuleCompleted(n) {
+      if (!modulePassed[n]) {
+        modulePassed[n] = true;
+        completedModules = Object.keys(modulePassed).length;
+        updateProgress();
+        const badge = document.getElementById('badge-' + n);
+        if (badge) badge.textContent = '✔';
+      }
+    }
+
+    function unlockModuleBtn(n) {
+      const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+      const badge = document.getElementById('badge-' + n);
+      if (tab) {
+        tab.disabled = false;
+        tab.classList.remove('text-slate-500');
+      }
+      if (badge && badge.textContent === '🔒') {
+        badge.textContent = '●';
+      }
+    }
+
+    function showModule(n) {
+      document.querySelectorAll('.module-view').forEach(view =>
+        view.classList.add('hidden')
+      );
+      const active = document.getElementById('module-' + n);
+      if (active) active.classList.remove('hidden');
+
+      document.querySelectorAll('.module-tab').forEach(btn => {
+        const m = btn.dataset.module;
+        if (String(m) === String(n)) {
+          btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
+          btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
+        } else {
+          btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
+          btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
+        }
+      });
+    }
+
+    // ------- VERBOS 1–4 --------
+    function buildVerbModule(moduleNumber, items) {
+      const container = document.getElementById('module-' + moduleNumber + '-questions');
+      if (!container) return;
+      container.innerHTML = '';
+
+      items.forEach((item, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'space-y-1 quiz-item';
+        wrapper.dataset.answer = item.forma;
+
+        const sujeto = item.sujeto || '';
+        const contexto = item.contexto || '___';
+        const infinitivo = item.infinitivo || '';
+
+        wrapper.innerHTML = `
+          <label class="text-sm font-medium text-slate-800">
+            ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
+          </label>
+          <input type="text"
+                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          <p class="text-xs text-slate-500 feedback hidden"></p>
+        `;
+        container.appendChild(wrapper);
+      });
+    }
+
+    function buildAllVerbModules(items) {
+      const chunkSize = 5;
+      for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
+        const start = (moduleNum - 1) * chunkSize;
+        const slice = items.slice(start, start + chunkSize);
+        if (!slice.length) break;
+        buildVerbModule(moduleNum, slice);
+      }
+    }
+
+    function attachQuizHandler(moduleNumber) {
+      const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
+      if (!btnCheck) return;
+
+      btnCheck.addEventListener('click', () => {
+        const selector = '#module-' + moduleNumber + ' .quiz-item';
+        const items = document.querySelectorAll(selector);
+        const resultEl = document.getElementById('module-' + moduleNumber + '-result');
+
+        let missing = false;
+        items.forEach(item => {
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          if (!input) return;
+          const value = (input.value || '').trim();
+          if (value === '') {
+            missing = true;
+            input.classList.remove('border-emerald-400', 'border-red-400');
+            input.classList.add('border-yellow-400');
+            if (feedback) feedback.classList.add('hidden');
+          }
+        });
+
+        if (missing) {
+          resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
+          resultEl.classList.remove('text-emerald-700');
+          resultEl.classList.add('text-red-600');
+          return;
+        }
+
+        let correct = 0;
+        items.forEach(item => {
+          const rawAnswer = (item.dataset.answer || '').trim();
+          const answer = rawAnswer.toLowerCase();
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          if (!input) return;
+          const userValue = (input.value || '').trim().toLowerCase();
+
+          if (userValue === answer) {
+            correct++;
+            input.classList.remove('border-red-400', 'border-yellow-400');
+            input.classList.add('border-emerald-400');
+          } else {
+            input.classList.remove('border-emerald-400', 'border-yellow-400');
+            input.classList.add('border-red-400');
+          }
+
+          if (feedback) {
+            feedback.textContent = '';
+            feedback.classList.add('hidden');
+          }
+        });
+
+        const total = items.length;
+        const score = total ? correct / total : 0;
+        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
+
+        if (score >= PASS_THRESHOLD) {
+          resultEl.classList.remove('text-red-600');
+          resultEl.classList.add('text-emerald-700');
+
+          if (nextBtn) {
+            nextBtn.classList.remove(
+              'bg-slate-300',
+              'text-slate-600',
+              'cursor-not-allowed',
+              'pointer-events-none'
+            );
+            nextBtn.classList.add(
+              'bg-emerald-600',
+              'hover:bg-emerald-700',
+              'text-white'
+            );
+            nextBtn.disabled = false;
+          }
+
+          markModuleCompleted(moduleNumber);
+          const nextModule = moduleNumber + 1;
+          if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
+        } else {
+          resultEl.classList.remove('text-emerald-700');
+          resultEl.classList.add('text-red-600');
+        }
+      });
+    }
+
+    async function loadPracticeSet() {
+      try {
+        const res = await fetch(PRACTICE_JSON_URL);
+        const data = await res.json();
+        const items = data;
+        buildAllVerbModules(items);
+        [1, 2, 3, 4].forEach(attachQuizHandler);
+      } catch (err) {
+        console.error('Error al cargar el JSON de práctica:', err);
+        const result = document.getElementById('module-1-result');
+        if (result) {
+          result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
+          result.classList.add('text-red-600');
+        }
+      }
+    }
+
+    // Next buttons 1–4 (internal navigation)
+    for (let i = 1; i <= 4; i++) {
+      const nextBtn = document.getElementById('btn-next-from-' + i);
+      if (!nextBtn) continue;
+      nextBtn.addEventListener('click', () => {
+        const target = i + 1; // 1→2, 2→3, 3→4, 4→5
+        const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
+        if (tab && !tab.disabled) showModule(target);
+      });
+    }
+
+    // Sidebar tabs
+    document.querySelectorAll('.module-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const num = Number(btn.dataset.module);
+        if (btn.disabled) return;
+        showModule(num);
+      });
+    });
+
+    // "Volver a módulo X" buttons
+    document.querySelectorAll('[data-go-module]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const num = Number(btn.dataset.goModule);
+        showModule(num);
+      });
+    });
+
+    // ------- Lectura (module 5) -> desbloquea preguntas (module 6) ------
+    const finishReadingBtn = document.getElementById('btn-finish-reading');
+    if (finishReadingBtn) {
+      finishReadingBtn.addEventListener('click', () => {
+        markModuleCompleted(5);
+        unlockModuleBtn(6);
+        showModule(6);
+      });
+    }
+
+    // ------- Preguntas de comprensión (module 6) -------
+    const btnCheckReading = document.getElementById('btn-check-reading');
+    const readingResult = document.getElementById('reading-result');
+    const btnShowPassword = document.getElementById('btn-show-password');
+    const passwordDisplay = document.getElementById('password-display');
+
+    if (btnCheckReading) {
+      btnCheckReading.addEventListener('click', () => {
+        const items = document.querySelectorAll('#reading-questions .quiz-item');
+
+        let missing = false;
+        items.forEach(item => {
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          if (!input) return;
+          const val = (input.value || '').trim();
+          if (!val) {
+            missing = true;
+            input.classList.remove('border-emerald-400', 'border-red-400');
+            input.classList.add('border-yellow-400');
+            if (feedback) feedback.classList.add('hidden');
+          }
+        });
+
+        if (missing) {
+          readingResult.textContent = 'Responde todos los campos antes de corregir.';
+          readingResult.classList.remove('text-emerald-700');
+          readingResult.classList.add('text-red-600');
+          return;
+        }
+
+        let correct = 0;
+        items.forEach(item => {
+          const rawAnswer = (item.dataset.answer || '').trim().toLowerCase();
+          const input = item.querySelector('input');
+          const feedback = item.querySelector('.feedback');
+          const userVal = (input.value || '').trim().toLowerCase();
+
+          if (userVal === rawAnswer) {
+            correct++;
+            input.classList.remove('border-red-400', 'border-yellow-400');
+            input.classList.add('border-emerald-400');
+            if (feedback) {
+              feedback.textContent = '';
+              feedback.classList.add('hidden');
+            }
+          } else {
+            input.classList.remove('border-emerald-400', 'border-yellow-400');
+            input.classList.add('border-red-400');
+            if (feedback) {
+              feedback.textContent = `❌ Respuesta esperada: ${rawAnswer}`;
+              feedback.classList.remove('hidden');
+              feedback.classList.add('text-red-500');
+            }
+          }
+        });
+
+        const total = items.length;
+        const score = total ? correct / total : 0;
+        readingResult.textContent =
+          `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        if (score >= PASS_THRESHOLD) {
+          readingResult.classList.remove('text-red-600');
+          readingResult.classList.add('text-emerald-700');
+
+          markModuleCompleted(6);
+
+          if (btnShowPassword) {
+            btnShowPassword.disabled = false;
+            btnShowPassword.classList.remove(
+              'bg-slate-300',
+              'text-slate-600',
+              'cursor-not-allowed'
+            );
+            btnShowPassword.classList.add(
+              'bg-emerald-600',
+              'hover:bg-emerald-700',
+              'text-white'
+            );
+          }
+        } else {
+          readingResult.classList.remove('text-emerald-700');
+          readingResult.classList.add('text-red-600');
+        }
+      });
+    }
+
+    if (btnShowPassword && passwordDisplay) {
+      btnShowPassword.addEventListener('click', () => {
+        passwordDisplay.classList.remove('hidden');
+        // aquí puedes también poner un link al siguiente nivel
+      });
+    }
+
+    // Init
+    updateProgress();
+    showModule(1);
+    loadPracticeSet();
+  </script>
+    
+<style>
+  /* Slot styling kept minimal; Tailwind does most of it */
+  .slot {
+    height: 86px;
+    border: 2px dashed #cbd5e1; /* slate-300 */
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    position: relative;
+    background: #f8fafc; /* slate-50 */
+  }
+  .slot[data-filled="true"] { border-style: solid; }
+  .slot::before{
+    content: attr(data-slot);
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    font-size: 12px;
+    color: #64748b; /* slate-500 */
+    font-weight: 700;
+  }
+  .ghost {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+</style>
+
+<script>
+  // ✅ PICKED ORDER (10 answers) — change these whenever you want
+  // Your 6 available colors: amarillo, anaranjado, azul, rojo, verde, morado
+  const ANSWER_ORDER = [
+    "azul",
+    "rojo",
+    "verde",
+    "amarillo",
+    "morado",
+    "anaranjado",
+    "azul",
+    "verde",
+    "rojo",
+    "amarillo"
+  ];
+
+  // Password to reveal when correct (change this)
+  const PASSWORD = "NIVEL5";
+
+  const palette = document.getElementById("palette");
+</script>
+</body>
+        </html>
