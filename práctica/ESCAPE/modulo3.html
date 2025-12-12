@@ -102,14 +102,15 @@
   <span id="badge-5" class="text-xs">🔒</span>
 </button>
 
-<!-- Keep por/para as external page -->
 <a href="porpara.html"
+   id="link-porpara"
    class="w-full block px-3 py-2 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-sm hover:bg-slate-100">
   <div class="flex items-center justify-between gap-2">
     <span>Módulo 3 · Crucigrama / pista</span>
     <span class="text-xs">↗</span>
   </div>
 </a>
+
 
           <!-- MAIN PANEL -->
           <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
@@ -990,6 +991,23 @@
       if (tab && !tab.disabled) showModule(target);
     });
   }
+// ---------- LOCK direct link to por/para until vocab (module 5) is done ----------
+const porparaLink = document.getElementById('link-porpara');
+if (porparaLink) {
+  porparaLink.addEventListener('click', (e) => {
+    // Option A: require vocab only
+    if (!modulePassed[5]) {
+      e.preventDefault();
+      alert('Primero completa el Módulo 2 de vocabulario antes de ir al crucigrama.');
+    }
+
+    // Option B (stricter): require ALL 5 modules
+    // if (completedModules < TOTAL_MODULES) {
+    //   e.preventDefault();
+    //   alert('Primero completa todos los módulos de este nivel.');
+    // }
+  });
+}
 
   // Sidebar tabs
   document.querySelectorAll('.module-tab').forEach(btn => {
