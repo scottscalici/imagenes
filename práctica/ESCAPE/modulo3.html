@@ -263,807 +263,783 @@
     </section>
   </main>
 
-  <script>
+ <script>
   // 👉 Change this per day (VERBS):
-const PRACTICE_JSON_URL =
-  'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos3.json';
+  const PRACTICE_JSON_URL =
+    'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos3.json';
 
-// 👉 New: vocab JSON for this module:
-const VOCAB_JSON_URL =
-  'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/práctica/ESCAPE/vocab3.json';
+  // 👉 New: vocab JSON for this module:
+  const VOCAB_JSON_URL =
+    'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/práctica/ESCAPE/vocab3.json';
 
-// We now have 5 internal modules on this page (4 verb blocks + vocab)
-const TOTAL_MODULES = 5;
-const PASS_THRESHOLD = 1.0;
+  // We now have 5 internal modules on this page (4 verb blocks + vocab)
+  const TOTAL_MODULES = 5;
+  const PASS_THRESHOLD = 1.0;
 
+  // ---------- PROGRESS ----------
+  const progressFill = document.getElementById('progress-fill');
+  const progressLabel = document.getElementById('progress-label');
+  const modulePassed = {};
+  let completedModules = 0;
 
-    const progressFill = document.getElementById('progress-fill');
-    const progressLabel = document.getElementById('progress-label');
-    const modulePassed = {};
-    let completedModules = 0;
+  function updateProgress() {
+    const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
+    progressFill.style.width = percent + '%';
+    progressLabel.textContent = percent + '% completado';
+  }
 
-    function updateProgress() {
-      const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
-      progressFill.style.width = percent + '%';
-      progressLabel.textContent = percent + '% completado';
-    }
-
-    function markModuleCompleted(n) {
-      if (!modulePassed[n]) {
-        modulePassed[n] = true;
-        completedModules = Object.keys(modulePassed).length;
-        updateProgress();
-        const badge = document.getElementById('badge-' + n);
-        if (badge) badge.textContent = '✔';
-      }
-    }
-
-    function unlockModuleBtn(n) {
-      const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+  function markModuleCompleted(n) {
+    if (!modulePassed[n]) {
+      modulePassed[n] = true;
+      completedModules = Object.keys(modulePassed).length;
+      updateProgress();
       const badge = document.getElementById('badge-' + n);
-      if (tab) {
-        tab.disabled = false;
-        tab.classList.remove('text-slate-500');
-      }
-      if (badge && badge.textContent === '🔒') {
-        badge.textContent = '●';
-      }
-    }
-
-    function showModule(n) {
-      document.querySelectorAll('.module-view').forEach(view => view.classList.add('hidden'));
-      const active = document.getElementById('module-' + n);
-      if (active) active.classList.remove('hidden');
-
-      document.querySelectorAll('.module-tab').forEach(btn => {
-        const m = btn.dataset.module;
-        if (String(m) === String(n)) {
-          btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
-        } else {
-          btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
-        }
-      });
-    }
-
-    function buildVerbModule(moduleNumber, items) {
-      const container = document.getElementById('module-' + moduleNumber + '-questions');
-      if (!container) return;
-      container.innerHTML = '';
-
-      items.forEach((item, index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'space-y-1 quiz-item';
-        wrapper.dataset.answer = item.forma;
-
-        const sujeto = item.sujeto || '';
-        const contexto = item.contexto || '___';
-        const infinitivo = item.infinitivo || '';
-
-        wrapper.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">
-            ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
-          </label>
-          <input type="text"
-                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        container.appendChild(wrapper);
-      });
-    }
-
-    function buildAllVerbModules(items) {
-      const chunkSize = 5;
-      for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
-        const start = (moduleNum - 1) * chunkSize;
-        const slice = items.slice(start, start + chunkSize);
-        if (!slice.length) break;
-        buildVerbModule(moduleNum, slice);
-      }
-    }
-
-    function attachQuizHandler(moduleNumber) {
-      const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
-      if (!btnCheck) return;
-
-      btnCheck.addEventListener('click', () => {
-        const selector = '#module-' + moduleNumber + ' .quiz-item';
-        const items = document.querySelectorAll(selector);
-        const resultEl = document.getElementById('module-' + moduleNumber + '-result');
-
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const value = (input.value || '').trim();
-          if (value === '') {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
-          }
-        });
-
-        if (missing) {
-          resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-          return;
-        }
-
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim();
-          const answer = rawAnswer.toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const userValue = (input.value || '').trim().toLowerCase();
-
-          if (userValue === answer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-          }
-
-          if (feedback) {
-            feedback.textContent = '';
-            feedback.classList.add('hidden');
-          }
-        });
-
-        const total = items.length;
-        const score = total ? correct / total : 0;
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-        const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
-
-        if (score >= PASS_THRESHOLD) {
-          resultEl.classList.remove('text-red-600');
-          resultEl.classList.add('text-emerald-700');
-
-          if (nextBtn) {
-            // enable next button
-            nextBtn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed', 'pointer-events-none');
-            nextBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-700', 'text-white');
-            if (nextBtn.tagName.toLowerCase() === 'a') {
-              nextBtn.removeAttribute('disabled');
-            } else {
-              nextBtn.disabled = false;
-            }
-          }
-
-          markModuleCompleted(moduleNumber);
-          const nextModule = moduleNumber + 1;
-          if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
-        } else {
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-        }
-      });
-    }
-
-    async function loadPracticeSet() {
-      try {
-        const res = await fetch(PRACTICE_JSON_URL);
-        const data = await res.json();
-        const items = data;
-
-        buildAllVerbModules(items);
-        [1, 2, 3, 4].forEach(attachQuizHandler);
-      } catch (err) {
-        console.error('Error al cargar el JSON de práctica:', err);
-        const result = document.getElementById('module-1-result');
-        if (result) {
-          result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
-          result.classList.add('text-red-600');
-        }
-      }
-    }
-
-
-    // ===== VOCAB MODULE (Módulo 2) =====
-
-const vocabBlockContainer = document.getElementById('vocab-block-container');
-const vocabGlobalStatus = document.getElementById('vocab-global-status');
-const nextFrom5Btn = document.getElementById('btn-next-from-5');
-const resetVocabBtn = document.getElementById('btn-reset-vocab');
-
-const vocabState = {
-  blocks: [],        // [{ items: [{spanish, english}], index }]
-  currentIndex: 0,   // 0,1,2
-  completedBlocks: 0,
-  scores: [],        // [{correct, total}] per block
-  pairs: []          // full list of 30 words (for reset)
-};
-
-// ---------- Helpers for flexible / typo-tolerant checking ----------
-
-function normalizeVocabPiece(str) {
-  let s = (str || '').toLowerCase().trim();
-
-  // Remove anything in parentheses: (money), (up with), etc.
-  s = s.replace(/\([^)]*\)/g, ' ').trim();
-
-  // Strip leading "to / the / a / an"
-  while (/^(to|the|a|an)\s+/.test(s)) {
-    s = s.replace(/^(to|the|a|an)\s+/, '');
-  }
-
-  // Collapse extra spaces
-  s = s.replace(/\s+/g, ' ');
-  return s;
-}
-
-
-// Simple Levenshtein distance for small typos
-function levenshtein(a, b) {
-  a = a || '';
-  b = b || '';
-  const m = a.length;
-  const n = b.length;
-  if (m === 0) return n;
-  if (n === 0) return m;
-
-  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-
-  for (let i = 0; i <= m; i++) dp[i][0] = i;
-  for (let j = 0; j <= n; j++) dp[0][j] = j;
-
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      dp[i][j] = Math.min(
-        dp[i - 1][j] + 1,      // deletion
-        dp[i][j - 1] + 1,      // insertion
-        dp[i - 1][j - 1] + cost // substitution
-      );
-    }
-  }
-  return dp[m][n];
-}
-
-function isVocabCorrect(userRaw, answerRaw) {
-  const user = (userRaw || '').trim();
-  const ans = (answerRaw || '').trim();
-  if (!ans) return false;
-
-  // Split on common separators: ; , /
-  const answerParts = ans
-    .split(/[;,/]/)
-    .map(normalizeVocabPiece)
-    .filter(Boolean);
-
-  const userParts = user
-    .split(/[;,/]/)
-    .map(normalizeVocabPiece)
-    .filter(Boolean);
-
-  // Fallback: compare whole thing
-  if (!answerParts.length) {
-    return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
-  }
-  if (!userParts.length) return false;
-
-  // Correct if ANY user piece ≈ ANY answer piece (exact or small typo)
-  for (const up of userParts) {
-    for (const ap of answerParts) {
-      if (!ap) continue;
-      if (up === ap) return true;
-
-      const dist = levenshtein(up, ap);
-      const len = Math.max(up.length, ap.length);
-      const maxAllowed = Math.min(2, Math.floor(len * 0.25)); // e.g. 1 error for 4–7 letters, max 2
-
-      if (dist > 0 && dist <= maxAllowed) return true;
+      if (badge) badge.textContent = '✔';
     }
   }
 
-  return false;
-}
-
-// ---------- Extractor: adapts to your spanish/english JSON ----------
-
-function extractVocabPairs(data) {
-  let raw = [];
-  if (Array.isArray(data)) {
-    raw = data;
-  } else if (Array.isArray(data.items)) {
-    raw = data.items;
-  } else if (Array.isArray(data.vocabulario)) {
-    raw = data.vocabulario;
-  }
-
-  return raw
-    .map(entry => {
-      const spanish =
-        entry.spanish ||
-        entry.es ||
-        entry.espanol ||
-        entry.español ||
-        entry.palabra ||
-        entry.termino ||
-        entry.vocabulario ||
-        '';
-      const english =
-        entry.english ||
-        entry.en ||
-        entry.ingles ||
-        entry.englishText ||
-        entry.traduccion ||
-        entry.definicion ||
-        '';
-      return { spanish, english };
-    })
-    .filter(p => p.spanish && p.english);
-}
-
-// ---------- Typing stage (bloques de 10) ----------
-
-function buildTypingStage(blockIdx) {
-  const totalBlocks = vocabState.blocks.length;
-  const block = vocabState.blocks[blockIdx];
-  if (!block) return;
-
-  vocabBlockContainer.innerHTML = '';
-
-  const header = document.createElement('div');
-  header.className = 'flex items-baseline justify-between gap-2';
-  header.innerHTML = `
-    <h3 class="text-lg font-semibold text-slate-800">
-      Bloque ${blockIdx + 1} de ${totalBlocks}
-    </h3>
-    <p class="text-xs text-slate-500">
-      Escribe la traducción al inglés para cada palabra.
-    </p>
-  `;
-  vocabBlockContainer.appendChild(header);
-
-  const list = document.createElement('div');
-  list.className = 'space-y-3 mt-2';
-
-  block.items.forEach((item, i) => {
-    const row = document.createElement('div');
-    row.className = 'space-y-1 vocab-item';
-    row.dataset.answer = item.english;
-
-    row.innerHTML = `
-      <label class="text-sm font-medium text-slate-800">
-        ${i + 1}. ${item.spanish}
-      </label>
-      <input type="text"
-             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-      <p class="text-xs text-slate-500 feedback hidden"></p>
-    `;
-    list.appendChild(row);
-  });
-
-  vocabBlockContainer.appendChild(list);
-
-  const footer = document.createElement('div');
-  footer.className = 'flex flex-wrap items-center gap-3 pt-3';
-  footer.innerHTML = `
-    <button id="btn-vocab-check"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-      Corregir respuestas
-    </button>
-    <p id="vocab-block-result" class="text-sm text-slate-700"></p>
-  `;
-  vocabBlockContainer.appendChild(footer);
-
-  const checkBtn = footer.querySelector('#btn-vocab-check');
-  const resultEl = footer.querySelector('#vocab-block-result');
-
-  checkBtn.addEventListener('click', () => {
-    const items = vocabBlockContainer.querySelectorAll('.vocab-item');
-
-    let missing = false;
-    items.forEach(item => {
-      const input = item.querySelector('input');
-      const feedback = item.querySelector('.feedback');
-      const val = (input.value || '').trim();
-      if (!val) {
-        missing = true;
-        input.classList.remove('border-emerald-400', 'border-red-400');
-        input.classList.add('border-yellow-400');
-        feedback.classList.add('hidden');
-      }
-    });
-
-    if (missing) {
-      resultEl.textContent = 'Responde todos los campos antes de corregir.';
-      resultEl.classList.remove('text-emerald-700');
-      resultEl.classList.add('text-red-600');
-      return;
+  function unlockModuleBtn(n) {
+    const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+    const badge = document.getElementById('badge-' + n);
+    if (tab) {
+      tab.disabled = false;
+      tab.classList.remove('text-slate-500');
     }
-
-    let correct = 0;
-    const wrongItems = [];
-
-    items.forEach(item => {
-      const rawAnswer = (item.dataset.answer || '').trim();
-      const input = item.querySelector('input');
-      const feedback = item.querySelector('.feedback');
-      const userVal = (input.value || '').trim();
-
-      const ok = isVocabCorrect(userVal, rawAnswer);
-
-      if (ok) {
-        correct++;
-        input.classList.remove('border-red-400', 'border-yellow-400');
-        input.classList.add('border-emerald-400');
-        feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-        feedback.classList.remove('hidden', 'text-red-500');
-        feedback.classList.add('text-emerald-600');
-      } else {
-        input.classList.remove('border-emerald-400', 'border-yellow-400');
-        input.classList.add('border-red-400');
-        feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-        feedback.classList.remove('hidden', 'text-emerald-600');
-        feedback.classList.add('text-red-500');
-
-        const idx = Number(item.querySelector('label').textContent.split('.')[0]) - 1;
-        wrongItems.push(block.items[idx]);
-      }
-    });
-
-    const total = items.length;
-    const score = total ? correct / total : 0;
-
-    // Guarda el resultado de este bloque para el resumen final
-    vocabState.scores[blockIdx] = { correct, total };
-
-    resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-    if (wrongItems.length === 0) {
-      resultEl.classList.remove('text-red-600');
-      resultEl.classList.add('text-emerald-700');
-      buildNextBlockButton(blockIdx);
-    } else {
-      resultEl.classList.remove('text-emerald-700');
-      resultEl.classList.add('text-slate-700');
-      buildMatchingStage(blockIdx, wrongItems);
+    if (badge && badge.textContent === '🔒') {
+      badge.textContent = '●';
     }
-  });
-}
-
-// ---------- Matching stage for wrong answers ----------
-
-function buildMatchingStage(blockIdx, wrongItems) {
-  const existingMatch = document.getElementById('vocab-matching-section');
-  if (existingMatch) existingMatch.remove();
-
-  const matchSection = document.createElement('div');
-  matchSection.id = 'vocab-matching-section';
-  matchSection.className = 'mt-5 border-t border-slate-200 pt-4 space-y-3';
-
-  matchSection.innerHTML = `
-    <h4 class="text-sm font-semibold text-slate-800">
-      Empareja las palabras que fallaste
-    </h4>
-    <p class="text-xs text-slate-500">
-      Haz clic primero en la palabra en español y luego en su traducción correcta en inglés.
-    </p>
-  `;
-
-  const columns = document.createElement('div');
-  columns.className = 'grid sm:grid-cols-2 gap-3';
-
-  const leftCol = document.createElement('div');
-  leftCol.className = 'space-y-2';
-  const rightCol = document.createElement('div');
-  rightCol.className = 'space-y-2';
-
-  function shuffle(arr) {
-    return arr
-      .map(v => ({ v, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ v }) => v);
   }
 
-  const shuffledSpanish = shuffle(wrongItems);
-  const shuffledEnglish = shuffle(wrongItems);
-
-  shuffledSpanish.forEach((item, idx) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className =
-      'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option';
-    btn.dataset.key = String(idx);
-    btn.textContent = item.spanish;
-    leftCol.appendChild(btn);
-  });
-
-  shuffledEnglish.forEach((item, idx) => {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className =
-      'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
-    btn.dataset.spanish = item.spanish;
-    btn.dataset.english = item.english;
-    btn.textContent = item.english; // <- important
-
-    rightCol.appendChild(btn);
-  });
-
-  columns.appendChild(leftCol);
-  columns.appendChild(rightCol);
-  matchSection.appendChild(columns);
-
-  const status = document.createElement('p');
-  status.className = 'text-xs text-slate-500 mt-2';
-  matchSection.appendChild(status);
-
-  vocabBlockContainer.appendChild(matchSection);
-
-  let selectedSpanishBtn = null;
-  let remaining = wrongItems.length;
-
-  function clearSelections() {
-    vocabBlockContainer
-      .querySelectorAll('.spanish-option, .english-option')
-      .forEach(btn =>
-        btn.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-50')
-      );
-  }
-
-  leftCol.querySelectorAll('.spanish-option').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (btn.disabled) return;
-      selectedSpanishBtn = btn;
-      clearSelections();
-      btn.classList.add('ring-2', 'ring-sky-400', 'bg-sky-50');
-      status.textContent = 'Ahora haz clic en la traducción correcta en inglés.';
-      status.classList.remove('text-red-600', 'text-emerald-700');
-      status.classList.add('text-slate-500');
-    });
-  });
-
-  rightCol.querySelectorAll('.english-option').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!selectedSpanishBtn || btn.disabled) return;
-
-      const spanishText = selectedSpanishBtn.textContent.trim();
-      const englishText = btn.dataset.english;
-
-      const correctPair = wrongItems.find(
-        it => it.spanish === spanishText && it.english === englishText
-      );
-
-      if (correctPair) {
-        selectedSpanishBtn.disabled = true;
-        btn.disabled = true;
-        selectedSpanishBtn.classList.remove('ring-2', 'ring-sky-400');
-        selectedSpanishBtn.classList.add('bg-emerald-50', 'border-emerald-400');
-        btn.classList.add('bg-emerald-50', 'border-emerald-400');
-        remaining--;
-        selectedSpanishBtn = null;
-        status.textContent = `✔ ¡Bien! Te quedan ${remaining} por emparejar.`;
-        status.classList.remove('text-red-600', 'text-slate-500');
-        status.classList.add('text-emerald-700');
-
-        if (remaining === 0) {
-          status.textContent =
-            '✔ Bloque completado. Puedes pasar al siguiente bloque.';
-          buildNextBlockButton(blockIdx);
-        }
-      } else {
-        status.textContent =
-          '❌ No es la traducción correcta. Intenta de nuevo.';
-        status.classList.remove('text-slate-500', 'text-emerald-700');
-        status.classList.add('text-red-600');
-        clearSelections();
-        selectedSpanishBtn = null;
-      }
-    });
-  });
-}
-
-// ---------- Botón "Siguiente bloque / Terminar vocabulario" ----------
-
-function buildNextBlockButton(blockIdx) {
-  const existing = document.getElementById('vocab-next-block');
-  if (existing) existing.remove();
-
-  const totalBlocks = vocabState.blocks.length;
-  const wrapper = document.createElement('div');
-  wrapper.id = 'vocab-next-block';
-  wrapper.className = 'pt-4 flex justify-end';
-
-  const isLast = blockIdx === totalBlocks - 1;
-  const label = isLast
-    ? 'Terminar vocabulario'
-    : 'Siguiente bloque de vocabulario →';
-
-  const btn = document.createElement('button');
-  btn.type = 'button';
-  btn.className =
-    'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
-  btn.textContent = label;
-
-  btn.addEventListener('click', () => {
-    vocabState.completedBlocks++;
-
-   // In the "isLast" block of buildNextBlockButton:
-if (isLast) {
-  let totalCorrect = 0;
-  let totalQs = 0;
-  (vocabState.scores || []).forEach(s => {
-    if (!s) return;
-    totalCorrect += s.correct || 0;
-    totalQs += s.total || 0;
-  });
-  const overallPct = totalQs
-    ? Math.round((totalCorrect / totalQs) * 100)
-    : 0;
-
-  vocabGlobalStatus.innerHTML =
-    `✔ Has completado los 3 bloques de vocabulario. ` +
-    `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
-    `${overallPct}&nbsp;%).`;
-  vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
-  vocabGlobalStatus.classList.add('text-emerald-700');
-
-  // Mark vocab module complete in the progress bar
-  markModuleCompleted(5);
-
-  // Enable the "Ir al Módulo 3 →" button
-  if (nextFrom5Btn) {
-    nextFrom5Btn.disabled = false;
-    nextFrom5Btn.classList.remove(
-      'bg-slate-300',
-      'text-slate-600',
-      'cursor-not-allowed'
+  function showModule(n) {
+    document.querySelectorAll('.module-view').forEach(view =>
+      view.classList.add('hidden')
     );
-    nextFrom5Btn.classList.add(
-      'bg-emerald-600',
-      'hover:bg-emerald-700',
-      'text-white'
-    );
-  }
-} else {
-  // same as before: go to next vocab block
-  vocabState.currentIndex = blockIdx + 1;
-  buildTypingStage(vocabState.currentIndex);
-  vocabGlobalStatus.textContent =
-    `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
-}
+    const active = document.getElementById('module-' + n);
+    if (active) active.classList.remove('hidden');
 
-  wrapper.appendChild(btn);
-  vocabBlockContainer.appendChild(wrapper);
-}
-
-// ---------- Reset button ----------
-
-if (resetVocabBtn) {
-  resetVocabBtn.addEventListener('click', () => {
-    if (!vocabState.pairs.length) {
-      loadVocabSet();
-      return;
-    }
-    vocabState.currentIndex = 0;
-    vocabState.completedBlocks = 0;
-    vocabState.scores = [];
-    vocabGlobalStatus.textContent =
-      'Módulo reiniciado. Empieza de nuevo con el Bloque 1 de 3.';
-    vocabGlobalStatus.classList.remove('text-emerald-700', 'text-red-600');
-    vocabGlobalStatus.classList.add('text-slate-500');
-
-if (nextFrom5Btn) {
-  nextFrom5Btn.addEventListener('click', () => {
-    // Optional: ensure it's marked as completed (if not already)
-    markModuleCompleted(5);
-
-    // Go to the por/para puzzle page
-    window.location.href = 'porpara.html';
-  });
-}
-
-
-// ---------- Load vocab from JSON and initialize ----------
-
-async function loadVocabSet() {
-  if (!VOCAB_JSON_URL || !vocabBlockContainer) return;
-  try {
-    const res = await fetch(VOCAB_JSON_URL);
-    const data = await res.json();
-    let pairs = extractVocabPairs(data);
-
-    pairs = pairs.slice(0, 30);
-    vocabState.pairs = pairs;
-    vocabState.scores = [];
-    vocabState.currentIndex = 0;
-    vocabState.completedBlocks = 0;
-
-    if (!pairs.length) {
-      vocabBlockContainer.innerHTML =
-        '<p class="text-sm text-red-600">No se encontraron palabras en el archivo de vocabulario.</p>';
-      return;
-    }
-
-    const blockSize = 10;
-    vocabState.blocks = [];
-    for (let i = 0; i < 3; i++) {
-      const slice = pairs.slice(i * blockSize, (i + 1) * blockSize);
-      if (slice.length) {
-        vocabState.blocks.push({ index: i, items: slice });
-      }
-    }
-
-    vocabGlobalStatus.textContent =
-      `Módulo de vocabulario listo: ${vocabState.blocks.length} bloques de hasta 10 palabras.`;
-    buildTypingStage(0);
-  } catch (err) {
-    console.error('Error al cargar vocabulario:', err);
-    vocabBlockContainer.innerHTML =
-      '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL del JSON).</p>';
-  }
-}
-
-// Next buttons 1–4 (internal navigation)
-for (let i = 1; i <= 4; i++) {
-  const nextBtn = document.getElementById('btn-next-from-' + i);
-  if (!nextBtn) continue;
-  nextBtn.addEventListener('click', () => {
-    const target = i + 1;
-    const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
-    if (tab && !tab.disabled) showModule(target);
-  });
-}
-// btn-next-from-4 now leads to Módulo 2 (vocabulario) internally
-
-
-    // Sidebar tabs
     document.querySelectorAll('.module-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.module);
-        if (btn.disabled) return;
-        showModule(num);
-      });
-    });
-
-    // "Volver a módulo X" buttons
-    document.querySelectorAll('[data-go-module]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.goModule);
-        showModule(num);
-      });
-    });
-
-    // Init
-updateProgress();
-showModule(1);
-loadPracticeSet();
-loadVocabSet();   // ← NEW
-
-
-    // ----- PASSWORD LOGIC -----
-    function checkPassword() {
-      const inputEl = document.getElementById("passwordInput");
-      const errorEl = document.getElementById("password-error");
-      const input = inputEl.value.trim();
-      const correct = "SALUD";
-
-      if (input.toUpperCase() === correct) {
-        document.getElementById("password-gate").classList.add("hidden");
-        document.getElementById("protected-content").classList.remove("hidden");
-        errorEl.classList.add("hidden");
+      const m = btn.dataset.module;
+      if (String(m) === String(n)) {
+        btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
+        btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
       } else {
-        errorEl.classList.remove("hidden");
-        inputEl.focus();
+        btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
+        btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
+      }
+    });
+  }
+
+  // ---------- VERB MODULES ----------
+  function buildVerbModule(moduleNumber, items) {
+    const container = document.getElementById('module-' + moduleNumber + '-questions');
+    if (!container) return;
+    container.innerHTML = '';
+
+    items.forEach((item, index) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'space-y-1 quiz-item';
+      wrapper.dataset.answer = item.forma;
+
+      const sujeto = item.sujeto || '';
+      const contexto = item.contexto || '___';
+      const infinitivo = item.infinitivo || '';
+
+      wrapper.innerHTML = `
+        <label class="text-sm font-medium text-slate-800">
+          ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
+        </label>
+        <input type="text"
+               class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+        <p class="text-xs text-slate-500 feedback hidden"></p>
+      `;
+      container.appendChild(wrapper);
+    });
+  }
+
+  function buildAllVerbModules(items) {
+    const chunkSize = 5;
+    for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
+      const start = (moduleNum - 1) * chunkSize;
+      const slice = items.slice(start, start + chunkSize);
+      if (!slice.length) break;
+      buildVerbModule(moduleNum, slice);
+    }
+  }
+
+  function attachQuizHandler(moduleNumber) {
+    const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
+    if (!btnCheck) return;
+
+    btnCheck.addEventListener('click', () => {
+      const selector = '#module-' + moduleNumber + ' .quiz-item';
+      const items = document.querySelectorAll(selector);
+      const resultEl = document.getElementById('module-' + moduleNumber + '-result');
+
+      let missing = false;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        if (!input) return;
+        const value = (input.value || '').trim();
+        if (value === '') {
+          missing = true;
+          input.classList.remove('border-emerald-400', 'border-red-400');
+          input.classList.add('border-yellow-400');
+          if (feedback) feedback.classList.add('hidden');
+        }
+      });
+
+      if (missing) {
+        resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+        return;
+      }
+
+      let correct = 0;
+      items.forEach(item => {
+        const rawAnswer = (item.dataset.answer || '').trim();
+        const answer = rawAnswer.toLowerCase();
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        if (!input) return;
+        const userValue = (input.value || '').trim().toLowerCase();
+
+        if (userValue === answer) {
+          correct++;
+          input.classList.remove('border-red-400', 'border-yellow-400');
+          input.classList.add('border-emerald-400');
+        } else {
+          input.classList.remove('border-emerald-400', 'border-yellow-400');
+          input.classList.add('border-red-400');
+        }
+
+        if (feedback) {
+          feedback.textContent = '';
+          feedback.classList.add('hidden');
+        }
+      });
+
+      const total = items.length;
+      const score = total ? correct / total : 0;
+      resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+      const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
+
+      if (score >= PASS_THRESHOLD) {
+        resultEl.classList.remove('text-red-600');
+        resultEl.classList.add('text-emerald-700');
+
+        if (nextBtn) {
+          nextBtn.classList.remove(
+            'bg-slate-300',
+            'text-slate-600',
+            'cursor-not-allowed',
+            'pointer-events-none'
+          );
+          nextBtn.classList.add(
+            'bg-emerald-600',
+            'hover:bg-emerald-700',
+            'text-white'
+          );
+          if (nextBtn.tagName.toLowerCase() === 'a') {
+            nextBtn.removeAttribute('disabled');
+          } else {
+            nextBtn.disabled = false;
+          }
+        }
+
+        markModuleCompleted(moduleNumber);
+        const nextModule = moduleNumber + 1;
+        if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
+      } else {
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+      }
+    });
+  }
+
+  async function loadPracticeSet() {
+    try {
+      const res = await fetch(PRACTICE_JSON_URL);
+      const data = await res.json();
+      const items = data;
+      buildAllVerbModules(items);
+      [1, 2, 3, 4].forEach(attachQuizHandler);
+    } catch (err) {
+      console.error('Error al cargar el JSON de práctica:', err);
+      const result = document.getElementById('module-1-result');
+      if (result) {
+        result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
+        result.classList.add('text-red-600');
+      }
+    }
+  }
+
+  // ---------- VOCAB MODULE (Módulo 2) ----------
+  const vocabBlockContainer = document.getElementById('vocab-block-container');
+  const vocabGlobalStatus = document.getElementById('vocab-global-status');
+  const nextFrom5Btn = document.getElementById('btn-next-from-5');
+  const resetVocabBtn = document.getElementById('btn-reset-vocab');
+
+  const vocabState = {
+    blocks: [],
+    currentIndex: 0,
+    completedBlocks: 0,
+    scores: [],
+    pairs: []
+  };
+
+  function normalizeVocabPiece(str) {
+    let s = (str || '').toLowerCase().trim();
+    s = s.replace(/\([^)]*\)/g, ' ').trim();        // remove (money), (up with), etc.
+    while (/^(to|the|a|an)\s+/.test(s)) {
+      s = s.replace(/^(to|the|a|an)\s+/, '');
+    }
+    s = s.replace(/\s+/g, ' ');
+    return s;
+  }
+
+  function levenshtein(a, b) {
+    a = a || '';
+    b = b || '';
+    const m = a.length;
+    const n = b.length;
+    if (m === 0) return n;
+    if (n === 0) return m;
+
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + cost
+        );
+      }
+    }
+    return dp[m][n];
+  }
+
+  function isVocabCorrect(userRaw, answerRaw) {
+    const user = (userRaw || '').trim();
+    const ans = (answerRaw || '').trim();
+    if (!ans) return false;
+
+    const answerParts = ans
+      .split(/[;,/]/)
+      .map(normalizeVocabPiece)
+      .filter(Boolean);
+
+    const userParts = user
+      .split(/[;,/]/)
+      .map(normalizeVocabPiece)
+      .filter(Boolean);
+
+    if (!answerParts.length) {
+      return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
+    }
+    if (!userParts.length) return false;
+
+    for (const up of userParts) {
+      for (const ap of answerParts) {
+        if (!ap) continue;
+        if (up === ap) return true;
+        const dist = levenshtein(up, ap);
+        const len = Math.max(up.length, ap.length);
+        const maxAllowed = Math.min(2, Math.floor(len * 0.25));
+        if (dist > 0 && dist <= maxAllowed) return true;
       }
     }
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && document.activeElement.id === "passwordInput") {
-        checkPassword();
+    return false;
+  }
+
+  function extractVocabPairs(data) {
+    let raw = [];
+    if (Array.isArray(data)) {
+      raw = data;
+    } else if (Array.isArray(data.items)) {
+      raw = data.items;
+    } else if (Array.isArray(data.vocabulario)) {
+      raw = data.vocabulario;
+    }
+
+    return raw
+      .map(entry => {
+        const spanish =
+          entry.spanish ||
+          entry.es ||
+          entry.espanol ||
+          entry.español ||
+          entry.palabra ||
+          entry.termino ||
+          entry.vocabulario ||
+          '';
+        const english =
+          entry.english ||
+          entry.en ||
+          entry.ingles ||
+          entry.englishText ||
+          entry.traduccion ||
+          entry.definicion ||
+          '';
+        return { spanish, english };
+      })
+      .filter(p => p.spanish && p.english);
+  }
+
+  function buildTypingStage(blockIdx) {
+    const totalBlocks = vocabState.blocks.length;
+    const block = vocabState.blocks[blockIdx];
+    if (!block) return;
+
+    vocabBlockContainer.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'flex items-baseline justify-between gap-2';
+    header.innerHTML = `
+      <h3 class="text-lg font-semibold text-slate-800">
+        Bloque ${blockIdx + 1} de ${totalBlocks}
+      </h3>
+      <p class="text-xs text-slate-500">
+        Escribe la traducción al inglés para cada palabra.
+      </p>
+    `;
+    vocabBlockContainer.appendChild(header);
+
+    const list = document.createElement('div');
+    list.className = 'space-y-3 mt-2';
+
+    block.items.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'space-y-1 vocab-item';
+      row.dataset.answer = item.english;
+      row.innerHTML = `
+        <label class="text-sm font-medium text-slate-800">
+          ${i + 1}. ${item.spanish}
+        </label>
+        <input type="text"
+               class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+        <p class="text-xs text-slate-500 feedback hidden"></p>
+      `;
+      list.appendChild(row);
+    });
+
+    vocabBlockContainer.appendChild(list);
+
+    const footer = document.createElement('div');
+    footer.className = 'flex flex-wrap items-center gap-3 pt-3';
+    footer.innerHTML = `
+      <button id="btn-vocab-check"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+        Corregir respuestas
+      </button>
+      <p id="vocab-block-result" class="text-sm text-slate-700"></p>
+    `;
+    vocabBlockContainer.appendChild(footer);
+
+    const checkBtn = footer.querySelector('#btn-vocab-check');
+    const resultEl = footer.querySelector('#vocab-block-result');
+
+    checkBtn.addEventListener('click', () => {
+      const items = vocabBlockContainer.querySelectorAll('.vocab-item');
+
+      let missing = false;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        const val = (input.value || '').trim();
+        if (!val) {
+          missing = true;
+          input.classList.remove('border-emerald-400', 'border-red-400');
+          input.classList.add('border-yellow-400');
+          feedback.classList.add('hidden');
+        }
+      });
+
+      if (missing) {
+        resultEl.textContent = 'Responde todos los campos antes de corregir.';
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+        return;
+      }
+
+      let correct = 0;
+      const wrongItems = [];
+
+      items.forEach(item => {
+        const rawAnswer = (item.dataset.answer || '').trim();
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        const userVal = (input.value || '').trim();
+
+        const ok = isVocabCorrect(userVal, rawAnswer);
+
+        if (ok) {
+          correct++;
+          input.classList.remove('border-red-400', 'border-yellow-400');
+          input.classList.add('border-emerald-400');
+          feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+          feedback.classList.remove('hidden', 'text-red-500');
+          feedback.classList.add('text-emerald-600');
+        } else {
+          input.classList.remove('border-emerald-400', 'border-yellow-400');
+          input.classList.add('border-red-400');
+          feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+          feedback.classList.remove('hidden', 'text-emerald-600');
+          feedback.classList.add('text-red-500');
+
+          const idx = Number(item.querySelector('label').textContent.split('.')[0]) - 1;
+          wrongItems.push(block.items[idx]);
+        }
+      });
+
+      const total = items.length;
+      const score = total ? correct / total : 0;
+      vocabState.scores[blockIdx] = { correct, total };
+
+      resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+      if (wrongItems.length === 0) {
+        resultEl.classList.remove('text-red-600');
+        resultEl.classList.add('text-emerald-700');
+        buildNextBlockButton(blockIdx);
+      } else {
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-slate-700');
+        buildMatchingStage(blockIdx, wrongItems);
       }
     });
-  </script>
+  }
+
+  function buildMatchingStage(blockIdx, wrongItems) {
+    const existingMatch = document.getElementById('vocab-matching-section');
+    if (existingMatch) existingMatch.remove();
+
+    const matchSection = document.createElement('div');
+    matchSection.id = 'vocab-matching-section';
+    matchSection.className = 'mt-5 border-t border-slate-200 pt-4 space-y-3';
+
+    matchSection.innerHTML = `
+      <h4 class="text-sm font-semibold text-slate-800">
+        Empareja las palabras que fallaste
+      </h4>
+      <p class="text-xs text-slate-500">
+        Haz clic primero en la palabra en español y luego en su traducción correcta en inglés.
+      </p>
+    `;
+
+    const columns = document.createElement('div');
+    columns.className = 'grid sm:grid-cols-2 gap-3';
+
+    const leftCol = document.createElement('div');
+    leftCol.className = 'space-y-2';
+    const rightCol = document.createElement('div');
+    rightCol.className = 'space-y-2';
+
+    function shuffle(arr) {
+      return arr
+        .map(v => ({ v, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ v }) => v);
+    }
+
+    const shuffledSpanish = shuffle(wrongItems);
+    const shuffledEnglish = shuffle(wrongItems);
+
+    shuffledSpanish.forEach((item, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option';
+      btn.dataset.key = String(idx);
+      btn.textContent = item.spanish;
+      leftCol.appendChild(btn);
+    });
+
+    shuffledEnglish.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
+      btn.dataset.spanish = item.spanish;
+      btn.dataset.english = item.english;
+      btn.textContent = item.english;
+      rightCol.appendChild(btn);
+    });
+
+    columns.appendChild(leftCol);
+    columns.appendChild(rightCol);
+    matchSection.appendChild(columns);
+
+    const status = document.createElement('p');
+    status.className = 'text-xs text-slate-500 mt-2';
+    matchSection.appendChild(status);
+
+    vocabBlockContainer.appendChild(matchSection);
+
+    let selectedSpanishBtn = null;
+    let remaining = wrongItems.length;
+
+    function clearSelections() {
+      vocabBlockContainer
+        .querySelectorAll('.spanish-option, .english-option')
+        .forEach(btn =>
+          btn.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-50')
+        );
+    }
+
+    leftCol.querySelectorAll('.spanish-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        selectedSpanishBtn = btn;
+        clearSelections();
+        btn.classList.add('ring-2', 'ring-sky-400', 'bg-sky-50');
+        status.textContent = 'Ahora haz clic en la traducción correcta en inglés.';
+        status.classList.remove('text-red-600', 'text-emerald-700');
+        status.classList.add('text-slate-500');
+      });
+    });
+
+    rightCol.querySelectorAll('.english-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedSpanishBtn || btn.disabled) return;
+
+        const spanishText = selectedSpanishBtn.textContent.trim();
+        const englishText = btn.dataset.english;
+
+        const correctPair = wrongItems.find(
+          it => it.spanish === spanishText && it.english === englishText
+        );
+
+        if (correctPair) {
+          selectedSpanishBtn.disabled = true;
+          btn.disabled = true;
+          selectedSpanishBtn.classList.remove('ring-2', 'ring-sky-400');
+          selectedSpanishBtn.classList.add('bg-emerald-50', 'border-emerald-400');
+          btn.classList.add('bg-emerald-50', 'border-emerald-400');
+          remaining--;
+          selectedSpanishBtn = null;
+          status.textContent = `✔ ¡Bien! Te quedan ${remaining} por emparejar.`;
+          status.classList.remove('text-red-600', 'text-slate-500');
+          status.classList.add('text-emerald-700');
+
+          if (remaining === 0) {
+            status.textContent =
+              '✔ Bloque completado. Puedes pasar al siguiente bloque.';
+            buildNextBlockButton(blockIdx);
+          }
+        } else {
+          status.textContent =
+            '❌ No es la traducción correcta. Intenta de nuevo.';
+          status.classList.remove('text-slate-500', 'text-emerald-700');
+          status.classList.add('text-red-600');
+          clearSelections();
+          selectedSpanishBtn = null;
+        }
+      });
+    });
+  }
+
+  function buildNextBlockButton(blockIdx) {
+    const existing = document.getElementById('vocab-next-block');
+    if (existing) existing.remove();
+
+    const totalBlocks = vocabState.blocks.length;
+    const wrapper = document.createElement('div');
+    wrapper.id = 'vocab-next-block';
+    wrapper.className = 'pt-4 flex justify-end';
+
+    const isLast = blockIdx === totalBlocks - 1;
+    const label = isLast
+      ? 'Terminar vocabulario'
+      : 'Siguiente bloque de vocabulario →';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className =
+      'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
+    btn.textContent = label;
+
+    btn.addEventListener('click', () => {
+      vocabState.completedBlocks++;
+
+      if (isLast) {
+        let totalCorrect = 0;
+        let totalQs = 0;
+        (vocabState.scores || []).forEach(s => {
+          if (!s) return;
+          totalCorrect += s.correct || 0;
+          totalQs += s.total || 0;
+        });
+        const overallPct = totalQs
+          ? Math.round((totalCorrect / totalQs) * 100)
+          : 0;
+
+        vocabGlobalStatus.innerHTML =
+          `✔ Has completado los 3 bloques de vocabulario. ` +
+          `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+          `${overallPct}&nbsp;%).`;
+        vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
+        vocabGlobalStatus.classList.add('text-emerald-700');
+
+        // Mark vocab module complete in the progress bar
+        markModuleCompleted(5);
+
+        // Enable the "Ir al Módulo 3 →" button
+        if (nextFrom5Btn) {
+          nextFrom5Btn.disabled = false;
+          nextFrom5Btn.classList.remove(
+            'bg-slate-300',
+            'text-slate-600',
+            'cursor-not-allowed'
+          );
+          nextFrom5Btn.classList.add(
+            'bg-emerald-600',
+            'hover:bg-emerald-700',
+            'text-white'
+          );
+        }
+      } else {
+        vocabState.currentIndex = blockIdx + 1;
+        buildTypingStage(vocabState.currentIndex);
+        vocabGlobalStatus.textContent =
+          `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+      }
+    });
+
+    wrapper.appendChild(btn);
+    vocabBlockContainer.appendChild(wrapper);
+  }
+
+  if (resetVocabBtn) {
+    resetVocabBtn.addEventListener('click', () => {
+      if (!vocabState.pairs.length) {
+        loadVocabSet();
+        return;
+      }
+      vocabState.currentIndex = 0;
+      vocabState.completedBlocks = 0;
+      vocabState.scores = [];
+      vocabGlobalStatus.textContent =
+        'Módulo reiniciado. Empieza de nuevo con el Bloque 1 de 3.';
+      vocabGlobalStatus.classList.remove('text-emerald-700', 'text-red-600');
+      vocabGlobalStatus.classList.add('text-slate-500');
+      buildTypingStage(0);
+    });
+  }
+
+  if (nextFrom5Btn) {
+    nextFrom5Btn.addEventListener('click', () => {
+      markModuleCompleted(5);
+      window.location.href = 'porpara.html';
+    });
+  }
+
+  async function loadVocabSet() {
+    if (!VOCAB_JSON_URL || !vocabBlockContainer) return;
+    try {
+      const res = await fetch(VOCAB_JSON_URL);
+      const data = await res.json();
+      let pairs = extractVocabPairs(data);
+
+      pairs = pairs.slice(0, 30);
+      vocabState.pairs = pairs;
+      vocabState.scores = [];
+      vocabState.currentIndex = 0;
+      vocabState.completedBlocks = 0;
+
+      if (!pairs.length) {
+        vocabBlockContainer.innerHTML =
+          '<p class="text-sm text-red-600">No se encontraron palabras en el archivo de vocabulario.</p>';
+        return;
+      }
+
+      const blockSize = 10;
+      vocabState.blocks = [];
+      for (let i = 0; i < 3; i++) {
+        const slice = pairs.slice(i * blockSize, (i + 1) * blockSize);
+        if (slice.length) {
+          vocabState.blocks.push({ index: i, items: slice });
+        }
+      }
+
+      vocabGlobalStatus.textContent =
+        `Módulo de vocabulario listo: ${vocabState.blocks.length} bloques de hasta 10 palabras.`;
+      buildTypingStage(0);
+    } catch (err) {
+      console.error('Error al cargar vocabulario:', err);
+      vocabBlockContainer.innerHTML =
+        '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL del JSON).</p>';
+    }
+  }
+
+  // ---------- INTERNAL NAV NEXT BUTTONS 1–4 ----------
+  for (let i = 1; i <= 4; i++) {
+    const nextBtn = document.getElementById('btn-next-from-' + i);
+    if (!nextBtn) continue;
+    nextBtn.addEventListener('click', () => {
+      const target = i + 1;
+      const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
+      if (tab && !tab.disabled) showModule(target);
+    });
+  }
+
+  // Sidebar tabs
+  document.querySelectorAll('.module-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = Number(btn.dataset.module);
+      if (btn.disabled) return;
+      showModule(num);
+    });
+  });
+
+  // "Volver a módulo X" buttons
+  document.querySelectorAll('[data-go-module]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = Number(btn.dataset.goModule);
+      showModule(num);
+    });
+  });
+
+  // ---------- INIT ----------
+  updateProgress();
+  showModule(1);
+  loadPracticeSet();
+  loadVocabSet();
+
+  // ---------- PASSWORD LOGIC ----------
+  function checkPassword() {
+    const inputEl = document.getElementById('passwordInput');
+    const errorEl = document.getElementById('password-error');
+    const input = inputEl.value.trim();
+    const correct = 'SALUD';
+
+    if (input.toUpperCase() === correct) {
+      document.getElementById('password-gate').classList.add('hidden');
+      document.getElementById('protected-content').classList.remove('hidden');
+      errorEl.classList.add('hidden');
+    } else {
+      errorEl.classList.remove('hidden');
+      inputEl.focus();
+    }
+  }
+
+  // make it available to the inline onclick
+  window.checkPassword = checkPassword;
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && document.activeElement.id === 'passwordInput') {
+      checkPassword();
+    }
+  });
+</script>
+
 </body>
 </html>
