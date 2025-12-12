@@ -658,7 +658,34 @@
         // aquí puedes también poner un link al siguiente nivel
       });
     }
+function checkPassword() {
+  // 👉 Define la contraseña correcta aquí.
+  // Observa que el nivel anterior (Módulo 3.1) da la contraseña 'BRLAVT'.
+  const CORRECT_PASSWORD = 'BRLAVT';
 
+  const inputEl = document.getElementById('passwordInput');
+  const errorEl = document.getElementById('password-error');
+  const gateEl = document.getElementById('password-gate');
+  const contentEl = document.getElementById('protected-content');
+
+  // Obtener el valor del campo de entrada y normalizarlo (quitar espacios, convertir a mayúsculas)
+  const userAttempt = (inputEl.value || '').trim().toUpperCase();
+
+  if (userAttempt === CORRECT_PASSWORD) {
+    // Contraseña correcta
+    errorEl.classList.add('hidden');
+    gateEl.classList.add('hidden'); // Ocultar la puerta de la contraseña
+    contentEl.classList.remove('hidden'); // Mostrar el contenido protegido (el examen/módulos)
+
+    // Opcional: guardar que el usuario ha entrado (por ejemplo, en localStorage)
+    localStorage.setItem('course_level3_unlocked', 'true');
+    console.log('¡Acceso concedido!');
+  } else {
+    // Contraseña incorrecta
+    errorEl.classList.remove('hidden'); // Mostrar el mensaje de error
+    inputEl.value = ''; // Opcional: limpiar el campo de entrada
+  }
+}
     // Init
     updateProgress();
     showModule(1);
