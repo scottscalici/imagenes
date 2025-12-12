@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Módulo – Nivel 4</title>
+  <title>Módulo – Nivel 3</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
   <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-  <!-- 🔐 PASSWORD GATE -->
+
+    <!-- 🔐 PASSWORD GATE -->
     <section id="password-gate"
              class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-slate-200">
       <h1 class="text-2xl font-bold text-indigo-600 mb-2">
@@ -36,660 +37,1052 @@
       </p>
     </section>
 
-<body class="bg-slate-100 min-h-screen">
-  <!-- STICKY HEADER WITH PROGRESS -->
-   <section id="protected-content" class="hidden">
-    <!-- STICKY HEADER WITH PROGRESS -->
-    <header class="sticky top-0 z-20 bg-white shadow-sm">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <div>
-          <h1 class="text-lg sm:text-xl font-bold text-slate-800">
-            Examen del semestre
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-500">
-            Nivel 3
-          </p>
+    <!-- 🔓 PROTECTED CONTENT -->
+    <section id="protected-content" class="hidden">
+
+      <!-- STICKY HEADER WITH PROGRESS -->
+      <header class="sticky top-0 z-20 bg-white shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-lg sm:text-xl font-bold text-slate-800">
+              Examen del semestre
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500">
+              parte 2 · Nivel 2 (verbos)
+            </p>
+          </div>
+          <div class="w-40 sm:w-64">
+            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+            <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
+              0 % completado
+            </p>
+          </div>
         </div>
-        <div class="w-40 sm:w-64">
-          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-            <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
-          </div>
-          <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
-            0 % completado
-          </p>
-        </div>
-      </div>
-    </header>
+      </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-6">
-      <div class="grid md:grid-cols-[230px,1fr] gap-6">
-        <!-- SIDEBAR -->
-        <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
-          <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-            Módulos
-          </h2>
-
-          <!-- 1.1–1.4 Verbos -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
-                  data-module="1">
-            <span>Módulo 1.1 · Verbos</span>
-            <span id="badge-1" class="text-xs">●</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="2" disabled>
-            <span>Módulo 1.2 · Verbos</span>
-            <span id="badge-2" class="text-xs">🔒</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="3" disabled>
-            <span>Módulo 1.3 · Verbos</span>
-            <span id="badge-3" class="text-xs">🔒</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="4" disabled>
-            <span>Módulo 1.4 · Verbos</span>
-            <span id="badge-4" class="text-xs">🔒</span>
-          </button>
-
-          <!-- 2.1 Lectura -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="5" disabled>
-            <span>Módulo 2.1 · Lectura</span>
-            <span id="badge-5" class="text-xs">🔒</span>
-          </button>
-
-          <!-- 3.1 Preguntas de comprensión -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="6" disabled>
-            <span>Módulo 3.1 · Preguntas</span>
-            <span id="badge-6" class="text-xs">🔒</span>
-          </button>
-        </aside>
-
-        <!-- MAIN PANEL -->
-        <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
-
-          <!-- Module 1.1 -->
-          <div id="module-1" class="module-view space-y-4">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.1 · Verbos (pretérito)
+      <main class="max-w-6xl mx-auto px-4 py-6">
+        <div class="grid md:grid-cols-[230px,1fr] gap-6">
+          <!-- SIDEBAR -->
+          <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
+            <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              Módulos
             </h2>
-            <p class="text-sm text-slate-600">
-              Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
-            </p>
 
-            <div id="module-1-questions" class="space-y-3"></div>
+            <!-- Internal verb modules -->
+<button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
+        data-module="1">
+  <span>Módulo 1.1 · Verbos</span>
+  <span id="badge-1" class="text-xs">●</span>
+</button>
 
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-1"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-1-result" class="text-sm text-slate-700"></p>
-            </div>
+<button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+        data-module="2" disabled>
+  <span>Módulo 1.2 · Verbos</span>
+  <span id="badge-2" class="text-xs">🔒</span>
+</button>
 
-            <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
-              <button id="btn-next-from-1"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.2) →
-              </button>
-            </div>
-          </div>
+<button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+        data-module="3" disabled>
+  <span>Módulo 1.3 · Verbos</span>
+  <span id="badge-3" class="text-xs">🔒</span>
+</button>
 
-          <!-- Module 1.2 -->
-          <div id="module-2" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.2 · Verbos (presente)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Segundo bloque de este conjunto de práctica.
-            </p>
+<button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+        data-module="4" disabled>
+  <span>Módulo 1.4 · Verbos</span>
+  <span id="badge-4" class="text-xs">🔒</span>
+</button>
 
-            <div id="module-2-questions" class="space-y-3"></div>
+<!-- NEW: internal vocab module-tab -->
+<button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+        data-module="5" disabled>
+  <span>Módulo 2 · Repaso vocabulario</span>
+  <span id="badge-5" class="text-xs">🔒</span>
+</button>
 
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-2"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-2-result" class="text-sm text-slate-700"></p>
-            </div>
+<a href="#"
+   id="link-porpara"
+   class="w-full block px-3 py-2 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 text-sm 
+          cursor-not-allowed pointer-events-none">
+  <div class="flex items-center justify-between gap-2">
+    <span>Módulo 3 · Crucigrama / pista</span>
+    <span class="text-xs">↗</span>
+  </div>
+</a>
 
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="1">
-                ← Volver a 1.1
-              </button>
-              <button id="btn-next-from-2"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.3) →
-              </button>
-            </div>
-          </div>
 
-          <!-- Module 1.3 -->
-          <div id="module-3" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.3 · Verbos (presente)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Tercer bloque de este conjunto de práctica.
-            </p>
 
-            <div id="module-3-questions" class="space-y-3"></div>
+          <!-- MAIN PANEL -->
+          <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
+            <!-- Module 1.1 -->
+            <div id="module-1" class="module-view space-y-4">
+              <h2 class="text-xl font-semibold text-slate-800">
+                Módulo 1.1 · Verbos (pretérito)
+              </h2>
+              <p class="text-sm text-slate-600">
+                Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
+              </p>
 
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-3"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-3-result" class="text-sm text-slate-700"></p>
-            </div>
+              <div id="module-1-questions" class="space-y-3"></div>
 
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="2">
-                ← Volver a 1.2
-              </button>
-              <button id="btn-next-from-3"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.4) →
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 1.4 -->
-          <div id="module-4" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.4 · Verbos (pretérito)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Último bloque de verbos de este conjunto.
-            </p>
-
-            <div id="module-4-questions" class="space-y-3"></div>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-4"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-4-result" class="text-sm text-slate-700"></p>
-            </div>
-
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="3">
-                ← Volver a 1.3
-              </button>
-              <button id="btn-next-from-4"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Ir al Módulo 2.1 (lectura) →
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 2.1 – Lectura -->
-          <div id="module-5" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 2.1 · Lectura
-            </h2>
-            <p class="text-sm text-slate-600">
-              Lee el siguiente texto con atención. Cuando termines, haz clic en el botón de abajo.
-            </p>
-
-            <article class="prose max-w-none text-sm text-slate-800 bg-slate-50 rounded-lg p-4 border border-slate-200">
-              <p><em>(Aquí va la lectura – podemos cambiarla cuando la tengas lista.)</em></p>
-            </article>
-
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="4">
-                ← Volver a 1.4
-              </button>
-              <button id="btn-finish-reading"
-                      class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
-                He terminado de leer
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 3.1 – Preguntas de comprensión -->
-          <div id="module-6" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 3.1 · Comprensión de lectura
-            </h2>
-            <p class="text-sm text-slate-600">
-              Contesta las preguntas sobre la lectura. Necesitas <strong>100&nbsp;%</strong> para obtener la contraseña.
-            </p>
-
-            <div id="reading-questions" class="space-y-3">
-              <!-- Ejemplos de preguntas (ajusta data-answer a lo que quieras aceptar) -->
-              <div class="space-y-1 quiz-item" data-answer="respuesta1">
-                <label class="text-sm font-medium text-slate-800">
-                  1. ¿Pregunta 1 sobre el texto?
-                </label>
-                <input type="text"
-                       class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-                <p class="text-xs text-slate-500 feedback hidden"></p>
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button id="btn-check-module-1"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                  Corregir respuestas
+                </button>
+                <p id="module-1-result" class="text-sm text-slate-700"></p>
               </div>
 
-              <div class="space-y-1 quiz-item" data-answer="respuesta2">
-                <label class="text-sm font-medium text-slate-800">
-                  2. ¿Pregunta 2 sobre el texto?
-                </label>
-                <input type="text"
-                       class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-                <p class="text-xs text-slate-500 feedback hidden"></p>
+              <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+                <button id="btn-next-from-1"
+                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                        disabled>
+                  Siguiente módulo (1.2) →
+                </button>
               </div>
-              <!-- añade más preguntas si quieres -->
             </div>
 
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-reading"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="reading-result" class="text-sm text-slate-700"></p>
+            <!-- Module 1.2 -->
+            <div id="module-2" class="module-view space-y-4 hidden">
+              <h2 class="text-xl font-semibold text-slate-800">
+                Módulo 1.2 · Verbos (presente)
+              </h2>
+              <p class="text-sm text-slate-600">
+                Segundo bloque de este conjunto de práctica.
+              </p>
+
+              <div id="module-2-questions" class="space-y-3"></div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button id="btn-check-module-2"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                  Corregir respuestas
+                </button>
+                <p id="module-2-result" class="text-sm text-slate-700"></p>
+              </div>
+
+              <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+                <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                        data-go-module="1">
+                  ← Volver a 1.1
+                </button>
+                <button id="btn-next-from-2"
+                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                        disabled>
+                  Siguiente módulo (1.3) →
+                </button>
+              </div>
             </div>
 
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="5">
-                ← Volver a la lectura
-              </button>
-              <button id="btn-show-password"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Mostrar contraseña del siguiente nivel
-              </button>
+            <!-- Module 1.3 -->
+            <div id="module-3" class="module-view space-y-4 hidden">
+              <h2 class="text-xl font-semibold text-slate-800">
+                Módulo 1.3 · Verbos (presente)
+              </h2>
+              <p class="text-sm text-slate-600">
+                Tercer bloque de este conjunto de práctica.
+              </p>
+
+              <div id="module-3-questions" class="space-y-3"></div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button id="btn-check-module-3"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+                  Corregir respuestas
+                </button>
+                <p id="module-3-result" class="text-sm text-slate-700"></p>
+              </div>
+
+              <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+                <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                        data-go-module="2">
+                  ← Volver a 1.2
+                </button>
+                <button id="btn-next-from-3"
+                        class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                        disabled>
+                  Siguiente módulo (1.4) →
+                </button>
+              </div>
             </div>
 
-            <p id="password-display" class="mt-3 text-sm font-semibold text-emerald-700 hidden">
-              Contraseña: <span class="font-mono">BRLAVT</span>
-            </p>
-          </div>
+           <!-- Module 1.4 (already there) -->
+<div id="module-4" class="module-view space-y-4 hidden">
+  ...
+  <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+            data-go-module="3">
+      ← Volver a 1.3
+    </button>
+    <button id="btn-next-from-4"
+            class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+            disabled>
+      Ir al Módulo 2 (vocabulario) →
+    </button>
+  </div>
+</div>
 
-        </section>
-      </div>
-    </main>
+<!-- NEW: Module 2 – vocab real (internal) -->
+<div id="module-5" class="module-view space-y-4 hidden">
+  <h2 class="text-xl font-semibold text-slate-800">
+    Módulo 2 · Repaso de vocabulario
+  </h2>
+  <p class="text-sm text-slate-600">
+    Escribe la traducción al inglés. Luego, empareja solo las palabras que fallaste.
+  </p>
+  <p class="text-xs text-slate-500">
+    Este módulo usa 30 palabras (3 bloques de 10) desde un archivo JSON de vocabulario.
+  </p>
+
+  <!-- Bloque dinámico -->
+  <div id="vocab-block-container" class="space-y-4 mt-4"></div>
+  <p id="vocab-global-status" class="text-xs text-slate-500"></p>
+
+  <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-100 mt-4">
+    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+            data-go-module="4">
+      ← Volver a 1.4
+    </button>
+
+    <button id="btn-reset-vocab"
+            class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold">
+      Reiniciar vocabulario
+    </button>
+
+    <button id="btn-next-from-5"
+            class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+            disabled>
+      Ir al Módulo 3 →
+    </button>
+  </div>
+</div>
+
+
+          </section>
+        </div>
+      </main>
+    </section>
   </main>
 
-  <script>
-    // 👉 JSON de verbos para esta página
-    const PRACTICE_JSON_URL =
-      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos3.json';
+ <script>
+  // 👉 Change this per day (VERBS):
+  const PRACTICE_JSON_URL =
+    'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos3.json';
 
-    // 4 módulos de verbos + 1 de lectura + 1 de preguntas
-    const TOTAL_MODULES = 6;
-    const PASS_THRESHOLD = 1.0;
+  // 👉 New: vocab JSON for this module:
+  const VOCAB_JSON_URL =
+    'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/práctica/ESCAPE/vocab1.json';
 
-    const progressFill = document.getElementById('progress-fill');
-    const progressLabel = document.getElementById('progress-label');
-    const modulePassed = {};
-    let completedModules = 0;
+  // We now have 5 internal modules on this page (4 verb blocks + vocab)
+  const TOTAL_MODULES = 5;
+  const PASS_THRESHOLD = 1.0;
 
-    function updateProgress() {
-      const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
-      progressFill.style.width = percent + '%';
-      progressLabel.textContent = percent + '% completado';
-    }
+  // ---------- PROGRESS ----------
+  const progressFill = document.getElementById('progress-fill');
+  const progressLabel = document.getElementById('progress-label');
+  const modulePassed = {};
+  let completedModules = 0;
 
-    function markModuleCompleted(n) {
-      if (!modulePassed[n]) {
-        modulePassed[n] = true;
-        completedModules = Object.keys(modulePassed).length;
-        updateProgress();
-        const badge = document.getElementById('badge-' + n);
-        if (badge) badge.textContent = '✔';
-      }
-    }
+  function updateProgress() {
+    const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
+    progressFill.style.width = percent + '%';
+    progressLabel.textContent = percent + '% completado';
+  }
 
-    function unlockModuleBtn(n) {
-      const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+  function markModuleCompleted(n) {
+    if (!modulePassed[n]) {
+      modulePassed[n] = true;
+      completedModules = Object.keys(modulePassed).length;
+      updateProgress();
       const badge = document.getElementById('badge-' + n);
-      if (tab) {
-        tab.disabled = false;
-        tab.classList.remove('text-slate-500');
-      }
-      if (badge && badge.textContent === '🔒') {
-        badge.textContent = '●';
-      }
+      if (badge) badge.textContent = '✔';
     }
+  }
 
-    function showModule(n) {
-      document.querySelectorAll('.module-view').forEach(view =>
-        view.classList.add('hidden')
-      );
-      const active = document.getElementById('module-' + n);
-      if (active) active.classList.remove('hidden');
+  function unlockModuleBtn(n) {
+    const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+    const badge = document.getElementById('badge-' + n);
+    if (tab) {
+      tab.disabled = false;
+      tab.classList.remove('text-slate-500');
+    }
+    if (badge && badge.textContent === '🔒') {
+      badge.textContent = '●';
+    }
+  }
 
-      document.querySelectorAll('.module-tab').forEach(btn => {
-        const m = btn.dataset.module;
-        if (String(m) === String(n)) {
-          btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
+  function showModule(n) {
+    document.querySelectorAll('.module-view').forEach(view =>
+      view.classList.add('hidden')
+    );
+    const active = document.getElementById('module-' + n);
+    if (active) active.classList.remove('hidden');
+
+    document.querySelectorAll('.module-tab').forEach(btn => {
+      const m = btn.dataset.module;
+      if (String(m) === String(n)) {
+        btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
+        btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
+      } else {
+        btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
+        btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
+      }
+    });
+  }
+
+  // ---------- VERB MODULES ----------
+  function buildVerbModule(moduleNumber, items) {
+    const container = document.getElementById('module-' + moduleNumber + '-questions');
+    if (!container) return;
+    container.innerHTML = '';
+
+    items.forEach((item, index) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'space-y-1 quiz-item';
+      wrapper.dataset.answer = item.forma;
+
+      const sujeto = item.sujeto || '';
+      const contexto = item.contexto || '___';
+      const infinitivo = item.infinitivo || '';
+
+      wrapper.innerHTML = `
+        <label class="text-sm font-medium text-slate-800">
+          ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
+        </label>
+        <input type="text"
+               class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+        <p class="text-xs text-slate-500 feedback hidden"></p>
+      `;
+      container.appendChild(wrapper);
+    });
+  }
+
+  function buildAllVerbModules(items) {
+    const chunkSize = 5;
+    for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
+      const start = (moduleNum - 1) * chunkSize;
+      const slice = items.slice(start, start + chunkSize);
+      if (!slice.length) break;
+      buildVerbModule(moduleNum, slice);
+    }
+  }
+
+  function attachQuizHandler(moduleNumber) {
+    const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
+    if (!btnCheck) return;
+
+    btnCheck.addEventListener('click', () => {
+      const selector = '#module-' + moduleNumber + ' .quiz-item';
+      const items = document.querySelectorAll(selector);
+      const resultEl = document.getElementById('module-' + moduleNumber + '-result');
+
+      let missing = false;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        if (!input) return;
+        const value = (input.value || '').trim();
+        if (value === '') {
+          missing = true;
+          input.classList.remove('border-emerald-400', 'border-red-400');
+          input.classList.add('border-yellow-400');
+          if (feedback) feedback.classList.add('hidden');
+        }
+      });
+
+      if (missing) {
+        resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+        return;
+      }
+
+      let correct = 0;
+      items.forEach(item => {
+        const rawAnswer = (item.dataset.answer || '').trim();
+        const answer = rawAnswer.toLowerCase();
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        if (!input) return;
+        const userValue = (input.value || '').trim().toLowerCase();
+
+        if (userValue === answer) {
+          correct++;
+          input.classList.remove('border-red-400', 'border-yellow-400');
+          input.classList.add('border-emerald-400');
         } else {
-          btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
-        }
-      });
-    }
-
-    // ------- VERBOS 1–4 --------
-    function buildVerbModule(moduleNumber, items) {
-      const container = document.getElementById('module-' + moduleNumber + '-questions');
-      if (!container) return;
-      container.innerHTML = '';
-
-      items.forEach((item, index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'space-y-1 quiz-item';
-        wrapper.dataset.answer = item.forma;
-
-        const sujeto = item.sujeto || '';
-        const contexto = item.contexto || '___';
-        const infinitivo = item.infinitivo || '';
-
-        wrapper.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">
-            ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
-          </label>
-          <input type="text"
-                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        container.appendChild(wrapper);
-      });
-    }
-
-    function buildAllVerbModules(items) {
-      const chunkSize = 5;
-      for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
-        const start = (moduleNum - 1) * chunkSize;
-        const slice = items.slice(start, start + chunkSize);
-        if (!slice.length) break;
-        buildVerbModule(moduleNum, slice);
-      }
-    }
-
-    function attachQuizHandler(moduleNumber) {
-      const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
-      if (!btnCheck) return;
-
-      btnCheck.addEventListener('click', () => {
-        const selector = '#module-' + moduleNumber + ' .quiz-item';
-        const items = document.querySelectorAll(selector);
-        const resultEl = document.getElementById('module-' + moduleNumber + '-result');
-
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const value = (input.value || '').trim();
-          if (value === '') {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
-          }
-        });
-
-        if (missing) {
-          resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-          return;
+          input.classList.remove('border-emerald-400', 'border-yellow-400');
+          input.classList.add('border-red-400');
         }
 
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim();
-          const answer = rawAnswer.toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const userValue = (input.value || '').trim().toLowerCase();
+        if (feedback) {
+          feedback.textContent = '';
+          feedback.classList.add('hidden');
+        }
+      });
 
-          if (userValue === answer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
+      const total = items.length;
+      const score = total ? correct / total : 0;
+      resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+      const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
+
+      if (score >= PASS_THRESHOLD) {
+        resultEl.classList.remove('text-red-600');
+        resultEl.classList.add('text-emerald-700');
+
+        if (nextBtn) {
+          nextBtn.classList.remove(
+            'bg-slate-300',
+            'text-slate-600',
+            'cursor-not-allowed',
+            'pointer-events-none'
+          );
+          nextBtn.classList.add(
+            'bg-emerald-600',
+            'hover:bg-emerald-700',
+            'text-white'
+          );
+          if (nextBtn.tagName.toLowerCase() === 'a') {
+            nextBtn.removeAttribute('disabled');
           } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-          }
-
-          if (feedback) {
-            feedback.textContent = '';
-            feedback.classList.add('hidden');
-          }
-        });
-
-        const total = items.length;
-        const score = total ? correct / total : 0;
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-        const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
-
-        if (score >= PASS_THRESHOLD) {
-          resultEl.classList.remove('text-red-600');
-          resultEl.classList.add('text-emerald-700');
-
-          if (nextBtn) {
-            nextBtn.classList.remove(
-              'bg-slate-300',
-              'text-slate-600',
-              'cursor-not-allowed',
-              'pointer-events-none'
-            );
-            nextBtn.classList.add(
-              'bg-emerald-600',
-              'hover:bg-emerald-700',
-              'text-white'
-            );
             nextBtn.disabled = false;
           }
-
-          markModuleCompleted(moduleNumber);
-          const nextModule = moduleNumber + 1;
-          if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
-        } else {
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
         }
-      });
+
+        markModuleCompleted(moduleNumber);
+        const nextModule = moduleNumber + 1;
+        if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
+      } else {
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+      }
+    });
+  }
+
+  async function loadPracticeSet() {
+    try {
+      const res = await fetch(PRACTICE_JSON_URL);
+      const data = await res.json();
+      const items = data;
+      buildAllVerbModules(items);
+      [1, 2, 3, 4].forEach(attachQuizHandler);
+    } catch (err) {
+      console.error('Error al cargar el JSON de práctica:', err);
+      const result = document.getElementById('module-1-result');
+      if (result) {
+        result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
+        result.classList.add('text-red-600');
+      }
     }
+  }
 
-    async function loadPracticeSet() {
-      try {
-        const res = await fetch(PRACTICE_JSON_URL);
-        const data = await res.json();
-        const items = data;
-        buildAllVerbModules(items);
-        [1, 2, 3, 4].forEach(attachQuizHandler);
-      } catch (err) {
-        console.error('Error al cargar el JSON de práctica:', err);
-        const result = document.getElementById('module-1-result');
-        if (result) {
-          result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
-          result.classList.add('text-red-600');
-        }
+  // ---------- VOCAB MODULE (Módulo 2) ----------
+  const vocabBlockContainer = document.getElementById('vocab-block-container');
+  const vocabGlobalStatus = document.getElementById('vocab-global-status');
+  const nextFrom5Btn = document.getElementById('btn-next-from-5');
+  const resetVocabBtn = document.getElementById('btn-reset-vocab');
+
+  const vocabState = {
+    blocks: [],
+    currentIndex: 0,
+    completedBlocks: 0,
+    scores: [],
+    pairs: []
+  };
+
+  function normalizeVocabPiece(str) {
+    let s = (str || '').toLowerCase().trim();
+    s = s.replace(/\([^)]*\)/g, ' ').trim();        // remove (money), (up with), etc.
+    while (/^(to|the|a|an)\s+/.test(s)) {
+      s = s.replace(/^(to|the|a|an)\s+/, '');
+    }
+    s = s.replace(/\s+/g, ' ');
+    return s;
+  }
+
+  function levenshtein(a, b) {
+    a = a || '';
+    b = b || '';
+    const m = a.length;
+    const n = b.length;
+    if (m === 0) return n;
+    if (n === 0) return m;
+
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + cost
+        );
+      }
+    }
+    return dp[m][n];
+  }
+
+  function isVocabCorrect(userRaw, answerRaw) {
+    const user = (userRaw || '').trim();
+    const ans = (answerRaw || '').trim();
+    if (!ans) return false;
+
+    const answerParts = ans
+      .split(/[;,/]/)
+      .map(normalizeVocabPiece)
+      .filter(Boolean);
+
+    const userParts = user
+      .split(/[;,/]/)
+      .map(normalizeVocabPiece)
+      .filter(Boolean);
+
+    if (!answerParts.length) {
+      return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
+    }
+    if (!userParts.length) return false;
+
+    for (const up of userParts) {
+      for (const ap of answerParts) {
+        if (!ap) continue;
+        if (up === ap) return true;
+        const dist = levenshtein(up, ap);
+        const len = Math.max(up.length, ap.length);
+        const maxAllowed = Math.min(2, Math.floor(len * 0.25));
+        if (dist > 0 && dist <= maxAllowed) return true;
       }
     }
 
-    // Next buttons 1–4 (internal navigation)
-    for (let i = 1; i <= 4; i++) {
-      const nextBtn = document.getElementById('btn-next-from-' + i);
-      if (!nextBtn) continue;
-      nextBtn.addEventListener('click', () => {
-        const target = i + 1; // 1→2, 2→3, 3→4, 4→5
-        const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
-        if (tab && !tab.disabled) showModule(target);
-      });
+    return false;
+  }
+
+  function extractVocabPairs(data) {
+    let raw = [];
+    if (Array.isArray(data)) {
+      raw = data;
+    } else if (Array.isArray(data.items)) {
+      raw = data.items;
+    } else if (Array.isArray(data.vocabulario)) {
+      raw = data.vocabulario;
     }
 
-    // Sidebar tabs
-    document.querySelectorAll('.module-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.module);
-        if (btn.disabled) return;
-        showModule(num);
-      });
+    return raw
+      .map(entry => {
+        const spanish =
+          entry.spanish ||
+          entry.es ||
+          entry.espanol ||
+          entry.español ||
+          entry.palabra ||
+          entry.termino ||
+          entry.vocabulario ||
+          '';
+        const english =
+          entry.english ||
+          entry.en ||
+          entry.ingles ||
+          entry.englishText ||
+          entry.traduccion ||
+          entry.definicion ||
+          '';
+        return { spanish, english };
+      })
+      .filter(p => p.spanish && p.english);
+  }
+
+  function buildTypingStage(blockIdx) {
+    const totalBlocks = vocabState.blocks.length;
+    const block = vocabState.blocks[blockIdx];
+    if (!block) return;
+
+    vocabBlockContainer.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'flex items-baseline justify-between gap-2';
+    header.innerHTML = `
+      <h3 class="text-lg font-semibold text-slate-800">
+        Bloque ${blockIdx + 1} de ${totalBlocks}
+      </h3>
+      <p class="text-xs text-slate-500">
+        Escribe la traducción al inglés para cada palabra.
+      </p>
+    `;
+    vocabBlockContainer.appendChild(header);
+
+    const list = document.createElement('div');
+    list.className = 'space-y-3 mt-2';
+
+    block.items.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'space-y-1 vocab-item';
+      row.dataset.answer = item.english;
+      row.innerHTML = `
+        <label class="text-sm font-medium text-slate-800">
+          ${i + 1}. ${item.spanish}
+        </label>
+        <input type="text"
+               class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+        <p class="text-xs text-slate-500 feedback hidden"></p>
+      `;
+      list.appendChild(row);
     });
 
-    // "Volver a módulo X" buttons
-    document.querySelectorAll('[data-go-module]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.goModule);
-        showModule(num);
-      });
-    });
+    vocabBlockContainer.appendChild(list);
 
-    // ------- Lectura (module 5) -> desbloquea preguntas (module 6) ------
-    const finishReadingBtn = document.getElementById('btn-finish-reading');
-    if (finishReadingBtn) {
-      finishReadingBtn.addEventListener('click', () => {
-        markModuleCompleted(5);
-        unlockModuleBtn(6);
-        showModule(6);
-      });
-    }
+    const footer = document.createElement('div');
+    footer.className = 'flex flex-wrap items-center gap-3 pt-3';
+    footer.innerHTML = `
+      <button id="btn-vocab-check"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+        Corregir respuestas
+      </button>
+      <p id="vocab-block-result" class="text-sm text-slate-700"></p>
+    `;
+    vocabBlockContainer.appendChild(footer);
 
-    // ------- Preguntas de comprensión (module 6) -------
-    const btnCheckReading = document.getElementById('btn-check-reading');
-    const readingResult = document.getElementById('reading-result');
-    const btnShowPassword = document.getElementById('btn-show-password');
-    const passwordDisplay = document.getElementById('password-display');
+    const checkBtn = footer.querySelector('#btn-vocab-check');
+    const resultEl = footer.querySelector('#vocab-block-result');
 
-    if (btnCheckReading) {
-      btnCheckReading.addEventListener('click', () => {
-        const items = document.querySelectorAll('#reading-questions .quiz-item');
+    checkBtn.addEventListener('click', () => {
+      const items = vocabBlockContainer.querySelectorAll('.vocab-item');
 
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const val = (input.value || '').trim();
-          if (!val) {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
-          }
-        });
-
-        if (missing) {
-          readingResult.textContent = 'Responde todos los campos antes de corregir.';
-          readingResult.classList.remove('text-emerald-700');
-          readingResult.classList.add('text-red-600');
-          return;
+      let missing = false;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        const val = (input.value || '').trim();
+        if (!val) {
+          missing = true;
+          input.classList.remove('border-emerald-400', 'border-red-400');
+          input.classList.add('border-yellow-400');
+          feedback.classList.add('hidden');
         }
+      });
 
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim().toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          const userVal = (input.value || '').trim().toLowerCase();
+      if (missing) {
+        resultEl.textContent = 'Responde todos los campos antes de corregir.';
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-red-600');
+        return;
+      }
 
-          if (userVal === rawAnswer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-            if (feedback) {
-              feedback.textContent = '';
-              feedback.classList.add('hidden');
-            }
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-            if (feedback) {
-              feedback.textContent = `❌ Respuesta esperada: ${rawAnswer}`;
-              feedback.classList.remove('hidden');
-              feedback.classList.add('text-red-500');
-            }
-          }
-        });
+      let correct = 0;
+      const wrongItems = [];
 
-        const total = items.length;
-        const score = total ? correct / total : 0;
-        readingResult.textContent =
-          `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+      items.forEach(item => {
+        const rawAnswer = (item.dataset.answer || '').trim();
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        const userVal = (input.value || '').trim();
 
-        if (score >= PASS_THRESHOLD) {
-          readingResult.classList.remove('text-red-600');
-          readingResult.classList.add('text-emerald-700');
+        const ok = isVocabCorrect(userVal, rawAnswer);
 
-          markModuleCompleted(6);
+        if (ok) {
+          correct++;
+          input.classList.remove('border-red-400', 'border-yellow-400');
+          input.classList.add('border-emerald-400');
+          feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+          feedback.classList.remove('hidden', 'text-red-500');
+          feedback.classList.add('text-emerald-600');
+        } else {
+          input.classList.remove('border-emerald-400', 'border-yellow-400');
+          input.classList.add('border-red-400');
+          feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+          feedback.classList.remove('hidden', 'text-emerald-600');
+          feedback.classList.add('text-red-500');
 
-          if (btnShowPassword) {
-            btnShowPassword.disabled = false;
-            btnShowPassword.classList.remove(
-              'bg-slate-300',
-              'text-slate-600',
-              'cursor-not-allowed'
-            );
-            btnShowPassword.classList.add(
-              'bg-emerald-600',
-              'hover:bg-emerald-700',
-              'text-white'
-            );
+          const idx = Number(item.querySelector('label').textContent.split('.')[0]) - 1;
+          wrongItems.push(block.items[idx]);
+        }
+      });
+
+      const total = items.length;
+      const score = total ? correct / total : 0;
+      vocabState.scores[blockIdx] = { correct, total };
+
+      resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+      if (wrongItems.length === 0) {
+        resultEl.classList.remove('text-red-600');
+        resultEl.classList.add('text-emerald-700');
+        buildNextBlockButton(blockIdx);
+      } else {
+        resultEl.classList.remove('text-emerald-700');
+        resultEl.classList.add('text-slate-700');
+        buildMatchingStage(blockIdx, wrongItems);
+      }
+    });
+  }
+
+  function buildMatchingStage(blockIdx, wrongItems) {
+    const existingMatch = document.getElementById('vocab-matching-section');
+    if (existingMatch) existingMatch.remove();
+
+    const matchSection = document.createElement('div');
+    matchSection.id = 'vocab-matching-section';
+    matchSection.className = 'mt-5 border-t border-slate-200 pt-4 space-y-3';
+
+    matchSection.innerHTML = `
+      <h4 class="text-sm font-semibold text-slate-800">
+        Empareja las palabras que fallaste
+      </h4>
+      <p class="text-xs text-slate-500">
+        Haz clic primero en la palabra en español y luego en su traducción correcta en inglés.
+      </p>
+    `;
+
+    const columns = document.createElement('div');
+    columns.className = 'grid sm:grid-cols-2 gap-3';
+
+    const leftCol = document.createElement('div');
+    leftCol.className = 'space-y-2';
+    const rightCol = document.createElement('div');
+    rightCol.className = 'space-y-2';
+
+    function shuffle(arr) {
+      return arr
+        .map(v => ({ v, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ v }) => v);
+    }
+
+    const shuffledSpanish = shuffle(wrongItems);
+    const shuffledEnglish = shuffle(wrongItems);
+
+    shuffledSpanish.forEach((item, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option';
+      btn.dataset.key = String(idx);
+      btn.textContent = item.spanish;
+      leftCol.appendChild(btn);
+    });
+
+    shuffledEnglish.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className =
+        'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
+      btn.dataset.spanish = item.spanish;
+      btn.dataset.english = item.english;
+      btn.textContent = item.english;
+      rightCol.appendChild(btn);
+    });
+
+    columns.appendChild(leftCol);
+    columns.appendChild(rightCol);
+    matchSection.appendChild(columns);
+
+    const status = document.createElement('p');
+    status.className = 'text-xs text-slate-500 mt-2';
+    matchSection.appendChild(status);
+
+    vocabBlockContainer.appendChild(matchSection);
+
+    let selectedSpanishBtn = null;
+    let remaining = wrongItems.length;
+
+    function clearSelections() {
+      vocabBlockContainer
+        .querySelectorAll('.spanish-option, .english-option')
+        .forEach(btn =>
+          btn.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-50')
+        );
+    }
+
+    leftCol.querySelectorAll('.spanish-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        selectedSpanishBtn = btn;
+        clearSelections();
+        btn.classList.add('ring-2', 'ring-sky-400', 'bg-sky-50');
+        status.textContent = 'Ahora haz clic en la traducción correcta en inglés.';
+        status.classList.remove('text-red-600', 'text-emerald-700');
+        status.classList.add('text-slate-500');
+      });
+    });
+
+    rightCol.querySelectorAll('.english-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!selectedSpanishBtn || btn.disabled) return;
+
+        const spanishText = selectedSpanishBtn.textContent.trim();
+        const englishText = btn.dataset.english;
+
+        const correctPair = wrongItems.find(
+          it => it.spanish === spanishText && it.english === englishText
+        );
+
+        if (correctPair) {
+          selectedSpanishBtn.disabled = true;
+          btn.disabled = true;
+          selectedSpanishBtn.classList.remove('ring-2', 'ring-sky-400');
+          selectedSpanishBtn.classList.add('bg-emerald-50', 'border-emerald-400');
+          btn.classList.add('bg-emerald-50', 'border-emerald-400');
+          remaining--;
+          selectedSpanishBtn = null;
+          status.textContent = `✔ ¡Bien! Te quedan ${remaining} por emparejar.`;
+          status.classList.remove('text-red-600', 'text-slate-500');
+          status.classList.add('text-emerald-700');
+
+          if (remaining === 0) {
+            status.textContent =
+              '✔ Bloque completado. Puedes pasar al siguiente bloque.';
+            buildNextBlockButton(blockIdx);
           }
         } else {
-          readingResult.classList.remove('text-emerald-700');
-          readingResult.classList.add('text-red-600');
+          status.textContent =
+            '❌ No es la traducción correcta. Intenta de nuevo.';
+          status.classList.remove('text-slate-500', 'text-emerald-700');
+          status.classList.add('text-red-600');
+          clearSelections();
+          selectedSpanishBtn = null;
         }
       });
-    }
-
-    if (btnShowPassword && passwordDisplay) {
-      btnShowPassword.addEventListener('click', () => {
-        passwordDisplay.classList.remove('hidden');
-        // aquí puedes también poner un link al siguiente nivel
-      });
-    }
-function checkPassword() {
-  // 👉 Define la contraseña correcta aquí.
-  // Observa que el nivel anterior (Módulo 3.1) da la contraseña 'BRLAVT'.
-  const CORRECT_PASSWORD = 'SALUD';
-
-  const inputEl = document.getElementById('passwordInput');
-  const errorEl = document.getElementById('password-error');
-  const gateEl = document.getElementById('password-gate');
-  const contentEl = document.getElementById('protected-content');
-
-  // Obtener el valor del campo de entrada y normalizarlo (quitar espacios, convertir a mayúsculas)
-  const userAttempt = (inputEl.value || '').trim().toUpperCase();
-
-  if (userAttempt === CORRECT_PASSWORD) {
-    // Contraseña correcta
-    errorEl.classList.add('hidden');
-    gateEl.classList.add('hidden'); // Ocultar la puerta de la contraseña
-    contentEl.classList.remove('hidden'); // Mostrar el contenido protegido (el examen/módulos)
-
-    // Opcional: guardar que el usuario ha entrado (por ejemplo, en localStorage)
-    localStorage.setItem('course_level3_unlocked', 'true');
-    console.log('¡Acceso concedido!');
-  } else {
-    // Contraseña incorrecta
-    errorEl.classList.remove('hidden'); // Mostrar el mensaje de error
-    inputEl.value = ''; // Opcional: limpiar el campo de entrada
+    });
   }
+
+  function buildNextBlockButton(blockIdx) {
+    const existing = document.getElementById('vocab-next-block');
+    if (existing) existing.remove();
+
+    const totalBlocks = vocabState.blocks.length;
+    const wrapper = document.createElement('div');
+    wrapper.id = 'vocab-next-block';
+    wrapper.className = 'pt-4 flex justify-end';
+
+    const isLast = blockIdx === totalBlocks - 1;
+    const label = isLast
+      ? 'Terminar vocabulario'
+      : 'Siguiente bloque de vocabulario →';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className =
+      'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
+    btn.textContent = label;
+
+    btn.addEventListener('click', () => {
+      vocabState.completedBlocks++;
+
+if (isLast) {
+  let totalCorrect = 0;
+  let totalQs = 0;
+  (vocabState.scores || []).forEach(s => {
+    if (!s) return;
+    totalCorrect += s.correct || 0;
+    totalQs += s.total || 0;
+  });
+  const overallPct = totalQs
+    ? Math.round((totalCorrect / totalQs) * 100)
+    : 0;
+
+  vocabGlobalStatus.innerHTML =
+    `✔ Has completado los 3 bloques de vocabulario. ` +
+    `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+    `${overallPct}&nbsp;%).`;
+  vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
+  vocabGlobalStatus.classList.add('text-emerald-700');
+
+  // Mark vocab module complete in the progress bar
+  markModuleCompleted(5);
+
+  // Enable the "Ir al Módulo 3 →" button
+  if (nextFrom5Btn) {
+    nextFrom5Btn.disabled = false;
+    nextFrom5Btn.classList.remove(
+      'bg-slate-300',
+      'text-slate-600',
+      'cursor-not-allowed'
+    );
+    nextFrom5Btn.classList.add(
+      'bg-emerald-600',
+      'hover:bg-emerald-700',
+      'text-white'
+    );
+  }
+
+  // 🔓 Desbloquear el enlace del crucigrama en la barra lateral
+  const porparaLink = document.getElementById('link-porpara');
+  if (porparaLink) {
+    porparaLink.href = 'porpara.html';
+    porparaLink.classList.remove(
+      'text-slate-400',
+      'cursor-not-allowed',
+      'pointer-events-none'
+    );
+    porparaLink.classList.add('text-slate-700', 'hover:bg-slate-100');
+  }
+} else {
+         vocabState.currentIndex = blockIdx + 1;
+        buildTypingStage(vocabState.currentIndex);
+        vocabGlobalStatus.textContent =
+          `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+      }
+    });
+
+    wrapper.appendChild(btn);
+    vocabBlockContainer.appendChild(wrapper);
+  }
+
+  if (resetVocabBtn) {
+    resetVocabBtn.addEventListener('click', () => {
+      if (!vocabState.pairs.length) {
+        loadVocabSet();
+        return;
+      }
+      vocabState.currentIndex = 0;
+      vocabState.completedBlocks = 0;
+      vocabState.scores = [];
+      vocabGlobalStatus.textContent =
+        'Módulo reiniciado. Empieza de nuevo con el Bloque 1 de 3.';
+      vocabGlobalStatus.classList.remove('text-emerald-700', 'text-red-600');
+      vocabGlobalStatus.classList.add('text-slate-500');
+      buildTypingStage(0);
+    });
+  }
+
+  if (nextFrom5Btn) {
+    nextFrom5Btn.addEventListener('click', () => {
+      markModuleCompleted(5);
+      window.location.href = 'porpara.html';
+    });
+  }
+
+  async function loadVocabSet() {
+    if (!VOCAB_JSON_URL || !vocabBlockContainer) return;
+    try {
+      const res = await fetch(VOCAB_JSON_URL);
+      const data = await res.json();
+      let pairs = extractVocabPairs(data);
+
+      pairs = pairs.slice(0, 30);
+      vocabState.pairs = pairs;
+      vocabState.scores = [];
+      vocabState.currentIndex = 0;
+      vocabState.completedBlocks = 0;
+
+      if (!pairs.length) {
+        vocabBlockContainer.innerHTML =
+          '<p class="text-sm text-red-600">No se encontraron palabras en el archivo de vocabulario.</p>';
+        return;
+      }
+
+      const blockSize = 10;
+      vocabState.blocks = [];
+      for (let i = 0; i < 3; i++) {
+        const slice = pairs.slice(i * blockSize, (i + 1) * blockSize);
+        if (slice.length) {
+          vocabState.blocks.push({ index: i, items: slice });
+        }
+      }
+
+      vocabGlobalStatus.textContent =
+        `Módulo de vocabulario listo: ${vocabState.blocks.length} bloques de hasta 10 palabras.`;
+      buildTypingStage(0);
+    } catch (err) {
+      console.error('Error al cargar vocabulario:', err);
+      vocabBlockContainer.innerHTML =
+        '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL del JSON).</p>';
+    }
+  }
+
+  // ---------- INTERNAL NAV NEXT BUTTONS 1–4 ----------
+  for (let i = 1; i <= 4; i++) {
+    const nextBtn = document.getElementById('btn-next-from-' + i);
+    if (!nextBtn) continue;
+    nextBtn.addEventListener('click', () => {
+      const target = i + 1;
+      const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
+      if (tab && !tab.disabled) showModule(target);
+    });
+  }
+// ---------- LOCK direct link to por/para until vocab (module 5) is done ----------
+const porparaLink = document.getElementById('link-porpara');
+if (porparaLink) {
+  porparaLink.addEventListener('click', (e) => {
+    // Option A: require vocab only
+    if (!modulePassed[5]) {
+      e.preventDefault();
+      alert('Primero completa el Módulo 2 de vocabulario antes de ir al crucigrama.');
+    }
+
+    // Option B (stricter): require ALL 5 modules
+    // if (completedModules < TOTAL_MODULES) {
+    //   e.preventDefault();
+    //   alert('Primero completa todos los módulos de este nivel.');
+    // }
+  });
 }
-    // Init
-    updateProgress();
-    showModule(1);
-    loadPracticeSet();
-  </script>
+
+  // Sidebar tabs
+  document.querySelectorAll('.module-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = Number(btn.dataset.module);
+      if (btn.disabled) return;
+      showModule(num);
+    });
+  });
+
+  // "Volver a módulo X" buttons
+  document.querySelectorAll('[data-go-module]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const num = Number(btn.dataset.goModule);
+      showModule(num);
+    });
+  });
+
+  // ---------- INIT ----------
+  updateProgress();
+  showModule(1);
+  loadPracticeSet();
+  loadVocabSet();
+
+  // ---------- PASSWORD LOGIC ----------
+  function checkPassword() {
+    const inputEl = document.getElementById('passwordInput');
+    const errorEl = document.getElementById('password-error');
+    const input = inputEl.value.trim();
+    const correct = 'SALUD';
+
+    if (input.toUpperCase() === correct) {
+      document.getElementById('password-gate').classList.add('hidden');
+      document.getElementById('protected-content').classList.remove('hidden');
+      errorEl.classList.add('hidden');
+    } else {
+      errorEl.classList.remove('hidden');
+      inputEl.focus();
+    }
+  }
+
+  // make it available to the inline onclick
+  window.checkPassword = checkPassword;
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && document.activeElement.id === 'passwordInput') {
+      checkPassword();
+    }
+  });
+   const porparaLinkGuard = document.getElementById('link-porpara');
+if (porparaLinkGuard) {
+  porparaLinkGuard.addEventListener('click', (e) => {
+    // Only allow if vocab module is officially marked as passed
+    if (!modulePassed[5]) {
+      e.preventDefault();
+      alert('Primero completa el Módulo 2 de vocabulario antes de ir al crucigrama.');
+    }
+  });
+}
+
+</script>
+
 </body>
 </html>
