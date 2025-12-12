@@ -102,14 +102,16 @@
   <span id="badge-5" class="text-xs">🔒</span>
 </button>
 
-<a href="porpara.html"
+<a href="#"
    id="link-porpara"
-   class="w-full block px-3 py-2 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-sm hover:bg-slate-100">
+   class="w-full block px-3 py-2 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 text-sm 
+          cursor-not-allowed pointer-events-none">
   <div class="flex items-center justify-between gap-2">
     <span>Módulo 3 · Crucigrama / pista</span>
     <span class="text-xs">↗</span>
   </div>
 </a>
+
 
 
           <!-- MAIN PANEL -->
@@ -871,44 +873,56 @@
     btn.addEventListener('click', () => {
       vocabState.completedBlocks++;
 
-      if (isLast) {
-        let totalCorrect = 0;
-        let totalQs = 0;
-        (vocabState.scores || []).forEach(s => {
-          if (!s) return;
-          totalCorrect += s.correct || 0;
-          totalQs += s.total || 0;
-        });
-        const overallPct = totalQs
-          ? Math.round((totalCorrect / totalQs) * 100)
-          : 0;
+if (isLast) {
+  let totalCorrect = 0;
+  let totalQs = 0;
+  (vocabState.scores || []).forEach(s => {
+    if (!s) return;
+    totalCorrect += s.correct || 0;
+    totalQs += s.total || 0;
+  });
+  const overallPct = totalQs
+    ? Math.round((totalCorrect / totalQs) * 100)
+    : 0;
 
-        vocabGlobalStatus.innerHTML =
-          `✔ Has completado los 3 bloques de vocabulario. ` +
-          `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
-          `${overallPct}&nbsp;%).`;
-        vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
-        vocabGlobalStatus.classList.add('text-emerald-700');
+  vocabGlobalStatus.innerHTML =
+    `✔ Has completado los 3 bloques de vocabulario. ` +
+    `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+    `${overallPct}&nbsp;%).`;
+  vocabGlobalStatus.classList.remove('text-slate-500', 'text-red-600');
+  vocabGlobalStatus.classList.add('text-emerald-700');
 
-        // Mark vocab module complete in the progress bar
-        markModuleCompleted(5);
+  // Mark vocab module complete in the progress bar
+  markModuleCompleted(5);
 
-        // Enable the "Ir al Módulo 3 →" button
-        if (nextFrom5Btn) {
-          nextFrom5Btn.disabled = false;
-          nextFrom5Btn.classList.remove(
-            'bg-slate-300',
-            'text-slate-600',
-            'cursor-not-allowed'
-          );
-          nextFrom5Btn.classList.add(
-            'bg-emerald-600',
-            'hover:bg-emerald-700',
-            'text-white'
-          );
-        }
-      } else {
-        vocabState.currentIndex = blockIdx + 1;
+  // Enable the "Ir al Módulo 3 →" button
+  if (nextFrom5Btn) {
+    nextFrom5Btn.disabled = false;
+    nextFrom5Btn.classList.remove(
+      'bg-slate-300',
+      'text-slate-600',
+      'cursor-not-allowed'
+    );
+    nextFrom5Btn.classList.add(
+      'bg-emerald-600',
+      'hover:bg-emerald-700',
+      'text-white'
+    );
+  }
+
+  // 🔓 Desbloquear el enlace del crucigrama en la barra lateral
+  const porparaLink = document.getElementById('link-porpara');
+  if (porparaLink) {
+    porparaLink.href = 'porpara.html';
+    porparaLink.classList.remove(
+      'text-slate-400',
+      'cursor-not-allowed',
+      'pointer-events-none'
+    );
+    porparaLink.classList.add('text-slate-700', 'hover:bg-slate-100');
+  }
+} else {
+         vocabState.currentIndex = blockIdx + 1;
         buildTypingStage(vocabState.currentIndex);
         vocabGlobalStatus.textContent =
           `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
@@ -1057,6 +1071,17 @@ if (porparaLink) {
       checkPassword();
     }
   });
+   const porparaLinkGuard = document.getElementById('link-porpara');
+if (porparaLinkGuard) {
+  porparaLinkGuard.addEventListener('click', (e) => {
+    // Only allow if vocab module is officially marked as passed
+    if (!modulePassed[5]) {
+      e.preventDefault();
+      alert('Primero completa el Módulo 2 de vocabulario antes de ir al crucigrama.');
+    }
+  });
+}
+
 </script>
 
 </body>
