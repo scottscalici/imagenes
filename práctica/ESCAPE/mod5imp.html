@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Módulo – Nivel 4</title>
+  <title>Módulo – Nivel 5</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
@@ -17,7 +17,7 @@
             Examen del semestre
           </h1>
           <p class="text-xs sm:text-sm text-slate-500">
-            Nivel 4
+            Nivel 5
           </p>
         </div>
         <div class="w-40 sm:w-64">
@@ -839,51 +839,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Check answers
-  if (checkBtn) {
-    checkBtn.addEventListener("click", () => {
-      const slots = Array.from(document.querySelectorAll(".slot"));
-      const user = slots.map(s => s.querySelector("img")?.dataset.color || "");
+// Check answers (ALL OR NOTHING)
+if (checkBtn) {
+  checkBtn.addEventListener("click", () => {
+    const slots = Array.from(document.querySelectorAll(".slot"));
+    const user = slots.map(s => s.querySelector("img")?.dataset.color || "");
 
-      if (user.some(x => !x)) {
-        if (feedback) {
-          feedback.className = "text-sm mt-4 font-medium text-amber-700";
-          feedback.textContent = "⛔ Falta completar uno o más espacios (1–10).";
-        }
-        return;
+    // Must fill all 10
+    if (user.some(x => !x)) {
+      if (feedback) {
+        feedback.className = "text-sm mt-4 font-medium text-amber-700";
+        feedback.textContent = "⛔ Falta completar uno o más espacios (1–10).";
       }
+      if (passwordBox) passwordBox.classList.add("hidden");
+      return;
+    }
 
-      let correctCount = 0;
-      slots.forEach((slot, i) => {
-        const ok = user[i] === ANSWER_ORDER[i];
-        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
+    const isPerfect = user.every((val, i) => val === ANSWER_ORDER[i]);
 
-        if (ok) {
-          correctCount++;
-          slot.classList.add("border-emerald-300", "bg-emerald-50");
-          slot.style.borderColor = "#6ee7b7";
-        } else {
-          slot.classList.add("border-rose-300", "bg-rose-50");
-          slot.style.borderColor = "#fda4af";
-        }
-      });
-
-      if (correctCount === 10) {
-        if (feedback) {
-          feedback.className = "text-sm mt-4 font-medium text-emerald-700";
-          feedback.textContent = "✅ ¡Perfecto! Orden correcto.";
-        }
-        if (passwordText) passwordText.textContent = PASSWORD;
-        if (passwordBox) passwordBox.classList.remove("hidden");
-      } else {
-        if (feedback) {
-          feedback.className = "text-sm mt-4 font-medium text-rose-700";
-          feedback.textContent = `❌ Tienes ${correctCount}/10 correctos. Ajusta los espacios marcados en rojo.`;
-        }
-        if (passwordBox) passwordBox.classList.add("hidden");
-      }
+    // ✅ Do NOT color-code slots individually
+    slots.forEach(slot => {
+      slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
+      slot.style.borderColor = "";
     });
-  }
+
+    if (isPerfect) {
+      if (feedback) {
+        feedback.className = "text-sm mt-4 font-medium text-emerald-700";
+        feedback.textContent = "✅ ¡Perfecto! Orden correcto.";
+      }
+      if (passwordText) passwordText.textContent = PASSWORD;
+      if (passwordBox) passwordBox.classList.remove("hidden");
+    } else {
+      if (feedback) {
+        feedback.className = "text-sm mt-4 font-medium text-rose-700";
+        feedback.textContent = "❌ No está correcto todavía. Revisa el orden e inténtalo de nuevo.";
+      }
+      if (passwordBox) passwordBox.classList.add("hidden");
+    }
+  });
+}
+
 
   // Reset
   if (resetBtn) {
