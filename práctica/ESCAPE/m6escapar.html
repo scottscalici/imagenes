@@ -61,3 +61,34 @@
           </div>
         </div>
       </header>
+
+<script>
+
+
+
+       // ---------- PASSWORD LOGIC ----------
+    function checkPassword() {
+      const inputEl = document.getElementById('passwordInput');
+      const errorEl = document.getElementById('password-error');
+      const input = inputEl.value.trim();
+      const correct = 'PuraVida'; // cámbiala si quieres otra contraseña
+
+      if (input.toUpperCase() === correct) {
+        document.getElementById('password-gate').classList.add('hidden');
+        document.getElementById('protected-content').classList.remove('hidden');
+        errorEl.classList.add('hidden');
+      } else {
+        errorEl.classList.remove('hidden');
+        inputEl.focus();
+      }
+    }
+
+    // Make available to inline onclick
+    window.checkPassword = checkPassword;
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && document.activeElement.id === 'passwordInput') {
+        checkPassword();
+      }
+    });
+  </script>
