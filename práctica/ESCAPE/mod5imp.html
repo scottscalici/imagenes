@@ -370,6 +370,7 @@
     </div>
 
     <p id="feedback" class="text-sm mt-4 font-medium"></p>
+</div> <!-- end module-6 -->
 
     <!-- PASSWORD REVEAL -->
     <div id="passwordBox" class="hidden mt-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
@@ -389,7 +390,7 @@
   <script>
     // 👉 JSON de verbos para esta página
     const PRACTICE_JSON_URL =
-      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos4.json';
+      'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos5.json';
 
     // 4 módulos de verbos + 1 de lectura + 1 de preguntas
     const TOTAL_MODULES = 6;
@@ -730,15 +731,14 @@
   </script>
     
 <style>
-  /* Slot styling kept minimal; Tailwind does most of it */
   .slot {
     height: 86px;
-    border: 2px dashed #cbd5e1; /* slate-300 */
+    border: 2px dashed #cbd5e1;
     border-radius: 16px;
     display: grid;
     place-items: center;
     position: relative;
-    background: #f8fafc; /* slate-50 */
+    background: #f8fafc;
   }
   .slot[data-filled="true"] { border-style: solid; }
   .slot::before{
@@ -747,18 +747,15 @@
     top: 6px;
     left: 10px;
     font-size: 12px;
-    color: #64748b; /* slate-500 */
+    color: #64748b;
     font-weight: 700;
   }
-  .ghost {
-    opacity: 0.45;
-    transform: scale(0.98);
-  }
+  .ghost { opacity: 0.45; transform: scale(0.98); }
 </style>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // ✅ PICKED ORDER (10 answers) — change these whenever you want
-  // Your 6 available colors: amarillo, anaranjado, azul, rojo, verde, morado
+
   const ANSWER_ORDER = [
     "azul",
     "rojo",
@@ -772,10 +769,137 @@ document.addEventListener("DOMContentLoaded", () => {
     "amarillo"
   ];
 
-  // Password to reveal when correct (change this)
   const PASSWORD = "NIVEL5";
 
   const palette = document.getElementById("palette");
+  const feedback = document.getElementById("feedback");
+  const passwordBox = document.getElementById("passwordBox");
+  const passwordText = document.getElementById("passwordText");
+  const checkBtn = document.getElementById("checkBtn");
+  const resetBtn = document.getElementById("resetBtn");
+
+  // If module-6 is hidden at page load, this is still OK.
+  // We just attach listeners once.
+
+  // Make palette swatches draggable
+  function wireSwatch(img) {
+    img.addEventListener("dragstart", (e) => {
+      img.classList.add("ghost");
+      e.dataTransfer.setData("text/color", img.dataset.color);
+      e.dataTransfer.setData("text/src", img.src);
+      e.dataTransfer.effectAllowed = "copy";
+    });
+    img.addEventListener("dragend", () => img.classList.remove("ghost"));
+  }
+  document.querySelectorAll("#palette .swatch").forEach(wireSwatch);
+
+  // Activate slots
+  document.querySelectorAll(".slot").forEach(slot => {
+    slot.classList.add("shadow-sm");
+
+    slot.addEventListener("dragover", (e) => {
+      e.preventDefault(); // REQUIRED: allows dropping
+      slot.classList.add("ring-2", "ring-sky-400");
+    });
+
+    slot.addEventListener("dragleave", () => {
+      slot.classList.remove("ring-2", "ring-sky-400");
+    });
+
+    slot.addEventListener("drop", (e) => {
+      e.preventDefault();
+      slot.classList.remove("ring-2", "ring-sky-400");
+
+      const color = e.dataTransfer.getData("text/color");
+      const src = e.dataTransfer.getData("text/src");
+      if (!color || !src) return;
+
+      // Only 1 per slot (click to remove)
+      if (slot.querySelector("img")) return;
+
+      const placed = document.createElement("img");
+      placed.src = src;
+      placed.alt = color;
+      placed.dataset.color = color;
+      placed.className = "w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-pointer";
+      placed.title = "Clic para quitar";
+
+      placed.addEventListener("click", () => {
+        placed.remove();
+        slot.dataset.filled = "false";
+        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
+        slot.style.borderColor = "";
+      });
+
+      slot.appendChild(placed);
+      slot.dataset.filled = "true";
+
+      if (feedback) feedback.textContent = "";
+      if (passwordBox) passwordBox.classList.add("hidden");
+    });
+  });
+
+  // Check answers
+  if (checkBtn) {
+    checkBtn.addEventListener("click", () => {
+      const slots = Array.from(document.querySelectorAll(".slot"));
+      const user = slots.map(s => s.querySelector("img")?.dataset.color || "");
+
+      if (user.some(x => !x)) {
+        if (feedback) {
+          feedback.className = "text-sm mt-4 font-medium text-amber-700";
+          feedback.textContent = "⛔ Falta completar uno o más espacios (1–10).";
+        }
+        return;
+      }
+
+      let correctCount = 0;
+      slots.forEach((slot, i) => {
+        const ok = user[i] === ANSWER_ORDER[i];
+        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
+
+        if (ok) {
+          correctCount++;
+          slot.classList.add("border-emerald-300", "bg-emerald-50");
+          slot.style.borderColor = "#6ee7b7";
+        } else {
+          slot.classList.add("border-rose-300", "bg-rose-50");
+          slot.style.borderColor = "#fda4af";
+        }
+      });
+
+      if (correctCount === 10) {
+        if (feedback) {
+          feedback.className = "text-sm mt-4 font-medium text-emerald-700";
+          feedback.textContent = "✅ ¡Perfecto! Orden correcto.";
+        }
+        if (passwordText) passwordText.textContent = PASSWORD;
+        if (passwordBox) passwordBox.classList.remove("hidden");
+      } else {
+        if (feedback) {
+          feedback.className = "text-sm mt-4 font-medium text-rose-700";
+          feedback.textContent = `❌ Tienes ${correctCount}/10 correctos. Ajusta los espacios marcados en rojo.`;
+        }
+        if (passwordBox) passwordBox.classList.add("hidden");
+      }
+    });
+  }
+
+  // Reset
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      document.querySelectorAll(".slot img").forEach(img => img.remove());
+      document.querySelectorAll(".slot").forEach(slot => {
+        slot.dataset.filled = "false";
+        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
+        slot.style.borderColor = "";
+      });
+      if (feedback) feedback.textContent = "";
+      if (passwordBox) passwordBox.classList.add("hidden");
+    });
+  }
+
+});
 </script>
 </body>
         </html>
