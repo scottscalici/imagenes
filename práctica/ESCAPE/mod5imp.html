@@ -271,11 +271,53 @@
     <h2 class="text-xl font-semibold text-slate-800">
       Módulo 3.1 · Comprensión de lectura
     </h2>
-    <p class="text-sm text-slate-600">
-      Contesta las preguntas sobre la lectura. Necesitas <strong>100&nbsp;%</strong> para obtener la contraseña.
-    </p>
+<!-- ✅ PREGUNTAS DE COMPRENSIÓN -->
+<section class="space-y-4">
+  <h3 class="text-lg font-semibold text-slate-800">Preguntas de comprensión</h3>
+  <p class="text-sm text-slate-600">
+    Contesta. Al conseguir 100%, se desbloquea la entrada del código.
+  </p>
 
-   <!-- ✅ MÓDULO: Orden de colores (arrastrar y soltar) -->
+  <div id="reading-questions" class="space-y-3">
+    <!-- EJEMPLO (duplica y edita): data-answer es lo que aceptas -->
+    <div class="space-y-1 quiz-item" data-answer="terra.com">
+      <label class="text-sm font-medium text-slate-800">
+        1) ¿Cuál es el sitio web favorito entre los hispanos en EE.UU.?
+      </label>
+      <input type="text"
+             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+      <p class="text-xs feedback hidden"></p>
+    </div>
+
+    <!-- Agrega más preguntas aquí... -->
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3 pt-2">
+    <button id="btn-check-reading"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
+      Corregir respuestas
+    </button>
+    <p id="reading-result" class="text-sm text-slate-700"></p>
+  </div>
+
+  <!-- 🔐 CODE GATE (hidden until 100%) -->
+  <div id="code-gate" class="hidden mt-3 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
+    <p class="text-sm text-emerald-900 font-semibold">✅ Desbloqueado: escribe el código</p>
+    <div class="mt-2 flex flex-col sm:flex-row gap-2">
+      <input id="codeInput"
+             type="text"
+             placeholder="Código…"
+             class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+      <button id="btn-submit-code"
+              class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+        Entrar
+      </button>
+    </div>
+    <p id="codeFeedback" class="text-sm mt-2"></p>
+  </div>
+</section>
+
+    <!-- ✅ MÓDULO: Orden de colores (arrastrar y soltar) -->
 <section id="module-colores" class="space-y-6">
 
   <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
@@ -497,93 +539,123 @@
     }
 
     function attachQuizHandler(moduleNumber) {
-      const btnCheck = document.getElementById('btn-check-module-' + moduleNumber);
-      if (!btnCheck) return;
+      // ------- Preguntas de comprensión (module 6) -------
+const btnCheckReading = document.getElementById('btn-check-reading');
+const readingResult   = document.getElementById('reading-result');
 
-      btnCheck.addEventListener('click', () => {
-        const selector = '#module-' + moduleNumber + ' .quiz-item';
-        const items = document.querySelectorAll(selector);
-        const resultEl = document.getElementById('module-' + moduleNumber + '-result');
+const codeGate     = document.getElementById('code-gate');
+const codeInput    = document.getElementById('codeInput');
+const btnSubmitCode= document.getElementById('btn-submit-code');
+const codeFeedback = document.getElementById('codeFeedback');
 
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const value = (input.value || '').trim();
-          if (value === '') {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
-          }
-        });
+// ✅ the code they must enter after earning 100%
+const FINAL_CODE = "t6le37";
 
-        if (missing) {
-          resultEl.textContent = 'Responde todos los campos antes de corregir tus respuestas.';
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-          return;
-        }
+function normalize(str) {
+  return (str || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ""); // ignore spaces
+}
 
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim();
-          const answer = rawAnswer.toLowerCase();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          if (!input) return;
-          const userValue = (input.value || '').trim().toLowerCase();
+if (btnCheckReading) {
+  btnCheckReading.addEventListener('click', () => {
+    const items = document.querySelectorAll('#reading-questions .quiz-item');
 
-          if (userValue === answer) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-          }
+    // require all fields
+    let missing = false;
+    items.forEach(item => {
+      const input = item.querySelector('input');
+      if (!input) return;
+      const val = (input.value || '').trim();
+      if (!val) {
+        missing = true;
+        input.classList.remove('border-emerald-400', 'border-red-400');
+        input.classList.add('border-yellow-400');
+      }
+    });
 
-          if (feedback) {
-            feedback.textContent = '';
-            feedback.classList.add('hidden');
-          }
-        });
-
-        const total = items.length;
-        const score = total ? correct / total : 0;
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-        const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
-
-        if (score >= PASS_THRESHOLD) {
-          resultEl.classList.remove('text-red-600');
-          resultEl.classList.add('text-emerald-700');
-
-          if (nextBtn) {
-            nextBtn.classList.remove(
-              'bg-slate-300',
-              'text-slate-600',
-              'cursor-not-allowed',
-              'pointer-events-none'
-            );
-            nextBtn.classList.add(
-              'bg-emerald-600',
-              'hover:bg-emerald-700',
-              'text-white'
-            );
-            nextBtn.disabled = false;
-          }
-
-          markModuleCompleted(moduleNumber);
-          const nextModule = moduleNumber + 1;
-          if (nextModule <= TOTAL_MODULES) unlockModuleBtn(nextModule);
-        } else {
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-        }
-      });
+    if (missing) {
+      readingResult.textContent = 'Responde todos los campos antes de corregir.';
+      readingResult.classList.remove('text-emerald-700');
+      readingResult.classList.add('text-red-600');
+      if (codeGate) codeGate.classList.add('hidden');
+      return;
     }
+
+    // grade without revealing answers
+    let correct = 0;
+    items.forEach(item => {
+      const input = item.querySelector('input');
+      const feedback = item.querySelector('.feedback');
+
+      const expected = normalize(item.dataset.answer);
+      const userVal  = normalize(input.value);
+
+      if (userVal === expected) {
+        correct++;
+        input.classList.remove('border-red-400', 'border-yellow-400');
+        input.classList.add('border-emerald-400');
+        if (feedback) {
+          feedback.textContent = '✔ Correcto';
+          feedback.classList.remove('hidden', 'text-red-500');
+          feedback.classList.add('text-emerald-600');
+        }
+      } else {
+        input.classList.remove('border-emerald-400', 'border-yellow-400');
+        input.classList.add('border-red-400');
+        if (feedback) {
+          feedback.textContent = '✘ Incorrecto';
+          feedback.classList.remove('hidden', 'text-emerald-600');
+          feedback.classList.add('text-red-500');
+        }
+      }
+    });
+
+    const total = items.length;
+    const score = total ? correct / total : 0;
+
+    readingResult.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+    if (score >= PASS_THRESHOLD) {
+      readingResult.classList.remove('text-red-600');
+      readingResult.classList.add('text-emerald-700');
+
+      // ✅ unlock module completion + show code gate
+      markModuleCompleted(6);
+      if (codeGate) codeGate.classList.remove('hidden');
+
+      if (codeFeedback) codeFeedback.textContent = '';
+      if (codeInput) codeInput.value = '';
+    } else {
+      readingResult.classList.remove('text-emerald-700');
+      readingResult.classList.add('text-red-600');
+      if (codeGate) codeGate.classList.add('hidden');
+    }
+  });
+}
+
+if (btnSubmitCode) {
+  btnSubmitCode.addEventListener('click', () => {
+    const attempt = normalize(codeInput?.value);
+    if (attempt === FINAL_CODE) {
+      // ✅ go to next page
+      window.location.href = "m6escapar.html";
+    } else {
+      if (codeFeedback) {
+        codeFeedback.className = "text-sm mt-2 text-red-600";
+        codeFeedback.textContent = "❌ Código incorrecto. Inténtalo otra vez.";
+      }
+    }
+  });
+}
+
+// optional: Enter key submits code
+if (codeInput) {
+  codeInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") btnSubmitCode?.click();
+  });
+}
 
     async function loadPracticeSet() {
       try {
