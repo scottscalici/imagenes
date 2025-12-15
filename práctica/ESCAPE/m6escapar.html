@@ -2,61 +2,205 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nivel 6</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Escape Room – Panel</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-100 text-slate-800 min-h-screen">
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-      <!-- STICKY HEADER WITH PROGRESS -->
-      <header class="sticky top-0 z-20 bg-white shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+
+  <!-- Layout: left notes + right main, with bottom password bar -->
+  <div class="h-screen grid grid-rows-[1fr,110px]">
+    <!-- Top area -->
+    <div class="grid grid-cols-12 gap-4 p-4 overflow-hidden">
+
+      <!-- Left: Scratch Pad -->
+      <aside class="col-span-12 md:col-span-3 bg-white rounded-2xl shadow border border-slate-200 overflow-hidden flex flex-col">
+        <div class="px-4 py-3 border-b border-slate-200">
+          <h1 class="text-base font-bold text-slate-800">📝 Apuntes (borrador)</h1>
+          <p class="text-xs text-slate-500">Se guarda automáticamente en este navegador.</p>
+        </div>
+
+        <div class="p-3 flex-1 overflow-auto">
+          <textarea id="scratchpad"
+            class="w-full h-full min-h-[300px] resize-none border rounded-xl p-3 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-sky-400"
+            placeholder="Escribe aquí tus notas..."></textarea>
+        </div>
+
+        <div class="px-4 py-3 border-t border-slate-200 flex items-center justify-between">
+          <button id="clearNotes"
+            class="text-xs font-semibold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200">
+            Borrar notas
+          </button>
+          <span id="saveStatus" class="text-xs text-slate-500">Guardado</span>
+        </div>
+      </aside>
+
+      <!-- Main: Genially -->
+      <main class="col-span-12 md:col-span-9 bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between gap-3">
           <div>
-            <h1 class="text-lg sm:text-xl font-bold text-slate-800">
-              Examen del semestre
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-500">
-              Nivel 6
-            </p>
+            <h2 class="text-base font-bold text-slate-800">🧩 Breakout (Genially)</h2>
+            <p class="text-xs text-slate-500">Completa el escape room y luego escribe la contraseña abajo.</p>
           </div>
-          <div class="w-40 sm:w-64">
-            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-              <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+          <button id="fullscreenBtn"
+            class="text-xs font-semibold px-3 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800">
+            Pantalla completa
+          </button>
+        </div>
+
+        <div class="p-3 h-full overflow-hidden">
+          <!-- Responsive Genially embed -->
+          <div id="geniallyWrap" class="w-full h-full">
+            <div style="width: 100%;">
+              <div style="position: relative; padding-bottom: 56.25%; padding-top: 0; height: 0;">
+                <iframe id="geniallyFrame"
+                  title="Breakout - Robo en el AVE Express"
+                  frameborder="0"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                  src="https://view.genially.com/6478494104fbc00012016cf5"
+                  type="text/html"
+                  allowscriptaccess="always"
+                  allowfullscreen="true"
+                  scrolling="yes"
+                  allownetworking="all"></iframe>
+              </div>
             </div>
-            <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
-              0 % completado
-            </p>
           </div>
         </div>
-      </header>
+      </main>
+    </div>
 
-<script>
+    <!-- Bottom: Password Pane -->
+    <footer class="px-4 pb-4">
+      <section class="bg-white rounded-2xl shadow border border-slate-200 h-[110px] flex items-center justify-between gap-4 px-4">
+        <div class="min-w-[200px]">
+          <h3 class="text-sm font-bold text-slate-800">🔐 Contraseña final</h3>
+          <p class="text-xs text-slate-500">Cuando sea correcta, pasarás a la pantalla final.</p>
+        </div>
 
+        <div class="flex-1 flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+          <input id="passwordInput"
+                 type="text"
+                 class="flex-1 border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                 placeholder="Escribe la contraseña aquí…" />
+          <button id="submitPassword"
+                  class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+            Entrar
+          </button>
+        </div>
 
+        <div class="min-w-[220px] text-right">
+          <p id="passwordFeedback" class="text-sm font-semibold text-slate-600"></p>
+          <p class="text-[11px] text-slate-400">Tip: no uses espacios extra.</p>
+        </div>
+      </section>
+    </footer>
+  </div>
 
-       // ---------- PASSWORD LOGIC ----------
+  <script>
+    // ---------------------------
+    // Scratchpad autosave
+    // ---------------------------
+    const scratch = document.getElementById('scratchpad');
+    const clearBtn = document.getElementById('clearNotes');
+    const saveStatus = document.getElementById('saveStatus');
+
+    const SCRATCH_KEY = "escape_scratchpad_notes_v1";
+
+    function setStatus(msg) {
+      if (!saveStatus) return;
+      saveStatus.textContent = msg;
+      setTimeout(() => { saveStatus.textContent = "Guardado"; }, 900);
+    }
+
+    // Load saved notes
+    try {
+      const saved = localStorage.getItem(SCRATCH_KEY);
+      if (saved && scratch) scratch.value = saved;
+    } catch (e) {}
+
+    // Save on input (debounced)
+    let t = null;
+    scratch?.addEventListener('input', () => {
+      clearTimeout(t);
+      setStatus("Guardando...");
+      t = setTimeout(() => {
+        try {
+          localStorage.setItem(SCRATCH_KEY, scratch.value);
+          setStatus("Guardado");
+        } catch (e) {
+          setStatus("No se pudo guardar");
+        }
+      }, 250);
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (!scratch) return;
+      scratch.value = "";
+      try { localStorage.removeItem(SCRATCH_KEY); } catch (e) {}
+      setStatus("Borrado");
+      scratch.focus();
+    });
+
+    // ---------------------------
+    // Password gate
+    // ---------------------------
+    const PASSWORD = "renfebarcelonacincomaletín";
+    const NEXT_URL = "m7finalfin.html";
+
+    const pwdInput = document.getElementById('passwordInput');
+    const pwdBtn = document.getElementById('submitPassword');
+    const pwdFeedback = document.getElementById('passwordFeedback');
+
+    function normalize(str) {
+      return (str || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")          // remove spaces
+        .normalize("NFD")             // split accents
+        .replace(/[\u0300-\u036f]/g,""); // remove accents
+    }
+
     function checkPassword() {
-      const inputEl = document.getElementById('passwordInput');
-      const errorEl = document.getElementById('password-error');
-      const input = inputEl.value.trim();
-      const correct = 'PURAVIDA'; // cámbiala si quieres otra contraseña
+      const attempt = normalize(pwdInput?.value);
+      const target = normalize(PASSWORD);
 
-      if (input.toUpperCase() === correct) {
-        document.getElementById('password-gate').classList.add('hidden');
-        document.getElementById('protected-content').classList.remove('hidden');
-        errorEl.classList.add('hidden');
+      if (!attempt) {
+        pwdFeedback.textContent = "Escribe la contraseña.";
+        pwdFeedback.className = "text-sm font-semibold text-rose-600";
+        return;
+      }
+
+      if (attempt === target) {
+        pwdFeedback.textContent = "✅ Correcto. ¡Has escapado!";
+        pwdFeedback.className = "text-sm font-semibold text-emerald-700";
+        // Redirect
+        window.location.href = NEXT_URL;
       } else {
-        errorEl.classList.remove('hidden');
-        inputEl.focus();
+        pwdFeedback.textContent = "❌ Incorrecto. Inténtalo otra vez.";
+        pwdFeedback.className = "text-sm font-semibold text-rose-600";
+        pwdInput?.focus();
+        pwdInput?.select();
       }
     }
 
-    // Make available to inline onclick
-    window.checkPassword = checkPassword;
+    pwdBtn?.addEventListener('click', checkPassword);
+    pwdInput?.addEventListener('keydown', (e) => {
+      if (e.key === "Enter") checkPassword();
+    });
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && document.activeElement.id === 'passwordInput') {
-        checkPassword();
-      }
+    // ---------------------------
+    // "Fullscreen" (simple)
+    // ---------------------------
+    const fsBtn = document.getElementById('fullscreenBtn');
+    const geniallyFrame = document.getElementById('geniallyFrame');
+
+    fsBtn?.addEventListener('click', () => {
+      // Try fullscreen the iframe element
+      if (geniallyFrame?.requestFullscreen) geniallyFrame.requestFullscreen();
+      else if (geniallyFrame?.webkitRequestFullscreen) geniallyFrame.webkitRequestFullscreen();
     });
   </script>
+</body>
+</html>
