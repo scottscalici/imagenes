@@ -5,419 +5,393 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Módulo – Nivel 5</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .slot {
+      height: 86px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: #f8fafc;
+      min-height: 86px;
+    }
+    .slot[data-filled="true"] { border-style: solid; }
+    .slot::before{
+      content: attr(data-slot);
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 700;
+    }
+    .ghost { opacity: 0.45; transform: scale(0.98); }
+  </style>
 </head>
+
 <body class="bg-slate-100 text-slate-800 min-h-screen">
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-
-    <!-- STICKY HEADER WITH PROGRESS -->
-    <header class="sticky top-0 z-20 bg-white shadow-sm">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <div>
-          <h1 class="text-lg sm:text-xl font-bold text-slate-800">
-            Examen del semestre
-          </h1>
-          <p class="text-xs sm:text-sm text-slate-500">
-            Nivel 5
-          </p>
-        </div>
-        <div class="w-40 sm:w-64">
-          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-            <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
-          </div>
-          <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
-            0 % completado
-          </p>
-        </div>
+  <!-- STICKY HEADER WITH PROGRESS -->
+  <header class="sticky top-0 z-20 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div>
+        <h1 class="text-lg sm:text-xl font-bold text-slate-800">Examen del semestre</h1>
+        <p class="text-xs sm:text-sm text-slate-500">Nivel 5</p>
       </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto px-4 py-6">
-      <div class="grid md:grid-cols-[230px,1fr] gap-6">
-        <!-- SIDEBAR -->
-        <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
-          <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-            Módulos
-          </h2>
-
-          <!-- 1.1–1.4 Verbos -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
-                  data-module="1">
-            <span>Módulo 1.1 · Verbos</span>
-            <span id="badge-1" class="text-xs">●</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="2" disabled>
-            <span>Módulo 1.2 · Verbos</span>
-            <span id="badge-2" class="text-xs">🔒</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="3" disabled>
-            <span>Módulo 1.3 · Verbos</span>
-            <span id="badge-3" class="text-xs">🔒</span>
-          </button>
-
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="4" disabled>
-            <span>Módulo 1.4 · Verbos</span>
-            <span id="badge-4" class="text-xs">🔒</span>
-          </button>
-
-          <!-- 2.1 Lectura -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="5" disabled>
-            <span>Módulo 2.1 · Lectura</span>
-            <span id="badge-5" class="text-xs">🔒</span>
-          </button>
-
-          <!-- 3.1 Preguntas de comprensión -->
-          <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                  data-module="6" disabled>
-            <span>Módulo 3.1 · Preguntas</span>
-            <span id="badge-6" class="text-xs">🔒</span>
-          </button>
-        </aside>
-
-        <!-- MAIN PANEL -->
-        <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
-
-          <!-- Module 1.1 -->
-          <div id="module-1" class="module-view space-y-4">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.1 · Verbos (imperfecto)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar al siguiente módulo.
-            </p>
-
-            <div id="module-1-questions" class="space-y-3"></div>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-1"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-1-result" class="text-sm text-slate-700"></p>
-            </div>
-
-            <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
-              <button id="btn-next-from-1"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.2) →
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 1.2 -->
-          <div id="module-2" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.2 · Verbos (presente)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Segundo bloque de este conjunto de práctica.
-            </p>
-
-            <div id="module-2-questions" class="space-y-3"></div>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-2"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-2-result" class="text-sm text-slate-700"></p>
-            </div>
-
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="1">
-                ← Volver a 1.1
-              </button>
-              <button id="btn-next-from-2"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.3) →
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 1.3 -->
-          <div id="module-3" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.3 · Verbos (presente)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Tercer bloque de este conjunto de práctica.
-            </p>
-
-            <div id="module-3-questions" class="space-y-3"></div>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-3"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-3-result" class="text-sm text-slate-700"></p>
-            </div>
-
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="2">
-                ← Volver a 1.2
-              </button>
-              <button id="btn-next-from-3"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Siguiente módulo (1.4) →
-              </button>
-            </div>
-          </div>
-
-          <!-- Module 1.4 -->
-          <div id="module-4" class="module-view space-y-4 hidden">
-            <h2 class="text-xl font-semibold text-slate-800">
-              Módulo 1.4 · Verbos (pretérito)
-            </h2>
-            <p class="text-sm text-slate-600">
-              Último bloque de verbos de este conjunto.
-            </p>
-
-            <div id="module-4-questions" class="space-y-3"></div>
-
-            <div class="flex flex-wrap items-center gap-3 pt-2">
-              <button id="btn-check-module-4"
-                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-                Corregir respuestas
-              </button>
-              <p id="module-4-result" class="text-sm text-slate-700"></p>
-            </div>
-
-            <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-              <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                      data-go-module="3">
-                ← Volver a 1.3
-              </button>
-              <button id="btn-next-from-4"
-                      class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                      disabled>
-                Ir al Módulo 2.1 (lectura) →
-              </button>
-            </div>
-          </div>
-
-         <!-- Module 2.1 – pret o imp --> 
-<div id="module-5" class="module-view space-y-4 hidden">
-  <h2 class="text-xl font-semibold text-slate-800">
-    Módulo 2.1 · Pretérito o imperfecto
-  </h2>
-  1. <span style="color: blue;">Estuve</span> / <span style="color: orange;">Estaba</span> en casa cuando me llamaron.
-
-2. De niño, siempre <span style="color: blue;">jugué</span> / <span style="color: orange;">jugaba</span> al fútbol en el parque.
-
-3. Anoche, nosotros <span style="color: blue;">cenamos</span> / <span style="color: orange;">cenábamos</span> cuando sonó la alarma.
-
-4. El verano pasado, mis amigos <span style="color: blue;">fueron</span> / <span style="color: orange;">iban</span> a la playa todos los fines de semana.
-
-5. Esta mañana <span style="color: blue;">vi</span> / <span style="color: orange;">veía</span> un accidente mientras manejaba.
-
-6. Cuando eras pequeño, ¿qué programas <span style="color: blue;">miraste</span> / <span style="color: orange;">mirabas</span> en la tele?
-
-7. A las ocho, yo <span style="color: blue;">estudié</span> / <span style="color: orange;">estudiaba</span> y mi hermano escuchaba música.
-
-8. El martes pasado, nosotros <span style="color: blue;">tuvimos</span> / <span style="color: orange;">teníamos</span> un examen importante.
-
-9. Siempre que ella iba a ese restaurante, <span style="color: blue;">pidió</span> / <span style="color: orange;">pedía</span> la misma comida.
-
-10. Una vez, yo <span style="color: blue;">conocí</span> / <span style="color: orange;">conocía</span> a un actor famoso en el aeropuerto.
-
-11. Mientras ustedes hablaban, el profesor <span style="color: blue;">entró</span> / <span style="color: orange;">entraba</span> en el salón.
-
-12. De repente, yo <span style="color: blue;">me di</span> / <span style="color: orange;">me daba</span> cuenta de que no tenía mi teléfono.
-
-          <!-- Module 3.1 – Pista -->
-  <div id="module-6" class="module-view space-y-4 hidden">
-    <h2 class="text-xl font-semibold text-slate-800">
-      Módulo 3.1 · Código
-    </h2>
-<!-- ✅ PREGUNTAS DE COMPRENSIÓN -->
-<section class="space-y-4">
-  <h3 class="text-lg font-semibold text-slate-800">Preguntas de comprensión</h3>
-  <p class="text-sm text-slate-600">
-    Contesta. Al conseguir 100%, se desbloquea la entrada del código.
-  </p>
-
-  <div id="reading-questions" class="space-y-3">
-    <!-- EJEMPLO (duplica y edita): data-answer es lo que aceptas -->
-    <div class="space-y-1 quiz-item" data-answer="terra.com">
-      <label class="text-sm font-medium text-slate-800">
-        1) ¿Cuál es el sitio web favorito entre los hispanos en EE.UU.?
-      </label>
-      <input type="text"
-             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-      <p class="text-xs feedback hidden"></p>
-    </div>
-
-    <!-- Agrega más preguntas aquí... -->
-  </div>
-
-  <div class="flex flex-wrap items-center gap-3 pt-2">
-    <button id="btn-check-reading"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
-      Corregir respuestas
-    </button>
-    <p id="reading-result" class="text-sm text-slate-700"></p>
-  </div>
-
-  <!-- 🔐 CODE GATE (hidden until 100%) -->
-  <div id="code-gate" class="hidden mt-3 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
-    <p class="text-sm text-emerald-900 font-semibold">✅ Desbloqueado: escribe el código</p>
-    <div class="mt-2 flex flex-col sm:flex-row gap-2">
-      <input id="codeInput"
-             type="text"
-             placeholder="Código…"
-             class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
-      <button id="btn-submit-code"
-              class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
-        Entrar
-      </button>
-    </div>
-    <p id="codeFeedback" class="text-sm mt-2"></p>
-  </div>
-</section>
-
-    <!-- ✅ MÓDULO: Orden de colores (arrastrar y soltar) -->
-<section id="module-colores" class="space-y-6">
-
-  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
-    <h2 class="text-xl font-semibold text-slate-800">Módulo · Orden secreto</h2>
-    <p class="text-sm text-slate-600 mt-1">
-      Arrastra los colores al orden correcto. (Pista: el “primer paso” de cada respuesta…)
-    </p>
-  </div>
-
-  <!-- PALETA -->
-  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
-    <h3 class="text-sm font-semibold text-slate-700 mb-3">Paleta</h3>
-
-    <div id="palette"
-         class="flex flex-wrap gap-3 items-center"
-         aria-label="Paleta de colores">
-
-      <!-- Cada swatch tiene data-color con el nombre -->
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="amarillo"
-           alt="amarillo"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/amarillo.png" />
-
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="anaranjado"
-           alt="anaranjado"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/anaranjado.png" />
-
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="azul"
-           alt="azul"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/azul.png" />
-
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="rojo"
-           alt="rojo"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/rojo.png" />
-
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="verde"
-           alt="verde"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/verde.png" />
-
-      <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
-           draggable="true"
-           data-color="morado"
-           alt="morado"
-           src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/morado.png" />
-    </div>
-
-    <p class="text-xs text-slate-500 mt-3">
-      Puedes usar un color más de una vez.
-    </p>
-  </div>
-
-  <!-- SLOTS -->
-  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
-    <div class="flex items-center justify-between gap-4 flex-wrap">
-      <h3 class="text-sm font-semibold text-slate-700">Orden (1–10)</h3>
-
-      <div class="flex gap-2">
-        <button id="checkBtn"
-                class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
-          Comprobar
-        </button>
-        <button id="resetBtn"
-                class="px-4 py-2 rounded-xl bg-slate-200 text-slate-800 text-sm font-semibold hover:bg-slate-300">
-          Reiniciar
-        </button>
+      <div class="w-40 sm:w-64">
+        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+        </div>
+        <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">0 % completado</p>
       </div>
     </div>
+  </header>
 
-    <div id="slots"
-         class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-4">
-      <!-- 10 drop zones -->
-      <!-- Each slot holds exactly 1 swatch -->
-      <div class="slot" data-slot="1"></div>
-      <div class="slot" data-slot="2"></div>
-      <div class="slot" data-slot="3"></div>
-      <div class="slot" data-slot="4"></div>
-      <div class="slot" data-slot="5"></div>
-      <div class="slot" data-slot="6"></div>
-      <div class="slot" data-slot="7"></div>
-      <div class="slot" data-slot="8"></div>
-      <div class="slot" data-slot="9"></div>
-      <div class="slot" data-slot="10"></div>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div class="grid md:grid-cols-[230px,1fr] gap-6">
+
+      <!-- SIDEBAR -->
+      <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
+        <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Módulos</h2>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
+                data-module="1">
+          <span>Módulo 1.1 · Verbos</span>
+          <span id="badge-1" class="text-xs">●</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="2" disabled>
+          <span>Módulo 1.2 · Verbos</span>
+          <span id="badge-2" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="3" disabled>
+          <span>Módulo 1.3 · Verbos</span>
+          <span id="badge-3" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="4" disabled>
+          <span>Módulo 1.4 · Verbos</span>
+          <span id="badge-4" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="5" disabled>
+          <span>Módulo 2.1 · Lectura</span>
+          <span id="badge-5" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="6" disabled>
+          <span>Módulo 3.1 · Código</span>
+          <span id="badge-6" class="text-xs">🔒</span>
+        </button>
+      </aside>
+
+      <!-- MAIN PANEL -->
+      <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
+
+        <!-- Module 1 -->
+        <div id="module-1" class="module-view space-y-4">
+          <h2 class="text-xl font-semibold text-slate-800">Módulo 1.1 · Verbos (imperfecto)</h2>
+          <p class="text-sm text-slate-600">Completa las formas verbales. Necesitas <strong>100&nbsp;%</strong> para avanzar.</p>
+
+          <div id="module-1-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-1"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-1-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+            <button id="btn-next-from-1"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.2) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 2 -->
+        <div id="module-2" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">Módulo 1.2 · Verbos (presente)</h2>
+          <p class="text-sm text-slate-600">Segundo bloque de este conjunto de práctica.</p>
+
+          <div id="module-2-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-2"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-2-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold" data-go-module="1">
+              ← Volver a 1.1
+            </button>
+            <button id="btn-next-from-2"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.3) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 3 -->
+        <div id="module-3" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">Módulo 1.3 · Verbos (presente)</h2>
+          <p class="text-sm text-slate-600">Tercer bloque de este conjunto de práctica.</p>
+
+          <div id="module-3-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-3"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-3-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold" data-go-module="2">
+              ← Volver a 1.2
+            </button>
+            <button id="btn-next-from-3"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.4) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 4 -->
+        <div id="module-4" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">Módulo 1.4 · Verbos (pretérito)</h2>
+          <p class="text-sm text-slate-600">Último bloque de verbos de este conjunto.</p>
+
+          <div id="module-4-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-4"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-4-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold" data-go-module="3">
+              ← Volver a 1.3
+            </button>
+            <button id="btn-next-from-4"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Ir al Módulo 2.1 (lectura) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 5 -->
+        <div id="module-5" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">Módulo 2.1 · Pretérito o imperfecto</h2>
+          <p class="text-sm text-slate-600">
+            Lee y decide mentalmente cuál es mejor. Cuando termines, pulsa el botón para continuar.
+          </p>
+
+          <div class="space-y-2 text-sm leading-relaxed">
+            <p>1. <span class="text-blue-700 font-semibold">Estuve</span> / <span class="text-orange-700 font-semibold">Estaba</span> en casa cuando me llamaron.</p>
+            <p>2. De niño, siempre <span class="text-blue-700 font-semibold">jugué</span> / <span class="text-orange-700 font-semibold">jugaba</span> al fútbol en el parque.</p>
+            <p>3. Anoche, nosotros <span class="text-blue-700 font-semibold">cenamos</span> / <span class="text-orange-700 font-semibold">cenábamos</span> cuando sonó la alarma.</p>
+            <p>4. El verano pasado, mis amigos <span class="text-blue-700 font-semibold">fueron</span> / <span class="text-orange-700 font-semibold">iban</span> a la playa todos los fines de semana.</p>
+            <p>5. Esta mañana <span class="text-blue-700 font-semibold">vi</span> / <span class="text-orange-700 font-semibold">veía</span> un accidente mientras manejaba.</p>
+            <p>6. Cuando eras pequeño, ¿qué programas <span class="text-blue-700 font-semibold">miraste</span> / <span class="text-orange-700 font-semibold">mirabas</span> en la tele?</p>
+            <p>7. A las ocho, yo <span class="text-blue-700 font-semibold">estudié</span> / <span class="text-orange-700 font-semibold">estudiaba</span> y mi hermano escuchaba música.</p>
+            <p>8. El martes pasado, nosotros <span class="text-blue-700 font-semibold">tuvimos</span> / <span class="text-orange-700 font-semibold">teníamos</span> un examen importante.</p>
+            <p>9. Siempre que ella iba a ese restaurante, <span class="text-blue-700 font-semibold">pidió</span> / <span class="text-orange-700 font-semibold">pedía</span> la misma comida.</p>
+            <p>10. Una vez, yo <span class="text-blue-700 font-semibold">conocí</span> / <span class="text-orange-700 font-semibold">conocía</span> a un actor famoso en el aeropuerto.</p>
+            <p>11. Mientras ustedes hablaban, el profesor <span class="text-blue-700 font-semibold">entró</span> / <span class="text-orange-700 font-semibold">entraba</span> en el salón.</p>
+            <p>12. De repente, yo <span class="text-blue-700 font-semibold">me di</span> / <span class="text-orange-700 font-semibold">me daba</span> cuenta de que no tenía mi teléfono.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-finish-reading"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
+              Terminé → Ir al código
+            </button>
+            <p id="module-5-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold" data-go-module="4">
+              ← Volver a 1.4
+            </button>
+            <button id="btn-next-from-5"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Ir al Módulo 3.1 (código) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 6 -->
+        <div id="module-6" class="module-view space-y-6 hidden">
+          <div>
+            <h2 class="text-xl font-semibold text-slate-800">Módulo 3.1 · Código</h2>
+            <p class="text-sm text-slate-600">Completa la comprensión para desbloquear la entrada del código (o resuelve el orden secreto).</p>
+          </div>
+
+          <!-- ✅ PREGUNTAS DE COMPRENSIÓN -->
+          <section class="space-y-4">
+            <h3 class="text-lg font-semibold text-slate-800">Preguntas de comprensión</h3>
+            <p class="text-sm text-slate-600">Contesta. Al conseguir 100%, se desbloquea la entrada del código.</p>
+
+            <div id="reading-questions" class="space-y-3">
+              <div class="space-y-1 quiz-item" data-answer="terra.com">
+                <label class="text-sm font-medium text-slate-800">
+                  1) ¿Cuál es el sitio web favorito entre los hispanos en EE.UU.?
+                </label>
+                <input type="text"
+                       class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+                <p class="text-xs text-slate-500 feedback hidden"></p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <button id="btn-check-reading"
+                      class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
+                Corregir respuestas
+              </button>
+              <p id="reading-result" class="text-sm text-slate-700"></p>
+            </div>
+
+            <!-- 🔐 CODE GATE -->
+            <div id="code-gate" class="hidden mt-3 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
+              <p class="text-sm text-emerald-900 font-semibold">✅ Desbloqueado: escribe el código</p>
+              <div class="mt-2 flex flex-col sm:flex-row gap-2">
+                <input id="codeInput"
+                       type="text"
+                       placeholder="Código…"
+                       class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                <button id="btn-submit-code"
+                        class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+                  Entrar
+                </button>
+              </div>
+              <p id="codeFeedback" class="text-sm mt-2"></p>
+            </div>
+          </section>
+
+          <!-- ✅ MÓDULO: Orden de colores (arrastrar y soltar) -->
+          <section id="module-colores" class="space-y-6">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+              <h2 class="text-xl font-semibold text-slate-800">Módulo · Orden secreto</h2>
+              <p class="text-sm text-slate-600 mt-1">
+                Arrastra los colores al orden correcto. Si lo logras, se revela el código.
+              </p>
+            </div>
+
+            <!-- PALETA -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+              <h3 class="text-sm font-semibold text-slate-700 mb-3">Paleta</h3>
+
+              <div id="palette" class="flex flex-wrap gap-3 items-center" aria-label="Paleta de colores">
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="amarillo" alt="amarillo"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/amarillo.png" />
+
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="anaranjado" alt="anaranjado"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/anaranjado.png" />
+
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="azul" alt="azul"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/azul.png" />
+
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="rojo" alt="rojo"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/rojo.png" />
+
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="verde" alt="verde"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/verde.png" />
+
+                <img class="swatch w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-grab active:cursor-grabbing"
+                     draggable="true" data-color="morado" alt="morado"
+                     src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/pr%C3%A1ctica/ESCAPE/morado.png" />
+              </div>
+
+              <p class="text-xs text-slate-500 mt-3">Puedes usar un color más de una vez.</p>
+            </div>
+
+            <!-- SLOTS -->
+            <div class="bg-white border border-slate-200 rounded-2xl shadow p-6">
+              <div class="flex items-center justify-between gap-4 flex-wrap">
+                <h3 class="text-sm font-semibold text-slate-700">Orden (1–10)</h3>
+
+                <div class="flex gap-2">
+                  <button id="checkBtn" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700">
+                    Comprobar
+                  </button>
+                  <button id="resetBtn" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-800 text-sm font-semibold hover:bg-slate-300">
+                    Reiniciar
+                  </button>
+                </div>
+              </div>
+
+              <div id="slots" class="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-4">
+                <div class="slot" data-slot="1"></div>
+                <div class="slot" data-slot="2"></div>
+                <div class="slot" data-slot="3"></div>
+                <div class="slot" data-slot="4"></div>
+                <div class="slot" data-slot="5"></div>
+                <div class="slot" data-slot="6"></div>
+                <div class="slot" data-slot="7"></div>
+                <div class="slot" data-slot="8"></div>
+                <div class="slot" data-slot="9"></div>
+                <div class="slot" data-slot="10"></div>
+              </div>
+
+              <p id="feedback" class="text-sm mt-4 font-medium"></p>
+
+              <!-- PASSWORD REVEAL -->
+              <div id="passwordBox" class="hidden mt-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
+                <p class="text-sm text-emerald-900">
+                  ✅ ¡Correcto! Tu código es:
+                  <span id="passwordText" class="font-bold"></span>
+                </p>
+                <p class="text-xs text-slate-600 mt-2">
+                  (También se desbloquea automáticamente la entrada de código arriba.)
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </section>
     </div>
-
-    <p id="feedback" class="text-sm mt-4 font-medium"></p>
-</div> <!-- end module-6 -->
-
-    <!-- PASSWORD REVEAL -->
-    <div id="passwordBox" class="hidden mt-4 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
-      <p class="text-sm text-emerald-900">
-        ✅ ¡Correcto! Tu contraseña es:
-        <span id="passwordText" class="font-bold"></span>
-      </p>
-    <div class="mt-3">
-  <a href="m6escapar.html"
-     class="inline-flex items-center justify-center px-4 py-2 rounded-lg
-            bg-emerald-600 hover:bg-emerald-700
-            text-white text-sm font-semibold
-            shadow-sm transition">
-    Continuar →
-  </a>
-</div>
-
-
-    </div>
-  </div>
-
-</section>
-
-
-    </main>
   </main>
 
   <script>
-    // 👉 JSON de verbos para esta página
+    // ---------------- CONFIG ----------------
     const PRACTICE_JSON_URL =
       'https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/ESCAPE/verbos5.json';
 
-    // 4 módulos de verbos + 1 de lectura + 1 de preguntas
     const TOTAL_MODULES = 6;
     const PASS_THRESHOLD = 1.0;
 
+    const FINAL_CODE = "t6le37";     // code gate target
+    const NEXT_PAGE = "m6escapar.html";
+
+    // ---------------- PROGRESS ----------------
     const progressFill = document.getElementById('progress-fill');
     const progressLabel = document.getElementById('progress-label');
     const modulePassed = {};
@@ -446,31 +420,44 @@
         tab.disabled = false;
         tab.classList.remove('text-slate-500');
       }
-      if (badge && badge.textContent === '🔒') {
-        badge.textContent = '●';
-      }
+      if (badge && badge.textContent === '🔒') badge.textContent = '●';
+    }
+
+    function enableNextButton(moduleNumber) {
+      const nextBtn = document.getElementById('btn-next-from-' + moduleNumber);
+      if (!nextBtn) return;
+      nextBtn.disabled = false;
+      nextBtn.classList.remove('bg-slate-300','text-slate-600','cursor-not-allowed');
+      nextBtn.classList.add('bg-emerald-600','hover:bg-emerald-700','text-white');
     }
 
     function showModule(n) {
-      document.querySelectorAll('.module-view').forEach(view =>
-        view.classList.add('hidden')
-      );
+      document.querySelectorAll('.module-view').forEach(view => view.classList.add('hidden'));
       const active = document.getElementById('module-' + n);
       if (active) active.classList.remove('hidden');
 
       document.querySelectorAll('.module-tab').forEach(btn => {
         const m = btn.dataset.module;
-        if (String(m) === String(n)) {
-          btn.classList.add('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.remove('bg-slate-50', 'text-slate-500', 'border-slate-200');
-        } else {
-          btn.classList.remove('bg-sky-50', 'text-sky-800', 'border-sky-300');
-          btn.classList.add('bg-slate-50', 'text-slate-500', 'border-slate-200');
-        }
+        const isActive = String(m) === String(n);
+        btn.classList.toggle('bg-sky-50', isActive);
+        btn.classList.toggle('text-sky-800', isActive);
+        btn.classList.toggle('border-sky-300', isActive);
+
+        btn.classList.toggle('bg-slate-50', !isActive);
+        btn.classList.toggle('text-slate-500', !isActive);
+        btn.classList.toggle('border-slate-200', !isActive);
       });
     }
 
-    // ------- VERBOS 1–4 --------
+    // ---------------- HELPERS ----------------
+    function normalize(str) {
+      return (str || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    // ---------------- VERBS 1–4 ----------------
     function buildVerbModule(moduleNumber, items) {
       const container = document.getElementById('module-' + moduleNumber + '-questions');
       if (!container) return;
@@ -507,185 +494,98 @@
       }
     }
 
-    function attachQuizHandler(moduleNumber) {
-      // ------- Preguntas de comprensión (module 6) -------
-const btnCheckReading = document.getElementById('btn-check-reading');
-const readingResult   = document.getElementById('reading-result');
+    function gradeVerbModule(moduleNumber) {
+      const result = document.getElementById(`module-${moduleNumber}-result`);
+      const container = document.getElementById(`module-${moduleNumber}-questions`);
+      const items = container ? container.querySelectorAll('.quiz-item') : [];
 
-const codeGate     = document.getElementById('code-gate');
-const codeInput    = document.getElementById('codeInput');
-const btnSubmitCode= document.getElementById('btn-submit-code');
-const codeFeedback = document.getElementById('codeFeedback');
+      if (!items.length) return;
 
-// ✅ the code they must enter after earning 100%
-const FINAL_CODE = "t6le37";
-
-function normalize(str) {
-  return (str || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, ""); // ignore spaces
-}
-
-if (btnCheckReading) {
-  btnCheckReading.addEventListener('click', () => {
-    const items = document.querySelectorAll('#reading-questions .quiz-item');
-
-    // require all fields
-    let missing = false;
-    items.forEach(item => {
-      const input = item.querySelector('input');
-      if (!input) return;
-      const val = (input.value || '').trim();
-      if (!val) {
-        missing = true;
-        input.classList.remove('border-emerald-400', 'border-red-400');
-        input.classList.add('border-yellow-400');
-      }
-    });
-
-    if (missing) {
-      readingResult.textContent = 'Responde todos los campos antes de corregir.';
-      readingResult.classList.remove('text-emerald-700');
-      readingResult.classList.add('text-red-600');
-      if (codeGate) codeGate.classList.add('hidden');
-      return;
-    }
-
-    // grade without revealing answers
-    let correct = 0;
-    items.forEach(item => {
-      const input = item.querySelector('input');
-      const feedback = item.querySelector('.feedback');
-
-      const expected = normalize(item.dataset.answer);
-      const userVal  = normalize(input.value);
-
-      if (userVal === expected) {
-        correct++;
-        input.classList.remove('border-red-400', 'border-yellow-400');
-        input.classList.add('border-emerald-400');
-        if (feedback) {
-          feedback.textContent = '✔ Correcto';
-          feedback.classList.remove('hidden', 'text-red-500');
-          feedback.classList.add('text-emerald-600');
+      let missing = false;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        if (!input) return;
+        if (!input.value.trim()) {
+          missing = true;
+          input.classList.remove('border-emerald-400','border-red-400');
+          input.classList.add('border-yellow-400');
         }
-      } else {
-        input.classList.remove('border-emerald-400', 'border-yellow-400');
-        input.classList.add('border-red-400');
-        if (feedback) {
-          feedback.textContent = '✘ Incorrecto';
-          feedback.classList.remove('hidden', 'text-emerald-600');
-          feedback.classList.add('text-red-500');
-        }
-      }
-    });
+      });
 
-    const total = items.length;
-    const score = total ? correct / total : 0;
-
-    readingResult.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-    if (score >= PASS_THRESHOLD) {
-      readingResult.classList.remove('text-red-600');
-      readingResult.classList.add('text-emerald-700');
-
-      // ✅ unlock module completion + show code gate
-      markModuleCompleted(6);
-      if (codeGate) codeGate.classList.remove('hidden');
-
-      if (codeFeedback) codeFeedback.textContent = '';
-      if (codeInput) codeInput.value = '';
-    } else {
-      readingResult.classList.remove('text-emerald-700');
-      readingResult.classList.add('text-red-600');
-      if (codeGate) codeGate.classList.add('hidden');
-    }
-  });
-}
-
-if (btnSubmitCode) {
-  btnSubmitCode.addEventListener('click', () => {
-    const attempt = normalize(codeInput?.value);
-    if (attempt === FINAL_CODE) {
-      // ✅ go to next page
-      window.location.href = "m6escapar.html";
-    } else {
-      if (codeFeedback) {
-        codeFeedback.className = "text-sm mt-2 text-red-600";
-        codeFeedback.textContent = "❌ Código incorrecto. Inténtalo otra vez.";
-      }
-    }
-  });
-}
-
-// optional: Enter key submits code
-if (codeInput) {
-  codeInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") btnSubmitCode?.click();
-  });
-}
-
-    async function loadPracticeSet() {
-      try {
-        const res = await fetch(PRACTICE_JSON_URL);
-        const data = await res.json();
-        const items = data;
-        buildAllVerbModules(items);
-        [1, 2, 3, 4].forEach(attachQuizHandler);
-      } catch (err) {
-        console.error('Error al cargar el JSON de práctica:', err);
-        const result = document.getElementById('module-1-result');
+      if (missing) {
         if (result) {
-          result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
+          result.textContent = 'Responde todos los campos antes de corregir.';
+          result.classList.remove('text-emerald-700');
           result.classList.add('text-red-600');
         }
+        return;
+      }
+
+      let correct = 0;
+      items.forEach(item => {
+        const input = item.querySelector('input');
+        const feedback = item.querySelector('.feedback');
+        const expected = normalize(item.dataset.answer);
+        const userVal = normalize(input.value);
+
+        if (userVal === expected) {
+          correct++;
+          input.classList.remove('border-red-400','border-yellow-400');
+          input.classList.add('border-emerald-400');
+          if (feedback) {
+            feedback.textContent = '✔ Correcto';
+            feedback.classList.remove('hidden','text-red-500');
+            feedback.classList.add('text-emerald-600');
+          }
+        } else {
+          input.classList.remove('border-emerald-400','border-yellow-400');
+          input.classList.add('border-red-400');
+          if (feedback) {
+            feedback.textContent = '✘ Incorrecto';
+            feedback.classList.remove('hidden','text-emerald-600');
+            feedback.classList.add('text-red-500');
+          }
+        }
+      });
+
+      const total = items.length;
+      const score = total ? correct / total : 0;
+
+      if (result) {
+        result.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+        result.classList.toggle('text-emerald-700', score >= PASS_THRESHOLD);
+        result.classList.toggle('text-red-600', score < PASS_THRESHOLD);
+      }
+
+      if (score >= PASS_THRESHOLD) {
+        markModuleCompleted(moduleNumber);
+
+        const next = moduleNumber + 1;
+        unlockModuleBtn(next);
+        enableNextButton(moduleNumber);
+
+        // If module 4 passed, also unlock module 5
+        if (moduleNumber === 4) {
+          unlockModuleBtn(5);
+        }
       }
     }
 
-    // Next buttons 1–4 (internal navigation)
-    for (let i = 1; i <= 4; i++) {
-      const nextBtn = document.getElementById('btn-next-from-' + i);
-      if (!nextBtn) continue;
-      nextBtn.addEventListener('click', () => {
-        const target = i + 1; // 1→2, 2→3, 3→4, 4→5
-        const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
-        if (tab && !tab.disabled) showModule(target);
-      });
-    }
-
-    // Sidebar tabs
-    document.querySelectorAll('.module-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.module);
-        if (btn.disabled) return;
-        showModule(num);
-      });
-    });
-
-    // "Volver a módulo X" buttons
-    document.querySelectorAll('[data-go-module]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const num = Number(btn.dataset.goModule);
-        showModule(num);
-      });
-    });
-
-    // ------- Lectura (module 5) -> desbloquea preguntas (module 6) ------
-    const finishReadingBtn = document.getElementById('btn-finish-reading');
-    if (finishReadingBtn) {
-      finishReadingBtn.addEventListener('click', () => {
-        markModuleCompleted(5);
-        unlockModuleBtn(6);
-        showModule(6);
-      });
-    }
-
-    // ------- Preguntas de comprensión (module 6) -------
+    // ---------------- MODULE 6 (Reading + Code) ----------------
     const btnCheckReading = document.getElementById('btn-check-reading');
-    const readingResult = document.getElementById('reading-result');
-    const btnShowPassword = document.getElementById('btn-show-password');
-    const passwordDisplay = document.getElementById('password-display');
+    const readingResult   = document.getElementById('reading-result');
+
+    const codeGate      = document.getElementById('code-gate');
+    const codeInput     = document.getElementById('codeInput');
+    const btnSubmitCode = document.getElementById('btn-submit-code');
+    const codeFeedback  = document.getElementById('codeFeedback');
+
+    function unlockCodeGate() {
+      if (codeGate) codeGate.classList.remove('hidden');
+      if (codeFeedback) codeFeedback.textContent = '';
+      if (codeInput) codeInput.focus();
+      markModuleCompleted(6);
+    }
 
     if (btnCheckReading) {
       btnCheckReading.addEventListener('click', () => {
@@ -694,14 +594,11 @@ if (codeInput) {
         let missing = false;
         items.forEach(item => {
           const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
           if (!input) return;
-          const val = (input.value || '').trim();
-          if (!val) {
+          if (!input.value.trim()) {
             missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
+            input.classList.remove('border-emerald-400','border-red-400');
             input.classList.add('border-yellow-400');
-            if (feedback) feedback.classList.add('hidden');
           }
         });
 
@@ -714,25 +611,26 @@ if (codeInput) {
 
         let correct = 0;
         items.forEach(item => {
-          const rawAnswer = (item.dataset.answer || '').trim().toLowerCase();
           const input = item.querySelector('input');
           const feedback = item.querySelector('.feedback');
-          const userVal = (input.value || '').trim().toLowerCase();
+          const expected = normalize(item.dataset.answer).replace(/\s+/g,'');
+          const userVal  = normalize(input.value).replace(/\s+/g,'');
 
-          if (userVal === rawAnswer) {
+          if (userVal === expected) {
             correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
+            input.classList.remove('border-red-400','border-yellow-400');
             input.classList.add('border-emerald-400');
             if (feedback) {
-              feedback.textContent = '';
-              feedback.classList.add('hidden');
+              feedback.textContent = '✔ Correcto';
+              feedback.classList.remove('hidden','text-red-500');
+              feedback.classList.add('text-emerald-600');
             }
           } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
+            input.classList.remove('border-emerald-400','border-yellow-400');
             input.classList.add('border-red-400');
             if (feedback) {
-              feedback.textContent = `❌ Respuesta esperada: ${rawAnswer}`;
-              feedback.classList.remove('hidden');
+              feedback.textContent = '✘ Incorrecto';
+              feedback.classList.remove('hidden','text-emerald-600');
               feedback.classList.add('text-red-500');
             }
           }
@@ -740,28 +638,13 @@ if (codeInput) {
 
         const total = items.length;
         const score = total ? correct / total : 0;
-        readingResult.textContent =
-          `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        readingResult.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
 
         if (score >= PASS_THRESHOLD) {
           readingResult.classList.remove('text-red-600');
           readingResult.classList.add('text-emerald-700');
-
-          markModuleCompleted(6);
-
-          if (btnShowPassword) {
-            btnShowPassword.disabled = false;
-            btnShowPassword.classList.remove(
-              'bg-slate-300',
-              'text-slate-600',
-              'cursor-not-allowed'
-            );
-            btnShowPassword.classList.add(
-              'bg-emerald-600',
-              'hover:bg-emerald-700',
-              'text-white'
-            );
-          }
+          unlockCodeGate();
         } else {
           readingResult.classList.remove('text-emerald-700');
           readingResult.classList.add('text-red-600');
@@ -769,185 +652,214 @@ if (codeInput) {
       });
     }
 
-    if (btnShowPassword && passwordDisplay) {
-      btnShowPassword.addEventListener('click', () => {
-        passwordDisplay.classList.remove('hidden');
-        // aquí puedes también poner un link al siguiente nivel
+    function normalizeCode(str) {
+      return (str || "").trim().toLowerCase().replace(/\s+/g, "");
+    }
+
+    if (btnSubmitCode) {
+      btnSubmitCode.addEventListener('click', () => {
+        const attempt = normalizeCode(codeInput?.value);
+        if (attempt === normalizeCode(FINAL_CODE)) {
+          window.location.href = NEXT_PAGE;
+        } else {
+          if (codeFeedback) {
+            codeFeedback.className = "text-sm mt-2 text-red-600";
+            codeFeedback.textContent = "❌ Código incorrecto. Inténtalo otra vez.";
+          }
+        }
       });
     }
 
-    // Init
+    if (codeInput) {
+      codeInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") btnSubmitCode?.click();
+      });
+    }
+
+    // ---------------- DRAG & DROP PUZZLE ----------------
+    document.addEventListener("DOMContentLoaded", () => {
+      const ANSWER_ORDER = ["azul","rojo","verde","amarillo","morado","anaranjado","azul","verde","rojo","amarillo"];
+
+      const palette = document.getElementById("palette");
+      const feedback = document.getElementById("feedback");
+      const passwordBox = document.getElementById("passwordBox");
+      const passwordText = document.getElementById("passwordText");
+      const checkBtn = document.getElementById("checkBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      function wireSwatch(img) {
+        img.addEventListener("dragstart", (e) => {
+          img.classList.add("ghost");
+          e.dataTransfer.setData("text/color", img.dataset.color);
+          e.dataTransfer.setData("text/src", img.src);
+          e.dataTransfer.effectAllowed = "copy";
+        });
+        img.addEventListener("dragend", () => img.classList.remove("ghost"));
+      }
+      document.querySelectorAll("#palette .swatch").forEach(wireSwatch);
+
+      document.querySelectorAll(".slot").forEach(slot => {
+        slot.classList.add("shadow-sm");
+
+        slot.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          slot.classList.add("ring-2", "ring-sky-400");
+        });
+
+        slot.addEventListener("dragleave", () => {
+          slot.classList.remove("ring-2", "ring-sky-400");
+        });
+
+        slot.addEventListener("drop", (e) => {
+          e.preventDefault();
+          slot.classList.remove("ring-2", "ring-sky-400");
+
+          const color = e.dataTransfer.getData("text/color");
+          const src = e.dataTransfer.getData("text/src");
+          if (!color || !src) return;
+
+          if (slot.querySelector("img")) return;
+
+          const placed = document.createElement("img");
+          placed.src = src;
+          placed.alt = color;
+          placed.dataset.color = color;
+          placed.className = "w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-pointer";
+          placed.title = "Clic para quitar";
+
+          placed.addEventListener("click", () => {
+            placed.remove();
+            slot.dataset.filled = "false";
+          });
+
+          slot.appendChild(placed);
+          slot.dataset.filled = "true";
+
+          if (feedback) feedback.textContent = "";
+          if (passwordBox) passwordBox.classList.add("hidden");
+        });
+      });
+
+      if (checkBtn) {
+        checkBtn.addEventListener("click", () => {
+          const slots = Array.from(document.querySelectorAll(".slot"));
+          const user = slots.map(s => s.querySelector("img")?.dataset.color || "");
+
+          if (user.some(x => !x)) {
+            if (feedback) {
+              feedback.className = "text-sm mt-4 font-medium text-amber-700";
+              feedback.textContent = "⛔ Falta completar uno o más espacios (1–10).";
+            }
+            if (passwordBox) passwordBox.classList.add("hidden");
+            return;
+          }
+
+          const isPerfect = user.every((val, i) => val === ANSWER_ORDER[i]);
+
+          if (isPerfect) {
+            if (feedback) {
+              feedback.className = "text-sm mt-4 font-medium text-emerald-700";
+              feedback.textContent = "✅ ¡Perfecto! Orden correcto.";
+            }
+            if (passwordText) passwordText.textContent = FINAL_CODE;
+            if (passwordBox) passwordBox.classList.remove("hidden");
+
+            // Unlock code gate + optionally prefill
+            unlockCodeGate();
+            if (codeInput) codeInput.value = FINAL_CODE;
+          } else {
+            if (feedback) {
+              feedback.className = "text-sm mt-4 font-medium text-rose-700";
+              feedback.textContent = "❌ No está correcto todavía. Revisa el orden e inténtalo de nuevo.";
+            }
+            if (passwordBox) passwordBox.classList.add("hidden");
+          }
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          document.querySelectorAll(".slot img").forEach(img => img.remove());
+          document.querySelectorAll(".slot").forEach(slot => slot.dataset.filled = "false");
+          if (feedback) feedback.textContent = "";
+          if (passwordBox) passwordBox.classList.add("hidden");
+        });
+      }
+    });
+
+    // ---------------- NAV BUTTONS ----------------
+    for (let i = 1; i <= 5; i++) {
+      const nextBtn = document.getElementById('btn-next-from-' + i);
+      if (!nextBtn) continue;
+      nextBtn.addEventListener('click', () => {
+        const target = i + 1;
+        const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
+        if (tab && !tab.disabled) showModule(target);
+      });
+    }
+
+    document.querySelectorAll('.module-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        showModule(Number(btn.dataset.module));
+      });
+    });
+
+    document.querySelectorAll('[data-go-module]').forEach(btn => {
+      btn.addEventListener('click', () => showModule(Number(btn.dataset.goModule)));
+    });
+
+    // ---------------- MODULE 5 FINISH ----------------
+    const finishReadingBtn = document.getElementById('btn-finish-reading');
+    const module5Result = document.getElementById('module-5-result');
+    const btnNextFrom5 = document.getElementById('btn-next-from-5');
+
+    if (finishReadingBtn) {
+      finishReadingBtn.addEventListener('click', () => {
+        markModuleCompleted(5);
+        unlockModuleBtn(6);
+
+        if (btnNextFrom5) {
+          btnNextFrom5.disabled = false;
+          btnNextFrom5.classList.remove('bg-slate-300','text-slate-600','cursor-not-allowed');
+          btnNextFrom5.classList.add('bg-emerald-600','hover:bg-emerald-700','text-white');
+        }
+
+        if (module5Result) {
+          module5Result.textContent = '✅ Listo. Módulo 3.1 desbloqueado.';
+          module5Result.classList.add('text-emerald-700');
+        }
+
+        showModule(6);
+      });
+    }
+
+    // ---------------- LOAD JSON + INIT ----------------
+    async function loadPracticeSet() {
+      try {
+        const res = await fetch(PRACTICE_JSON_URL);
+        const data = await res.json();
+        buildAllVerbModules(data);
+
+        // wire verb check buttons
+        [1,2,3,4].forEach(n => {
+          const btn = document.getElementById(`btn-check-module-${n}`);
+          if (btn) btn.addEventListener('click', () => gradeVerbModule(n));
+        });
+      } catch (err) {
+        console.error('Error al cargar el JSON de práctica:', err);
+        const result = document.getElementById('module-1-result');
+        if (result) {
+          result.textContent = 'No se pudo cargar el conjunto de práctica (revisa la URL del JSON).';
+          result.classList.add('text-red-600');
+        }
+      }
+    }
+
+    // init
     updateProgress();
     showModule(1);
     loadPracticeSet();
   </script>
-    
-<style>
-  .slot {
-    height: 86px;
-    border: 2px dashed #cbd5e1;
-    border-radius: 16px;
-    display: grid;
-    place-items: center;
-    position: relative;
-    background: #f8fafc;
-  }
-  .slot[data-filled="true"] { border-style: solid; }
-  .slot::before{
-    content: attr(data-slot);
-    position: absolute;
-    top: 6px;
-    left: 10px;
-    font-size: 12px;
-    color: #64748b;
-    font-weight: 700;
-  }
-  .ghost { opacity: 0.45; transform: scale(0.98); }
-</style>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const ANSWER_ORDER = [
-    "azul",
-    "rojo",
-    "verde",
-    "amarillo",
-    "morado",
-    "anaranjado",
-    "azul",
-    "verde",
-    "rojo",
-    "amarillo"
-  ];
-
-  const PASSWORD = "PuraVida";
-
-  const palette = document.getElementById("palette");
-  const feedback = document.getElementById("feedback");
-  const passwordBox = document.getElementById("passwordBox");
-  const passwordText = document.getElementById("passwordText");
-  const checkBtn = document.getElementById("checkBtn");
-  const resetBtn = document.getElementById("resetBtn");
-
-  // If module-6 is hidden at page load, this is still OK.
-  // We just attach listeners once.
-
-  // Make palette swatches draggable
-  function wireSwatch(img) {
-    img.addEventListener("dragstart", (e) => {
-      img.classList.add("ghost");
-      e.dataTransfer.setData("text/color", img.dataset.color);
-      e.dataTransfer.setData("text/src", img.src);
-      e.dataTransfer.effectAllowed = "copy";
-    });
-    img.addEventListener("dragend", () => img.classList.remove("ghost"));
-  }
-  document.querySelectorAll("#palette .swatch").forEach(wireSwatch);
-
-  // Activate slots
-  document.querySelectorAll(".slot").forEach(slot => {
-    slot.classList.add("shadow-sm");
-
-    slot.addEventListener("dragover", (e) => {
-      e.preventDefault(); // REQUIRED: allows dropping
-      slot.classList.add("ring-2", "ring-sky-400");
-    });
-
-    slot.addEventListener("dragleave", () => {
-      slot.classList.remove("ring-2", "ring-sky-400");
-    });
-
-    slot.addEventListener("drop", (e) => {
-      e.preventDefault();
-      slot.classList.remove("ring-2", "ring-sky-400");
-
-      const color = e.dataTransfer.getData("text/color");
-      const src = e.dataTransfer.getData("text/src");
-      if (!color || !src) return;
-
-      // Only 1 per slot (click to remove)
-      if (slot.querySelector("img")) return;
-
-      const placed = document.createElement("img");
-      placed.src = src;
-      placed.alt = color;
-      placed.dataset.color = color;
-      placed.className = "w-14 h-14 rounded-xl border border-slate-200 shadow-sm cursor-pointer";
-      placed.title = "Clic para quitar";
-
-      placed.addEventListener("click", () => {
-        placed.remove();
-        slot.dataset.filled = "false";
-        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
-        slot.style.borderColor = "";
-      });
-
-      slot.appendChild(placed);
-      slot.dataset.filled = "true";
-
-      if (feedback) feedback.textContent = "";
-      if (passwordBox) passwordBox.classList.add("hidden");
-    });
-  });
-
-// Check answers (ALL OR NOTHING)
-if (checkBtn) {
-  checkBtn.addEventListener("click", () => {
-    const slots = Array.from(document.querySelectorAll(".slot"));
-    const user = slots.map(s => s.querySelector("img")?.dataset.color || "");
-
-    // Must fill all 10
-    if (user.some(x => !x)) {
-      if (feedback) {
-        feedback.className = "text-sm mt-4 font-medium text-amber-700";
-        feedback.textContent = "⛔ Falta completar uno o más espacios (1–10).";
-      }
-      if (passwordBox) passwordBox.classList.add("hidden");
-      return;
-    }
-
-    const isPerfect = user.every((val, i) => val === ANSWER_ORDER[i]);
-
-    // ✅ Do NOT color-code slots individually
-    slots.forEach(slot => {
-      slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
-      slot.style.borderColor = "";
-    });
-
-    if (isPerfect) {
-      if (feedback) {
-        feedback.className = "text-sm mt-4 font-medium text-emerald-700";
-        feedback.textContent = "✅ ¡Perfecto! Orden correcto.";
-      }
-      if (passwordText) passwordText.textContent = PASSWORD;
-      if (passwordBox) passwordBox.classList.remove("hidden");
-    } else {
-      if (feedback) {
-        feedback.className = "text-sm mt-4 font-medium text-rose-700";
-        feedback.textContent = "❌ No está correcto todavía. Revisa el orden e inténtalo de nuevo.";
-      }
-      if (passwordBox) passwordBox.classList.add("hidden");
-    }
-  });
-}
-
-
-  // Reset
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      document.querySelectorAll(".slot img").forEach(img => img.remove());
-      document.querySelectorAll(".slot").forEach(slot => {
-        slot.dataset.filled = "false";
-        slot.classList.remove("border-emerald-300", "bg-emerald-50", "border-rose-300", "bg-rose-50");
-        slot.style.borderColor = "";
-      });
-      if (feedback) feedback.textContent = "";
-      if (passwordBox) passwordBox.classList.add("hidden");
-    });
-  }
-
-});
-</script>
 </body>
-        </html>
+</html>
