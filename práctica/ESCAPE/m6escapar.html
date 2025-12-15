@@ -3,43 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Módulo – Nivel 3</title>
+  <title>Nivel 6</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
   <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-
-    <!-- 🔐 PASSWORD GATE -->
-    <section id="password-gate"
-             class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-slate-200">
-      <h1 class="text-2xl font-bold text-indigo-600 mb-2">
-        Acceso al siguiente nivel
-      </h1>
-      <p class="text-sm text-slate-600 mb-4">
-        Escribe la contraseña que encontraste en el módulo anterior.
-      </p>
-
-      <label for="passwordInput" class="block text-sm font-semibold text-slate-700 mb-1">
-        Contraseña:
-      </label>
-      <input id="passwordInput" type="text"
-             class="w-full border rounded-lg p-2 mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-             placeholder="Escribe la contraseña aquí">
-
-      <button type="button"
-              onclick="checkPassword()"
-              class="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition">
-        Entrar
-      </button>
-
-      <p id="password-error" class="text-xs text-red-600 mt-3 hidden">
-        Contraseña incorrecta. Inténtalo otra vez.
-      </p>
-    </section>
-
-    <!-- 🌟 PROTECTED CONTENT -->
-    <section id="protected-content" class="hidden">
-
       <!-- STICKY HEADER WITH PROGRESS -->
       <header class="sticky top-0 z-20 bg-white shadow-sm">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
