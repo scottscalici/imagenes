@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Final · Escape Room</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+  <main class="max-w-xl mx-auto px-4 py-10">
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4 border border-slate-200">
+      <h1 class="text-2xl font-bold text-emerald-700">✅ ¡Escape Room completado!</h1>
+      <p class="text-sm text-slate-600">
+        Para registrar tu finalización, escribe tu nombre y envía.
+      </p>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Nombre y apellido</label>
+          <input id="studentName" type="text"
+                 class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                 placeholder="Ej: Sofía Martínez" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1">Clase / Hora (opcional)</label>
+          <input id="studentPeriod" type="text"
+                 class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                 placeholder="Ej: 3A o 2ª hora" />
+        </div>
+
+        <button id="submitBtn"
+                class="w-full mt-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold">
+          Enviar
+        </button>
+
+        <p id="status" class="text-sm"></p>
+      </div>
+
+      <p class="text-xs text-slate-500">
+        Nota: solo se registra el nombre (y la clase si la escribes).
+      </p>
+    </section>
+  </main>
+
+  <script>
+    // ✅ REPLACE THESE WITH YOUR GOOGLE FORM VALUES
+    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/1FAIpQLScwmxNmAPI-uUh8jWKYShVClNg9XBqJaVVZNt0qyCPgv8017w/viewform?usp=sharing&ouid=101355293923139334621";
+    const ENTRY_NAME   = "entry.1080940560"; // <-- name field entry id
+    const ENTRY_PERIOD = "entry.1962537487"; // <-- period field entry id (or remove if not used)
+
+    // Optional redirect after success:
+    // const REDIRECT_URL = "https://yoursite.com/thanks.html";
+    const REDIRECT_URL = "";
+
+    const nameEl = document.getElementById("studentName");
+    const periodEl = document.getElementById("studentPeriod");
+    const btn = document.getElementById("submitBtn");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(msg, ok=false) {
+      statusEl.textContent = msg;
+      statusEl.className = ok ? "text-sm text-emerald-700" : "text-sm text-rose-700";
+    }
+
+    btn.addEventListener("click", async () => {
+      const name = (nameEl.value || "").trim();
+      const period = (periodEl.value || "").trim();
+
+      if (!name) {
+        setStatus("⛔ Escribe tu nombre y apellido antes de enviar.");
+        nameEl.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.classList.add("opacity-60", "cursor-not-allowed");
+      setStatus("Enviando…", true);
+
+      // Build form data
+      const formData = new FormData();
+      formData.append(ENTRY_NAME, name);
+      if (ENTRY_PERIOD && period) formData.append(ENTRY_PERIOD, period);
+
+      // Timestamp (optional extra field if you add it to the form)
+      // formData.append("entry.0000000000", new Date().toLocaleString());
+
+      try {
+        // Google Forms doesn't allow normal CORS responses, so we use no-cors.
+        // This still records the response successfully.
+        await fetch(FORM_ACTION_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData
+        });
+
+        setStatus("✅ ¡Enviado! Ya quedó registrado.", true);
+
+        // Optional: prevent accidental re-submit during same session
+        btn.textContent = "Enviado ✔";
+        btn.disabled = true;
+
+        if (REDIRECT_URL) {
+          setTimeout(() => window.location.href = REDIRECT_URL, 900);
+        }
+      } catch (e) {
+        console.error(e);
+        btn.disabled = false;
+        btn.classList.remove("opacity-60", "cursor-not-allowed");
+        setStatus("❌ No se pudo enviar. Inténtalo otra vez.");
+      }
+    });
+  </script>
+</body>
+</html>
 
