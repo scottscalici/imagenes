@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Imagen</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+    <header class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-3">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h1 id="titulo" class="text-2xl font-bold text-indigo-700">Cargando…</h1>
+          <p class="text-sm text-slate-600">Práctica de descripción y conversación</p>
+        </div>
+
+        <!-- Back-to-hub button -->
+        <a href="hub.html"
+           class="shrink-0 inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-xl hover:opacity-90">
+          🎲 Otra imagen
+        </a>
+      </div>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-4">
+      <img id="img" alt="Imagen" class="w-full rounded-xl border border-slate-200" />
+    </section>
+
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-6">
+      <div class="space-y-2">
+        <h2 class="text-lg font-semibold text-slate-800">Preguntas</h2>
+        <ol id="texto" class="list-decimal pl-6 space-y-2 text-slate-700"></ol>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-slate-800">Temas y sugerencias léxicas</h2>
+        <div id="lexico" class="space-y-4"></div>
+      </div>
+
+      <div class="space-y-2">
+        <h2 class="text-lg font-semibold text-slate-800">Otros temas</h2>
+        <ul id="otros" class="list-disc pl-6 space-y-1 text-slate-700"></ul>
+      </div>
+
+      <!-- Optional placeholders (won't show if empty) -->
+      <div id="extras" class="space-y-4 hidden">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">Vocabulario por niveles</h2>
+          <div id="vocab" class="space-y-3"></div>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">Preguntas extra por niveles</h2>
+          <div id="preguntasExtra" class="space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center text-xs text-slate-500 pb-6">
+      Consejo: si una imagen no carga, revisa que el enlace sea “raw.githubusercontent.com/.../main/...”.
+    </footer>
+  </main>
+
+  <script>
+    // Put banco_imagenes.json in the same folder as imagen.html
+    const JSON_URL = "image.json";
+
+    const params = new URLSearchParams(location.search);
+    const id = Number(params.get("id") || 1);
+
+    const elTitulo = document.getElementById("titulo");
+    const elImg = document.getElementById("img");
+    const elTexto = document.getElementById("texto");
+    const elLexico = document.getElementById("lexico");
+    const elOtros = document.getElementById("otros");
+
+    const elExtras = document.getElementById("extras");
+    const elVocab = document.getElementById("vocab");
+    const elPreguntasExtra = document.getElementById("preguntasExtra");
+
+    function renderListItems(ulOrOl, items) {
+      ulOrOl.innerHTML = "";
+      (items || []).forEach(t => {
+        const li = document.createElement("li");
+        li.textContent = t;
+        ulOrOl.appendChild(li);
+      });
+    }
+
+    function renderLexico(container, lexicoObj) {
+      container.innerHTML = "";
+      if (!lexicoObj) return;
+
+      const labelMap = {
+        "varios_tipos_de_familia": "Varios tipos de familia",
+        "los_parientes": "Los parientes",
+        "la_organizacion_de_la_familia": "La organización de la familia"
+      };
+
+      Object.entries(lexicoObj).forEach(([k, arr]) => {
+        if (!arr || arr.length === 0) return;
+
+        const box = document.createElement("div");
+        box.className = "bg-slate-50 border border-slate-200 rounded-xl p-4";
+
+        const h3 = document.createElement("h3");
+        h3.className = "font-semibold text-slate-800 mb-2";
+        h3.textContent = labelMap[k] || k.replaceAll("_", " ");
+        box.appendChild(h3);
+
+        const ul = document.createElement("ul");
+        ul.className = "list-disc pl-6 space-y-1 text-slate-700";
+        arr.forEach(t => {
+          const li = document.createElement("li");
+          li.textContent = t;
+          ul.appendChild(li);
+        });
+        box.appendChild(ul);
+
+        container.appendChild(box);
+      });
+    }
+
+    function renderTieredBlocks(container, obj) {
+      container.innerHTML = "";
+      if (!obj) return 0;
+
+      let countShown = 0;
+      Object.entries(obj).forEach(([nivel, arr]) => {
+        if (!arr || arr.length === 0) return;
+
+        countShown++;
+
+        const box = document.createElement("div");
+        box.className = "bg-slate-50 border border-slate-200 rounded-xl p-4";
+
+        const h3 = document.createElement("h3");
+        h3.className = "font-semibold text-slate-800 mb-2";
+        h3.textContent = nivel.replace("_", " ").toUpperCase();
+        box.appendChild(h3);
+
+        const ul = document.createElement("ul");
+        ul.className = "list-disc pl-6 space-y-1 text-slate-700";
+        arr.forEach(t => {
+          const li = document.createElement("li");
+          li.textContent = t;
+          ul.appendChild(li);
+        });
+        box.appendChild(ul);
+
+        container.appendChild(box);
+      });
+
+      return countShown;
+    }
+
+    async function main() {
+      const res = await fetch(JSON_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error("No se pudo cargar el JSON.");
+
+      const items = await res.json();
+      const item = items.find(x => Number(x.id) === id) || items[0];
+      if (!item) throw new Error("JSON vacío.");
+
+      document.title = item.titulo || `Imagen ${id}`;
+      elTitulo.textContent = item.titulo || `Imagen ${id}`;
+      elImg.src = item.img;
+
+      renderListItems(elTexto, item.texto);
+      renderLexico(elLexico, item.temas_y_sugerencias_lexicas);
+      renderListItems(elOtros, item.otros_temas);
+
+      const shownVocab = renderTieredBlocks(elVocab, item.vocab_niveles);
+      const shownQ = renderTieredBlocks(elPreguntasExtra, item.preguntas_niveles);
+
+      if (shownVocab + shownQ > 0) elExtras.classList.remove("hidden");
+    }
+
+    main().catch(err => {
+      elTitulo.textContent = "Error";
+      elTexto.innerHTML = `<li>${err.message}</li>`;
+    });
+  </script>
+</body>
+</html>
