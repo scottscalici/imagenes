@@ -90,38 +90,49 @@
     }
 
     function renderLexico(container, lexicoObj) {
-      container.innerHTML = "";
-      if (!lexicoObj) return;
+  container.innerHTML = "";
+  if (!lexicoObj) return;
 
-      const labelMap = {
-        "varios_tipos_de_familia": "Varios tipos de familia",
-        "los_parientes": "Los parientes",
-        "la_organizacion_de_la_familia": "La organización de la familia"
-      };
+  Object.entries(lexicoObj).forEach(([k, v]) => {
+    // NEW format: v = { titulo: "...", items: [...] }
+    // OLD format fallback: v = ["...", "..."]
+    let titulo = "";
+    let items = [];
 
-      Object.entries(lexicoObj).forEach(([k, arr]) => {
-        if (!arr || arr.length === 0) return;
-
-        const box = document.createElement("div");
-        box.className = "bg-slate-50 border border-slate-200 rounded-xl p-4";
-
-        const h3 = document.createElement("h3");
-        h3.className = "font-semibold text-slate-800 mb-2";
-        h3.textContent = labelMap[k] || k.replaceAll("_", " ");
-        box.appendChild(h3);
-
-        const ul = document.createElement("ul");
-        ul.className = "list-disc pl-6 space-y-1 text-slate-700";
-        arr.forEach(t => {
-          const li = document.createElement("li");
-          li.textContent = t;
-          ul.appendChild(li);
-        });
-        box.appendChild(ul);
-
-        container.appendChild(box);
-      });
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      titulo = (v.titulo || "").trim();
+      items = Array.isArray(v.items) ? v.items : [];
+    } else if (Array.isArray(v)) {
+      // Backward-compatible: if someone left an old array in place
+      titulo = k.replaceAll("_", " ");
+      items = v;
+    } else {
+      return;
     }
+
+    if (!items || items.length === 0) return;
+
+    const box = document.createElement("div");
+    box.className = "bg-slate-50 border border-slate-200 rounded-xl p-4";
+
+    const h3 = document.createElement("h3");
+    h3.className = "font-semibold text-slate-800 mb-2";
+    h3.textContent = titulo || k.replaceAll("_", " ");
+    box.appendChild(h3);
+
+    const ul = document.createElement("ul");
+    ul.className = "list-disc pl-6 space-y-1 text-slate-700";
+    items.forEach(t => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+
+    container.appendChild(box);
+  });
+}
+
 
     function renderTieredBlocks(container, obj) {
       container.innerHTML = "";
