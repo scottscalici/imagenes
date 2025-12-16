@@ -1,294 +1,505 @@
 [
-{
-  "id": 1,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/1.png",
-  "titulo": "La familia",
-  "texto": [
-    "Existen varios tipos de familia: ¿cómo es tu familia?",
-    "¿Quiénes son los componentes de tu familia? ¿Qué otros parientes tienes?",
-    "¿Cómo se organiza tu familia durante la vida cotidiana?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Varios tipos de familia: familia nuclear, familia extensa, familia adoptiva, familia numerosa, familia multiétnica…"
-    ],
-    "bloque_2": [
-      "Los parientes: los padres, los hermanos y las hermanas, los tíos y las tías, los primos y las primas, los abuelos y las abuelas, los nietos y las nietas, los sobrinos y las sobrinas…"
-    ],
-    "bloque_3": [
-      "La organización de la familia: las labores domésticas, el trabajo de los padres, el estudio y el tiempo libre de los hijos e hijas, la compra, la presencia o ausencia de abuelos y abuelas…"
-    ]
-  },
-  "otros_temas": [
-    "La convivencia",
-    "Las familias multiétnicas"
-  ],
-  "tags": ["identidades", "familia"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
   {
-  "id": 2,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/2.png",
-  "titulo": "Los hermanos y las hermanas",
-  "texto": [
-    "¿Eres hijo único/hija única o tienes hermanos y hermanas?",
-    "¿Te gusta este tipo de familia? ¿Por qué?",
-    "¿Qué te gusta / te gustaría compartir con un hermano o una hermana?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Las ventajas y desventajas de ser hijo único o hija única, o de tener hermanos y hermanas: la relación con los padres, el espacio disponible, los juegos y las actividades en casa y fuera de casa, la soledad y la compañía, los celos…"
+    "id": 1,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/1.png",
+    "titulo": "La familia",
+    "texto": [
+      "Existen varios tipos de familia: ¿cómo es tu familia?",
+      "¿Quiénes son los componentes de tu familia? ¿Qué otros parientes tienes?",
+      "¿Cómo se organiza tu familia durante la vida cotidiana?"
     ],
-    "bloque_2": [
-      "Compartir: el espacio en común, las labores domésticas, una relación especial, las experiencias familiares, los problemas y las conquistas mientras se crece y se madura…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Varios tipos de familia",
+        "items": [
+          "familia nuclear",
+          "familia extensa",
+          "familia adoptiva",
+          "familia numerosa",
+          "familia multiétnica"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Los parientes",
+        "items": [
+          "los padres",
+          "los hermanos y las hermanas",
+          "los tíos y las tías",
+          "los primos y las primas",
+          "los abuelos y las abuelas",
+          "los nietos y las nietas",
+          "los sobrinos y las sobrinas"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "La organización de la familia",
+        "items": [
+          "las labores domésticas",
+          "el trabajo de los padres",
+          "el estudio y el tiempo libre de los hijos e hijas",
+          "la compra",
+          "la presencia o ausencia de abuelos y abuelas"
+        ]
+      }
+    },
+    "otros_temas": [
+      "La convivencia",
+      "Las familias multiétnicas"
     ],
-    "bloque_3": [
-      "El papel del hermano o la hermana mayor y del hermano o la hermana menor: la responsabilidad, los consejos, la experiencia, la mediación con los padres, los contactos con amigos y amigas…"
-    ]
+    "tags": ["identidades", "familia"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Las familias numerosas",
-    "Los privilegios y los problemas del hijo único o la hija única"
-  ],
-  "tags": ["identidades", "familia"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 3,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/3.png",
-  "titulo": "Los abuelos",
-  "texto": [
-    "¿Tienes abuelos? ¿Los ves todos los días o solo de vez en cuando?",
-    "¿Viven cerca o lejos? ¿Te gustaría vivir con ellos?",
-    "¿Qué papel tienen o han tenido en tu vida?",
-    "¿Son más severos o más tolerantes que tus padres?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Los momentos de las visitas: las fiestas de verano, las fiestas tradicionales, las vacaciones…"
+  {
+    "id": 2,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/2.png",
+    "titulo": "Los hermanos y las hermanas",
+    "texto": [
+      "¿Eres hijo único/hija única o tienes hermanos y hermanas?",
+      "¿Te gusta este tipo de familia? ¿Por qué?",
+      "¿Qué te gusta / te gustaría compartir con un hermano o una hermana?"
     ],
-    "bloque_2": [
-      "Los abuelos: convivir con ellos, presencia o ausencia en nuestra vida, el cariño, los consejos, su papel como personas especiales para la familia…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Las ventajas y desventajas de ser hijo único o hija única, o de tener hermanos y hermanas",
+        "items": [
+          "la relación con los padres, el espacio disponible, los juegos y las actividades en casa y fuera de casa, la soledad y la compañía, los celos…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Compartir",
+        "items": [
+          "el espacio en común, las labores domésticas, una relación especial, las experiencias familiares, los problemas y las conquistas mientras se crece y se madura…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "El papel del hermano o la hermana mayor y del hermano o la hermana menor",
+        "items": [
+          "la responsabilidad, los consejos, la experiencia, la mediación con los padres, los contactos con amigos y amigas…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Las familias numerosas",
+      "Los privilegios y los problemas del hijo único o la hija única"
     ],
-    "bloque_3": [
-      "El papel de los abuelos: ayuda diaria, tiempo de dedicación, el cariño, los cuidados, la enseñanza para los nietos…",
-      "Los regalos: las diferencias entre abuelos y padres, acuerdos sobre cómo comportarse en las vacaciones y los juegos, al hacer los deberes, para usar el móvil, la televisión o usar las redes sociales…"
-    ]
+    "tags": ["identidades", "familia"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Qué nos enseñan los abuelos",
-    "La pérdida de un ser querido"
-  ],
-  "tags": ["identidades", "familia"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 4,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/4.png",
-  "titulo": "Animales en casa",
-  "texto": [
-    "¿Tienes alguna mascota? ¿Cuál?",
-    "¿Te gustaría tener un animal exótico? ¿Por qué?",
-    "¿Cómo organizas/organizarías el tiempo y los espacios que hay que dedicar a un animal doméstico?",
-    "¿Tienes algún derecho? ¿A quién se lo pides? ¿A quién se renuncia? ¿Qué responsabilidades asumes?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Los animales domésticos: las mascotas: el perro, el gato, el hámster, el conejo, el pez…"
+  {
+    "id": 3,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/3.png",
+    "titulo": "Los abuelos",
+    "texto": [
+      "¿Tienes abuelos? ¿Los ves todos los días o solo de vez en cuando?",
+      "¿Viven cerca o lejos? ¿Te gustaría vivir con ellos?",
+      "¿Qué papel tienen o han tenido en tu vida?",
+      "¿Son más severos o más tolerantes que tus padres?"
     ],
-    "bloque_2": [
-      "Los animales exóticos: el loro, la serpiente, la iguana, la tortuga…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Los momentos de las visitas",
+        "items": [
+          "las fiestas de verano",
+          "las fiestas tradicionales",
+          "las vacaciones…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Los abuelos",
+        "items": [
+          "convivir con ellos",
+          "presencia o ausencia en nuestra vida",
+          "el cariño",
+          "los consejos",
+          "su papel como personas especiales para la familia…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "El papel de los abuelos / Los regalos",
+        "items": [
+          "ayuda diaria",
+          "tiempo de dedicación",
+          "el cariño",
+          "los cuidados",
+          "la enseñanza para los nietos…",
+          "las diferencias entre abuelos y padres, acuerdos sobre cómo comportarse en las vacaciones y los juegos, al hacer los deberes, para usar el móvil, la televisión o usar las redes sociales…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Qué nos enseñan los abuelos",
+      "La pérdida de un ser querido"
     ],
-    "bloque_3": [
-      "Responsabilidades: los horarios de las comidas, salir, la limpieza, las visitas del veterinario, los juegos…",
-      "Normas para adoptar un animal: buscar información, centros de acogida para animales, consejos del veterinario…"
-    ]
+    "tags": ["identidades", "familia"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "La adopción y el abandono de animales",
-    "La Pet Therapy, zooterapia o terapia asistida por animales (TAA)"
-  ],
-  "tags": ["identidades", "convivencia"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 5,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/5.png",
-  "titulo": "La amistad",
-  "texto": [
-    "¿Tienes algún amigo o amiga especial o prefieres tener muchos amigos y amigas?",
-    "¿Cómo es tu amigo/amiga ideal?",
-    "¿Qué momentos y qué sentimientos compartes con tus amigos y amigas?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Formas de ser amigos: el compañero o la compañera del colegio/instituto o del deporte que practicas, el amigo o amiga de la infancia…"
+  {
+    "id": 4,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/4.png",
+    "titulo": "Animales en casa",
+    "texto": [
+      "¿Tienes alguna mascota? ¿Cuál?",
+      "¿Te gustaría tener un animal exótico? ¿Por qué?",
+      "¿Cómo organizas/organizarías el tiempo y los espacios que hay que dedicar a un animal doméstico?",
+      "¿Tienes algún derecho? ¿A quién se lo pides? ¿A quién se renuncia? ¿Qué responsabilidades asumes?"
     ],
-    "bloque_2": [
-      "El amigo o la amiga ideal: disponible, fiel, sincero/a, cómplice, presente, solidario/a…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Los animales domésticos",
+        "items": [
+          "las mascotas",
+          "el perro",
+          "el gato",
+          "el hámster",
+          "el conejo",
+          "el pez…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Los animales exóticos",
+        "items": [
+          "el loro",
+          "la serpiente",
+          "la iguana",
+          "la tortuga…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "Responsabilidades / Normas para adoptar un animal",
+        "items": [
+          "los horarios de las comidas",
+          "salir",
+          "la limpieza",
+          "las visitas del veterinario",
+          "los juegos…",
+          "buscar información",
+          "centros de acogida para animales",
+          "consejos del veterinario…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "La adopción y el abandono de animales",
+      "La Pet Therapy, zooterapia o terapia asistida por animales (TAA)"
     ],
-    "bloque_3": [
-      "Qué compartes los amigos/as: juegos, aficiones, el estudio y el tiempo libre, las emociones y los sentimientos, los problemas y las incertidumbres de la vida…"
-    ]
+    "tags": ["identidades", "convivencia"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Los amistades “en directo” y las virtuales",
-    "La soledad y la búsqueda de amistad"
-  ],
-  "tags": ["identidades", "relaciones"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 6,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/6.png",
-  "titulo": "Enamorarse",
-  "texto": [
-    "¿Puede surgir el amor a partir de una amistad? ¿Has tenido alguna experiencia directa o indirecta?",
-    "¿Qué pasa cuando nace el amor entre dos amigos de la misma pandilla?",
-    "Y, cuando el amor termina, ¿qué sucede con los sentimientos y con la relación?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "De la amistad al amor: las miradas, la atracción física…"
+  {
+    "id": 5,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/5.png",
+    "titulo": "La amistad",
+    "texto": [
+      "¿Tienes algún amigo o amiga especial o prefieres tener muchos amigos y amigas?",
+      "¿Cómo es tu amigo/amiga ideal?",
+      "¿Qué momentos y qué sentimientos compartes con tus amigos y amigas?"
     ],
-    "bloque_2": [
-      "El amor y la dinámica de grupo: la relación entre dos personas, la vida dentro del grupo, el momento de salir a la luz, la reacción del grupo…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Formas de ser amigos",
+        "items": [
+          "el compañero o la compañera del colegio/instituto o del deporte que practicas",
+          "el amigo o amiga de la infancia…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "El amigo o la amiga ideal",
+        "items": [
+          "disponible",
+          "fiel",
+          "sincero/a",
+          "cómplice",
+          "presente",
+          "solidario/a…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "Qué compartes con los amigos/as",
+        "items": [
+          "juegos",
+          "aficiones",
+          "el estudio y el tiempo libre",
+          "las emociones y los sentimientos",
+          "los problemas",
+          "las incertidumbres de la vida…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Los amistades “en directo” y las virtuales",
+      "La soledad y la búsqueda de amistad"
     ],
-    "bloque_3": [
-      "Los sentimientos cuando termina una historia de amor: los celos, la rabia, la tristeza, sentirse abandonado/a, el apoyo de los amigos…"
-    ]
+    "tags": ["identidades", "relaciones"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Comprender y hablar de los sentimientos",
-    "Amores no correspondidos"
-  ],
-  "tags": ["identidades", "relaciones", "sentimientos"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 7,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/7.png",
-  "titulo": "Tu estilo",
-  "texto": [
-    "¿Cómo te vistes? ¿Cómo definirías la ropa que llevas?",
-    "¿Cuánto tardas en prepararte antes de salir de casa?",
-    "¿Te gusta ir a la moda o prefieres ser fiel a tu propio estilo?",
-    "¿Te gusta ir de compras? ¿Cuándo? ¿Dónde? ¿Con quién…?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Los estilos de la ropa: elegante o deportivo, clásico o moderno, original, transgresivo, minimalista, divertido…"
+  {
+    "id": 6,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/6.png",
+    "titulo": "Enamorarse",
+    "texto": [
+      "¿Puede surgir el amor a partir de una amistad? ¿Has tenido alguna experiencia directa o indirecta?",
+      "¿Qué pasa cuando nace el amor entre dos amigos de la misma pandilla?",
+      "Y, cuando el amor termina, ¿qué sucede con los sentimientos y con la relación?"
     ],
-    "bloque_2": [
-      "Cómo nos vestimos: elegir las prendas y los accesorios, los tejidos de cada temporada (lana, algodón, materiales sintéticos), el calzado de moda (zapatillas, botas, sandalias…)"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "De la amistad al amor",
+        "items": [
+          "las miradas",
+          "la atracción física…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "El amor y la dinámica de grupo",
+        "items": [
+          "la relación entre dos personas",
+          "la vida dentro del grupo",
+          "el momento de salir a la luz",
+          "la reacción del grupo…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "Los sentimientos cuando termina una historia de amor",
+        "items": [
+          "los celos",
+          "la rabia",
+          "la tristeza",
+          "sentirse abandonado/a",
+          "el apoyo de los amigos…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Comprender y hablar de los sentimientos",
+      "Amores no correspondidos"
     ],
-    "bloque_3": [
-      "La moda: marcar tendencias, nuevos materiales, los diseñadores, las propuestas alternativas…",
-      "La compra: ir de tiendas, elegir una prenda, dejarse llevar, dinero disponible, comparar precios, rebajas, reservar y comprar en línea (online), formas de pago (en efectivo, con tarjeta, pago electrónico)…"
-    ]
+    "tags": ["identidades", "relaciones", "sentimientos"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "La moda sostenible",
-    "Reciclar, reutilizar y regalar"
-  ],
-  "tags": ["identidades", "estilo", "consumo"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 8,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/8.png",
-  "titulo": "Tu ciudad ideal",
-  "texto": [
-    "¿Dónde vives? ¿En una metrópolis, una ciudad o un pueblo?",
-    "¿Te gusta el lugar en el que vives o preferirías vivir en otro sitio? ¿Cuál y por qué?",
-    "¿Cómo sería tu ciudad ideal?",
-    "¿Has vivido la experiencia de mudarte a otro lugar? ¿Cómo fue/ha sido?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Vivir en una ciudad o en un pueblo: diferencias en la calidad de vida, servicios, oportunidades…"
+  {
+    "id": 7,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/7.png",
+    "titulo": "Tu estilo",
+    "texto": [
+      "¿Cómo te vistes? ¿Cómo definirías la ropa que llevas?",
+      "¿Cuánto tardas en prepararte antes de salir de casa?",
+      "¿Te gusta ir a la moda o prefieres ser fiel a tu propio estilo?",
+      "¿Te gusta ir de compras? ¿Cuándo? ¿Dónde? ¿Con quién…?"
     ],
-    "bloque_2": [
-      "Las ganas de mudarse: los problemas, las expectativas, las relaciones con los amigos, encontrar nuevas amistades…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Los estilos de la ropa",
+        "items": [
+          "elegante o deportivo",
+          "clásico o moderno",
+          "original",
+          "transgresivo",
+          "minimalista",
+          "divertido…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Cómo nos vestimos",
+        "items": [
+          "elegir las prendas y los accesorios",
+          "los tejidos de cada temporada (lana, algodón, materiales sintéticos)",
+          "el calzado de moda (zapatillas, botas, sandalias…)"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "La moda / La compra",
+        "items": [
+          "marcar tendencias",
+          "nuevos materiales",
+          "los diseñadores",
+          "las propuestas alternativas…",
+          "ir de tiendas",
+          "elegir una prenda",
+          "dejarse llevar",
+          "dinero disponible",
+          "comparar precios",
+          "rebajas",
+          "reservar y comprar en línea (online)",
+          "formas de pago (en efectivo, con tarjeta, pago electrónico)…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "La moda sostenible",
+      "Reciclar, reutilizar y regalar"
     ],
-    "bloque_3": [
-      "La ciudad ideal: los servicios, la escuela/el instituto, los lugares para el tiempo libre, el deporte y la cultura, las costumbres del lugar…",
-      "Vivir un cambio de residencia: la mudanza, el cambio de barrio, escuela y trabajo, las nuevas amistades…"
-    ]
+    "tags": ["identidades", "estilo", "consumo"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Ventajas y desventajas de vivir en una gran metrópolis o en una pequeña ciudad",
-    "La contaminación y la salud"
-  ],
-  "tags": ["organizacion_social", "ciudad", "calidad_de_vida"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 9,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/9.png",
-  "titulo": "¿Vivir en la ciudad o en el campo?",
-  "texto": [
-    "¿Vives en una ciudad o en el campo?",
-    "¿Cuáles son las ventajas y las desventajas de vivir en una ciudad o en un pueblo pequeño?",
-    "¿Qué consejos darías a una persona que quiera dejar la ciudad para irse al campo? ¿Y a quien quiere dejar el campo para irse a la ciudad?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "En la ciudad: la velocidad, los lugares de encuentro, los servicios públicos, ver gente, viajar en medios de transporte público, la contaminación, el ruido, el tráfico…"
+  {
+    "id": 8,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/8.png",
+    "titulo": "Tu ciudad ideal",
+    "texto": [
+      "¿Dónde vives? ¿En una metrópolis, una ciudad o un pueblo?",
+      "¿Te gusta el lugar en el que vives o preferirías vivir en otro sitio? ¿Cuál y por qué?",
+      "¿Cómo sería tu ciudad ideal?",
+      "¿Has vivido la experiencia de mudarte a otro lugar? ¿Cómo fue/ha sido?"
     ],
-    "bloque_2": [
-      "En el campo: la calma, los espacios abiertos, la naturaleza, el aire limpio, el silencio, los sonidos de la naturaleza, el trabajo agrícola/ganadero…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Vivir en una ciudad o en un pueblo",
+        "items": [
+          "diferencias en la calidad de vida",
+          "servicios",
+          "oportunidades…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "Las ganas de mudarse",
+        "items": [
+          "los problemas",
+          "las expectativas",
+          "las relaciones con los amigos",
+          "encontrar nuevas amistades…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "La ciudad ideal / Vivir un cambio de residencia",
+        "items": [
+          "los servicios",
+          "la escuela/el instituto",
+          "los lugares para el tiempo libre",
+          "el deporte y la cultura",
+          "las costumbres del lugar…",
+          "la mudanza",
+          "el cambio de barrio",
+          "escuela y trabajo",
+          "las nuevas amistades…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Ventajas y desventajas de vivir en una gran metrópolis o en una pequeña ciudad",
+      "La contaminación y la salud"
     ],
-    "bloque_3": [
-      "Consejos para cambiar de vida: buscar información, red de contactos, elegir la vivienda adecuada, organizar la mudanza, visitar el lugar o barrio…"
-    ]
+    "tags": ["organizacion_social", "ciudad", "calidad_de_vida"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "Las oportunidades de una ciudad organizada",
-    "El bienestar psicológico y físico; el contacto con la naturaleza"
-  ],
-  "tags": ["organizacion_social", "ciudad_campo", "calidad_de_vida"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-},
-{
-  "id": 10,
-  "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/10.png",
-  "titulo": "El transporte sostenible",
-  "texto": [
-    "¿Sueles moverte en bici, monopatín o skate para sustituir otros medios de transporte? ¿Por qué?",
-    "¿Sabes dónde están los carriles bici de tu ciudad?",
-    "¿Conoces las reglas de seguridad vial?",
-    "¿Sería muy útil recibir también en la escuela información útil para el uso correcto de los medios ecosostenibles? ¿Por qué? ¿Cómo podría hacerse?"
-  ],
-  "temas_y_sugerencias_lexicas": {
-    "bloque_1": [
-      "Los medios de transporte “ecológicos”: una moda juvenil, experiencia familiar y personal, la práctica cotidiana, el placer, la diversión, el deporte…"
+  {
+    "id": 9,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/9.png",
+    "titulo": "¿Vivir en la ciudad o en el campo?",
+    "texto": [
+      "¿Vives en una ciudad o en el campo?",
+      "¿Cuáles son las ventajas y las desventajas de vivir en una ciudad o en un pueblo pequeño?",
+      "¿Qué consejos darías a una persona que quiera dejar la ciudad para irse al campo? ¿Y a quien quiere dejar el campo para irse a la ciudad?"
     ],
-    "bloque_2": [
-      "El transporte urbano: el coche, la moto, el autobús, el metro, el tranvía, la contaminación atmosférica y sonora, el tráfico, las aglomeraciones, las colas, los horarios…"
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "En la ciudad",
+        "items": [
+          "la velocidad",
+          "los lugares de encuentro",
+          "los servicios públicos",
+          "ver gente",
+          "viajar en medios de transporte público",
+          "la contaminación",
+          "el ruido",
+          "el tráfico…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "En el campo",
+        "items": [
+          "la calma",
+          "los espacios abiertos",
+          "la naturaleza",
+          "el aire limpio",
+          "el silencio",
+          "los sonidos de la naturaleza",
+          "el trabajo agrícola/ganadero…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "Consejos para cambiar de vida",
+        "items": [
+          "buscar información",
+          "red de contactos",
+          "elegir la vivienda adecuada",
+          "organizar la mudanza",
+          "visitar el lugar o barrio…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "Las oportunidades de una ciudad organizada",
+      "El bienestar psicológico y físico; el contacto con la naturaleza"
     ],
-    "bloque_3": [
-      "Las normas de seguridad vial: el código de circulación, la prevención, la protección…",
-      "La educación vial en la escuela: las señales de tráfico, el comportamiento responsable, programas especiales para niños, las normas para adolescentes, el carnet para ciclomotores…"
-    ]
+    "tags": ["organizacion_social", "ciudad_campo", "calidad_de_vida"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
   },
-  "otros_temas": [
-    "La contaminación atmosférica en la ciudad",
-    "El tráfico y la seguridad vial"
-  ],
-  "tags": ["como_compartimos_el_planeta", "transporte", "sostenibilidad"],
-  "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
-  "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
-}
-
+  {
+    "id": 10,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/images/10.png",
+    "titulo": "El transporte sostenible",
+    "texto": [
+      "¿Sueles moverte en bici, monopatín o skate para sustituir otros medios de transporte? ¿Por qué?",
+      "¿Sabes dónde están los carriles bici de tu ciudad?",
+      "¿Conoces las reglas de seguridad vial?",
+      "¿Sería muy útil recibir también en la escuela información útil para el uso correcto de los medios ecosostenibles? ¿Por qué? ¿Cómo podría hacerse?"
+    ],
+    "temas_y_sugerencias_lexicas": {
+      "bloque_1": {
+        "titulo": "Los medios de transporte “ecológicos”",
+        "items": [
+          "una moda juvenil",
+          "experiencia familiar y personal",
+          "la práctica cotidiana",
+          "el placer",
+          "la diversión",
+          "el deporte…"
+        ]
+      },
+      "bloque_2": {
+        "titulo": "El transporte urbano",
+        "items": [
+          "el coche",
+          "la moto",
+          "el autobús",
+          "el metro",
+          "el tranvía",
+          "la contaminación atmosférica y sonora",
+          "el tráfico",
+          "las aglomeraciones",
+          "las colas",
+          "los horarios…"
+        ]
+      },
+      "bloque_3": {
+        "titulo": "Las normas de seguridad vial / La educación vial en la escuela",
+        "items": [
+          "el código de circulación",
+          "la prevención",
+          "la protección…",
+          "las señales de tráfico",
+          "el comportamiento responsable",
+          "programas especiales para niños",
+          "las normas para adolescentes",
+          "el carnet para ciclomotores…"
+        ]
+      }
+    },
+    "otros_temas": [
+      "La contaminación atmosférica en la ciudad",
+      "El tráfico y la seguridad vial"
+    ],
+    "tags": ["como_compartimos_el_planeta", "transporte", "sostenibilidad"],
+    "vocab_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] },
+    "preguntas_niveles": { "nivel_1": [], "nivel_2": [], "nivel_3": [] }
+  }
 ]
-
