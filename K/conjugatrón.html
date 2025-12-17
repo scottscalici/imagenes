@@ -47,7 +47,7 @@ let totalIntentos = 0;
 let respuestasCorrectas = 0;
 
   Promise.all([
-    fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/k.json').then(res => res.json()),
+    fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/K/k.json').then(res => res.json()),
     fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/sujetos.json').then(res => res.json())
   ])
   .then(([verbosData, sujetosData]) => {
