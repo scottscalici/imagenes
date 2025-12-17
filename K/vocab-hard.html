@@ -77,7 +77,7 @@
 
   <script>
     // ---------- Config ----------
-    const DEFAULT_BLOB = 'https://github.com/scottscalici/imagenes/blob/main/vocabulario/desc2lec8.json';
+    const DEFAULT_BLOB = 'https://github.com/scottscalici/imagenes/blob/main/vocabulario/unidad2parte1.json';
 
     // ---------- Helpers ----------
     const $ = sel => document.querySelector(sel);
@@ -313,17 +313,31 @@
     }
 
     // ---------- Flow ----------
-    async function init(){
-      // Load default JSON automatically and start
-      const url = toRaw(DEFAULT_BLOB);
-      const res = await fetch(url);
-      allItems = await res.json(); // include ALL entries (eval true/false)
+  async function init(){
+  const url = toRaw(DEFAULT_BLOB);
+  const res = await fetch(url);
+  const raw = await res.json();
 
-      renderLessonCheckboxes(allItems);
-      currentMode();
-      buildPool();
-      nextCard();
-    }
+  // ✅ ADAPTER: allow either format
+  allItems = raw.map(d => {
+    // If it's already your Descubre-style JSON, keep it
+    if (d.palabra && d.definicion) return d;
+
+    // Otherwise convert Scott-style (unit/es/en/answers_es) -> (leccion/palabra/definicion)
+    return {
+      leccion: d.unit || d.leccion || '',
+      palabra: d.es || d.palabra || '',
+      definicion: d.en || d.definicion || '',
+      // keep answers list if present (optional use later)
+      answers_es: d.answers_es || []
+    };
+  });
+
+  renderLessonCheckboxes(allItems);
+  currentMode();
+  buildPool();
+  nextCard();
+}
 
     // Events
     $$('input[name="mode"]').forEach(r =>
