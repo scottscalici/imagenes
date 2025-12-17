@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conjugatrón 3000</title>
 
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f9f9f9;
+      padding: 2rem;
+    }
+    .output {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    input[type="text"] {
+      font-size: 1rem;
+      padding: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤖 Conjugatrón 3000</h1>
+
+<div style="margin-bottom: 1rem;">
+  <p id="score-display" style="font-size: 1.1rem;">Puntuación: 0 aciertos de 0 (0%)</p>
+</div>
+<button onclick="mostrarPregunta()">🎲 Nueva Pregunta</button>
+<div class="output" id="resultado"></div>
+
+ <script>
+  let verbos = [];
+  let sujetos = [];
+  let esperandoRespuesta = false;
+  let currentCorrectAnswer = "";
+let totalIntentos = 0;
+let respuestasCorrectas = 0;
+
+  Promise.all([
+    fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/K/k.json').then(res => res.json()),
+    fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/sujetos.json').then(res => res.json())
+  ])
+  .then(([verbosData, sujetosData]) => {
+    verbos = verbosData;
+    sujetos = sujetosData;
+    mostrarPregunta();
+  })
+  .catch(err => {
+    document.getElementById("resultado").innerHTML = "❌ Error al cargar los archivos JSON.";
+    console.error(err);
+  });
+
+  function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  function generarPregunta() {
+  const verbo = randomItem(verbos);
+  const grupoSujetos = sujetos.find(grupo => grupo.grupo === verbo.sujeto);
+  if (!grupoSujetos) return null;
+
+  const sujeto = randomItem(grupoSujetos.sujetos);
+  const fraseConHueco = verbo.contexto.replace("___", `${sujeto.es} _____`);
+  const traduccion = `${sujeto.en} ${verbo.traducción}.`;
+
+  return {
+    spanish: fraseConHueco,
+    correct: verbo.forma,
+    english: traduccion,
+    pronombre: grupoSujetos.pronombre,
+    infinitivo: verbo.infinitivo,
+    tiempo: verbo.tiempo
+  };
+}
+function mostrarClave() {
+  const claveBox = document.getElementById("clave");
+  if (claveBox) claveBox.style.display = "block";
+}
+
+
+function actualizarPuntuacion() {
+  const porcentaje = totalIntentos === 0 ? 0 : Math.round((respuestasCorrectas / totalIntentos) * 100);
+  const scoreText = `Puntuación: ${respuestasCorrectas} aciertos de ${totalIntentos} (${porcentaje}%)`;
+  document.getElementById("score-display").textContent = scoreText;
+}
+
+
+  function mostrarPregunta() {
+  const pregunta = generarPregunta();
+  if (!pregunta) return;
+
+  currentCorrectAnswer = pregunta.correct;
+  esperandoRespuesta = true;
+
+  const output = document.getElementById("resultado");
+  output.innerHTML = `
+    <p><strong>Completa la frase:</strong></p>
+    <p>${pregunta.spanish}</p>
+    <input type="text" id="respuestaInput" placeholder="Escribe la forma correcta">
+    <button onclick="verificarRespuesta()">Verificar</button>
+    <button onclick="mostrarClave()" style="margin-left: 1rem;">🧩 Ver pista</button>
+    <p><em>Traducción:</em> ${pregunta.english}</p>
+    <div id="clave" style="display:none; margin-top:1rem; background:#eef; padding:0.5rem; border-left:4px solid #339;">
+      🔑 <strong>Clave:</strong> <span id="clave-content"></span>
+    </div>
+    <div id="feedback"></div>
+  `;
+
+  // 🟢 Now properly inject the clue content after HTML is built
+  document.getElementById("clave-content").textContent =
+    `${pregunta.pronombre}, ${pregunta.infinitivo}, ${pregunta.tiempo}`;
+
+  document.getElementById("respuestaInput").focus();
+}
+
+  function verificarRespuesta() {
+  const entrada = document.getElementById("respuestaInput").value.trim().toLowerCase();
+  const feedback = document.getElementById("feedback");
+
+  totalIntentos++;
+
+  if (entrada === currentCorrectAnswer.toLowerCase()) {
+    respuestasCorrectas++;
+    feedback.innerHTML = "✅ ¡Correcto! Presiona Enter o → para continuar.";
+    feedback.style.color = "green";
+  } else {
+    feedback.innerHTML = `❌ Incorrecto. La respuesta correcta es: <strong>${currentCorrectAnswer}</strong><br>Presiona Enter o → para continuar.`;
+    feedback.style.color = "red";
+  }
+
+  esperandoRespuesta = false;
+  actualizarPuntuacion();
+}
+
+  // Keyboard event listener
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" || event.key === "ArrowRight") {
+      if (esperandoRespuesta) {
+        verificarRespuesta();
+      } else {
+        mostrarPregunta();
+
+
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
