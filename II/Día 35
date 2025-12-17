@@ -3,148 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>plan de clase</title>
+  <title>Plan de clase · Navidad</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* 🎄 Background image */
+    body.bg-navidad {
+      background-image: url("https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/BG-navidad.jpg");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    /* ❄️ Snow layer */
+    #snow-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 50;
+    }
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      user-select: none;
+      will-change: transform, opacity;
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+      0%   { transform: translate3d(0, -10px, 0); opacity: 0.95; }
+      10%  { opacity: 0.95; }
+      100% { transform: translate3d(var(--drift, 40px), 110vh, 0); opacity: 0.15; }
+    }
+
+    /* 🧊 Frosted card helper (optional) */
+    .frost {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+  </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
+
+<body class="font-sans bg-navidad min-h-screen p-6 text-slate-800">
+  <!-- ❄️ Falling snow -->
+  <div id="snow-layer" aria-hidden="true"></div>
+
   <div class="max-w-5xl mx-auto space-y-6">
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>plan de clase</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+    <!--Día-->
+    <header class="shadow rounded-xl overflow-hidden frost border border-white/40">
+      <div class="bg-gradient-to-r from-emerald-600 via-red-600 to-emerald-600 text-white flex justify-between items-center py-6 px-6">
+        <h1 class="text-3xl font-bold drop-shadow">🎄 Día 35</h1>
+        <p class="text-lg italic drop-shadow">17 de diciembre</p>
+      </div>
+    </header>
 
+    <!--Evaluación-->
+    <section class="shadow rounded-xl border-l-4 border-red-600 overflow-hidden frost border border-white/40">
+      <h2 class="text-red-700 font-semibold text-lg px-4 pt-4">🎅 Evaluación</h2>
+      <div class="p-4 text-slate-800">
+        <p>Examen de lección 2</p>
 
-<!--Día-->
-<header class="shadow rounded-xl overflow-hidden">
-  <div class="bg-sky-300 text-white flex justify-between items-center py-6 px-6">
-    <h1 class="text-3xl font-bold drop-shadow">Día 34</h1>
-    <p class="text-lg italic drop-shadow">15 de diciembre</p>
-  </div>
-</header>
+        <p class="font-semibold mt-2">Próximas pruebas</p>
+        <ul class="list-disc ml-6 mt-1">
+          <li>Nada - la próxima clase</li>
+          <li>Vocabulario 3.1 - Día 37</li>
+        </ul>
+      </div>
+    </section>
 
-<!--Aviso o Anuncio-->
-
-
-<!--Evaluación-->
-<section class="bg-white shadow rounded-xl border-l-4 border-green-500 overflow-hidden">
-  <h2 class="text-green-600 font-semibold text-lg px-4 pt-4">Evaluación</h2>
-  <div class="p-4 text-gray-800">
-    <p>Examen de lección 2</p>
-    
-            <p class="font-semibold mt-2">Próximas pruebas</p>
-            <ul class="list-disc ml-6 mt-1"><li>Examen del semestre - la próxima clase</li><li>- Día 36</li></ul>
-          
-  </div>
-</section>
-
-
-<!--Calentamiento-->
-<section class="bg-white shadow rounded-xl border-l-4 border-red-500 overflow-hidden">
-  <h2 class="text-red-600 font-semibold text-lg px-4 pt-4">Calentamiento</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <div>
-      <p class="font-semibold">Schoology:</p>
-      <p>Repaso de vocabulario:</p>
-    </div>
-    <div>
-      <p class="font-semibold">Repaso de vocabulario: 1</p>
-      <button onclick="toggleVocab()" class="text-blue-600 hover:underline mb-2">Expandir/Reducir</button>
-      <div id="vocabBox" class="hidden">
-        <div class="grid grid-cols-3 gap-4">
-          <div class="space-y-1"><p><span class="font-semibold">2.</span> 12</p><p><span class="font-semibold">4.</span> 14</p><p><span class="font-semibold">6.</span> 16</p><p><span class="font-semibold">8.</span> 18</p><p><span class="font-semibold">10.</span> 20</p></div><div class="space-y-1"><p><span class="font-semibold">11.</span> 21</p><p><span class="font-semibold">13.</span> 23</p><p><span class="font-semibold">15.</span> 25</p><p><span class="font-semibold">17.</span> 27</p><p><span class="font-semibold">19.</span> 29</p></div><div class="space-y-1"><p><span class="font-semibold">22.</span> 3</p><p><span class="font-semibold">24.</span> 5</p><p><span class="font-semibold">26.</span> 7</p><p><span class="font-semibold">28.</span> 9</p></div>
+  
+   
+    <!--Conversación-->
+    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/espii/2"
+       class="block rounded-xl shadow border-l-4 border-violet-500 hover:shadow-lg hover:ring-violet-300 hover:ring-2 transition frost border border-white/40">
+      <div class="flex items-center gap-5 p-5">
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/conversacion/tecnolog%C3%ADa%20en%20educaci%C3%B3n.jpg"
+             alt="Presentación 💬"
+             class="max-h-36 w-auto object-cover rounded-md shadow" />
+        <div class="min-w-0">
+          <h3 class="font-semibold text-violet-700 text-lg leading-snug truncate">Presentación 💬</h3>
+          <p class="text-base text-slate-700 mt-0.5 line-clamp-2">Ingenio humano (tecnología 🖥️ en educación 🎓)</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-
-<!--Curiosidad-->
-<section class="bg-white shadow rounded-xl border-l-4 border-indigo-500 overflow-hidden">
-  <h2 class="text-indigo-600 font-semibold text-lg px-4 pt-4">Curiosidad 34</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-    <p class="font-semibold text-lg">Venezuela</p>
-    
-  </div>
-</section>
-
-
-<!--Estructura-->
-<section class="bg-white shadow rounded-xl border-l-4 border-blue-500 overflow-hidden">
-  <h2 class="text-blue-600 font-semibold text-lg px-4 pt-4">Estructura</h2>
-  <div class="p-4 text-gray-800 space-y-4">
-
-    <div>
-      <p class="font-semibold underline">Apuntes</p>
-      <div class="space-y-6">
-        
-      </div>
-    </div>
-  </div>
-</section>
-
-<!--Objetos-->
-
-<!--Cultura-->
-
-<!--Enlace-->
-
-<!--Práctica de verbos-->
-
-<!--Práctica general-->
-
-<!--Video-->
-
-<!--Conversacion-->
-<!--Enlace-->
-<a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/espii/2" class="block bg-white rounded-xl shadow border-l-4 border-violet-400 hover:shadow-lg hover:ring-violet-300 hover:ring-2 transition">
-  <div class="flex items-center gap-5 p-5">
-    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/conversacion/tecnolog%C3%ADa%20en%20educaci%C3%B3n.jpg" alt="Presentación 💬" class="max-h-36 w-auto object-cover rounded-md">
-    <div class="min-w-0">
-      <h3 class="font-semibold text-violet-600 text-lg leading-snug truncate">Presentación 💬</h3>
-      <p class="text-base text-gray-600 mt-0.5 line-clamp-2">Ingenio humano (tecnología 🖥️ en educación 🎓)</p>
-    </div>
-  </div>
-</a>
-
-<!--Señor+-->
-<section class="bg-gradient-to-br from-sky-50 to-blue-100 shadow-lg rounded-2xl border-l-4 border-blue-500 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl">
-  <div class="flex items-center space-x-4 p-6">
-    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" alt="Señor+" class="w-16 h-16 rounded-full shadow-md">
-    <div>
-      <h2 class="text-blue-700 font-bold text-xl tracking-tight">💬 Señor+</h2>
-      <p class="text-gray-600 text-sm italic">Tu asistente de gramática y conversación</p>
-    </div>
-  </div>
-  <div class="bg-white p-6 border-t border-blue-200 text-gray-800 text-center">
-    <p class="mb-4">Practica español con tu coach personal:</p>
-    <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank"
-       class="inline-block px-6 py-2 text-white bg-gradient-to-r from-blue-600 to-sky-500 rounded-full font-semibold shadow hover:from-blue-700 hover:to-sky-600 transition">
-      🚀 Iniciar Chat con Señor+
     </a>
+<!--ESCAPE Room-->
+<section class="shadow rounded-xl border-l-4 border-emerald-700 overflow-hidden frost border border-white/40">
+  <h2 class="text-emerald-800 font-semibold text-lg px-4 pt-4">🧩 ESCAPE Room · Examen del semestre</h2>
+  <div class="p-4 text-slate-800 space-y-3">
+    <p class="font-semibold">Hoy: ¡modo misión! 🎄</p>
+    <p>
+      Vas a avanzar por <span class="font-semibold">niveles</span>. Cada nivel te da una pista para llegar al siguiente.
+      Lee con calma, trabaja con intención y <span class="font-semibold">no te saltes pasos</span>.
+    </p>
+
+    <div class="bg-white/70 rounded-xl p-4 border border-emerald-200">
+      <p class="font-semibold text-emerald-900">🔐 Importante</p>
+      <ul class="list-disc ml-6 mt-2 space-y-1">
+        <li>La contraseña <span class="font-semibold">no</span> aparece “gratis” — tienes que encontrarla con una pista.</li>
+        <li>Si te atoras: vuelve a leer, revisa recursos, y prueba otra estrategia.</li>
+        <li>Objetivo: avanzar con precisión (no con velocidad).</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-slate-700">
+      🎯 Consejo: usa tu “scratch pad” para anotar palabras clave y posibles contraseñas.
+    </p>
   </div>
 </section>
 
+    <!--Señor+-->
+    <section class="shadow-lg rounded-2xl border-l-4 border-emerald-700 overflow-hidden transform transition duration-300 hover:scale-[1.02] hover:shadow-xl frost border border-white/40">
+      <div class="flex items-center space-x-4 p-6">
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/se%C3%B1or%2B.png"
+             alt="Señor+"
+             class="w-16 h-16 rounded-full shadow-md">
+        <div>
+          <h2 class="text-emerald-800 font-bold text-xl tracking-tight">🎄 Señor+</h2>
+          <p class="text-slate-700 text-sm italic">Tu asistente de gramática y conversación</p>
+        </div>
+      </div>
+      <div class="bg-white/70 p-6 border-t border-emerald-200 text-slate-800 text-center">
+        <p class="mb-4">Practica español con tu coach personal:</p>
+        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank"
+           class="inline-block px-6 py-2 text-white bg-gradient-to-r from-emerald-700 to-red-600 rounded-full font-semibold shadow hover:opacity-95 transition">
+          🚀 Iniciar Chat con Señor+
+        </a>
+      </div>
+    </section>
 
-<!--Información adicional-->
-<section class="bg-white shadow rounded-xl border-l-4 border-purple-500 p-4 space-y-1 info-section">
-  <h2 class="text-purple-600 font-semibold text-lg">Información adicional</h2>
-  
-        <h4 class="font-semibold">
-          <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-purple-700 hover:underline">Evaluaciones</a>
-        </h4>
-        <ul class="list-disc list-inside">
-          <li>Examen del semestre - la próxima clase</li><li>- Día 36</li>
-        </ul>
-  
-  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Pretérito)</a></li></ul><h4 class="font-semibold">Pretérito o imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="hover:underline">Marcadores temporales</a></li></ul><h4 class="font-semibold">Imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Imperfecto)</a></li></ul><h4 class="font-semibold">Usos de SE</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="hover:underline">Se con voz pasiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="hover:underline">Se con eventos inesperados</a></li></ul><h4 class="font-semibold">Adverbios</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/adverbios/" target="_blank" class="hover:underline">Adverbios comunes y cómo se forman</a></li></ul><h4 class="font-semibold">Por o para</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/palabras-problemáticas/por-o-para" target="_blank" class="hover:underline">Por o para</a></li></ul><h4 class="font-semibold">Mandatos (familiares)</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul><h4 class="font-semibold">Reflexivos recíprocos</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/" target="_blank" class="hover:underline">Reflexivos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/1" target="_blank" class="hover:underline">Reflexivos recíprocos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/1/pr%C3%A1ctica" target="_blank" class="hover:underline">Práctica de los reflexivos recíprocos</a></li></ul>
+    <!--Información adicional-->
+    <section class="shadow rounded-xl border-l-4 border-red-600 p-4 space-y-1 frost border border-white/40">
+      <h2 class="text-red-700 font-semibold text-lg">🎁 Información adicional</h2>
+
+      <h4 class="font-semibold">
+        <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="text-red-700 hover:underline">Evaluaciones</a>
+      </h4>
+      <ul class="list-disc list-inside">
+        <li>Nada - la próxima clase</li><li>Vocabulario 3.1 - Día 37</li>
+      </ul>
+
+      <!-- (Tu bloque larguísimo de enlaces lo dejo tal cual, solo con color navideño) -->
+      <div class="text-red-800">
+         
+  <h4 class="font-semibold">Pretérito</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/1" target="_blank" class="hover:underline">Regulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/2" target="_blank" class="hover:underline">Los 4 irregulares</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/3" target="_blank" class="hover:underline">-CAR, -GAR, -ZAR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/4" target="_blank" class="hover:underline">Cambios morfológicos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/5" target="_blank" class="hover:underline">Caer, creer, leer, oír</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/6" target="_blank" class="hover:underline">Verbos terminados en -UIR</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/7" target="_blank" class="hover:underline">Cambios radicales (stem changers)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/presente/3/common" target="_blank" class="hover:underline">Common stem changing verbs</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/9" target="_blank" class="hover:underline">Diagrama de flujo</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/10" target="_blank" class="hover:underline">Diagrama de flujo: Página interactiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/8" target="_blank" class="hover:underline">Pruebas (Español 2)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/pret%C3%A9rito/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Pretérito)</a></li></ul><h4 class="font-semibold">Pretérito o imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/2" target="_blank" class="hover:underline">Matices</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/pret%C3%A9rito-e-imperfecto/1" target="_blank" class="hover:underline">Marcadores temporales</a></li></ul><h4 class="font-semibold">Imperfecto</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/1" target="_blank" class="hover:underline">Conjugaciones</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/imperfecto/0" target="_blank" class="hover:underline">Conjugatrón 3000 (Imperfecto)</a></li></ul><h4 class="font-semibold">Usos de SE</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/se/" target="_blank" class="hover:underline">Notas generales</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/1" target="_blank" class="hover:underline">Se con voz pasiva</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/se/2" target="_blank" class="hover:underline">Se con eventos inesperados</a></li></ul><h4 class="font-semibold">Adverbios</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/adverbios/" target="_blank" class="hover:underline">Adverbios comunes y cómo se forman</a></li></ul><h4 class="font-semibold">Por o para</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/palabras-problemáticas/por-o-para" target="_blank" class="hover:underline">Por o para</a></li></ul><h4 class="font-semibold">Posesivos</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/posesivos" target="_blank" class="hover:underline">Posesivos atonos y tónicos</a></li></ul><h4 class="font-semibold">Mandatos (familiares)</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/1" target="_blank" class="hover:underline">Mandatos familiares afirmativos (tú +)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/2" target="_blank" class="hover:underline">Mandatos familiares negativos (tú -)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/3" target="_blank" class="hover:underline">Mandatos formales y plurales (Ud. y Uds.)</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/verbos/mandatos/6" target="_blank" class="hover:underline">Mandatos con pronombres (acentos escritos)</a></li></ul><h4 class="font-semibold">Reflexivos recíprocos</h4><ul class="list-disc list-inside text-purple-700"><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/" target="_blank" class="hover:underline">Reflexivos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/1" target="_blank" class="hover:underline">Reflexivos recíprocos</a></li><li><a href="https://sites.google.com/view/srscalici/apuntes/reflexivos/1/pr%C3%A1ctica" target="_blank" class="hover:underline">Práctica de los reflexivos recíprocos</a></li></ul>
   
       <h4 class="font-semibold">Vocabulario</h4>
       <ul class="list-disc list-inside text-purple-700">
@@ -153,10 +160,16 @@
   <p><span class="font-semibold">Ayuda con la vida</span> –
     <a href="https://connection.misd.net/index.html" target="_blank" class="text-purple-700 hover:underline">recursos de MISD</a>
   </p>
-  
-          <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-purple-700 hover:underline">Costa Rica</a></p>
-          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" alt="Costa Rica" class="mt-2 rounded-lg shadow-md w-64">
-</section>
+      </div>
+
+    
+      <div class="mt-3">
+        <p>Viaje a <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="font-semibold text-emerald-800 hover:underline">Costa Rica</a></p>
+        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth-christmas.png"
+             alt="Costa Rica"
+             class="mt-2 rounded-lg shadow-md w-64 border border-white/60">
+      </div>
+    </section>
 
   </div>
 
@@ -164,21 +177,41 @@
     function toggleVocab() {
       const box = document.getElementById("vocabBox");
       if (!box) return;
-      const isHidden = box.classList.contains("hidden");
-      if (isHidden) {
-        box.classList.remove("hidden");
-      } else {
-        box.classList.add("hidden");
-      }
+      box.classList.toggle("hidden");
     }
+
+    // ❄️ Simple falling snow
+    (function makeSnow() {
+      const layer = document.getElementById("snow-layer");
+      if (!layer) return;
+
+      const COUNT = 40; // bump to 60 if you want heavier snow
+      const glyphs = ["❄", "❅", "❆"];
+
+      for (let i = 0; i < COUNT; i++) {
+        const flake = document.createElement("span");
+        flake.className = "snowflake";
+        flake.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+
+        const left = Math.random() * 100;              // vw
+        const size = 10 + Math.random() * 16;          // px
+        const duration = 6 + Math.random() * 10;       // s
+        const delay = Math.random() * 8;               // s
+        const drift = (Math.random() * 80 - 40).toFixed(0) + "px"; // -40..40
+
+        flake.style.left = left + "vw";
+        flake.style.fontSize = size + "px";
+        flake.style.animationDuration = duration + "s";
+        flake.style.animationDelay = (-delay) + "s";
+        flake.style.setProperty("--drift", drift);
+        flake.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+
+        layer.appendChild(flake);
+      }
+    })();
   </script>
 </body>
 </html>
-
-
-
-
-
 
 
 
