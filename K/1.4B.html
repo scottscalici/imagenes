@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Práctica de Vocabulario (Descubre 2 · Lección 8)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <header class="rounded-2xl overflow-hidden shadow">
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-6 px-6">
+        <h1 class="text-2xl font-bold">Práctica de vocabulario</h1>
+        <p class="text-white/80 text-sm">Descubre 2 · Lección 8</p>
+      </div>
+    </header>
+
+    <!-- Controls (no URL field) -->
+    <section class="bg-white rounded-xl shadow p-5 space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold mb-1">Modo</label>
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="mode" value="en2es" checked>
+              <span>English → Spanish</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="mode" value="es2en">
+              <span>Spanish → English</span>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">En ES→EN, el prompt es <em>palabra</em>. En EN→ES, el prompt es <em>definición</em>.</p>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">Lección(es)</label>
+          <div id="lessonFilters" class="flex flex-wrap gap-2 text-sm"></div>
+          <p class="text-xs text-gray-500 mt-1">Filtra por lección</code>).</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="restartBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">Reiniciar práctica</button>
+      </div>
+    </section>
+
+    <!-- Practice card -->
+    <section id="practiceSection" class="bg-white rounded-xl shadow p-6 space-y-4 hidden">
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+          <span id="counter">0/0</span> · Aciertos: <span id="correctCount">0</span>
+          · Racha: <span id="streak">0</span>
+        </div>
+        <div class="text-xs text-gray-500">Acentos cuentan · Mayúsculas no · Se ignoran artículos (“el/la/los/las”) y “to ” en inglés</div>
+      </div>
+
+      <div class="border rounded-xl p-4">
+        <div class="text-gray-500 text-xs mb-1" id="promptLabel">Definición (EN)</div>
+        <div id="prompt" class="text-xl font-semibold">—</div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Tu respuesta</label>
+        <input id="answerInput" class="w-full border rounded px-3 py-2" autocomplete="off" />
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <button id="checkBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">Comprobar</button>
+        <button id="rightBtn" class="bg-sky-600 hover:bg-sky-700 text-white rounded px-4 py-2">Yo tenía razón</button>
+        <button id="hintBtn" class="bg-amber-500 hover:bg-amber-600 text-white rounded px-4 py-2">Pista (primera letra)</button>
+        <button id="skipBtn" class="bg-gray-800 hover:bg-black text-white rounded px-4 py-2">Saltar</button>
+        <span id="feedback" class="ml-2 text-sm"></span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ---------- Config ----------
+    const DEFAULT_BLOB = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/K/unidad1parte4.json';
+
+    // ---------- Helpers ----------
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    function toRaw(url) {
+      try {
+        const u = new URL(url.trim());
+        if (u.hostname === 'raw.githubusercontent.com') return u.toString();
+        if (u.hostname === 'github.com' && u.pathname.includes('/blob/')) {
+          const parts = u.pathname.split('/').filter(Boolean); // [user, repo, 'blob', branch, ...path]
+          const i = parts.indexOf('blob');
+          const user = parts[0], repo = parts[1], branch = parts[i+1];
+          const rest = parts.slice(i+2).join('/');
+          return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${rest}`;
+        }
+        return u.toString();
+      } catch { return url; }
+    }
+
+    // Strip parentheses & punctuation, keep accents
+    function stripPunctAndParens(s) {
+      return s
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/[.,;:!?¿¡"“”'’]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    function lc(s){ return (s||'').toLocaleLowerCase(); }
+    function stripArticlesEs(s){ return s.replace(/^\s*(el|la|los|las)\s+/i, ''); }
+    function stripToEn(s){ return s.replace(/^\s*to\s+/i, ''); }
+
+    // Handle gender/number slash variants (e.g., "roto/a")
+    function expandSlashVariants(term){
+      const tokens = term.split(/\s+/);
+      const choices = tokens.map(tok => {
+        if (tok.includes('/')) {
+          const parts = tok.split('/');
+          const first = parts[0];
+          if (parts.length === 2 && first) {
+            const base = first;
+            const alt = base.endsWith('o') ? base.slice(0, -1) + 'a' : parts[1];
+            return [base, alt];
+          }
+          return parts;
+        }
+        return [tok];
+      });
+      const out = [];
+      (function build(i, acc){
+        if (i === choices.length) { out.push(acc.join(' ')); return; }
+        for (const c of choices[i]) build(i+1, acc.concat(c));
+      })(0, []);
+      const plusPlurals = new Set(out);
+      out.forEach(w => {
+        const last = w.split(' ').pop();
+        if (/[ao]$/.test(last)) plusPlurals.add(w + 's');
+      });
+      return Array.from(plusPlurals);
+    }
+
+    function buildAcceptables(target, lang){
+      const base = stripPunctAndParens(target);
+      let core = lc(base);
+      core = lang === 'es' ? stripArticlesEs(core) : stripToEn(core);
+      let variants = expandSlashVariants(core).map(v => v.replace(/\s+/g,' ').trim());
+      return Array.from(new Set(variants));
+    }
+
+    function matches(userInput, acceptList, lang) {
+      let ui = stripPunctAndParens(lc(userInput));
+      ui = lang === 'es' ? stripArticlesEs(ui) : stripToEn(ui);
+      ui = ui.replace(/\s+/g,' ').trim();
+      return acceptList.some(acc => ui === acc);
+    }
+
+    function firstLetter(target, lang){
+      const acc = buildAcceptables(target, lang);
+      const c = acc[0]?.trim();
+      return c ? c[0] : '';
+    }
+
+    // ---------- App state ----------
+    let allItems = [];     // full JSON (ALL entries)
+    let pool = [];         // filtered by lesson + mode
+    let index = -1;
+    let correct = 0;
+    let streak = 0;
+    let mode = 'en2es';
+
+    const els = {
+      filters: $('#lessonFilters'),
+      practice: $('#practiceSection'),
+      prompt: $('#prompt'),
+      promptLabel: $('#promptLabel'),
+      input: $('#answerInput'),
+      counter: $('#counter'),
+      correct: $('#correctCount'),
+      streak: $('#streak'),
+      feedback: $('#feedback'),
+      check: $('#checkBtn'),
+      right: $('#rightBtn'),
+      hint: $('#hintBtn'),
+      skip: $('#skipBtn'),
+      restartBtn: $('#restartBtn'),
+    };
+
+    function uniqueLessons(data){
+      const set = new Set();
+      data.forEach(d => {
+        const m = String(d.leccion||'').match(/^(\d+(?:\.\d+)?)/);
+        if (m) set.add(m[1]);
+      });
+      return Array.from(set).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    }
+
+    function renderLessonCheckboxes(data){
+      const lessons = uniqueLessons(data);
+      els.filters.innerHTML = '';
+      if (!lessons.length){
+        els.filters.innerHTML = '<span class="text-gray-500">No hay lecciones en este archivo.</span>';
+        return;
+      }
+      // Check ALL by default so practice starts with everything
+      lessons.forEach((L)=>{
+        const id = 'L_'+L.replace('.','_');
+        const wrapper = document.createElement('label');
+        wrapper.className = 'inline-flex items-center gap-2 bg-gray-100 rounded px-2 py-1';
+        wrapper.innerHTML = `<input type="checkbox" id="${id}" value="${L}" checked><span>${L}</span>`;
+        els.filters.appendChild(wrapper);
+      });
+
+      // When lessons change, rebuild immediately & continue
+      els.filters.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+        cb.addEventListener('change', ()=>{ buildPool(); nextCard(); });
+      });
+    }
+
+    function currentMode(){
+      const m = $$('input[name="mode"]:checked')[0]?.value || 'en2es';
+      mode = m;
+      els.promptLabel.textContent = (mode === 'en2es') ? 'Definición (EN)' : 'Palabra (ES)';
+    }
+
+    function pickLessons(){
+      const picked = $$(`#lessonFilters input[type="checkbox"]:checked`).map(cb=>cb.value);
+      if (!picked.length) return [];
+      return allItems.filter(x=>{
+        const m = String(x.leccion||'').match(/^(\d+(?:\.\d+)?)/);
+        const head = m ? m[1] : '';
+        return picked.includes(head);
+      });
+    }
+
+    function shuffle(arr){
+      for (let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    function buildPool(){
+      const base = pickLessons();
+      pool = base.map(item=>{
+        return (mode === 'en2es')
+          ? { prompt: item.definicion, answer: item.palabra, item, targetLang:'es' }
+          : { prompt: item.palabra,    answer: item.definicion, item, targetLang:'en' };
+      });
+      shuffle(pool);
+      index = -1;
+      correct = 0;
+      streak = 0;
+      updateHud();
+      // Show section once we have items
+      if (pool.length) els.practice.classList.remove('hidden');
+    }
+
+    function updateHud(){
+      els.counter.textContent = `${Math.max(0,index)}/${pool.length}`;
+      els.correct.textContent = String(correct);
+      els.streak.textContent = String(streak);
+    }
+
+    function nextCard(resetIfExhausted=true){
+      if (!pool.length) return;
+      index++;
+      if (index >= pool.length){
+        if (resetIfExhausted){
+          shuffle(pool);
+          index = 0;
+        } else {
+          index = pool.length-1;
+        }
+      }
+      const cur = pool[index];
+      els.prompt.textContent = cur.prompt;
+      els.input.value = '';
+      els.input.focus();
+      els.feedback.textContent = '';
+      els.feedback.className = 'ml-2 text-sm';
+      updateHud();
+    }
+
+    function checkAnswer(manualCorrect=false){
+      const cur = pool[index];
+      if (!cur) return;
+      const user = els.input.value;
+      const accepts = buildAcceptables(cur.answer, cur.targetLang);
+      const ok = manualCorrect ? true : matches(user, accepts, cur.targetLang);
+
+      if (ok){
+        correct += 1;
+        streak += 1;
+        els.feedback.textContent = '✔️ Correcto';
+        els.feedback.className = 'ml-2 text-sm text-emerald-700';
+        setTimeout(()=>nextCard(), 400);
+      } else {
+        streak = 0;
+        els.feedback.innerHTML = `❌ <span class="text-gray-700">Correcto:</span> <span class="font-semibold">${cur.answer}</span>`;
+        els.feedback.className = 'ml-2 text-sm text-rose-700';
+      }
+      updateHud();
+    }
+
+    function showHint(){
+      const cur = pool[index];
+      if (!cur) return;
+      const fl = firstLetter(cur.answer, cur.targetLang);
+      els.feedback.textContent = `Pista: empieza con “${fl}”`;
+      els.feedback.className = 'ml-2 text-sm text-amber-700';
+      els.input.focus();
+    }
+
+    // ---------- Flow ----------
+  async function init(){
+  const url = toRaw(DEFAULT_BLOB);
+  const res = await fetch(url);
+  const raw = await res.json();
+
+  // ✅ ADAPTER: allow either format
+  allItems = raw.map(d => {
+    // If it's already your Descubre-style JSON, keep it
+    if (d.palabra && d.definicion) return d;
+
+    // Otherwise convert Scott-style (unit/es/en/answers_es) -> (leccion/palabra/definicion)
+    return {
+      leccion: d.unit || d.leccion || '',
+      palabra: d.es || d.palabra || '',
+      definicion: d.en || d.definicion || '',
+      // keep answers list if present (optional use later)
+      answers_es: d.answers_es || []
+    };
+  });
+
+  renderLessonCheckboxes(allItems);
+  currentMode();
+  buildPool();
+  nextCard();
+}
+
+    // Events
+    $$('input[name="mode"]').forEach(r =>
+      r.addEventListener('change', ()=> {
+        currentMode();
+        if (pool.length) { buildPool(); nextCard(); }
+      })
+    );
+    els.restartBtn.addEventListener('click', ()=>{ currentMode(); buildPool(); nextCard(); });
+
+    $('#checkBtn').addEventListener('click', ()=>checkAnswer(false));
+    $('#rightBtn').addEventListener('click', ()=>checkAnswer(true));
+    $('#hintBtn').addEventListener('click', showHint);
+    $('#skipBtn').addEventListener('click', ()=>{ streak = 0; nextCard(); });
+    $('#answerInput').addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter') checkAnswer(false);
+    });
+
+    // Go!
+    init();
+  </script>
+</body>
+</html>
