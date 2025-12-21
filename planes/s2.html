@@ -1,0 +1,26 @@
+<script>
+const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
+const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
+
+async function getJSON(url){
+  const res = await fetch(url, { cache: "no-store" });
+  if(!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  return await res.json();
+}
+
+(async () => {
+  const plan = await getJSON(PLAN_URL);
+  const evals = await getJSON(EVAL_URL);
+
+  const DIA = 23; // later this will come from "today" or a selector
+  const day = plan.days.find(d => d.dia === DIA);
+  console.log("DAY:", day);
+
+  for (const block of day.blocks) {
+    if (block.type === "evaluacion") {
+      const item = evals.items.find(x => x.id === block.ref);
+      console.log("EVALUACIÓN:", item);
+    }
+  }
+})();
+</script>
