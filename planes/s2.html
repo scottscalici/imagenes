@@ -1,26 +1,188 @@
-<script>
-const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
-const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan Test – Spanish 2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-async function getJSON(url){
-  const res = await fetch(url, { cache: "no-store" });
-  if(!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
-  return await res.json();
-}
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+  <main class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+    <header class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+      <h1 class="text-2xl font-bold">Plan References – Test</h1>
+      <p class="text-sm text-slate-600">
+        Esto debe mostrar la evaluación referenciada para un día específico.
+      </p>
+    </header>
 
-(async () => {
-  const plan = await getJSON(PLAN_URL);
-  const evals = await getJSON(EVAL_URL);
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-3">
+      <div class="flex flex-wrap items-end gap-3">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700">Día</label>
+          <input id="diaInput" type="number" value="23"
+                 class="w-28 border rounded-lg px-3 py-2 text-sm" />
+        </div>
+        <button id="loadBtn"
+                class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+          Cargar
+        </button>
+      </div>
 
-  const DIA = 23; // later this will come from "today" or a selector
-  const day = plan.days.find(d => d.dia === DIA);
-  console.log("DAY:", day);
+      <div id="status" class="text-sm text-slate-600"></div>
+    </section>
 
-  for (const block of day.blocks) {
-    if (block.type === "evaluacion") {
-      const item = evals.items.find(x => x.id === block.ref);
-      console.log("EVALUACIÓN:", item);
+    <section id="output" class="space-y-4"></section>
+  </main>
+
+  <script>
+    const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
+    const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
+
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
+    const diaInput = document.getElementById("diaInput");
+    const loadBtn = document.getElementById("loadBtn");
+
+    function setStatus(msg, kind="info") {
+      const classes = {
+        info: "text-slate-600",
+        ok: "text-emerald-700",
+        err: "text-red-700"
+      };
+      statusEl.className = `text-sm ${classes[kind] || classes.info}`;
+      statusEl.textContent = msg;
     }
-  }
-})();
-</script>
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    async function getJSON(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Fetch failed (${res.status}) for ${url}`);
+      return await res.json();
+    }
+
+    function renderEvaluacion(item) {
+      const prompts = Array.isArray(item.prompts) ? item.prompts : [];
+      const instructions = item.instructions ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>` : "";
+
+      return `
+        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-emerald-600 text-white">
+            <h2 class="text-lg font-extrabold">✅ Evaluación</h2>
+            <p class="text-sm opacity-90">${escapeHtml(item.title || item.kind || item.id)}</p>
+          </div>
+          <div class="p-6 space-y-3">
+            ${instructions}
+            ${prompts.length ? `
+              <ol class="list-decimal pl-5 space-y-2 text-slate-800">
+                ${prompts.map(p => `<li>${escapeHtml(p)}</li>`).join("")}
+              </ol>
+            ` : `<p class="text-sm text-slate-600">No hay prompts en este item.</p>`}
+            <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderDebugBox(title, obj) {
+      return `
+        <details class="bg-white rounded-2xl shadow border border-slate-200 p-4">
+          <summary class="cursor-pointer font-semibold">${escapeHtml(title)}</summary>
+          <pre class="mt-3 text-xs overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-3">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
+        </details>
+      `;
+    }
+
+    async function loadDay() {
+      outputEl.innerHTML = "";
+      const DIA = Number(diaInput.value);
+
+      if (!Number.isFinite(DIA) || DIA <= 0) {
+        setStatus("Pon un número de día válido.", "err");
+        return;
+      }
+
+      try {
+        setStatus("Cargando plan y evaluaciones…", "info");
+
+        const [plan, evals] = await Promise.all([
+          getJSON(PLAN_URL),
+          getJSON(EVAL_URL)
+        ]);
+
+        // Useful debug (you can remove later)
+        outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
+        outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
+
+        const days = Array.isArray(plan.days) ? plan.days : [];
+        const day = days.find(d => Number(d.dia) === DIA);
+
+        if (!day) {
+          setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
+          outputEl.insertAdjacentHTML("beforeend", `
+            <div class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+              <p class="text-slate-700">Revisa que <code class="bg-slate-100 px-1 rounded">plan.days</code> tenga un objeto con <strong>"dia": ${DIA}</strong>.</p>
+            </div>
+          `);
+          return;
+        }
+
+        const blocks = Array.isArray(day.blocks) ? day.blocks : [];
+        if (!blocks.length) {
+          setStatus(`Día ${DIA} existe, pero day.blocks está vacío.`, "err");
+          return;
+        }
+
+        const evalItems = Array.isArray(evals.items) ? evals.items : [];
+        let renderedAny = false;
+
+        for (const block of blocks) {
+          if (block.type === "evaluacion") {
+            const item = evalItems.find(x => x.id === block.ref);
+            if (!item) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
+              renderedAny = true;
+            }
+          }
+        }
+
+        setStatus(
+          renderedAny
+            ? `Listo. Rendericé Día ${DIA}.`
+            : `Encontré Día ${DIA}, pero no hay bloques type="evaluacion" para renderizar.`,
+          renderedAny ? "ok" : "err"
+        );
+
+      } catch (err) {
+        console.error(err);
+        setStatus(`Error: ${err.message}`, "err");
+        outputEl.insertAdjacentHTML("beforeend", `
+          <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+            <p class="text-red-700 font-semibold">Hubo un error cargando los JSON.</p>
+            <p class="text-sm text-slate-700">Abre la consola (DevTools) para ver detalles.</p>
+            <p class="text-xs text-slate-500 mt-2">${escapeHtml(String(err))}</p>
+          </div>
+        `);
+      }
+    }
+
+    loadBtn.addEventListener("click", loadDay);
+    loadDay(); // auto-load on page open
+  </script>
+</body>
+</html>
