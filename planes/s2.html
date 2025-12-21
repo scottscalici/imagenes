@@ -93,6 +93,72 @@
         </article>
       `;
     }
+function renderExtra(item) {
+  const title = escapeHtml(item.title || "Extra");
+
+  // LINKS
+  if (item.kind === "links") {
+    const links = Array.isArray(item.links) ? item.links : [];
+    return `
+      <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 bg-indigo-600 text-white">
+          <h2 class="text-lg font-extrabold">➕ Extra</h2>
+          <p class="text-sm opacity-90">${title}</p>
+        </div>
+        <div class="p-6">
+          ${links.length ? `
+            <ul class="list-disc pl-5 space-y-2">
+              ${links.map(l => `
+                <li>
+                  <a class="text-indigo-700 underline"
+                     href="${escapeHtml(l.url)}"
+                     target="_blank" rel="noopener">
+                    ${escapeHtml(l.label)}
+                  </a>
+                </li>
+              `).join("")}
+            </ul>
+          ` : `<p class="text-sm text-slate-600">No hay enlaces en este extra.</p>`}
+          <p class="text-xs text-slate-500 mt-4">id: ${escapeHtml(item.id)}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  // SENTENCES
+  if (item.kind === "sentences") {
+    const sentences = Array.isArray(item.sentences) ? item.sentences : [];
+    const instructions = item.instructions
+      ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
+      : "";
+
+    return `
+      <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 bg-indigo-600 text-white">
+          <h2 class="text-lg font-extrabold">➕ Extra</h2>
+          <p class="text-sm opacity-90">${title}</p>
+        </div>
+        <div class="p-6 space-y-3">
+          ${instructions}
+          ${sentences.length ? `
+            <ol class="list-decimal pl-5 space-y-2 text-slate-800">
+              ${sentences.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+            </ol>
+          ` : `<p class="text-sm text-slate-600">No hay oraciones en este extra.</p>`}
+          <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  // FALLBACK
+  return `
+    <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+      <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
+      <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+    </div>
+  `;
+}
 
     function renderDebugBox(title, obj) {
       return `
@@ -115,14 +181,16 @@
       try {
         setStatus("Cargando plan y evaluaciones…", "info");
 
-        const [plan, evals] = await Promise.all([
-          getJSON(PLAN_URL),
-          getJSON(EVAL_URL)
-        ]);
+        const [plan, evals, extras] = await Promise.all([
+  getJSON(PLAN_URL),
+  getJSON(EVAL_URL),
+  getJSON(EXTRAS_URL)
+]);
 
         // Useful debug (you can remove later)
-        outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
-        outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
+       outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
+outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
+outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", extras));
 
         const days = Array.isArray(plan.days) ? plan.days : [];
         const day = days.find(d => Number(d.dia) === DIA);
@@ -145,28 +213,41 @@
 
         const evalItems = Array.isArray(evals.items) ? evals.items : [];
         let renderedAny = false;
+for (const block of blocks) {
+  if (block.type === "evaluacion") {
+    const item = evalItems.find(x => x.id === block.ref);
+    if (!item) {
+      outputEl.insertAdjacentHTML("beforeend", `
+        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+          <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
+          <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
+        </div>
+      `);
+    } else {
+      outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
+      renderedAny = true;
+    }
 
-        for (const block of blocks) {
-          if (block.type === "evaluacion") {
-            const item = evalItems.find(x => x.id === block.ref);
-            if (!item) {
-              outputEl.insertAdjacentHTML("beforeend", `
-                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-                  <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
-                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
-                </div>
-              `);
-            } else {
-              outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
-              renderedAny = true;
-            }
-          }
-        }
+  } else if (block.type === "extras") {
+    const item = extraItems.find(x => x.id === block.ref);
+    if (!item) {
+      outputEl.insertAdjacentHTML("beforeend", `
+        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+          <p class="text-red-700 font-semibold">No encontré el extra con id = "${escapeHtml(block.ref)}".</p>
+          <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">extras.items</code>.</p>
+        </div>
+      `);
+    } else {
+      outputEl.insertAdjacentHTML("beforeend", renderExtra(item));
+      renderedAny = true;
+    }
+  }
+}
 
         setStatus(
           renderedAny
             ? `Listo. Rendericé Día ${DIA}.`
-            : `Encontré Día ${DIA}, pero no hay bloques type="evaluacion" para renderizar.`,
+            : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
           renderedAny ? "ok" : "err"
         );
 
