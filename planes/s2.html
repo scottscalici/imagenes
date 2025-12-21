@@ -212,8 +212,10 @@ outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", ex
         }
 
         const evalItems = Array.isArray(evals.items) ? evals.items : [];
-        let renderedAny = false;
-for (const block of blocks) {
+const extraItems = Array.isArray(extras.items) ? extras.items : [];
+let renderedAny = false;
+
+        for (const block of blocks) {
   if (block.type === "evaluacion") {
     const item = evalItems.find(x => x.id === block.ref);
     if (!item) {
