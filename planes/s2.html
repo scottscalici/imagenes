@@ -42,6 +42,7 @@
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
 
 
+
     const statusEl = document.getElementById("status");
     const outputEl = document.getElementById("output");
     const diaInput = document.getElementById("diaInput");
@@ -182,29 +183,108 @@ function renderExtra(item) {
         </details>
       `;
     }
+function ymdLocal(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function parseYMD(ymd) {
+  // Local time midnight
+  const [y, m, d] = ymd.split("-").map(Number);
+  return new Date(y, m - 1, d, 0, 0, 0, 0);
+}
+
+function getDiaFromURL() {
+  const params = new URLSearchParams(location.search);
+  const v = Number(params.get("dia"));
+  return Number.isFinite(v) && v > 0 ? v : null;
+}
+
+function buildCalendarIndex(cal) {
+  const mapArr = Array.isArray(cal.map) ? cal.map : [];
+  const byDate = new Map();
+  for (const row of mapArr) {
+    if (row && typeof row.fecha === "string") {
+      byDate.set(row.fecha, row); // last one wins if duplicates (shouldn't happen)
+    }
+  }
+  return { mapArr, byDate };
+}
+
+function resolveDiaForDate(cal, targetYMD) {
+  const { mapArr, byDate } = buildCalendarIndex(cal);
+
+  // 1) Direct match exists AND dia is a number
+  const direct = byDate.get(targetYMD);
+  const directDia = direct ? Number(direct.dia) : NaN;
+  if (Number.isFinite(directDia) && directDia > 0) {
+    return { dia: directDia, source: "today" };
+  }
+
+  // 2) Otherwise: find most recent previous row with a real dia
+  const targetDate = parseYMD(targetYMD);
+
+  let best = null;
+  let bestDate = null;
+
+  for (const row of mapArr) {
+    if (!row || typeof row.fecha !== "string") continue;
+
+    const rowDia = Number(row.dia);
+    if (!(Number.isFinite(rowDia) && rowDia > 0)) continue; // skip null / invalid
+
+    const rowDate = parseYMD(row.fecha);
+    if (rowDate <= targetDate) {
+      if (!bestDate || rowDate > bestDate) {
+        bestDate = rowDate;
+        best = rowDia;
+      }
+    }
+  }
+
+  if (best !== null) {
+    return { dia: best, source: "previous" };
+  }
+
+  // 3) If calendar starts after today (rare), return null and let caller fall back.
+  return { dia: null, source: "none" };
+}
 
     async function loadDay() {
       outputEl.innerHTML = "";
-     const diaFromUrl = getDiaFromURL();
-
+  const diaFromUrl = getDiaFromURL();
 let diaFromCalendar = null;
+let calSource = null;
+
 try {
   const cal = await getJSON(CAL_URL);
   const today = ymdLocal();
-  const row = (cal.map || []).find(x => x.fecha === today);
-  if (row && Number.isFinite(Number(row.dia)) && Number(row.dia) > 0) {
-    diaFromCalendar = Number(row.dia);
-  }
+  const resolved = resolveDiaForDate(cal, today);
+  diaFromCalendar = resolved.dia;
+  calSource = resolved.source; // "today" | "previous" | "none"
 } catch (e) {
-  // calendario missing or not ready yet — totally fine
+  // calendar not ready; ignore
 }
 
-const DIA = diaFromUrl ?? diaFromCalendar ?? Number(diaInput.value);
+const diaFromInput = Number(diaInput.value);
+const DIA = diaFromUrl ?? diaFromCalendar ?? diaFromInput;
 
-      if (!Number.isFinite(DIA) || DIA <= 0) {
-        setStatus("Pon un número de día válido.", "err");
-        return;
-      }
+if (!Number.isFinite(DIA) || DIA <= 0) {
+  setStatus("Pon un número de día válido.", "err");
+  return;
+}
+
+if (diaFromUrl) {
+  setStatus(`Cargando Día ${DIA} (link)…`, "info");
+} else if (calSource === "today") {
+  setStatus(`Cargando Día ${DIA} (hoy)…`, "info");
+} else if (calSource === "previous") {
+  setStatus(`No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`, "info");
+} else {
+  setStatus(`Cargando Día ${DIA}…`, "info");
+}
 
       try {
         setStatus(`Cargando Día ${DIA}…`, "info");
