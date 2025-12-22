@@ -9,6 +9,15 @@
 
 <body class="bg-slate-100 text-slate-900 min-h-screen">
   <main class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+
+    <!-- Day Header -->
+<section class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+  <h1 id="dayTitle" class="text-2xl font-extrabold text-slate-900">
+    Día —
+  </h1>
+  <p id="daySubtitle" class="text-sm text-slate-600 mt-1"></p>
+</section>
+
     <header class="bg-white rounded-2xl shadow border border-slate-200 p-6">
       <h1 class="text-2xl font-bold">Plan References – Test</h1>
       <p class="text-sm text-slate-600">
@@ -36,6 +45,9 @@
   </main>
 
   <script>
+    const dayTitleEl = document.getElementById("dayTitle");
+const daySubtitleEl = document.getElementById("daySubtitle");
+
     const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
     const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
     const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
@@ -302,6 +314,17 @@ outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", ex
 
         const days = Array.isArray(plan.days) ? plan.days : [];
         const day = days.find(d => Number(d.dia) === DIA);
+        // Header: Día + Fecha
+const fechaPlan = day?.fecha ? String(day.fecha) : null;
+
+dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
+daySubtitleEl.textContent = fechaPlan
+  ? formatFechaES(fechaPlan)
+  : "Fecha no definida en el plan.";
+if (calSource === "previous") {
+  daySubtitleEl.textContent = `No hay clase hoy — mostrando la clase más reciente. ${fechaPlan ? formatFechaES(fechaPlan) : ""}`.trim();
+}
+
 
         if (!day) {
           setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
