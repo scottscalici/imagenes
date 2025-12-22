@@ -354,12 +354,12 @@ let renderedAny = false;
   }
 }
 
-        sets(
-          renderedAny
-            ? `Listo. Rendericé Día ${DIA}.`
-            : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
-          renderedAny ? "ok" : "err"
-        );
+        setStatus(
+  renderedAny
+    ? `Listo. Rendericé Día ${DIA}.`
+    : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
+  renderedAny ? "ok" : "err"
+);
 
       } catch (err) {
         console.error(err);
