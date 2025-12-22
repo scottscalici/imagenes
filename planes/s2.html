@@ -39,12 +39,26 @@
     const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
     const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
     const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
+    const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
 
 
     const statusEl = document.getElementById("status");
     const outputEl = document.getElementById("output");
     const diaInput = document.getElementById("diaInput");
     const loadBtn = document.getElementById("loadBtn");
+function ymdLocal() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function getDiaFromURL() {
+  const params = new URLSearchParams(location.search);
+  const v = Number(params.get("dia"));
+  return Number.isFinite(v) && v > 0 ? v : null;
+}
 
     function setStatus(msg, kind="info") {
       const classes = {
@@ -171,7 +185,21 @@ function renderExtra(item) {
 
     async function loadDay() {
       outputEl.innerHTML = "";
-      const DIA = Number(diaInput.value);
+     const diaFromUrl = getDiaFromURL();
+
+let diaFromCalendar = null;
+try {
+  const cal = await getJSON(CAL_URL);
+  const today = ymdLocal();
+  const row = (cal.map || []).find(x => x.fecha === today);
+  if (row && Number.isFinite(Number(row.dia)) && Number(row.dia) > 0) {
+    diaFromCalendar = Number(row.dia);
+  }
+} catch (e) {
+  // calendario missing or not ready yet — totally fine
+}
+
+const DIA = diaFromUrl ?? diaFromCalendar ?? Number(diaInput.value);
 
       if (!Number.isFinite(DIA) || DIA <= 0) {
         setStatus("Pon un número de día válido.", "err");
@@ -179,7 +207,7 @@ function renderExtra(item) {
       }
 
       try {
-        setStatus("Cargando plan y evaluaciones…", "info");
+        setStatus(`Cargando Día ${DIA}…`, "info");
 
         const [plan, evals, extras] = await Promise.all([
   getJSON(PLAN_URL),
@@ -246,7 +274,7 @@ let renderedAny = false;
   }
 }
 
-        setStatus(
+        sets(
           renderedAny
             ? `Listo. Rendericé Día ${DIA}.`
             : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
