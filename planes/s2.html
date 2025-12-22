@@ -195,7 +195,13 @@ function renderExtra(item) {
         </details>
       `;
     }
-function ymdLocal(d = new Date()) {
+function formatFechaES(ymd) {
+  // ymd = "YYYY-MM-DD"
+  const [y, m, d] = ymd.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString("es-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+}
+    function ymdLocal(d = new Date()) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
