@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Logic Puzzle Unlock</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+  <main class="max-w-3xl mx-auto p-6 space-y-6">
+    <header class="bg-white rounded-2xl shadow p-6 border border-slate-200">
+      <h1 class="text-2xl font-bold">🎄 Logic Puzzle Check</h1>
+      <p class="text-slate-600 mt-2">
+        Match each athlete to the correct <b>state</b> and <b>other sport</b>. When everything is correct, you’ll unlock the next step.
+      </p>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow p-6 border border-slate-200 space-y-4">
+      <h2 class="text-lg font-semibold">Enter your matches</h2>
+
+      <div id="form" class="space-y-4"></div>
+
+      <div class="flex flex-wrap gap-3 pt-2">
+        <button id="checkBtn" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+          Check Answers
+        </button>
+        <button id="resetBtn" class="px-4 py-2 rounded-xl bg-slate-200 font-semibold hover:bg-slate-300">
+          Reset
+        </button>
+      </div>
+
+      <div id="feedback" class="mt-4 text-sm"></div>
+
+      <div id="unlock" class="hidden mt-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50">
+        <p class="font-semibold text-emerald-800">✅ Unlocked!</p>
+        <p class="text-emerald-800 mt-1">Click to continue:</p>
+        <a id="nextLink" class="inline-block mt-3 px-4 py-2 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700"
+           href="#" target="_blank" rel="noopener">
+          Open Next Link
+        </a>
+      </div>
+    </section>
+
+    <footer class="text-center text-xs text-slate-500">
+      Tip: If you want it to open automatically, I can change it to auto-redirect instead of showing a button.
+    </footer>
+  </main>
+
+  <script>
+    // ✅ EDIT THESE
+    const NEXT_URL = "https://example.com/nextstep.html"; // <-- put your real next page here
+
+    const athletes = [
+      "Patrick Mahomes",
+      "Aaron Judge",
+      "Paige Bueckers",
+      "Jameson Williams",
+      "Mookie Betts"
+    ];
+
+    const states = ["Texas", "California", "Minnesota", "Missouri", "Tennessee"];
+    const sports = ["Baseball", "Football", "Soccer", "Track & Field", "Bowling"];
+
+    // ✅ Correct answers (keys must match athlete strings exactly)
+    const ANSWERS = {
+      "Patrick Mahomes": { state: "Texas", sport: "Baseball" },
+      "Aaron Judge": { state: "California", sport: "Football" },
+      "Paige Bueckers": { state: "Minnesota", sport: "Soccer" },
+      "Jameson Williams": { state: "Missouri", sport: "Track & Field" },
+      "Mookie Betts": { state: "Tennessee", sport: "Bowling" }
+    };
+
+    const form = document.getElementById("form");
+    const feedback = document.getElementById("feedback");
+    const unlock = document.getElementById("unlock");
+    const nextLink = document.getElementById("nextLink");
+
+    nextLink.href = NEXT_URL;
+
+    function makeSelect(options, id) {
+      const sel = document.createElement("select");
+      sel.id = id;
+      sel.className = "w-full md:w-64 px-3 py-2 rounded-xl border border-slate-300 bg-white";
+      const blank = document.createElement("option");
+      blank.value = "";
+      blank.textContent = "— select —";
+      sel.appendChild(blank);
+      options.forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt;
+        o.textContent = opt;
+        sel.appendChild(o);
+      });
+      return sel;
+    }
+
+    function render() {
+      form.innerHTML = "";
+      athletes.forEach(name => {
+        const row = document.createElement("div");
+        row.className = "p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col md:flex-row md:items-center md:justify-between gap-3";
+
+        const left = document.createElement("div");
+        left.className = "font-semibold";
+        left.textContent = name;
+
+        const right = document.createElement("div");
+        right.className = "flex flex-col md:flex-row gap-3";
+
+        const stateSel = makeSelect(states, `state-${name}`);
+        const sportSel = makeSelect(sports, `sport-${name}`);
+
+        right.appendChild(stateSel);
+        right.appendChild(sportSel);
+
+        row.appendChild(left);
+        row.appendChild(right);
+        form.appendChild(row);
+      });
+    }
+
+    function checkAnswers() {
+      let total = athletes.length * 2;
+      let correct = 0;
+      let missing = 0;
+
+      athletes.forEach(name => {
+        const s = document.getElementById(`state-${name}`).value;
+        const sp = document.getElementById(`sport-${name}`).value;
+
+        if (!s) missing++;
+        if (!sp) missing++;
+
+        if (s && s === ANSWERS[name].state) correct++;
+        if (sp && sp === ANSWERS[name].sport) correct++;
+      });
+
+      unlock.classList.add("hidden");
+
+      if (missing > 0) {
+        feedback.className = "mt-4 text-sm text-amber-700";
+        feedback.textContent = `Fill in all blanks first. Missing: ${missing}.`;
+        return;
+      }
+
+      if (correct === total) {
+        feedback.className = "mt-4 text-sm text-emerald-700 font-semibold";
+        feedback.textContent = "Perfect! Everything is correct — unlocked.";
+        unlock.classList.remove("hidden");
+
+        // Optional: auto-open the link
+        // window.open(NEXT_URL, "_blank", "noopener");
+      } else {
+        feedback.className = "mt-4 text-sm text-rose-700";
+        feedback.textContent = `Not quite. You have ${correct}/${total} correct. Keep going.`;
+      }
+    }
+
+    function resetAll() {
+      render();
+      feedback.textContent = "";
+      unlock.classList.add("hidden");
+    }
+
+    document.getElementById("checkBtn").addEventListener("click", checkAnswers);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+    render();
+  </script>
+</body>
+</html>
