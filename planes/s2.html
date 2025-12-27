@@ -440,7 +440,7 @@
           if (!block || typeof block.type !== "string") continue;
 
           // ✅ Evaluación
-          if (block.type === "evaluacion") {
+          if (blockkind === "evaluacion") {
             const item = evalItems.find(x => x.id === block.ref);
             if (!item) {
               outputEl.insertAdjacentHTML("beforeend", `
@@ -456,7 +456,7 @@
           }
 
           // ➕ Extra
-          else if (block.type === "extras") {
+          else if (blockKind === "extras") {
             const item = extraItems.find(x => x.id === block.ref);
             if (!item) {
               outputEl.insertAdjacentHTML("beforeend", `
@@ -472,7 +472,7 @@
           }
 
           // 🔥 Calentamiento (Option A)
-          else if (block.type === "calentamiento") {
+          else if (blockKind === "calentamiento") {
             const entry = calItems.find(x => x.id === block.ref);
             if (!entry) {
               outputEl.insertAdjacentHTML("beforeend", `
