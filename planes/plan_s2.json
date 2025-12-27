@@ -6,18 +6,19 @@
       "dia": 23,
       "fecha": "2025-11-20",
       "blocks": [
-        { "type": "evaluacion", "ref": "eval-s2-d23-01" },
-        { "type": "evaluacion", "ref": "eval-s2-d23-02" },
-         { "type": "extras", "ref": "extra-s2-d23-01" },
-    { "type": "extras", "ref": "extra-s2-d23-02" }
+        { "kind": "evaluacion", "ref": "eval-s2-d23-01" },
+        { "kind": "evaluacion", "ref": "eval-s2-d23-02" },
+        { "kind": "extras", "ref": "extra-s2-d23-01" },
+        { "kind": "extras", "ref": "extra-s2-d23-02" }
       ]
     },
     {
       "dia": 35,
       "fecha": "2025-12-16",
       "blocks": [
-        { "type": "evaluacion", "ref": "eval-s2-d35" },
-        { "type": "extras", "ref": "extra-s2-d35-2" }      ]
+        { "kind": "evaluacion", "ref": "eval-s2-d35" },
+        { "kind": "extras", "ref": "extra-s2-d35-2" }
+      ]
     }
   ]
 }
