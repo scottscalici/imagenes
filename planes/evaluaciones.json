@@ -1,47 +1,36 @@
 {
   "version": 1,
-  "items": [
-    {
-      "id": "eval-s2-d23-01",
-      "course": "s2",
-      "dia": 23,
-      "kind": "exit_ticket",
-      "title": "Salida rápida",
-      "instructions": "Contesta en 3–4 frases completas.",
-      "prompts": [
-        "¿Qué fue lo más difícil hoy?",
-        "Escribe una oración en pretérito y otra en imperfecto."
-      ]
-    },
- {
-  "id": "eval-s2-d23-02",
-  "course": "s2",
-  "dia": 23,
-  "kind": "mini_quiz",
-  "title": "Mini quiz (2 minutos)",
-  "instructions": "Responde rápido. Sin traductor.",
-  "prompts": [
-    "Conjuga: (tener) — yo — pretérito",
-    "Conjuga: (ir) — nosotros — imperfecto"
-  ]
-},
-     {
-      "id": "eval-s2-d35",
-      "course": "s2",
-      "dia": 35,
-      "kind": "examen",
-      "title": "Examen del semestre",
-      "instructions": "Hablar y escapar"
-    },
-    
-     {
-      "id": "eval-s2-d36-01",
-      "course": "s2",
-      "dia": 36,
-      "kind": "Nada",
-      "title": "No hay nada"
-          }
-
-
-  ]
+  "courses": {
+    "s2": [
+      { "dia": 29, "label": "Vocabulario 2.2" },
+      { "dia": 30, "label": "Nada" },
+      { "dia": 31, "label": "Vocabulario 2.3 y Mandatos: tú negativo" },
+      { "dia": 32, "label": "Vocabulario 2.4" },
+      { "dia": 33, "label": "Mandatos: tú afirmativos y negativos" },
+      { "dia": 34, "label": "Examen de lección 2" },
+      { "dia": 35, "label": "Examen del semestre" },
+      { "dia": 36, "label": "Nada" },
+      { "dia": 37, "label": "Vocabulario 3.1" },
+      { "dia": 38, "label": "Mandatos formales y plurales" },
+      { "dia": 39, "label": "Vocabulario 3.2" },
+      { "dia": 40, "label": "Presente de subjuntivo 1" },
+      { "dia": 41, "label": "Vocabulario 3.3" },
+      { "dia": 42, "label": "Nada" }
+    ],
+    "s4": [
+      { "dia": 28, "label": "Vocabulario 5.3" },
+      { "dia": 29, "label": "Nada" },
+      { "dia": 30, "label": "Vocabulario 6.1" },
+      { "dia": 31, "label": "Mandatos" },
+      { "dia": 32, "label": "Vocabulario 6.2" },
+      { "dia": 33, "label": "Nada" },
+      { "dia": 34, "label": "Vocabulario 6.3" },
+      { "dia": 35, "label": "Examen del semestre" },
+      { "dia": 36, "label": "Nada" },
+      { "dia": 37, "label": "Vocabulario 7.1" },
+      { "dia": 38, "label": "Futuro y condicional" },
+      { "dia": 39, "label": "Vocabulario 7.2" },
+      { "dia": 40, "label": "Nada" }
+    ]
+  }
 }
