@@ -11,17 +11,15 @@
   <main class="max-w-3xl mx-auto px-4 py-10 space-y-6">
 
     <!-- Day Header -->
-<section class="bg-white rounded-2xl shadow border border-slate-200 p-6">
-  <h1 id="dayTitle" class="text-2xl font-extrabold text-slate-900">
-    Día —
-  </h1>
-  <p id="daySubtitle" class="text-sm text-slate-600 mt-1"></p>
-</section>
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+      <h1 id="dayTitle" class="text-2xl font-extrabold text-slate-900">Día —</h1>
+      <p id="daySubtitle" class="text-sm text-slate-600 mt-1"></p>
+    </section>
 
     <header class="bg-white rounded-2xl shadow border border-slate-200 p-6">
-      <h1 class="text-2xl font-bold">Plan References – Test</h1>
+      <h2 class="text-2xl font-bold">Plan References – Test</h2>
       <p class="text-sm text-slate-600">
-        Esto debe mostrar la evaluación referenciada para un día específico.
+        Esto debe mostrar los bloques referenciados para un día específico (calentamiento, evaluación, extras).
       </p>
     </header>
 
@@ -32,10 +30,16 @@
           <input id="diaInput" type="number" value="23"
                  class="w-28 border rounded-lg px-3 py-2 text-sm" />
         </div>
+
         <button id="loadBtn"
                 class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
           Cargar
         </button>
+
+        <label class="ml-auto inline-flex items-center gap-2 text-sm text-slate-700">
+          <input id="debugToggle" type="checkbox" class="rounded" />
+          Debug JSON
+        </label>
       </div>
 
       <div id="status" class="text-sm text-slate-600"></div>
@@ -45,39 +49,38 @@
   </main>
 
   <script>
-    const dayTitleEl = document.getElementById("dayTitle");
-const daySubtitleEl = document.getElementById("daySubtitle");
-
+    /***********************
+     * CONFIG (URLs)
+     ***********************/
     const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
     const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
     const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
-    const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
+    const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
 
+    // 🔥 Option A: Calentamiento library
+    const CALENTAMIENTOS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calentamientos.json";
 
+    /***********************
+     * DOM
+     ***********************/
+    const dayTitleEl = document.getElementById("dayTitle");
+    const daySubtitleEl = document.getElementById("daySubtitle");
 
     const statusEl = document.getElementById("status");
     const outputEl = document.getElementById("output");
+
     const diaInput = document.getElementById("diaInput");
     const loadBtn = document.getElementById("loadBtn");
-function ymdLocal() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+    const debugToggle = document.getElementById("debugToggle");
 
-function getDiaFromURL() {
-  const params = new URLSearchParams(location.search);
-  const v = Number(params.get("dia"));
-  return Number.isFinite(v) && v > 0 ? v : null;
-}
-
-    function setStatus(msg, kind="info") {
+    /***********************
+     * UTILS
+     ***********************/
+    function setStatus(msg, kind = "info") {
       const classes = {
         info: "text-slate-600",
         ok: "text-emerald-700",
-        err: "text-red-700"
+        err: "text-red-700",
       };
       statusEl.className = `text-sm ${classes[kind] || classes.info}`;
       statusEl.textContent = msg;
@@ -85,11 +88,11 @@ function getDiaFromURL() {
 
     function escapeHtml(str) {
       return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     async function getJSON(url) {
@@ -98,14 +101,101 @@ function getDiaFromURL() {
       return await res.json();
     }
 
+    function ymdLocal(d = new Date()) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function parseYMD(ymd) {
+      // Local midnight
+      const [y, m, d] = String(ymd).split("-").map(Number);
+      return new Date(y, m - 1, d, 0, 0, 0, 0);
+    }
+
+    function formatFechaES(ymd) {
+      if (!ymd) return "";
+      const [y, m, d] = String(ymd).split("-").map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString("es-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+
+    function getDiaFromURL() {
+      const params = new URLSearchParams(location.search);
+      const v = Number(params.get("dia"));
+      return Number.isFinite(v) && v > 0 ? v : null;
+    }
+
+    function buildCalendarIndex(cal) {
+      const mapArr = Array.isArray(cal?.map) ? cal.map : [];
+      const byDate = new Map();
+      for (const row of mapArr) {
+        if (row && typeof row.fecha === "string") byDate.set(row.fecha, row);
+      }
+      return { mapArr, byDate };
+    }
+
+    function resolveDiaForDate(cal, targetYMD) {
+      const { mapArr, byDate } = buildCalendarIndex(cal);
+
+      // 1) direct match
+      const direct = byDate.get(targetYMD);
+      const directDia = direct ? Number(direct.dia) : NaN;
+      if (Number.isFinite(directDia) && directDia > 0) {
+        return { dia: directDia, source: "today" };
+      }
+
+      // 2) nearest previous
+      const targetDate = parseYMD(targetYMD);
+      let bestDia = null;
+      let bestDate = null;
+
+      for (const row of mapArr) {
+        if (!row || typeof row.fecha !== "string") continue;
+        const rowDia = Number(row.dia);
+        if (!(Number.isFinite(rowDia) && rowDia > 0)) continue;
+
+        const rowDate = parseYMD(row.fecha);
+        if (rowDate <= targetDate) {
+          if (!bestDate || rowDate > bestDate) {
+            bestDate = rowDate;
+            bestDia = rowDia;
+          }
+        }
+      }
+
+      if (bestDia !== null) return { dia: bestDia, source: "previous" };
+      return { dia: null, source: "none" };
+    }
+
+    function renderDebugBox(title, obj) {
+      return `
+        <details class="bg-white rounded-2xl shadow border border-slate-200 p-4">
+          <summary class="cursor-pointer font-semibold">${escapeHtml(title)}</summary>
+          <pre class="mt-3 text-xs overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-3">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
+        </details>
+      `;
+    }
+
+    /***********************
+     * RENDERERS
+     ***********************/
     function renderEvaluacion(item) {
       const prompts = Array.isArray(item.prompts) ? item.prompts : [];
-      const instructions = item.instructions ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>` : "";
+      const instructions = item.instructions
+        ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
+        : "";
 
       return `
         <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
           <div class="px-6 py-4 bg-emerald-600 text-white">
-            <h2 class="text-lg font-extrabold">✅ Evaluación</h2>
+            <h3 class="text-lg font-extrabold">✅ Evaluación</h3>
             <p class="text-sm opacity-90">${escapeHtml(item.title || item.kind || item.id)}</p>
           </div>
           <div class="p-6 space-y-3">
@@ -120,275 +210,300 @@ function getDiaFromURL() {
         </article>
       `;
     }
-function renderExtra(item) {
-  const title = escapeHtml(item.title || "Extra");
 
-  // LINKS
-  if (item.kind === "links") {
-    const links = Array.isArray(item.links) ? item.links : [];
-    return `
-      <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 bg-indigo-600 text-white">
-          <h2 class="text-lg font-extrabold">➕ Extra</h2>
-          <p class="text-sm opacity-90">${title}</p>
-        </div>
-        <div class="p-6">
-          ${links.length ? `
-            <ul class="list-disc pl-5 space-y-2">
-              ${links.map(l => `
-                <li>
-                  <a class="text-indigo-700 underline"
-                     href="${escapeHtml(l.url)}"
-                     target="_blank" rel="noopener">
-                    ${escapeHtml(l.label)}
-                  </a>
-                </li>
-              `).join("")}
-            </ul>
-          ` : `<p class="text-sm text-slate-600">No hay enlaces en este extra.</p>`}
-          <p class="text-xs text-slate-500 mt-4">id: ${escapeHtml(item.id)}</p>
-        </div>
-      </article>
-    `;
-  }
+    function renderExtra(item) {
+      const title = escapeHtml(item.title || "Extra");
 
-  // SENTENCES
-  if (item.kind === "sentences") {
-    const sentences = Array.isArray(item.sentences) ? item.sentences : [];
-    const instructions = item.instructions
-      ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
-      : "";
+      // LINKS
+      if (item.kind === "links") {
+        const links = Array.isArray(item.links) ? item.links : [];
+        return `
+          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-indigo-600 text-white">
+              <h3 class="text-lg font-extrabold">➕ Extra</h3>
+              <p class="text-sm opacity-90">${title}</p>
+            </div>
+            <div class="p-6">
+              ${links.length ? `
+                <ul class="list-disc pl-5 space-y-2">
+                  ${links.map(l => `
+                    <li>
+                      <a class="text-indigo-700 underline"
+                        href="${escapeHtml(l.url)}"
+                        target="_blank" rel="noopener">
+                        ${escapeHtml(l.label)}
+                      </a>
+                    </li>
+                  `).join("")}
+                </ul>
+              ` : `<p class="text-sm text-slate-600">No hay enlaces en este extra.</p>`}
+              <p class="text-xs text-slate-500 mt-4">id: ${escapeHtml(item.id)}</p>
+            </div>
+          </article>
+        `;
+      }
 
-    return `
-      <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 bg-indigo-600 text-white">
-          <h2 class="text-lg font-extrabold">➕ Extra</h2>
-          <p class="text-sm opacity-90">${title}</p>
-        </div>
-        <div class="p-6 space-y-3">
-          ${instructions}
-          ${sentences.length ? `
-            <ol class="list-decimal pl-5 space-y-2 text-slate-800">
-              ${sentences.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
-            </ol>
-          ` : `<p class="text-sm text-slate-600">No hay oraciones en este extra.</p>`}
+      // SENTENCES
+      if (item.kind === "sentences") {
+        const sentences = Array.isArray(item.sentences) ? item.sentences : [];
+        const instructions = item.instructions
+          ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
+          : "";
+
+        return `
+          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-indigo-600 text-white">
+              <h3 class="text-lg font-extrabold">➕ Extra</h3>
+              <p class="text-sm opacity-90">${title}</p>
+            </div>
+            <div class="p-6 space-y-3">
+              ${instructions}
+              ${sentences.length ? `
+                <ol class="list-decimal pl-5 space-y-2 text-slate-800">
+                  ${sentences.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+                </ol>
+              ` : `<p class="text-sm text-slate-600">No hay oraciones en este extra.</p>`}
+              <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+            </div>
+          </article>
+        `;
+      }
+
+      // FALLBACK
+      return `
+        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+          <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
           <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
         </div>
-      </article>
-    `;
-  }
-
-  // FALLBACK
-  return `
-    <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-      <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
-      <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
-    </div>
-  `;
-}
-
-    function renderDebugBox(title, obj) {
-      return `
-        <details class="bg-white rounded-2xl shadow border border-slate-200 p-4">
-          <summary class="cursor-pointer font-semibold">${escapeHtml(title)}</summary>
-          <pre class="mt-3 text-xs overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-3">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
-        </details>
       `;
     }
-function formatFechaES(ymd) {
-  // ymd = "YYYY-MM-DD"
-  const [y, m, d] = ymd.split("-").map(Number);
-  const dt = new Date(y, m - 1, d);
-  return dt.toLocaleDateString("es-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-}
-    function ymdLocal(d = new Date()) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
 
-function parseYMD(ymd) {
-  // Local time midnight
-  const [y, m, d] = ymd.split("-").map(Number);
-  return new Date(y, m - 1, d, 0, 0, 0, 0);
-}
+    // 🔥 Calentamiento: plan-page summary card (practice opens in new tab)
+    function renderCalentamientoCard(entry) {
+      const title = escapeHtml(entry.title || "Calentamiento");
+      const timebox = Number(entry.timebox_min);
+      const timeText = Number.isFinite(timebox) && timebox > 0 ? `${timebox} min` : null;
 
-function getDiaFromURL() {
-  const params = new URLSearchParams(location.search);
-  const v = Number(params.get("dia"));
-  return Number.isFinite(v) && v > 0 ? v : null;
-}
+      const verbsLabel = escapeHtml(entry?.sources?.verbs?.label || "Verbos");
+      const vocabLabel = escapeHtml(entry?.sources?.vocab?.label || "Vocabulario");
 
-function buildCalendarIndex(cal) {
-  const mapArr = Array.isArray(cal.map) ? cal.map : [];
-  const byDate = new Map();
-  for (const row of mapArr) {
-    if (row && typeof row.fecha === "string") {
-      byDate.set(row.fecha, row); // last one wins if duplicates (shouldn't happen)
+      const teacherNote = entry.teacher_note
+        ? `<p class="text-sm text-slate-700">${escapeHtml(entry.teacher_note)}</p>`
+        : "";
+
+      const practiceUrlBase = String(entry.practice_page_url || "").trim();
+      const practiceHref = practiceUrlBase
+        ? `${practiceUrlBase}${practiceUrlBase.includes("?") ? "&" : "?"}cal=${encodeURIComponent(entry.id)}`
+        : "";
+
+      const button = practiceHref
+        ? `<a href="${escapeHtml(practiceHref)}"
+              target="_blank" rel="noopener"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700">
+              Abrir práctica ↗
+           </a>`
+        : `<span class="text-sm text-red-700 font-semibold">⚠ Falta practice_page_url para este calentamiento.</span>`;
+
+      return `
+        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-amber-500 text-white">
+            <div class="flex items-baseline justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-extrabold">🔥 Calentamiento</h3>
+                <p class="text-sm opacity-95">${title}</p>
+              </div>
+              ${timeText ? `<span class="text-sm font-bold opacity-95">${escapeHtml(timeText)}</span>` : ""}
+            </div>
+          </div>
+
+          <div class="p-6 space-y-3">
+            <div class="text-sm text-slate-800">
+              <div><span class="font-semibold">Verbos:</span> ${verbsLabel}</div>
+              <div><span class="font-semibold">Vocab:</span> ${vocabLabel}</div>
+            </div>
+
+            ${teacherNote}
+
+            <div class="pt-2">
+              ${button}
+            </div>
+
+            <p class="text-xs text-slate-500">id: ${escapeHtml(entry.id)}</p>
+          </div>
+        </article>
+      `;
     }
-  }
-  return { mapArr, byDate };
-}
 
-function resolveDiaForDate(cal, targetYMD) {
-  const { mapArr, byDate } = buildCalendarIndex(cal);
+    /***********************
+     * LOAD + RENDER DAY
+     ***********************/
+    async function determineDia() {
+      const diaFromUrl = getDiaFromURL();
+      if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
 
-  // 1) Direct match exists AND dia is a number
-  const direct = byDate.get(targetYMD);
-  const directDia = direct ? Number(direct.dia) : NaN;
-  if (Number.isFinite(directDia) && directDia > 0) {
-    return { dia: directDia, source: "today" };
-  }
+      // Try calendar-based resolution
+      try {
+        const cal = await getJSON(CALENDAR_URL);
+        const today = ymdLocal();
+        const resolved = resolveDiaForDate(cal, today);
+        if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
+      } catch (_) {
+        // ignore calendar errors; fall back to input
+      }
 
-  // 2) Otherwise: find most recent previous row with a real dia
-  const targetDate = parseYMD(targetYMD);
+      const diaFromInput = Number(diaInput.value);
+      if (Number.isFinite(diaFromInput) && diaFromInput > 0) return { DIA: diaFromInput, source: "input" };
 
-  let best = null;
-  let bestDate = null;
+      return { DIA: null, source: "none" };
+    }
 
-  for (const row of mapArr) {
-    if (!row || typeof row.fecha !== "string") continue;
+    function updateHeader({ DIA, day, calSource }) {
+      const fechaPlan = day?.fecha ? String(day.fecha) : null;
+      dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
 
-    const rowDia = Number(row.dia);
-    if (!(Number.isFinite(rowDia) && rowDia > 0)) continue; // skip null / invalid
+      if (!fechaPlan) {
+        daySubtitleEl.textContent = "Fecha no definida en el plan.";
+        return;
+      }
 
-    const rowDate = parseYMD(row.fecha);
-    if (rowDate <= targetDate) {
-      if (!bestDate || rowDate > bestDate) {
-        bestDate = rowDate;
-        best = rowDia;
+      const fechaBonita = formatFechaES(fechaPlan);
+
+      if (calSource === "previous") {
+        daySubtitleEl.textContent = `No hay clase hoy — mostrando la clase más reciente. ${fechaBonita}`.trim();
+      } else {
+        daySubtitleEl.textContent = fechaBonita;
       }
     }
-  }
-
-  if (best !== null) {
-    return { dia: best, source: "previous" };
-  }
-
-  // 3) If calendar starts after today (rare), return null and let caller fall back.
-  return { dia: null, source: "none" };
-}
 
     async function loadDay() {
       outputEl.innerHTML = "";
-  const diaFromUrl = getDiaFromURL();
-let diaFromCalendar = null;
-let calSource = null;
 
-try {
-  const cal = await getJSON(CAL_URL);
-  const today = ymdLocal();
-  const resolved = resolveDiaForDate(cal, today);
-  diaFromCalendar = resolved.dia;
-  calSource = resolved.source; // "today" | "previous" | "none"
-} catch (e) {
-  // calendar not ready; ignore
-}
+      const { DIA, source } = await determineDia();
+      if (!DIA) {
+        setStatus("Pon un número de día válido.", "err");
+        return;
+      }
 
-const diaFromInput = Number(diaInput.value);
-const DIA = diaFromUrl ?? diaFromCalendar ?? diaFromInput;
-
-if (!Number.isFinite(DIA) || DIA <= 0) {
-  setStatus("Pon un número de día válido.", "err");
-  return;
-}
-
-if (diaFromUrl) {
-  setStatus(`Cargando Día ${DIA} (link)…`, "info");
-} else if (calSource === "today") {
-  setStatus(`Cargando Día ${DIA} (hoy)…`, "info");
-} else if (calSource === "previous") {
-  setStatus(`No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`, "info");
-} else {
-  setStatus(`Cargando Día ${DIA}…`, "info");
-}
+      // Status line
+      if (source === "link") setStatus(`Cargando Día ${DIA} (link)…`, "info");
+      else if (source === "today") setStatus(`Cargando Día ${DIA} (hoy)…`, "info");
+      else if (source === "previous") setStatus(`No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`, "info");
+      else setStatus(`Cargando Día ${DIA}…`, "info");
 
       try {
-        setStatus(`Cargando Día ${DIA}…`, "info");
+        const [plan, evals, extras, cals] = await Promise.all([
+          getJSON(PLAN_URL),
+          getJSON(EVAL_URL),
+          getJSON(EXTRAS_URL),
+          getJSON(CALENTAMIENTOS_URL),
+        ]);
 
-        const [plan, evals, extras] = await Promise.all([
-  getJSON(PLAN_URL),
-  getJSON(EVAL_URL),
-  getJSON(EXTRAS_URL)
-]);
+        if (debugToggle.checked) {
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", extras));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: calentamientos.json", cals));
+        }
 
-        // Useful debug (you can remove later)
-       outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
-outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
-outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", extras));
-
-        const days = Array.isArray(plan.days) ? plan.days : [];
+        const days = Array.isArray(plan?.days) ? plan.days : [];
         const day = days.find(d => Number(d.dia) === DIA);
-        // Header: Día + Fecha
-const fechaPlan = day?.fecha ? String(day.fecha) : null;
-
-dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
-daySubtitleEl.textContent = fechaPlan
-  ? formatFechaES(fechaPlan)
-  : "Fecha no definida en el plan.";
-if (calSource === "previous") {
-  daySubtitleEl.textContent = `No hay clase hoy — mostrando la clase más reciente. ${fechaPlan ? formatFechaES(fechaPlan) : ""}`.trim();
-}
-
 
         if (!day) {
           setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
           outputEl.insertAdjacentHTML("beforeend", `
             <div class="bg-white rounded-2xl shadow border border-slate-200 p-6">
-              <p class="text-slate-700">Revisa que <code class="bg-slate-100 px-1 rounded">plan.days</code> tenga un objeto con <strong>"dia": ${DIA}</strong>.</p>
+              <p class="text-slate-700">
+                Revisa que <code class="bg-slate-100 px-1 rounded">plan.days</code> tenga un objeto con <strong>"dia": ${escapeHtml(DIA)}</strong>.
+              </p>
             </div>
           `);
           return;
         }
 
-        const blocks = Array.isArray(day.blocks) ? day.blocks : [];
+        // If calendar said "previous", reflect it in header subtitle. We can infer it by re-resolving quickly
+        // BUT we already used determineDia() (which doesn’t return the calSource explicitly beyond source string).
+        updateHeader({ DIA, day, calSource: source });
+
+        const blocks = Array.isArray(day?.blocks) ? day.blocks : [];
         if (!blocks.length) {
           setStatus(`Día ${DIA} existe, pero day.blocks está vacío.`, "err");
           return;
         }
 
-        const evalItems = Array.isArray(evals.items) ? evals.items : [];
-const extraItems = Array.isArray(extras.items) ? extras.items : [];
-let renderedAny = false;
+        const evalItems = Array.isArray(evals?.items) ? evals.items : [];
+        const extraItems = Array.isArray(extras?.items) ? extras.items : [];
+        const calItems = Array.isArray(cals?.items) ? cals.items : [];
+
+        let renderedAny = false;
 
         for (const block of blocks) {
-  if (block.type === "evaluacion") {
-    const item = evalItems.find(x => x.id === block.ref);
-    if (!item) {
-      outputEl.insertAdjacentHTML("beforeend", `
-        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-          <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
-          <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
-        </div>
-      `);
-    } else {
-      outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
-      renderedAny = true;
-    }
+          if (!block || typeof block.type !== "string") continue;
 
-  } else if (block.type === "extras") {
-    const item = extraItems.find(x => x.id === block.ref);
-    if (!item) {
-      outputEl.insertAdjacentHTML("beforeend", `
-        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-          <p class="text-red-700 font-semibold">No encontré el extra con id = "${escapeHtml(block.ref)}".</p>
-          <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">extras.items</code>.</p>
-        </div>
-      `);
-    } else {
-      outputEl.insertAdjacentHTML("beforeend", renderExtra(item));
-      renderedAny = true;
-    }
-  }
-}
+          // ✅ Evaluación
+          if (block.type === "evaluacion") {
+            const item = evalItems.find(x => x.id === block.ref);
+            if (!item) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
+              renderedAny = true;
+            }
+          }
+
+          // ➕ Extra
+          else if (block.type === "extras") {
+            const item = extraItems.find(x => x.id === block.ref);
+            if (!item) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré el extra con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">extras.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderExtra(item));
+              renderedAny = true;
+            }
+          }
+
+          // 🔥 Calentamiento (Option A)
+          else if (block.type === "calentamiento") {
+            const entry = calItems.find(x => x.id === block.ref);
+            if (!entry) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré el calentamiento con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">calentamientos.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderCalentamientoCard(entry));
+              renderedAny = true;
+            }
+          }
+
+          // ❓ Unknown block type
+          else {
+            outputEl.insertAdjacentHTML("beforeend", `
+              <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                <p class="text-red-700 font-semibold">Tipo de bloque no soportado: "${escapeHtml(block.type)}"</p>
+                <p class="text-sm text-slate-700">Ref: <code class="bg-slate-100 px-1 rounded">${escapeHtml(block.ref)}</code></p>
+              </div>
+            `);
+          }
+        }
 
         setStatus(
-  renderedAny
-    ? `Listo. Rendericé Día ${DIA}.`
-    : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
-  renderedAny ? "ok" : "err"
-);
+          renderedAny
+            ? `Listo. Rendericé Día ${DIA}.`
+            : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
+          renderedAny ? "ok" : "err"
+        );
 
       } catch (err) {
         console.error(err);
@@ -404,7 +519,7 @@ let renderedAny = false;
     }
 
     loadBtn.addEventListener("click", loadDay);
-    loadDay(); // auto-load on page open
+    loadDay(); // auto-load on open
   </script>
 </body>
 </html>
