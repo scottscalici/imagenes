@@ -6,42 +6,43 @@
       "id": "est-s2-presente",
       "title": "Presente",
       "order": 10,
+      "note_refs": ["gram-presente"],
       "children": [
         {
           "id": "est-s2-presente-reg",
           "title": "Presente: Regulares",
           "order": 10,
-          "note_refs": ["gram-presente-regular"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-presente-irreg-comunes",
           "title": "Presente: Irregulares comunes",
           "order": 20,
-          "note_refs": ["gram-presente-irreg-comunes", "gram-presente-cambios-radicales"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-presente-ortografia-ger-gir-cer-cir-guir",
           "title": "Presente: -ger, -gir, -cer, -cir, -guir",
           "order": 30,
-          "note_refs": ["gram-presente-ger-gir", "gram-presente-cer-cir", "gram-presente-guir"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-presente-irreg-lista-1",
           "title": "Presente: decir, tener, venir, oír, oler, caber",
           "order": 40,
-          "note_refs": ["gram-presente-irreg-decir", "gram-presente-irreg-tener-venir", "gram-presente-irreg-oir-oler-caber"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-presente-zo-uir-1",
           "title": "Presente: -ZO, -UIR",
           "order": 50,
-          "note_refs": ["gram-presente-zo", "gram-presente-uir"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-presente-zo-uir-2",
           "title": "Presente: -ZO, -UIR (repaso / práctica extra)",
           "order": 60,
-          "note_refs": ["gram-presente-zo", "gram-presente-uir"]
+          "note_refs": ["gram-presente"]
         }
       ]
     },
@@ -50,24 +51,25 @@
       "id": "est-s2-preterito",
       "title": "Pretérito",
       "order": 20,
+      "note_refs": ["gram-preterito"],
       "children": [
         {
           "id": "est-s2-preterito-reg",
           "title": "Pretérito: Regulares",
           "order": 10,
-          "note_refs": ["gram-preterito-regular"]
+          "note_refs": ["gram-preterito"]
         },
         {
           "id": "est-s2-preterito-gar-car-zar-ir-ser-dar-ver",
           "title": "Pretérito: -GAR, -CAR, -ZAR; ir/ser, dar, ver",
           "order": 20,
-          "note_refs": ["gram-preterito-gar-car-zar", "gram-preterito-ir-ser", "gram-preterito-dar", "gram-preterito-ver"]
+          "note_refs": ["gram-preterito"]
         },
         {
           "id": "est-s2-preterito-cambios-morfologicos",
           "title": "Pretérito: Cambios morfológicos",
           "order": 30,
-          "note_refs": ["gram-preterito-cambios-morfologicos"]
+          "note_refs": ["gram-preterito"]
         }
       ]
     },
@@ -76,18 +78,19 @@
       "id": "est-s2-se",
       "title": "Se",
       "order": 30,
+      "note_refs": ["gram-usos-de-se"],
       "children": [
         {
           "id": "est-s2-se-pasiva-impersonal",
           "title": "Se con la voz pasiva (frases impersonales)",
           "order": 10,
-          "note_refs": ["gram-se-pasiva", "gram-se-impersonal"]
+          "note_refs": ["gram-usos-de-se"]
         },
         {
           "id": "est-s2-se-eventos-inesperados",
           "title": "Se con eventos inesperados",
           "order": 20,
-          "note_refs": ["gram-se-eventos-inesperados"]
+          "note_refs": ["gram-usos-de-se"]
         }
       ]
     },
@@ -101,7 +104,7 @@
           "id": "est-s2-preterito-uir-leer-caer-creer-oir",
           "title": "-UIR, leer, caer, creer, oír",
           "order": 10,
-          "note_refs": ["gram-preterito-uir", "gram-preterito-leer-caer-creer-oir"]
+          "note_refs": ["gram-preterito"]
         },
         {
           "id": "est-s2-adverbios",
@@ -113,13 +116,13 @@
           "id": "est-s2-cambios-radicales-repaso",
           "title": "Cambios radicales",
           "order": 30,
-          "note_refs": ["gram-cambios-radicales"]
+          "note_refs": ["gram-presente"]
         },
         {
           "id": "est-s2-diagrama-flujo",
           "title": "Diagrama de flujo",
           "order": 40,
-          "note_refs": ["gram-diagrama-flujo-pasado"]
+          "note_refs": ["gram-preterito-o-imperfecto"]
         }
       ]
     },
@@ -135,30 +138,31 @@
       "id": "est-s2-pasado-usos",
       "title": "El pasado: pretérito vs imperfecto",
       "order": 60,
+      "note_refs": ["gram-preterito-o-imperfecto"],
       "children": [
         {
           "id": "est-s2-usos-preterito-imperfecto",
           "title": "Usos del pretérito e imperfecto",
           "order": 10,
-          "note_refs": ["gram-usos-preterito", "gram-usos-imperfecto"]
+          "note_refs": ["gram-preterito-o-imperfecto"]
         },
         {
           "id": "est-s2-marcadores-temporales",
           "title": "Marcadores temporales",
           "order": 20,
-          "note_refs": ["gram-marcadores-temporales"]
+          "note_refs": ["gram-preterito-o-imperfecto"]
         },
         {
           "id": "est-s2-cambios-significado",
           "title": "Cambios en significado",
           "order": 30,
-          "note_refs": ["gram-cambios-significado-pasado"]
+          "note_refs": ["gram-preterito-o-imperfecto"]
         },
         {
           "id": "est-s2-matices-pasado",
           "title": "Matices en el pasado",
           "order": 40,
-          "note_refs": ["gram-matices-pasado"]
+          "note_refs": ["gram-preterito-o-imperfecto"]
         }
       ]
     },
@@ -167,30 +171,31 @@
       "id": "est-s2-mandatos",
       "title": "Mandatos",
       "order": 70,
+      "note_refs": ["gram-mandatos-todos"],
       "children": [
         {
           "id": "est-s2-mandatos-inf-afirm",
           "title": "Mandatos informales afirmativos",
           "order": 10,
-          "note_refs": ["gram-mandatos-inf-afirm"]
+          "note_refs": ["gram-mandatos-informales"]
         },
         {
           "id": "est-s2-mandatos-inf-neg",
           "title": "Mandatos informales negativos",
           "order": 20,
-          "note_refs": ["gram-mandatos-inf-neg"]
+          "note_refs": ["gram-mandatos-informales"]
         },
         {
           "id": "est-s2-mandatos-formales",
           "title": "Mandatos formales",
           "order": 30,
-          "note_refs": ["gram-mandatos-formales"]
+          "note_refs": ["gram-mandatos-informal-y-formal"]
         },
         {
           "id": "est-s2-mandatos-plurales",
           "title": "Mandatos plurales",
           "order": 40,
-          "note_refs": ["gram-mandatos-plurales"]
+          "note_refs": ["gram-mandatos-informal-y-formal"]
         }
       ]
     },
@@ -199,7 +204,7 @@
       "id": "est-s2-por-para",
       "title": "Por o para",
       "order": 80,
-      "note_refs": ["gram-por-para"]
+      "note_refs": ["gram-por-y-para"]
     },
     {
       "id": "est-s2-posesivos",
@@ -223,7 +228,7 @@
       "id": "est-s2-subj-pres-conj",
       "title": "Presente de subjuntivo — conjugaciones",
       "order": 120,
-      "note_refs": ["gram-subj-pres-conjugaciones"]
+      "note_refs": ["gram-subjuntivo"]
     }
   ]
 }
