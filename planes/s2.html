@@ -109,7 +109,6 @@
     }
 
     function parseYMD(ymd) {
-      // Local midnight
       const [y, m, d] = String(ymd).split("-").map(Number);
       return new Date(y, m - 1, d, 0, 0, 0, 0);
     }
@@ -128,7 +127,8 @@
 
     function getDiaFromURL() {
       const params = new URLSearchParams(location.search);
-      const v = Number(params.get("dia"));
+      const raw = params.get("dia");
+      const v = raw ? Number(raw) : NaN;
       return Number.isFinite(v) && v > 0 ? v : null;
     }
 
@@ -183,6 +183,10 @@
       `;
     }
 
+    function normType(t) {
+      return String(t || "").trim().toLowerCase();
+    }
+
     /***********************
      * RENDERERS
      ***********************/
@@ -214,7 +218,6 @@
     function renderExtra(item) {
       const title = escapeHtml(item.title || "Extra");
 
-      // LINKS
       if (item.kind === "links") {
         const links = Array.isArray(item.links) ? item.links : [];
         return `
@@ -243,7 +246,6 @@
         `;
       }
 
-      // SENTENCES
       if (item.kind === "sentences") {
         const sentences = Array.isArray(item.sentences) ? item.sentences : [];
         const instructions = item.instructions
@@ -269,7 +271,6 @@
         `;
       }
 
-      // FALLBACK
       return `
         <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
           <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
@@ -278,7 +279,6 @@
       `;
     }
 
-    // 🔥 Calentamiento: plan-page summary card (practice opens in new tab)
     function renderCalentamientoCard(entry) {
       const title = escapeHtml(entry.title || "Calentamiento");
       const timebox = Number(entry.timebox_min);
@@ -324,9 +324,7 @@
 
             ${teacherNote}
 
-            <div class="pt-2">
-              ${button}
-            </div>
+            <div class="pt-2">${button}</div>
 
             <p class="text-xs text-slate-500">id: ${escapeHtml(entry.id)}</p>
           </div>
@@ -341,14 +339,13 @@
       const diaFromUrl = getDiaFromURL();
       if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
 
-      // Try calendar-based resolution
       try {
         const cal = await getJSON(CALENDAR_URL);
         const today = ymdLocal();
         const resolved = resolveDiaForDate(cal, today);
         if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
       } catch (_) {
-        // ignore calendar errors; fall back to input
+        // ignore
       }
 
       const diaFromInput = Number(diaInput.value);
@@ -357,7 +354,7 @@
       return { DIA: null, source: "none" };
     }
 
-    function updateHeader({ DIA, day, calSource }) {
+    function updateHeader({ DIA, day, source }) {
       const fechaPlan = day?.fecha ? String(day.fecha) : null;
       dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
 
@@ -367,12 +364,10 @@
       }
 
       const fechaBonita = formatFechaES(fechaPlan);
-
-      if (calSource === "previous") {
-        daySubtitleEl.textContent = `No hay clase hoy — mostrando la clase más reciente. ${fechaBonita}`.trim();
-      } else {
-        daySubtitleEl.textContent = fechaBonita;
-      }
+      daySubtitleEl.textContent =
+        source === "previous"
+          ? `No hay clase hoy — mostrando la clase más reciente. ${fechaBonita}`
+          : fechaBonita;
     }
 
     async function loadDay() {
@@ -384,7 +379,6 @@
         return;
       }
 
-      // Status line
       if (source === "link") setStatus(`Cargando Día ${DIA} (link)…`, "info");
       else if (source === "today") setStatus(`Cargando Día ${DIA} (hoy)…`, "info");
       else if (source === "previous") setStatus(`No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`, "info");
@@ -406,7 +400,7 @@
         }
 
         const days = Array.isArray(plan?.days) ? plan.days : [];
-        const day = days.find(d => Number(d.dia) === DIA);
+        const day = days.find(d => Number(d?.dia) === Number(DIA));
 
         if (!day) {
           setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
@@ -420,9 +414,7 @@
           return;
         }
 
-        // If calendar said "previous", reflect it in header subtitle. We can infer it by re-resolving quickly
-        // BUT we already used determineDia() (which doesn’t return the calSource explicitly beyond source string).
-        updateHeader({ DIA, day, calSource: source });
+        updateHeader({ DIA, day, source });
 
         const blocks = Array.isArray(day?.blocks) ? day.blocks : [];
         if (!blocks.length) {
@@ -437,11 +429,18 @@
         let renderedAny = false;
 
         for (const block of blocks) {
-          if (!block || typeof block.type !== "string") continue;
+          if (!block) continue;
+
+          const t = normType(block.type);
+
+          // Accept a few aliases so you don’t get burned by naming
+          const isEval = (t === "evaluacion" || t === "evaluación" || t === "eval" || t === "evaluaciones");
+          const isExtra = (t === "extra" || t === "extras");
+          const isCal = (t === "calentamiento" || t === "calentamientos" || t === "warmup");
 
           // ✅ Evaluación
-          if (blockkind === "evaluacion") {
-            const item = evalItems.find(x => x.id === block.ref);
+          if (isEval) {
+            const item = evalItems.find(x => x?.id === block.ref);
             if (!item) {
               outputEl.insertAdjacentHTML("beforeend", `
                 <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
@@ -456,8 +455,8 @@
           }
 
           // ➕ Extra
-          else if (blockKind === "extras") {
-            const item = extraItems.find(x => x.id === block.ref);
+          else if (isExtra) {
+            const item = extraItems.find(x => x?.id === block.ref);
             if (!item) {
               outputEl.insertAdjacentHTML("beforeend", `
                 <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
@@ -472,8 +471,8 @@
           }
 
           // 🔥 Calentamiento (Option A)
-          else if (blockKind === "calentamiento") {
-            const entry = calItems.find(x => x.id === block.ref);
+          else if (isCal) {
+            const entry = calItems.find(x => x?.id === block.ref);
             if (!entry) {
               outputEl.insertAdjacentHTML("beforeend", `
                 <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
