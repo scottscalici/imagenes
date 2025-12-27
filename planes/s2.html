@@ -3,336 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calentamiento – Práctica</title>
+  <title>Plan Test – Spanish 2</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-100 min-h-screen">
-  <!-- STICKY HEADER WITH PROGRESS -->
-  <header class="sticky top-0 z-20 bg-white shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-      <div>
-        <h1 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-800">
-          Calentamiento – Módulo de práctica
-        </h1>
-        <p id="pageSubtitle" class="text-xs sm:text-sm text-slate-500">
-          Cargando…
-        </p>
-        <p id="pageMeta" class="text-[10px] sm:text-xs text-slate-400"></p>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+  <main class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+
+    <!-- Day Header -->
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+      <h1 id="dayTitle" class="text-2xl font-extrabold text-slate-900">Día —</h1>
+      <p id="daySubtitle" class="text-sm text-slate-600 mt-1"></p>
+    </section>
+
+    <header class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+      <h2 class="text-2xl font-bold">Plan References – Test</h2>
+      <p class="text-sm text-slate-600">
+        Esto debe mostrar los bloques referenciados para un día específico (calentamiento, evaluación, extras).
+      </p>
+    </header>
+
+    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-3">
+      <div class="flex flex-wrap items-end gap-3">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700">Día</label>
+          <input id="diaInput" type="number" value="23"
+                 class="w-28 border rounded-lg px-3 py-2 text-sm" />
+        </div>
+
+        <button id="loadBtn"
+                class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+          Cargar
+        </button>
+
+        <label class="ml-auto inline-flex items-center gap-2 text-sm text-slate-700">
+          <input id="debugToggle" type="checkbox" class="rounded" />
+          Debug JSON
+        </label>
       </div>
 
-      <div class="w-40 sm:w-64">
-        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-          <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width:0%"></div>
-        </div>
-        <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
-          0 % completado
-        </p>
-      </div>
-    </div>
-  </header>
+      <div id="status" class="text-sm text-slate-600"></div>
+    </section>
 
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <!-- Status / errors -->
-    <div id="topStatus" class="hidden mb-4 rounded-xl border border-slate-200 bg-white p-4 text-sm"></div>
-
-    <div class="grid md:grid-cols-[230px,1fr] gap-6">
-      <!-- SIDEBAR -->
-      <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
-        <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-          Módulos
-        </h2>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
-                data-module="1">
-          <span>Módulo 1.1 · Verbos</span>
-          <span id="badge-1" class="text-xs">●</span>
-        </button>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                data-module="2" disabled>
-          <span>Módulo 1.2 · Verbos</span>
-          <span id="badge-2" class="text-xs">🔒</span>
-        </button>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                data-module="3" disabled>
-          <span>Módulo 1.3 · Verbos</span>
-          <span id="badge-3" class="text-xs">🔒</span>
-        </button>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                data-module="4" disabled>
-          <span>Módulo 1.4 · Verbos</span>
-          <span id="badge-4" class="text-xs">🔒</span>
-        </button>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                data-module="5" disabled>
-          <span>Módulo 2 · Repaso vocabulario</span>
-          <span id="badge-5" class="text-xs">🔒</span>
-        </button>
-
-        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
-                data-module="6" disabled>
-          <span>Módulo 3 · Curiosidad</span>
-          <span id="badge-6" class="text-xs">🔒</span>
-        </button>
-      </aside>
-
-      <!-- MAIN PANEL -->
-      <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
-
-        <!-- Module 1.1 -->
-        <div id="module-1" class="module-view space-y-4">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 1.1 · Verbos (presente)
-          </h2>
-          <p class="text-sm text-slate-600">
-            Completa las formas verbales. Necesitas al menos <strong>50&nbsp;%</strong> para avanzar al siguiente módulo.
-          </p>
-
-          <div id="module-1-questions" class="space-y-3"></div>
-
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <button id="btn-check-module-1"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-              Corregir respuestas
-            </button>
-            <p id="module-1-result" class="text-sm text-slate-700"></p>
-          </div>
-
-          <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
-            <button id="btn-next-from-1"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Siguiente módulo (1.2) →
-            </button>
-          </div>
-        </div>
-
-        <!-- Module 1.2 -->
-        <div id="module-2" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 1.2 · Verbos (presente)
-          </h2>
-          <p class="text-sm text-slate-600">Segundo bloque de este conjunto de práctica.</p>
-
-          <div id="module-2-questions" class="space-y-3"></div>
-
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <button id="btn-check-module-2"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-              Corregir respuestas
-            </button>
-            <p id="module-2-result" class="text-sm text-slate-700"></p>
-          </div>
-
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="1">
-              ← Volver a 1.1
-            </button>
-            <button id="btn-next-from-2"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Siguiente módulo (1.3) →
-            </button>
-          </div>
-        </div>
-
-        <!-- Module 1.3 -->
-        <div id="module-3" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 1.3 · Verbos (presente)
-          </h2>
-          <p class="text-sm text-slate-600">Tercer bloque de este conjunto de práctica.</p>
-
-          <div id="module-3-questions" class="space-y-3"></div>
-
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <button id="btn-check-module-3"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-              Corregir respuestas
-            </button>
-            <p id="module-3-result" class="text-sm text-slate-700"></p>
-          </div>
-
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="2">
-              ← Volver a 1.2
-            </button>
-            <button id="btn-next-from-3"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Siguiente módulo (1.4) →
-            </button>
-          </div>
-        </div>
-
-        <!-- Module 1.4 -->
-        <div id="module-4" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 1.4 · Verbos (presente)
-          </h2>
-          <p class="text-sm text-slate-600">
-            Último bloque de verbos. Al completar con éxito, se desbloquea el Módulo 2.
-          </p>
-
-          <div id="module-4-questions" class="space-y-3"></div>
-
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <button id="btn-check-module-4"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-              Corregir respuestas
-            </button>
-            <p id="module-4-result" class="text-sm text-slate-700"></p>
-          </div>
-
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="3">
-              ← Volver a 1.3
-            </button>
-            <button id="btn-next-from-4"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Ir al Módulo 2 →
-            </button>
-          </div>
-        </div>
-
-        <!-- Module 2 – vocab -->
-        <div id="module-5" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 2 · Repaso de vocabulario
-          </h2>
-          <p class="text-sm text-slate-600">
-            Escribe la traducción al inglés. Luego, empareja solo las palabras que fallaste.
-          </p>
-          <p class="text-xs text-slate-500">
-            Este módulo usa 30 palabras (3 bloques de 10) desde un archivo JSON de vocabulario.
-          </p>
-
-          <div id="vocab-block-container" class="space-y-4 mt-4"></div>
-          <p id="vocab-global-status" class="text-xs text-slate-500"></p>
-
-          <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="4">
-              ← Volver a 1.4
-            </button>
-
-            <button id="btn-reset-vocab"
-                    class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold">
-              Reiniciar vocabulario
-            </button>
-
-            <button id="btn-next-from-5"
-                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
-                    disabled>
-              Ir al Módulo 3 →
-            </button>
-          </div>
-        </div>
-
-        <!-- Module 3 – curiosidad placeholder -->
-        <div id="module-6" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 3 · Curiosidad
-          </h2>
-          <p class="text-sm text-slate-600">
-            Aquí puedes enlazar o incrustar tu Curiosidad del día.
-          </p>
-
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="5">
-              ← Volver al Módulo 2
-            </button>
-            <span class="text-sm text-emerald-700 font-semibold flex items-center gap-1">
-              ✔ Curso completado
-            </span>
-          </div>
-        </div>
-
-      </section>
-    </div>
+    <section id="output" class="space-y-4"></section>
   </main>
 
   <script>
-    /******************************************************************
-     * Library + static-day support
-     * - Accept ?cal=<id>
-     * - Accept ?dia=<num>
-     * - Accept path ending in /<num> (Google Sites style)
-     * - Fetch calentamientos.json and resolve verbs/vocab
-     ******************************************************************/
+    /***********************
+     * CONFIG (URLs)
+     ***********************/
+    const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
+    const EVAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
+    const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
+    const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
 
-    const COURSE = "s2"; // adjust if you reuse this runner for other courses
-
-    const CALENTAMIENTOS_URL =
-      "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calentamientos.json";
-
-    // Fallback defaults (used if no library match)
-    const DEFAULT_VERBS_URL =
-      "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/dailyJSON/presente-1.json";
-
-    const DEFAULT_VOCAB_URL =
-      "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/rdv/D2-0-1.json";
-
-    const TOTAL_MODULES = 6;
-    const PASS_THRESHOLD = 0.5;
+    // 🔥 Option A: Calentamiento library
+    const CALENTAMIENTOS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calentamientos.json";
 
     /***********************
      * DOM
      ***********************/
-    const pageTitleEl = document.getElementById("pageTitle");
-    const pageSubtitleEl = document.getElementById("pageSubtitle");
-    const pageMetaEl = document.getElementById("pageMeta");
-    const topStatusEl = document.getElementById("topStatus");
+    const dayTitleEl = document.getElementById("dayTitle");
+    const daySubtitleEl = document.getElementById("daySubtitle");
 
-    const progressFill = document.getElementById("progress-fill");
-    const progressLabel = document.getElementById("progress-label");
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
 
-    /***********************
-     * STATE
-     ***********************/
-    const modulePassed = {};
-    let completedModules = 0;
-
-    const runtime = {
-      dia: null,
-      calId: null,
-      verbsUrl: DEFAULT_VERBS_URL,
-      vocabUrl: DEFAULT_VOCAB_URL,
-      verbsLabel: "Presente (set)",
-      vocabLabel: "Vocabulario (set)",
-      title: "Calentamiento – Módulo de práctica",
-      subtitle: "Calentamiento",
-      teacherNote: ""
-    };
+    const diaInput = document.getElementById("diaInput");
+    const loadBtn = document.getElementById("loadBtn");
+    const debugToggle = document.getElementById("debugToggle");
 
     /***********************
      * UTILS
      ***********************/
-    function showTopStatus(msg, kind = "info") {
-      const styles = {
-        info: "border-slate-200 text-slate-700",
-        ok: "border-emerald-200 text-emerald-800",
-        err: "border-red-200 text-red-700",
+    function setStatus(msg, kind = "info") {
+      const classes = {
+        info: "text-slate-600",
+        ok: "text-emerald-700",
+        err: "text-red-700",
       };
-      topStatusEl.className = `mb-4 rounded-xl bg-white p-4 text-sm border ${styles[kind] || styles.info}`;
-      topStatusEl.textContent = msg;
-      topStatusEl.classList.remove("hidden");
+      statusEl.className = `text-sm ${classes[kind] || classes.info}`;
+      statusEl.textContent = msg;
     }
 
-    function safeText(v) { return String(v ?? "").trim(); }
-
-    function isLikelyUrl(s) {
-      const t = safeText(s);
-      return /^https?:\/\//i.test(t);
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     async function getJSON(url) {
@@ -341,746 +101,425 @@
       return await res.json();
     }
 
-    function getParam(name) {
-      const params = new URLSearchParams(location.search);
-      const v = params.get(name);
-      return v && v.trim() ? v.trim() : null;
+    function ymdLocal(d = new Date()) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
     }
 
-    function getDiaFromPath() {
-      // Supports URLs like .../calentamiento/33
-      const path = location.pathname || "";
-      const parts = path.split("/").filter(Boolean);
-      const last = parts[parts.length - 1] || "";
-      if (/^\d+$/.test(last)) return Number(last);
-      return null;
+    function parseYMD(ymd) {
+      // Local midnight
+      const [y, m, d] = String(ymd).split("-").map(Number);
+      return new Date(y, m - 1, d, 0, 0, 0, 0);
+    }
+
+    function formatFechaES(ymd) {
+      if (!ymd) return "";
+      const [y, m, d] = String(ymd).split("-").map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString("es-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     }
 
     function getDiaFromURL() {
-      const diaParam = getParam("dia");
-      if (diaParam && /^\d+$/.test(diaParam)) return Number(diaParam);
-      return getDiaFromPath();
+      const params = new URLSearchParams(location.search);
+      const v = Number(params.get("dia"));
+      return Number.isFinite(v) && v > 0 ? v : null;
     }
 
-    function getCalIdFromURL() {
-      const id = getParam("cal");
-      return id && id.trim() ? id.trim() : null;
-    }
-
-    /***********************
-     * HEADER / PROGRESS
-     ***********************/
-    function updateProgress() {
-      const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
-      progressFill.style.width = percent + "%";
-      progressLabel.textContent = percent + "% completado";
-    }
-
-    function markModuleCompleted(n) {
-      if (!modulePassed[n]) {
-        modulePassed[n] = true;
-        completedModules = Object.keys(modulePassed).length;
-        updateProgress();
-        const badge = document.getElementById("badge-" + n);
-        if (badge) badge.textContent = "✔";
+    function buildCalendarIndex(cal) {
+      const mapArr = Array.isArray(cal?.map) ? cal.map : [];
+      const byDate = new Map();
+      for (const row of mapArr) {
+        if (row && typeof row.fecha === "string") byDate.set(row.fecha, row);
       }
+      return { mapArr, byDate };
     }
 
-    function unlockModuleBtn(n) {
-      const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
-      const badge = document.getElementById("badge-" + n);
-      if (tab) {
-        tab.disabled = false;
-        tab.classList.remove("text-slate-500");
+    function resolveDiaForDate(cal, targetYMD) {
+      const { mapArr, byDate } = buildCalendarIndex(cal);
+
+      // 1) direct match
+      const direct = byDate.get(targetYMD);
+      const directDia = direct ? Number(direct.dia) : NaN;
+      if (Number.isFinite(directDia) && directDia > 0) {
+        return { dia: directDia, source: "today" };
       }
-      if (badge && badge.textContent === "🔒") badge.textContent = "●";
-    }
 
-    function showModule(n) {
-      document.querySelectorAll(".module-view").forEach(view => view.classList.add("hidden"));
-      const active = document.getElementById("module-" + n);
-      if (active) active.classList.remove("hidden");
+      // 2) nearest previous
+      const targetDate = parseYMD(targetYMD);
+      let bestDia = null;
+      let bestDate = null;
 
-      document.querySelectorAll(".module-tab").forEach(btn => {
-        const m = btn.dataset.module;
-        if (String(m) === String(n)) {
-          btn.classList.add("bg-sky-50", "text-sky-800", "border-sky-300");
-          btn.classList.remove("bg-slate-50", "text-slate-500", "border-slate-200");
-        } else {
-          btn.classList.remove("bg-sky-50", "text-sky-800", "border-sky-300");
-          btn.classList.add("bg-slate-50", "text-slate-500", "border-slate-200");
+      for (const row of mapArr) {
+        if (!row || typeof row.fecha !== "string") continue;
+        const rowDia = Number(row.dia);
+        if (!(Number.isFinite(rowDia) && rowDia > 0)) continue;
+
+        const rowDate = parseYMD(row.fecha);
+        if (rowDate <= targetDate) {
+          if (!bestDate || rowDate > bestDate) {
+            bestDate = rowDate;
+            bestDia = rowDia;
+          }
         }
-      });
-    }
-
-    function applyHeaderFromRuntime() {
-      pageTitleEl.textContent = runtime.title || "Calentamiento – Módulo de práctica";
-      pageSubtitleEl.textContent = runtime.subtitle || "Calentamiento";
-
-      const bits = [];
-      if (runtime.dia != null) bits.push(`Día: ${runtime.dia}`);
-      if (runtime.calId) bits.push(`id: ${runtime.calId}`);
-      if (runtime.verbsLabel) bits.push(`Verbos: ${runtime.verbsLabel}`);
-      if (runtime.vocabLabel) bits.push(`Vocab: ${runtime.vocabLabel}`);
-      pageMetaEl.textContent = bits.join(" · ");
-    }
-
-    /***********************
-     * LIBRARY PARSING (robust)
-     ***********************/
-    function extractLibraryItems(lib) {
-      if (Array.isArray(lib)) return lib;
-
-      const candidates = [
-        lib?.items,
-        lib?.calentamientos,
-        lib?.data,
-        lib?.library,
-        lib?.entries
-      ];
-
-      for (const c of candidates) {
-        if (Array.isArray(c)) return c;
       }
-      return [];
+
+      if (bestDia !== null) return { dia: bestDia, source: "previous" };
+      return { dia: null, source: "none" };
+    }
+
+    function renderDebugBox(title, obj) {
+      return `
+        <details class="bg-white rounded-2xl shadow border border-slate-200 p-4">
+          <summary class="cursor-pointer font-semibold">${escapeHtml(title)}</summary>
+          <pre class="mt-3 text-xs overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-3">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
+        </details>
+      `;
     }
 
     /***********************
-     * RESOLVE FROM LIBRARY
+     * RENDERERS
      ***********************/
-    async function resolveFromLibraryIfPossible() {
-      // 1) Prefer explicit ?cal=
-      const calId = getCalIdFromURL();
-      const dia = getDiaFromURL();
+    function renderEvaluacion(item) {
+      const prompts = Array.isArray(item.prompts) ? item.prompts : [];
+      const instructions = item.instructions
+        ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
+        : "";
 
-      runtime.dia = dia ?? null;
+      return `
+        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-emerald-600 text-white">
+            <h3 class="text-lg font-extrabold">✅ Evaluación</h3>
+            <p class="text-sm opacity-90">${escapeHtml(item.title || item.kind || item.id)}</p>
+          </div>
+          <div class="p-6 space-y-3">
+            ${instructions}
+            ${prompts.length ? `
+              <ol class="list-decimal pl-5 space-y-2 text-slate-800">
+                ${prompts.map(p => `<li>${escapeHtml(p)}</li>`).join("")}
+              </ol>
+            ` : `<p class="text-sm text-slate-600">No hay prompts en este item.</p>`}
+            <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+          </div>
+        </article>
+      `;
+    }
 
-      // 2) If no ?cal= but we have a día, auto-map to cal-s2-d<dia>
-      runtime.calId = calId || (dia != null ? `cal-${COURSE}-d${dia}` : null);
+    function renderExtra(item) {
+      const title = escapeHtml(item.title || "Extra");
 
-      // If neither exists, just run defaults
-      if (!runtime.calId) {
-        runtime.subtitle = "Calentamiento (modo manual)";
-        applyHeaderFromRuntime();
-        showTopStatus("Modo manual: no se proporcionó ?cal= ni día en la URL. Usando valores por defecto.", "info");
+      // LINKS
+      if (item.kind === "links") {
+        const links = Array.isArray(item.links) ? item.links : [];
+        return `
+          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-indigo-600 text-white">
+              <h3 class="text-lg font-extrabold">➕ Extra</h3>
+              <p class="text-sm opacity-90">${title}</p>
+            </div>
+            <div class="p-6">
+              ${links.length ? `
+                <ul class="list-disc pl-5 space-y-2">
+                  ${links.map(l => `
+                    <li>
+                      <a class="text-indigo-700 underline"
+                        href="${escapeHtml(l.url)}"
+                        target="_blank" rel="noopener">
+                        ${escapeHtml(l.label)}
+                      </a>
+                    </li>
+                  `).join("")}
+                </ul>
+              ` : `<p class="text-sm text-slate-600">No hay enlaces en este extra.</p>`}
+              <p class="text-xs text-slate-500 mt-4">id: ${escapeHtml(item.id)}</p>
+            </div>
+          </article>
+        `;
+      }
+
+      // SENTENCES
+      if (item.kind === "sentences") {
+        const sentences = Array.isArray(item.sentences) ? item.sentences : [];
+        const instructions = item.instructions
+          ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
+          : "";
+
+        return `
+          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-indigo-600 text-white">
+              <h3 class="text-lg font-extrabold">➕ Extra</h3>
+              <p class="text-sm opacity-90">${title}</p>
+            </div>
+            <div class="p-6 space-y-3">
+              ${instructions}
+              ${sentences.length ? `
+                <ol class="list-decimal pl-5 space-y-2 text-slate-800">
+                  ${sentences.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
+                </ol>
+              ` : `<p class="text-sm text-slate-600">No hay oraciones en este extra.</p>`}
+              <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+            </div>
+          </article>
+        `;
+      }
+
+      // FALLBACK
+      return `
+        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+          <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
+          <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
+        </div>
+      `;
+    }
+
+    // 🔥 Calentamiento: plan-page summary card (practice opens in new tab)
+    function renderCalentamientoCard(entry) {
+      const title = escapeHtml(entry.title || "Calentamiento");
+      const timebox = Number(entry.timebox_min);
+      const timeText = Number.isFinite(timebox) && timebox > 0 ? `${timebox} min` : null;
+
+      const verbsLabel = escapeHtml(entry?.sources?.verbs?.label || "Verbos");
+      const vocabLabel = escapeHtml(entry?.sources?.vocab?.label || "Vocabulario");
+
+      const teacherNote = entry.teacher_note
+        ? `<p class="text-sm text-slate-700">${escapeHtml(entry.teacher_note)}</p>`
+        : "";
+
+      const practiceUrlBase = String(entry.practice_page_url || "").trim();
+      const practiceHref = practiceUrlBase
+        ? `${practiceUrlBase}${practiceUrlBase.includes("?") ? "&" : "?"}cal=${encodeURIComponent(entry.id)}`
+        : "";
+
+      const button = practiceHref
+        ? `<a href="${escapeHtml(practiceHref)}"
+              target="_blank" rel="noopener"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700">
+              Abrir práctica ↗
+           </a>`
+        : `<span class="text-sm text-red-700 font-semibold">⚠ Falta practice_page_url para este calentamiento.</span>`;
+
+      return `
+        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 bg-amber-500 text-white">
+            <div class="flex items-baseline justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-extrabold">🔥 Calentamiento</h3>
+                <p class="text-sm opacity-95">${title}</p>
+              </div>
+              ${timeText ? `<span class="text-sm font-bold opacity-95">${escapeHtml(timeText)}</span>` : ""}
+            </div>
+          </div>
+
+          <div class="p-6 space-y-3">
+            <div class="text-sm text-slate-800">
+              <div><span class="font-semibold">Verbos:</span> ${verbsLabel}</div>
+              <div><span class="font-semibold">Vocab:</span> ${vocabLabel}</div>
+            </div>
+
+            ${teacherNote}
+
+            <div class="pt-2">
+              ${button}
+            </div>
+
+            <p class="text-xs text-slate-500">id: ${escapeHtml(entry.id)}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    /***********************
+     * LOAD + RENDER DAY
+     ***********************/
+    async function determineDia() {
+      const diaFromUrl = getDiaFromURL();
+      if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
+
+      // Try calendar-based resolution
+      try {
+        const cal = await getJSON(CALENDAR_URL);
+        const today = ymdLocal();
+        const resolved = resolveDiaForDate(cal, today);
+        if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
+      } catch (_) {
+        // ignore calendar errors; fall back to input
+      }
+
+      const diaFromInput = Number(diaInput.value);
+      if (Number.isFinite(diaFromInput) && diaFromInput > 0) return { DIA: diaFromInput, source: "input" };
+
+      return { DIA: null, source: "none" };
+    }
+
+    function updateHeader({ DIA, day, calSource }) {
+      const fechaPlan = day?.fecha ? String(day.fecha) : null;
+      dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
+
+      if (!fechaPlan) {
+        daySubtitleEl.textContent = "Fecha no definida en el plan.";
         return;
       }
 
+      const fechaBonita = formatFechaES(fechaPlan);
+
+      if (calSource === "previous") {
+        daySubtitleEl.textContent = `No hay clase hoy — mostrando la clase más reciente. ${fechaBonita}`.trim();
+      } else {
+        daySubtitleEl.textContent = fechaBonita;
+      }
+    }
+
+    async function loadDay() {
+      outputEl.innerHTML = "";
+
+      const { DIA, source } = await determineDia();
+      if (!DIA) {
+        setStatus("Pon un número de día válido.", "err");
+        return;
+      }
+
+      // Status line
+      if (source === "link") setStatus(`Cargando Día ${DIA} (link)…`, "info");
+      else if (source === "today") setStatus(`Cargando Día ${DIA} (hoy)…`, "info");
+      else if (source === "previous") setStatus(`No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`, "info");
+      else setStatus(`Cargando Día ${DIA}…`, "info");
+
       try {
-        const lib = await getJSON(CALENTAMIENTOS_URL);
-        const items = extractLibraryItems(lib);
+        const [plan, evals, extras, cals] = await Promise.all([
+          getJSON(PLAN_URL),
+          getJSON(EVAL_URL),
+          getJSON(EXTRAS_URL),
+          getJSON(CALENTAMIENTOS_URL),
+        ]);
 
-        const entry = items.find(x => x && safeText(x.id) === safeText(runtime.calId));
+        if (debugToggle.checked) {
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evals));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", extras));
+          outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: calentamientos.json", cals));
+        }
 
-        if (!entry) {
-          runtime.subtitle = "Calentamiento (id no encontrado)";
-          applyHeaderFromRuntime();
-          showTopStatus(
-            `⚠ No encontré "${runtime.calId}" en calentamientos.json. Usando valores por defecto.`,
-            "err"
-          );
+        const days = Array.isArray(plan?.days) ? plan.days : [];
+        const day = days.find(d => Number(d.dia) === DIA);
+
+        if (!day) {
+          setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
+          outputEl.insertAdjacentHTML("beforeend", `
+            <div class="bg-white rounded-2xl shadow border border-slate-200 p-6">
+              <p class="text-slate-700">
+                Revisa que <code class="bg-slate-100 px-1 rounded">plan.days</code> tenga un objeto con <strong>"dia": ${escapeHtml(DIA)}</strong>.
+              </p>
+            </div>
+          `);
           return;
         }
 
-        // Apply metadata
-        const t = safeText(entry.title);
-        runtime.title = t ? `Calentamiento – ${t}` : runtime.title;
+        // If calendar said "previous", reflect it in header subtitle. We can infer it by re-resolving quickly
+        // BUT we already used determineDia() (which doesn’t return the calSource explicitly beyond source string).
+        updateHeader({ DIA, day, calSource: source });
 
-        runtime.teacherNote = safeText(entry.teacher_note);
-        runtime.subtitle = runtime.teacherNote ? "Calentamiento (con nota)" : "Calentamiento";
-
-        // Apply labels + URLs
-        runtime.verbsLabel = safeText(entry?.sources?.verbs?.label) || runtime.verbsLabel;
-        runtime.vocabLabel = safeText(entry?.sources?.vocab?.label) || runtime.vocabLabel;
-
-        const vUrl = safeText(entry?.sources?.verbs?.url);
-        const vbUrl = safeText(entry?.sources?.vocab?.url);
-
-        if (isLikelyUrl(vUrl)) runtime.verbsUrl = vUrl;
-        if (isLikelyUrl(vbUrl)) runtime.vocabUrl = vbUrl;
-
-        applyHeaderFromRuntime();
-
-        const msg =
-          `✔ Biblioteca: ${runtime.calId}` +
-          ` · Verbos: ${runtime.verbsLabel}` +
-          ` · Vocab: ${runtime.vocabLabel}`;
-
-        if (runtime.teacherNote) {
-          showTopStatus(`${msg} — Nota: ${runtime.teacherNote}`, "ok");
-        } else {
-          showTopStatus(msg, "ok");
+        const blocks = Array.isArray(day?.blocks) ? day.blocks : [];
+        if (!blocks.length) {
+          setStatus(`Día ${DIA} existe, pero day.blocks está vacío.`, "err");
+          return;
         }
 
-        // Extra debug: show the resolved URLs (so you know it actually changed)
-        showTopStatus(
-          `${msg}\nVerbos URL: ${runtime.verbsUrl}\nVocab URL: ${runtime.vocabUrl}`,
-          "ok"
+        const evalItems = Array.isArray(evals?.items) ? evals.items : [];
+        const extraItems = Array.isArray(extras?.items) ? extras.items : [];
+        const calItems = Array.isArray(cals?.items) ? cals.items : [];
+
+        let renderedAny = false;
+
+        for (const block of blocks) {
+          if (!block || typeof block.type !== "string") continue;
+
+          // ✅ Evaluación
+          if (blockkind === "evaluacion") {
+            const item = evalItems.find(x => x.id === block.ref);
+            if (!item) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré la evaluación con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">evaluaciones.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderEvaluacion(item));
+              renderedAny = true;
+            }
+          }
+
+          // ➕ Extra
+          else if (blockKind === "extras") {
+            const item = extraItems.find(x => x.id === block.ref);
+            if (!item) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré el extra con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">extras.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderExtra(item));
+              renderedAny = true;
+            }
+          }
+
+          // 🔥 Calentamiento (Option A)
+          else if (blockKind === "calentamiento") {
+            const entry = calItems.find(x => x.id === block.ref);
+            if (!entry) {
+              outputEl.insertAdjacentHTML("beforeend", `
+                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                  <p class="text-red-700 font-semibold">No encontré el calentamiento con id = "${escapeHtml(block.ref)}".</p>
+                  <p class="text-sm text-slate-700">Revisa que exista en <code class="bg-slate-100 px-1 rounded">calentamientos.items</code>.</p>
+                </div>
+              `);
+            } else {
+              outputEl.insertAdjacentHTML("beforeend", renderCalentamientoCard(entry));
+              renderedAny = true;
+            }
+          }
+
+          // ❓ Unknown block type
+          else {
+            outputEl.insertAdjacentHTML("beforeend", `
+              <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+                <p class="text-red-700 font-semibold">Tipo de bloque no soportado: "${escapeHtml(block.type)}"</p>
+                <p class="text-sm text-slate-700">Ref: <code class="bg-slate-100 px-1 rounded">${escapeHtml(block.ref)}</code></p>
+              </div>
+            `);
+          }
+        }
+
+        setStatus(
+          renderedAny
+            ? `Listo. Rendericé Día ${DIA}.`
+            : `Encontré Día ${DIA}, pero no rendericé nada (refs faltantes o tipos no soportados).`,
+          renderedAny ? "ok" : "err"
         );
-      } catch (err) {
-        runtime.subtitle = "Calentamiento (error al cargar biblioteca)";
-        applyHeaderFromRuntime();
-        showTopStatus(
-          `⚠ No pude cargar calentamientos.json. Usando valores por defecto. (${err.message})`,
-          "err"
-        );
-      }
-    }
 
-    /***********************
-     * VERB MODULES
-     ***********************/
-    function buildVerbModule(moduleNumber, items) {
-      const container = document.getElementById("module-" + moduleNumber + "-questions");
-      if (!container) return;
-      container.innerHTML = "";
-
-      items.forEach((item, index) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "space-y-1 quiz-item";
-        wrapper.dataset.answer = safeText(item.forma);
-
-        const sujeto = safeText(item.sujeto);
-        const contexto = safeText(item.contexto) || "___";
-        const infinitivo = safeText(item.infinitivo);
-
-        wrapper.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">
-            ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
-          </label>
-          <input type="text"
-                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        container.appendChild(wrapper);
-      });
-    }
-
-    function buildAllVerbModules(items) {
-      const chunkSize = 5; // 4 modules x 5 = 20
-      for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
-        const start = (moduleNum - 1) * chunkSize;
-        const slice = items.slice(start, start + chunkSize);
-        if (!slice.length) break;
-        buildVerbModule(moduleNum, slice);
-      }
-    }
-
-    function attachQuizHandler(moduleNumber) {
-      const btnCheck = document.getElementById("btn-check-module-" + moduleNumber);
-      if (!btnCheck) return;
-
-      btnCheck.addEventListener("click", () => {
-        const selector = "#module-" + moduleNumber + " .quiz-item";
-        const items = document.querySelectorAll(selector);
-        const resultEl = document.getElementById("module-" + moduleNumber + "-result");
-
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector("input");
-          const feedback = item.querySelector(".feedback");
-          const value = (input?.value || "").trim();
-          if (!value) {
-            missing = true;
-            input.classList.remove("border-emerald-400", "border-red-400");
-            input.classList.add("border-yellow-400");
-            feedback?.classList.add("hidden");
-          }
-        });
-
-        if (missing) {
-          resultEl.textContent = "Responde todos los campos antes de corregir tus respuestas.";
-          resultEl.classList.remove("text-emerald-700");
-          resultEl.classList.add("text-red-600");
-          return;
-        }
-
-        let correct = 0;
-        items.forEach(item => {
-          const rawAnswer = safeText(item.dataset.answer);
-          const answer = rawAnswer.toLowerCase();
-          const input = item.querySelector("input");
-          const feedback = item.querySelector(".feedback");
-          const userValue = (input?.value || "").trim().toLowerCase();
-
-          if (userValue === answer) {
-            correct++;
-            input.classList.remove("border-red-400", "border-yellow-400");
-            input.classList.add("border-emerald-400");
-            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-            feedback.classList.remove("hidden", "text-red-500");
-            feedback.classList.add("text-emerald-600");
-          } else {
-            input.classList.remove("border-emerald-400", "border-yellow-400");
-            input.classList.add("border-red-400");
-            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-            feedback.classList.remove("hidden", "text-emerald-600");
-            feedback.classList.add("text-red-500");
-          }
-        });
-
-        const total = items.length;
-        const score = total ? correct / total : 0;
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
-
-        const nextBtn = document.getElementById("btn-next-from-" + moduleNumber);
-
-        if (score >= PASS_THRESHOLD) {
-          resultEl.classList.remove("text-red-600");
-          resultEl.classList.add("text-emerald-700");
-
-          if (nextBtn) {
-            nextBtn.disabled = false;
-            nextBtn.classList.remove("bg-slate-300", "text-slate-600", "cursor-not-allowed");
-            nextBtn.classList.add("bg-emerald-600", "hover:bg-emerald-700", "text-white");
-          }
-
-          markModuleCompleted(moduleNumber);
-          const nextModule = moduleNumber + 1;
-          if (nextModule <= 6) unlockModuleBtn(nextModule);
-        } else {
-          resultEl.classList.remove("text-emerald-700");
-          resultEl.classList.add("text-red-600");
-        }
-      });
-    }
-
-    async function loadPracticeSet() {
-      try {
-        const data = await getJSON(runtime.verbsUrl);
-        const items = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
-        if (!items.length) throw new Error("El JSON de verbos no contiene items.");
-
-        buildAllVerbModules(items);
-        [1, 2, 3, 4].forEach(attachQuizHandler);
-      } catch (err) {
-        console.error("Error al cargar el JSON de práctica:", err);
-        document.getElementById("module-1-result").textContent =
-          "No se pudo cargar el conjunto de práctica (revisa la URL del JSON).";
-        showTopStatus(`⚠ Error cargando verbos: ${err.message}`, "err");
-      }
-    }
-
-    /***********************
-     * VOCAB MODULE (Módulo 2)
-     ***********************/
-    const vocabBlockContainer = document.getElementById("vocab-block-container");
-    const vocabGlobalStatus = document.getElementById("vocab-global-status");
-    const nextFrom5Btn = document.getElementById("btn-next-from-5");
-    const resetVocabBtn = document.getElementById("btn-reset-vocab");
-
-    const vocabState = { blocks: [], currentIndex: 0, scores: [], pairs: [] };
-
-    function normalizeVocabPiece(str) {
-      let s = (str || "").toLowerCase().trim();
-      s = s.replace(/\([^)]*\)/g, " ").trim();
-      while (/^(to|the|a|an)\s+/.test(s)) s = s.replace(/^(to|the|a|an)\s+/, "");
-      return s.replace(/\s+/g, " ");
-    }
-
-    function levenshtein(a, b) {
-      a = a || ""; b = b || "";
-      const m = a.length, n = b.length;
-      if (!m) return n;
-      if (!n) return m;
-      const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-      for (let i = 0; i <= m; i++) dp[i][0] = i;
-      for (let j = 0; j <= n; j++) dp[0][j] = j;
-      for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-          dp[i][j] = Math.min(
-            dp[i - 1][j] + 1,
-            dp[i][j - 1] + 1,
-            dp[i - 1][j - 1] + cost
-          );
-        }
-      }
-      return dp[m][n];
-    }
-
-    function isVocabCorrect(userRaw, answerRaw) {
-      const user = (userRaw || "").trim();
-      const ans = (answerRaw || "").trim();
-      if (!ans) return false;
-
-      const answerParts = ans.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
-      const userParts = user.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
-      if (!answerParts.length) return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
-      if (!userParts.length) return false;
-
-      for (const up of userParts) {
-        for (const ap of answerParts) {
-          if (up === ap) return true;
-          const dist = levenshtein(up, ap);
-          const len = Math.max(up.length, ap.length);
-          const maxAllowed = Math.min(2, Math.floor(len * 0.25));
-          if (dist > 0 && dist <= maxAllowed) return true;
-        }
-      }
-      return false;
-    }
-
-    function extractVocabPairs(data) {
-      let raw = [];
-      if (Array.isArray(data)) raw = data;
-      else if (Array.isArray(data.items)) raw = data.items;
-      else if (Array.isArray(data.vocabulario)) raw = data.vocabulario;
-
-      return raw
-        .map(entry => {
-          const spanish =
-            entry.spanish || entry.es || entry.espanol || entry.español ||
-            entry.palabra || entry.termino || entry.vocabulario || "";
-          const english =
-            entry.english || entry.en || entry.ingles || entry.englishText ||
-            entry.traduccion || entry.definicion || "";
-          return { spanish: safeText(spanish), english: safeText(english) };
-        })
-        .filter(p => p.spanish && p.english);
-    }
-
-    function buildTypingStage(blockIdx) {
-      const block = vocabState.blocks[blockIdx];
-      if (!block) return;
-
-      vocabBlockContainer.innerHTML = "";
-
-      const header = document.createElement("div");
-      header.className = "flex items-baseline justify-between gap-2";
-      header.innerHTML = `
-        <h3 class="text-lg font-semibold text-slate-800">Bloque ${blockIdx + 1} de ${vocabState.blocks.length}</h3>
-        <p class="text-xs text-slate-500">Escribe la traducción al inglés para cada palabra.</p>
-      `;
-      vocabBlockContainer.appendChild(header);
-
-      const list = document.createElement("div");
-      list.className = "space-y-3 mt-2";
-
-      block.items.forEach((item, i) => {
-        const row = document.createElement("div");
-        row.className = "space-y-1 vocab-item";
-        row.dataset.answer = item.english;
-        row.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">${i + 1}. ${item.spanish}</label>
-          <input type="text" class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        list.appendChild(row);
-      });
-
-      vocabBlockContainer.appendChild(list);
-
-      const footer = document.createElement("div");
-      footer.className = "flex flex-wrap items-center gap-3 pt-3";
-      footer.innerHTML = `
-        <button id="btn-vocab-check" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
-          Corregir respuestas
-        </button>
-        <p id="vocab-block-result" class="text-sm text-slate-700"></p>
-      `;
-      vocabBlockContainer.appendChild(footer);
-
-      const checkBtn = footer.querySelector("#btn-vocab-check");
-      const resultEl = footer.querySelector("#vocab-block-result");
-
-      checkBtn.addEventListener("click", () => {
-        const items = vocabBlockContainer.querySelectorAll(".vocab-item");
-
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector("input");
-          const feedback = item.querySelector(".feedback");
-          const val = (input.value || "").trim();
-          if (!val) {
-            missing = true;
-            input.classList.remove("border-emerald-400", "border-red-400");
-            input.classList.add("border-yellow-400");
-            feedback.classList.add("hidden");
-          }
-        });
-
-        if (missing) {
-          resultEl.textContent = "Responde todos los campos antes de corregir.";
-          resultEl.classList.add("text-red-600");
-          return;
-        }
-
-        let correct = 0;
-        const wrongItems = [];
-
-        items.forEach((item, idx) => {
-          const rawAnswer = safeText(item.dataset.answer);
-          const input = item.querySelector("input");
-          const feedback = item.querySelector(".feedback");
-          const userVal = (input.value || "").trim();
-
-          const ok = isVocabCorrect(userVal, rawAnswer);
-          if (ok) {
-            correct++;
-            input.classList.remove("border-red-400", "border-yellow-400");
-            input.classList.add("border-emerald-400");
-            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-            feedback.classList.remove("hidden", "text-red-500");
-            feedback.classList.add("text-emerald-600");
-          } else {
-            input.classList.remove("border-emerald-400", "border-yellow-400");
-            input.classList.add("border-red-400");
-            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-            feedback.classList.remove("hidden", "text-emerald-600");
-            feedback.classList.add("text-red-500");
-            wrongItems.push(block.items[idx]);
-          }
-        });
-
-        vocabState.scores[blockIdx] = { correct, total: items.length };
-        resultEl.textContent = `Obtuviste ${correct} de ${items.length} (${Math.round((correct/items.length)*100)} %).`;
-
-        if (wrongItems.length === 0) {
-          resultEl.classList.remove("text-red-600");
-          resultEl.classList.add("text-emerald-700");
-          buildNextBlockButton(blockIdx);
-        } else {
-          buildMatchingStage(blockIdx, wrongItems);
-        }
-      });
-    }
-
-    function buildMatchingStage(blockIdx, wrongItems) {
-      const existing = document.getElementById("vocab-matching-section");
-      if (existing) existing.remove();
-
-      const matchSection = document.createElement("div");
-      matchSection.id = "vocab-matching-section";
-      matchSection.className = "mt-5 border-t border-slate-200 pt-4 space-y-3";
-      matchSection.innerHTML = `
-        <h4 class="text-sm font-semibold text-slate-800">Empareja las palabras que fallaste</h4>
-        <p class="text-xs text-slate-500">Clic en español → clic en inglés correcto.</p>
-      `;
-
-      function shuffle(arr) {
-        return arr.map(v => ({ v, r: Math.random() })).sort((a,b)=>a.r-b.r).map(x=>x.v);
-      }
-
-      const left = document.createElement("div");
-      left.className = "space-y-2";
-      const right = document.createElement("div");
-      right.className = "space-y-2";
-
-      const cols = document.createElement("div");
-      cols.className = "grid sm:grid-cols-2 gap-3";
-      cols.appendChild(left);
-      cols.appendChild(right);
-
-      const sList = shuffle(wrongItems);
-      const eList = shuffle(wrongItems);
-
-      sList.forEach(item => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option";
-        btn.textContent = item.spanish;
-        left.appendChild(btn);
-      });
-
-      eList.forEach(item => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option";
-        btn.dataset.english = item.english;
-        btn.textContent = item.english;
-        right.appendChild(btn);
-      });
-
-      matchSection.appendChild(cols);
-
-      const status = document.createElement("p");
-      status.className = "text-xs text-slate-500 mt-2";
-      matchSection.appendChild(status);
-
-      vocabBlockContainer.appendChild(matchSection);
-
-      let selectedSpanish = null;
-      let remaining = wrongItems.length;
-
-      function clearSelections() {
-        matchSection.querySelectorAll(".spanish-option,.english-option")
-          .forEach(b => b.classList.remove("ring-2","ring-sky-400","bg-sky-50"));
-      }
-
-      left.querySelectorAll(".spanish-option").forEach(btn => {
-        btn.addEventListener("click", () => {
-          if (btn.disabled) return;
-          selectedSpanish = btn;
-          clearSelections();
-          btn.classList.add("ring-2","ring-sky-400","bg-sky-50");
-          status.textContent = "Ahora clic en la traducción correcta.";
-        });
-      });
-
-      right.querySelectorAll(".english-option").forEach(btn => {
-        btn.addEventListener("click", () => {
-          if (!selectedSpanish || btn.disabled) return;
-
-          const s = selectedSpanish.textContent.trim();
-          const e = btn.dataset.english;
-
-          const ok = wrongItems.some(it => it.spanish === s && it.english === e);
-
-          if (ok) {
-            selectedSpanish.disabled = true;
-            btn.disabled = true;
-
-            selectedSpanish.classList.remove("ring-2","ring-sky-400","bg-sky-50");
-            selectedSpanish.classList.add("bg-emerald-50","border-emerald-400");
-            btn.classList.add("bg-emerald-50","border-emerald-400");
-
-            remaining--;
-            selectedSpanish = null;
-            status.className = "text-xs text-emerald-700 mt-2";
-            status.textContent = remaining ? `✔ Bien. Te quedan ${remaining}.` : "✔ Bloque completado.";
-
-            if (remaining === 0) buildNextBlockButton(blockIdx);
-          } else {
-            selectedSpanish = null;
-            clearSelections();
-            status.className = "text-xs text-red-600 mt-2";
-            status.textContent = "❌ No. Intenta otra vez.";
-          }
-        });
-      });
-    }
-
-    function buildNextBlockButton(blockIdx) {
-      const existing = document.getElementById("vocab-next-block");
-      if (existing) existing.remove();
-
-      const wrapper = document.createElement("div");
-      wrapper.id = "vocab-next-block";
-      wrapper.className = "pt-4 flex justify-end";
-
-      const isLast = blockIdx === vocabState.blocks.length - 1;
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold";
-      btn.textContent = isLast ? "Terminar vocabulario" : "Siguiente bloque de vocabulario →";
-
-      btn.addEventListener("click", () => {
-        if (isLast) {
-          const totals = vocabState.scores.reduce((acc, s) => {
-            if (!s) return acc;
-            acc.correct += s.correct || 0;
-            acc.total += s.total || 0;
-            return acc;
-          }, { correct: 0, total: 0 });
-
-          const pct = totals.total ? Math.round((totals.correct / totals.total) * 100) : 0;
-          vocabGlobalStatus.innerHTML =
-            `✔ Vocab completado. Total: <strong>${totals.correct}/${totals.total}</strong> (${pct}%).`;
-          vocabGlobalStatus.classList.remove("text-slate-500");
-          vocabGlobalStatus.classList.add("text-emerald-700");
-
-          markModuleCompleted(5);
-          unlockModuleBtn(6);
-
-          nextFrom5Btn.disabled = false;
-          nextFrom5Btn.classList.remove("bg-slate-300","text-slate-600","cursor-not-allowed");
-          nextFrom5Btn.classList.add("bg-emerald-600","hover:bg-emerald-700","text-white");
-        } else {
-          buildTypingStage(blockIdx + 1);
-          vocabGlobalStatus.textContent = `Bloque ${blockIdx + 2} de ${vocabState.blocks.length}.`;
-        }
-      });
-
-      wrapper.appendChild(btn);
-      vocabBlockContainer.appendChild(wrapper);
-    }
-
-    async function loadVocabSet() {
-      try {
-        const data = await getJSON(runtime.vocabUrl);
-        let pairs = extractVocabPairs(data).slice(0, 30);
-        if (!pairs.length) throw new Error("No se encontraron palabras en el JSON.");
-
-        vocabState.pairs = pairs;
-        vocabState.scores = [];
-        vocabState.blocks = [];
-        for (let i = 0; i < 3; i++) {
-          const slice = pairs.slice(i * 10, (i + 1) * 10);
-          if (slice.length) vocabState.blocks.push({ items: slice });
-        }
-
-        vocabGlobalStatus.textContent = `Vocab listo: ${vocabState.blocks.length} bloques.`;
-        buildTypingStage(0);
       } catch (err) {
         console.error(err);
-        vocabBlockContainer.innerHTML =
-          '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL).</p>';
-        showTopStatus(`⚠ Error cargando vocabulario: ${err.message}`, "err");
+        setStatus(`Error: ${err.message}`, "err");
+        outputEl.insertAdjacentHTML("beforeend", `
+          <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
+            <p class="text-red-700 font-semibold">Hubo un error cargando los JSON.</p>
+            <p class="text-sm text-slate-700">Abre la consola (DevTools) para ver detalles.</p>
+            <p class="text-xs text-slate-500 mt-2">${escapeHtml(String(err))}</p>
+          </div>
+        `);
       }
     }
 
-    if (resetVocabBtn) {
-      resetVocabBtn.addEventListener("click", () => {
-        buildTypingStage(0);
-        vocabGlobalStatus.textContent = "Reiniciado.";
-        nextFrom5Btn.disabled = true;
-        nextFrom5Btn.classList.add("bg-slate-300","text-slate-600","cursor-not-allowed");
-        nextFrom5Btn.classList.remove("bg-emerald-600","hover:bg-emerald-700","text-white");
-      });
-    }
-
-    /***********************
-     * NAV / BUTTONS
-     ***********************/
-    function wireNavigation() {
-      for (let i = 1; i <= 4; i++) {
-        const nextBtn = document.getElementById("btn-next-from-" + i);
-        if (!nextBtn) continue;
-        nextBtn.addEventListener("click", () => {
-          const target = i + 1;
-          const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
-          if (tab && !tab.disabled) showModule(target);
-        });
-      }
-
-      if (nextFrom5Btn) {
-        nextFrom5Btn.addEventListener("click", () => {
-          showModule(6);
-          markModuleCompleted(6);
-        });
-      }
-
-      document.querySelectorAll(".module-tab").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const num = Number(btn.dataset.module);
-          if (btn.disabled) return;
-          showModule(num);
-        });
-      });
-
-      document.querySelectorAll("[data-go-module]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const num = Number(btn.dataset.goModule);
-          showModule(num);
-        });
-      });
-    }
-
-    /***********************
-     * INIT
-     ***********************/
-    async function init() {
-      updateProgress();
-      showModule(1);
-      wireNavigation();
-
-      await resolveFromLibraryIfPossible();
-      await loadPracticeSet();
-      await loadVocabSet();
-    }
-
-    init();
+    loadBtn.addEventListener("click", loadDay);
+    loadDay(); // auto-load on open
   </script>
 </body>
 </html>
