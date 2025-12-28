@@ -183,40 +183,7 @@ const CALENTAMIENTO_STATIC_BASE =
     /***********************
      * RENDERERS
      ***********************/
-   function renderCalentamientoStaticCard(DIA) {
-  const href = `${CALENTAMIENTO_STATIC_BASE}/${encodeURIComponent(DIA)}`;
-
-  return `
-    <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-      <div class="px-6 py-4 bg-amber-500 text-white">
-        <div class="flex items-baseline justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-extrabold">🔥 Calentamiento</h3>
-            <p class="text-sm opacity-95">Día ${escapeHtml(DIA)}</p>
-          </div>
-          <span class="text-sm font-bold opacity-95">8 min</span>
-        </div>
-      </div>
-
-      <div class="p-6 space-y-3">
-        <p class="text-sm text-slate-700">
-          Abre el calentamiento del día. (Ruta fija: <code class="bg-slate-100 px-1 rounded">/DIA</code>)
-        </p>
-
-        <div class="pt-2">
-          <a href="${escapeHtml(href)}"
-             target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700">
-            Abrir calentamiento ↗
-          </a>
-        </div>
-
-        <p class="text-xs text-slate-500">url: ${escapeHtml(href)}</p>
-      </div>
-    </article>
-  `;
-}
-
+   
     function renderEvaluacion(item) {
       const prompts = Array.isArray(item.prompts) ? item.prompts : [];
       const instructions = item.instructions
@@ -416,12 +383,11 @@ const CALENTAMIENTO_STATIC_BASE =
       else setStatus(`Cargando Día ${DIA}…`, "info");
 
       try {
-        const [plan, evals, extras, cals] = await Promise.all([
-          getJSON(PLAN_URL),
-          getJSON(EVAL_URL),
-          getJSON(EXTRAS_URL),
-          getJSON(CALENTAMIENTOS_URL),
-        ]);
+       const [plan, evals, extras] = await Promise.all([
+  getJSON(PLAN_URL),
+  getJSON(EVAL_URL),
+  getJSON(EXTRAS_URL),
+]);
 
         if (debugToggle.checked) {
           outputEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
@@ -462,10 +428,16 @@ const CALENTAMIENTO_STATIC_BASE =
         for (const block of blocks) {
           if (!block) continue;
 
-          const blockType = normalizeType(block.type);   // ✅ THIS was the broken part
-          const ref = String(block.ref || "").trim();
+          const blockType = normalizeType(block.kind);
+const ref = String(block.ref || "").trim();
 
-          if (!blockType || !ref) continue;
+if (!blockType) continue;
+if (blockType === "calentamiento") {
+  outputEl.insertAdjacentHTML("beforeend", renderCalentamientoStaticCard(DIA));
+  renderedAny = true;
+  continue;
+}
+if (!ref) continue;
 
           if (blockType === "evaluacion") {
             const item = evalItems.find(x => x?.id === ref);
