@@ -57,12 +57,8 @@
     const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
     const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
 
-    // Library (still used for labels/metadata on the plan page)
-    const CALENTAMIENTOS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calentamientos.json";
-
-    // ✅ Your chosen static pattern: base + "/" + DIA
-    // Example output: https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/33
-    const CALENTAMIENTO_STATIC_BASE = "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento";
+const CALENTAMIENTO_STATIC_BASE =
+  "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento";
 
     /***********************
      * DOM
@@ -187,6 +183,40 @@
     /***********************
      * RENDERERS
      ***********************/
+   function renderCalentamientoStaticCard(DIA) {
+  const href = `${CALENTAMIENTO_STATIC_BASE}/${encodeURIComponent(DIA)}`;
+
+  return `
+    <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
+      <div class="px-6 py-4 bg-amber-500 text-white">
+        <div class="flex items-baseline justify-between gap-4">
+          <div>
+            <h3 class="text-lg font-extrabold">🔥 Calentamiento</h3>
+            <p class="text-sm opacity-95">Día ${escapeHtml(DIA)}</p>
+          </div>
+          <span class="text-sm font-bold opacity-95">8 min</span>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-3">
+        <p class="text-sm text-slate-700">
+          Abre el calentamiento del día. (Ruta fija: <code class="bg-slate-100 px-1 rounded">/DIA</code>)
+        </p>
+
+        <div class="pt-2">
+          <a href="${escapeHtml(href)}"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700">
+            Abrir calentamiento ↗
+          </a>
+        </div>
+
+        <p class="text-xs text-slate-500">url: ${escapeHtml(href)}</p>
+      </div>
+    </article>
+  `;
+}
+
     function renderEvaluacion(item) {
       const prompts = Array.isArray(item.prompts) ? item.prompts : [];
       const instructions = item.instructions
