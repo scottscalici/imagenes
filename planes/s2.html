@@ -3,552 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plan – Español 2</title>
+  <title>Plan de Clase - Español</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .card-shadow { box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1); }
+  </style>
 </head>
 
-<body class="bg-slate-100 text-slate-900 min-h-screen">
-  <main class="max-w-4xl mx-auto px-4 py-10 space-y-6">
+<body class="bg-slate-50 text-slate-900 min-h-screen font-sans">
+  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
-    <!-- Day Header -->
-    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6">
-      <h1 id="dayTitle" class="text-2xl font-extrabold text-slate-900">Día —</h1>
-      <p id="daySubtitle" class="text-sm text-slate-600 mt-1"></p>
-      <p id="dayMeta" class="text-xs text-slate-500 mt-2"></p>
-    </section>
+    <header id="header" class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
+      <h1 id="dayTitle" class="text-3xl font-bold italic">Día —</h1>
+      <p id="daySubtitle" class="text-lg font-medium"></p>
+    </header>
 
-    <!-- Controls -->
-    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-3">
-      <div class="flex flex-wrap items-end gap-3">
+    <details class="bg-white rounded-xl border border-slate-200 p-4 opacity-50 hover:opacity-100 transition-opacity">
+      <summary class="text-xs font-bold text-slate-500 cursor-pointer uppercase tracking-widest">Controles del Profesor</summary>
+      <div class="flex items-end gap-3 mt-4">
         <div>
-          <label class="block text-sm font-semibold text-slate-700">Día</label>
-          <input id="diaInput" type="number" value="35"
-                 class="w-28 border rounded-lg px-3 py-2 text-sm" />
+          <label class="block text-xs font-bold text-slate-500 uppercase">Saltar a Día</label>
+          <input id="diaInput" type="number" class="w-20 border-b-2 border-slate-200 focus:border-sky-500 outline-none py-1 text-lg" />
         </div>
-
-        <button id="loadBtn"
-                class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
-          Cargar
-        </button>
-
-        <label class="ml-auto inline-flex items-center gap-2 text-sm text-slate-700">
-          <input id="debugToggle" type="checkbox" class="rounded" />
-          Debug JSON
-        </label>
+        <button id="loadBtn" class="bg-sky-600 text-white px-4 py-1 rounded-lg font-bold hover:bg-sky-700">Ir</button>
       </div>
+    </details>
 
-      <div id="status" class="text-sm text-slate-600"></div>
+    <section id="evalSection" class="space-y-4">
+      <div class="border-l-4 border-emerald-500 pl-4">
+        <h2 class="text-emerald-700 font-bold uppercase tracking-tight text-sm">Evaluación</h2>
+        <div id="evalContent" class="mt-2 space-y-1"></div>
+      </div>
     </section>
 
-    <!-- Evaluaciones (Today + Next 2) -->
-    <section id="evalStrip" class="space-y-4"></section>
+    <section id="calentamientoSection" class="bg-white rounded-xl border-l-4 border-red-500 p-6 card-shadow">
+        <h2 class="text-red-600 font-bold text-xl mb-2">Calentamiento</h2>
+        <div id="calDetail" class="text-slate-700 mb-4"></div>
+        <a id="calBtn" href="#" target="_blank" class="inline-block bg-slate-100 text-sky-700 font-bold px-4 py-2 rounded-lg hover:bg-sky-50 transition-colors">
+          Expandir/Reducir ↗
+        </a>
+    </section>
 
-    <!-- Day Blocks -->
-    <section id="output" class="space-y-4"></section>
-
-    <!-- Debug -->
-    <section id="debug" class="space-y-3"></section>
+    <section id="mainContent" class="space-y-4"></section>
 
   </main>
 
   <script>
-    /***********************
-     * CONFIG (URLs)
-     ***********************/
-    const COURSE = "s2";
+    const CONFIG = {
+      COURSE: "s2",
+      PLAN_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
+      EXTRAS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
+      EVAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+      CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
+    };
 
-    const PLAN_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json";
-    const EXTRAS_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
-
-    // ✅ evaluaciones as SCHEDULE (día -> label)
-    // (Your file can be either an array OR { courses: { s2: [...] } })
-    const EVALUACIONES_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json";
-
-    // Calendar map for "today / previous class" DIA resolution
-    const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
-
-    // ✅ pure static calentamiento (base + "/" + DIA)
-    const CALENTAMIENTO_STATIC_BASE =
-      "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento";
-
-    /***********************
-     * DOM
-     ***********************/
-    const dayTitleEl = document.getElementById("dayTitle");
-    const daySubtitleEl = document.getElementById("daySubtitle");
-    const dayMetaEl = document.getElementById("dayMeta");
-
-    const statusEl = document.getElementById("status");
-    const outputEl = document.getElementById("output");
-    const evalStripEl = document.getElementById("evalStrip");
-    const debugEl = document.getElementById("debug");
-
-    const diaInput = document.getElementById("diaInput");
-    const loadBtn = document.getElementById("loadBtn");
-    const debugToggle = document.getElementById("debugToggle");
-
-    /***********************
-     * UTILS
-     ***********************/
-    function setStatus(msg, kind = "info") {
-      const classes = {
-        info: "text-slate-600",
-        ok: "text-emerald-700",
-        err: "text-red-700",
-      };
-      statusEl.className = `text-sm ${classes[kind] || classes.info}`;
-      statusEl.textContent = msg;
+    async function fetchData() {
+      const [plan, extras, evals] = await Promise.all([
+        fetch(CONFIG.PLAN_URL).then(r => r.json()),
+        fetch(CONFIG.EXTRAS_URL).then(r => r.json()),
+        fetch(CONFIG.EVAL_URL).then(r => r.json())
+      ]);
+      return { plan, extras, evals };
     }
 
-    function escapeHtml(str) {
-      return String(str ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+    function getActiveDia() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('dia')) return parseInt(params.get('dia'));
+      return parseInt(document.getElementById('diaInput').value) || 1;
     }
 
-    async function getJSON(url) {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Fetch failed (${res.status}) for ${url}`);
-      return await res.json();
-    }
+    async function render() {
+      const { plan, extras, evals } = await fetchData();
+      const DIA = getActiveDia();
+      const dayData = plan.days.find(d => d.dia == DIA);
 
-    function ymdLocal(d = new Date()) {
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${y}-${m}-${day}`;
-    }
+      // Header
+      document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+      document.getElementById('daySubtitle').textContent = dayData?.fecha || "";
 
-    function parseYMD(ymd) {
-      const [y, m, d] = String(ymd).split("-").map(Number);
-      return new Date(y, m - 1, d, 0, 0, 0, 0);
-    }
+      // Evaluaciones (Rule of Three)
+      const evalMap = new Map(evals.courses[CONFIG.COURSE].map(e => [e.dia, e.label]));
+      const getEval = (d) => evalMap.get(d) || "Nada";
+      
+      document.getElementById('evalContent').innerHTML = `
+        <p class="text-lg font-medium text-slate-800">${getEval(DIA)}</p>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+            <p class="text-xs font-bold text-slate-400 uppercase">Próximas pruebas</p>
+            <ul class="text-sm text-slate-600 mt-1 list-disc ml-4">
+                <li>${getEval(DIA + 1)} - la próxima clase</li>
+                <li>${getEval(DIA + 2)} - Día ${DIA + 2}</li>
+            </ul>
+        </div>
+      `;
 
-    function formatFechaES(ymd) {
-      if (!ymd) return "";
-      const [y, m, d] = String(ymd).split("-").map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString("es-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+      // Calentamiento
+      document.getElementById('calDetail').innerHTML = `
+        <p class="font-medium text-slate-800">Práctica del Día ${DIA}</p>
+        <p class="text-sm text-slate-500">Haz clic para abrir la actividad en una nueva pestaña.</p>
+      `;
+      document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
+      // Main Blocks (Lecturas/Extras)
+      const contentEl = document.getElementById('mainContent');
+      contentEl.innerHTML = "";
+      
+      dayData?.blocks?.forEach(block => {
+        if (block.kind === 'calentamiento') return; // Handled above
+        
+        const extraData = extras.items.find(i => i.id === block.ref);
+        if (extraData) {
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-xl border-l-4 border-indigo-500 p-6 card-shadow";
+            card.innerHTML = `
+                <h2 class="text-indigo-600 font-bold text-xl mb-2">${extraData.title}</h2>
+                <div class="text-slate-700">${extraData.instructions || ""}</div>
+                ${extraData.sentences ? `<ol class="list-decimal ml-5 mt-3 space-y-1">${extraData.sentences.map(s => `<li>${s}</li>`).join('')}</ol>` : ""}
+            `;
+            contentEl.appendChild(card);
+        }
       });
     }
 
-    function getDiaFromURL() {
-      const params = new URLSearchParams(location.search);
-      const v = Number(params.get("dia"));
-      return Number.isFinite(v) && v > 0 ? v : null;
-    }
-
-    function buildCalendarIndex(cal) {
-      const mapArr = Array.isArray(cal?.map) ? cal.map : [];
-      const byDate = new Map();
-      for (const row of mapArr) {
-        if (row && typeof row.fecha === "string") byDate.set(row.fecha, row);
-      }
-      return { mapArr, byDate };
-    }
-
-    function resolveDiaForDate(cal, targetYMD) {
-      const { mapArr, byDate } = buildCalendarIndex(cal);
-
-      const direct = byDate.get(targetYMD);
-      const directDia = direct ? Number(direct.dia) : NaN;
-      if (Number.isFinite(directDia) && directDia > 0) {
-        return { dia: directDia, source: "today" };
-      }
-
-      const targetDate = parseYMD(targetYMD);
-      let bestDia = null;
-      let bestDate = null;
-
-      for (const row of mapArr) {
-        if (!row || typeof row.fecha !== "string") continue;
-        const rowDia = Number(row.dia);
-        if (!(Number.isFinite(rowDia) && rowDia > 0)) continue;
-
-        const rowDate = parseYMD(row.fecha);
-        if (rowDate <= targetDate) {
-          if (!bestDate || rowDate > bestDate) {
-            bestDate = rowDate;
-            bestDia = rowDia;
-          }
-        }
-      }
-
-      if (bestDia !== null) return { dia: bestDia, source: "previous" };
-      return { dia: null, source: "none" };
-    }
-
-    function renderDebugBox(title, obj) {
-      return `
-        <details class="bg-white rounded-2xl shadow border border-slate-200 p-4">
-          <summary class="cursor-pointer font-semibold">${escapeHtml(title)}</summary>
-          <pre class="mt-3 text-xs overflow-auto bg-slate-50 border border-slate-200 rounded-xl p-3">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
-        </details>
-      `;
-    }
-
-    function normalizeKind(raw) {
-      const t = String(raw || "").toLowerCase().trim();
-      // accept both "extras" and "extra"
-      if (t === "extras" || t === "extra") return "extra";
-      if (t === "evaluacion" || t === "evaluación" || t === "eval") return "evaluacion";
-      if (t === "calentamiento" || t === "cal") return "calentamiento";
-      return t;
-    }
-
-    /***********************
-     * EVALUACIONES (SCHEDULE)
-     ***********************/
-    function extractEvaluacionesArray(evalsJson, course) {
-      // supports:
-      // 1) [ {dia,label}, ... ]
-      // 2) { courses: { s2: [ {dia,label} ] } }
-      if (Array.isArray(evalsJson)) return evalsJson;
-      if (evalsJson?.courses && Array.isArray(evalsJson.courses?.[course])) return evalsJson.courses[course];
-      if (evalsJson?.items && Array.isArray(evalsJson.items)) return evalsJson.items; // fallback if you ever rename
-      return [];
-    }
-
-    function buildEvalIndex(evalsArr) {
-      const map = new Map();
-      for (const row of evalsArr) {
-        const dia = Number(row?.dia);
-        const label = String(row?.label ?? "").trim();
-        if (Number.isFinite(dia) && dia > 0) map.set(dia, label || "Nada");
-      }
-      return map;
-    }
-
-    function evalLabelForDia(evalMap, dia) {
-      // Your rule: always show something; if missing -> "Nada"
-      const label = evalMap.get(Number(dia));
-      return (label && label.trim()) ? label : "Nada";
-    }
-
-    function renderEvalCard({ title, dia, label }) {
-      return `
-        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-          <div class="px-6 py-4 bg-emerald-600 text-white">
-            <div class="flex items-baseline justify-between gap-4">
-              <div>
-                <h3 class="text-lg font-extrabold">✅ Evaluación</h3>
-                <p class="text-sm opacity-95">${escapeHtml(title)} · Día ${escapeHtml(dia)}</p>
-              </div>
-              <span class="text-sm font-bold opacity-95">${escapeHtml(label || "Nada")}</span>
-            </div>
-          </div>
-          <div class="p-6">
-            <p class="text-sm text-slate-700">
-              ${escapeHtml(label || "Nada")}
-            </p>
-          </div>
-        </article>
-      `;
-    }
-
-    function renderEvalStrip(evalMap, DIA) {
-      const d0 = Number(DIA);
-      const d1 = d0 + 1;
-      const d2 = d0 + 2;
-
-      const html = [
-        renderEvalCard({ title: "Hoy", dia: d0, label: evalLabelForDia(evalMap, d0) }),
-        renderEvalCard({ title: "Próxima clase", dia: d1, label: evalLabelForDia(evalMap, d1) }),
-        renderEvalCard({ title: "En 2 clases", dia: d2, label: evalLabelForDia(evalMap, d2) }),
-      ].join("");
-
-      evalStripEl.innerHTML = html;
-    }
-
-    /***********************
-     * RENDERERS
-     ***********************/
-    function renderCalentamientoStaticCard(DIA) {
-      const href = `${CALENTAMIENTO_STATIC_BASE}/${encodeURIComponent(String(DIA))}`;
-      return `
-        <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-          <div class="px-6 py-4 bg-amber-500 text-white">
-            <div class="flex items-baseline justify-between gap-4">
-              <div>
-                <h3 class="text-lg font-extrabold">🔥 Calentamiento</h3>
-                <p class="text-sm opacity-95">Día ${escapeHtml(DIA)}</p>
-              </div>
-              <span class="text-sm font-bold opacity-95">8 min</span>
-            </div>
-          </div>
-
-          <div class="p-6 space-y-3">
-            <p class="text-sm text-slate-700">Abre el calentamiento del día (ruta fija).</p>
-
-            <div class="pt-2">
-              <a href="${escapeHtml(href)}"
-                 target="_blank" rel="noopener"
-                 class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-600 text-white font-semibold hover:bg-amber-700">
-                Abrir calentamiento ↗
-              </a>
-            </div>
-
-            <p class="text-xs text-slate-500">url: ${escapeHtml(href)}</p>
-          </div>
-        </article>
-      `;
-    }
-
-    function renderExtra(item) {
-      const title = escapeHtml(item.title || "Extra");
-
-      if (item.kind === "links") {
-        const links = Array.isArray(item.links) ? item.links : [];
-        return `
-          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-            <div class="px-6 py-4 bg-indigo-600 text-white">
-              <h3 class="text-lg font-extrabold">➕ Extra</h3>
-              <p class="text-sm opacity-90">${title}</p>
-            </div>
-            <div class="p-6">
-              ${links.length ? `
-                <ul class="list-disc pl-5 space-y-2">
-                  ${links.map(l => `
-                    <li>
-                      <a class="text-indigo-700 underline"
-                        href="${escapeHtml(l.url)}"
-                        target="_blank" rel="noopener">
-                        ${escapeHtml(l.label)}
-                      </a>
-                    </li>
-                  `).join("")}
-                </ul>
-              ` : `<p class="text-sm text-slate-600">No hay enlaces en este extra.</p>`}
-              <p class="text-xs text-slate-500 mt-4">id: ${escapeHtml(item.id)}</p>
-            </div>
-          </article>
-        `;
-      }
-
-      if (item.kind === "sentences") {
-        const sentences = Array.isArray(item.sentences) ? item.sentences : [];
-        const instructions = item.instructions
-          ? `<p class="text-sm text-slate-700">${escapeHtml(item.instructions)}</p>`
-          : "";
-
-        return `
-          <article class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
-            <div class="px-6 py-4 bg-indigo-600 text-white">
-              <h3 class="text-lg font-extrabold">➕ Extra</h3>
-              <p class="text-sm opacity-90">${title}</p>
-            </div>
-            <div class="p-6 space-y-3">
-              ${instructions}
-              ${sentences.length ? `
-                <ol class="list-decimal pl-5 space-y-2 text-slate-800">
-                  ${sentences.map(s => `<li>${escapeHtml(s)}</li>`).join("")}
-                </ol>
-              ` : `<p class="text-sm text-slate-600">No hay oraciones en este extra.</p>`}
-              <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
-            </div>
-          </article>
-        `;
-      }
-
-      return `
-        <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-          <p class="text-red-700 font-semibold">Extra no soportado: ${escapeHtml(item.kind || "sin kind")}</p>
-          <p class="text-xs text-slate-500">id: ${escapeHtml(item.id)}</p>
-        </div>
-      `;
-    }
-
-    /***********************
-     * LOAD + RENDER DAY
-     ***********************/
-  async function determineDia() {
-  // 1) URL override (optional)
-  const diaFromUrl = getDiaFromURL();
-  if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
-
-  // 2) INPUT wins (what you typed)
-  const diaFromInput = Number(diaInput.value);
-  if (Number.isFinite(diaFromInput) && diaFromInput > 0) {
-    return { DIA: diaFromInput, source: "input" };
-  }
-
-  // 3) Calendar fallback (only if no input)
-  try {
-    const cal = await getJSON(CALENDAR_URL);
-    const today = ymdLocal();
-    const resolved = resolveDiaForDate(cal, today);
-    if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
-  } catch (_) {}
-
-  return { DIA: null, source: "none" };
-}
-
-    function updateHeader({ DIA, day, calSource }) {
-      const fechaPlan = day?.fecha ? String(day.fecha) : null;
-      dayTitleEl.textContent = `Día ${DIA}${fechaPlan ? ` · ${fechaPlan}` : ""}`;
-
-      if (!fechaPlan) {
-        daySubtitleEl.textContent = "Fecha no definida en el plan.";
-      } else {
-        const fechaBonita = formatFechaES(fechaPlan);
-        daySubtitleEl.textContent = (calSource === "previous")
-          ? `No hay clase hoy — mostrando la clase más reciente. ${fechaBonita}`.trim()
-          : fechaBonita;
-      }
-
-      dayMetaEl.textContent = `course: ${COURSE} · source: ${calSource || "?"}`;
-    }
-
-    async function loadDay() {
-      outputEl.innerHTML = "";
-      evalStripEl.innerHTML = "";
-      debugEl.innerHTML = "";
-
-      const { DIA, source } = await determineDia();
-      if (!DIA) {
-        setStatus("Pon un número de día válido.", "err");
-        return;
-      }
-
-      setStatus(
-        source === "previous"
-          ? `No hay clase hoy — mostrando la clase más reciente (Día ${DIA}).`
-          : `Cargando Día ${DIA}…`,
-        "info"
-      );
-
-      try {
-        const [plan, extrasJson, evalsJson] = await Promise.all([
-          getJSON(PLAN_URL),
-          getJSON(EXTRAS_URL),
-          getJSON(EVALUACIONES_URL),
-        ]);
-
-        if (debugToggle.checked) {
-          debugEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: plan_s2.json", plan));
-          debugEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: extras.json", extrasJson));
-          debugEl.insertAdjacentHTML("beforeend", renderDebugBox("Debug: evaluaciones.json", evalsJson));
-        }
-
-        const days = Array.isArray(plan?.days) ? plan.days : [];
-        const day = days.find(d => Number(d.dia) === Number(DIA));
-
-        if (!day) {
-          updateHeader({ DIA, day: null, calSource: source });
-          setStatus(`No encontré Día ${DIA} dentro de plan.days.`, "err");
-          outputEl.insertAdjacentHTML("beforeend", `
-            <div class="bg-white rounded-2xl shadow border border-slate-200 p-6">
-              <p class="text-slate-700">
-                Revisa que <code class="bg-slate-100 px-1 rounded">plan.days</code> tenga un objeto con <strong>"dia": ${escapeHtml(DIA)}</strong>.
-              </p>
-            </div>
-          `);
-          return;
-        }
-
-        updateHeader({ DIA, day, calSource: source });
-
-        // ✅ Evaluaciones strip (Hoy + next 2), ALWAYS includes "Nada"
-        const evalArr = extractEvaluacionesArray(evalsJson, COURSE);
-        const evalMap = buildEvalIndex(evalArr);
-        renderEvalStrip(evalMap, DIA);
-
-        // Day blocks
-        const blocks = Array.isArray(day?.blocks) ? day.blocks : [];
-        if (!blocks.length) {
-          setStatus(`Día ${DIA} existe, pero day.blocks está vacío.`, "err");
-          return;
-        }
-
-        const extraItems = Array.isArray(extrasJson?.items) ? extrasJson.items : [];
-        let renderedAny = false;
-
-        for (const block of blocks) {
-          if (!block) continue;
-
-          const kind = normalizeKind(block.kind);
-          const ref = String(block.ref || "").trim();
-
-          if (!kind) continue;
-
-          if (kind === "calentamiento") {
-            outputEl.insertAdjacentHTML("beforeend", renderCalentamientoStaticCard(DIA));
-            renderedAny = true;
-            continue;
-          }
-
-          if (kind === "extra") {
-            if (!ref) {
-              // allow extras without ref, but show a helpful warning
-              outputEl.insertAdjacentHTML("beforeend", `
-                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-                  <p class="text-red-700 font-semibold">Extra sin "ref".</p>
-                  <p class="text-sm text-slate-700">Este bloque necesita <code class="bg-slate-100 px-1 rounded">"ref"</code> para buscarlo en extras.json.</p>
-                </div>
-              `);
-              continue;
-            }
-
-            const item = extraItems.find(x => x?.id === ref);
-            if (!item) {
-              outputEl.insertAdjacentHTML("beforeend", `
-                <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-                  <p class="text-red-700 font-semibold">No encontré el extra con id = "${escapeHtml(ref)}".</p>
-                  <p class="text-sm text-slate-700">Revisa <code class="bg-slate-100 px-1 rounded">extras.items</code>.</p>
-                </div>
-              `);
-            } else {
-              outputEl.insertAdjacentHTML("beforeend", renderExtra(item));
-              renderedAny = true;
-            }
-            continue;
-          }
-
-          if (kind === "evaluacion") {
-            // ✅ we do NOT look up eval by id anymore; schedule handles it.
-            // If you still put evaluacion blocks in day.blocks, we’ll show the same label for the day.
-            const label = evalLabelForDia(evalMap, DIA);
-            outputEl.insertAdjacentHTML("beforeend", renderEvalCard({ title: "Evaluación del día", dia: DIA, label }));
-            renderedAny = true;
-            continue;
-          }
-
-          // fallback
-          outputEl.insertAdjacentHTML("beforeend", `
-            <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-              <p class="text-red-700 font-semibold">Tipo de bloque no soportado: "${escapeHtml(block.kind)}"</p>
-              ${ref ? `<p class="text-sm text-slate-700">Ref: <code class="bg-slate-100 px-1 rounded">${escapeHtml(ref)}</code></p>` : ""}
-            </div>
-          `);
-        }
-
-        setStatus(
-          renderedAny ? `Listo. Rendericé Día ${DIA}.` : `Render parcial: Día ${DIA}, pero algunos bloques no tenían refs / tipos válidos.`,
-          renderedAny ? "ok" : "err"
-        );
-
-      } catch (err) {
-        console.error(err);
-        setStatus(`Error: ${err.message}`, "err");
-        outputEl.insertAdjacentHTML("beforeend", `
-          <div class="bg-white rounded-2xl shadow border border-red-200 p-6">
-            <p class="text-red-700 font-semibold">Hubo un error cargando los JSON.</p>
-            <p class="text-sm text-slate-700">Abre la consola (DevTools) para ver detalles.</p>
-            <p class="text-xs text-slate-500 mt-2">${escapeHtml(String(err))}</p>
-          </div>
-        `);
-      }
-    }
-
-    loadBtn.addEventListener("click", loadDay);
-    loadDay();
+    document.getElementById('loadBtn').addEventListener('click', render);
+    render();
   </script>
 </body>
 </html>
