@@ -368,22 +368,27 @@
     /***********************
      * LOAD + RENDER DAY
      ***********************/
-    async function determineDia() {
-      const diaFromUrl = getDiaFromURL();
-      if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
+  async function determineDia() {
+  // 1) URL override (optional)
+  const diaFromUrl = getDiaFromURL();
+  if (diaFromUrl) return { DIA: diaFromUrl, source: "link" };
 
-      try {
-        const cal = await getJSON(CALENDAR_URL);
-        const today = ymdLocal();
-        const resolved = resolveDiaForDate(cal, today);
-        if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
-      } catch (_) {}
+  // 2) INPUT wins (what you typed)
+  const diaFromInput = Number(diaInput.value);
+  if (Number.isFinite(diaFromInput) && diaFromInput > 0) {
+    return { DIA: diaFromInput, source: "input" };
+  }
 
-      const diaFromInput = Number(diaInput.value);
-      if (Number.isFinite(diaFromInput) && diaFromInput > 0) return { DIA: diaFromInput, source: "input" };
+  // 3) Calendar fallback (only if no input)
+  try {
+    const cal = await getJSON(CALENDAR_URL);
+    const today = ymdLocal();
+    const resolved = resolveDiaForDate(cal, today);
+    if (resolved.dia) return { DIA: resolved.dia, source: resolved.source };
+  } catch (_) {}
 
-      return { DIA: null, source: "none" };
-    }
+  return { DIA: null, source: "none" };
+}
 
     function updateHeader({ DIA, day, calSource }) {
       const fechaPlan = day?.fecha ? String(day.fecha) : null;
