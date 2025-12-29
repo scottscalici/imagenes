@@ -32,189 +32,179 @@
     <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
       <h2 class="text-red-600 font-bold text-xl mb-3">Calentamiento</h2>
       <div id="calDetail" class="text-slate-700 space-y-2 mb-4 text-md">
-        </div>
+        <p>Práctica interactiva del día.</p>
+      </div>
       <a id="calBtn" href="#" target="_blank" class="text-sky-600 font-semibold hover:underline decoration-2 underline-offset-4">
-        Expandir/Reducir
+        Expandir/Reducir ↗
       </a>
     </section>
 
     <div id="dynamicBlocks" class="space-y-6"></div>
 
     <div class="mt-12 pt-8 border-t border-slate-200 opacity-40 hover:opacity-100 transition-opacity">
-        <div class="flex items-center gap-4 text-sm">
-            <span class="font-bold text-slate-500 uppercase">Salto de Día:</span>
-            <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="33">
-            <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Cargar</button>
-        </div>
+      <div class="flex items-center gap-4 text-sm">
+        <span class="font-bold text-slate-500 uppercase">Salto de Día:</span>
+        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="33">
+        <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Cargar</button>
+      </div>
     </div>
 
   </main>
 
   <script>
-const CONFIG = {
-    COURSE: "s2",
-    PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
-    EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
-    EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
-    CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
-    CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
-    CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
-  ESTRUCTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/estructura.json",
-  GRAMMAR: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/grammar.json"
-};
+    const CONFIG = {
+      COURSE: "s2",
+      PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
+      EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+      EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
+      CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+      CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
+      ESTRUCTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/estructura.json",
+      GRAMMAR: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/grammar.json",
+      CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
+    };
 
+    function formatSpanishDate(dateStr) {
+      if (!dateStr) return "";
+      const date = new Date(dateStr + "T00:00:00");
+      return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+    }
 
-  function formatSpanishDate(dateStr) {
-    if (!dateStr) return "";
-    const date = new Date(dateStr + "T00:00:00");
-    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-  }
+    async function loadData() {
+      const [plan, evals, extras, cal, curios, est, gram] = await Promise.all([
+        fetch(CONFIG.PLAN).then(r => r.json()),
+        fetch(CONFIG.EVALS).then(r => r.json()),
+        fetch(CONFIG.EXTRAS).then(r => r.json()),
+        fetch(CONFIG.CALENDARIO).then(r => r.json()),
+        fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
+        fetch(CONFIG.ESTRUCTURA).then(r => r.json()),
+        fetch(CONFIG.GRAMMAR).then(r => r.json())
+      ]);
+      return { plan, evals, extras, cal, curios, est, gram };
+    }
 
-  async function loadData() {
-    const [plan, evals, extras, cal, curios] = await Promise.all([
-      fetch(CONFIG.PLAN).then(r => r.json()),
-      fetch(CONFIG.EVALS).then(r => r.json()),
-      fetch(CONFIG.EXTRAS).then(r => r.json()),
-      fetch(CONFIG.CALENDARIO).then(r => r.json()),
-      fetch(CONFIG.CURIOSIDADES).then(r => r.json())
-    fetch(CONFIG.ESTRUCTURA).then(r => r.json()),
-    fetch(CONFIG.GRAMMAR).then(r => r.json())
-  ]);
-  return { plan, evals, extras, cal, curios, est, gram };
-}
-  
+    function renderManual() {
+      const d = document.getElementById('diaInput').value;
+      window.history.pushState({}, '', `?dia=${d}`);
+      init();
+    }
 
+    async function init() {
+      const data = await loadData();
+      const params = new URLSearchParams(window.location.search);
+      let DIA = parseInt(params.get('dia')) || 33; 
 
-  function renderManual() {
-    const d = document.getElementById('diaInput').value;
-    window.history.pushState({}, '', `?dia=${d}`);
-    init();
-  }
+      const dayPlan = data.plan.days.find(d => d.dia == DIA);
+      const evalList = data.evals.courses[CONFIG.COURSE];
 
-  async function init() {
-    const data = await loadData();
-    const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 33; 
+      // 1. Header
+      document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+      document.getElementById('headerDate').textContent = formatSpanishDate(dayPlan?.fecha);
 
-    const dayPlan = data.plan.days.find(d => d.dia == DIA);
-    const evalList = data.evals.courses[CONFIG.COURSE];
-
-    // 1. Header
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    document.getElementById('headerDate').textContent = formatSpanishDate(dayPlan?.fecha);
-
-    // 2. Evaluaciones
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Nada");
-    document.getElementById('currentEval').textContent = findEval(DIA);
-    document.getElementById('nextEvals').innerHTML = `
-      <li>${findEval(DIA + 1)} - la próxima clase</li>
-      <li>${findEval(DIA + 2)} - Día ${DIA + 2}</li>
-    `;
-
-    // 3. Calentamiento
-    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
-
-    // 4. Content Container
-    const container = document.getElementById('dynamicBlocks');
-    container.innerHTML = "";
-
-    // --- CURIOSIDAD RENDERING (Check by ID: cur-DIA) ---
-    const curiosity = data.curios.find(c => c.id === `cur-${DIA}`);
-    if (curiosity) {
-      const curCard = document.createElement('article');
-      curCard.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4 mb-6";
-      curCard.innerHTML = `
-        <h3 class="text-indigo-600 font-bold text-lg uppercase tracking-wide">Curiosidad ${DIA}</h3>
-        <h2 class="text-2xl font-extrabold text-slate-900">${curiosity.title}</h2>
-        <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm">
-          <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto object-cover">
-        </div>
-        ${curiosity.student_note ? `<p class="text-slate-700 italic">${curiosity.student_note}</p>` : ''}
+      // 2. Evaluaciones (Rule of Three)
+      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Nada");
+      document.getElementById('currentEval').textContent = findEval(DIA);
+      document.getElementById('nextEvals').innerHTML = `
+        <li>${findEval(DIA + 1)} - la próxima clase</li>
+        <li>${findEval(DIA + 2)} - Día ${DIA + 2}</li>
       `;
-      container.appendChild(curCard);
-    }
 
-    // 5. Dynamic Blocks (Extras from plan_s2.json)
-    dayPlan?.blocks?.forEach(block => {
-      if (block.kind === "extras") {
-        const content = data.extras.items.find(i => i.id === block.ref);
-        if (content) {
-          const section = document.createElement('section');
-          section.className = "bg-white rounded-xl border-l-[6px] border-sky-500 p-6 card-shadow mb-6";
-          let innerHTML = `<h2 class="text-sky-600 font-bold text-xl mb-3">${content.title || 'Extra'}</h2>`;
-          if (content.instructions) innerHTML += `<p class="text-slate-800 font-medium mb-3">${content.instructions}</p>`;
-          
-          if (content.kind === "sentences") {
-            innerHTML += `<ol class="list-decimal ml-5 space-y-2 text-slate-700">${content.sentences.map(s => `<li>${s}</li>`).join('')}</ol>`;
-          } else if (content.kind === "links") {
-            innerHTML += `<ul class="list-disc ml-5 space-y-2 text-sky-700 font-semibold">${content.links.map(l => `<li><a href="${l.url}" class="hover:underline">${l.label}</a></li>`).join('')}</ul>`;
+      // 3. Calentamiento
+      document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
+      // 4. Content Container
+      const container = document.getElementById('dynamicBlocks');
+      container.innerHTML = "";
+
+      // --- 4a. CURIOSIDAD RENDERING ---
+      const curiosity = data.curios.find(c => c.id === `cur-${DIA}`);
+      if (curiosity) {
+        const curCard = document.createElement('article');
+        curCard.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4 mb-6";
+        curCard.innerHTML = `
+          <h3 class="text-indigo-600 font-bold text-lg uppercase tracking-wide">Curiosidad ${DIA}</h3>
+          <h2 class="text-2xl font-extrabold text-slate-900">${curiosity.title}</h2>
+          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm">
+            <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto object-cover">
+          </div>
+          ${curiosity.student_note ? `<p class="text-slate-700 italic">${curiosity.student_note}</p>` : ''}
+        `;
+        container.appendChild(curCard);
+      }
+
+      // --- 4b. DYNAMIC BLOCKS (Extras & Estructura) ---
+      dayPlan?.blocks?.forEach(block => {
+        
+        // LOGIC FOR EXTRAS
+        if (block.kind === "extras") {
+          const content = data.extras.items.find(i => i.id === block.ref);
+          if (content) {
+            const section = document.createElement('section');
+            section.className = "bg-white rounded-xl border-l-[6px] border-sky-500 p-6 card-shadow mb-6";
+            let innerHTML = `<h2 class="text-sky-600 font-bold text-xl mb-3">${content.title || 'Extra'}</h2>`;
+            if (content.instructions) innerHTML += `<p class="text-slate-800 font-medium mb-3">${content.instructions}</p>`;
+            
+            if (content.kind === "sentences") {
+              innerHTML += `<ol class="list-decimal ml-5 space-y-2 text-slate-700">${content.sentences.map(s => `<li>${s}</li>`).join('')}</ol>`;
+            } else if (content.kind === "links") {
+              innerHTML += `<ul class="list-disc ml-5 space-y-2 text-sky-700 font-semibold">${content.links.map(l => `<li><a href="${l.url}" class="hover:underline">${l.label}</a></li>`).join('')}</ul>`;
+            }
+            section.innerHTML = innerHTML;
+            container.appendChild(section);
           }
-          section.innerHTML = innerHTML;
-          container.appendChild(section);
         }
-      }
-    });
-  }
-dayPlan?.blocks?.forEach(block => {
-  // --- EXISTING EXTRAS LOGIC ---
-  if (block.kind === "extras") { 
-     /* ... your existing extras code ... */ 
-  }
 
-  // --- NEW ESTRUCTURA LOGIC (ADD THIS HERE) ---
-  if (block.kind === "estructura") {
-    // 1. Find the structure in the library (checking parents and children)
-    let estData = null;
-    data.est.estructuras.forEach(parent => {
-      if (parent.id === block.ref) estData = parent;
-      if (parent.children) {
-        const child = parent.children.find(c => c.id === block.ref);
-        if (child) estData = child;
-      }
-    });
+        // LOGIC FOR ESTRUCTURA
+        if (block.kind === "estructura") {
+          let estData = null;
+          data.est.estructuras.forEach(parent => {
+            if (parent.id === block.ref) estData = parent;
+            if (parent.children) {
+              const child = parent.children.find(c => c.id === block.ref);
+              if (child) estData = child;
+            }
+          });
 
-    if (estData) {
-      const isIntro = block.status === 'intro';
-      const section = document.createElement('section');
-      
-      // Styling: Amber border for 'intro', Slate (grey) for 'review'
-      section.className = `bg-white rounded-xl border-l-[6px] p-6 shadow-sm mb-6 ${isIntro ? 'border-amber-500' : 'border-slate-400'}`;
-      
-      let html = `
-        <div class="mb-4">
-          <h3 class="font-bold text-xs uppercase tracking-widest ${isIntro ? 'text-amber-600' : 'text-slate-500'}">
-            ${isIntro ? '★ Introducción (Hoy)' : '↻ Repaso'}
-          </h3>
-          <h2 class="text-2xl font-extrabold text-slate-900">${estData.title}</h2>
-        </div>
-        <div class="grid grid-cols-1 gap-3">`;
+          if (estData) {
+            const isIntro = block.status === 'intro';
+            const section = document.createElement('section');
+            section.className = `bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 ${isIntro ? 'border-amber-500' : 'border-slate-400'}`;
+            
+            let html = `
+              <div class="mb-4">
+                <h3 class="font-bold text-xs uppercase tracking-widest ${isIntro ? 'text-amber-600' : 'text-slate-500'}">
+                  ${isIntro ? '★ Introducción (Hoy)' : '↻ Repaso'}
+                </h3>
+                <h2 class="text-2xl font-extrabold text-slate-900">${estData.title}</h2>
+              </div>
+              <div class="grid grid-cols-1 gap-3">`;
 
-      // 2. Lookup Grammar links from grammar.json using note_refs
-      if (estData.note_refs) {
-        estData.note_refs.forEach(refId => {
-          const gramTopic = data.gram.topics.find(t => t.id === refId);
-          if (gramTopic) {
-            html += `
-              <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
-                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Recursos: ${gramTopic.title}</p>
-                <div class="flex flex-wrap gap-4">
-                  ${gramTopic.links.map(link => `
-                    <a href="${link.url}" target="_blank" class="text-sky-700 hover:underline text-sm font-bold flex items-center gap-1">
-                      <span>📄</span> ${link.label}
-                    </a>`).join('')}
-                </div>
-              </div>`;
+            if (estData.note_refs) {
+              estData.note_refs.forEach(refId => {
+                const gramTopic = data.gram.topics.find(t => t.id === refId);
+                if (gramTopic) {
+                  html += `
+                    <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                      <p class="text-xs font-bold text-slate-400 uppercase mb-2">Recursos: ${gramTopic.title}</p>
+                      <div class="flex flex-wrap gap-4">
+                        ${gramTopic.links.map(link => `
+                          <a href="${link.url}" target="_blank" class="text-sky-700 hover:underline text-sm font-bold flex items-center gap-1">
+                            <span>📄</span> ${link.label}
+                          </a>`).join('')}
+                      </div>
+                    </div>`;
+                }
+              });
+            }
+            html += `</div>`;
+            section.innerHTML = html;
+            container.appendChild(section);
           }
-        });
-      }
-
-      html += `</div>`;
-      section.innerHTML = html;
-      container.appendChild(section);
+        }
+      });
     }
-  }
-});
-  init();
-</script>
+
+    init();
+  </script>
 </body>
 </html>
