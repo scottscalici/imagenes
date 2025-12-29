@@ -137,6 +137,42 @@
     }
 
     init();
+
+  async function loadDay() {
+    // ... (previous setup) ...
+    try {
+      const [plan, extrasJson, evalsJson, curiosJson] = await Promise.all([
+        getJSON(PLAN_URL),
+        getJSON(EXTRAS_URL),
+        getJSON(EVALUACIONES_URL),
+        getJSON("https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json") // Added this
+      ]);
+
+      // ... (existing header and eval logic) ...
+
+      // --- CURIOSIDAD RENDERING ---
+      // Rule: Find curiosity where ID matches "cur-" + DIA
+      const curiosity = curiosJson.find(c => c.id === `cur-${DIA}`);
+      if (curiosity) {
+        const curHtml = `
+          <article class="bg-white rounded-2xl shadow border-l-[6px] border-indigo-400 p-6 space-y-4">
+            <h3 class="text-indigo-600 font-bold text-lg">Curiosidad ${DIA}</h3>
+            <h2 class="text-2xl font-bold text-slate-900">${curiosity.title}</h2>
+            <div class="rounded-xl overflow-hidden border border-slate-100">
+              <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto object-cover">
+            </div>
+            ${curiosity.student_note ? `<p class="text-slate-700 italic">${curiosity.student_note}</p>` : ''}
+          </article>
+        `;
+        outputEl.insertAdjacentHTML("afterbegin", curHtml); // Place at the top of content
+      }
+
+      // ... (existing block rendering loop for extras and calentamiento) ...
+      
+    } catch (err) {
+      console.error(err);
+    }
+  }
   </script>
 </body>
 </html>
