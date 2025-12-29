@@ -3,129 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plan de Clase - Español</title>
+  <title>Plan de Clase - Español 2</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    .card-shadow { box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1); }
+    body { font-family: 'Inter', sans-serif; }
+    .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
   </style>
 </head>
 
-<body class="bg-slate-50 text-slate-900 min-h-screen font-sans">
-  <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
-    <header id="header" class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
-      <h1 id="dayTitle" class="text-3xl font-bold italic">Día —</h1>
-      <p id="daySubtitle" class="text-lg font-medium"></p>
+    <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
+      <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight">Día —</h1>
+      <p id="headerDate" class="text-lg italic opacity-90"></p>
     </header>
 
-    <details class="bg-white rounded-xl border border-slate-200 p-4 opacity-50 hover:opacity-100 transition-opacity">
-      <summary class="text-xs font-bold text-slate-500 cursor-pointer uppercase tracking-widest">Controles del Profesor</summary>
-      <div class="flex items-end gap-3 mt-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase">Saltar a Día</label>
-          <input id="diaInput" type="number" class="w-20 border-b-2 border-slate-200 focus:border-sky-500 outline-none py-1 text-lg" />
+    <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
+      <h2 class="text-emerald-600 font-bold text-xl mb-3">Evaluación</h2>
+      <div id="currentEval" class="text-lg text-slate-800 font-medium"></div>
+      <div class="mt-4 pt-4 border-t border-slate-100">
+        <h3 class="text-slate-900 font-bold text-md mb-2">Próximas pruebas</h3>
+        <ul id="nextEvals" class="list-disc ml-5 space-y-1 text-slate-700"></ul>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
+      <h2 class="text-red-600 font-bold text-xl mb-3">Calentamiento</h2>
+      <div id="calDetail" class="text-slate-700 space-y-2 mb-4 text-md">
         </div>
-        <button id="loadBtn" class="bg-sky-600 text-white px-4 py-1 rounded-lg font-bold hover:bg-sky-700">Ir</button>
-      </div>
-    </details>
-
-    <section id="evalSection" class="space-y-4">
-      <div class="border-l-4 border-emerald-500 pl-4">
-        <h2 class="text-emerald-700 font-bold uppercase tracking-tight text-sm">Evaluación</h2>
-        <div id="evalContent" class="mt-2 space-y-1"></div>
-      </div>
+      <a id="calBtn" href="#" target="_blank" class="text-sky-600 font-semibold hover:underline decoration-2 underline-offset-4">
+        Expandir/Reducir
+      </a>
     </section>
 
-    <section id="calentamientoSection" class="bg-white rounded-xl border-l-4 border-red-500 p-6 card-shadow">
-        <h2 class="text-red-600 font-bold text-xl mb-2">Calentamiento</h2>
-        <div id="calDetail" class="text-slate-700 mb-4"></div>
-        <a id="calBtn" href="#" target="_blank" class="inline-block bg-slate-100 text-sky-700 font-bold px-4 py-2 rounded-lg hover:bg-sky-50 transition-colors">
-          Expandir/Reducir ↗
-        </a>
-    </section>
+    <div id="dynamicBlocks" class="space-y-6"></div>
 
-    <section id="mainContent" class="space-y-4"></section>
+    <div class="mt-12 pt-8 border-t border-slate-200 opacity-40 hover:opacity-100 transition-opacity">
+        <div class="flex items-center gap-4 text-sm">
+            <span class="font-bold text-slate-500 uppercase">Salto de Día:</span>
+            <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="33">
+            <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Cargar</button>
+        </div>
+    </div>
 
   </main>
 
   <script>
     const CONFIG = {
       COURSE: "s2",
-      PLAN_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
-      EXTRAS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
-      EVAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+      PLAN: "plan_s2.json",
+      EVALS: "evaluaciones.json",
+      EXTRAS: "extras.json",
+      CALENDARIO: "calendario.json",
       CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
     };
 
-    async function fetchData() {
-      const [plan, extras, evals] = await Promise.all([
-        fetch(CONFIG.PLAN_URL).then(r => r.json()),
-        fetch(CONFIG.EXTRAS_URL).then(r => r.json()),
-        fetch(CONFIG.EVAL_URL).then(r => r.json())
+    // Helper: Format date for header (e.g., "10 de diciembre")
+    function formatSpanishDate(dateStr) {
+      if (!dateStr) return "";
+      const date = new Date(dateStr + "T00:00:00");
+      return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+    }
+
+    async function loadData() {
+      const [plan, evals, extras, cal] = await Promise.all([
+        fetch(CONFIG.PLAN).then(r => r.json()),
+        fetch(CONFIG.EVALS).then(r => r.json()),
+        fetch(CONFIG.EXTRAS).then(r => r.json()),
+        fetch(CONFIG.CALENDARIO).then(r => r.json())
       ]);
-      return { plan, extras, evals };
+      return { plan, evals, extras, cal };
     }
 
-    function getActiveDia() {
+    function renderManual() {
+        const d = document.getElementById('diaInput').value;
+        window.history.pushState({}, '', `?dia=${d}`);
+        init();
+    }
+
+    async function init() {
+      const data = await loadData();
       const params = new URLSearchParams(window.location.search);
-      if (params.has('dia')) return parseInt(params.get('dia'));
-      return parseInt(document.getElementById('diaInput').value) || 1;
-    }
+      let DIA = parseInt(params.get('dia')) || 33; // Defaulting to 33 for your test
 
-    async function render() {
-      const { plan, extras, evals } = await fetchData();
-      const DIA = getActiveDia();
-      const dayData = plan.days.find(d => d.dia == DIA);
+      const dayPlan = data.plan.days.find(d => d.dia == DIA);
+      const evalList = data.evals.courses[CONFIG.COURSE];
 
-      // Header
+      // 1. Header
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-      document.getElementById('daySubtitle').textContent = dayData?.fecha || "";
+      document.getElementById('headerDate').textContent = formatSpanishDate(dayPlan?.fecha);
 
-      // Evaluaciones (Rule of Three)
-      const evalMap = new Map(evals.courses[CONFIG.COURSE].map(e => [e.dia, e.label]));
-      const getEval = (d) => evalMap.get(d) || "Nada";
-      
-      document.getElementById('evalContent').innerHTML = `
-        <p class="text-lg font-medium text-slate-800">${getEval(DIA)}</p>
-        <div class="mt-4 pt-4 border-t border-slate-100">
-            <p class="text-xs font-bold text-slate-400 uppercase">Próximas pruebas</p>
-            <ul class="text-sm text-slate-600 mt-1 list-disc ml-4">
-                <li>${getEval(DIA + 1)} - la próxima clase</li>
-                <li>${getEval(DIA + 2)} - Día ${DIA + 2}</li>
-            </ul>
-        </div>
+      // 2. Evaluaciones (The Rule of Three)
+      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Nada");
+      document.getElementById('currentEval').textContent = findEval(DIA);
+      document.getElementById('nextEvals').innerHTML = `
+        <li>${findEval(DIA + 1)} - la próxima clase</li>
+        <li>${findEval(DIA + 2)} - Día ${DIA + 2}</li>
       `;
 
-      // Calentamiento
-      document.getElementById('calDetail').innerHTML = `
-        <p class="font-medium text-slate-800">Práctica del Día ${DIA}</p>
-        <p class="text-sm text-slate-500">Haz clic para abrir la actividad en una nueva pestaña.</p>
-      `;
+      // 3. Calentamiento (Pure Deterministic URL)
       document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+      // Note: In v1, calentamiento instructions are static on the Sites page, 
+      // but we could pull "Schoology" info from plan blocks here if you add them.
 
-      // Main Blocks (Lecturas/Extras)
-      const contentEl = document.getElementById('mainContent');
-      contentEl.innerHTML = "";
-      
-      dayData?.blocks?.forEach(block => {
-        if (block.kind === 'calentamiento') return; // Handled above
-        
-        const extraData = extras.items.find(i => i.id === block.ref);
-        if (extraData) {
-            const card = document.createElement('div');
-            card.className = "bg-white rounded-xl border-l-4 border-indigo-500 p-6 card-shadow";
-            card.innerHTML = `
-                <h2 class="text-indigo-600 font-bold text-xl mb-2">${extraData.title}</h2>
-                <div class="text-slate-700">${extraData.instructions || ""}</div>
-                ${extraData.sentences ? `<ol class="list-decimal ml-5 mt-3 space-y-1">${extraData.sentences.map(s => `<li>${s}</li>`).join('')}</ol>` : ""}
-            `;
-            contentEl.appendChild(card);
+      // 4. Extras & Curiosidades
+      const container = document.getElementById('dynamicBlocks');
+      container.innerHTML = "";
+
+      dayPlan?.blocks?.forEach(block => {
+        if (block.kind === "extras") {
+          const content = data.extras.items.find(i => i.id === block.ref);
+          if (content) {
+            const section = document.createElement('section');
+            section.className = "bg-white rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow";
+            
+            let innerHTML = `<h2 class="text-indigo-600 font-bold text-xl mb-3">${content.title || 'Extra'}</h2>`;
+            
+            if (content.instructions) innerHTML += `<p class="text-slate-800 font-medium mb-3">${content.instructions}</p>`;
+            
+            if (content.kind === "sentences") {
+              innerHTML += `<ol class="list-decimal ml-5 space-y-2 text-slate-700">${content.sentences.map(s => `<li>${s}</li>`).join('')}</ol>`;
+            } else if (content.kind === "links") {
+              innerHTML += `<ul class="list-disc ml-5 space-y-2 text-sky-700">${content.links.map(l => `<li><a href="${l.url}" class="hover:underline font-semibold">${l.label}</a></li>`).join('')}</ul>`;
+            }
+            
+            section.innerHTML = innerHTML;
+            container.appendChild(section);
+          }
         }
       });
     }
 
-    document.getElementById('loadBtn').addEventListener('click', render);
-    render();
+    init();
   </script>
 </body>
 </html>
