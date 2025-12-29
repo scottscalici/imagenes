@@ -59,7 +59,10 @@ const CONFIG = {
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
     CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
     CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
-  };
+  ESTRUCTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/estructura.json",
+  GRAMMAR: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/grammar.json"
+};
+
 
   function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
@@ -74,9 +77,13 @@ const CONFIG = {
       fetch(CONFIG.EXTRAS).then(r => r.json()),
       fetch(CONFIG.CALENDARIO).then(r => r.json()),
       fetch(CONFIG.CURIOSIDADES).then(r => r.json())
-    ]);
-    return { plan, evals, extras, cal, curios };
-  }
+    fetch(CONFIG.ESTRUCTURA).then(r => r.json()),
+    fetch(CONFIG.GRAMMAR).then(r => r.json())
+  ]);
+  return { plan, evals, extras, cal, curios, est, gram };
+}
+  
+
 
   function renderManual() {
     const d = document.getElementById('diaInput').value;
@@ -148,7 +155,65 @@ const CONFIG = {
       }
     });
   }
+dayPlan?.blocks?.forEach(block => {
+  // --- EXISTING EXTRAS LOGIC ---
+  if (block.kind === "extras") { 
+     /* ... your existing extras code ... */ 
+  }
 
+  // --- NEW ESTRUCTURA LOGIC (ADD THIS HERE) ---
+  if (block.kind === "estructura") {
+    // 1. Find the structure in the library (checking parents and children)
+    let estData = null;
+    data.est.estructuras.forEach(parent => {
+      if (parent.id === block.ref) estData = parent;
+      if (parent.children) {
+        const child = parent.children.find(c => c.id === block.ref);
+        if (child) estData = child;
+      }
+    });
+
+    if (estData) {
+      const isIntro = block.status === 'intro';
+      const section = document.createElement('section');
+      
+      // Styling: Amber border for 'intro', Slate (grey) for 'review'
+      section.className = `bg-white rounded-xl border-l-[6px] p-6 shadow-sm mb-6 ${isIntro ? 'border-amber-500' : 'border-slate-400'}`;
+      
+      let html = `
+        <div class="mb-4">
+          <h3 class="font-bold text-xs uppercase tracking-widest ${isIntro ? 'text-amber-600' : 'text-slate-500'}">
+            ${isIntro ? '★ Introducción (Hoy)' : '↻ Repaso'}
+          </h3>
+          <h2 class="text-2xl font-extrabold text-slate-900">${estData.title}</h2>
+        </div>
+        <div class="grid grid-cols-1 gap-3">`;
+
+      // 2. Lookup Grammar links from grammar.json using note_refs
+      if (estData.note_refs) {
+        estData.note_refs.forEach(refId => {
+          const gramTopic = data.gram.topics.find(t => t.id === refId);
+          if (gramTopic) {
+            html += `
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Recursos: ${gramTopic.title}</p>
+                <div class="flex flex-wrap gap-4">
+                  ${gramTopic.links.map(link => `
+                    <a href="${link.url}" target="_blank" class="text-sky-700 hover:underline text-sm font-bold flex items-center gap-1">
+                      <span>📄</span> ${link.label}
+                    </a>`).join('')}
+                </div>
+              </div>`;
+          }
+        });
+      }
+
+      html += `</div>`;
+      section.innerHTML = html;
+      container.appendChild(section);
+    }
+  }
+});
   init();
 </script>
 </body>
