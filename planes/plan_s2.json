@@ -40,8 +40,16 @@
       "blocks": [
         { "kind": "calentamiento"},
         { "kind": "evaluacion", "ref": "eval-s2-d35" },
+        { "kind": "estructura", "ref": "est-s2-mandatos-inf-neg", "status": "intro" },
         { "kind": "extras", "ref": "extra-s2-d35-2" }
       ]
-    }
+    },
+    {
+  "dia": 36,
+  "blocks": [
+    { "kind": "estructura", "ref": "est-s2-mandatos-inf-neg", "status": "intro" },
+    { "kind": "estructura", "ref": "est-s2-mandatos-inf-afirm", "status": "review" }
+  ]
+}
   ]
 }
