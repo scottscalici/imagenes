@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plan de Clase - Español 2</title>
+  <title>Español 2 - Plan de Clase</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -18,13 +18,18 @@
   <main class="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
     <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
-      <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight">Día —</h1>
-      <p id="headerDate" class="text-lg italic opacity-90"></p>
+      <div>
+        <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
+        <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
+      </div>
+      <div class="text-right hidden sm:block">
+        <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
+      </div>
     </header>
 
     <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
       <h2 class="text-emerald-600 font-bold text-xl mb-3">Evaluación</h2>
-      <div id="currentEval" class="text-lg text-slate-800 font-medium"></div>
+      <div id="currentEval" class="text-lg text-slate-800 font-medium italic"></div>
       <div class="mt-4 pt-4 border-t border-slate-100">
         <h3 class="text-slate-900 font-bold text-md mb-2">Próximas pruebas</h3>
         <ul id="nextEvals" class="list-disc ml-5 space-y-1 text-slate-700"></ul>
@@ -32,24 +37,24 @@
     </section>
 
     <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
-      <h2 class="text-red-600 font-bold text-xl mb-3">Calentamiento</h2>
-      <div id="calDetail" class="text-slate-700 space-y-2 mb-4 text-md">
-        <p>Práctica interactiva del día.</p>
+      <div class="flex justify-between items-start">
+        <h2 class="text-red-600 font-bold text-xl mb-3">Calentamiento</h2>
+        <a id="calBtn" href="#" target="_blank" class="bg-red-50 text-red-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors uppercase">Abrir Pantalla Completa ↗</a>
       </div>
-      <a id="calBtn" href="#" target="_blank" class="text-sky-600 font-semibold hover:underline decoration-2 underline-offset-4">
-        Expandir/Reducir ↗
-      </a>
+      <div id="calDetail" class="text-slate-700 text-md mt-2">
+        Práctica interactiva para empezar la clase.
+      </div>
     </section>
 
     <div id="dynamicBlocks" class="space-y-6"></div>
 
     <div id="infoAdicionalSection"></div>
 
-    <div class="mt-12 pt-8 border-t border-slate-200 opacity-40 hover:opacity-100 transition-opacity">
-      <div class="flex items-center gap-4 text-sm">
-        <span class="font-bold text-slate-500 uppercase">Salto de Día:</span>
+    <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity">
+      <div class="flex items-center gap-4 text-xs">
+        <span class="font-bold text-slate-500 uppercase tracking-widest">Control del Día:</span>
         <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="33">
-        <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Cargar</button>
+        <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black transition-colors">Cargar</button>
       </div>
     </div>
 
@@ -58,6 +63,7 @@
   <script>
     const CONFIG = {
       COURSE: "s2",
+      CICLO_FILTER: "B", // Spanish 2 only meets on B Days
       PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
       EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
       EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
@@ -85,7 +91,7 @@
           cal: responses[3], curios: responses[4], est: responses[5], 
           gram: responses[6], vocab: responses[7], tareas: responses[8] 
         };
-      } catch (e) { console.error("Error loading JSON:", e); }
+      } catch (e) { console.error("Error loading JSON files:", e); }
     }
 
     function renderManual() {
@@ -101,55 +107,52 @@
       const params = new URLSearchParams(window.location.search);
       let DIA = parseInt(params.get('dia')) || 33; 
 
-      // 1. HEADER & DATE LOGIC (Using your "map" structure)
-      const calendarEntry = data.cal?.map?.find(c => c.dia == DIA);
-      const dayPlan = data.plan.days.find(d => d.dia == DIA);
+      // 1. HEADER LOGIC (Finds the B-Day date for this class)
+      const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
       if (calendarEntry) {
-        const dateStr = formatSpanishDate(calendarEntry.fecha);
-        const cicloStr = calendarEntry.ciclo ? ` (${calendarEntry.ciclo})` : "";
-        document.getElementById('headerDate').textContent = `${dateStr}${cicloStr}`;
+        document.getElementById('headerDate').textContent = formatSpanishDate(calendarEntry.fecha);
+      } else {
+        document.getElementById('headerDate').textContent = "Fecha no asignada (A-Day o Feriado)";
       }
 
       // 2. EVALUATIONS
       const evalList = data.evals.courses[CONFIG.COURSE];
-      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Nada");
+      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "No hay evaluaciones programadas");
       document.getElementById('currentEval').textContent = findEval(DIA);
       document.getElementById('nextEvals').innerHTML = `
-        <li>${findEval(DIA + 1)} - la próxima clase</li>
-        <li>${findEval(DIA + 2)} - Día ${DIA + 2}</li>
+        <li>${findEval(DIA + 1)} — Próxima clase</li>
+        <li>${findEval(DIA + 2)} — Día ${DIA + 2}</li>
       `;
 
       document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
 
-      // 3. MAIN CONTENT BLOCKS
+      // 3. MAIN CONTENT
       const container = document.getElementById('dynamicBlocks');
       container.innerHTML = "";
+      const dayPlan = data.plan.days.find(d => d.dia == DIA);
 
-      // Curiosidad Rendering
+      // Curiosidad
       const curiosity = data.curios.find(c => c.id === `cur-${DIA}`);
       if (curiosity) {
         const curCard = document.createElement('article');
         curCard.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4 mb-6";
         curCard.innerHTML = `
-          <h3 class="text-indigo-600 font-bold text-lg uppercase tracking-wide">Curiosidad ${DIA}</h3>
+          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
           <h2 class="text-2xl font-extrabold text-slate-900">${curiosity.title}</h2>
           <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm">
-            <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto object-cover">
+            <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto">
           </div>
-          ${curiosity.student_note ? `<p class="text-slate-700 italic">${curiosity.student_note}</p>` : ''}
+          ${curiosity.student_note ? `<p class="text-slate-700 italic text-sm">${curiosity.student_note}</p>` : ''}
         `;
         container.appendChild(curCard);
       }
 
-      // Instruction Blocks Rendering (Extras, Estructura, Vocab)
-      dayPlan?.blocks?.forEach(block => {
-          // ... [Your existing logic for Extras, Estructura, and Vocab blocks remains here] ...
-          // Note: Keep the logic you already had for these to ensure your lesson content displays.
-      });
+      // Instruction Blocks Logic
+      // [Blocks code from your previous setup would go here]
 
-      // 4. INFORMACIÓN ADICIONAL (Tareas Logic)
+      // 4. TAREAS LOGIC
       const infoContainer = document.getElementById('infoAdicionalSection');
       infoContainer.innerHTML = "";
 
@@ -160,16 +163,16 @@
           <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6">Información Adicional</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white rounded-xl p-6 card-shadow border-t-4 border-blue-500">
-              <h3 class="text-blue-600 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas</h3>
+              <h3 class="text-blue-600 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Vigentes</h3>
               <div class="space-y-4">`;
 
       if (activeTareas.length === 0) {
-        infoHTML += `<p class="text-slate-500 italic text-sm">No hay tareas vigentes.</p>`;
+        infoHTML += `<p class="text-slate-500 italic text-sm">No hay tareas pendientes hoy.</p>`;
       } else {
         activeTareas.forEach(t => {
-          // Lookup dates in the 'map'
-          const entryAssigned = data.cal.map.find(c => c.dia == t.day_assigned);
-          const entryDue = data.cal.map.find(c => c.dia == t.day_due);
+          // Homework due dates should also be the B-day version
+          const entryAssigned = data.cal.map.find(c => c.dia == t.day_assigned && c.ciclo === CONFIG.CICLO_FILTER);
+          const entryDue = data.cal.map.find(c => c.dia == t.day_due && c.ciclo === CONFIG.CICLO_FILTER);
           
           const isNuevo = (t.day_assigned == DIA);
           const isPronto = (t.day_due == DIA || t.day_due == DIA + 1);
@@ -178,12 +181,12 @@
             <div class="border-b border-slate-50 pb-3 last:border-0">
               <div class="flex items-center gap-2 mb-1">
                 <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-slate-100 text-slate-600">${t.tipo}</span>
-                ${isNuevo ? '<span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Nuevo</span>' : ''}
-                ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase animate-pronto">Pronto</span>' : ''}
+                ${isNuevo ? '<span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase shadow-sm">Nuevo</span>' : ''}
+                ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase animate-pronto shadow-sm">¡Para Hoy!</span>' : ''}
               </div>
               <h4 class="font-bold text-slate-900 leading-tight">${t.titulo}</h4>
-              <div class="text-[11px] text-slate-500 mt-1">
-                <span>📅 ${formatSpanishDate(entryAssigned?.fecha)}</span> — <span class="font-bold text-slate-700">⌛ ${formatSpanishDate(entryDue?.fecha)}</span>
+              <div class="text-[11px] text-slate-500 mt-1 font-medium">
+                Vence: <span class="${isPronto ? 'text-red-600 font-bold' : 'text-slate-700'}">${formatSpanishDate(entryDue?.fecha) || 'TBD'}</span>
               </div>
             </div>`;
         });
@@ -191,12 +194,21 @@
 
       infoHTML += `</div></div>
             <div class="bg-white rounded-xl p-6 card-shadow border-t-4 border-indigo-500">
-              <h3 class="text-indigo-600 font-bold text-lg mb-4">Señor+ y Recursos</h3>
-              <ul class="text-sm space-y-3">
-                <li>✈️ <a href="#" class="text-emerald-600 font-bold hover:underline">Viaje a Costa Rica 2026</a></li>
-                <li>🏠 <a href="#" class="text-slate-700 hover:text-sky-600">Portal MISD</a></li>
-                <li>📧 <a href="#" class="text-slate-700 hover:text-sky-600">Contacto</a></li>
+              <h3 class="text-indigo-600 font-bold text-lg mb-4">Recursos Útiles</h3>
+              <ul class="text-sm space-y-4">
+                <li class="flex items-center gap-3">
+                  <span class="text-xl">🏠</span>
+                  <a href="#" class="text-slate-700 hover:text-sky-600 font-semibold border-b border-transparent hover:border-sky-600 transition-all">Portal de Estudiante MISD</a>
+                </li>
+                <li class="flex items-center gap-3">
+                  <span class="text-xl">✈️</span>
+                  <a href="#" class="text-emerald-600 font-bold hover:underline">Información: Viaje Costa Rica 2026</a>
+                </li>
               </ul>
+              <div class="mt-6 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                 <p class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Aviso:</p>
+                 <p class="text-xs text-slate-600 leading-relaxed mt-1">Si faltaste a clase, revisa VHL Central para completar las actividades del día.</p>
+              </div>
             </div>
           </div>
         </div>`;
