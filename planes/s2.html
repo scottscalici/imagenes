@@ -149,18 +149,19 @@
       const params = new URLSearchParams(window.location.search);
       let DIA = parseInt(params.get('dia')) || 35; 
 
-      // Define standard variables used across all sections
       const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
-      const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
-      const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
+      
+      // DEBUG LOGS - Check your browser console (F12) if it's not working
+      console.log("Current Day:", DIA);
+      console.log("Plan found for today:", todayPlan);
 
-      // 1. HEADER
+      // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
       document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
       // 2. EVALS
-      const evalList = data.evals.courses[CONFIG.COURSE];
+      const evalList = data.evals.courses[CONFIG.COURSE] || [];
       const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
       document.getElementById('currentEval').textContent = findEval(DIA);
       document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
@@ -177,14 +178,17 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-      // 3.2 ESTRUCTURA (Main Card)
+      // 4. ESTRUCTURA (The Card)
       const estBlock = document.getElementById('estructuraBlock');
-      estBlock.innerHTML = "";
+      estBlock.innerHTML = ""; // Clear it
+      const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
+
       if (estBlockRef) {
         const topic = data.apuntes[estBlockRef.ref];
         if (topic) {
           const getLinkHtml = (key, label) => {
-            const link = topic.links[key];
+            // Check if links is an object (new way) or array (old way)
+            const link = Array.isArray(topic.links) ? topic.links.find(l => l.title.includes(key)) : topic.links[key];
             if (!link) return "";
             return `<div class="mb-2">
               <span class="text-[10px] font-black px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-tighter mr-2">${label}</span>
@@ -214,9 +218,10 @@
         }
       }
 
-      // 3.5 EXTRAS
+      // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
+      const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
       if (extraBlockRef) {
         const extraItem = data.extras.items.find(item => item.id === extraBlockRef.ref);
         if (extraItem) {
@@ -234,7 +239,7 @@
         }
       }
 
-      // 4. RESOURCE DASHBOARD (Bottom)
+      // 6. RESOURCE DASHBOARD (Bottom)
       const resourceGrid = document.getElementById('dynamicResources');
       resourceGrid.innerHTML = "";
       if (todayPlan?.blocks) {
@@ -255,10 +260,11 @@
       }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
-      // 5. TAREAS
+      // 7. TAREAS
       const tList = document.getElementById('tareasList');
       tList.innerHTML = "";
-      const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+      const allTareas = data.tareas.tareas || [];
+      const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
       active.forEach(t => {
         const isHoy = (t.day_due == DIA);
         const isPronto = (t.day_due == DIA + 1);
