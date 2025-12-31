@@ -28,6 +28,7 @@
   </header>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    
     <div class="lg:col-span-2 space-y-6">
       <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
         <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
@@ -64,6 +65,31 @@
   <div id="resourceDashboard" class="mt-12 pt-8 border-t-2 border-dashed border-slate-200">
     <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos del Día</h2>
     <div id="dynamicResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 mt-12 text-center lg:text-left">Enlaces Permanentes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col group">
+        <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="w-full h-full object-cover"></div>
+        <div class="p-5 flex flex-col flex-grow">
+          <h3 class="text-slate-900 font-bold text-lg mb-2 italic">Señor+ AI Tutor</h3>
+          <a href="https://student.schoolai.com/student-space?sessionId=cmgiali9202j3smcukb8ot50f" target="_blank" class="bg-indigo-600 text-white text-center py-2 rounded-lg font-bold text-sm">Practicar ahora</a>
+        </div>
+      </div>
+      <div class="bg-emerald-50 rounded-xl overflow-hidden shadow-md border border-emerald-100 flex flex-col group">
+        <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" class="w-full h-full object-cover"></div>
+        <div class="p-5 flex flex-col flex-grow">
+          <h3 class="text-emerald-800 font-bold text-lg mb-2">Costa Rica 2027</h3>
+          <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="bg-emerald-600 text-white text-center py-2 rounded-lg font-bold text-sm">Ver Detalles</a>
+        </div>
+      </div>
+      <div class="bg-slate-800 rounded-xl p-5 shadow-md border border-slate-700 flex flex-col justify-between">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="bg-white/10 p-3 rounded-lg text-xl">🏠</div>
+          <h3 class="text-white font-bold text-lg leading-tight">Portal MISD</h3>
+        </div>
+        <a href="https://connection.misd.net/index.html" target="_blank" class="border border-white/20 text-white text-center py-2 rounded-lg font-bold text-sm">Abrir Portal</a>
+      </div>
+    </div>
   </div>
 
   <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
@@ -73,7 +99,6 @@
     </div>
   </div>
 </main>
-
 <script>
     const CONFIG = {
       COURSE: "s2",
@@ -104,12 +129,13 @@
       try {
         const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
         return { 
-          plan: responses[0], evals: responses[1], cal: responses[2], curios: responses[3], 
-          tareas: responses[4], vocab: responses[5], apuntes: responses[6], extras: responses[7] 
+          plan: responses[0], evals: responses[1], cal: responses[2], 
+          curios: responses[3], tareas: responses[4], vocab: responses[5], 
+          apuntes: responses[6], extras: responses[7] 
         };
       } catch (e) { console.error("Error loading JSON data:", e); }
     }
-
+    
     function renderManual() {
       const d = document.getElementById('diaInput').value;
       window.history.pushState({}, '', `?dia=${d}`);
@@ -122,7 +148,12 @@
 
       const params = new URLSearchParams(window.location.search);
       let DIA = parseInt(params.get('dia')) || 35; 
+
       const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
+      
+      // DEBUG LOGS - Check your browser console (F12) if it's not working
+      console.log("Current Day:", DIA);
+      console.log("Plan found for today:", todayPlan);
 
       // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
@@ -139,71 +170,139 @@
       // 3. CURIOSIDAD
       const curBlock = document.getElementById('curiosityBlock');
       const cur = data.curios.find(c => c.id === `cur-${DIA}`);
-      curBlock.innerHTML = cur ? `<article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4"><h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}<p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p></article>` : "";
+      curBlock.innerHTML = cur ? `
+        <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3>
+          <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
+          ${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}
+          <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
+        </article>` : "";
 
-      // 4. ESTRUCTURA (Handles multiple blocks)
-      const estContainer = document.getElementById('estructuraBlock');
-      estContainer.innerHTML = "";
-      const grammarBlocks = todayPlan?.blocks?.filter(b => b.kind === "estructura") || [];
+// 4. ESTRUCTURA (Styled Version - Unlimited Focus Links)
+const estBlock = document.getElementById('estructuraBlock');
+estBlock.innerHTML = ""; 
+const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
 
-      grammarBlocks.forEach(blockRef => {
-        const topic = data.apuntes[blockRef.ref];
-        if (!topic) return;
-        let linksHtml = "";
-        
-        const processLinks = (ids, label) => {
-          ids?.forEach(id => {
-            const link = topic.links[id];
-            if (!link || (link.courses && !link.courses.includes(CONFIG.COURSE))) return;
-            const isIntro = label === "Introducir";
-            linksHtml += `<a href="${link.url}" target="_blank" class="group flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:border-blue-400 hover:shadow-md transition-all mb-2"><div class="flex flex-col"><span class="text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider w-fit mb-1 ${isIntro ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${label}</span><h3 class="text-slate-800 font-bold text-md">${link.title}</h3></div><div class="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">↗</div></a>`;
-          });
-        };
+if (estBlockRef) {
+  const getLinkHtml = (id, label) => {
+    // Look up the topic folder based on the plan's 'ref'
+    const topic = data.apuntes[estBlockRef.ref];
+    if (!topic || !topic.links) return "";
 
-        processLinks(blockRef.introducir, "Introducir");
-        processLinks(blockRef.repasar, "Repasar");
+    const linkData = topic.links[id];
+    if (!linkData) return "";
 
-        estContainer.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] border-blue-600 card-shadow p-6 mb-6"><div class="flex items-center gap-3 mb-4"><div class="bg-blue-600 text-white p-1.5 rounded-lg text-lg">⚙️</div><h2 class="text-xl font-black text-slate-900">${blockRef.title || topic.title}</h2></div><div>${linksHtml}</div></section>`;
-      });
+    // Course Filtering Logic
+    if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return "";
 
+    // Dynamic Styling based on the label
+    const isIntro = label === "Introducir";
+    const badgeBg = isIntro ? "bg-emerald-500/10" : "bg-blue-500/10";
+    const badgeText = isIntro ? "text-emerald-600" : "text-blue-600";
+    const borderHover = isIntro ? "hover:border-emerald-300" : "hover:border-blue-300";
+
+    return `
+      <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-200/60 ${borderHover} hover:bg-white hover:shadow-xl transition-all duration-300">
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest ${badgeBg} ${badgeText}">
+              ${label}
+            </span>
+          </div>
+          <h3 class="text-slate-800 font-bold text-lg leading-tight group-hover:text-blue-700 transition-colors">
+            ${linkData.title}
+          </h3>
+        </div>
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </div>
+      </a>`;
+  };
+
+  let allLinksHtml = "";
+  if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
+  if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
+
+  estBlock.innerHTML = `
+    <section class="bg-white rounded-[2rem] border border-slate-200/80 p-8 shadow-2xl shadow-slate-200/50">
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl shadow-lg shadow-blue-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Gramática y Enlaces</p>
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-4'>No hay temas asignados hoy.</p>"}
+      </div>
+    </section>`;
+}
+      
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
-      const extraRef = todayPlan?.blocks?.find(b => b.kind === "extras")?.ref;
-      const extraItem = data.extras.items.find(i => i.id === extraRef);
-      if (extraItem) {
-        let content = extraItem.kind === "sentences" ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700">${l.label} ↗</a>`).join('')}</div>`;
-        extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}${content}</div></section>`;
+      const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
+      if (extraBlockRef) {
+        const extraItem = data.extras.items.find(item => item.id === extraBlockRef.ref);
+        if (extraItem) {
+          let contentHtml = extraItem.kind === "sentences" 
+            ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
+            : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+          extrasBlock.innerHTML = `
+            <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
+              <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
+              <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+                ${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}
+                ${contentHtml}
+              </div>
+            </section>`;
+        }
       }
 
-      // 6. TAREAS (The section that was missing)
-      const tareasList = document.getElementById('tareasList');
-      tareasList.innerHTML = "";
-      const taskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
-
-      if (taskRefs.length > 0) {
-        taskRefs.forEach(ref => {
-          const t = data.tareas[ref];
-          if (!t) return;
-          const isUrgent = t.status === "para hoy";
-          tareasList.innerHTML += `<div class="bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group"><div class="flex justify-between items-start mb-2"><span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest text-white ${isUrgent ? 'bg-red-500' : 'bg-blue-600'}">${t.type || "Tarea"}</span>${isUrgent ? '<span class="text-[9px] font-bold text-red-500 animate-pronto uppercase">¡Para Hoy!</span>' : ''}</div><h4 class="text-slate-900 font-bold text-sm mb-3 group-hover:text-blue-700">${t.title}</h4><a href="${t.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-black">Abrir Tarea</a></div>`;
-        });
-      } else {
-        tareasList.innerHTML = "<p class='text-blue-400 italic text-sm text-center py-4'>No hay tareas pendientes.</p>";
-      }
-
-      // 7. RESOURCE DASHBOARD (Bottom)
+      // 6. RESOURCE DASHBOARD (Bottom)
       const resourceGrid = document.getElementById('dynamicResources');
       resourceGrid.innerHTML = "";
-      todayPlan?.blocks?.forEach(block => {
-        if (block.kind === "vocabulario") {
-          const ch = data.vocab.descubre2.chapters[block.ref];
-          if (ch) resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100">Cards</a></div></div>`;
-        }
-      });
-    } // END of init()
+      if (todayPlan?.blocks) {
+        todayPlan.blocks.forEach(block => {
+          if (block.kind === "vocabulario") {
+            const ch = data.vocab.descubre2.chapters[block.ref];
+            if (ch) {
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a></div></div>`;
+            }
+          } else if (block.kind === "estructura") {
+            const topic = data.apuntes[block.ref];
+            if (topic) {
+              const allLinks = Object.values(topic.links);
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100"><h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3><div class="flex flex-wrap gap-2">${allLinks.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}</div></div>`;
+            }
+          }
+        });
+      }
+      if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
-    // Kick off the script
+      // 7. TAREAS
+      const tList = document.getElementById('tareasList');
+      tList.innerHTML = "";
+      const allTareas = data.tareas.tareas || [];
+      const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+      active.forEach(t => {
+        const isHoy = (t.day_due == DIA);
+        const isPronto = (t.day_due == DIA + 1);
+        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
+      });
+      if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+    }
+
     init();
 </script>
 </body>
