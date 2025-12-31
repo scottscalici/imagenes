@@ -159,68 +159,52 @@
       const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
       document.getElementById('currentEval').textContent = findEval(DIA);
       document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
-
       document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
+      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
 
       // 3. CURIOSIDAD
       const curBlock = document.getElementById('curiosityBlock');
       const cur = data.curios.find(c => c.id === `cur-${DIA}`);
       curBlock.innerHTML = cur ? `
         <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
-          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest text-indigo-500">Curiosidad ${DIA}</h3>
+          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3>
           <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
-          ${cur.img ? `
-            <div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden">
-              <img src="${cur.img}" class="max-w-full max-h-full object-contain block" alt="Curiosidad">
-            </div>` : ''}
+          ${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-      // NEW: 3.2 ESTRUCTURA (Grammar Card)
+      // 3.2 ESTRUCTURA (Main Card)
       const estBlock = document.getElementById('estructuraBlock');
       estBlock.innerHTML = "";
-      
-      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
       const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
-
       if (estBlockRef) {
-        // Find the topic in your new apuntes structure (e.g., "mandatos todos")
         const topic = data.apuntes[estBlockRef.ref];
         if (topic) {
           estBlock.innerHTML = `
             <section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
-              <h2 class="text-blue-600 font-bold text-xl mb-4 flex items-center gap-2">
-                <span>⚙️</span> Estructura: ${topic.title}
-              </h2>
+              <h2 class="text-blue-600 font-bold text-xl mb-4 flex items-center gap-2"><span>⚙️</span> Estructura: ${topic.title}</h2>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 ${topic.links.map(link => `
-                  <a href="${link.url}" target="_blank" 
-                     class="flex items-center justify-between p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-100 hover:bg-blue-100 transition-all group">
+                  <a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-100 hover:bg-blue-100 transition-all group">
                     <span class="text-sm font-semibold">${link.title}</span>
                     <span class="text-blue-400 group-hover:translate-x-1 transition-transform">↗</span>
-                  </a>
-                `).join('')}
+                  </a>`).join('')}
               </div>
             </section>`;
         }
       }
-      
-      // NEW: 3.5 EXTRAS (Directly under Curiosidad)
+
+      // 3.5 EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
-      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
       const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
-
       if (extraBlockRef) {
         const extraItem = data.extras.items.find(item => item.id === extraBlockRef.ref);
         if (extraItem) {
-          let contentHtml = "";
-          if (extraItem.kind === "sentences") {
-            contentHtml = `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
-          } else if (extraItem.kind === "links") {
-            contentHtml = `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-          }
-
+          let contentHtml = extraItem.kind === "sentences" 
+            ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
+            : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
           extrasBlock.innerHTML = `
             <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
               <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
@@ -232,10 +216,10 @@
         }
       }
 
-      // 4. DYNAMIC RESOURCES (Dashboard grid)
+      // 4. RESOURCE DASHBOARD (Bottom)
       const resourceGrid = document.getElementById('dynamicResources');
       resourceGrid.innerHTML = "";
-      if (todayPlan && todayPlan.blocks) {
+      if (todayPlan?.blocks) {
         todayPlan.blocks.forEach(block => {
           if (block.kind === "vocabulario") {
             const ch = data.vocab.descubre2.chapters[block.ref];
@@ -256,7 +240,7 @@
                 <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100">
                   <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
                   <div class="flex flex-wrap gap-2">
-                    ${topic.introducir.map(id => `<a href="${topic.children[id].url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${topic.children[id].title} ↗</a>`).join('')}
+                    ${topic.links.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}
                   </div>
                 </div>`;
             }
@@ -269,27 +253,16 @@
       const tList = document.getElementById('tareasList');
       tList.innerHTML = "";
       const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-
       active.forEach(t => {
         const isHoy = (t.day_due == DIA);
         const isPronto = (t.day_due == DIA + 1);
-        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : 
-                          isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : 
-                          `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
-
-        tList.innerHTML += `
-          <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
-              ${statusLabel}
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4>
-          </div>`;
+        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
       });
       if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
     }
 
     init();
-  </script>
+</script>
 </body>
 </html>
