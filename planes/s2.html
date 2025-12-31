@@ -48,7 +48,10 @@
 
         <div id="curiosityBlock"></div>
       </div>
-
+<div class="lg:col-span-2 space-y-6">
+  <div id="curiosityBlock"></div>
+  <div id="extrasBlock"></div> 
+</div>
       <div id="tareasColumn" class="space-y-6">
         <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 h-full">
           <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
@@ -173,12 +176,36 @@
             </div>` : ''}
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
-      
-      // 4. DYNAMIC RESOURCES
+      // NEW: 3.5 EXTRAS (Directly under Curiosidad)
+      const extrasBlock = document.getElementById('extrasBlock');
+      extrasBlock.innerHTML = "";
+      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
+      const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
+
+      if (extraBlockRef) {
+        const extraItem = data.extras.items.find(item => item.id === extraBlockRef.ref);
+        if (extraItem) {
+          let contentHtml = "";
+          if (extraItem.kind === "sentences") {
+            contentHtml = `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
+          } else if (extraItem.kind === "links") {
+            contentHtml = `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+          }
+
+          extrasBlock.innerHTML = `
+            <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
+              <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
+              <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+                ${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}
+                ${contentHtml}
+              </div>
+            </section>`;
+        }
+      }
+
+      // 4. DYNAMIC RESOURCES (Dashboard grid)
       const resourceGrid = document.getElementById('dynamicResources');
       resourceGrid.innerHTML = "";
-      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
-      
       if (todayPlan && todayPlan.blocks) {
         todayPlan.blocks.forEach(block => {
           if (block.kind === "vocabulario") {
@@ -201,33 +228,6 @@
                   <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
                   <div class="flex flex-wrap gap-2">
                     ${topic.introducir.map(id => `<a href="${topic.children[id].url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${topic.children[id].title} ↗</a>`).join('')}
-                  </div>
-                </div>`;
-            }
-          } else if (block.kind === "extras") {
-            const extraItem = data.extras.items.find(item => item.id === block.ref);
-            if (extraItem) {
-              let contentHtml = "";
-              if (extraItem.kind === "sentences") {
-                contentHtml = `
-                  <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">${extraItem.instructions || ''}</p>
-                  <ul class="space-y-2">
-                    ${extraItem.sentences.map(s => `<li class="text-sm text-slate-700 border-l-2 border-indigo-200 pl-3 italic">"${s}"</li>`).join('')}
-                  </ul>`;
-              } else if (extraItem.kind === "links") {
-                contentHtml = `
-                  <div class="flex flex-wrap gap-2">
-                    ${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-bold uppercase border border-indigo-200 hover:bg-indigo-200 transition-colors">${l.label} ↗</a>`).join('')}
-                  </div>`;
-              }
-
-              resourceGrid.innerHTML += `
-                <div class="bg-indigo-50/30 rounded-xl border-2 border-dashed border-indigo-100 p-5 shadow-sm flex flex-col group transition-all hover:border-indigo-300">
-                  <h3 class="text-indigo-800 font-black text-sm uppercase tracking-tight mb-3 flex items-center gap-2">
-                    <span>✨</span> ${extraItem.title}
-                  </h3>
-                  <div class="bg-white/80 rounded-lg p-4 border border-indigo-50">
-                    ${contentHtml}
                   </div>
                 </div>`;
             }
