@@ -174,45 +174,53 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-      // 4. ESTRUCTURA (Shows all grammar blocks in the day)
-      const estContainer = document.getElementById('estructuraBlock');
-      estContainer.innerHTML = ""; 
-      const grammarBlocks = todayPlan?.blocks?.filter(b => b.kind === "estructura") || [];
+    // 4. ESTRUCTURA (Improved to show ALL blocks assigned for the day)
+const estBlock = document.getElementById('estructuraBlock');
+estBlock.innerHTML = ""; 
 
-      grammarBlocks.forEach(blockRef => {
-        const topic = data.apuntes[blockRef.ref];
-        if (!topic) return;
+// We use .filter instead of .find to get every "estructura" block in the day's plan
+const allEstBlocks = todayPlan?.blocks?.filter(b => b.kind === "estructura") || [];
 
-        let linksHtml = "";
-        const processLinks = (ids, label) => {
-          if (!ids) return;
-          ids.forEach(id => {
-            const linkData = topic.links[id];
-            if (!linkData) return;
-            if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return;
-            
-            const badge = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
-            linksHtml += `
-              <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-white transition-all mb-2 group">
-                <div class="flex flex-col">
-                  <span class="text-[9px] font-bold uppercase ${badge} px-2 rounded-full w-fit mb-1">${label}</span>
-                  <span class="font-bold text-slate-800">${linkData.title}</span>
-                </div>
-                <span class="text-blue-500 group-hover:translate-x-1 transition-all">↗</span>
-              </a>`;
-          });
-        };
+allEstBlocks.forEach(blockRef => {
+  const getLinkHtml = (id, label) => {
+    const topic = data.apuntes[blockRef.ref];
+    if (!topic || !topic.links) return "";
 
-        processLinks(blockRef.introducir, "Introducir");
-        processLinks(blockRef.repasar, "Repasar");
+    const linkData = topic.links[id];
+    if (!linkData) return "";
 
-        estContainer.innerHTML += `
-          <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow mb-6">
-            <h2 class="text-xl font-black text-slate-900 mb-4 flex items-center gap-2"><span>⚙️</span> ${blockRef.title || "Gramática"}</h2>
-            <div>${linksHtml}</div>
-          </section>`;
-      });
+    const isGlobal = !linkData.courses;
+    const isAllowed = linkData.courses && linkData.courses.includes(CONFIG.COURSE);
+    if (!isGlobal && !isAllowed) return "";
 
+    const badgeColor = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
+    
+    return `
+      <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group mb-3">
+        <div class="flex flex-col gap-1">
+          <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase tracking-wider ${badgeColor}">${label}</span>
+          <span class="text-slate-800 font-bold text-md">${linkData.title}</span>
+        </div>
+        <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
+      </a>`;
+  };
+
+  let linksHtml = "";
+  if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += getLinkHtml(id, "Introducir"));
+  if (blockRef.repasar) blockRef.repasar.forEach(id => linksHtml += getLinkHtml(id, "Repasar"));
+
+  // Append each block to the container instead of overwriting it
+  estBlock.innerHTML += `
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow mb-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl">⚙️</div>
+        <h2 class="text-2xl font-black text-slate-900">${blockRef.title || "Gramática"}</h2>
+      </div>
+      <div class="grid grid-cols-1">
+        ${linksHtml || "<p class='text-slate-400 italic text-sm text-center py-4'>No hay enlaces de gramática asignados hoy.</p>"}
+      </div>
+    </section>`;
+});
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
