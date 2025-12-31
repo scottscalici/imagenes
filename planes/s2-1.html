@@ -15,115 +15,103 @@
 </head>
 
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
-  <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+<main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
 
-    <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
-      <div>
-        <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
-        <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
-      </div>
-      <div class="text-right hidden sm:block">
-        <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
-      </div>
-    </header>
+  <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
+    <div>
+      <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
+      <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
+    </div>
+    <div class="text-right hidden sm:block">
+      <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
+    </div>
+  </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 space-y-6">
-        
-        <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
-          <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
-          <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
-          <div class="pt-4 border-t border-slate-100">
-            <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
-            <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
-          </div>
-        </section>
-
-        <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
-          <div class="flex justify-between items-start mb-3">
-            <h2 class="text-red-600 font-bold text-xl">Calentamiento</h2>
-            <a id="calBtn" href="#" target="_blank" class="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors uppercase">Pantalla Completa ↗</a>
-          </div>
-          <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
-        </section>
-
-        <div id="dynamicBlocks" class="space-y-6"></div>
-      </div>
-
-      <div id="tareasColumn" class="space-y-6">
-        <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 h-full">
-          <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
-            <span>📝</span> Tareas Vigentes
-          </h3>
-          <div id="tareasList" class="space-y-4">
-            </div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    
+    <div class="lg:col-span-2 space-y-6">
+      <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
+        <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
+        <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
+        <div class="pt-4 border-t border-slate-100">
+          <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
+          <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
         </div>
-      </div>
+      </section>
+
+      <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
+        <div class="flex justify-between items-start mb-3">
+          <h2 class="text-red-600 font-bold text-xl">Calentamiento</h2>
+          <a id="calBtn" href="#" target="_blank" class="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors uppercase">Pantalla Completa ↗</a>
+        </div>
+        <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
+      </section>
+
+      <div id="curiosityBlock"></div>
+      <div id="estructuraBlock"></div>
+      <div id="extrasBlock"></div> 
     </div>
 
-    <div id="resourceDashboard" class="mt-12 pt-8 border-t-2 border-dashed border-slate-200">
-      <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos del Curso</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col group">
-          <div class="h-32 overflow-hidden">
-            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Señor+">
-          </div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="text-slate-900 font-bold text-lg mb-2 italic">Señor+ AI Tutor</h3>
-            <p class="text-xs text-slate-600 mb-4 flex-grow">Tu compañero inteligente para practicar conversación y gramática en tiempo real.</p>
-            <a href="https://student.schoolai.com/student-space?sessionId=cmgiali9202j3smcukb8ot50f" target="_blank" 
-               class="bg-indigo-600 text-white text-center py-2 rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors shadow-sm">Practicar ahora</a>
-          </div>
-        </div>
-
-        <div class="bg-emerald-50 rounded-xl overflow-hidden shadow-md border border-emerald-100 flex flex-col group">
-          <div class="h-32 overflow-hidden">
-            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Costa Rica">
-          </div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="text-emerald-800 font-bold text-lg mb-2">Costa Rica 2027</h3>
-            <p class="text-xs text-emerald-700 mb-4 flex-grow">¡Únete a nuestra próxima aventura cultural! Información sobre el itinerario y registros.</p>
-            <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" 
-               class="bg-emerald-600 text-white text-center py-2 rounded-lg font-bold text-sm hover:bg-emerald-700 transition-colors shadow-sm">Ver Detalles</a>
-          </div>
-        </div>
-
-        <div class="bg-slate-800 rounded-xl p-5 shadow-md border border-slate-700 flex flex-col justify-between">
-          <div class="flex items-start gap-4 mb-6">
-            <div class="bg-white/10 p-3 rounded-lg text-2xl">🏠</div>
-            <div>
-              <h3 class="text-white font-bold text-lg leading-tight">Portal MISD</h3>
-              <p class="text-slate-400 text-xs mt-1 italic">PowerSchool & Office 365</p>
-            </div>
-          </div>
-          <a href="https://connection.misd.net/index.html" target="_blank" 
-             class="border border-white/20 text-white text-center py-2 rounded-lg font-bold text-sm hover:bg-white/10 transition-colors">Abrir Portal</a>
-        </div>
-
+    <div id="tareasColumn" class="space-y-6">
+      <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100">
+        <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
+          <span>📝</span> Tareas Pendientes
+        </h3>
+        <div id="tareasList" class="space-y-4"></div>
       </div>
     </div>
+  </div>
 
-    <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
-      <div class="flex items-center gap-4 text-xs">
-        <span class="font-bold text-slate-500 uppercase tracking-widest">Docente:</span>
-        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="33">
-        <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Cargar Día</button>
+  <div id="resourceDashboard" class="mt-12 pt-8 border-t-2 border-dashed border-slate-200">
+    <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos del Día</h2>
+    <div id="dynamicResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 mt-12 text-center lg:text-left">Enlaces Permanentes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col group">
+        <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="w-full h-full object-cover"></div>
+        <div class="p-5 flex flex-col flex-grow">
+          <h3 class="text-slate-900 font-bold text-lg mb-2 italic">Señor+ AI Tutor</h3>
+          <a href="https://student.schoolai.com/student-space?sessionId=cmgiali9202j3smcukb8ot50f" target="_blank" class="bg-indigo-600 text-white text-center py-2 rounded-lg font-bold text-sm">Practicar ahora</a>
+        </div>
+      </div>
+      <div class="bg-emerald-50 rounded-xl overflow-hidden shadow-md border border-emerald-100 flex flex-col group">
+        <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" class="w-full h-full object-cover"></div>
+        <div class="p-5 flex flex-col flex-grow">
+          <h3 class="text-emerald-800 font-bold text-lg mb-2">Costa Rica 2027</h3>
+          <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="bg-emerald-600 text-white text-center py-2 rounded-lg font-bold text-sm">Ver Detalles</a>
+        </div>
+      </div>
+      <div class="bg-slate-800 rounded-xl p-5 shadow-md border border-slate-700 flex flex-col justify-between">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="bg-white/10 p-3 rounded-lg text-xl">🏠</div>
+          <h3 class="text-white font-bold text-lg leading-tight">Portal MISD</h3>
+        </div>
+        <a href="https://connection.misd.net/index.html" target="_blank" class="border border-white/20 text-white text-center py-2 rounded-lg font-bold text-sm">Abrir Portal</a>
       </div>
     </div>
+  </div>
 
-  </main>
+  <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
+    <div class="flex items-center gap-4 text-xs">
+      <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
+      <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Cargar</button>
+    </div>
+  </div>
+</main>
 
-  <script>
+<script>
     const CONFIG = {
       COURSE: "s2",
-      CICLO_FILTER: "B", // Meets only on B Days
+      CICLO_FILTER: "B",
       PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
       EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
-      EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
       CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
       CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
       TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
+      VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
+      APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+      EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
       CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
     };
 
@@ -134,13 +122,21 @@
     }
 
     async function loadData() {
-      const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS];
+      const urls = [
+        CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, 
+        CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, 
+        CONFIG.APUNTES_BANK, CONFIG.EXTRAS
+      ];
       try {
-        const responses = await Promise.all(urls.map(url => fetch(url).then(r => r.json())));
-        return { plan: responses[0], evals: responses[1], cal: responses[2], curios: responses[3], tareas: responses[4] };
-      } catch (e) { console.error("Error loading JSON:", e); }
+        const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
+        return { 
+          plan: responses[0], evals: responses[1], cal: responses[2], 
+          curios: responses[3], tareas: responses[4], vocab: responses[5], 
+          apuntes: responses[6], extras: responses[7] 
+        };
+      } catch (e) { console.error("Error loading JSON data:", e); }
     }
-
+    
     function renderManual() {
       const d = document.getElementById('diaInput').value;
       window.history.pushState({}, '', `?dia=${d}`);
@@ -152,72 +148,165 @@
       if (!data) return;
 
       const params = new URLSearchParams(window.location.search);
-      let DIA = parseInt(params.get('dia')) || 33; 
+      let DIA = parseInt(params.get('dia')) || 35; 
 
-      // 1. DATE LOGIC (Filters for B-Day)
+      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
+      
+      // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-      document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD (A-Day)";
+      document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-      // 2. EVALUATIONS
-      const evalList = data.evals.courses[CONFIG.COURSE];
-      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "No hay evaluaciones");
+      // 2. EVALS
+      const evalList = data.evals.courses[CONFIG.COURSE] || [];
+      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
       document.getElementById('currentEval').textContent = findEval(DIA);
-      document.getElementById('nextEvals').innerHTML = `
-        <li><span class="font-bold">Día ${DIA+1}:</span> ${findEval(DIA+1)}</li>
-        <li><span class="font-bold">Día ${DIA+2}:</span> ${findEval(DIA+2)}</li>
-      `;
-
+      document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
       document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
 
-      // 3. DYNAMIC CONTENT
-      const container = document.getElementById('dynamicBlocks');
-      container.innerHTML = "";
+      // 3. CURIOSIDAD
+      const curBlock = document.getElementById('curiosityBlock');
+      const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+      curBlock.innerHTML = cur ? `
+        <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3>
+          <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
+          ${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}
+          <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
+        </article>` : "";
 
-      // Curiosidad
-      const curiosity = data.curios.find(c => c.id === `cur-${DIA}`);
-      if (curiosity) {
-        const curCard = document.createElement('article');
-        curCard.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4";
-        curCard.innerHTML = `
-          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
-          <h2 class="text-2xl font-extrabold text-slate-900">${curiosity.title}</h2>
-          <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm">
-            <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto">
-          </div>
-          ${curiosity.student_note ? `<p class="text-slate-700 italic text-sm">${curiosity.student_note}</p>` : ''}
-        `;
-        container.appendChild(curCard);
+      // 4. ESTRUCTURA (Main Section)
+      const estBlock = document.getElementById('estructuraBlock');
+      estBlock.innerHTML = ""; 
+      const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
+
+      if (estBlockRef) {
+        const getLinkHtml = (id, label) => {
+          const topic = data.apuntes[estBlockRef.ref];
+          if (!topic || !topic.links) return "";
+          const linkData = topic.links[id];
+          if (!linkData) return "";
+          if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return "";
+
+          const isIntro = label === "Introducir";
+          const badgeBg = isIntro ? "bg-emerald-100" : "bg-blue-100";
+          const badgeText = isIntro ? "text-emerald-700" : "text-blue-700";
+
+          return `
+            <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:border-blue-400 hover:shadow-md transition-all duration-200">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider w-fit ${badgeBg} ${badgeText}">
+                  ${label}
+                </span>
+                <h3 class="text-slate-800 font-bold text-lg group-hover:text-blue-600 transition-colors">
+                  ${linkData.title}
+                </h3>
+              </div>
+              <div class="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>`;
+        };
+
+        let allLinksHtml = "";
+        if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
+        if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
+
+        estBlock.innerHTML = `
+          <section class="bg-white rounded-2xl border-l-[6px] border-blue-600 shadow-sm border-y border-r border-slate-200 p-6 md:p-8">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
+            </div>
+            <div class="flex flex-col gap-3">
+              ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-2 text-center'>No hay enlaces de gramática asignados hoy.</p>"}
+            </div>
+          </section>`;
+      } 
+
+      // 5. EXTRAS
+      const extrasBlock = document.getElementById('extrasBlock');
+      extrasBlock.innerHTML = "";
+      const extraBlockRef = todayPlan?.blocks?.find(b => b.kind === "extras");
+      if (extraBlockRef) {
+        const extraItem = data.extras.items.find(item => item.id === extraBlockRef.ref);
+        if (extraItem) {
+          let contentHtml = extraItem.kind === "sentences" 
+            ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
+            : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+          extrasBlock.innerHTML = `
+            <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
+              <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
+              <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+                ${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}
+                ${contentHtml}
+              </div>
+            </section>`;
+        }
       }
 
-      // 4. TAREAS LOGIC
-      const tareasList = document.getElementById('tareasList');
-      tareasList.innerHTML = "";
-
-      const activeTareas = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-
-      if (activeTareas.length === 0) {
-        tareasList.innerHTML = `<p class="text-blue-400 italic text-sm">No hay tareas pendientes hoy.</p>`;
-      } else {
-        activeTareas.forEach(t => {
-          const entryDue = data.cal.map.find(c => c.dia == t.day_due && c.ciclo === CONFIG.CICLO_FILTER);
-          const isNuevo = (t.day_assigned == DIA);
-          const isPronto = (t.day_due == DIA || t.day_due == DIA + 1);
-
-          tareasList.innerHTML += `
-            <div class="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-blue-100 text-blue-600">${t.tipo}</span>
-                ${isNuevo ? '<span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Nuevo</span>' : ''}
-                ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase animate-pronto">¡Para Hoy!</span>' : ''}
-              </div>
-              <h4 class="font-bold text-slate-900 leading-tight">${t.titulo}</h4>
-              <p class="text-[11px] text-slate-500 mt-2 font-medium">Vence: <span class="${isPronto ? 'text-red-600 font-bold' : 'text-slate-700'}">${formatSpanishDate(entryDue?.fecha) || 'TBD'}</span></p>
-            </div>`;
+      // 6. RESOURCE DASHBOARD (Bottom)
+      const resourceGrid = document.getElementById('dynamicResources');
+      resourceGrid.innerHTML = "";
+      if (todayPlan?.blocks) {
+        todayPlan.blocks.forEach(block => {
+          if (block.kind === "vocabulario") {
+            const ch = data.vocab.descubre2.chapters[block.ref];
+            if (ch) {
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Cards</a></div></div>`;
+            }
+          } else if (block.kind === "estructura") {
+            const topic = data.apuntes[block.ref];
+            if (topic) {
+              const allLinks = Object.values(topic.links);
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100"><h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3><div class="flex flex-wrap gap-2">${allLinks.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}</div></div>`;
+            }
+          }
         });
       }
-    }
+      if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
+
+      // 7. TAREAS
+      const tareasContainer = document.getElementById('tareasList');
+      tareasContainer.innerHTML = ""; 
+      const assignedTaskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
+
+      if (assignedTaskRefs.length > 0) {
+          let tasksHtml = "";
+          assignedTaskRefs.forEach(ref => {
+              const taskData = data.tareas[ref];
+              if (!taskData) return;
+              const isUrgent = taskData.status === "para hoy";
+              const pillBg = isUrgent ? "bg-red-500" : "bg-blue-600";
+              const badgeLabel = taskData.type || "Tarea";
+
+              tasksHtml += `
+              <div class="bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group">
+                  <div class="flex justify-between items-start mb-2">
+                      <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest text-white ${pillBg}">
+                          ${badgeLabel}
+                      </span>
+                      ${isUrgent ? '<span class="text-[9px] font-bold text-red-500 animate-pronto uppercase">¡Para Hoy!</span>' : ''}
+                  </div>
+                  <h4 class="text-slate-900 font-bold text-sm mb-3 group-hover:text-blue-700 transition-colors">${taskData.title}</h4>
+                  <a href="${taskData.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">
+                      Abrir Tarea
+                  </a>
+              </div>`;
+          });
+          tareasContainer.innerHTML = tasksHtml;
+      } else {
+          tareasContainer.innerHTML = "<p class='text-blue-400 italic text-sm text-center py-4'>No hay tareas pendientes.</p>";
+      }
+    } // End of init function
+
     init();
-  </script>
+</script>
 </body>
 </html>
