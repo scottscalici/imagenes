@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -30,7 +29,6 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 space-y-6">
-        
         <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
           <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
           <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
@@ -54,8 +52,8 @@
       <div id="tareasColumn" class="space-y-6">
         <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 h-full">
           <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
-  <span>📝</span> Tareas Pendientes
-</h3>
+            <span>📝</span> Tareas Pendientes
+          </h3>
           <div id="tareasList" class="space-y-4"></div>
         </div>
       </div>
@@ -63,8 +61,7 @@
 
     <div id="resourceDashboard" class="mt-12 pt-8 border-t-2 border-dashed border-slate-200">
       <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos del Día</h2>
-      <div id="dynamicResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        </div>
+      <div id="dynamicResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
       <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 mt-12 text-center lg:text-left">Enlaces Permanentes</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -100,139 +97,137 @@
     </div>
   </main>
 
-  
-<script>
-  const CONFIG = {
-    COURSE: "s2",
-    CICLO_FILTER: "B",
-    PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
-    EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
-    CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
-    CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
-    TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
-    VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
-    APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
-    CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
-  };
+  <script>
+    const CONFIG = {
+      COURSE: "s2",
+      CICLO_FILTER: "B",
+      PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
+      EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+      CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+      CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
+      TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
+      VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
+      APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+      CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
+    };
 
-  function formatSpanishDate(dateStr) {
-    if (!dateStr) return "";
-    const date = new Date(dateStr + "T00:00:00");
-    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-  }
-
-  async function loadData() {
-    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
-    try {
-      const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
-      return { plan: responses[0], evals: responses[1], cal: responses[2], curios: responses[3], tareas: responses[4], vocab: responses[5], apuntes: responses[6] };
-    } catch (e) { console.error("Error loading JSON data:", e); }
-  }
-
-  function renderManual() {
-    const d = document.getElementById('diaInput').value;
-    window.history.pushState({}, '', `?dia=${d}`);
-    init();
-  }
-
-  async function init() {
-    const data = await loadData();
-    if (!data) return;
-
-    const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 35; 
-
-    // 1. HEADER
-    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
-
-    // 2. EVALUATIONS
-    const evalList = data.evals.courses[CONFIG.COURSE];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
-    document.getElementById('currentEval').textContent = findEval(DIA);
-    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
-
-    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
-
-    // 3. CURIOSIDAD
-const curBlock = document.getElementById('curiosityBlock');
-const cur = data.curios.find(c => c.id === `cur-${DIA}`);
-curBlock.innerHTML = cur ? `
-  <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
-    <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest text-indigo-500">Curiosidad Día ${DIA}</h3>
-    <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
-    ${cur.img ? `<img src="${cur.img}" class="w-full rounded-lg border border-slate-100">` : ''}
-    <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
-  </article>` : "";
-    
-    // 4. DYNAMIC RESOURCES (Dashboard)
-    const resourceGrid = document.getElementById('dynamicResources');
-    resourceGrid.innerHTML = "";
-    const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
-    
-    if (todayPlan && todayPlan.blocks) {
-      todayPlan.blocks.forEach(block => {
-        if (block.kind === "vocabulario") {
-          const ch = data.vocab.descubre2.chapters[block.ref];
-          if (ch) {
-            resourceGrid.innerHTML += `
-              <div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100">
-                <h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3>
-                <div class="flex gap-2">
-                  <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a>
-                  <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a>
-                </div>
-              </div>`;
-          }
-        } else if (block.kind === "estructura") {
-          const topic = data.apuntes[block.ref];
-          if (topic) {
-            resourceGrid.innerHTML += `
-              <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100">
-                <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
-                <div class="flex flex-wrap gap-2">
-                  ${topic.introducir.map(id => `<a href="${topic.children[id].url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${topic.children[id].title} ↗</a>`).join('')}
-                </div>
-              </div>`;
-          }
-        }
-      });
+    function formatSpanishDate(dateStr) {
+      if (!dateStr) return "";
+      const date = new Date(dateStr + "T00:00:00");
+      return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
     }
-    if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm'>No hay recursos específicos para hoy.</p>";
 
-    // 5. TAREAS (Sidebar - Día Focus)
-    const tList = document.getElementById('tareasList');
-tList.innerHTML = "";
-const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+    async function loadData() {
+      const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
+      try {
+        const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
+        return { plan: responses[0], evals: responses[1], cal: responses[2], curios: responses[3], tareas: responses[4], vocab: responses[5], apuntes: responses[6] };
+      } catch (e) { console.error("Error loading JSON data:", e); }
+    }
 
-active.forEach(t => {
-  const isHoy = (t.day_due == DIA);
-  const isPronto = (t.day_due == DIA + 1);
-  
-  let statusLabel = "";
-  if (isHoy) {
-      statusLabel = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>';
-  } else if (isPronto) {
-      statusLabel = '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>';
-  } else {
-      // Made this much less subtle: bolder font and a light gray background badge
-      statusLabel = `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
-  }
+    function renderManual() {
+      const d = document.getElementById('diaInput').value;
+      window.history.pushState({}, '', `?dia=${d}`);
+      init();
+    }
 
-  tList.innerHTML += `
-    <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md">
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
-        ${statusLabel}
-      </div>
-      <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4>
-    </div>`;
-});
-    
-  // Final trigger to run everything once on page load
-  init();
-</script>
+    async function init() {
+      const data = await loadData();
+      if (!data) return;
 
+      const params = new URLSearchParams(window.location.search);
+      let DIA = parseInt(params.get('dia')) || 35; 
+
+      const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+      document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+      document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+
+      const evalList = data.evals.courses[CONFIG.COURSE];
+      const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+      document.getElementById('currentEval').textContent = findEval(DIA);
+      document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
+
+      document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
+      // 3. CURIOSIDAD (Dynamic Header)
+      const curBlock = document.getElementById('curiosityBlock');
+      const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+      curBlock.innerHTML = cur ? `
+        <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad Día ${DIA}</h3>
+          <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
+          ${cur.img ? `<img src="${cur.img}" class="w-full rounded-lg border border-slate-100">` : ''}
+          <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
+        </article>` : "";
+
+      // 4. DYNAMIC RESOURCES
+      const resourceGrid = document.getElementById('dynamicResources');
+      resourceGrid.innerHTML = "";
+      const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
+      
+      if (todayPlan && todayPlan.blocks) {
+        todayPlan.blocks.forEach(block => {
+          if (block.kind === "vocabulario") {
+            const ch = data.vocab.descubre2.chapters[block.ref];
+            if (ch) {
+              resourceGrid.innerHTML += `
+                <div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100">
+                  <h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3>
+                  <div class="flex gap-2">
+                    <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a>
+                    <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a>
+                  </div>
+                </div>`;
+            }
+          } else if (block.kind === "estructura") {
+            const topic = data.apuntes[block.ref];
+            if (topic) {
+              resourceGrid.innerHTML += `
+                <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100">
+                  <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
+                  <div class="flex flex-wrap gap-2">
+                    ${topic.introducir.map(id => `<a href="${topic.children[id].url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${topic.children[id].title} ↗</a>`).join('')}
+                  </div>
+                </div>`;
+            }
+          }
+        });
+      }
+      if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
+
+      // 5. TAREAS (Sidebar - Improved Visibility)
+      const tList = document.getElementById('tareasList');
+      tList.innerHTML = "";
+      const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+
+      active.forEach(t => {
+        const isHoy = (t.day_due == DIA);
+        const isPronto = (t.day_due == DIA + 1);
+        
+        let statusLabel = "";
+        if (isHoy) {
+            statusLabel = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>';
+        } else if (isPronto) {
+            statusLabel = '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>';
+        } else {
+            // New Bold Badge Style
+            statusLabel = `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        }
+
+        tList.innerHTML += `
+          <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
+              ${statusLabel}
+            </div>
+            <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4>
+          </div>`;
+      });
+      if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+    }
+
+    // Call init once on load
+    init();
+  </script>
 </body>
 </html>
