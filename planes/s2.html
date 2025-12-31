@@ -199,20 +199,39 @@
       }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm'>No hay recursos específicos para hoy.</p>";
 
-      // 5. TAREAS (Sidebar)
-      const tList = document.getElementById('tareasList');
-      tList.innerHTML = "";
-      const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-      active.forEach(t => {
-          const isPronto = (t.day_due == DIA || t.day_due == DIA + 1);
-          tList.innerHTML += `<div class="bg-white rounded-lg p-3 border border-blue-200">
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-blue-100 text-blue-600">${t.tipo}</span>
-            <h4 class="font-bold text-slate-900 text-sm mt-1">${t.titulo}</h4>
-            ${isPronto ? '<span class="text-red-500 text-[10px] font-bold uppercase animate-pronto">¡Pronto!</span>' : ''}
-          </div>`;
-      });
+// 5. TAREAS (Sidebar logic - Día Focus)
+const tList = document.getElementById('tareasList');
+tList.innerHTML = "";
+const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+
+active.forEach(t => {
+    const isHoy = (t.day_due == DIA);
+    const isPronto = (t.day_due == DIA + 1);
+    
+    let statusLabel = "";
+    if (isHoy) {
+        statusLabel = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>';
+    } else if (isPronto) {
+        statusLabel = '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>';
+    } else {
+        // Keeps the focus on the Day number as requested
+        statusLabel = `<span class="text-slate-400 font-bold text-[10px]">DÍA ${t.day_due}</span>`;
     }
-    init();
+
+    tList.innerHTML += `
+      <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md">
+        <div class="flex justify-between items-start mb-1">
+          <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
+          ${statusLabel}
+        </div>
+        <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4>
+      </div>`;
+});
+
+if (active.length === 0) {
+    tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+}
+      init();
   </script>
 </body>
 </html>
