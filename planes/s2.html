@@ -282,18 +282,57 @@ if (estBlockRef) {
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
       // 7. TAREAS
-      const tList = document.getElementById('tareasList');
-      tList.innerHTML = "";
-      const allTareas = data.tareas.tareas || [];
-      const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-      active.forEach(t => {
-        const isHoy = (t.day_due == DIA);
-        const isPronto = (t.day_due == DIA + 1);
-        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
-        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
-      });
-      if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
-    }
+ const tareaBlock = document.getElementById('tareasBlock');
+tareaBlock.innerHTML = ""; 
+
+// Assuming your plan has a 'tareas' array in todayPlan
+const tasks = todayPlan?.blocks?.filter(b => b.kind === "tarea") || [];
+
+if (tasks.length > 0) {
+    let tasksHtml = "";
+
+    tasks.forEach(task => {
+        // We can define pill colors based on the task 'type' or 'category'
+        const isUrgent = task.status === "para hoy";
+        const pillBg = isUrgent ? "bg-red-100" : "bg-slate-100";
+        const pillText = isUrgent ? "text-red-700" : "text-slate-600";
+        const badgeLabel = task.type || "Tarea"; // e.g., "VHL" or "Quizlet"
+
+        tasksHtml += `
+        <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:shadow-sm transition-all">
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                    <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest ${pillBg} ${pillText}">
+                        ${badgeLabel}
+                    </span>
+                    ${isUrgent ? '<span class="text-[9px] font-bold text-red-500 uppercase tracking-tighter">¡Para Hoy!</span>' : ''}
+                </div>
+                <h3 class="text-slate-800 font-bold text-md">${task.title}</h3>
+            </div>
+            <a href="${task.url}" target="_blank" class="text-blue-500 hover:text-blue-700 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+            </a>
+        </div>`;
+    });
+
+    tareaBlock.innerHTML = `
+    <section class="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="bg-indigo-600 text-white p-2 rounded-lg text-xl shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Tareas</h2>
+      </div>
+      
+      <div class="flex flex-col gap-3">
+        ${tasksHtml}
+      </div>
+    </section>`;
+}
 
     init();
 </script>
