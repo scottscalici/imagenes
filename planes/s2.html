@@ -175,26 +175,51 @@
         </article>` : "";
 
       // 3.2 ESTRUCTURA (Main Card)
-      const estBlock = document.getElementById('estructuraBlock');
-      estBlock.innerHTML = "";
-      const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
-      if (estBlockRef) {
-        const topic = data.apuntes[estBlockRef.ref];
-        if (topic) {
-          estBlock.innerHTML = `
-            <section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
-              <h2 class="text-blue-600 font-bold text-xl mb-4 flex items-center gap-2"><span>⚙️</span> Estructura: ${topic.title}</h2>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                ${topic.links.map(link => `
-                  <a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-blue-50 text-blue-800 rounded-lg border border-blue-100 hover:bg-blue-100 transition-all group">
-                    <span class="text-sm font-semibold">${link.title}</span>
-                    <span class="text-blue-400 group-hover:translate-x-1 transition-transform">↗</span>
-                  </a>`).join('')}
-              </div>
-            </section>`;
-        }
-      }
+      // Inside the Estructura Card logic in init()
+if (estBlockRef) {
+  const topic = data.apuntes[estBlockRef.ref];
+  if (topic) {
+    // 1. Helper to find specific links requested in the plan
+    const getLinkHtml = (key, label) => {
+      const link = topic.links[key];
+      if (!link) return "";
+      return `
+        <div class="mb-2">
+          <span class="text-[10px] font-black px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-tighter mr-2">${label}</span>
+          <a href="${link.url}" target="_blank" class="text-blue-600 font-bold hover:underline text-sm">${link.title} ↗</a>
+        </div>`;
+    };
 
+    // 2. Build the "Focus" section (Introducir/Repasar)
+    let focusHtml = "";
+    if (estBlockRef.introducir) {
+      estBlockRef.introducir.forEach(k => focusHtml += getLinkHtml(k, "Introducir"));
+    }
+    if (estBlockRef.repasar) {
+      estBlockRef.repasar.forEach(k => focusHtml += getLinkHtml(k, "Repasar"));
+    }
+
+    estBlock.innerHTML = `
+      <section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
+        <h2 class="text-blue-600 font-bold text-xl mb-4 flex items-center gap-2">
+          <span>⚙️</span> Estructura: ${topic.title}
+        </h2>
+        
+        <div class="bg-blue-50/50 p-4 rounded-lg mb-6 border border-blue-100">
+          ${focusHtml || "<p class='text-xs text-slate-400 italic'>Explora los recursos de gramática abajo.</p>"}
+        </div>
+
+        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Todos los apuntes</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          ${Object.values(topic.links).map(link => `
+            <a href="${link.url}" target="_blank" class="flex items-center justify-between p-3 bg-white text-slate-700 rounded-lg border border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all group">
+              <span class="text-sm font-semibold">${link.title}</span>
+              <span class="text-blue-400 group-hover:translate-x-1 transition-transform">↗</span>
+            </a>`).join('')}
+        </div>
+      </section>`;
+  }
+}
       // 3.5 EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
