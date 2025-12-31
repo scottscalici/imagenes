@@ -3,55 +3,45 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Español - Plan de Clase</title>
+    <title>Español - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .animate-pronto { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .7; } }
     </style>
 </head>
-
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
     <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
-
         <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
             <div>
-                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
+                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
                 <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
             </div>
-            <div class="text-right hidden sm:block">
-                <span id="levelBadge" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
-            </div>
+            <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div id="mainColumn" class="lg:col-span-2 space-y-6">
                 </div>
-
             <div id="sidebarColumn" class="space-y-6">
                 <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 min-h-[400px]">
-                    <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Vigentes</h3>
+                    <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
+        <div class="mt-20 pt-8 border-t border-slate-200 flex justify-center opacity-30 hover:opacity-100 transition-opacity">
             <div class="flex items-center gap-4 text-xs">
-                <span class="font-bold text-slate-500 uppercase tracking-widest">Cargar Día:</span>
                 <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
-                <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Actualizar</button>
+                <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Actualizar</button>
             </div>
         </div>
     </main>
 
     <script>
         const CONFIG = {
-            COURSE: "s2",
-            CICLO: "B",
             PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
             EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
             CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
@@ -65,137 +55,83 @@
         async function loadData() {
             const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
             try {
-                const results = await Promise.all(urls.map(url => fetch(url).then(res => res.json())));
+                const results = await Promise.all(urls.map(url => 
+                    fetch(url).then(res => {
+                        if (!res.ok) throw new Error(`Failed to load ${url}`);
+                        return res.json();
+                    })
+                ));
                 return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6] };
-            } catch (e) { console.error("Fetch Error:", e); }
+            } catch (e) { 
+                alert("Error en JSON: Revisa comas o brackets en tus archivos.");
+                console.error(e); 
+            }
         }
 
-        // --- COMPONENT RENDERERS ---
-
-        function createCalentamiento(DIA) {
+        function createVocabBlock(ref, data) {
+            // Using logic from your provided vocab bank [cite: 1]
+            const chapter = data.vocab.descubre2.chapters[ref];
+            if (!chapter) return "";
             return `
-            <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
-                <div class="flex justify-between items-start mb-3">
-                    <h2 class="text-red-600 font-bold text-xl uppercase tracking-tight italic">Calentamiento</h2>
-                    <a href="${CONFIG.CAL_BASE}/${DIA}" target="_blank" class="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 uppercase">Pantalla Completa ↗</a>
-                </div>
-                <div class="text-slate-700 text-md">Práctica diaria interactiva. Haz clic para empezar.</div>
-            </section>`;
-        }
-
-        function createEvaluacion(ref, data, DIA) {
-            const evalList = data.evals.courses[CONFIG.COURSE];
-            const current = evalList.find(e => e.dia == DIA)?.label || "No hay evaluaciones hoy";
-            const d1 = evalList.find(e => e.dia == DIA + 1)?.label || "Nada programado";
-            const d2 = evalList.find(e => e.dia == DIA + 2)?.label || "Nada programado";
-
-            return `
-            <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
-                <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
-                <div class="text-lg text-slate-800 font-medium italic mb-4">${current}</div>
-                <div class="pt-4 border-t border-slate-100">
-                    <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
-                    <ul class="space-y-1 text-sm text-slate-600">
-                        <li><span class="font-bold">Día ${DIA+1}:</span> ${d1}</li>
-                        <li><span class="font-bold">Día ${DIA+2}:</span> ${d2}</li>
-                    </ul>
+            <section class="bg-white rounded-xl border-l-[6px] border-amber-500 p-6 card-shadow">
+                <h2 class="text-amber-600 font-bold text-xl mb-3">📚 Vocabulario: ${chapter.label}</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="${chapter.listas}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100">Lista</a>
+                    <a href="${chapter.flashcards}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100">Flashcards</a>
                 </div>
             </section>`;
         }
 
-        function createEstructura(ref, status, data) {
+        function createEstructuraBlock(ref, data) {
             const topic = data.apuntes[ref];
             if (!topic) return "";
-            
-            let html = `<section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
-                        <h2 class="text-blue-600 font-bold text-xl mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h2>`;
-
-            const renderSub = (list, label, color) => {
-                if (!list) return "";
-                let sub = `<h3 class="text-xs font-bold uppercase text-slate-400 mt-4 mb-2 tracking-widest">${label}</h3><div class="flex flex-wrap gap-2">`;
-                list.forEach(id => {
-                    const item = topic.children[id];
-                    if (!item) return;
-                    if (!item.url || item.url === "#") {
-                        sub += `<span class="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg border border-slate-200 text-sm italic font-medium">${item.title}</span>`;
-                    } else {
-                        sub += `<a href="${item.url}" target="_blank" class="px-3 py-1.5 bg-${color}-50 text-${color}-700 rounded-lg border border-${color}-100 text-sm font-bold hover:bg-${color}-100 transition-colors">${item.title} ↗</a>`;
-                    }
-                });
-                return sub + `</div>`;
-            };
-
-            // If status is "intro", prioritize the 'introducir' list from your bank
-            html += renderSub(topic.introducir, "Conceptos de Hoy", "blue");
-            html += renderSub(topic.repasar, "Repaso / Práctica", "emerald");
-            return html + `</section>`;
-        }
-
-        function createCuriosidad(DIA, data) {
-            const cur = data.curios.find(c => c.id === `cur-${DIA}`);
-            if (!cur) return "";
             return `
-            <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
-                <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
-                <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
-                <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm"><img src="${cur.img}" class="w-full"></div>
-                <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
-            </article>`;
+            <section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
+                <h2 class="text-blue-600 font-bold text-xl mb-3">⚙️ Gramática: ${topic.title}</h2>
+                <div class="flex flex-wrap gap-2">
+                    ${topic.introducir.map(id => `<span class="px-3 py-1 bg-slate-100 rounded-lg text-sm">${topic.children[id].title}</span>`).join('')}
+                </div>
+            </section>`;
         }
-
-        // --- MASTER LOGIC ---
 
         async function init() {
             const data = await loadData();
+            if (!data) return;
+
             const params = new URLSearchParams(window.location.search);
             const DIA = parseInt(params.get('dia')) || 35;
-            document.getElementById('diaInput').value = DIA;
-
-            // 1. Header & Date
-            const dateEntry = data.cal.map.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO);
+            
+            // 1. HEADER & DATE
+            const dateEntry = data.cal.map.find(c => c.dia == DIA);
             document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-            document.getElementById('headerDate').textContent = dateEntry ? new Date(dateEntry.fecha + "T00:00:00").toLocaleDateString('es-ES', {day:'numeric', month:'long'}) : "Fecha Pendiente";
+            if(dateEntry) document.getElementById('headerDate').textContent = dateEntry.fecha;
 
-            // 2. Main Blocks (Ordering by JSON)
+            // 2. MAIN BLOCKS
             const mainCol = document.getElementById('mainColumn');
             mainCol.innerHTML = "";
 
-            // SAFETY: Handle plan as Array or Single Object
-            const planList = Array.isArray(data.plan) ? data.plan : [data.plan];
-            const todayPlan = planList.find(p => p.dia == DIA);
+            // SAFETY: Force plan into an array format to avoid the .find error in your screenshot
+            const planArray = Array.isArray(data.plan) ? data.plan : [data.plan];
+            const todayPlan = planArray.find(p => p.dia == DIA);
 
             if (todayPlan && todayPlan.blocks) {
                 todayPlan.blocks.forEach(block => {
-                    if (block.kind === "calentamiento") mainCol.innerHTML += createCalentamiento(DIA);
-                    if (block.kind === "evaluacion") mainCol.innerHTML += createEvaluacion(block.ref, data, DIA);
-                    if (block.kind === "estructura") mainCol.innerHTML += createEstructura(block.ref, block.status, data);
+                    if (block.kind === "calentamiento") {
+                        mainCol.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow"><h2 class="text-red-600 font-bold text-xl">Calentamiento</h2></section>`;
+                    }
+                    if (block.kind === "vocabulario") mainCol.innerHTML += createVocabBlock(block.ref, data);
+                    if (block.kind === "estructura") mainCol.innerHTML += createEstructuraBlock(block.ref, data);
                 });
             }
 
-            // Always try to show curiosity at the end
-            mainCol.innerHTML += createCuriosidad(DIA, data);
-
-            // 3. Tareas (Sidebar)
-            const tList = document.getElementById('tareasList');
-            tList.innerHTML = "";
-            const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-            if (active.length === 0) tList.innerHTML = `<p class="text-blue-400 italic text-sm">No hay tareas.</p>`;
-            active.forEach(t => {
-                const isPronto = (t.day_due <= DIA + 1);
-                tList.innerHTML += `<div class="bg-white rounded-lg p-3 border border-blue-200">
-                    <div class="flex gap-2 mb-1">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-600 uppercase">${t.tipo}</span>
-                        ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pronto uppercase">¡Pronto!</span>' : ''}
-                    </div>
-                    <h4 class="font-bold text-slate-900 text-sm">${t.titulo}</h4>
-                </div>`;
-            });
+            // Always try to show Curiosity
+            const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+            if (cur) {
+                mainCol.innerHTML += `<article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow"><h3 class="text-indigo-600 font-bold text-xs uppercase">Sabías que...</h3><h2 class="text-2xl font-extrabold">${cur.title}</h2></article>`;
+            }
         }
 
-        function renderManual() {
-            window.location.search = `?dia=${document.getElementById('diaInput').value}`;
-        }
-
+        function renderManual() { window.location.search = `?dia=${document.getElementById('diaInput').value}`; }
         init();
     </script>
 </body>
