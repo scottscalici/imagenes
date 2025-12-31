@@ -99,6 +99,7 @@
     </div>
   </div>
 </main>
+
 <script>
     const CONFIG = {
       COURSE: "s2",
@@ -151,10 +152,6 @@
 
       const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
       
-      // DEBUG LOGS - Check your browser console (F12) if it's not working
-      console.log("Current Day:", DIA);
-      console.log("Plan found for today:", todayPlan);
-
       // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
@@ -178,67 +175,61 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-// 4. ESTRUCTURA (Stacked Styled Version with Left Border)
-const estBlock = document.getElementById('estructuraBlock');
-estBlock.innerHTML = ""; 
-const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
+      // 4. ESTRUCTURA (Main Section)
+      const estBlock = document.getElementById('estructuraBlock');
+      estBlock.innerHTML = ""; 
+      const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
 
-if (estBlockRef) {
-  const getLinkHtml = (id, label) => {
-    // Look up the topic folder based on the plan's 'ref'
-    const topic = data.apuntes[estBlockRef.ref];
-    if (!topic || !topic.links) return "";
+      if (estBlockRef) {
+        const getLinkHtml = (id, label) => {
+          const topic = data.apuntes[estBlockRef.ref];
+          if (!topic || !topic.links) return "";
+          const linkData = topic.links[id];
+          if (!linkData) return "";
+          if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return "";
 
-    const linkData = topic.links[id];
-    if (!linkData) return "";
+          const isIntro = label === "Introducir";
+          const badgeBg = isIntro ? "bg-emerald-100" : "bg-blue-100";
+          const badgeText = isIntro ? "text-emerald-700" : "text-blue-700";
 
-    // Course Filtering Logic
-    if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return "";
+          return `
+            <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:border-blue-400 hover:shadow-md transition-all duration-200">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider w-fit ${badgeBg} ${badgeText}">
+                  ${label}
+                </span>
+                <h3 class="text-slate-800 font-bold text-lg group-hover:text-blue-600 transition-colors">
+                  ${linkData.title}
+                </h3>
+              </div>
+              <div class="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>`;
+        };
 
-    // Label Colors
-    const isIntro = label === "Introducir";
-    const badgeBg = isIntro ? "bg-emerald-100" : "bg-blue-100";
-    const badgeText = isIntro ? "text-emerald-700" : "text-blue-700";
+        let allLinksHtml = "";
+        if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
+        if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
 
-    return `
-      <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:border-blue-400 hover:shadow-md transition-all duration-200">
-        <div class="flex flex-col gap-2">
-          <span class="text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider w-fit ${badgeBg} ${badgeText}">
-            ${label}
-          </span>
-          <h3 class="text-slate-800 font-bold text-lg group-hover:text-blue-600 transition-colors">
-            ${linkData.title}
-          </h3>
-        </div>
-        <div class="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-      </a>`;
-  };
+        estBlock.innerHTML = `
+          <section class="bg-white rounded-2xl border-l-[6px] border-blue-600 shadow-sm border-y border-r border-slate-200 p-6 md:p-8">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
+            </div>
+            <div class="flex flex-col gap-3">
+              ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-2 text-center'>No hay enlaces de gramática asignados hoy.</p>"}
+            </div>
+          </section>`;
+      } 
 
-  let allLinksHtml = "";
-  if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
-  if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
-
-  estBlock.innerHTML = `
-    <section class="bg-white rounded-2xl border-l-[6px] border-blue-600 shadow-sm border-y border-r border-slate-200 p-6 md:p-8">
-      <div class="flex items-center gap-4 mb-6">
-        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-md">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
-      </div>
-      
-      <div class="flex flex-col gap-3">
-        ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-2 text-center'>No hay enlaces de gramática asignados hoy.</p>"}
-      </div>
-    </section>`;
-} 
-      
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
@@ -268,7 +259,7 @@ if (estBlockRef) {
           if (block.kind === "vocabulario") {
             const ch = data.vocab.descubre2.chapters[block.ref];
             if (ch) {
-              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a></div></div>`;
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Cards</a></div></div>`;
             }
           } else if (block.kind === "estructura") {
             const topic = data.apuntes[block.ref];
@@ -281,44 +272,40 @@ if (estBlockRef) {
       }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
-  // 7. TAREAS (Fixed for your specific HTML IDs)
-const tareasContainer = document.getElementById('tareasList');
-tareasContainer.innerHTML = ""; 
+      // 7. TAREAS
+      const tareasContainer = document.getElementById('tareasList');
+      tareasContainer.innerHTML = ""; 
+      const assignedTaskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
 
-// 1. Get the list of task IDs assigned for today from the plan
-const assignedTaskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
+      if (assignedTaskRefs.length > 0) {
+          let tasksHtml = "";
+          assignedTaskRefs.forEach(ref => {
+              const taskData = data.tareas[ref];
+              if (!taskData) return;
+              const isUrgent = taskData.status === "para hoy";
+              const pillBg = isUrgent ? "bg-red-500" : "bg-blue-600";
+              const badgeLabel = taskData.type || "Tarea";
 
-if (assignedTaskRefs.length > 0) {
-    let tasksHtml = "";
+              tasksHtml += `
+              <div class="bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group">
+                  <div class="flex justify-between items-start mb-2">
+                      <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest text-white ${pillBg}">
+                          ${badgeLabel}
+                      </span>
+                      ${isUrgent ? '<span class="text-[9px] font-bold text-red-500 animate-pronto uppercase">¡Para Hoy!</span>' : ''}
+                  </div>
+                  <h4 class="text-slate-900 font-bold text-sm mb-3 group-hover:text-blue-700 transition-colors">${taskData.title}</h4>
+                  <a href="${taskData.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">
+                      Abrir Tarea
+                  </a>
+              </div>`;
+          });
+          tareasContainer.innerHTML = tasksHtml;
+      } else {
+          tareasContainer.innerHTML = "<p class='text-blue-400 italic text-sm text-center py-4'>No hay tareas pendientes.</p>";
+      }
+    } // End of init function
 
-    assignedTaskRefs.forEach(ref => {
-        // 2. Look up the actual task data in the global tareas bank
-        const taskData = data.tareas[ref];
-        if (!taskData) return;
-
-        const isUrgent = taskData.status === "para hoy";
-        const pillBg = isUrgent ? "bg-red-500" : "bg-blue-600";
-        const badgeLabel = taskData.type || "Tarea";
-
-        tasksHtml += `
-        <div class="bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group">
-            <div class="flex justify-between items-start mb-2">
-                <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest text-white ${pillBg}">
-                    ${badgeLabel}
-                </span>
-                ${isUrgent ? '<span class="text-[9px] font-bold text-red-500 animate-pronto uppercase">¡Para Hoy!</span>' : ''}
-            </div>
-            <h4 class="text-slate-900 font-bold text-sm mb-3 group-hover:text-blue-700 transition-colors">${taskData.title}</h4>
-            <a href="${taskData.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">
-                Abrir Tarea
-            </a>
-        </div>`;
-    });
-
-    tareasContainer.innerHTML = tasksHtml;
-} else {
-    tareasContainer.innerHTML = "<p class='text-blue-400 italic text-sm text-center py-4'>No hay tareas pendientes.</p>";
-}
     init();
 </script>
 </body>
