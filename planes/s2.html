@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -100,8 +99,7 @@
     </div>
   </div>
 </main>
-<script>
-    const CONFIG = {
+  <script>const CONFIG = {
       COURSE: "s2",
       CICLO_FILTER: "B",
       PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
@@ -152,10 +150,6 @@
 
       const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
       
-      // DEBUG LOGS - Check your browser console (F12) if it's not working
-      console.log("Current Day:", DIA);
-      console.log("Plan found for today:", todayPlan);
-
       // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
@@ -179,55 +173,70 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
- // 4. ESTRUCTURA (Grouped Library Version)
-const estBlock = document.getElementById('estructuraBlock');
-estBlock.innerHTML = ""; 
-const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
+      // 4. ESTRUCTURA & 6. RESOURCE DASHBOARD (Combined for sync)
+      const estBlock = document.getElementById('estructuraBlock');
+      const resourceGrid = document.getElementById('dynamicResources');
+      estBlock.innerHTML = ""; 
+      resourceGrid.innerHTML = "";
 
-if (estBlockRef) {
-  const getLinkHtml = (id, label) => {
-    // 1. Look up the Parent Topic (e.g., "mandatos")
-    const topic = data.apuntes[estBlockRef.ref];
-    if (!topic || !topic.links) return "";
+      const grammarBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "estructura");
 
-    // 2. Look up the specific Child Link (e.g., "tu_neg")
-    const linkData = topic.links[id];
-    if (!linkData) return "";
+      grammarBlocks.forEach(blockRef => {
+        const topic = data.apuntes?.[blockRef.ref];
+        if (!topic) return;
 
-    // 3. Course Filtering Logic
-    const isGlobal = !linkData.courses;
-    const isAllowed = linkData.courses && linkData.courses.includes(CONFIG.COURSE);
-    if (!isGlobal && !isAllowed) return "";
+        // Add to Resource Dashboard (Section 6)
+        const allLinks = Object.values(topic.links || {});
+        resourceGrid.innerHTML += `
+          <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100">
+            <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
+            <div class="flex flex-wrap gap-2">
+              ${allLinks.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}
+            </div>
+          </div>`;
 
-    const badgeColor = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
-    
-    return `
-      <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group">
-        <div class="flex flex-col gap-1">
-          <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase tracking-wider ${badgeColor}">${label}</span>
-          <span class="text-slate-800 font-bold text-md">${linkData.title}</span>
-        </div>
-        <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
-      </a>`;
-  };
+        // Main Card Link Generation
+        const makeLinks = (ids, label) => {
+          if (!ids) return "";
+          return ids.map(id => {
+            const link = topic.links?.[id];
+            if (!link) return "";
+            if (link.courses && !link.courses.includes(CONFIG.COURSE)) return "";
+            const color = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
+            return `
+              <a href="${link.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-400 transition-all mb-2 group">
+                <div class="flex flex-col">
+                  <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase ${color} mb-1">${label}</span>
+                  <span class="text-slate-800 font-bold">${link.title}</span>
+                </div>
+                <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
+              </a>`;
+          }).join('');
+        };
 
-  let allLinksHtml = "";
-  if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
-  if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
+        const htmlContent = makeLinks(blockRef.introducir, "Introducir") + makeLinks(blockRef.repasar, "Repasar");
 
-  estBlock.innerHTML = `
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl">⚙️</div>
-        <h2 class="text-2xl font-black text-slate-900">${estBlockRef.title || "Gramática"}</h2>
-      </div>
-      <div class="grid grid-cols-1 gap-4">
-        ${allLinksHtml || "<p class='text-slate-400 italic text-sm text-center py-4'>No hay enlaces de gramática asignados hoy.</p>"}
-      </div>
-    </section>`;
-}
-      
-      
+        if (htmlContent) {
+          estBlock.innerHTML += `
+            <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow mb-6">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="bg-blue-600 text-white p-2 rounded-lg text-xl">⚙️</div>
+                <h2 class="text-2xl font-black text-slate-900">${blockRef.title || topic.title}</h2>
+              </div>
+              <div>${htmlContent}</div>
+            </section>`;
+        }
+      });
+
+      // Finish Resource Dashboard (Vocab)
+      (todayPlan?.blocks || []).filter(b => b.kind === "vocabulario").forEach(block => {
+        const ch = data.vocab.descubre2.chapters[block.ref];
+        if (ch) {
+          resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Cards</a></div></div>`;
+        }
+      });
+      if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
+
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
@@ -238,47 +247,18 @@ if (estBlockRef) {
           let contentHtml = extraItem.kind === "sentences" 
             ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
             : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-          extrasBlock.innerHTML = `
-            <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
-              <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
-              <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
-                ${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}
-                ${contentHtml}
-              </div>
-            </section>`;
+          extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${contentHtml}</div></section>`;
         }
       }
 
-      // 6. RESOURCE DASHBOARD (Bottom)
-      const resourceGrid = document.getElementById('dynamicResources');
-      resourceGrid.innerHTML = "";
-      if (todayPlan?.blocks) {
-        todayPlan.blocks.forEach(block => {
-          if (block.kind === "vocabulario") {
-            const ch = data.vocab.descubre2.chapters[block.ref];
-            if (ch) {
-              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a></div></div>`;
-            }
-          } else if (block.kind === "estructura") {
-            const topic = data.apuntes[block.ref];
-            if (topic) {
-              const allLinks = Object.values(topic.links);
-              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100"><h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3><div class="flex flex-wrap gap-2">${allLinks.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}</div></div>`;
-            }
-          }
-        });
-      }
-      if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
-
-      // 7. TAREAS
+      // 7. TAREAS (Date-based Logic)
       const tList = document.getElementById('tareasList');
       tList.innerHTML = "";
       const allTareas = data.tareas.tareas || [];
       const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
       active.forEach(t => {
         const isHoy = (t.day_due == DIA);
-        const isPronto = (t.day_due == DIA + 1);
-        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
       });
       if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
