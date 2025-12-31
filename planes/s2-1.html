@@ -178,7 +178,7 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-// 4. ESTRUCTURA (Stacked Styled Version with Left Border)
+// 4. ESTRUCTURA (Styled Version - Unlimited Focus Links)
 const estBlock = document.getElementById('estructuraBlock');
 estBlock.innerHTML = ""; 
 const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
@@ -195,24 +195,27 @@ if (estBlockRef) {
     // Course Filtering Logic
     if (linkData.courses && !linkData.courses.includes(CONFIG.COURSE)) return "";
 
-    // Label Colors
+    // Dynamic Styling based on the label
     const isIntro = label === "Introducir";
-    const badgeBg = isIntro ? "bg-emerald-100" : "bg-blue-100";
-    const badgeText = isIntro ? "text-emerald-700" : "text-blue-700";
+    const badgeBg = isIntro ? "bg-emerald-500/10" : "bg-blue-500/10";
+    const badgeText = isIntro ? "text-emerald-600" : "text-blue-600";
+    const borderHover = isIntro ? "hover:border-emerald-300" : "hover:border-blue-300";
 
     return `
-      <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-5 bg-slate-50 border border-slate-200 rounded-xl hover:bg-white hover:border-blue-400 hover:shadow-md transition-all duration-200">
+      <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-200/60 ${borderHover} hover:bg-white hover:shadow-xl transition-all duration-300">
         <div class="flex flex-col gap-2">
-          <span class="text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider w-fit ${badgeBg} ${badgeText}">
-            ${label}
-          </span>
-          <h3 class="text-slate-800 font-bold text-lg group-hover:text-blue-600 transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-widest ${badgeBg} ${badgeText}">
+              ${label}
+            </span>
+          </div>
+          <h3 class="text-slate-800 font-bold text-lg leading-tight group-hover:text-blue-700 transition-colors">
             ${linkData.title}
           </h3>
         </div>
-        <div class="text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-100 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </div>
       </a>`;
@@ -223,21 +226,26 @@ if (estBlockRef) {
   if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
 
   estBlock.innerHTML = `
-    <section class="bg-white rounded-2xl border-l-[6px] border-blue-600 shadow-sm border-y border-r border-slate-200 p-6 md:p-8">
-      <div class="flex items-center gap-4 mb-6">
-        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-md">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
+    <section class="bg-white rounded-[2rem] border border-slate-200/80 p-8 shadow-2xl shadow-slate-200/50">
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl shadow-lg shadow-blue-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Gramática y Enlaces</p>
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
+          </div>
         </div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">${estBlockRef.title || "Estructura"}</h2>
       </div>
       
-      <div class="flex flex-col gap-3">
-        ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-2 text-center'>No hay enlaces de gramática asignados hoy.</p>"}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        ${allLinksHtml || "<p class='text-slate-400 italic text-sm py-4'>No hay temas asignados hoy.</p>"}
       </div>
     </section>`;
-} 
+}
       
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
@@ -281,44 +289,20 @@ if (estBlockRef) {
       }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
-  // 7. TAREAS (Fixed for your specific HTML IDs)
-const tareasContainer = document.getElementById('tareasList');
-tareasContainer.innerHTML = ""; 
+      // 7. TAREAS
+      const tList = document.getElementById('tareasList');
+      tList.innerHTML = "";
+      const allTareas = data.tareas.tareas || [];
+      const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+      active.forEach(t => {
+        const isHoy = (t.day_due == DIA);
+        const isPronto = (t.day_due == DIA + 1);
+        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
+      });
+      if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+    }
 
-// 1. Get the list of task IDs assigned for today from the plan
-const assignedTaskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
-
-if (assignedTaskRefs.length > 0) {
-    let tasksHtml = "";
-
-    assignedTaskRefs.forEach(ref => {
-        // 2. Look up the actual task data in the global tareas bank
-        const taskData = data.tareas[ref];
-        if (!taskData) return;
-
-        const isUrgent = taskData.status === "para hoy";
-        const pillBg = isUrgent ? "bg-red-500" : "bg-blue-600";
-        const badgeLabel = taskData.type || "Tarea";
-
-        tasksHtml += `
-        <div class="bg-white border border-blue-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group">
-            <div class="flex justify-between items-start mb-2">
-                <span class="text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest text-white ${pillBg}">
-                    ${badgeLabel}
-                </span>
-                ${isUrgent ? '<span class="text-[9px] font-bold text-red-500 animate-pronto uppercase">¡Para Hoy!</span>' : ''}
-            </div>
-            <h4 class="text-slate-900 font-bold text-sm mb-3 group-hover:text-blue-700 transition-colors">${taskData.title}</h4>
-            <a href="${taskData.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-black transition-colors">
-                Abrir Tarea
-            </a>
-        </div>`;
-    });
-
-    tareasContainer.innerHTML = tasksHtml;
-} else {
-    tareasContainer.innerHTML = "<p class='text-blue-400 italic text-sm text-center py-4'>No hay tareas pendientes.</p>";
-}
     init();
 </script>
 </body>
