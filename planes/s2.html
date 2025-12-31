@@ -194,6 +194,25 @@
                   </div>
                 </div>`;
             }
+          } else if (block.kind === "extras") {
+  // Use the ref as the title, cleaning up the ID pattern (extra-s2-d35-01 -> Extra 01)
+  const displayTitle = block.ref.split('-').pop().toUpperCase();
+  
+  // Custom styling: Indigo border and a subtle pattern background to look "different"
+  resourceGrid.innerHTML += `
+    <div class="bg-indigo-50/50 rounded-xl border-2 border-dashed border-indigo-200 p-5 shadow-sm flex flex-col group">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-indigo-700 font-black text-sm uppercase tracking-tighter flex items-center gap-2">
+          <span>✨</span> ${block.ref}
+        </h3>
+      </div>
+      <div class="bg-white rounded-lg p-3 border border-indigo-100 space-y-2">
+        <p class="text-slate-600 text-sm leading-relaxed italic">
+          Contenido adicional para el Día ${DIA}...
+        </p>
+      </div>
+    </div>`;
+}
           }
         });
       }
