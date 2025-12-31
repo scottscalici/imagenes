@@ -149,19 +149,23 @@
 
       document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
 
-// 3. CURIOSIDAD (Full Image, Scrollable Container)
-      const curBlock = document.getElementById('curiosityBlock');
-      const cur = data.curios.find(c => c.id === `cur-${DIA}`);
-      curBlock.innerHTML = cur ? `
-        <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
-          <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest text-indigo-500">Curiosidad ${DIA}</h3>
-          <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
-          ${cur.img ? `
-            <div class="w-full max-h-[500px] overflow-y-auto rounded-lg border border-slate-100 scrollbar-thin">
-              <img src="${cur.img}" class="w-full h-auto block">
-            </div>` : ''}
-          <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
-        </article>` : "";
+// 3. CURIOSIDAD (Fixed: No cropping, internal scrolling)
+const curBlock = document.getElementById('curiosityBlock');
+const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+curBlock.innerHTML = cur ? `
+  <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+    <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3>
+    <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
+    
+    ${cur.img ? `
+      <div class="w-full max-h-[450px] overflow-y-auto rounded-lg border border-slate-100 bg-slate-50">
+        <img src="${cur.img}" class="w-full h-auto block" alt="Curiosidad image">
+      </div>
+    ` : ''}
+    
+    <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
+  </article>` : "";
+      
       
       // 4. DYNAMIC RESOURCES
       const resourceGrid = document.getElementById('dynamicResources');
