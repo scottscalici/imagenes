@@ -178,35 +178,26 @@
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-    // 4. ESTRUCTURA (Single Card - Unlimited Focus Links with Course Filtering)
+// 4. ESTRUCTURA (Grouped Library Version)
 const estBlock = document.getElementById('estructuraBlock');
 estBlock.innerHTML = ""; 
-
-// Find the specific 'estructura' block for today's plan
 const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
 
 if (estBlockRef) {
-  /**
-   * Helper to create the link row with course-level filtering
-   * @param {string} id - The key in apuntes.json
-   * @param {string} label - "Introducir" or "Repasar"
-   */
   const getLinkHtml = (id, label) => {
-    const linkData = data.apuntes[id]; // Lookup ID in the library
+    // 1. Look up the Parent Topic (e.g., "mandatos")
+    const topic = data.apuntes[estBlockRef.ref];
+    if (!topic || !topic.links) return "";
+
+    // 2. Look up the specific Child Link (e.g., "tu_neg")
+    const linkData = topic.links[id];
     if (!linkData) return "";
 
-    // --- COURSE FILTERING LOGIC ---
-    // 1. If 'courses' is missing, it is GLOBAL (anyone can see it).
-    // 2. If 'courses' exists, it MUST include the current CONFIG.COURSE.
+    // 3. Course Filtering Logic
     const isGlobal = !linkData.courses;
     const isAllowed = linkData.courses && linkData.courses.includes(CONFIG.COURSE);
+    if (!isGlobal && !isAllowed) return "";
 
-    if (!isGlobal && !isAllowed) {
-      console.log(`Skipping link "${id}": Not assigned to ${CONFIG.COURSE}`);
-      return ""; 
-    }
-
-    // Define styling based on the status label
     const badgeColor = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
     
     return `
@@ -215,33 +206,26 @@ if (estBlockRef) {
           <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase tracking-wider ${badgeColor}">${label}</span>
           <span class="text-slate-800 font-bold text-md">${linkData.title}</span>
         </div>
-        <div class="flex items-center gap-2">
-           <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
-        </div>
+        <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
       </a>`;
   };
 
-  // Generate the list of HTML rows for all assigned IDs
   let allLinksHtml = "";
-  if (estBlockRef.introducir) {
-    estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
-  }
-  if (estBlockRef.repasar) {
-    estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
-  }
+  if (estBlockRef.introducir) estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
+  if (estBlockRef.repasar) estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
 
-  // Render the final card
   estBlock.innerHTML = `
     <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow">
       <div class="flex items-center gap-3 mb-6">
-        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div>
+        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl">⚙️</div>
         <h2 class="text-2xl font-black text-slate-900">${estBlockRef.title || "Gramática"}</h2>
       </div>
       <div class="grid grid-cols-1 gap-4">
-        ${allLinksHtml || "<p class='text-slate-400 italic text-sm text-center py-4'>No hay enlaces de gramática asignados hoy para este curso.</p>"}
+        ${allLinksHtml || "<p class='text-slate-400 italic text-sm text-center py-4'>No hay enlaces de gramática asignados hoy.</p>"}
       </div>
     </section>`;
 }
+
       
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
