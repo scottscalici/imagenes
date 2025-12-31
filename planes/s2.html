@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -99,8 +100,8 @@
     </div>
   </div>
 </main>
-  <script>
-const CONFIG = {
+<script>
+    const CONFIG = {
       COURSE: "s2",
       CICLO_FILTER: "B",
       PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
@@ -151,6 +152,10 @@ const CONFIG = {
 
       const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
       
+      // DEBUG LOGS - Check your browser console (F12) if it's not working
+      console.log("Current Day:", DIA);
+      console.log("Plan found for today:", todayPlan);
+
       // 1. HEADER & CALENDAR
       const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
       document.getElementById('dayTitle').textContent = `Día ${DIA}`;
@@ -174,45 +179,71 @@ const CONFIG = {
           <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
         </article>` : "";
 
-      // 4. ESTRUCTURA (Handles MULTIPLE blocks per day)
-      const estContainer = document.getElementById('estructuraBlock');
-      estContainer.innerHTML = ""; 
-      const grammarBlocks = todayPlan?.blocks?.filter(b => b.kind === "estructura") || [];
+    // 4. ESTRUCTURA (Single Card - Unlimited Focus Links with Course Filtering)
+const estBlock = document.getElementById('estructuraBlock');
+estBlock.innerHTML = ""; 
 
-      grammarBlocks.forEach(blockRef => {
-        const getLinkHtml = (id, label) => {
-          const topic = data.apuntes[blockRef.ref];
-          if (!topic || !topic.links) return "";
-          const linkData = topic.links[id];
-          if (!linkData || (linkData.courses && !linkData.courses.includes(CONFIG.COURSE))) return "";
+// Find the specific 'estructura' block for today's plan
+const estBlockRef = todayPlan?.blocks?.find(b => b.kind === "estructura");
 
-          const isIntro = label === "Introducir";
-          const badgeStyle = isIntro ? "bg-emerald-500/10 text-emerald-600" : "bg-blue-500/10 text-blue-600";
+if (estBlockRef) {
+  /**
+   * Helper to create the link row with course-level filtering
+   * @param {string} id - The key in apuntes.json
+   * @param {string} label - "Introducir" or "Repasar"
+   */
+  const getLinkHtml = (id, label) => {
+    const linkData = data.apuntes[id]; // Lookup ID in the library
+    if (!linkData) return "";
 
-          return `
-            <a href="${linkData.url}" target="_blank" class="group flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl border border-slate-200/60 hover:border-blue-300 hover:bg-white hover:shadow-xl transition-all duration-300 mb-2">
-              <div class="flex flex-col gap-1">
-                <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest w-fit ${badgeStyle}">${label}</span>
-                <h3 class="text-slate-800 font-bold text-md leading-tight group-hover:text-blue-700">${linkData.title}</h3>
-              </div>
-              <div class="text-slate-300 group-hover:text-blue-500 transition-all">↗</div>
-            </a>`;
-        };
+    // --- COURSE FILTERING LOGIC ---
+    // 1. If 'courses' is missing, it is GLOBAL (anyone can see it).
+    // 2. If 'courses' exists, it MUST include the current CONFIG.COURSE.
+    const isGlobal = !linkData.courses;
+    const isAllowed = linkData.courses && linkData.courses.includes(CONFIG.COURSE);
 
-        let linksHtml = "";
-        if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += getLinkHtml(id, "Introducir"));
-        if (blockRef.repasar) blockRef.repasar.forEach(id => linksHtml += getLinkHtml(id, "Repasar"));
+    if (!isGlobal && !isAllowed) {
+      console.log(`Skipping link "${id}": Not assigned to ${CONFIG.COURSE}`);
+      return ""; 
+    }
 
-        estContainer.innerHTML += `
-          <section class="bg-white rounded-[2rem] border border-slate-200/80 p-6 shadow-xl mb-6">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg">⚙️</div>
-              <h2 class="text-xl font-black text-slate-900">${blockRef.title || "Gramática"}</h2>
-            </div>
-            <div class="grid grid-cols-1 gap-2">${linksHtml || "<p class='text-slate-400 italic text-sm py-2'>No hay enlaces hoy.</p>"}</div>
-          </section>`;
-      });
+    // Define styling based on the status label
+    const badgeColor = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
+    
+    return `
+      <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all group">
+        <div class="flex flex-col gap-1">
+          <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase tracking-wider ${badgeColor}">${label}</span>
+          <span class="text-slate-800 font-bold text-md">${linkData.title}</span>
+        </div>
+        <div class="flex items-center gap-2">
+           <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
+        </div>
+      </a>`;
+  };
 
+  // Generate the list of HTML rows for all assigned IDs
+  let allLinksHtml = "";
+  if (estBlockRef.introducir) {
+    estBlockRef.introducir.forEach(id => allLinksHtml += getLinkHtml(id, "Introducir"));
+  }
+  if (estBlockRef.repasar) {
+    estBlockRef.repasar.forEach(id => allLinksHtml += getLinkHtml(id, "Repasar"));
+  }
+
+  // Render the final card
+  estBlock.innerHTML = `
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 card-shadow">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div>
+        <h2 class="text-2xl font-black text-slate-900">${estBlockRef.title || "Gramática"}</h2>
+      </div>
+      <div class="grid grid-cols-1 gap-4">
+        ${allLinksHtml || "<p class='text-slate-400 italic text-sm text-center py-4'>No hay enlaces de gramática asignados hoy para este curso.</p>"}
+      </div>
+    </section>`;
+}
+      
       // 5. EXTRAS
       const extrasBlock = document.getElementById('extrasBlock');
       extrasBlock.innerHTML = "";
@@ -223,44 +254,50 @@ const CONFIG = {
           let contentHtml = extraItem.kind === "sentences" 
             ? `<ul class="space-y-2">${extraItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
             : `<div class="flex flex-wrap gap-3">${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-          extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}${contentHtml}</div></section>`;
+          extrasBlock.innerHTML = `
+            <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow">
+              <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${extraItem.title}</h2>
+              <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+                ${extraItem.instructions ? `<p class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-4">${extraItem.instructions}</p>` : ''}
+                ${contentHtml}
+              </div>
+            </section>`;
         }
       }
 
       // 6. RESOURCE DASHBOARD (Bottom)
       const resourceGrid = document.getElementById('dynamicResources');
       resourceGrid.innerHTML = "";
-      todayPlan?.blocks?.forEach(block => {
-        if (block.kind === "vocabulario") {
-          const ch = data.vocab.descubre2.chapters[block.ref];
-          if (ch) resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2">📚 Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Cards</a></div></div>`;
-        }
-      });
+      if (todayPlan?.blocks) {
+        todayPlan.blocks.forEach(block => {
+          if (block.kind === "vocabulario") {
+            const ch = data.vocab.descubre2.chapters[block.ref];
+            if (ch) {
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100"><h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase tracking-tighter">Flashcards</a></div></div>`;
+            }
+          } else if (block.kind === "estructura") {
+            const topic = data.apuntes[block.ref];
+            if (topic) {
+              const allLinks = Object.values(topic.links);
+              resourceGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100"><h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3><div class="flex flex-wrap gap-2">${allLinks.slice(0, 3).map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase">${l.title} ↗</a>`).join('')}</div></div>`;
+            }
+          }
+        });
+      }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
 
-      // 7. TAREAS (Updated to pull from block refs)
+      // 7. TAREAS
       const tList = document.getElementById('tareasList');
       tList.innerHTML = "";
-      const taskRefs = todayPlan?.blocks?.filter(b => b.kind === "tarea").map(b => b.ref) || [];
-
-      if (taskRefs.length > 0) {
-        taskRefs.forEach(ref => {
-          const t = data.tareas[ref]; // Checks your tareas.json keys
-          if (!t) return;
-          const isUrgent = t.status === "para hoy";
-          tList.innerHTML += `
-            <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md">
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.type || "Tarea"}</span>
-                ${isUrgent ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : ''}
-              </div>
-              <h4 class="font-bold text-slate-800 text-sm leading-tight mb-3">${t.title}</h4>
-              <a href="${t.url}" target="_blank" class="block w-full text-center py-2 bg-slate-800 text-white rounded-lg text-[10px] font-bold hover:bg-black transition-colors">Abrir Tarea</a>
-            </div>`;
-        });
-      } else {
-        tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
-      }
+      const allTareas = data.tareas.tareas || [];
+      const active = allTareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+      active.forEach(t => {
+        const isHoy = (t.day_due == DIA);
+        const isPronto = (t.day_due == DIA + 1);
+        let statusLabel = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : isPronto ? '<span class="text-amber-600 font-bold text-[10px]">¡MAÑANA!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusLabel}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
+      });
+      if (active.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
     }
 
     init();
