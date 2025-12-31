@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Español - Dashboard de Clase</title>
+    <title>Español - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -19,12 +19,10 @@
 
         <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
             <div>
-                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
+                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
                 <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
             </div>
-            <div class="text-right hidden sm:block">
-                <span id="levelBadge" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full text-white">Español 2</span>
-            </div>
+            <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -33,19 +31,16 @@
 
             <div id="sidebarColumn" class="space-y-6">
                 <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 min-h-[400px]">
-                    <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
-                        <span>📝</span> Tareas Vigentes
-                    </h3>
+                    <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
+        <div class="mt-20 pt-8 border-t border-slate-200 flex justify-center opacity-30 hover:opacity-100 transition-opacity">
             <div class="flex items-center gap-4 text-xs">
-                <span class="font-bold text-slate-500 uppercase tracking-widest">Docente:</span>
                 <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
-                <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black transition-colors">Actualizar Día</button>
+                <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded">Actualizar</button>
             </div>
         </div>
     </main>
@@ -62,162 +57,107 @@
             CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
         };
 
-        // --- DATA LOADER ---
-        async function loadAllData() {
-            const cacheBuster = `?t=${new Date().getTime()}`;
-            const keys = ['plan', 'evals', 'cal', 'curios', 'tareas', 'vocab', 'apuntes'];
+        async function loadData() {
+            const cb = `?t=${Date.now()}`;
             const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
-            
             try {
-                const results = await Promise.all(urls.map(url => 
-                    fetch(url + cacheBuster).then(res => {
-                        if (!res.ok) throw new Error(`Fetch fail: ${url}`);
-                        return res.json();
-                    })
-                ));
-                return keys.reduce((obj, key, i) => ({ ...obj, [key]: results[i] }), {});
-            } catch (e) {
-                console.error("Data Load Error:", e);
-                return null;
-            }
+                const results = await Promise.all(urls.map(url => fetch(url + cb).then(res => res.json())));
+                return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6] };
+            } catch (e) { console.error("Data Load Error", e); }
         }
 
-        // --- BLOCK RENDERERS ---
+        // --- RENDERERS ---
 
-        function createVocabBlock(ref, data) {
-            const chapter = data.vocab.descubre2.chapters[ref]; //
-            if (!chapter) return "";
-            return `
-            <section class="bg-white rounded-xl border-l-[6px] border-amber-500 p-6 card-shadow">
-                <h2 class="text-amber-600 font-bold text-xl mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${chapter.label}</h2>
+        function renderVocab(ref, data) {
+            const ch = data.vocab.descubre2.chapters[ref];
+            if (!ch) return "";
+            return `<section class="bg-white rounded-xl border-l-[6px] border-amber-500 p-6 card-shadow">
+                <h2 class="text-amber-600 font-bold text-xl mb-3">📚 Vocabulario: ${ch.label}</h2>
                 <div class="grid grid-cols-2 gap-4">
-                    <a href="${chapter.listas}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100 hover:bg-amber-100 transition-colors">Lista 📄</a>
-                    <a href="${chapter.flashcards}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100 hover:bg-amber-100 transition-colors">Flashcards ⚡</a>
+                    <a href="${ch.listas}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100">Lista</a>
+                    <a href="${ch.flashcards}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold border border-amber-100">Flashcards</a>
                 </div>
             </section>`;
         }
 
-        function createEstructuraBlock(ref, status, data) {
-            const topic = data.apuntes[ref];
-            if (!topic) return "";
-            return `
-            <section class="bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow">
-                <h2 class="text-blue-600 font-bold text-xl mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h2>
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xs font-bold uppercase text-slate-400 mb-2 tracking-widest">Contenido</h3>
-                        <div class="flex flex-wrap gap-2">
-                            ${topic.introducir.map(id => {
-                                const item = topic.children[id];
-                                return item.url && item.url !== "#" 
-                                    ? `<a href="${item.url}" target="_blank" class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-sm font-bold hover:bg-blue-100 transition-colors">${item.title} ↗</a>`
-                                    : `<span class="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg border border-slate-200 text-sm italic font-medium">${item.title}</span>`;
-                            }).join('')}
-                        </div>
-                    </div>
-                </div>
+        function renderEval(ref, data, DIA) {
+            const evalList = data.evals.courses["s2"];
+            const current = evalList.find(e => e.dia == DIA)?.label || "Evaluación Programada";
+            return `<section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
+                <h2 class="text-emerald-600 font-bold text-xl mb-1 flex items-center gap-2"><span>🏆</span> Evaluación</h2>
+                <div class="text-lg text-slate-800 font-medium italic">${current}</div>
+                <p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest font-bold">Ref: ${ref}</p>
             </section>`;
         }
 
-        function createSimpleBlock(block, color) {
-            return `
-            <section class="bg-white rounded-xl border-l-[6px] border-${color}-500 p-6 card-shadow">
-                <h2 class="text-${color}-600 font-bold text-lg uppercase tracking-tight flex items-center gap-2">
-                    <span>📍</span> ${block.kind}: <span class="text-slate-500 font-medium normal-case italic">${block.ref}</span>
-                </h2>
+        function renderSpecial(kind) {
+            const types = {
+                "señor+": { color: "orange", icon: "➕", label: "Señor+", text: "Recursos premium para la clase." },
+                "trip": { color: "blue", icon: "✈️", label: "Trip Card", text: "Información sobre nuestro próximo viaje." },
+                "misd": { color: "red", icon: "🏫", label: "MISD", text: "Avisos importantes del distrito escolar." }
+            };
+            const t = types[kind] || { color: "slate", icon: "📍", label: kind, text: "" };
+            return `<section class="bg-white rounded-xl border-l-[6px] border-${t.color}-500 p-6 card-shadow">
+                <h2 class="text-${t.color}-600 font-bold text-xl flex items-center gap-2"><span>${t.icon}</span> ${t.label}</h2>
+                <p class="text-slate-600 text-sm mt-1">${t.text}</p>
             </section>`;
         }
-
-        // --- MASTER INIT ---
 
         async function init() {
-            const data = await loadAllData();
+            const data = await loadData();
             if (!data) return;
-
-            const params = new URLSearchParams(window.location.search);
-            const DIA = parseInt(params.get('dia')) || 35; // Default to 35 as per user JSON
+            const DIA = parseInt(new URLSearchParams(window.location.search).get('dia')) || 35;
             document.getElementById('diaInput').value = DIA;
 
-            // 1. Header & Date
+            // Date
             const dateEntry = data.cal.map.find(c => c.dia == DIA);
             document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-            document.getElementById('headerDate').textContent = dateEntry ? dateEntry.fecha : "Fecha TBD";
+            if(dateEntry) document.getElementById('headerDate').textContent = dateEntry.fecha;
 
-            // 2. Main Column Blocks (Navigating data.plan.days)
             const mainCol = document.getElementById('mainColumn');
             mainCol.innerHTML = "";
+            const today = (data.plan.days || []).find(p => p.dia == DIA);
 
-            const planArray = data.plan.days || []; //
-            const todayPlan = planArray.find(p => p.dia == DIA); //
-
-            if (todayPlan && todayPlan.blocks) {
-                todayPlan.blocks.forEach(block => {
-                    if (block.kind === "calentamiento") {
-                        mainCol.innerHTML += `
-                        <section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow">
-                            <div class="flex justify-between items-start mb-3">
-                                <h2 class="text-red-600 font-bold text-xl uppercase italic tracking-tight">Calentamiento</h2>
-                                <a href="${CONFIG.CAL_BASE}/${DIA}" target="_blank" class="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 uppercase transition-colors">Pantalla Completa ↗</a>
-                            </div>
-                            <p class="text-slate-600 text-sm italic">Haz clic para ver el calentamiento de hoy en pantalla completa.</p>
+            if (today && today.blocks) {
+                // Ensure "evaluacion" shows first if it exists in your JSON order
+                today.blocks.forEach(block => {
+                    const k = block.kind.toLowerCase();
+                    if (k === "evaluacion") mainCol.innerHTML += renderEval(block.ref, data, DIA);
+                    else if (k === "vocabulario") mainCol.innerHTML += renderVocab(block.ref, data);
+                    else if (["señor+", "trip", "misd"].includes(k)) mainCol.innerHTML += renderSpecial(k);
+                    else if (k === "calentamiento") {
+                        mainCol.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] border-red-500 p-6 card-shadow flex justify-between items-center">
+                            <h2 class="text-red-600 font-bold text-xl uppercase italic">Calentamiento</h2>
+                            <a href="${CONFIG.CAL_BASE}/${DIA}" target="_blank" class="bg-red-50 text-red-600 text-xs font-bold px-3 py-1 rounded-lg border border-red-100">Abrir ↗</a>
                         </section>`;
-                    }
-                    else if (block.kind === "vocabulario") {
-                        mainCol.innerHTML += createVocabBlock(block.ref, data); //
-                    }
-                    else if (block.kind === "estructura") {
-                        mainCol.innerHTML += createEstructuraBlock(block.ref, block.status, data); //
-                    }
-                    else if (block.kind === "evaluacion") {
-                        mainCol.innerHTML += createSimpleBlock(block, "emerald");
-                    }
-                    else if (block.kind === "extras") {
-                        mainCol.innerHTML += createSimpleBlock(block, "indigo");
                     }
                 });
             }
 
-            // Curiosity Card (Always at bottom)
+            // Curiosidad (With fixed image check)
             const cur = data.curios.find(c => c.id === `cur-${DIA}`);
             if (cur) {
-                mainCol.innerHTML += `
-                <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+                mainCol.innerHTML += `<article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
                     <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
-                    <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
-                    <div class="rounded-xl overflow-hidden border border-slate-100">
-                        <img src="${cur.img}" class="w-full h-auto" onerror="this.style.display='none'">
-                    </div>
-                    ${cur.student_note ? `<p class="text-slate-700 italic text-sm">${cur.student_note}</p>` : ''}
+                    <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
+                    ${cur.img ? `<div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm"><img src="${cur.img}" class="w-full h-auto" onerror="this.parentElement.style.display='none'"></div>` : ''}
+                    <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
                 </article>`;
             }
 
-            // 3. Sidebar (Tareas)
+            // Tareas
             const tList = document.getElementById('tareasList');
             tList.innerHTML = "";
-            const activeTareas = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-            
-            if (activeTareas.length === 0) {
-                tList.innerHTML = `<p class="text-blue-400 italic text-sm">No hay tareas pendientes.</p>`;
-            } else {
-                activeTareas.forEach(t => {
-                    const isPronto = (t.day_due <= DIA + 1);
-                    tList.innerHTML += `
-                    <div class="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-600 uppercase">${t.tipo}</span>
-                            ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pronto uppercase tracking-tighter">¡Pronto!</span>' : ''}
-                        </div>
-                        <h4 class="font-bold text-slate-900 leading-tight text-sm">${t.titulo}</h4>
-                    </div>`;
-                });
-            }
+            const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+            active.forEach(t => {
+                tList.innerHTML += `<div class="bg-white rounded-lg p-3 border border-blue-200">
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-600 uppercase">DOMINIO</span>
+                    <h4 class="font-bold text-slate-900 text-sm mt-1">${t.titulo}</h4>
+                </div>`;
+            });
         }
 
-        function renderManual() {
-            const d = document.getElementById('diaInput').value;
-            window.location.search = `?dia=${d}`;
-        }
-
+        function renderManual() { window.location.search = `?dia=${document.getElementById('diaInput').value}`; }
         init();
     </script>
 </body>
