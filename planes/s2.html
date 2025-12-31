@@ -108,6 +108,7 @@
       TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
       VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
       APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+    CONFIG.EXTRAS = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json";
       const extraData = data.extras[block.ref]; 
 // Then map over extraData.sentences to show them in the white box
 
@@ -121,13 +122,17 @@
     }
 
     async function loadData() {
-      const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
-      try {
-        const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
-        return { plan: responses[0], evals: responses[1], cal: responses[2], curios: responses[3], tareas: responses[4], vocab: responses[5], apuntes: responses[6] };
-      } catch (e) { console.error("Error loading JSON data:", e); }
-    }
-
+  const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS];
+  try {
+    const responses = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(r => r.json())));
+    return { 
+        plan: responses[0], evals: responses[1], cal: responses[2], 
+        curios: responses[3], tareas: responses[4], vocab: responses[5], 
+        apuntes: responses[6], extras: responses[7] // <--- Added this
+    };
+  } catch (e) { console.error("Error loading JSON data:", e); }
+}
+    
     function renderManual() {
       const d = document.getElementById('diaInput').value;
       window.history.pushState({}, '', `?dia=${d}`);
@@ -198,25 +203,39 @@
                 </div>`;
             }
           } else if (block.kind === "extras") {
-  // Use the ref as the title, cleaning up the ID pattern (extra-s2-d35-01 -> Extra 01)
-  const displayTitle = block.ref.split('-').pop().toUpperCase();
+  // Find the specific item in your extras JSON by the ref ID
+  const extraItem = data.extras.items.find(item => item.id === block.ref);
   
-  // Custom styling: Indigo border and a subtle pattern background to look "different"
-  resourceGrid.innerHTML += `
-    <div class="bg-indigo-50/50 rounded-xl border-2 border-dashed border-indigo-200 p-5 shadow-sm flex flex-col group">
-      <div class="flex justify-between items-center mb-3">
-        <h3 class="text-indigo-700 font-black text-sm uppercase tracking-tighter flex items-center gap-2">
-          <span>✨</span> ${block.ref}
+  if (extraItem) {
+    let contentHtml = "";
+    
+    // Handle "sentences" type
+    if (extraItem.kind === "sentences") {
+      contentHtml = `
+        <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">${extraItem.instructions || ''}</p>
+        <ul class="space-y-2">
+          ${extraItem.sentences.map(s => `<li class="text-sm text-slate-700 border-l-2 border-indigo-200 pl-3 italic">"${s}"</li>`).join('')}
+        </ul>`;
+    } 
+    // Handle "links" type
+    else if (extraItem.kind === "links") {
+      contentHtml = `
+        <div class="flex flex-wrap gap-2">
+          ${extraItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-bold uppercase border border-indigo-200 hover:bg-indigo-200 transition-colors">${l.label} ↗</a>`).join('')}
+        </div>`;
+    }
+
+    resourceGrid.innerHTML += `
+      <div class="bg-indigo-50/30 rounded-xl border-2 border-dashed border-indigo-100 p-5 shadow-sm flex flex-col group transition-all hover:border-indigo-300">
+        <h3 class="text-indigo-800 font-black text-sm uppercase tracking-tight mb-3 flex items-center gap-2">
+          <span>✨</span> ${extraItem.title}
         </h3>
-      </div>
-      <div class="bg-white rounded-lg p-3 border border-indigo-100 space-y-2">
-        <p class="text-slate-600 text-sm leading-relaxed italic">
-          Contenido adicional para el Día ${DIA}...
-        </p>
-      </div>
-    </div>`;
+        <div class="bg-white/80 rounded-lg p-4 border border-indigo-50">
+          ${contentHtml}
+        </div>
+      </div>`;
+  }
 }
-          }
         });
       }
       if(resourceGrid.innerHTML === "") resourceGrid.innerHTML = "<p class='text-slate-400 italic text-sm py-4 text-center w-full'>No hay recursos específicos para hoy.</p>";
