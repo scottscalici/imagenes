@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Español - Dashboard de Clase</title>
+    <title>Español - Plan de Clase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
                 <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
             </div>
             <div class="text-right hidden sm:block">
-                <span id="levelBadge" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full text-white">Cargando...</span>
+                <span id="levelBadge" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
             </div>
         </header>
 
@@ -44,14 +44,14 @@
                         <h2 class="text-red-600 font-bold text-xl">Calentamiento</h2>
                         <a id="calBtn" href="#" target="_blank" class="bg-red-50 text-red-600 text-[10px] font-bold px-3 py-1.5 rounded-lg border border-red-100 hover:bg-red-100 transition-colors uppercase">Pantalla Completa ↗</a>
                     </div>
-                    <div id="calDetail" class="text-slate-700 text-md">Cargando instrucciones...</div>
+                    <div id="calDetail" class="text-slate-700 text-md italic">Cargando instrucciones...</div>
                 </section>
 
                 <div id="dynamicBlocks" class="space-y-6"></div>
             </div>
 
             <div id="tareasColumn" class="space-y-6">
-                <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 min-h-[300px]">
+                <div class="bg-blue-50 rounded-xl p-6 shadow-sm border border-blue-100 h-full min-h-[400px]">
                     <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
                         <span>📝</span> Tareas Vigentes
                     </h3>
@@ -67,13 +67,11 @@
                 <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Cargar Día</button>
             </div>
         </div>
-
     </main>
 
     <script>
-        // CONFIGURATION: Replace these URLs with your raw GitHub links
         const CONFIG = {
-            COURSE: "s2", // "s2" for Español 2, "s4" for IB/Español 4
+            COURSE: "s2",
             CICLO_FILTER: "B",
             PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json",
             EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
@@ -85,6 +83,7 @@
             CAL_BASE: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/planes/calentamiento"
         };
 
+        // --- HELPER FUNCTIONS ---
         function formatSpanishDate(dateStr) {
             if (!dateStr) return "";
             const date = new Date(dateStr + "T00:00:00");
@@ -92,24 +91,13 @@
         }
 
         async function loadAllData() {
-            const urls = {
-                plan: CONFIG.PLAN,
-                evals: CONFIG.EVALS,
-                cal: CONFIG.CALENDARIO,
-                curios: CONFIG.CURIOSIDADES,
-                tareas: CONFIG.TAREAS,
-                vocabBank: CONFIG.VOCAB_BANK,
-                apuntesBank: CONFIG.APUNTES_BANK
-            };
+            const keys = ['plan', 'evals', 'cal', 'curios', 'tareas', 'vocabBank', 'apuntesBank'];
+            const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK];
             
             try {
-                const results = {};
-                for (const [key, url] of Object.entries(urls)) {
-                    const response = await fetch(url);
-                    results[key] = await response.json();
-                }
-                return results;
-            } catch (e) { console.error("Error loading JSON banks:", e); }
+                const responses = await Promise.all(urls.map(url => fetch(url).then(r => r.json())));
+                return keys.reduce((obj, key, i) => ({ ...obj, [key]: responses[i] }), {});
+            } catch (e) { console.error("Error loading data:", e); }
         }
 
         function renderManual() {
@@ -118,6 +106,117 @@
             init();
         }
 
+        // --- COMPONENT WORKERS (One function per section) ---
+
+        function updateHeader(DIA, data) {
+            const entry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+            document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+            document.getElementById('headerDate').textContent = entry ? formatSpanishDate(entry.fecha) : "Fecha TBD";
+            document.getElementById('levelBadge').textContent = CONFIG.COURSE === "s2" ? "Español 2" : "Español 4 / IB";
+        }
+
+        function updateEvaluations(DIA, data) {
+            const evalList = data.evals.courses[CONFIG.COURSE];
+            const findLabel = (d) => (evalList.find(e => e.dia == d)?.label || "No hay evaluaciones");
+            document.getElementById('currentEval').textContent = findLabel(DIA);
+            document.getElementById('nextEvals').innerHTML = `
+                <li><span class="font-bold">Día ${DIA+1}:</span> ${findLabel(DIA+1)}</li>
+                <li><span class="font-bold">Día ${DIA+2}:</span> ${findLabel(DIA+2)}</li>
+            `;
+        }
+
+        function updateTareas(DIA, data) {
+            const list = document.getElementById('tareasList');
+            list.innerHTML = "";
+            const active = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+            if (active.length === 0) {
+                list.innerHTML = `<p class="text-blue-400 italic text-sm">No hay tareas pendientes.</p>`;
+                return;
+            }
+            active.forEach(t => {
+                const dueEntry = data.cal.map.find(c => c.dia == t.day_due && c.ciclo === CONFIG.CICLO_FILTER);
+                const isPronto = (t.day_due == DIA || t.day_due == DIA + 1);
+                list.innerHTML += `
+                    <div class="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-600 uppercase">${t.tipo}</span>
+                            ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full animate-pronto">¡PRONTO!</span>' : ''}
+                        </div>
+                        <h4 class="font-bold text-slate-900 leading-tight">${t.titulo}</h4>
+                        <p class="text-[11px] text-slate-500 mt-2 font-medium italic">Vence: ${formatSpanishDate(dueEntry?.fecha) || 'TBD'}</p>
+                    </div>`;
+            });
+        }
+
+        function updateDynamicContent(DIA, data) {
+            const container = document.getElementById('dynamicBlocks');
+            container.innerHTML = "";
+            const today = data.plan.find(p => p.dia === DIA);
+            
+            // 1. Warm-up Instructions update
+            document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+            document.getElementById('calDetail').textContent = today?.calentamiento_instrucciones || "Práctica interactiva para empezar la clase.";
+
+            if (!today) return;
+
+            // 2. Vocab Card
+            const courseKey = CONFIG.COURSE === "s2" ? "descubre2" : "descubre3";
+            const vBank = data.vocabBank[courseKey]?.chapters[today.vocab_unidad];
+            if (vBank) {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl border-l-[6px] border-amber-500 p-6 card-shadow";
+                card.innerHTML = `
+                    <h2 class="text-amber-600 font-bold text-xl mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${vBank.label}</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="${vBank.listas}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 border border-amber-100">Lista 📄</a>
+                        <a href="${vBank.flashcards}" target="_blank" class="text-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 border border-amber-100">Flashcards ⚡</a>
+                    </div>`;
+                container.appendChild(card);
+            }
+
+            // 3. Grammar Card (With Scaffolding Logic)
+            const gBank = data.apuntesBank[today.grammar_id];
+            if (gBank) {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow";
+                let html = `<h2 class="text-blue-600 font-bold text-xl mb-3 flex items-center gap-2"><span>⚙️</span> Estructuras: ${gBank.title}</h2>`;
+                
+                const renderGroup = (ids, label, color) => {
+                    if (!ids || ids.length === 0) return "";
+                    let section = `<h3 class="text-xs font-bold uppercase text-slate-400 mt-4 mb-2 tracking-widest">${label}</h3><div class="flex flex-wrap gap-2">`;
+                    ids.forEach(id => {
+                        const item = gBank.children[id];
+                        if (!item) return;
+                        if (!item.url || item.url === "#") {
+                            section += `<span class="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg border border-slate-200 text-sm italic">${item.title}</span>`;
+                        } else {
+                            section += `<a href="${item.url}" target="_blank" class="px-3 py-1.5 bg-${color}-50 text-${color}-700 rounded-lg border border-${color}-100 text-sm font-bold hover:bg-${color}-100">${item.title} ↗</a>`;
+                        }
+                    });
+                    return section + `</div>`;
+                };
+
+                html += renderGroup(today.introducir, "Nuevos conceptos", "blue");
+                html += renderGroup(today.repasar, "Repaso", "emerald");
+                card.innerHTML = html;
+                container.appendChild(card);
+            }
+
+            // 4. Curiosity Card
+            const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+            if (cur) {
+                const card = document.createElement('article');
+                card.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4";
+                card.innerHTML = `
+                    <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
+                    <h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>
+                    <div class="rounded-xl overflow-hidden border border-slate-100"><img src="${cur.img}" class="w-full"></div>
+                    <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>`;
+                container.appendChild(card);
+            }
+        }
+
+        // --- MASTER INIT ---
         async function init() {
             const data = await loadAllData();
             if (!data) return;
@@ -126,122 +225,11 @@
             let DIA = parseInt(params.get('dia')) || 33;
             document.getElementById('diaInput').value = DIA;
 
-            // 1. HEADER & DATE
-            const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
-            document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-            document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
-            document.getElementById('levelBadge').textContent = CONFIG.COURSE === "s2" ? "Español 2" : "Español 4 / IB";
-
-            // 2. EVALUATIONS
-            const evalList = data.evals.courses[CONFIG.COURSE];
-            const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "No hay evaluaciones");
-            document.getElementById('currentEval').textContent = findEval(DIA);
-            document.getElementById('nextEvals').innerHTML = `
-                <li><span class="font-bold">Día ${DIA+1}:</span> ${findEval(DIA+1)}</li>
-                <li><span class="font-bold">Día ${DIA+2}:</span> ${findEval(DIA+2)}</li>
-            `;
-
-            // 3. CALENTAMIENTO
-            document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
-            // Optional: You can pull instructions from your daily plan if they exist
-            const todayPlan = data.plan.find(p => p.dia === DIA);
-            document.getElementById('calDetail').textContent = todayPlan?.calentamiento_instrucciones || "Práctica interactiva para empezar la clase.";
-
-            // 4. DYNAMIC CONTENT CONTAINER
-            const container = document.getElementById('dynamicBlocks');
-            container.innerHTML = "";
-
-            if (todayPlan) {
-                // --- VOCABULARY CARD ---
-                const courseKey = CONFIG.COURSE === "s2" ? "descubre2" : "descubre3";
-                const vocabData = data.vocabBank[courseKey]?.chapters[todayPlan.vocab_unidad];
-                
-                if (vocabData) {
-                    const vocabCard = document.createElement('section');
-                    vocabCard.className = "bg-white rounded-xl border-l-[6px] border-amber-500 p-6 card-shadow";
-                    vocabCard.innerHTML = `
-                        <h2 class="text-amber-600 font-bold text-xl mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${vocabData.label}</h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <a href="${vocabData.listas}" target="_blank" class="flex items-center justify-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 transition-colors border border-amber-100">Lista 📄</a>
-                            <a href="${vocabData.flashcards}" target="_blank" class="flex items-center justify-center p-3 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 transition-colors border border-amber-100">Flashcards ⚡</a>
-                        </div>
-                    `;
-                    container.appendChild(vocabCard);
-                }
-
-                // --- ESTRUCTURAS CARD (Scaffolding Logic) ---
-                const grammarTopic = data.apuntesBank[todayPlan.grammar_id];
-                if (grammarTopic) {
-                    const structCard = document.createElement('section');
-                    structCard.className = "bg-white rounded-xl border-l-[6px] border-blue-600 p-6 card-shadow";
-                    
-                    let structHTML = `<h2 class="text-blue-600 font-bold text-xl mb-3 flex items-center gap-2"><span>⚙️</span> Estructuras: ${grammarTopic.title}</h2>`;
-                    
-                    const renderItems = (items, label, color) => {
-                        if (!items || items.length === 0) return "";
-                        let html = `<h3 class="text-xs font-bold uppercase text-slate-400 mt-4 mb-2 tracking-wider">${label}</h3><div class="flex flex-wrap gap-2">`;
-                        
-                        items.forEach(itemID => {
-                            const item = grammarTopic.children[itemID];
-                            if (!item) return;
-                            // SCAFFOLDING: If URL is missing, render as label only
-                            if (!item.url || item.url === "#" || item.url === "") {
-                                html += `<span class="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg border border-slate-200 text-sm font-medium italic">${item.title}</span>`;
-                            } else {
-                                html += `<a href="${item.url}" target="_blank" class="px-3 py-1.5 bg-${color}-50 text-${color}-700 rounded-lg border border-${color}-100 text-sm font-bold hover:bg-${color}-100 transition-colors">${item.title} ↗</a>`;
-                            }
-                        });
-                        return html + `</div>`;
-                    };
-
-                    structHTML += renderItems(todayPlan.introducir, "Introducir hoy", "blue");
-                    structHTML += renderItems(todayPlan.repasar, "Repasar / Práctica", "emerald");
-                    structCard.innerHTML = structHTML;
-                    container.appendChild(structCard);
-                }
-            }
-
-            // --- CURIOSIDAD (Existing logic) ---
-            const curiosity = data.curios.find(c => c.id === `cur-${DIA}`);
-            if (curiosity) {
-                const curCard = document.createElement('article');
-                curCard.className = "bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4";
-                curCard.innerHTML = `
-                    <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Sabías que...</h3>
-                    <h2 class="text-2xl font-extrabold text-slate-900">${curiosity.title}</h2>
-                    <div class="rounded-xl overflow-hidden border border-slate-100 shadow-sm">
-                        <img src="${curiosity.img}" alt="${curiosity.title}" class="w-full h-auto">
-                    </div>
-                    ${curiosity.student_note ? `<p class="text-slate-700 italic text-sm">${curiosity.student_note}</p>` : ''}
-                `;
-                container.appendChild(curCard);
-            }
-
-            // 5. TAREAS (Existing logic)
-            const tareasList = document.getElementById('tareasList');
-            tareasList.innerHTML = "";
-            const activeTareas = data.tareas.tareas.filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-
-            if (activeTareas.length === 0) {
-                tareasList.innerHTML = `<p class="text-blue-400 italic text-sm">No hay tareas pendientes hoy.</p>`;
-            } else {
-                activeTareas.forEach(t => {
-                    const entryDue = data.cal.map.find(c => c.dia == t.day_due && c.ciclo === CONFIG.CICLO_FILTER);
-                    const isNuevo = (t.day_assigned == DIA);
-                    const isPronto = (t.day_due == DIA || t.day_due == DIA + 1);
-
-                    tareasList.innerHTML += `
-                        <div class="bg-white rounded-lg p-3 shadow-sm border border-blue-200">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase bg-blue-100 text-blue-600">${t.tipo}</span>
-                                ${isNuevo ? '<span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Nuevo</span>' : ''}
-                                ${isPronto ? '<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase animate-pronto">¡Pronto!</span>' : ''}
-                            </div>
-                            <h4 class="font-bold text-slate-900 leading-tight">${t.titulo}</h4>
-                            <p class="text-[11px] text-slate-500 mt-2 font-medium">Vence: <span class="${isPronto ? 'text-red-600 font-bold' : 'text-slate-700'}">${formatSpanishDate(entryDue?.fecha) || 'TBD'}</span></p>
-                        </div>`;
-                });
-            }
+            // Run all workers independently
+            updateHeader(DIA, data);
+            updateEvaluations(DIA, data);
+            updateTareas(DIA, data);
+            updateDynamicContent(DIA, data);
         }
 
         init();
