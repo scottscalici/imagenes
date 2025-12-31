@@ -1,65 +1,111 @@
 {
-  "version": 1,
-  "course": "s2",
-  "days": [
-    {
-      "dia": 23,
-      "fecha": "2025-11-20",
-      "blocks": [
-        { "kind": "calentamiento"},
-        { "kind": "evaluacion", "ref": "eval-s2-d23-01" },
-        { "kind": "evaluacion", "ref": "eval-s2-d23-02" },
-        { "kind": "extras", "ref": "extra-s2-d23-01" },
-        { "kind": "extras", "ref": "extra-s2-d23-02" }
-      ]
-    },
-    {
-      "dia": 32,
-      "fecha": "2025-12-08",
-      "blocks": [
-        { "kind": "calentamiento"},
-        { "kind": "evaluacion", "ref": "eval-s2-d32" },
-        { "kind": "extras", "ref": "extra-s2-d35-2" }
-      ]
-    },
-     {
-      "dia": 33,
-      "fecha": "2025-12-10",
-      "blocks": [
-        { "kind": "calentamiento"},
-        { "kind": "evaluacion", "ref": "eval-s2-d33-01" },
-        { "kind": "evaluacion", "ref": "eval-s2-d33-02" },
-        { "kind": "extras", "ref": "extra-s2-d33-01" },
-        { "kind": "extras", "ref": "extra-s2-d33-02" }
-      ]
-    },
-   
-   {
-  "dia": 35,
-  "blocks": [
-    { 
-      "kind": "estructura", 
-      "ref": "est-s2-mandatos-inf-neg", 
-      "status": "intro" 
-    },
-    { 
-      "kind": "vocabulario", 
-      "ref": "L2", 
-      "status": "repaso" 
-    },
-    { 
-      "kind": "extras", 
-      "ref": "extra-s2-d35-2" 
-    }
-  ]
-},
-    {
-  "dia": 36,
-  "blocks": [
-    { "kind": "estructura", "ref": "est-s2-mandatos-inf-neg", "status": "intro" },
-    { "kind": "estructura", "ref": "est-s2-mandatos-inf-afirm", "status": "review" },
-    { "kind": "vocabulario", "ref": "L2" }
-  ]
-}
-  ]
+    "version": 1,
+    "course": "s2",
+    "days": [
+        {
+            "dia": 23,
+            "fecha": "2025-11-20",
+            "blocks": [
+                {
+                    "kind": "calentamiento"
+                },
+                {
+                    "kind": "evaluacion",
+                    "ref": "eval-s2-d23-01"
+                },
+                {
+                    "kind": "evaluacion",
+                    "ref": "eval-s2-d23-02"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d23-01"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d23-02"
+                }
+            ]
+        },
+        {
+            "dia": 32,
+            "fecha": "2025-12-08",
+            "blocks": [
+                {
+                    "kind": "calentamiento"
+                },
+                {
+                    "kind": "evaluacion",
+                    "ref": "eval-s2-d32"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d35-2"
+                }
+            ]
+        },
+        {
+            "dia": 33,
+            "fecha": "2025-12-10",
+            "blocks": [
+                {
+                    "kind": "calentamiento"
+                },
+                {
+                    "kind": "evaluacion",
+                    "ref": "eval-s2-d33-01"
+                },
+                {
+                    "kind": "evaluacion",
+                    "ref": "eval-s2-d33-02"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d33-01"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d33-02"
+                }
+            ]
+        },
+        {
+            "dia": 35,
+            "blocks": [
+                {
+                    "kind": "estructura",
+                    "ref": "mandatos informal y formal",
+                    "status": "intro"
+                },
+                {
+                    "kind": "vocabulario",
+                    "ref": "L2",
+                    "status": "repaso"
+                },
+                {
+                    "kind": "extras",
+                    "ref": "extra-s2-d35-2"
+                }
+            ]
+        },
+        {
+            "dia": 36,
+            "blocks": [
+                {
+                    "kind": "estructura",
+                    "ref": "est-s2-mandatos-inf-neg",
+                    "status": "intro"
+                },
+                {
+                    "kind": "estructura",
+                    "ref": "est-s2-mandatos-inf-afirm",
+                    "status": "review"
+                },
+                {
+                    "kind": "vocabulario",
+                    "ref": "L2"
+                }
+            ]
+        }
+    ]
 }
