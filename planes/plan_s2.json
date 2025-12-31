@@ -34,16 +34,25 @@
       ]
     },
    
-    {
-      "dia": 35,
-      "fecha": "2025-12-16",
-      "blocks": [
-        { "kind": "calentamiento"},
-        { "kind": "evaluacion", "ref": "eval-s2-d35" },
-        { "kind": "estructura", "ref": "est-s2-mandatos-inf-neg", "status": "intro" },
-        { "kind": "extras", "ref": "extra-s2-d35-2" }
-      ]
+   {
+  "dia": 35,
+  "blocks": [
+    { 
+      "kind": "estructura", 
+      "ref": "est-s2-mandatos-inf-neg", 
+      "status": "intro" 
     },
+    { 
+      "kind": "vocabulario", 
+      "ref": "L2", 
+      "status": "repaso" 
+    },
+    { 
+      "kind": "extras", 
+      "ref": "extra-s2-d35-2" 
+    }
+  ]
+},
     {
   "dia": 36,
   "blocks": [
