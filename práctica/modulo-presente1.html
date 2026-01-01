@@ -475,11 +475,11 @@
     const contexto = item.contexto || "___";
     const infinitivo = item.infinitivo || "";
     // Get the translation from the JSON
-    const traduccion = item.traduccion ? ` — ${item.traduccion}` : "";
+    const traducción = item.traducción ? ` — ${item.traducción}` : "";
 
     wrapper.innerHTML = `
       <label class="text-sm font-medium text-slate-800">
-        ${index + 1}. ${sujeto} ${contexto} <span class="text-slate-500 font-normal">(${infinitivo}${traduccion})</span>
+        ${index + 1}. ${sujeto} ${contexto} <span class="text-slate-500 font-normal">(${infinitivo}${traducción})</span>
       </label>
       <input type="text"
              class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
@@ -687,7 +687,7 @@
             entry.palabra || entry.termino || entry.vocabulario || "";
           const english =
             entry.english || entry.en || entry.ingles || entry.englishText ||
-            entry.traduccion || entry.definicion || "";
+            entry.traducción || entry.definicion || "";
           return { spanish, english };
         })
         .filter(p => p.spanish && p.english);
