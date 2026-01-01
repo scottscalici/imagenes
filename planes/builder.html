@@ -242,11 +242,19 @@
             updateOutput();
         }
 
-        function updateRes(idx, val) {
-            activePlan.blocks[idx].recursos_gramatica = val.split(',').map(s => s.trim()).filter(s => s !== "");
-            updateOutput();
-        }
-
+      // This function ensures the input "mandatos, reflexivos" 
+// becomes ["mandatos", "reflexivos"] in the JSON.
+function updateRes(idx, val) {
+    // Split by comma
+    const cleanArray = val.split(',')
+        .map(item => item.trim()) // Remove spaces around words
+        .filter(item => item !== ""); // Remove empty items from trailing commas
+    
+    activePlan.blocks[idx].recursos_gramatica = cleanArray;
+    
+    updateOutput();
+}
+        
         function move(idx, dir) {
             const to = idx + dir;
             if (to < 0 || to >= activePlan.blocks.length) return;
