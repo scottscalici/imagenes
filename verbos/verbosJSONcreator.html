@@ -238,24 +238,35 @@
   }
 
   // 🔹 Tags desde distintas claves
-  function getRawTagsFromEntry(v) {
+ function getRawTagsFromEntry(v) {
     if (!v) return [];
-    if (Array.isArray(v.tags)) return v.tags;
-    if (Array.isArray(v["tipo_verbo"])) return v["tipo_verbo"];
-    if (Array.isArray(v["tipo_verбо"])) return v["tipo_verбо"]; // por si acaso con la "o" rara
+    // Check all possible keys where tags might hide
+    const rawValue = v.tags || v["tipo_verbo"] || v["tipo_verбо"];
+    
+    if (!rawValue) return [];
+    if (Array.isArray(rawValue)) return rawValue;
+    if (typeof rawValue === 'string') return [rawValue]; // Convert string to array
     return [];
   }
-
-  function extractTagsFromYoEntries(items) {
+  
+function extractTagsFromYoEntries(items) {
     allTags = new Set();
-    items.forEach(v => {
-      if (v.sujeto?.trim().toLowerCase() === "yo") {
-        const entryTags = getRawTagsFromEntry(v);
-        entryTags.forEach(t => allTags.add(t));
-      }
-    });
+    
+    // 1. Try to find tags from "yo" first (standard for most banks)
+    const yoEntries = items.filter(v => (v.sujeto || "").trim().toLowerCase() === "yo");
+    
+    if (yoEntries.length > 0) {
+      yoEntries.forEach(v => {
+        getRawTagsFromEntry(v).forEach(t => allTags.add(t));
+      });
+    } else {
+      // 2. Fallback: If no "yo" exists (like Mandatos), collect tags from ALL entries
+      items.forEach(v => {
+        getRawTagsFromEntry(v).forEach(t => allTags.add(t));
+      });
+    }
   }
-
+  
   function renderTagFilters() {
     const container = document.getElementById("tagFilters");
     container.innerHTML = "";
@@ -357,6 +368,7 @@
         const haystack = (
           (item.infinitivo || "") + " " +
           (item.sujeto || "") + " " +
+          (item.persona_base || "") + " " + // Added persona_base to search
           (item.contexto || "")
         ).toLowerCase();
 
@@ -367,16 +379,17 @@
           const subjLower = (item.sujeto || "").trim().toLowerCase();
           let tags = [];
 
-          if (subjLower === "yo") {
-            tags = getRawTagsFromEntry(item);
-          } else {
-            const yo = masterItems.find(
-              x =>
-                x.infinitivo === item.infinitivo &&
-                (x.tiempo === item.tiempo || !x.tiempo || !item.tiempo) &&
-                (x.sujeto || "").trim().toLowerCase() === "yo"
+          // For Mandatos, tags are usually attached to every entry anyway, 
+          // or we look for the specific infinitive group.
+          tags = getRawTagsFromEntry(item);
+
+          // If current item has no tags, try to find another item with same infinitive that does
+          if (tags.length === 0) {
+            const related = masterItems.find(x => 
+              x.infinitivo === item.infinitivo && 
+              getRawTagsFromEntry(x).length > 0
             );
-            tags = getRawTagsFromEntry(yo);
+            tags = getRawTagsFromEntry(related);
           }
 
           if (!tags.length) {
@@ -391,7 +404,6 @@
 
     renderList();
   }
-
   async function loadMasterJson() {
     try {
       const bank = VERB_BANKS[currentBank];
