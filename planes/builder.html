@@ -6,66 +6,71 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .sticky-preview { position: sticky; top: 1rem; max-height: 90vh; overflow-y: auto; }
-        .block-card { transition: all 0.2s ease; border-left-width: 6px; }
+        .block-card { border-left-width: 8px; transition: all 0.2s; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 p-4 md:p-8">
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <div class="space-y-6">
-            <header class="border-b border-slate-700 pb-4">
-                <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
+            <header class="border-b border-slate-700 pb-4 flex justify-between items-end">
+                <div>
+                    <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
+                    <p class="text-slate-400 text-sm">Generador de JSON para plan_s2.json</p>
+                </div>
+                <button onclick="resetPlan()" class="text-xs font-bold text-red-400 hover:text-red-300 uppercase">Reiniciar Todo</button>
             </header>
 
             <section class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Día</label>
-                        <input type="number" id="diaNum" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-400 font-bold" value="35">
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Día</label>
+                        <input type="number" id="diaNum" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-400 font-bold" value="36">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Fecha</label>
+                        <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Fecha</label>
                         <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
                     </div>
                 </div>
 
                 <div class="space-y-6">
-                    <div class="p-4 bg-slate-900/50 rounded-lg border border-slate-700">
-                        <h3 class="text-xs font-black text-blue-400 mb-3 uppercase tracking-widest">Académico</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Gramática (Estructura)</label>
-                                <div class="flex gap-2">
-                                    <select id="apuntesSelect" class="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm"></select>
-                                    <button onclick="addGrammarBlock()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
-                                </div>
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-black text-slate-400 border-b border-slate-700 pb-1 uppercase tracking-widest">Académico</h3>
+                        <div>
+                            <label class="block text-[10px] font-bold text-blue-400 uppercase mb-1">Gramática</label>
+                            <div class="flex gap-2">
+                                <select id="apuntesSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                <button onclick="addGrammarBlock()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Vocabulario</label>
-                                <div class="flex gap-2">
-                                    <select id="vocabSelect" class="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm"></select>
-                                    <button onclick="addVocabBlock()" class="bg-amber-600 hover:bg-amber-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
-                                </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-500 uppercase mb-1">Vocabulario</label>
+                            <div class="flex gap-2">
+                                <select id="vocabSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                <button onclick="addVocabBlock()" class="bg-amber-600 hover:bg-amber-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
                             </div>
                         </div>
                     </div>
 
                     <div id="libraryPickers" class="space-y-4">
-                        <h3 class="text-xs font-black text-purple-400 mb-3 uppercase tracking-widest">Actividades y Extras</h3>
-                        </div>
+                        <h3 class="text-xs font-black text-slate-400 border-b border-slate-700 pb-1 uppercase tracking-widest">Actividades y Cultura</h3>
+                    </div>
                 </div>
             </section>
 
             <section class="space-y-4">
                 <h3 class="text-sm font-black text-slate-300 uppercase tracking-widest">Bloques del Día</h3>
-                <div id="activeBlocks" class="space-y-4"></div>
+                <div id="activeBlocks" class="space-y-4">
+                    </div>
             </section>
         </div>
 
         <div class="sticky-preview">
             <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full flex flex-col shadow-2xl">
                 <div class="bg-slate-700 p-3 flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">JSON Final</span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Preview JSON</span>
                     <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-4 py-1.5 rounded text-xs font-black">COPY JSON</button>
                 </div>
                 <pre id="jsonOutput" class="p-6 text-emerald-400 font-mono text-sm overflow-auto flex-grow bg-slate-950"></pre>
@@ -75,7 +80,7 @@
 
     <script>
         let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {}, extras: {} };
-        let activePlan = { dia: 35, blocks: [] };
+        let activePlan = { dia: 36, blocks: [] };
 
         async function initBuilder() {
             const sources = {
@@ -102,8 +107,9 @@
                         dataLibrary[key] = json.items;
                         createLibraryPicker(key, json.items);
                     }
-                } catch (e) { console.error("Error: " + key, e); }
+                } catch (e) { console.error("Error loading: " + key, e); }
             }
+            renderBlockEditors(); // Initial empty state
         }
 
         function populateDropdown(id, items, labelKey) {
@@ -114,8 +120,11 @@
         function createLibraryPicker(type, items) {
             const container = document.getElementById('libraryPickers');
             const div = document.createElement('div');
+            const colors = { musica: 'pink-400', lectura: 'orange-400', cultura: 'purple-400', conv: 'cyan-400', extras: 'emerald-400' };
+            const labelColor = colors[type] || 'slate-400';
+
             div.innerHTML = `
-                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${type}</label>
+                <label class="block text-[10px] font-bold text-${labelColor} uppercase mb-1">${type}</label>
                 <div class="flex gap-2 mb-2">
                     <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
                         ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo || id}</option>`).join('')}
@@ -158,53 +167,60 @@
         function renderBlockEditors() {
             const container = document.getElementById('activeBlocks');
             container.innerHTML = "";
-            
+
+            if (activePlan.blocks.length === 0) {
+                container.innerHTML = `<div class="p-10 border-2 border-dashed border-slate-700 rounded-xl text-center text-slate-500 text-sm">Agrega actividades para verlas aquí</div>`;
+                return;
+            }
+
             activePlan.blocks.forEach((block, idx) => {
                 const div = document.createElement('div');
-                div.className = `block-card bg-slate-800 p-4 rounded-r-xl relative shadow-lg mb-4 border-l-4 border-slate-600`;
+                div.className = "block-card bg-slate-800 p-4 rounded-r-xl relative shadow-lg mb-4 border-l-8";
                 
-                // Set border color based on kind
-                if(block.kind === 'estructura') div.style.borderColor = "#3b82f6";
-                if(block.kind === 'vocabulario') div.style.borderColor = "#f59e0b";
-                if(block.kind === 'extras') div.style.borderColor = "#10b981";
+                // Color coding
+                const borderColors = { estructura: '#3b82f6', vocabulario: '#f59e0b', musica: '#f472b6', extras: '#10b981' };
+                div.style.borderColor = borderColors[block.kind] || '#475569';
 
                 let html = `
-                    <div class="absolute top-2 right-4 flex gap-2">
-                        <button onclick="move(${idx},-1)" class="text-slate-500 hover:text-white">↑</button>
-                        <button onclick="move(${idx},1)" class="text-slate-500 hover:text-white">↓</button>
-                        <button onclick="remove(${idx})" class="text-red-500 font-bold ml-2">×</button>
+                    <div class="absolute top-2 right-4 flex gap-3 items-center">
+                        <button onclick="move(${idx},-1)" class="text-slate-500 hover:text-white text-xs font-bold">↑</button>
+                        <button onclick="move(${idx},1)" class="text-slate-500 hover:text-white text-xs font-bold">↓</button>
+                        <button onclick="remove(${idx})" class="text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>
                     </div>
                     <h4 class="text-[10px] font-black uppercase mb-1 opacity-50">${block.kind}</h4>
                 `;
 
                 if (block.kind === 'estructura') {
                     const topic = dataLibrary.apuntes[block.ref];
-                    html += `<p class="font-bold text-white mb-3">${topic.title}</p>`;
-                    html += `<div class="space-y-1 bg-slate-900/50 p-2 rounded mb-3">`;
-                    // THE CHILDREN (LINKS)
+                    html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
+                    html += `<div class="space-y-1 bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">`;
+                    
                     Object.keys(topic.links).forEach(lKey => {
                         const isI = block.introducir.includes(lKey);
                         const isR = block.repasar.includes(lKey);
                         html += `
-                            <div class="flex items-center justify-between py-1">
-                                <span class="text-xs text-slate-300">${topic.links[lKey].title}</span>
+                            <div class="flex items-center justify-between py-1 border-b border-slate-800 last:border-0">
+                                <span class="text-xs text-slate-300 font-medium">${topic.links[lKey].title}</span>
                                 <div class="flex gap-1">
-                                    <button onclick="toggleLink(${idx},'introducir','${lKey}')" class="text-[9px] px-2 py-0.5 rounded font-bold ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">INTRO</button>
-                                    <button onclick="toggleLink(${idx},'repasar','${lKey}')" class="text-[9px] px-2 py-0.5 rounded font-bold ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">REPASO</button>
+                                    <button onclick="toggleLink(${idx},'introducir','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">INTRO</button>
+                                    <button onclick="toggleLink(${idx},'repasar','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">REPASO</button>
                                 </div>
                             </div>
                         `;
                     });
                     html += `</div>`;
-                    html += `<label class="text-[9px] font-bold text-slate-500 uppercase">Recursos Dashboard (Separados por coma)</label>
-                             <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateRes(${idx}, this.value)" class="w-full bg-slate-950 text-blue-300 text-xs p-1.5 rounded mt-1 border border-slate-700">`;
+                    html += `
+                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Recursos Dashboard (IDs separados por coma)</label>
+                        <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateRes(${idx}, this.value)" 
+                               class="w-full bg-slate-950 text-blue-300 font-mono text-xs p-2 rounded border border-slate-700">
+                    `;
                 } else {
-                    // Title Lookup for Activities
                     let displayTitle = block.ref;
                     if(dataLibrary[block.kind] && dataLibrary[block.kind][block.ref]) {
                         displayTitle = dataLibrary[block.kind][block.ref].titulo || block.ref;
                     }
-                    html += `<p class="text-white font-bold text-sm">${displayTitle}</p><p class="text-[10px] text-slate-500">${block.ref}</p>`;
+                    html += `<p class="text-white font-bold text-sm">${displayTitle}</p>`;
+                    html += `<p class="text-[10px] text-slate-500 font-mono mt-1">ID: ${block.ref}</p>`;
                 }
 
                 div.innerHTML = html;
@@ -212,12 +228,16 @@
             });
         }
 
-        function toggleLink(bIdx, key, lKey) {
+        // Logic Functions
+        function toggleLink(bIdx, arrayKey, linkKey) {
             const block = activePlan.blocks[bIdx];
-            const other = key === 'introducir' ? 'repasar' : 'introducir';
-            block[other] = block[other].filter(k => k !== lKey);
-            if (block[key].includes(lKey)) block[key] = block[key].filter(k => k !== lKey);
-            else block[key].push(lKey);
+            const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
+            block[otherKey] = block[otherKey].filter(k => k !== linkKey);
+            if (block[arrayKey].includes(linkKey)) {
+                block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+            } else {
+                block[arrayKey].push(linkKey);
+            }
             renderBlockEditors();
             updateOutput();
         }
@@ -243,15 +263,23 @@
         }
 
         function updateOutput() {
-            activePlan.dia = parseInt(document.getElementById('diaNum').value);
+            activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
             const f = document.getElementById('diaFecha').value;
             if (f) activePlan.fecha = f; else delete activePlan.fecha;
             document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
         }
 
+        function resetPlan() {
+            if(confirm("¿Seguro que quieres borrar todo?")) {
+                activePlan.blocks = [];
+                renderBlockEditors();
+                updateOutput();
+            }
+        }
+
         function copyToClipboard() {
             navigator.clipboard.writeText(document.getElementById('jsonOutput').innerText);
-            alert("JSON Copiado!");
+            alert("JSON copiado al portapapeles");
         }
 
         initBuilder();
