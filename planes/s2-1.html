@@ -239,50 +239,58 @@
           extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
         }
   
-   // 6. RESOURCE DASHBOARD (Targeting separate placement containers)
-const grammarContainer = document.getElementById('grammarPlacement');
+// 6. RESOURCE DASHBOARD (Parent Set Logic)
 const grammarGrid = document.getElementById('grammarResources');
 const vocabContainer = document.getElementById('vocabPlacement');
 
 grammarGrid.innerHTML = "";
 vocabContainer.innerHTML = "";
 
-// Inject Grammar into the Top Row Grid
-grammarBlocks.forEach(blockRef => {
-  const topic = data.apuntes?.[blockRef.ref];
-  if (topic && topic.links) {
-    const links = Object.values(topic.links);
-    grammarGrid.innerHTML += `
-      <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100 flex flex-col h-full">
-        <h3 class="text-blue-600 font-bold text-sm mb-3">⚙️ ${topic.title}</h3>
-        <div class="flex flex-wrap gap-2 mt-auto">
-          ${links.map(l => `<a href="${l.url}" target="_blank" class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase hover:bg-blue-100 transition-colors">${l.title} ↗</a>`).join('')}
-        </div>
-      </div>`;
-  }
+// 1. Find the block that contains our grammar resource keys
+const grammarBlock = todayPlan?.blocks?.find(b => b.kind === "estructura");
+const grammarKeys = grammarBlock?.recursos_gramatica || [];
+
+grammarKeys.forEach(key => {
+  const parentSet = data.apuntes[key];
+  if (!parentSet || !parentSet.links) return;
+
+  // Render links as clean text (no buttons)
+  const linksHtml = Object.values(parentSet.links).map(link => `
+    <a href="${link.url}" target="_blank" 
+       class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">
+       ${link.title} <span class="text-[10px] opacity-40">↗</span>
+    </a>
+  `).join('');
+
+  grammarGrid.innerHTML += `
+    <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+      <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">
+        <span class="text-xl">⚙️</span> ${parentSet.title}
+      </h3>
+      <div class="flex flex-col gap-1">
+        ${linksHtml}
+      </div>
+    </div>`;
 });
 
-// Hide Grammar header if no grammar blocks exist
-grammarContainer.style.display = grammarBlocks.length ? "block" : "none";
+// 2. Handle Vocabulary Card Alignment
+const vBlock = todayPlan?.blocks?.find(b => b.kind === "vocabulario");
+const ch = vBlock ? data.vocab.descubre2.chapters[vBlock.ref] : null;
 
-// Inject Vocab into the Bottom Row (First Column)
-(todayPlan?.blocks || []).filter(b => b.kind === "vocabulario").forEach(block => {
-  const ch = data.vocab.descubre2.chapters[block.ref];
-  if (ch) {
-    vocabContainer.innerHTML = `
-      <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full">
-        <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">📚</div>
-        <div class="p-5 flex flex-col flex-grow justify-between">
-          <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
-          <div class="flex gap-2">
-            <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
-            <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
-          </div>
+if (ch) {
+  vocabContainer.innerHTML = `
+    <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+      <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">📚</div>
+      <div class="p-5 flex flex-col flex-grow justify-between">
+        <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
+        <div class="flex gap-2">
+          <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
+          <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
         </div>
-      </div>`;
-  }
-});
-   
+      </div>
+    </div>`;
+}
+        
         
         // 7. TAREAS
         const tList = document.getElementById('tareasList');
