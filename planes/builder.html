@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan Builder - Señor Scalici</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sticky-preview { position: sticky; top: 1rem; max-height: 90vh; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 p-8">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <div class="space-y-6">
+            <header class="border-b border-slate-700 pb-4">
+                <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
+                <p class="text-slate-400">Build Day JSON for plan_s2.json</p>
+            </header>
+
+            <section class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1">Día</label>
+                        <input type="number" id="diaNum" class="w-full bg-slate-900 border border-slate-700 rounded p-2" value="35">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1">Fecha (Opcional)</label>
+                        <input type="date" id="diaFecha" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-sm font-black text-slate-300 border-b border-slate-700 pb-2 uppercase">Añadir Bloques</h3>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="addBlock('calentamiento')" class="bg-red-900/30 text-red-400 border border-red-900/50 p-2 rounded text-xs font-bold hover:bg-red-900/50">+ Calentamiento</button>
+                        <button onclick="addBlock('estructura')" class="bg-blue-900/30 text-blue-400 border border-blue-900/50 p-2 rounded text-xs font-bold hover:bg-blue-900/50">+ Estructura</button>
+                    </div>
+
+                    <div id="libraryPickers" class="space-y-3 pt-4">
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase">Música</label>
+                        <select id="musicaSelect" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                        <button onclick="addActivity('musica')" class="w-full bg-pink-600 text-white text-xs font-bold py-1 rounded">Añadir Canción</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+                <h3 class="text-sm font-black text-slate-300 mb-4 uppercase">Bloques del Día</h3>
+                <div id="activeBlocks" class="space-y-2 text-sm">
+                    </div>
+            </section>
+        </div>
+
+        <div class="sticky-preview">
+            <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full flex flex-col">
+                <div class="bg-slate-700 p-3 flex justify-between items-center">
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Generated JSON</span>
+                    <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 px-4 py-1 rounded text-xs font-black transition-colors">COPY TO CLIPBOARD</button>
+                </div>
+                <pre id="jsonOutput" class="p-6 text-emerald-400 font-mono text-sm overflow-auto flex-grow"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // We'll populate these from your real JSONs
+        let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {} };
+        let activePlan = { dia: 35, blocks: [] };
+
+        async function initBuilder() {
+            // Fetch your library files to populate the dropdowns
+            const sources = {
+                musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+                lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+                cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+                conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json"
+            };
+
+            for (const [key, url] of Object.entries(sources)) {
+                try {
+                    const res = await fetch(url + "?t=" + Date.now());
+                    const json = await res.json();
+                    dataLibrary[key] = json.items;
+                    populateDropdown(key, json.items);
+                } catch (e) { console.error("Error loading " + key, e); }
+            }
+            updateOutput();
+        }
+
+        function populateDropdown(type, items) {
+            const select = document.getElementById(type + 'Select') || createDropdown(type);
+            select.innerHTML = Object.entries(items).map(([id, item]) => 
+                `<option value="${id}">${item.titulo} (${item.tag})</option>`
+            ).join('');
+        }
+
+        function createDropdown(type) {
+            const container = document.getElementById('libraryPickers');
+            const label = document.createElement('label');
+            label.className = "block text-[10px] font-bold text-slate-500 uppercase mt-3";
+            label.innerText = type;
+            const select = document.createElement('select');
+            select.id = type + 'Select';
+            select.className = "w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm mb-1";
+            const btn = document.createElement('button');
+            btn.className = "w-full bg-slate-700 text-white text-xs font-bold py-1 rounded hover:bg-slate-600";
+            btn.innerText = "Añadir " + type;
+            btn.onclick = () => addActivity(type);
+            container.appendChild(label);
+            container.appendChild(select);
+            container.appendChild(btn);
+            return select;
+        }
+
+        function addBlock(kind) {
+            if (kind === 'calentamiento') {
+                activePlan.blocks.push({ kind: "calentamiento" });
+            } else if (kind === 'estructura') {
+                activePlan.blocks.push({ 
+                    kind: "estructura", 
+                    ref: "CAMBIAR_POR_ID", 
+                    title: "Título de la Lección",
+                    introducir: [], 
+                    repasar: [],
+                    recursos_gramatica: []
+                });
+            }
+            updateOutput();
+        }
+
+        function addActivity(type) {
+            const id = document.getElementById(type + 'Select').value;
+            activePlan.blocks.push({ kind: type, ref: id });
+            updateOutput();
+        }
+
+        function updateOutput() {
+            activePlan.dia = parseInt(document.getElementById('diaNum').value);
+            const fecha = document.getElementById('diaFecha').value;
+            if (fecha) activePlan.fecha = fecha; else delete activePlan.fecha;
+
+            const output = document.getElementById('jsonOutput');
+            output.innerText = JSON.stringify(activePlan, null, 4);
+
+            // Update visible list
+            const list = document.getElementById('activeBlocks');
+            list.innerHTML = activePlan.blocks.map((b, i) => `
+                <div class="flex justify-between items-center bg-slate-900 p-2 rounded border border-slate-700">
+                    <span><b class="text-emerald-400 uppercase text-[10px]">${b.kind}:</b> ${b.ref || b.title || ''}</span>
+                    <button onclick="removeBlock(${i})" class="text-red-500 font-bold px-2">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeBlock(index) {
+            activePlan.blocks.splice(index, 1);
+            updateOutput();
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('jsonOutput').innerText;
+            navigator.clipboard.writeText(text);
+            alert("JSON copiado!");
+        }
+
+        document.getElementById('diaNum').oninput = updateOutput;
+        document.getElementById('diaFecha').oninput = updateOutput;
+
+        initBuilder();
+    </script>
+</body>
+</html>
