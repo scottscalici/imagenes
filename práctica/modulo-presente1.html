@@ -73,8 +73,8 @@
 
         <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
                 data-module="6" disabled>
-          <span>Módulo 3 · Curiosidad</span>
-          <span id="badge-6" class="text-xs">🔒</span>
+          <span>¡Finalizado!</span>
+  <span id="badge-6" class="text-xs">🔒</span>
         </button>
       </aside>
 
@@ -239,26 +239,32 @@
         </div>
 
         <!-- Module 3 – curiosidad placeholder -->
-        <div id="module-6" class="module-view space-y-4 hidden">
-          <h2 class="text-xl font-semibold text-slate-800">
-            Módulo 3 · Curiosidad
-          </h2>
-          <p class="text-sm text-slate-600">
-            Aquí puedes enlazar o incrustar tu Curiosidad del día (también podría venir de un JSON).
-          </p>
-
-          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
-            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
-                    data-go-module="5">
-              ← Volver al Módulo 2
-            </button>
-            <span class="text-sm text-emerald-700 font-semibold flex items-center gap-1">
-              ✔ Curso completado
-            </span>
-          </div>
-        </div>
-      </section>
+       <div id="module-6" class="module-view space-y-6 hidden text-center py-8">
+  <div class="space-y-2">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+      </svg>
     </div>
+    <h2 class="text-2xl font-bold text-slate-800">¡Felicidades!</h2>
+    <p class="text-slate-600 max-w-sm mx-auto">
+      Has completado con éxito el calentamiento de verbos y vocabulario.
+    </p>
+  </div>
+
+  <div class="bg-sky-50 border border-sky-100 rounded-xl p-4 max-w-xs mx-auto">
+    <p class="text-sm text-sky-800 font-medium">
+      Ya puedes cerrar esta pestaña y continuar con las actividades en <strong>Schoology</strong>.
+    </p>
+  </div>
+
+  <div class="pt-6 border-t border-slate-100">
+    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+            data-go-module="5">
+      ← Volver al Vocabulario
+    </button>
+  </div>
+</div>
   </main>
 
   <script>
@@ -456,31 +462,33 @@
      * VERB MODULES
      ***********************/
     function buildVerbModule(moduleNumber, items) {
-      const container = document.getElementById("module-" + moduleNumber + "-questions");
-      if (!container) return;
-      container.innerHTML = "";
+  const container = document.getElementById("module-" + moduleNumber + "-questions");
+  if (!container) return;
+  container.innerHTML = "";
 
-      items.forEach((item, index) => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "space-y-1 quiz-item";
-        wrapper.dataset.answer = item.forma;
+  items.forEach((item, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "space-y-1 quiz-item";
+    wrapper.dataset.answer = item.forma;
 
-        const sujeto = item.sujeto || "";
-        const contexto = item.contexto || "___";
-        const infinitivo = item.infinitivo || "";
+    const sujeto = item.sujeto || "";
+    const contexto = item.contexto || "___";
+    const infinitivo = item.infinitivo || "";
+    // Get the translation from the JSON
+    const traduccion = item.traduccion ? ` — ${item.traduccion}` : "";
 
-        wrapper.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">
-            ${index + 1}. ${sujeto} ${contexto} (${infinitivo})
-          </label>
-          <input type="text"
-                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        container.appendChild(wrapper);
-      });
-    }
-
+    wrapper.innerHTML = `
+      <label class="text-sm font-medium text-slate-800">
+        ${index + 1}. ${sujeto} ${contexto} <span class="text-slate-500 font-normal">(${infinitivo}${traduccion})</span>
+      </label>
+      <input type="text"
+             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+      <p class="text-xs text-slate-500 feedback hidden"></p>
+    `;
+    container.appendChild(wrapper);
+  });
+}
+ 
     function buildAllVerbModules(items) {
       const chunkSize = 5; // 4 modules x 5 = 20
       for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
