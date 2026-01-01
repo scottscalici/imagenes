@@ -2,14 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Builder - Señor Scalici</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .sticky-preview { position: sticky; top: 1rem; max-height: 90vh; overflow-y: auto; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .block-card { transition: all 0.2s ease; border-left-width: 6px; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 p-4 md:p-8">
@@ -18,52 +15,49 @@
         <div class="space-y-6">
             <header class="border-b border-slate-700 pb-4">
                 <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
-                <p class="text-slate-400">Generador de JSON para plan_s2.json</p>
             </header>
 
             <section class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Día del Plan</label>
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Día</label>
                         <input type="number" id="diaNum" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-400 font-bold" value="35">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Fecha (Opcional)</label>
-                        <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Fecha</label>
+                        <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
                     </div>
                 </div>
 
                 <div class="space-y-6">
-                    <div>
-                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Académico</h3>
+                    <div class="p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                        <h3 class="text-xs font-black text-blue-400 mb-3 uppercase tracking-widest">Académico</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-[10px] font-bold text-blue-400 uppercase mb-1">Gramática (Apuntes)</label>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Gramática (Estructura)</label>
                                 <div class="flex gap-2">
-                                    <select id="apuntesSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                    <select id="apuntesSelect" class="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm"></select>
                                     <button onclick="addGrammarBlock()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-amber-400 uppercase mb-1">Vocabulario (Capítulo)</label>
+                                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Vocabulario</label>
                                 <div class="flex gap-2">
-                                    <select id="vocabSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                    <select id="vocabSelect" class="flex-grow bg-slate-800 border border-slate-600 rounded p-2 text-sm"></select>
                                     <button onclick="addVocabBlock()" class="bg-amber-600 hover:bg-amber-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div>
-                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Actividades y Extras</h3>
-                        <div id="libraryPickers" class="grid grid-cols-1 gap-4">
-                            </div>
-                    </div>
+                    <div id="libraryPickers" class="space-y-4">
+                        <h3 class="text-xs font-black text-purple-400 mb-3 uppercase tracking-widest">Actividades y Extras</h3>
+                        </div>
                 </div>
             </section>
 
             <section class="space-y-4">
-                <h3 class="text-sm font-black text-slate-300 uppercase tracking-widest">Estructura del Día</h3>
+                <h3 class="text-sm font-black text-slate-300 uppercase tracking-widest">Bloques del Día</h3>
                 <div id="activeBlocks" class="space-y-4"></div>
             </section>
         </div>
@@ -71,8 +65,8 @@
         <div class="sticky-preview">
             <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full flex flex-col shadow-2xl">
                 <div class="bg-slate-700 p-3 flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Preview JSON</span>
-                    <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-4 py-1.5 rounded text-xs font-black transition-all transform active:scale-95">COPY JSON</button>
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">JSON Final</span>
+                    <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-4 py-1.5 rounded text-xs font-black">COPY JSON</button>
                 </div>
                 <pre id="jsonOutput" class="p-6 text-emerald-400 font-mono text-sm overflow-auto flex-grow bg-slate-950"></pre>
             </div>
@@ -98,7 +92,6 @@
                 try {
                     const res = await fetch(url + "?t=" + Date.now());
                     const json = await res.json();
-                    
                     if (key === 'vocab') {
                         dataLibrary.vocab = json.descubre2.chapters;
                         populateDropdown('vocab', dataLibrary.vocab, 'label');
@@ -109,27 +102,21 @@
                         dataLibrary[key] = json.items;
                         createLibraryPicker(key, json.items);
                     }
-                } catch (e) { console.error("Error loading " + key, e); }
+                } catch (e) { console.error("Error: " + key, e); }
             }
-            updateOutput();
         }
 
         function populateDropdown(id, items, labelKey) {
             const select = document.getElementById(id + 'Select');
-            select.innerHTML = Object.entries(items).map(([key, val]) => 
-                `<option value="${key}">${val[labelKey] || key}</option>`
-            ).join('');
+            select.innerHTML = Object.entries(items).map(([k, v]) => `<option value="${k}">${v[labelKey] || k}</option>`).join('');
         }
 
         function createLibraryPicker(type, items) {
             const container = document.getElementById('libraryPickers');
             const div = document.createElement('div');
-            const colors = { musica: 'pink', lectura: 'orange', cultura: 'purple', conv: 'cyan', extras: 'emerald' };
-            const color = colors[type] || 'slate';
-
             div.innerHTML = `
-                <label class="block text-[10px] font-bold text-${color}-400 uppercase mb-1">${type}</label>
-                <div class="flex gap-2">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">${type}</label>
+                <div class="flex gap-2 mb-2">
                     <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
                         ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo || id}</option>`).join('')}
                     </select>
@@ -168,65 +155,56 @@
             updateOutput();
         }
 
-        function moveBlock(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex >= 0 && newIndex < activePlan.blocks.length) {
-                const temp = activePlan.blocks[index];
-                activePlan.blocks[index] = activePlan.blocks[newIndex];
-                activePlan.blocks[newIndex] = temp;
-                renderBlockEditors();
-                updateOutput();
-            }
-        }
-
         function renderBlockEditors() {
             const container = document.getElementById('activeBlocks');
             container.innerHTML = "";
-            if (activePlan.blocks.length === 0) {
-                container.innerHTML = `<p class="text-slate-500 italic text-sm text-center py-10">Agrega un bloque para comenzar...</p>`;
-                return;
-            }
-
-            activePlan.blocks.forEach((block, index) => {
+            
+            activePlan.blocks.forEach((block, idx) => {
                 const div = document.createElement('div');
-                div.className = "bg-slate-800 border-l-4 border-slate-600 rounded-r-xl p-4 relative shadow-lg mb-4";
+                div.className = `block-card bg-slate-800 p-4 rounded-r-xl relative shadow-lg mb-4 border-l-4 border-slate-600`;
                 
-                let headerColor = "text-slate-400";
-                if(block.kind === 'estructura') headerColor = "text-blue-400";
-                if(block.kind === 'vocabulario') headerColor = "text-amber-400";
-                if(block.kind === 'extras') headerColor = "text-emerald-400";
+                // Set border color based on kind
+                if(block.kind === 'estructura') div.style.borderColor = "#3b82f6";
+                if(block.kind === 'vocabulario') div.style.borderColor = "#f59e0b";
+                if(block.kind === 'extras') div.style.borderColor = "#10b981";
 
                 let html = `
-                    <div class="absolute top-2 right-4 flex gap-3 items-center">
-                        <button onclick="moveBlock(${index}, -1)" class="text-slate-500 hover:text-white text-xs font-bold">↑</button>
-                        <button onclick="moveBlock(${index}, 1)" class="text-slate-500 hover:text-white text-xs font-bold">↓</button>
-                        <button onclick="removeBlock(${index})" class="text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>
+                    <div class="absolute top-2 right-4 flex gap-2">
+                        <button onclick="move(${idx},-1)" class="text-slate-500 hover:text-white">↑</button>
+                        <button onclick="move(${idx},1)" class="text-slate-500 hover:text-white">↓</button>
+                        <button onclick="remove(${idx})" class="text-red-500 font-bold ml-2">×</button>
                     </div>
+                    <h4 class="text-[10px] font-black uppercase mb-1 opacity-50">${block.kind}</h4>
                 `;
-                html += `<h4 class="${headerColor} font-black text-[10px] uppercase mb-1">${block.kind}</h4>`;
 
                 if (block.kind === 'estructura') {
                     const topic = dataLibrary.apuntes[block.ref];
-                    html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
-                    html += `<div class="space-y-2 border-t border-slate-700 pt-3">`;
+                    html += `<p class="font-bold text-white mb-3">${topic.title}</p>`;
+                    html += `<div class="space-y-1 bg-slate-900/50 p-2 rounded mb-3">`;
+                    // THE CHILDREN (LINKS)
                     Object.keys(topic.links).forEach(lKey => {
                         const isI = block.introducir.includes(lKey);
                         const isR = block.repasar.includes(lKey);
                         html += `
-                            <div class="flex items-center justify-between bg-slate-900/50 p-2 rounded">
+                            <div class="flex items-center justify-between py-1">
                                 <span class="text-xs text-slate-300">${topic.links[lKey].title}</span>
                                 <div class="flex gap-1">
-                                    <button onclick="toggleLink(${index}, 'introducir', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isI ? 'bg-emerald-600' : 'bg-slate-700 text-slate-500'}">Intro</button>
-                                    <button onclick="toggleLink(${index}, 'repasar', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isR ? 'bg-blue-600' : 'bg-slate-700 text-slate-500'}">Repaso</button>
+                                    <button onclick="toggleLink(${idx},'introducir','${lKey}')" class="text-[9px] px-2 py-0.5 rounded font-bold ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">INTRO</button>
+                                    <button onclick="toggleLink(${idx},'repasar','${lKey}')" class="text-[9px] px-2 py-0.5 rounded font-bold ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">REPASO</button>
                                 </div>
                             </div>
                         `;
                     });
                     html += `</div>`;
-                    html += `<div class="mt-4"><label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Recursos Dashboard (Comas)</label>
-                             <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateResources(${index}, this.value)" class="w-full bg-slate-950 text-blue-300 text-xs p-2 rounded border border-slate-700"></div>`;
+                    html += `<label class="text-[9px] font-bold text-slate-500 uppercase">Recursos Dashboard (Separados por coma)</label>
+                             <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateRes(${idx}, this.value)" class="w-full bg-slate-950 text-blue-300 text-xs p-1.5 rounded mt-1 border border-slate-700">`;
                 } else {
-                    html += `<p class="text-white font-bold text-sm">${block.ref}</p>`;
+                    // Title Lookup for Activities
+                    let displayTitle = block.ref;
+                    if(dataLibrary[block.kind] && dataLibrary[block.kind][block.ref]) {
+                        displayTitle = dataLibrary[block.kind][block.ref].titulo || block.ref;
+                    }
+                    html += `<p class="text-white font-bold text-sm">${displayTitle}</p><p class="text-[10px] text-slate-500">${block.ref}</p>`;
                 }
 
                 div.innerHTML = html;
@@ -234,43 +212,46 @@
             });
         }
 
-        function toggleLink(blockIdx, arrayKey, linkKey) {
-            const block = activePlan.blocks[blockIdx];
-            const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
-            block[otherKey] = block[otherKey].filter(k => k !== linkKey);
-            if (block[arrayKey].includes(linkKey)) {
-                block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
-            } else {
-                block[arrayKey].push(linkKey);
-            }
+        function toggleLink(bIdx, key, lKey) {
+            const block = activePlan.blocks[bIdx];
+            const other = key === 'introducir' ? 'repasar' : 'introducir';
+            block[other] = block[other].filter(k => k !== lKey);
+            if (block[key].includes(lKey)) block[key] = block[key].filter(k => k !== lKey);
+            else block[key].push(lKey);
             renderBlockEditors();
             updateOutput();
         }
 
-        function updateResources(index, val) {
-            activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim()).filter(s => s !== "");
+        function updateRes(idx, val) {
+            activePlan.blocks[idx].recursos_gramatica = val.split(',').map(s => s.trim()).filter(s => s !== "");
             updateOutput();
         }
 
-        function removeBlock(index) {
-            activePlan.blocks.splice(index, 1);
+        function move(idx, dir) {
+            const to = idx + dir;
+            if (to < 0 || to >= activePlan.blocks.length) return;
+            const el = activePlan.blocks.splice(idx, 1)[0];
+            activePlan.blocks.splice(to, 0, el);
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function remove(idx) {
+            activePlan.blocks.splice(idx, 1);
             renderBlockEditors();
             updateOutput();
         }
 
         function updateOutput() {
-            activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
-            const fecha = document.getElementById('diaFecha').value;
-            if (fecha) activePlan.fecha = fecha; else delete activePlan.fecha;
+            activePlan.dia = parseInt(document.getElementById('diaNum').value);
+            const f = document.getElementById('diaFecha').value;
+            if (f) activePlan.fecha = f; else delete activePlan.fecha;
             document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
         }
 
         function copyToClipboard() {
-            const text = document.getElementById('jsonOutput').innerText;
-            navigator.clipboard.writeText(text);
-            const btn = event.target;
-            btn.innerText = "COPIED! ✅";
-            setTimeout(() => btn.innerText = "COPY JSON", 2000);
+            navigator.clipboard.writeText(document.getElementById('jsonOutput').innerText);
+            alert("JSON Copiado!");
         }
 
         initBuilder();
