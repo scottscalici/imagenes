@@ -52,46 +52,59 @@
         <div id="extrasBlock"></div> 
       </div>
   
-      <div id="tareasColumn" class="space-y-6">
+     <div id="tareasColumn" class="space-y-6">
         <div class="bg-blue-50 rounded-xl p-6 shadow-md border-8 border-black">
           <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
             <span>📝</span> Tareas Pendientes
           </h3>
           <div id="tareasList" class="space-y-4"></div>
         </div>
+
+        <div class="bg-slate-50 rounded-xl overflow-hidden shadow-md border-8 border-slate-300 flex flex-col group">
+          <div class="h-28 overflow-hidden p-2"> 
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="w-full h-full object-contain"> 
+          </div>
+          <div class="p-4 flex flex-col flex-grow bg-white">
+            <h3 class="text-slate-900 font-bold text-md mb-2 italic text-center">Señor+ AI Tutor</h3>
+            <a href="https://student.schoolai.com/student-space?sessionId=cmgiali9202j3smcukb8ot50f" target="_blank" class="bg-slate-700 text-white text-center py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Practicar ahora</a>
+          </div>
+        </div>
+      </div> </div> <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        
+        <div id="grammarPlacement" class="col-span-1 md:col-span-2 lg:col-span-3">
+          <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
+          <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <div class="lg:col-span-3 mt-8">
+           <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos y Enlaces</h2>
+        </div>
+
+        <div id="vocabPlacement"></div>
+
+        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+          <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png" class="max-w-[150px] object-contain">
+          </div>
+          <div class="p-5 flex flex-col flex-grow justify-between">
+            <h3 class="text-slate-900 font-bold text-lg mb-4">Portal MISD</h3>
+            <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-black transition-colors">Abrir Portal</a>
+          </div>
+        </div>
+
+        <div class="bg-emerald-50 rounded-xl overflow-hidden shadow-md border border-emerald-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+          <div class="h-32 overflow-hidden border-b border-emerald-100">
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" class="w-full h-full object-cover">
+          </div>
+          <div class="p-5 flex flex-col flex-grow justify-between">
+            <h3 class="text-emerald-800 font-bold text-lg mb-4">Costa Rica 2027</h3>
+            <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full bg-emerald-600 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-emerald-700 transition-colors">Ver Detalles</a>
+          </div>
+        </div>
       </div>
     </div>
-  
-    <div id="resourceDashboard" class="mt-12 pt-8 border-t-2 border-dashed border-slate-200">
-      <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos del Día</h2>
-      <div id="dynamicResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  
-      <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 mt-12 text-center lg:text-left">Enlaces Permanentes</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col group">
-          <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="w-full h-full object-cover"></div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="text-slate-900 font-bold text-lg mb-2 italic">Señor+ AI Tutor</h3>
-            <a href="https://student.schoolai.com/student-space?sessionId=cmgiali9202j3smcukb8ot50f" target="_blank" class="bg-indigo-600 text-white text-center py-2 rounded-lg font-bold text-sm">Practicar ahora</a>
-          </div>
-        </div>
-        <div class="bg-emerald-50 rounded-xl overflow-hidden shadow-md border border-emerald-100 flex flex-col group">
-          <div class="h-32 overflow-hidden"><img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg" class="w-full h-full object-cover"></div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="text-emerald-800 font-bold text-lg mb-2">Costa Rica 2027</h3>
-            <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="bg-emerald-600 text-white text-center py-2 rounded-lg font-bold text-sm">Ver Detalles</a>
-          </div>
-        </div>
-        <div class="bg-slate-800 rounded-xl p-5 shadow-md border border-slate-700 flex flex-col justify-between">
-          <div class="flex items-start gap-4 mb-4">
-            <div class="bg-white/10 p-3 rounded-lg text-xl">🏠</div>
-            <h3 class="text-white font-bold text-lg leading-tight">Portal MISD</h3>
-          </div>
-          <a href="https://connection.misd.net/index.html" target="_blank" class="border border-white/20 text-white text-center py-2 rounded-lg font-bold text-sm">Abrir Portal</a>
-        </div>
-      </div>
-    </div>
-  
+
     <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
       <div class="flex items-center gap-4 text-xs">
         <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
@@ -226,39 +239,50 @@
           extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
         }
   
-        // 6. RESOURCE DASHBOARD (Isolated Section)
-        const resourceGrid = document.getElementById('dynamicResources');
-        resourceGrid.innerHTML = "";
-  
-        // Grammar Resources
-        grammarBlocks.forEach(blockRef => {
-          const topic = data.apuntes?.[blockRef.ref];
-          if (topic && topic.links) {
-            const links = Object.values(topic.links);
-            resourceGrid.innerHTML += `
-              <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100">
-                <h3 class="text-blue-600 font-bold mb-3 flex items-center gap-2"><span>⚙️</span> Gramática: ${topic.title}</h3>
-                <div class="grid grid-cols-2 gap-2">
-                  ${links.map(l => `<a href="${l.url}" target="_blank" class="px-2 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[9px] font-bold uppercase truncate hover:bg-blue-100">${l.title} ↗</a>`).join('')}
-                </div>
-              </div>`;
-          }
-        });
-  
-        // Vocabulary Resources
-        (todayPlan?.blocks || []).filter(b => b.kind === "vocabulario").forEach(block => {
-          const ch = data.vocab.descubre2.chapters[block.ref];
-          if (ch) {
-            resourceGrid.innerHTML += `
-              <div class="bg-white rounded-xl border-l-[6px] border-amber-500 p-5 shadow-sm border border-slate-100">
-                <h3 class="text-amber-600 font-bold mb-3 flex items-center gap-2"><span>📚</span> Vocabulario: ${ch.label}</h3>
-                <div class="flex gap-2">
-                  <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Lista</a>
-                  <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Cards</a>
-                </div>
-              </div>`;
-          }
-        });
+   // 6. RESOURCE DASHBOARD (Targeting separate placement containers)
+const grammarContainer = document.getElementById('grammarPlacement');
+const grammarGrid = document.getElementById('grammarResources');
+const vocabContainer = document.getElementById('vocabPlacement');
+
+grammarGrid.innerHTML = "";
+vocabContainer.innerHTML = "";
+
+// Inject Grammar into the Top Row Grid
+grammarBlocks.forEach(blockRef => {
+  const topic = data.apuntes?.[blockRef.ref];
+  if (topic && topic.links) {
+    const links = Object.values(topic.links);
+    grammarGrid.innerHTML += `
+      <div class="bg-white rounded-xl border-l-[6px] border-blue-600 p-5 shadow-sm border border-slate-100 flex flex-col h-full">
+        <h3 class="text-blue-600 font-bold text-sm mb-3">⚙️ ${topic.title}</h3>
+        <div class="flex flex-wrap gap-2 mt-auto">
+          ${links.map(l => `<a href="${l.url}" target="_blank" class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 text-[10px] font-bold uppercase hover:bg-blue-100 transition-colors">${l.title} ↗</a>`).join('')}
+        </div>
+      </div>`;
+  }
+});
+
+// Hide Grammar header if no grammar blocks exist
+grammarContainer.style.display = grammarBlocks.length ? "block" : "none";
+
+// Inject Vocab into the Bottom Row (First Column)
+(todayPlan?.blocks || []).filter(b => b.kind === "vocabulario").forEach(block => {
+  const ch = data.vocab.descubre2.chapters[block.ref];
+  if (ch) {
+    vocabContainer.innerHTML = `
+      <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full">
+        <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">📚</div>
+        <div class="p-5 flex flex-col flex-grow justify-between">
+          <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
+          <div class="flex gap-2">
+            <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
+            <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
+          </div>
+        </div>
+      </div>`;
+  }
+});
+   
         
         // 7. TAREAS
         const tList = document.getElementById('tareasList');
