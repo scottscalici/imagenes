@@ -114,36 +114,29 @@
                 }
             ]
         },
+{
+    "dia": 36,
+    "blocks": [
         {
-            "dia": 36,
-            "blocks": [
-                {
-                    "kind": "estructura",
-                    "ref": "mandatos",
-                    "title": "Los Mandatos",
-                    "introducir": [
-                        "ud_uds"
-                    ],
-                    "repasar": [
-                        "tu_neg",
-                        "tu_pos"
-                    ],
-                    "recursos_gramatica": [
-                        "mandatos"
-                    ]
-                },
-                {
-                    "kind": "estructura",
-                    "ref": "posesivos",
-                    "title": "Posesivos",
-                    "introducir": [],
-                    "repasar": [],
-                    "recursos_gramatica": [
-                        "posesivos"
-                    ]
-                }
+            "kind": "estructura",
+            "ref": "mandatos",
+            "title": "Los Mandatos",
+            "introducir": [
+                "ud_uds"
             ],
-            "fecha": "2025-01-06"
+            "repasar": [
+                "tu_neg"
+            ],
+            "recursos_gramatica": [
+                "mandatos"
+            ]
+        },
+        {
+            "kind": "vocabulario",
+            "ref": "L3"
         }
+    ],
+    "fecha": "2026-01-06"
+}
     ]
 }
