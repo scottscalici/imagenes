@@ -64,30 +64,120 @@
     </div>
 
     <script>
-        // We'll populate these from your real JSONs
-        let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {} };
-        let activePlan = { dia: 35, blocks: [] };
+        // Add to your dataLibrary
+let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {} };
 
-        async function initBuilder() {
-            // Fetch your library files to populate the dropdowns
-            const sources = {
-                musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
-                lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
-                cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
-                conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json"
-            };
+async function initBuilder() {
+    const sources = {
+        musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+        lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+        cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+        conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+        apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json"
+    };
 
-            for (const [key, url] of Object.entries(sources)) {
-                try {
-                    const res = await fetch(url + "?t=" + Date.now());
-                    const json = await res.json();
-                    dataLibrary[key] = json.items;
-                    populateDropdown(key, json.items);
-                } catch (e) { console.error("Error loading " + key, e); }
-            }
-            updateOutput();
+    for (const [key, url] of Object.entries(sources)) {
+        try {
+            const res = await fetch(url + "?t=" + Date.now());
+            const json = await res.json();
+            // Apuntes doesn't have an "items" wrapper, it's a direct object
+            dataLibrary[key] = json.items || json; 
+            populateDropdown(key, dataLibrary[key]);
+        } catch (e) { console.error("Error loading " + key, e); }
+    }
+    updateOutput();
+}
+
+// 1. ADD GRAMMAR BLOCK (Estructura)
+function addGrammarBlock() {
+    const ref = document.getElementById('apuntesSelect').value;
+    const topic = dataLibrary.apuntes[ref];
+    
+    const newBlock = {
+        kind: "estructura",
+        ref: ref,
+        title: topic.title,
+        introducir: [],
+        repasar: [],
+        recursos_gramatica: [ref] // Defaults to the current topic
+    };
+    
+    activePlan.blocks.push(newBlock);
+    renderBlockEditors();
+    updateOutput();
+}
+
+// 2. RENDER BLOCK EDITERS (For managing lists inside blocks)
+function renderBlockEditors() {
+    const container = document.getElementById('activeBlocks');
+    container.innerHTML = "";
+
+    activePlan.blocks.forEach((block, index) => {
+        const div = document.createElement('div');
+        div.className = "bg-slate-900 border border-slate-700 rounded-xl p-4 mb-4 relative";
+        
+        let html = `<button onclick="removeBlock(${index})" class="absolute top-2 right-2 text-red-500 font-bold text-xl">&times;</button>`;
+        html += `<h4 class="text-emerald-400 font-black text-xs uppercase mb-2">${block.kind}</h4>`;
+
+        if (block.kind === 'estructura') {
+            const topic = dataLibrary.apuntes[block.ref];
+            html += `<p class="font-bold text-white mb-3">${topic.title}</p>`;
+            
+            // Generate link toggles
+            html += `<div class="grid grid-cols-1 gap-2 text-[11px]">`;
+            Object.keys(topic.links).forEach(linkKey => {
+                const isIntro = block.introducir.includes(linkKey);
+                const isRepasar = block.repasar.includes(linkKey);
+                
+                html += `
+                <div class="flex items-center justify-between bg-slate-800 p-2 rounded">
+                    <span class="text-slate-300 font-medium">${topic.links[linkKey].title}</span>
+                    <div class="flex gap-1">
+                        <button onclick="toggleLink(${index}, 'introducir', '${linkKey}')" class="px-2 py-1 rounded ${isIntro ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}">Intro</button>
+                        <button onclick="toggleLink(${index}, 'repasar', '${linkKey}')" class="px-2 py-1 rounded ${isRepasar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}">Repaso</button>
+                    </div>
+                </div>`;
+            });
+            html += `</div>`;
+            
+            // Resources Section
+            html += `<div class="mt-4 pt-3 border-t border-slate-800">
+                <label class="text-[10px] text-slate-500 uppercase font-bold">Recursos Dashboard (ID)</label>
+                <input type="text" class="w-full bg-slate-800 border-none text-xs text-blue-400 p-1" 
+                       value="${block.recursos_gramatica.join(', ')}" 
+                       onchange="updateResources(${index}, this.value)">
+            </div>`;
+        } else {
+            html += `<p class="text-slate-300 font-bold">${block.ref}</p>`;
         }
 
+        div.innerHTML = html;
+        container.appendChild(div);
+    });
+}
+
+function toggleLink(blockIdx, arrayKey, linkKey) {
+    const block = activePlan.blocks[blockIdx];
+    const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
+    
+    // Remove from other array if it exists (can't be both)
+    block[otherKey] = block[otherKey].filter(k => k !== linkKey);
+    
+    // Toggle in current array
+    if (block[arrayKey].includes(linkKey)) {
+        block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+    } else {
+        block[arrayKey].push(linkKey);
+    }
+    
+    renderBlockEditors();
+    updateOutput();
+}
+
+function updateResources(index, val) {
+    activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim());
+    updateOutput();
+}
         function populateDropdown(type, items) {
             const select = document.getElementById(type + 'Select') || createDropdown(type);
             select.innerHTML = Object.entries(items).map(([id, item]) => 
