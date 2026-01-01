@@ -2,227 +2,248 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan Builder - Señor Scalici</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .sticky-preview { position: sticky; top: 1rem; max-height: 90vh; overflow-y: auto; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 p-8">
+<body class="bg-slate-900 text-slate-100 p-4 md:p-8">
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <div class="space-y-6">
-            <header class="border-b border-slate-700 pb-4">
-                <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
-                <p class="text-slate-400">Build Day JSON for plan_s2.json</p>
+            <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
+                    <p class="text-slate-400">Generador de JSON para plan_s2.json</p>
+                </div>
             </header>
 
-            <section class="bg-slate-800 p-6 rounded-xl border border-slate-700">
+            <section class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1">Día</label>
-                        <input type="number" id="diaNum" class="w-full bg-slate-900 border border-slate-700 rounded p-2" value="35">
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Día del Plan</label>
+                        <input type="number" id="diaNum" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-emerald-400 font-bold" value="35">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold uppercase mb-1">Fecha (Opcional)</label>
-                        <input type="date" id="diaFecha" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
+                        <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Fecha (Opcional)</label>
+                        <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <h3 class="text-sm font-black text-slate-300 border-b border-slate-700 pb-2 uppercase">Añadir Bloques</h3>
-                    
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="addBlock('calentamiento')" class="bg-red-900/30 text-red-400 border border-red-900/50 p-2 rounded text-xs font-bold hover:bg-red-900/50">+ Calentamiento</button>
-                        <button onclick="addBlock('estructura')" class="bg-blue-900/30 text-blue-400 border border-blue-900/50 p-2 rounded text-xs font-bold hover:bg-blue-900/50">+ Estructura</button>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Académico</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-blue-400 uppercase mb-1">Gramática (Apuntes)</label>
+                                <div class="flex gap-2">
+                                    <select id="apuntesSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                    <button onclick="addGrammarBlock()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-amber-400 uppercase mb-1">Vocabulario (Capítulo)</label>
+                                <div class="flex gap-2">
+                                    <select id="vocabSelect" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
+                                    <button onclick="addVocabBlock()" class="bg-amber-600 hover:bg-amber-500 px-4 rounded font-bold text-xs uppercase">Añadir</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div id="libraryPickers" class="space-y-3 pt-4">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase">Música</label>
-                        <select id="musicaSelect" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm"></select>
-                        <button onclick="addActivity('musica')" class="w-full bg-pink-600 text-white text-xs font-bold py-1 rounded">Añadir Canción</button>
+                    <div>
+                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Actividades y Cultura</h3>
+                        <div id="libraryPickers" class="grid grid-cols-1 gap-4">
+                            </div>
                     </div>
                 </div>
             </section>
 
-            <section class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h3 class="text-sm font-black text-slate-300 mb-4 uppercase">Bloques del Día</h3>
-                <div id="activeBlocks" class="space-y-2 text-sm">
-                    </div>
+            <section class="space-y-4">
+                <h3 class="text-sm font-black text-slate-300 uppercase tracking-widest">Estructura del Día</h3>
+                <div id="activeBlocks" class="space-y-4">
+                    <p class="text-slate-500 italic text-sm">No has añadido bloques todavía...</p>
+                </div>
             </section>
         </div>
 
         <div class="sticky-preview">
-            <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full flex flex-col">
+            <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden h-full flex flex-col shadow-2xl">
                 <div class="bg-slate-700 p-3 flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Generated JSON</span>
-                    <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 px-4 py-1 rounded text-xs font-black transition-colors">COPY TO CLIPBOARD</button>
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Preview JSON</span>
+                    <button onclick="copyToClipboard()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-4 py-1.5 rounded text-xs font-black transition-all transform active:scale-95">COPY JSON</button>
                 </div>
-                <pre id="jsonOutput" class="p-6 text-emerald-400 font-mono text-sm overflow-auto flex-grow"></pre>
+                <pre id="jsonOutput" class="p-6 text-emerald-400 font-mono text-sm overflow-auto flex-grow bg-slate-950"></pre>
             </div>
         </div>
     </div>
 
     <script>
-        // Add to your dataLibrary
-let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {} };
+        let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {} };
+        let activePlan = { dia: 35, blocks: [] };
 
-async function initBuilder() {
-    const sources = {
-        musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
-        lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
-        cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
-        conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
-        apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json"
-    };
+        async function initBuilder() {
+            const sources = {
+                musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+                lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+                cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+                conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+                apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+                vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json"
+            };
 
-    for (const [key, url] of Object.entries(sources)) {
-        try {
-            const res = await fetch(url + "?t=" + Date.now());
-            const json = await res.json();
-            // Apuntes doesn't have an "items" wrapper, it's a direct object
-            dataLibrary[key] = json.items || json; 
-            populateDropdown(key, dataLibrary[key]);
-        } catch (e) { console.error("Error loading " + key, e); }
-    }
-    updateOutput();
-}
-
-// 1. ADD GRAMMAR BLOCK (Estructura)
-function addGrammarBlock() {
-    const ref = document.getElementById('apuntesSelect').value;
-    const topic = dataLibrary.apuntes[ref];
-    
-    const newBlock = {
-        kind: "estructura",
-        ref: ref,
-        title: topic.title,
-        introducir: [],
-        repasar: [],
-        recursos_gramatica: [ref] // Defaults to the current topic
-    };
-    
-    activePlan.blocks.push(newBlock);
-    renderBlockEditors();
-    updateOutput();
-}
-
-// 2. RENDER BLOCK EDITERS (For managing lists inside blocks)
-function renderBlockEditors() {
-    const container = document.getElementById('activeBlocks');
-    container.innerHTML = "";
-
-    activePlan.blocks.forEach((block, index) => {
-        const div = document.createElement('div');
-        div.className = "bg-slate-900 border border-slate-700 rounded-xl p-4 mb-4 relative";
-        
-        let html = `<button onclick="removeBlock(${index})" class="absolute top-2 right-2 text-red-500 font-bold text-xl">&times;</button>`;
-        html += `<h4 class="text-emerald-400 font-black text-xs uppercase mb-2">${block.kind}</h4>`;
-
-        if (block.kind === 'estructura') {
-            const topic = dataLibrary.apuntes[block.ref];
-            html += `<p class="font-bold text-white mb-3">${topic.title}</p>`;
-            
-            // Generate link toggles
-            html += `<div class="grid grid-cols-1 gap-2 text-[11px]">`;
-            Object.keys(topic.links).forEach(linkKey => {
-                const isIntro = block.introducir.includes(linkKey);
-                const isRepasar = block.repasar.includes(linkKey);
-                
-                html += `
-                <div class="flex items-center justify-between bg-slate-800 p-2 rounded">
-                    <span class="text-slate-300 font-medium">${topic.links[linkKey].title}</span>
-                    <div class="flex gap-1">
-                        <button onclick="toggleLink(${index}, 'introducir', '${linkKey}')" class="px-2 py-1 rounded ${isIntro ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-400'}">Intro</button>
-                        <button onclick="toggleLink(${index}, 'repasar', '${linkKey}')" class="px-2 py-1 rounded ${isRepasar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}">Repaso</button>
-                    </div>
-                </div>`;
-            });
-            html += `</div>`;
-            
-            // Resources Section
-            html += `<div class="mt-4 pt-3 border-t border-slate-800">
-                <label class="text-[10px] text-slate-500 uppercase font-bold">Recursos Dashboard (ID)</label>
-                <input type="text" class="w-full bg-slate-800 border-none text-xs text-blue-400 p-1" 
-                       value="${block.recursos_gramatica.join(', ')}" 
-                       onchange="updateResources(${index}, this.value)">
-            </div>`;
-        } else {
-            html += `<p class="text-slate-300 font-bold">${block.ref}</p>`;
-        }
-
-        div.innerHTML = html;
-        container.appendChild(div);
-    });
-}
-
-function toggleLink(blockIdx, arrayKey, linkKey) {
-    const block = activePlan.blocks[blockIdx];
-    const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
-    
-    // Remove from other array if it exists (can't be both)
-    block[otherKey] = block[otherKey].filter(k => k !== linkKey);
-    
-    // Toggle in current array
-    if (block[arrayKey].includes(linkKey)) {
-        block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
-    } else {
-        block[arrayKey].push(linkKey);
-    }
-    
-    renderBlockEditors();
-    updateOutput();
-}
-
-function updateResources(index, val) {
-    activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim());
-    updateOutput();
-}
-        function populateDropdown(type, items) {
-            const select = document.getElementById(type + 'Select') || createDropdown(type);
-            select.innerHTML = Object.entries(items).map(([id, item]) => 
-                `<option value="${id}">${item.titulo} (${item.tag})</option>`
-            ).join('');
-        }
-
-        function createDropdown(type) {
-            const container = document.getElementById('libraryPickers');
-            const label = document.createElement('label');
-            label.className = "block text-[10px] font-bold text-slate-500 uppercase mt-3";
-            label.innerText = type;
-            const select = document.createElement('select');
-            select.id = type + 'Select';
-            select.className = "w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm mb-1";
-            const btn = document.createElement('button');
-            btn.className = "w-full bg-slate-700 text-white text-xs font-bold py-1 rounded hover:bg-slate-600";
-            btn.innerText = "Añadir " + type;
-            btn.onclick = () => addActivity(type);
-            container.appendChild(label);
-            container.appendChild(select);
-            container.appendChild(btn);
-            return select;
-        }
-
-        function addBlock(kind) {
-            if (kind === 'calentamiento') {
-                activePlan.blocks.push({ kind: "calentamiento" });
-            } else if (kind === 'estructura') {
-                activePlan.blocks.push({ 
-                    kind: "estructura", 
-                    ref: "CAMBIAR_POR_ID", 
-                    title: "Título de la Lección",
-                    introducir: [], 
-                    repasar: [],
-                    recursos_gramatica: []
-                });
+            for (const [key, url] of Object.entries(sources)) {
+                try {
+                    const res = await fetch(url + "?t=" + Date.now());
+                    const json = await res.json();
+                    
+                    if (key === 'vocab') {
+                        dataLibrary.vocab = json.descubre2.chapters;
+                        populateDropdown('vocab', dataLibrary.vocab, 'label');
+                    } else if (key === 'apuntes') {
+                        dataLibrary.apuntes = json;
+                        populateDropdown('apuntes', json, 'title');
+                    } else {
+                        dataLibrary[key] = json.items;
+                        createLibraryPicker(key, json.items);
+                    }
+                } catch (e) { console.error("Error loading " + key, e); }
             }
             updateOutput();
         }
 
-        function addActivity(type) {
-            const id = document.getElementById(type + 'Select').value;
-            activePlan.blocks.push({ kind: type, ref: id });
+        function populateDropdown(id, items, labelKey) {
+            const select = document.getElementById(id + 'Select');
+            select.innerHTML = Object.entries(items).map(([key, val]) => 
+                `<option value="${key}">${val[labelKey] || key}</option>`
+            ).join('');
+        }
+
+        function createLibraryPicker(type, items) {
+            const container = document.getElementById('libraryPickers');
+            const div = document.createElement('div');
+            
+            const colors = { musica: 'pink', lectura: 'orange', cultura: 'purple', conv: 'cyan' };
+            const color = colors[type] || 'slate';
+
+            div.innerHTML = `
+                <label class="block text-[10px] font-bold text-${color}-400 uppercase mb-1">${type}</label>
+                <div class="flex gap-2">
+                    <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
+                        ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo}</option>`).join('')}
+                    </select>
+                    <button onclick="addActivity('${type}')" class="bg-slate-700 hover:bg-slate-600 px-4 rounded font-bold text-xs uppercase">Añadir</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function addGrammarBlock() {
+            const ref = document.getElementById('apuntesSelect').value;
+            const topic = dataLibrary.apuntes[ref];
+            activePlan.blocks.push({
+                kind: "estructura",
+                ref: ref,
+                title: topic.title,
+                introducir: [],
+                repasar: [],
+                recursos_gramatica: [ref]
+            });
+            renderBlockEditors();
             updateOutput();
+        }
+
+        function addVocabBlock() {
+            const ref = document.getElementById('vocabSelect').value;
+            activePlan.blocks.push({ kind: "vocabulario", ref: ref });
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function addActivity(type) {
+            const ref = document.getElementById(type + 'Select').value;
+            activePlan.blocks.push({ kind: type, ref: ref });
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function toggleLink(blockIdx, arrayKey, linkKey) {
+            const block = activePlan.blocks[blockIdx];
+            const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
+            
+            block[otherKey] = block[otherKey].filter(k => k !== linkKey);
+            if (block[arrayKey].includes(linkKey)) {
+                block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+            } else {
+                block[arrayKey].push(linkKey);
+            }
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function removeBlock(index) {
+            activePlan.blocks.splice(index, 1);
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function updateResources(index, val) {
+            activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim());
+            updateOutput();
+        }
+
+        function renderBlockEditors() {
+            const container = document.getElementById('activeBlocks');
+            if (activePlan.blocks.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 italic text-sm">No has añadido bloques todavía...</p>`;
+                return;
+            }
+            container.innerHTML = "";
+
+            activePlan.blocks.forEach((block, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-800 border-l-4 border-slate-600 rounded-r-xl p-4 relative shadow-lg mb-4";
+                
+                let color = "text-slate-400";
+                if(block.kind === 'estructura') color = "text-blue-400";
+                if(block.kind === 'vocabulario') color = "text-amber-400";
+                if(block.kind === 'musica') color = "text-pink-400";
+
+                let html = `<button onclick="removeBlock(${index})" class="absolute top-2 right-4 text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>`;
+                html += `<h4 class="${color} font-black text-[10px] uppercase mb-1">${block.kind}</h4>`;
+
+                if (block.kind === 'estructura') {
+                    const topic = dataLibrary.apuntes[block.ref];
+                    html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
+                    html += `<div class="space-y-2">`;
+                    Object.keys(topic.links).forEach(lKey => {
+                        const isI = block.introducir.includes(lKey);
+                        const isR = block.repasar.includes(lKey);
+                        html += `
+                            <div class="flex items-center justify-between bg-slate-900/50 p-2 rounded border border-slate-700">
+                                <span class="text-xs text-slate-300">${topic.links[lKey].title}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="toggleLink(${index}, 'introducir', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isI ? 'bg-emerald-600' : 'bg-slate-700 text-slate-500'}">Intro</button>
+                                    <button onclick="toggleLink(${index}, 'repasar', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isR ? 'bg-blue-600' : 'bg-slate-700 text-slate-500'}">Repaso</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                    html += `<div class="mt-3"><label class="text-[9px] font-bold text-slate-500 uppercase">Dashboard Resources (IDs)</label>
+                             <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateResources(${index}, this.value)" class="w-full bg-slate-950 text-blue-300 text-xs p-1 rounded mt-1 border border-slate-700"></div>`;
+                } else {
+                    html += `<p class="text-white font-bold text-sm">${block.ref}</p>`;
+                }
+
+                div.innerHTML = html;
+                container.appendChild(div);
+            });
         }
 
         function updateOutput() {
@@ -232,30 +253,15 @@ function updateResources(index, val) {
 
             const output = document.getElementById('jsonOutput');
             output.innerText = JSON.stringify(activePlan, null, 4);
-
-            // Update visible list
-            const list = document.getElementById('activeBlocks');
-            list.innerHTML = activePlan.blocks.map((b, i) => `
-                <div class="flex justify-between items-center bg-slate-900 p-2 rounded border border-slate-700">
-                    <span><b class="text-emerald-400 uppercase text-[10px]">${b.kind}:</b> ${b.ref || b.title || ''}</span>
-                    <button onclick="removeBlock(${i})" class="text-red-500 font-bold px-2">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeBlock(index) {
-            activePlan.blocks.splice(index, 1);
-            updateOutput();
         }
 
         function copyToClipboard() {
             const text = document.getElementById('jsonOutput').innerText;
             navigator.clipboard.writeText(text);
-            alert("JSON copiado!");
+            const btn = event.target;
+            btn.innerText = "COPIED! ✅";
+            setTimeout(() => btn.innerText = "COPY JSON", 2000);
         }
-
-        document.getElementById('diaNum').oninput = updateOutput;
-        document.getElementById('diaFecha').oninput = updateOutput;
 
         initBuilder();
     </script>
