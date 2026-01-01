@@ -16,11 +16,9 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         <div class="space-y-6">
-            <header class="border-b border-slate-700 pb-4 flex justify-between items-center">
-                <div>
-                    <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
-                    <p class="text-slate-400">Generador de JSON para plan_s2.json</p>
-                </div>
+            <header class="border-b border-slate-700 pb-4">
+                <h1 class="text-3xl font-black text-emerald-400">PLAN BUILDER 🛠️</h1>
+                <p class="text-slate-400">Generador de JSON para plan_s2.json</p>
             </header>
 
             <section class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl">
@@ -31,14 +29,14 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Fecha (Opcional)</label>
-                        <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2">
+                        <input type="date" id="diaFecha" oninput="updateOutput()" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-white">
                     </div>
                 </div>
 
                 <div class="space-y-6">
                     <div>
                         <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Académico</h3>
-                        <div class="grid grid-cols-1 gap-4">
+                        <div class="space-y-4">
                             <div>
                                 <label class="block text-[10px] font-bold text-blue-400 uppercase mb-1">Gramática (Apuntes)</label>
                                 <div class="flex gap-2">
@@ -57,7 +55,7 @@
                     </div>
 
                     <div>
-                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Actividades y Cultura</h3>
+                        <h3 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-widest border-b border-slate-700 pb-1">Actividades y Extras</h3>
                         <div id="libraryPickers" class="grid grid-cols-1 gap-4">
                             </div>
                     </div>
@@ -66,9 +64,7 @@
 
             <section class="space-y-4">
                 <h3 class="text-sm font-black text-slate-300 uppercase tracking-widest">Estructura del Día</h3>
-                <div id="activeBlocks" class="space-y-4">
-                    <p class="text-slate-500 italic text-sm">No has añadido bloques todavía...</p>
-                </div>
+                <div id="activeBlocks" class="space-y-4"></div>
             </section>
         </div>
 
@@ -84,206 +80,200 @@
     </div>
 
     <script>
-let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {} };
-let activePlan = { dia: 35, blocks: [] };
+        let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {}, extras: {} };
+        let activePlan = { dia: 35, blocks: [] };
 
-async function initBuilder() {
-    const sources = {
-        musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
-        lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
-        cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
-        conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
-        apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
-        vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json"
-    };
+        async function initBuilder() {
+            const sources = {
+                musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+                lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+                cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+                conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+                apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+                vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
+                extras: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json"
+            };
 
-    for (const [key, url] of Object.entries(sources)) {
-        try {
-            const res = await fetch(url + "?t=" + Date.now());
-            const json = await res.json();
-            
-            if (key === 'vocab') {
-                dataLibrary.vocab = json.descubre2.chapters;
-                populateDropdown('vocab', dataLibrary.vocab, 'label');
-            } else if (key === 'apuntes') {
-                dataLibrary.apuntes = json;
-                populateDropdown('apuntes', json, 'title');
-            } else {
-                dataLibrary[key] = json.items;
-                createLibraryPicker(key, json.items);
+            for (const [key, url] of Object.entries(sources)) {
+                try {
+                    const res = await fetch(url + "?t=" + Date.now());
+                    const json = await res.json();
+                    
+                    if (key === 'vocab') {
+                        dataLibrary.vocab = json.descubre2.chapters;
+                        populateDropdown('vocab', dataLibrary.vocab, 'label');
+                    } else if (key === 'apuntes') {
+                        dataLibrary.apuntes = json;
+                        populateDropdown('apuntes', json, 'title');
+                    } else {
+                        dataLibrary[key] = json.items;
+                        createLibraryPicker(key, json.items);
+                    }
+                } catch (e) { console.error("Error loading " + key, e); }
             }
-        } catch (e) { console.error("Error loading " + key, e); }
-    }
-    updateOutput();
-}
-
-function populateDropdown(id, items, labelKey) {
-    const select = document.getElementById(id + 'Select');
-    select.innerHTML = Object.entries(items).map(([key, val]) => 
-        `<option value="${key}">${val[labelKey] || key}</option>`
-    ).join('');
-}
-
-function createLibraryPicker(type, items) {
-    const container = document.getElementById('libraryPickers');
-    const div = document.createElement('div');
-    const colors = { musica: 'pink', lectura: 'orange', cultura: 'purple', conv: 'cyan' };
-    const color = colors[type] || 'slate';
-
-    div.innerHTML = `
-        <label class="block text-[10px] font-bold text-${color}-400 uppercase mb-1">${type}</label>
-        <div class="flex gap-2 mb-3">
-            <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
-                ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo}</option>`).join('')}
-            </select>
-            <button onclick="addActivity('${type}')" class="bg-slate-700 hover:bg-slate-600 px-4 rounded font-bold text-xs uppercase">Añadir</button>
-        </div>
-    `;
-    container.appendChild(div);
-}
-
-// --- CORE ACTION FUNCTIONS ---
-
-function addGrammarBlock() {
-    const ref = document.getElementById('apuntesSelect').value;
-    const topic = dataLibrary.apuntes[ref];
-    activePlan.blocks.push({
-        kind: "estructura",
-        ref: ref,
-        title: topic.title,
-        introducir: [],
-        repasar: [],
-        recursos_gramatica: [ref]
-    });
-    renderBlockEditors();
-    updateOutput();
-}
-
-function addVocabBlock() {
-    const ref = document.getElementById('vocabSelect').value;
-    activePlan.blocks.push({ kind: "vocabulario", ref: ref });
-    renderBlockEditors();
-    updateOutput();
-}
-
-function addActivity(type) {
-    const ref = document.getElementById(type + 'Select').value;
-    activePlan.blocks.push({ kind: type, ref: ref });
-    renderBlockEditors();
-    updateOutput();
-}
-
-// --- BLOCK MANAGEMENT ---
-
-function renderBlockEditors() {
-    const container = document.getElementById('activeBlocks');
-    container.innerHTML = "";
-
-    if (activePlan.blocks.length === 0) {
-        container.innerHTML = `<p class="text-slate-500 italic text-sm text-center py-10">No has añadido bloques todavía...</p>`;
-        return;
-    }
-
-    activePlan.blocks.forEach((block, index) => {
-        const div = document.createElement('div');
-        div.className = "bg-slate-800 border-l-4 border-slate-600 rounded-r-xl p-4 relative shadow-lg mb-4";
-        
-        let headerColor = "text-slate-400";
-        if(block.kind === 'estructura') headerColor = "text-blue-400";
-        if(block.kind === 'vocabulario') headerColor = "text-amber-400";
-
-        let html = `<button onclick="removeBlock(${index})" class="absolute top-2 right-4 text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>`;
-        html += `<h4 class="${headerColor} font-black text-[10px] uppercase mb-1">${block.kind}</h4>`;
-
-        if (block.kind === 'estructura') {
-            const topic = dataLibrary.apuntes[block.ref];
-            html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
-            
-            // Render the Child Topics (introducir/repasar)
-            html += `<div class="space-y-2 border-t border-slate-700 pt-3">`;
-            Object.keys(topic.links).forEach(lKey => {
-                const isI = block.introducir.includes(lKey);
-                const isR = block.repasar.includes(lKey);
-                html += `
-                    <div class="flex items-center justify-between bg-slate-900/50 p-2 rounded">
-                        <span class="text-xs text-slate-300 font-medium">${topic.links[lKey].title}</span>
-                        <div class="flex gap-1">
-                            <button onclick="toggleLink(${index}, 'introducir', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase transition-colors ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">Intro</button>
-                            <button onclick="toggleLink(${index}, 'repasar', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase transition-colors ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">Repaso</button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += `</div>`;
-
-            // Render the Resources (Multi-Select support)
-            html += `
-                <div class="mt-4 pt-3 border-t border-slate-700">
-                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-2">Recursos Dashboard (Lista Separada por Comas)</label>
-                    <div class="flex gap-2">
-                         <input id="resInput-${index}" type="text" value="${block.recursos_gramatica.join(', ')}" 
-                           onchange="updateResources(${index}, this.value)" 
-                           class="flex-grow bg-slate-950 text-blue-300 text-xs p-2 rounded border border-slate-700">
-                    </div>
-                    <p class="text-[9px] text-slate-500 mt-1 italic">Ej: mandatos, reflexivos, gustar</p>
-                </div>
-            `;
-        } else {
-            html += `<p class="text-white font-bold text-sm">${block.ref}</p>`;
+            updateOutput();
         }
 
-        div.innerHTML = html;
-        container.appendChild(div);
-    });
-}
+        function populateDropdown(id, items, labelKey) {
+            const select = document.getElementById(id + 'Select');
+            select.innerHTML = Object.entries(items).map(([key, val]) => 
+                `<option value="${key}">${val[labelKey] || key}</option>`
+            ).join('');
+        }
 
-function toggleLink(blockIdx, arrayKey, linkKey) {
-    const block = activePlan.blocks[blockIdx];
-    const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
-    
-    // Remove from opposite list
-    block[otherKey] = block[otherKey].filter(k => k !== linkKey);
-    
-    // Toggle in current list
-    if (block[arrayKey].includes(linkKey)) {
-        block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
-    } else {
-        block[arrayKey].push(linkKey);
-    }
-    
-    renderBlockEditors();
-    updateOutput();
-}
+        function createLibraryPicker(type, items) {
+            const container = document.getElementById('libraryPickers');
+            const div = document.createElement('div');
+            const colors = { musica: 'pink', lectura: 'orange', cultura: 'purple', conv: 'cyan', extras: 'emerald' };
+            const color = colors[type] || 'slate';
 
-function updateResources(index, val) {
-    // Split by comma, trim whitespace, remove empty strings
-    activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim()).filter(s => s !== "");
-    updateOutput();
-}
+            div.innerHTML = `
+                <label class="block text-[10px] font-bold text-${color}-400 uppercase mb-1">${type}</label>
+                <div class="flex gap-2">
+                    <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
+                        ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo || id}</option>`).join('')}
+                    </select>
+                    <button onclick="addActivity('${type}')" class="bg-slate-700 hover:bg-slate-600 px-4 rounded font-bold text-xs uppercase">Añadir</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
 
-function removeBlock(index) {
-    activePlan.blocks.splice(index, 1);
-    renderBlockEditors();
-    updateOutput();
-}
+        function addGrammarBlock() {
+            const ref = document.getElementById('apuntesSelect').value;
+            const topic = dataLibrary.apuntes[ref];
+            activePlan.blocks.push({
+                kind: "estructura",
+                ref: ref,
+                title: topic.title,
+                introducir: [],
+                repasar: [],
+                recursos_gramatica: [ref]
+            });
+            renderBlockEditors();
+            updateOutput();
+        }
 
-function updateOutput() {
-    activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
-    const fecha = document.getElementById('diaFecha').value;
-    if (fecha) activePlan.fecha = fecha; else delete activePlan.fecha;
+        function addVocabBlock() {
+            const ref = document.getElementById('vocabSelect').value;
+            activePlan.blocks.push({ kind: "vocabulario", ref: ref });
+            renderBlockEditors();
+            updateOutput();
+        }
 
-    document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
-}
+        function addActivity(type) {
+            const ref = document.getElementById(type + 'Select').value;
+            activePlan.blocks.push({ kind: type, ref: ref });
+            renderBlockEditors();
+            updateOutput();
+        }
 
-function copyToClipboard() {
-    const text = document.getElementById('jsonOutput').innerText;
-    navigator.clipboard.writeText(text);
-    const btn = event.target;
-    btn.innerText = "COPIED! ✅";
-    setTimeout(() => btn.innerText = "COPY JSON", 2000);
-}
+        function moveBlock(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < activePlan.blocks.length) {
+                const temp = activePlan.blocks[index];
+                activePlan.blocks[index] = activePlan.blocks[newIndex];
+                activePlan.blocks[newIndex] = temp;
+                renderBlockEditors();
+                updateOutput();
+            }
+        }
 
-initBuilder();
+        function renderBlockEditors() {
+            const container = document.getElementById('activeBlocks');
+            container.innerHTML = "";
+            if (activePlan.blocks.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 italic text-sm text-center py-10">Agrega un bloque para comenzar...</p>`;
+                return;
+            }
+
+            activePlan.blocks.forEach((block, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-800 border-l-4 border-slate-600 rounded-r-xl p-4 relative shadow-lg mb-4";
+                
+                let headerColor = "text-slate-400";
+                if(block.kind === 'estructura') headerColor = "text-blue-400";
+                if(block.kind === 'vocabulario') headerColor = "text-amber-400";
+                if(block.kind === 'extras') headerColor = "text-emerald-400";
+
+                let html = `
+                    <div class="absolute top-2 right-4 flex gap-3 items-center">
+                        <button onclick="moveBlock(${index}, -1)" class="text-slate-500 hover:text-white text-xs font-bold">↑</button>
+                        <button onclick="moveBlock(${index}, 1)" class="text-slate-500 hover:text-white text-xs font-bold">↓</button>
+                        <button onclick="removeBlock(${index})" class="text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>
+                    </div>
+                `;
+                html += `<h4 class="${headerColor} font-black text-[10px] uppercase mb-1">${block.kind}</h4>`;
+
+                if (block.kind === 'estructura') {
+                    const topic = dataLibrary.apuntes[block.ref];
+                    html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
+                    html += `<div class="space-y-2 border-t border-slate-700 pt-3">`;
+                    Object.keys(topic.links).forEach(lKey => {
+                        const isI = block.introducir.includes(lKey);
+                        const isR = block.repasar.includes(lKey);
+                        html += `
+                            <div class="flex items-center justify-between bg-slate-900/50 p-2 rounded">
+                                <span class="text-xs text-slate-300">${topic.links[lKey].title}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="toggleLink(${index}, 'introducir', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isI ? 'bg-emerald-600' : 'bg-slate-700 text-slate-500'}">Intro</button>
+                                    <button onclick="toggleLink(${index}, 'repasar', '${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold uppercase ${isR ? 'bg-blue-600' : 'bg-slate-700 text-slate-500'}">Repaso</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                    html += `<div class="mt-4"><label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Recursos Dashboard (Comas)</label>
+                             <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateResources(${index}, this.value)" class="w-full bg-slate-950 text-blue-300 text-xs p-2 rounded border border-slate-700"></div>`;
+                } else {
+                    html += `<p class="text-white font-bold text-sm">${block.ref}</p>`;
+                }
+
+                div.innerHTML = html;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleLink(blockIdx, arrayKey, linkKey) {
+            const block = activePlan.blocks[blockIdx];
+            const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
+            block[otherKey] = block[otherKey].filter(k => k !== linkKey);
+            if (block[arrayKey].includes(linkKey)) {
+                block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+            } else {
+                block[arrayKey].push(linkKey);
+            }
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function updateResources(index, val) {
+            activePlan.blocks[index].recursos_gramatica = val.split(',').map(s => s.trim()).filter(s => s !== "");
+            updateOutput();
+        }
+
+        function removeBlock(index) {
+            activePlan.blocks.splice(index, 1);
+            renderBlockEditors();
+            updateOutput();
+        }
+
+        function updateOutput() {
+            activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
+            const fecha = document.getElementById('diaFecha').value;
+            if (fecha) activePlan.fecha = fecha; else delete activePlan.fecha;
+            document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('jsonOutput').innerText;
+            navigator.clipboard.writeText(text);
+            const btn = event.target;
+            btn.innerText = "COPIED! ✅";
+            setTimeout(() => btn.innerText = "COPY JSON", 2000);
+        }
+
+        initBuilder();
     </script>
 </body>
 </html>
