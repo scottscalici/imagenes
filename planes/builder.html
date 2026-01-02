@@ -79,218 +79,223 @@
     </div>
 
     <script>
-        let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {}, extras: {} };
-        let activePlan = { dia: 36, blocks: [] };
+    let dataLibrary = { musica: {}, cultura: {}, lectura: {}, conv: {}, apuntes: {}, vocab: {}, extras: {} };
+    let activePlan = { dia: 36, blocks: [] };
 
-        async function initBuilder() {
-            const sources = {
-                musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
-                lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
-                cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
-                conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
-                apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
-                vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
-                extras: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json"
-            };
+    async function initBuilder() {
+        const sources = {
+            musica: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+            lectura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+            cultura: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+            conv: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+            apuntes: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+            vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
+            extras: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json"
+        };
 
-            for (const [key, url] of Object.entries(sources)) {
-                try {
-                    const res = await fetch(url + "?t=" + Date.now());
-                    const json = await res.json();
-                    if (key === 'vocab') {
-                        dataLibrary.vocab = json.descubre2.chapters;
-                        populateDropdown('vocab', dataLibrary.vocab, 'label');
-                    } else if (key === 'apuntes') {
-                        dataLibrary.apuntes = json;
-                        populateDropdown('apuntes', json, 'title');
-                    } else {
-                        dataLibrary[key] = json.items;
-                        createLibraryPicker(key, json.items);
-                    }
-                } catch (e) { console.error("Error loading: " + key, e); }
-            }
-            renderBlockEditors(); // Initial empty state
-        }
-
-        function populateDropdown(id, items, labelKey) {
-            const select = document.getElementById(id + 'Select');
-            select.innerHTML = Object.entries(items).map(([k, v]) => `<option value="${k}">${v[labelKey] || k}</option>`).join('');
-        }
-
-        function createLibraryPicker(type, items) {
-            const container = document.getElementById('libraryPickers');
-            const div = document.createElement('div');
-            const colors = { musica: 'pink-400', lectura: 'orange-400', cultura: 'purple-400', conv: 'cyan-400', extras: 'emerald-400' };
-            const labelColor = colors[type] || 'slate-400';
-
-            div.innerHTML = `
-                <label class="block text-[10px] font-bold text-${labelColor} uppercase mb-1">${type}</label>
-                <div class="flex gap-2 mb-2">
-                    <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
-                        ${Object.entries(items).map(([id, item]) => `<option value="${id}">${item.titulo || id}</option>`).join('')}
-                    </select>
-                    <button onclick="addActivity('${type}')" class="bg-slate-700 hover:bg-slate-600 px-4 rounded font-bold text-xs uppercase">Añadir</button>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-
-        function addGrammarBlock() {
-            const ref = document.getElementById('apuntesSelect').value;
-            const topic = dataLibrary.apuntes[ref];
-            activePlan.blocks.push({
-                kind: "estructura",
-                ref: ref,
-                title: topic.title,
-                introducir: [],
-                repasar: [],
-                recursos_gramatica: [ref]
-            });
-            renderBlockEditors();
-            updateOutput();
-        }
-
-        function addVocabBlock() {
-            const ref = document.getElementById('vocabSelect').value;
-            activePlan.blocks.push({ kind: "vocabulario", ref: ref });
-            renderBlockEditors();
-            updateOutput();
-        }
-
-        function addActivity(type) {
-            const ref = document.getElementById(type + 'Select').value;
-            activePlan.blocks.push({ kind: type, ref: ref });
-            renderBlockEditors();
-            updateOutput();
-        }
-
-        function renderBlockEditors() {
-            const container = document.getElementById('activeBlocks');
-            container.innerHTML = "";
-
-            if (activePlan.blocks.length === 0) {
-                container.innerHTML = `<div class="p-10 border-2 border-dashed border-slate-700 rounded-xl text-center text-slate-500 text-sm">Agrega actividades para verlas aquí</div>`;
-                return;
-            }
-
-            activePlan.blocks.forEach((block, idx) => {
-                const div = document.createElement('div');
-                div.className = "block-card bg-slate-800 p-4 rounded-r-xl relative shadow-lg mb-4 border-l-8";
+        for (const [key, url] of Object.entries(sources)) {
+            try {
+                const res = await fetch(url + "?t=" + Date.now());
+                const json = await res.json();
                 
-                // Color coding
-                const borderColors = { estructura: '#3b82f6', vocabulario: '#f59e0b', musica: '#f472b6', extras: '#10b981' };
-                div.style.borderColor = borderColors[block.kind] || '#475569';
-
-                let html = `
-                    <div class="absolute top-2 right-4 flex gap-3 items-center">
-                        <button onclick="move(${idx},-1)" class="text-slate-500 hover:text-white text-xs font-bold">↑</button>
-                        <button onclick="move(${idx},1)" class="text-slate-500 hover:text-white text-xs font-bold">↓</button>
-                        <button onclick="remove(${idx})" class="text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>
-                    </div>
-                    <h4 class="text-[10px] font-black uppercase mb-1 opacity-50">${block.kind}</h4>
-                `;
-
-                if (block.kind === 'estructura') {
-                    const topic = dataLibrary.apuntes[block.ref];
-                    html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
-                    html += `<div class="space-y-1 bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">`;
-                    
-                    Object.keys(topic.links).forEach(lKey => {
-                        const isI = block.introducir.includes(lKey);
-                        const isR = block.repasar.includes(lKey);
-                        html += `
-                            <div class="flex items-center justify-between py-1 border-b border-slate-800 last:border-0">
-                                <span class="text-xs text-slate-300 font-medium">${topic.links[lKey].title}</span>
-                                <div class="flex gap-1">
-                                    <button onclick="toggleLink(${idx},'introducir','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">INTRO</button>
-                                    <button onclick="toggleLink(${idx},'repasar','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">REPASO</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    html += `</div>`;
-                    html += `
-                        <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Recursos Dashboard (IDs separados por coma)</label>
-                        <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateRes(${idx}, this.value)" 
-                               class="w-full bg-slate-950 text-blue-300 font-mono text-xs p-2 rounded border border-slate-700">
-                    `;
+                if (key === 'vocab') {
+                    dataLibrary.vocab = json.descubre2.chapters;
+                    populateDropdown('vocab', dataLibrary.vocab, 'label');
+                } else if (key === 'apuntes') {
+                    dataLibrary.apuntes = json;
+                    populateDropdown('apuntes', json, 'title');
                 } else {
-                    let displayTitle = block.ref;
-                    if(dataLibrary[block.kind] && dataLibrary[block.kind][block.ref]) {
-                        displayTitle = dataLibrary[block.kind][block.ref].titulo || block.ref;
+                    // Normalize Array data (like extras) into Objects keyed by ID
+                    let itemsData = json.items;
+                    if (Array.isArray(itemsData)) {
+                        const normalized = {};
+                        itemsData.forEach(item => {
+                            normalized[item.id] = item;
+                        });
+                        itemsData = normalized;
                     }
-                    html += `<p class="text-white font-bold text-sm">${displayTitle}</p>`;
-                    html += `<p class="text-[10px] text-slate-500 font-mono mt-1">ID: ${block.ref}</p>`;
+                    dataLibrary[key] = itemsData;
+                    createLibraryPicker(key, itemsData);
                 }
+            } catch (e) { console.error("Error loading: " + key, e); }
+        }
+        renderBlockEditors();
+    }
 
-                div.innerHTML = html;
-                container.appendChild(div);
-            });
+    function populateDropdown(id, items, labelKey) {
+        const select = document.getElementById(id + 'Select');
+        select.innerHTML = Object.entries(items).map(([k, v]) => `<option value="${k}">${v[labelKey] || k}</option>`).join('');
+    }
+
+    function createLibraryPicker(type, items) {
+        const container = document.getElementById('libraryPickers');
+        const div = document.createElement('div');
+        const colors = { musica: 'pink-400', lectura: 'orange-400', cultura: 'purple-400', conv: 'cyan-400', extras: 'emerald-400' };
+        const labelColor = colors[type] || 'slate-400';
+
+        div.innerHTML = `
+            <label class="block text-[10px] font-bold text-${labelColor} uppercase mb-1">${type}</label>
+            <div class="flex gap-2 mb-2">
+                <select id="${type}Select" class="flex-grow bg-slate-900 border border-slate-700 rounded p-2 text-sm">
+                    ${Object.entries(items).map(([id, item]) => {
+                        const name = item.title || item.titulo || id;
+                        return `<option value="${id}">${name}</option>`;
+                    }).join('')}
+                </select>
+                <button onclick="addActivity('${type}')" class="bg-slate-700 hover:bg-slate-600 px-4 rounded font-bold text-xs uppercase">Añadir</button>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function addGrammarBlock() {
+        const ref = document.getElementById('apuntesSelect').value;
+        const topic = dataLibrary.apuntes[ref];
+        activePlan.blocks.push({
+            kind: "estructura",
+            ref: ref,
+            title: topic.title,
+            introducir: [],
+            repasar: [],
+            recursos_gramatica: [ref]
+        });
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function addVocabBlock() {
+        const ref = document.getElementById('vocabSelect').value;
+        activePlan.blocks.push({ kind: "vocabulario", ref: ref });
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function addActivity(type) {
+        const ref = document.getElementById(type + 'Select').value;
+        activePlan.blocks.push({ kind: type, ref: ref });
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function renderBlockEditors() {
+        const container = document.getElementById('activeBlocks');
+        container.innerHTML = "";
+
+        if (activePlan.blocks.length === 0) {
+            container.innerHTML = `<div class="p-10 border-2 border-dashed border-slate-700 rounded-xl text-center text-slate-500 text-sm">Agrega actividades para verlas aquí</div>`;
+            return;
         }
 
-        // Logic Functions
-        function toggleLink(bIdx, arrayKey, linkKey) {
-            const block = activePlan.blocks[bIdx];
-            const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
-            block[otherKey] = block[otherKey].filter(k => k !== linkKey);
-            if (block[arrayKey].includes(linkKey)) {
-                block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+        activePlan.blocks.forEach((block, idx) => {
+            const div = document.createElement('div');
+            div.className = "block-card bg-slate-800 p-4 rounded-r-xl relative shadow-lg mb-4 border-l-8";
+            
+            const borderColors = { estructura: '#3b82f6', vocabulario: '#f59e0b', musica: '#f472b6', extras: '#10b981' };
+            div.style.borderColor = borderColors[block.kind] || '#475569';
+
+            let html = `
+                <div class="absolute top-2 right-4 flex gap-3 items-center">
+                    <button onclick="move(${idx},-1)" class="text-slate-500 hover:text-white text-xs font-bold">↑</button>
+                    <button onclick="move(${idx},1)" class="text-slate-500 hover:text-white text-xs font-bold">↓</button>
+                    <button onclick="remove(${idx})" class="text-slate-500 hover:text-red-500 text-xl font-black">&times;</button>
+                </div>
+                <h4 class="text-[10px] font-black uppercase mb-1 opacity-50">${block.kind}</h4>
+            `;
+
+            if (block.kind === 'estructura') {
+                const topic = dataLibrary.apuntes[block.ref];
+                html += `<p class="font-bold text-white mb-3 text-sm">${topic.title}</p>`;
+                html += `<div class="space-y-1 bg-slate-900/50 p-3 rounded-lg border border-slate-700 mb-4">`;
+                
+                Object.keys(topic.links).forEach(lKey => {
+                    const isI = block.introducir.includes(lKey);
+                    const isR = block.repasar.includes(lKey);
+                    html += `
+                        <div class="flex items-center justify-between py-1 border-b border-slate-800 last:border-0">
+                            <span class="text-xs text-slate-300 font-medium">${topic.links[lKey].title}</span>
+                            <div class="flex gap-1">
+                                <button onclick="toggleLink(${idx},'introducir','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isI ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-500'}">INTRO</button>
+                                <button onclick="toggleLink(${idx},'repasar','${lKey}')" class="text-[9px] px-2 py-1 rounded font-bold transition-colors ${isR ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-500'}">REPASO</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                html += `
+                    <label class="text-[9px] font-bold text-slate-500 uppercase block mb-1">Recursos Dashboard (IDs separados por coma)</label>
+                    <input type="text" value="${block.recursos_gramatica.join(', ')}" onchange="updateRes(${idx}, this.value)" 
+                           class="w-full bg-slate-950 text-blue-300 font-mono text-xs p-2 rounded border border-slate-700">
+                `;
             } else {
-                block[arrayKey].push(linkKey);
+                let displayTitle = block.ref;
+                if(dataLibrary[block.kind] && dataLibrary[block.kind][block.ref]) {
+                    const item = dataLibrary[block.kind][block.ref];
+                    displayTitle = item.title || item.titulo || block.ref;
+                }
+                html += `<p class="text-white font-bold text-sm">${displayTitle}</p>`;
+                html += `<p class="text-[10px] text-slate-500 font-mono mt-1">ID: ${block.ref}</p>`;
             }
-            renderBlockEditors();
-            updateOutput();
-        }
 
-      // This function ensures the input "mandatos, reflexivos" 
-// becomes ["mandatos", "reflexivos"] in the JSON.
-function updateRes(idx, val) {
-    // Split by comma
-    const cleanArray = val.split(',')
-        .map(item => item.trim()) // Remove spaces around words
-        .filter(item => item !== ""); // Remove empty items from trailing commas
-    
-    activePlan.blocks[idx].recursos_gramatica = cleanArray;
-    
-    updateOutput();
-}
+            div.innerHTML = html;
+            container.appendChild(div);
+        });
+    }
+
+    function toggleLink(bIdx, arrayKey, linkKey) {
+        const block = activePlan.blocks[bIdx];
+        const otherKey = arrayKey === 'introducir' ? 'repasar' : 'introducir';
+        block[otherKey] = block[otherKey].filter(k => k !== linkKey);
+        if (block[arrayKey].includes(linkKey)) {
+            block[arrayKey] = block[arrayKey].filter(k => k !== linkKey);
+        } else {
+            block[arrayKey].push(linkKey);
+        }
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function updateRes(idx, val) {
+        const cleanArray = val.split(',').map(item => item.trim()).filter(item => item !== "");
+        activePlan.blocks[idx].recursos_gramatica = cleanArray;
+        updateOutput();
+    }
         
-        function move(idx, dir) {
-            const to = idx + dir;
-            if (to < 0 || to >= activePlan.blocks.length) return;
-            const el = activePlan.blocks.splice(idx, 1)[0];
-            activePlan.blocks.splice(to, 0, el);
+    function move(idx, dir) {
+        const to = idx + dir;
+        if (to < 0 || to >= activePlan.blocks.length) return;
+        const el = activePlan.blocks.splice(idx, 1)[0];
+        activePlan.blocks.splice(to, 0, el);
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function remove(idx) {
+        activePlan.blocks.splice(idx, 1);
+        renderBlockEditors();
+        updateOutput();
+    }
+
+    function updateOutput() {
+        activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
+        const f = document.getElementById('diaFecha').value;
+        if (f) activePlan.fecha = f; else delete activePlan.fecha;
+        document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
+    }
+
+    function resetPlan() {
+        if(confirm("¿Seguro que quieres borrar todo?")) {
+            activePlan.blocks = [];
             renderBlockEditors();
             updateOutput();
         }
+    }
 
-        function remove(idx) {
-            activePlan.blocks.splice(idx, 1);
-            renderBlockEditors();
-            updateOutput();
-        }
+    function copyToClipboard() {
+        navigator.clipboard.writeText(document.getElementById('jsonOutput').innerText);
+        alert("JSON copiado al portapapeles");
+    }
 
-        function updateOutput() {
-            activePlan.dia = parseInt(document.getElementById('diaNum').value) || 0;
-            const f = document.getElementById('diaFecha').value;
-            if (f) activePlan.fecha = f; else delete activePlan.fecha;
-            document.getElementById('jsonOutput').innerText = JSON.stringify(activePlan, null, 4);
-        }
-
-        function resetPlan() {
-            if(confirm("¿Seguro que quieres borrar todo?")) {
-                activePlan.blocks = [];
-                renderBlockEditors();
-                updateOutput();
-            }
-        }
-
-        function copyToClipboard() {
-            navigator.clipboard.writeText(document.getElementById('jsonOutput').innerText);
-            alert("JSON copiado al portapapeles");
-        }
-
-        initBuilder();
-    </script>
+    initBuilder();
+</script>
 </body>
 </html>
