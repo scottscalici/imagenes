@@ -26,7 +26,6 @@
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-      
       <div class="lg:col-span-2 space-y-6">
         <section class="bg-white rounded-xl border-l-[6px] border-emerald-500 p-6 card-shadow">
           <h2 class="text-emerald-600 font-bold text-xl mb-3 flex items-center gap-2"><span>📋</span> Evaluación</h2>
@@ -52,21 +51,14 @@
 
       <div id="tareasColumn" class="space-y-6">
         <div class="bg-blue-50 rounded-xl p-6 shadow-md border-8 border-black">
-          <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2">
-            <span>📝</span> Tareas Pendientes
-          </h3>
+          <h3 class="text-blue-700 font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
           <div id="tareasList" class="space-y-4"></div>
         </div>
 
         <div id="evalSidebarBlock" class="bg-emerald-50 rounded-xl p-6 shadow-md border-8 border-emerald-500">
-          <h3 class="text-emerald-700 font-bold text-lg mb-4 flex items-center gap-2">
-            <span>📅</span> Próximas Pruebas
-          </h3>
+          <h3 class="text-emerald-700 font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Próximas Pruebas</h3>
           <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
-          <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" 
-             class="block text-center py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs hover:bg-emerald-700 transition-colors">
-              Ver calendario completo
-          </a>
+          <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="block text-center py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs hover:bg-emerald-700 transition-colors">Ver calendario completo</a>
         </div>
 
         <div class="bg-slate-50 rounded-xl overflow-hidden shadow-md border-8 border-slate-300 flex flex-col group">
@@ -86,10 +78,8 @@
             <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
             <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             <div id="vocabPlacement"></div>
-
             <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
                 <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
                   <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png" class="max-w-[150px] object-contain">
@@ -99,7 +89,6 @@
                   <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-black transition-colors">Abrir Portal</a>
                 </div>
             </div>
-
             <div class="bg-indigo-900 rounded-xl overflow-hidden shadow-md border border-indigo-700 flex flex-col h-full hover:shadow-lg transition-shadow">
                 <div class="h-32 p-4 bg-white flex items-center justify-center border-b border-indigo-800">
                   <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/IB.png" class="max-w-[120px] object-contain">
@@ -114,9 +103,9 @@
 
     <div class="mt-20 pt-8 border-t border-slate-200 flex justify-center">
       <div class="flex items-center gap-4 text-xs bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-        <label class="font-bold uppercase text-slate-400">Control de Día:</label>
-        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
-        <button onclick="renderManual()" class="bg-slate-800 text-white px-4 py-1 rounded hover:bg-black font-bold uppercase">Cargar Día</button>
+        <label class="font-bold uppercase text-slate-400">Archivo de Clases:</label>
+        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" placeholder="Día #">
+        <button onclick="renderManual()" class="bg-slate-800 text-white px-4 py-1 rounded hover:bg-black font-bold uppercase">Ir al Día</button>
       </div>
     </div>
 </main>
@@ -124,7 +113,6 @@
 <script>
   const CONFIG = {
     COURSE: "s4",
-    CICLO_FILTER: "B", // Set this to "A" or "B" depending on current cycle
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json", 
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
@@ -156,14 +144,14 @@
       const r = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(res => res.json())));
       return { 
         plan: r[0], evals: r[1], cal: r[2], curios: r[3], tareas: r[4], 
-        vocab: r[5], apuntes: r[6], extras: r[7],
-        musica: r[8], lectura: r[9], cultura: r[10], conv: r[11]
+        vocab: r[5], apuntes: r[6], extras: r[7], musica: r[8], lectura: r[9], cultura: r[10], conv: r[11]
       };
     } catch (e) { console.error("Error loading data", e); }
   }
 
   function renderManual() {
     const d = document.getElementById('diaInput').value;
+    if(!d) return;
     window.history.pushState({}, '', `?dia=${d}`);
     init();
   }
@@ -172,39 +160,46 @@ async function init() {
   const data = await loadData();
   if (!data) return;
 
+  // 1. DETERMINE CURRENT "LIVE" DAY FROM CALENDAR
+  const todayStr = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+  
+  // Find the day number for today (checking both cycles A and B)
+  const currentEntry = data.cal?.map?.find(c => c.fecha === todayStr);
+  const liveDia = currentEntry ? parseInt(currentEntry.dia) : 35; // Default to 35 if date not found
+
+  // 2. GET REQUESTED DAY FROM URL
   const params = new URLSearchParams(window.location.search);
-  
-  // 1. AUTOMATIC DATE LOGIC
-  const today = new Date();
-  const offset = today.getTimezoneOffset();
-  const localToday = new Date(today.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
+  let requestedDia = parseInt(params.get('dia')) || liveDia;
 
-  // Match current date to Day Number in JSON
-  const todayEntry = data.cal?.map?.find(c => c.fecha === localToday && c.ciclo === CONFIG.CICLO_FILTER);
-  
-  // Logic: Use URL param if exists, otherwise use calendar today, otherwise fallback to 35
-  let DIA = parseInt(params.get('dia')) || (todayEntry ? parseInt(todayEntry.dia) : 35); 
+  // 3. ANTI-PEEKING LOCK: If requested day is in the future, force back to liveDia
+  if (requestedDia > liveDia) {
+      requestedDia = liveDia;
+      window.history.replaceState({}, '', `?dia=${liveDia}`);
+  }
 
+  const DIA = requestedDia;
   const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-  // Update Header & Date Display
-  const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+  // 4. HEADER: SHOW BOTH A and B DATES
+  const datesForDia = data.cal?.map?.filter(c => c.dia == DIA) || [];
+  const dateString = datesForDia.map(d => formatSpanishDate(d.fecha)).join(' / ') || "Fecha TBD";
+  
   document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-  document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+  document.getElementById('headerDate').textContent = dateString;
 
-  // 2. EVALS
+  // 5. EVALS
   const evalList = data.evals.courses[CONFIG.COURSE] || [];
   const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
   document.getElementById('currentEval').textContent = findEval(DIA);
   document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
   document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}${DIA}`;
 
-  // 3. CURIOSIDAD
+  // 6. CURIOSIDAD
   const curBlock = document.getElementById('curiosityBlock');
   const cur = data.curios.find(c => c.id === `cur-${DIA}`);
   curBlock.innerHTML = cur ? `<article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4"><h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}<p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p></article>` : "";
 
-  // 4. ESTRUCTURA
+  // 7. ESTRUCTURA
   const estBlock = document.getElementById('estructuraBlock');
   estBlock.innerHTML = ""; 
   const grammarBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "estructura");
@@ -223,22 +218,19 @@ async function init() {
     estBlock.innerHTML += `<section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] border-blue-600 p-6 card-shadow mb-6"><div class="flex items-center gap-3 mb-4"><div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${cardLinksHtml}</div></section>`;
   });
 
-  // 5. EXTRAS
+  // 8. EXTRAS
   const extrasBlock = document.getElementById('extrasBlock');
   extrasBlock.innerHTML = "";
   const extraBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "extras");
   extraBlocks.forEach(blockRef => {
     const exItem = data.extras.items.find(i => i.id === blockRef.ref);
     if (exItem) {
-      let content = exItem.kind === "sentences" 
-        ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
-        : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-      
+      let content = exItem.kind === "sentences" ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
       extrasBlock.innerHTML += `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
     }
   });
 
-  // 6. DASHBOARD
+  // 9. DASHBOARD (Grammar & Vocab)
   const grammarGrid = document.getElementById('grammarResources');
   const vocabContainer = document.getElementById('vocabPlacement');
   grammarGrid.innerHTML = "";
@@ -262,7 +254,7 @@ async function init() {
     }
   }
 
-  // 7. TAREAS
+  // 10. TAREAS
   const tList = document.getElementById('tareasList');
   tList.innerHTML = "";
   const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
@@ -271,7 +263,6 @@ async function init() {
     if (t.day_due == DIA) { statusPill = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>'; }
     else if (t.day_assigned == DIA) { statusPill = '<span class="bg-emerald-100 text-emerald-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-emerald-200 uppercase">Nuevo</span>'; }
     else if (t.day_due == DIA + 1) { statusPill = '<span class="bg-amber-100 text-amber-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-amber-200 uppercase">Pronto</span>'; }
-
     tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusPill}</div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-2">${t.titulo}</h4><div class="pt-2 border-t border-slate-50 flex justify-between items-center"><span class="text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</span></div></div>`;
   });
   if (activeTareas.length === 0) { tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>'; }
