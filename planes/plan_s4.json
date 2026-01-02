@@ -69,46 +69,35 @@
                 }
             ]
         },
+{
+    "dia": 36,
+    "blocks": [
         {
-            "dia": 35,
-            "blocks": [
-                {
-                    "kind": "estructura",
-                    "ref": "mandatos",
-                    "title": "Cosas- Los Mandatos",
-                    "introducir": [
-                        "ud_uds"
-                    ],
-                    "repasar": [
-                        "tu_pos",
-                        "tu_neg"
-                    ],
-                    "recursos_gramatica": [
-                        "mandatos",
-                        "reflexivos"
-                    ]
-                },
-                {
-                    "kind": "vocabulario",
-                    "ref": "L2"
-                },
-                {
-                    "kind": "musica",
-                    "ref": "mus-s2-03"
-                },
-                {
-                    "kind": "lectura",
-                    "ref": "lect-s2-01"
-                },
-                {
-                    "kind": "cultura",
-                    "ref": "cultura-s2-01"
-                },
-                {
-                    "kind": "conv",
-                    "ref": "conv-s2-01"
-                },
-                {
+            "kind": "estructura",
+            "ref": "futuro",
+            "title": "Futuro",
+            "introducir": [],
+            "repasar": [
+                "notas_generales"
+            ],
+            "recursos_gramatica": [
+                "futuro",
+                "condicional"
+            ]
+        },
+        {
+            "kind": "estructura",
+            "ref": "condicional",
+            "title": "Condicional",
+            "introducir": [],
+            "repasar": [
+                "notas_generales"
+            ],
+            "recursos_gramatica": [
+                "condicional"
+            ]
+        },
+        {
             "kind": "vocabulario",
             "ref": "L6"
         },
@@ -116,9 +105,9 @@
             "kind": "extras",
             "ref": "extra-d35"
         }
-                
-            ]
-        },
+    ],
+    "fecha": "2025-12-18"
+},
 {
     "dia": 36,
     "blocks": [
