@@ -3,113 +3,117 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Evaluaciones - Español IB</title>
+    <title>Calendario de Evaluaciones</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e2e8f0;
-        }
     </style>
 </head>
 
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
-<main class="max-w-4xl mx-auto px-4 py-12 space-y-8">
+<main class="max-w-3xl mx-auto px-4 py-12 space-y-6">
 
-    <header class="bg-emerald-600 rounded-2xl p-8 text-white shadow-lg flex justify-between items-end">
-      <div>
+    <header class="bg-emerald-600 rounded-2xl p-8 text-white shadow-lg border-b-8 border-emerald-700">
         <h1 class="text-4xl font-black tracking-tight uppercase">Evaluaciones</h1>
-        <p id="courseTitle" class="text-lg italic opacity-90 font-medium">IB Español B II (S4)</p>
-      </div>
-      <div class="text-right">
-        <div class="text-3xl font-bold" id="totalCount">0</div>
-        <div class="text-[10px] uppercase font-black tracking-widest opacity-70">Pruebas Totales</div>
-      </div>
+        <p id="courseTitle" class="text-lg italic opacity-90 font-medium uppercase tracking-wide">IB Español B II (S4)</p>
     </header>
 
-    <div class="flex gap-4 overflow-x-auto pb-2">
-        <span class="flex items-center gap-2 text-xs font-bold uppercase text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
-            <span class="w-3 h-3 rounded-full bg-emerald-500"></span> Próxima
+    <div class="flex gap-4 px-2">
+        <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Próximas
         </span>
-        <span class="flex items-center gap-2 text-xs font-bold uppercase text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
-            <span class="w-3 h-3 rounded-full bg-slate-300"></span> Pasada
+        <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-300"></span> Pasadas
         </span>
     </div>
 
-    <div id="evalTimeline" class="relative space-y-8 timeline-line pl-12 pr-4">
+    <div id="evalContainer" class="space-y-4">
         </div>
 
 </main>
 
 <script>
   const CONFIG = {
-    COURSE: "s4", // Change to "s2" for Sophomores
+    COURSE: "s4",
     EVALS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
-    // We get current day from URL or default to 1 (for testing display)
+    CAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
     CURRENT_DAY: parseInt(new URLSearchParams(window.location.search).get('dia')) || 35 
   };
 
+  // Helper to format a single date string
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  }
+
   async function init() {
     try {
-      const response = await fetch(CONFIG.EVALS_URL + "?t=" + Date.now());
-      const data = await response.json();
-      const rawEvals = data.courses[CONFIG.COURSE] || [];
+      const [evalRes, calRes] = await Promise.all([
+        fetch(CONFIG.EVALS_URL + "?t=" + Date.now()),
+        fetch(CONFIG.CAL_URL + "?t=" + Date.now())
+      ]);
       
-      // Sort evaluations by day
+      const evalData = await evalRes.json();
+      const calData = await calRes.json();
+      
+      const rawEvals = evalData.courses[CONFIG.COURSE] || [];
+      const calendarMap = calData.map || [];
+
       const sortedEvals = rawEvals.sort((a, b) => a.dia - b.dia);
-      
-      document.getElementById('totalCount').textContent = sortedEvals.length;
-      renderTimeline(sortedEvals);
+      renderEvals(sortedEvals, calendarMap);
     } catch (e) {
-      console.error("Error loading evaluations", e);
+      console.error("Error loading data", e);
     }
   }
 
-  function renderTimeline(evals) {
-    const container = document.getElementById('evalTimeline');
+  function renderEvals(evals, calendar) {
+    const container = document.getElementById('evalContainer');
     container.innerHTML = "";
 
     evals.forEach(ev => {
+      // 1. FILTER CALENDAR FOR ALL MATCHING DAYS (A & B Days)
+      const matchingDays = calendar.filter(c => c.dia == ev.dia);
+      
+      // 2. FORMAT MULTIPLE DATES
+      let fechaDisplay = "Fecha por determinar";
+      if (matchingDays.length > 0) {
+          const formattedDates = [...new Set(matchingDays.map(d => formatDate(d.fecha)))];
+          if (formattedDates.length > 1) {
+              fechaDisplay = formattedDates.slice(0, -1).join(', ') + ' y ' + formattedDates.slice(-1);
+          } else {
+              fechaDisplay = formattedDates[0];
+          }
+      }
+
       const isPast = ev.dia < CONFIG.CURRENT_DAY;
       const isToday = ev.dia === CONFIG.CURRENT_DAY;
-      const isUpcoming = ev.dia > CONFIG.CURRENT_DAY && ev.dia <= CONFIG.CURRENT_DAY + 5;
+      const isPronto = ev.dia > CONFIG.CURRENT_DAY && ev.dia <= CONFIG.CURRENT_DAY + 2;
 
-      // Card Styling based on status
-      let dotColor = "bg-slate-300";
-      let borderColor = "border-slate-200";
-      let titleColor = "text-slate-700";
-      let opacity = "opacity-100";
+      let cardStyle = "bg-white border-slate-200 opacity-100";
+      let dateColor = "text-emerald-600";
+      let pill = "";
 
-      if (isToday || isUpcoming) {
-        dotColor = "bg-emerald-500 ring-4 ring-emerald-100";
-        borderColor = "border-emerald-500 border-l-[6px]";
-        titleColor = "text-emerald-700";
+      if (isToday) {
+        cardStyle = "bg-white border-emerald-500 border-l-[8px] shadow-md ring-2 ring-emerald-50";
+        pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse">¡HOY!</span>';
+      } else if (isPronto) {
+        cardStyle = "bg-white border-emerald-400 border-l-[8px] shadow-sm";
+        pill = '<span class="bg-emerald-100 text-emerald-700 text-[10px] font-black px-2 py-1 rounded">PRONTO</span>';
       } else if (isPast) {
-        opacity = "opacity-60";
+        cardStyle = "bg-slate-50 border-slate-200 opacity-60";
+        dateColor = "text-slate-400";
       }
 
       container.innerHTML += `
-        <div class="relative transition-all hover:scale-[1.01] ${opacity}">
-          <div class="absolute -left-[52px] top-6 w-10 h-10 rounded-full ${dotColor} flex items-center justify-center border-4 border-slate-50 z-10">
-             <span class="text-white text-[10px] font-black">${ev.dia}</span>
+        <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
+          <div class="flex items-center gap-3 mb-2">
+              <span class="text-[10px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-2 py-0.5 rounded">Día ${ev.dia}</span>
+              ${pill}
           </div>
-
-          <div class="bg-white rounded-xl border ${borderColor} p-6 shadow-sm">
-            <div class="flex justify-between items-start mb-2">
-              <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Día ${ev.dia}</span>
-              ${isToday ? '<span class="bg-red-100 text-red-600 text-[10px] font-black px-2 py-1 rounded">HOY</span>' : ''}
-              ${isUpcoming ? '<span class="bg-emerald-100 text-emerald-600 text-[10px] font-black px-2 py-1 rounded">PRONTO</span>' : ''}
-            </div>
-            <h3 class="text-xl font-bold ${titleColor} mb-2">${ev.label}</h3>
-            <p class="text-sm text-slate-500 italic">Preparen los materiales correspondientes para esta evaluación.</p>
-          </div>
+          <h3 class="text-2xl font-extrabold text-slate-900 leading-tight mb-1">${ev.label}</h3>
+          <p class="${dateColor} text-sm font-bold uppercase tracking-tight">${fechaDisplay}</p>
         </div>
       `;
     });
