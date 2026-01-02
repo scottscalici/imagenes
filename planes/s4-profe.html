@@ -217,16 +217,35 @@
       estBlock.innerHTML += `<section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] border-blue-600 p-6 card-shadow mb-6"><div class="flex items-center gap-3 mb-4"><div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${cardLinksHtml}</div></section>`;
     });
 
-    // 5. EXTRAS
+// 5. EXTRAS (Supports multiple extras in one day)
     const extrasBlock = document.getElementById('extrasBlock');
     extrasBlock.innerHTML = "";
-    const exRef = todayPlan?.blocks?.find(b => b.kind === "extras")?.ref;
-    const exItem = data.extras.items.find(i => i.id === exRef);
-    if (exItem) {
-      let content = exItem.kind === "sentences" ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-      extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
-    }
 
+    // We use .filter() instead of .find() to get all blocks marked as 'extras'
+    const extraBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "extras");
+
+    extraBlocks.forEach(blockRef => {
+      const exItem = data.extras.items.find(i => i.id === blockRef.ref);
+      if (exItem) {
+        let content = exItem.kind === "sentences" 
+          ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
+          : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+        
+        // Append instead of overwrite (+=)
+        extrasBlock.innerHTML += `
+          <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
+            <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2">
+              <span>✨</span> ${exItem.title}
+            </h2>
+            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+              ${content}
+            </div>
+          </section>`;
+      }
+    });
+
+
+      
     // 6. DASHBOARD (Multi-Block Grammar & Descubre 3 Vocab)
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
