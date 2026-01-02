@@ -252,18 +252,40 @@
       }
     }
 
-    // 7. TAREAS
+  // 7. TAREAS (Restored Nouveau & Pronto Pills)
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
+    
     const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+    
     activeTareas.forEach(t => {
-      const isHoy = (t.day_due == DIA);
-      const lbl = isHoy ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
-      tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${lbl}</div><h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4></div>`;
-    });
-    if (activeTareas.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
-  }
+      let statusPill = "";
+      
+      if (t.day_due == DIA) {
+        // Due Today
+        statusPill = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>';
+      } else if (t.day_assigned == DIA) {
+        // Assigned Today
+        statusPill = '<span class="bg-emerald-100 text-emerald-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-emerald-200 uppercase">Nuevo</span>';
+      } else if (t.day_due == DIA + 1) {
+        // Due Tomorrow
+        statusPill = '<span class="bg-amber-100 text-amber-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-amber-200 uppercase">Pronto</span>';
+      } else {
+        // Standard Future Due Date
+        statusPill = `<span class="bg-slate-100 text-slate-600 font-extrabold text-[10px] px-2 py-1 rounded-md border border-slate-200 uppercase">Día ${t.day_due}</span>`;
+      }
 
+      tList.innerHTML += `
+        <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
+            ${statusPill}
+          </div>
+          <h4 class="font-bold text-slate-800 text-sm leading-tight">${t.titulo}</h4>
+        </div>`;
+    });
+    
+    if (activeTareas.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
   init();
 </script>
 </body>
