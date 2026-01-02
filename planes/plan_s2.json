@@ -143,42 +143,40 @@
     "dia": 37,
     "blocks": [
         {
+            "kind": "extras",
+            "ref": "extra-s2-d36"
+        },
+        {
             "kind": "estructura",
             "ref": "mandatos",
             "title": "Los Mandatos",
-            "introducir": [],
-            "repasar": [
-                "tu_pos",
-                "tu_neg",
+            "introducir": [
                 "ud_uds"
             ],
+            "repasar": [
+                "tu_pos",
+                "tu_neg"
+            ],
             "recursos_gramatica": [
+                "mandatos"
+            ]
+        },
+        {
+            "kind": "estructura",
+            "ref": "objetos",
+            "title": "Objetos",
+            "introducir": [],
+            "repasar": [],
+            "recursos_gramatica": [
+                "objetos",
                 "mandatos"
             ]
         },
         {
             "kind": "vocabulario",
             "ref": "L3"
-        },
-        {
-            "kind": "extras",
-            "ref": "2"
-        },
-        {
-            "kind": "estructura",
-            "ref": "subjuntivo",
-            "title": "Presente de subjuntivo",
-            "introducir": [
-                "conjugaciones"
-            ],
-            "repasar": [],
-            "recursos_gramatica": [
-                "subjuntivo",
-                "mandatos"
-            ]
         }
-    ],
-    "fecha": "2026-01-08"
+    ]
 }
     ]
 }
