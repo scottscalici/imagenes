@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Evaluaciones - Español 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+<main class="max-w-3xl mx-auto px-4 py-12 space-y-6">
+
+    <header class="bg-indigo-600 rounded-2xl p-8 text-white shadow-lg border-b-8 border-indigo-700">
+        <h1 class="text-4xl font-black tracking-tight uppercase">Evaluaciones</h1>
+        <p id="courseTitle" class="text-lg italic opacity-90 font-medium uppercase tracking-wide">Español 2 (S2)</p>
+    </header>
+
+    <div class="flex gap-4 px-2">
+        <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Próximas
+        </span>
+        <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-slate-300"></span> Pasadas
+        </span>
+    </div>
+
+    <div id="evalContainer" class="space-y-4">
+        </div>
+
+</main>
+
+<script>
+  const CONFIG = {
+    COURSE: "s2", // Configured for Sophomores
+    EVALS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+    CAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+    CURRENT_DAY: parseInt(new URLSearchParams(window.location.search).get('dia')) || 35 
+  };
+
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+  }
+
+  async function init() {
+    try {
+      const [evalRes, calRes] = await Promise.all([
+        fetch(CONFIG.EVALS_URL + "?t=" + Date.now()),
+        fetch(CONFIG.CAL_URL + "?t=" + Date.now())
+      ]);
+      
+      const evalData = await evalRes.json();
+      const calData = await calRes.json();
+      
+      const rawEvals = evalData.courses[CONFIG.COURSE] || [];
+      const calendarMap = calData.map || [];
+
+      const sortedEvals = rawEvals.sort((a, b) => a.dia - b.dia);
+      renderEvals(sortedEvals, calendarMap);
+    } catch (e) {
+      console.error("Error loading data", e);
+    }
+  }
+
+  function renderEvals(evals, calendar) {
+    const container = document.getElementById('evalContainer');
+    container.innerHTML = "";
+
+    evals.forEach(ev => {
+      const matchingDays = calendar.filter(c => c.dia == ev.dia);
+      
+      let fechaDisplay = "Fecha por determinar";
+      if (matchingDays.length > 0) {
+          const formattedDates = [...new Set(matchingDays.map(d => formatDate(d.fecha)))];
+          if (formattedDates.length > 1) {
+              fechaDisplay = formattedDates.slice(0, -1).join(', ') + ' y ' + formattedDates.slice(-1);
+          } else {
+              fechaDisplay = formattedDates[0];
+          }
+      }
+
+      const isPast = ev.dia < CONFIG.CURRENT_DAY;
+      const isToday = ev.dia === CONFIG.CURRENT_DAY;
+      const isPronto = ev.dia > CONFIG.CURRENT_DAY && ev.dia <= CONFIG.CURRENT_DAY + 2;
+
+      let cardStyle = "bg-white border-slate-200 opacity-100";
+      let dateColor = "text-indigo-600";
+      let pill = "";
+
+      if (isToday) {
+        cardStyle = "bg-white border-indigo-500 border-l-[8px] shadow-md ring-2 ring-indigo-50";
+        pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse">¡HOY!</span>';
+      } else if (isPronto) {
+        cardStyle = "bg-white border-indigo-400 border-l-[8px] shadow-sm";
+        pill = '<span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-1 rounded">PRONTO</span>';
+      } else if (isPast) {
+        cardStyle = "bg-slate-50 border-slate-200 opacity-60";
+        dateColor = "text-slate-400";
+      }
+
+      container.innerHTML += `
+        <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
+          <div class="flex items-center gap-3 mb-2">
+              <span class="text-[10px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-2 py-0.5 rounded">Día ${ev.dia}</span>
+              ${pill}
+          </div>
+          <h3 class="text-2xl font-extrabold text-slate-900 leading-tight mb-1">${ev.label}</h3>
+          <p class="${dateColor} text-sm font-bold uppercase tracking-tight">${fechaDisplay}</p>
+        </div>
+      `;
+    });
+  }
+
+  init();
+</script>
+</body>
+</html>
