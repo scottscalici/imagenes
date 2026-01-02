@@ -243,12 +243,38 @@
       grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow"><h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2"><span class="text-xl">⚙️</span> ${parentSet.title}</h3><div class="flex flex-col gap-1">${linksHtml}</div></div>`;
     });
 
-    const vBlock = todayPlan?.blocks?.find(b => b.kind === "vocabulario");
-    const ch = vBlock ? (data.vocab.descubre2?.chapters[vBlock.ref] || data.vocab.ib?.chapters[vBlock.ref]) : null;
-    if (ch) {
-      vocabContainer.innerHTML = `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow"><div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a></div></div></div>`;
-    }
+const vBlock = todayPlan?.blocks?.find(b => b.kind === "vocabulario");
+    
+    if (vBlock) {
+      let ch = null;
+      
+      // Select the correct book based on the COURSE constant
+      if (CONFIG.COURSE === "s4") {
+        ch = data.vocab.descubre3?.chapters[vBlock.ref];
+      } else {
+        ch = data.vocab.descubre2?.chapters[vBlock.ref];
+      }
 
+      // Fallback: check IB section if not found in Descubre
+      if (!ch) {
+        ch = data.vocab.ib?.chapters[vBlock.ref];
+      }
+
+      if (ch) {
+        vocabContainer.innerHTML = `
+          <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+            <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div>
+            <div class="p-5 flex flex-col flex-grow justify-between">
+              <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
+              <div class="flex gap-2">
+                <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
+                <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
+              </div>
+            </div>
+          </div>`;
+      }
+    }
+      
     // 7. TAREAS
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
