@@ -35,12 +35,14 @@
 
 <script>
   const CONFIG = {
-    COURSE: "s2", // Configured for Sophomores
+    COURSE: "s2", 
     EVALS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+    // Get current day from URL or default to 35
     CURRENT_DAY: parseInt(new URLSearchParams(window.location.search).get('dia')) || 35 
   };
 
+  // Format: "6 de enero"
   function formatDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
@@ -60,7 +62,9 @@
       const rawEvals = evalData.courses[CONFIG.COURSE] || [];
       const calendarMap = calData.map || [];
 
+      // Sort evaluations chronologically by day
       const sortedEvals = rawEvals.sort((a, b) => a.dia - b.dia);
+      
       renderEvals(sortedEvals, calendarMap);
     } catch (e) {
       console.error("Error loading data", e);
@@ -72,17 +76,11 @@
     container.innerHTML = "";
 
     evals.forEach(ev => {
+      // LOGIC: Filter for the day, then take the LAST entry (The B Day date)
       const matchingDays = calendar.filter(c => c.dia == ev.dia);
+      const calEntry = matchingDays.length > 0 ? matchingDays[matchingDays.length - 1] : null;
       
-      let fechaDisplay = "Fecha por determinar";
-      if (matchingDays.length > 0) {
-          const formattedDates = [...new Set(matchingDays.map(d => formatDate(d.fecha)))];
-          if (formattedDates.length > 1) {
-              fechaDisplay = formattedDates.slice(0, -1).join(', ') + ' y ' + formattedDates.slice(-1);
-          } else {
-              fechaDisplay = formattedDates[0];
-          }
-      }
+      const fechaDisplay = calEntry ? formatDate(calEntry.fecha) : "Fecha por determinar";
 
       const isPast = ev.dia < CONFIG.CURRENT_DAY;
       const isToday = ev.dia === CONFIG.CURRENT_DAY;
@@ -93,11 +91,11 @@
       let pill = "";
 
       if (isToday) {
-        cardStyle = "bg-white border-indigo-500 border-l-[8px] shadow-md ring-2 ring-indigo-50";
-        pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse">¡HOY!</span>';
+        cardStyle = "bg-white border-indigo-600 border-l-[8px] shadow-md ring-2 ring-indigo-50";
+        pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
       } else if (isPronto) {
         cardStyle = "bg-white border-indigo-400 border-l-[8px] shadow-sm";
-        pill = '<span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-1 rounded">PRONTO</span>';
+        pill = '<span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-1 rounded uppercase tracking-tight">Pronto</span>';
       } else if (isPast) {
         cardStyle = "bg-slate-50 border-slate-200 opacity-60";
         dateColor = "text-slate-400";
@@ -110,7 +108,9 @@
               ${pill}
           </div>
           <h3 class="text-2xl font-extrabold text-slate-900 leading-tight mb-1">${ev.label}</h3>
-          <p class="${dateColor} text-sm font-bold uppercase tracking-tight">${fechaDisplay}</p>
+          <p class="${dateColor} text-sm font-bold uppercase tracking-tight italic">
+            ${fechaDisplay}
+          </p>
         </div>
       `;
     });
