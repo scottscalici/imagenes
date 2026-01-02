@@ -36,13 +36,16 @@
 <script>
   const CONFIG = {
     COURSE: "s2", 
+    CICLO: "B", 
     EVALS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
-    CAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
-    // Get current day from URL or default to 35
-    CURRENT_DAY: parseInt(new URLSearchParams(window.location.search).get('dia')) || 35 
+    CAL_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json"
   };
 
-  // Format: "6 de enero"
+  function getTodayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
   function formatDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
@@ -61,59 +64,76 @@
       
       const rawEvals = evalData.courses[CONFIG.COURSE] || [];
       const calendarMap = calData.map || [];
+      const todayStr = getTodayStr();
 
-      // Sort evaluations chronologically by day
-      const sortedEvals = rawEvals.sort((a, b) => a.dia - b.dia);
-      
-      renderEvals(sortedEvals, calendarMap);
+      // Find the most recent Day that has already happened or is happening today
+      const pastOrTodayEntries = calendarMap.filter(c => c.ciclo === CONFIG.CICLO && c.fecha <= todayStr);
+      const MASTER_DAY = pastOrTodayEntries.length > 0 
+        ? Math.max(...pastOrTodayEntries.map(e => e.dia)) 
+        : 0;
+
+      const container = document.getElementById('evalContainer');
+      container.innerHTML = "";
+
+      // Counter to track how many future pills we've given out
+      let futurePillCount = 0;
+
+      // Sort and Render
+      rawEvals.sort((a, b) => a.dia - b.dia).forEach(ev => {
+        const calEntry = calendarMap.find(c => c.dia == ev.dia && c.ciclo === CONFIG.CICLO);
+        const fechaDisplay = calEntry ? formatDate(calEntry.fecha) : "Fecha por determinar";
+        const evalDateStr = calEntry ? calEntry.fecha : null;
+
+        let cardStyle = "bg-white border-slate-200 opacity-100";
+        let dateColor = "text-indigo-600";
+        let pill = "";
+
+        if (evalDateStr === todayStr) {
+          // 1. EXACTLY TODAY
+          cardStyle = "bg-white border-red-500 border-l-[8px] shadow-md ring-2 ring-red-50";
+          pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
+        } else if (ev.dia === MASTER_DAY && evalDateStr < todayStr) {
+          // 2. MOST RECENT (ALREADY PASSED)
+          cardStyle = "bg-white border-slate-300 border-l-[8px]";
+          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Reciente</span>';
+        } else if (ev.dia > MASTER_DAY || (ev.dia === MASTER_DAY && evalDateStr > todayStr)) {
+          // 3. FUTURE DAYS
+          futurePillCount++;
+          
+          if (futurePillCount === 1) {
+            // The VERY NEXT one
+            cardStyle = "bg-white border-indigo-600 border-l-[8px] shadow-sm";
+            pill = '<span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-tight">Próximo</span>';
+          } else if (futurePillCount === 2) {
+            // The one AFTER the next
+            cardStyle = "bg-white border-indigo-300 border-l-[8px]";
+            pill = '<span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded uppercase border border-indigo-100">Pronto</span>';
+          } else {
+            // All other future ones (No pill)
+            cardStyle = "bg-white border-slate-200";
+          }
+        } else {
+          // 4. OLD PAST
+          cardStyle = "bg-slate-50 border-slate-200 opacity-60";
+          dateColor = "text-slate-400";
+        }
+
+        container.innerHTML += `
+          <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="text-[10px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-2 py-0.5 rounded">Día ${ev.dia}</span>
+                ${pill}
+            </div>
+            <h3 class="text-2xl font-extrabold text-slate-900 leading-tight mb-1">${ev.label}</h3>
+            <p class="${dateColor} text-sm font-bold uppercase tracking-tight italic">
+              ${fechaDisplay}
+            </p>
+          </div>
+        `;
+      });
     } catch (e) {
       console.error("Error loading data", e);
     }
-  }
-
-  function renderEvals(evals, calendar) {
-    const container = document.getElementById('evalContainer');
-    container.innerHTML = "";
-
-    evals.forEach(ev => {
-      // LOGIC: Filter for the day, then take the LAST entry (The B Day date)
-      const matchingDays = calendar.filter(c => c.dia == ev.dia);
-      const calEntry = matchingDays.length > 0 ? matchingDays[matchingDays.length - 1] : null;
-      
-      const fechaDisplay = calEntry ? formatDate(calEntry.fecha) : "Fecha por determinar";
-
-      const isPast = ev.dia < CONFIG.CURRENT_DAY;
-      const isToday = ev.dia === CONFIG.CURRENT_DAY;
-      const isPronto = ev.dia > CONFIG.CURRENT_DAY && ev.dia <= CONFIG.CURRENT_DAY + 2;
-
-      let cardStyle = "bg-white border-slate-200 opacity-100";
-      let dateColor = "text-indigo-600";
-      let pill = "";
-
-      if (isToday) {
-        cardStyle = "bg-white border-indigo-600 border-l-[8px] shadow-md ring-2 ring-indigo-50";
-        pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
-      } else if (isPronto) {
-        cardStyle = "bg-white border-indigo-400 border-l-[8px] shadow-sm";
-        pill = '<span class="bg-indigo-100 text-indigo-700 text-[10px] font-black px-2 py-1 rounded uppercase tracking-tight">Pronto</span>';
-      } else if (isPast) {
-        cardStyle = "bg-slate-50 border-slate-200 opacity-60";
-        dateColor = "text-slate-400";
-      }
-
-      container.innerHTML += `
-        <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
-          <div class="flex items-center gap-3 mb-2">
-              <span class="text-[10px] font-black uppercase tracking-tighter bg-slate-100 text-slate-500 px-2 py-0.5 rounded">Día ${ev.dia}</span>
-              ${pill}
-          </div>
-          <h3 class="text-2xl font-extrabold text-slate-900 leading-tight mb-1">${ev.label}</h3>
-          <p class="${dateColor} text-sm font-bold uppercase tracking-tight italic">
-            ${fechaDisplay}
-          </p>
-        </div>
-      `;
-    });
   }
 
   init();
