@@ -166,32 +166,62 @@
     init();
   }
 
-  async function init() {
+async function init() {
     const data = await loadData();
     if (!data) return;
 
+    // --- START TIME GATE LOGIC ---
+    const now = new Date();
+    // Use the filter to only look at days that have actually happened or are happening today
+    const allowedEntries = data.cal.map.filter(entry => {
+      if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
+      const entryDate = new Date(entry.fecha + "T00:00:00");
+      return entryDate <= now; 
+    });
+
+    // Find the absolute maximum day number allowed right now
+    const maxAllowedDia = allowedEntries.length > 0 
+      ? Math.max(...allowedEntries.map(e => e.dia)) 
+      : 1; // Fallback to Day 1 if nothing matches
+
     const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 35; 
+    let requestedDia = parseInt(params.get('dia'));
+    
+    let DIA;
+    if (!requestedDia) {
+      // If no day is requested, always show the most recent lesson
+      DIA = maxAllowedDia;
+    } else if (requestedDia > maxAllowedDia) {
+      // If they try to look ahead, force them back to the current day
+      DIA = maxAllowedDia;
+      console.warn("Intento de acceso a día futuro bloqueado.");
+      // Optional: Update the URL so it matches what they see
+      window.history.replaceState({}, '', `?dia=${DIA}`);
+    } else {
+      // If they request a past day, that's fine!
+      DIA = requestedDia;
+    }
+    // --- END TIME GATE LOGIC ---
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-    // 1. DATE LOGIC
-    const calendarEntries = data.cal?.map?.filter(c => c.dia == DIA);
-    if (calendarEntries && calendarEntries.length > 0) {
-        const datesFormatted = [...new Set(calendarEntries.map(e => formatSpanishDate(e.fecha)))];
-        const dateText = datesFormatted.length > 1 ? datesFormatted.slice(0, -1).join(', ') + ' y ' + datesFormatted.slice(-1) : datesFormatted[0];
-        document.getElementById('headerDate').textContent = dateText;
-    } else {
-        document.getElementById('headerDate').textContent = "Fecha TBD";
-    }
+    // 1. HEADER & CALENDAR
+    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-    // 2. EVALS
+    // 2. EVALS (Optional: Filter these too if you don't want them to see future test labels)
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+    const findEval = (d) => {
+        // Only show the label if that day is also <= maxAllowedDia
+        if (d > maxAllowedDia + 5) return "Próximamente"; // Hide labels too far in future
+        return (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+    };
+    
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
-    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}${DIA}`;
+    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
 
     // 3. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
