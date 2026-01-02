@@ -166,26 +166,31 @@
     init();
   }
 
-  async function init() {
-    const data = await loadData();
-    if (!data) return;
+async function init() {
+  const data = await loadData();
+  if (!data) return;
 
-    const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 35; 
+  const params = new URLSearchParams(window.location.search);
+  
+  // 1. AUTOMATIC DATE LOGIC
+  // Get today's date in YYYY-MM-DD format (local time)
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const localToday = new Date(today.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
+
+  // Look for today's entry in your calendar map
+  const todayEntry = data.cal?.map?.find(c => c.fecha === localToday && c.ciclo === CONFIG.CICLO_FILTER);
+  
+  // Set DIA: Priority is 1. URL (?dia=) 2. Today's Calendar 3. Fallback to 35
+  let DIA = parseInt(params.get('dia')) || (todayEntry ? parseInt(todayEntry.dia) : 35); 
+
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
     // 1. DATE LOGIC
-    const calendarEntries = data.cal?.map?.filter(c => c.dia == DIA);
-    if (calendarEntries && calendarEntries.length > 0) {
-        const datesFormatted = [...new Set(calendarEntries.map(e => formatSpanishDate(e.fecha)))];
-        const dateText = datesFormatted.length > 1 ? datesFormatted.slice(0, -1).join(', ') + ' y ' + datesFormatted.slice(-1) : datesFormatted[0];
-        document.getElementById('headerDate').textContent = dateText;
-    } else {
-        document.getElementById('headerDate').textContent = "Fecha TBD";
-    }
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-
+const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+  document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+  document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
     // 2. EVALS
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
