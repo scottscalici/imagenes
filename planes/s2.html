@@ -171,63 +171,32 @@
     init();
   }
 
-  async function init() {
-    const data = await loadData();
-    if (!data) return;
+  // 1. AUTOMATIC DATE LOGIC
+  // Get today's date in YYYY-MM-DD format (local time)
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const localToday = new Date(today.getTime() - (offset * 60 * 1000)).toISOString().split('T')[0];
 
-    // --- START TIME GATE LOGIC ---
-    const now = new Date();
-    // Use the filter to only look at days that have actually happened or are happening today
-    const allowedEntries = data.cal.map.filter(entry => {
-      if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
-      const entryDate = new Date(entry.fecha + "T00:00:00");
-      return entryDate <= now; 
-    });
-
-    // Find the absolute maximum day number allowed right now
-    const maxAllowedDia = allowedEntries.length > 0 
-      ? Math.max(...allowedEntries.map(e => e.dia)) 
-      : 1; // Fallback to Day 1 if nothing matches
-
-    const params = new URLSearchParams(window.location.search);
-    let requestedDia = parseInt(params.get('dia'));
-    
-    let DIA;
-    if (!requestedDia) {
-      // If no day is requested, always show the most recent lesson
-      DIA = maxAllowedDia;
-    } else if (requestedDia > maxAllowedDia) {
-      // If they try to look ahead, force them back to the current day
-      DIA = maxAllowedDia;
-      console.warn("Intento de acceso a día futuro bloqueado.");
-      // Optional: Update the URL so it matches what they see
-      window.history.replaceState({}, '', `?dia=${DIA}`);
-    } else {
-      // If they request a past day, that's fine!
-      DIA = requestedDia;
-    }
-    // --- END TIME GATE LOGIC ---
+  // Look for today's entry in your calendar map
+  const todayEntry = data.cal?.map?.find(c => c.fecha === localToday && c.ciclo === CONFIG.CICLO_FILTER);
+  
+  // Set DIA: Priority is 1. URL (?dia=) 2. Today's Calendar 3. Fallback to 35
+  let DIA = parseInt(params.get('dia')) || (todayEntry ? parseInt(todayEntry.dia) : 35); 
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
     // 1. HEADER & CALENDAR
-    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
-
-    // 2. EVALS (Optional: Filter these too if you don't want them to see future test labels)
+const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+  document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+  document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+      
+    // 2. EVALS
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => {
-        // Only show the label if that day is also <= maxAllowedDia
-        if (d > maxAllowedDia + 5) return "Próximamente"; // Hide labels too far in future
-        return (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
-    };
-    
+    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
     document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
 
-    // ... (The rest of your rendering code remains exactly the same)
     // 3. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
     const cur = data.curios.find(c => c.id === `cur-${DIA}`);
@@ -275,7 +244,7 @@
       }
     });
     
-   // 5. EXTRAS (Supports multiple extras in one day)
+  // 5. EXTRAS (Supports multiple extras in one day)
     const extrasBlock = document.getElementById('extrasBlock');
     extrasBlock.innerHTML = "";
 
@@ -301,7 +270,6 @@
           </section>`;
       }
     });
-
     
     // 5.5 NEW ACTIVITIES (Detecting and rendering from specialized JSONs)
     const activityTypes = ["musica", "cultura", "lectura", "conv"];
@@ -387,7 +355,7 @@
         </div>`;
     }
     
-  // 7. TAREAS (Date + Status Restoration)
+   // 7. TAREAS (Date + Status Restoration)
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
     
