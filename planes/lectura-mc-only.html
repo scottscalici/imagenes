@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plataforma de Lectura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .correct-highlight {
+      background-color: #dcfce7 !important;
+      border-color: #22c55e !important;
+      font-weight: 800;
+      color: #166534;
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    
+    <header class="bg-orange-500 rounded-xl p-6 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-md">
+      <div>
+        <h1 id="pageTitle" class="text-3xl font-extrabold tracking-tight">Cargando...</h1>
+        <p id="pageSubtitle" class="text-white/90 italic mt-1"></p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div id="teacherBadge" class="hidden bg-black/20 px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest">Modo Maestro</div>
+        <button id="toggleViewBtn" class="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest">Vista: Stack</button>
+      </div>
+    </header>
+
+    <section id="layoutRoot" class="grid grid-cols-1 gap-6 items-start">
+      <article class="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <h2 class="font-black text-xl mb-4 flex items-center gap-2"><span>📖</span> Texto</h2>
+        <div id="texto" class="space-y-4 text-slate-800 leading-relaxed text-lg"></div>
+      </article>
+
+      <article class="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+        <h2 class="font-black text-xl mb-4 flex items-center gap-2"><span>✅</span> Preguntas</h2>
+        <div id="statusTimer" class="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-100 text-sm font-bold text-orange-700 text-center"></div>
+        <div id="qa" class="space-y-8"></div>
+      </article>
+    </section>
+
+  </main>
+
+  <script>
+    const biblioteca = {
+      "sergio": {
+        "titulo": "Carta para Sergio",
+        "subtitulo": "Uso de las redes sociales.",
+        "texto": [
+          "Hola, Sergio:",
+          "Ayer completé los 800 contactos en mi red social...",
+          "Espero tu respuesta.",
+          "Julia"
+        ],
+        "preguntas": [
+          { "q": "¿Por qué cree Julia que Sergio podrá responder a sus preguntas?", "opts": ["Porque él tiene más de 2000 contactos", "Porque él sabe mucho sobre las redes sociales", "Porque él es el más popular en la escuela", "Porque él es muy sociable"], "correcta": 3 },
+          { "q": "Según la carta, ¿cuál de las siguientes afirmaciones refleja mejor la situación de Julia en la red?", "opts": ["Aún no ha cumplido su objetivo.", "Ya ha cumplido su objetivo.", "Ha perdido la competencia con sus compañeros.", "Solo tiene a sus compañeros de escuela como contactos."], "correcta": 1 },
+          { "q": "Según la carta, ¿por qué aceptan Julia y sus compañeros a desconocidos como contactos en la red social?", "opts": ["Porque tienen intereses comunes", "Porque quieren conocer a personas interesantes", "Porque quieren ser populares", "Porque quien tenga más contactos ganará un premio"], "correcta": 2 },
+          { "q": "¿A qué se refiere Julia cuando escribe “Sobre las redes sociales se dicen muchas cosas, pero yo he hecho buenos amigos a través de mi página.”?", "opts": ["A que hay muchas opiniones sobre las redes, pero su experiencia es positiva", "A que muchas personas hablan sobre las redes sin estar bien informadas", "A que ella está en desacuerdo con la mayoría de cosas que se dicen sobre las redes", "A que ella siempre habla sobre las redes con sus amigos"], "correcta": 0 },
+          { "q": "Según la carta, ¿cuál es uno de los beneficios que Julia ha obtenido por participar en la red?", "opts": ["Se ha vuelto fanática del rock.", "Ha descubierto grupos musicales que le gustan.", "Ha conocido grupos de personas buenísimas.", "Se ha vuelto muy popular en la escuela."], "correcta": 1 },
+          { "q": "¿Cuál de las siguientes afirmaciones describe mejor la opinión de Julia sobre la mayoría de sus contactos en la red?", "opts": ["Son fanáticos del rock.", "No son personas reales.", "No son realmente sus amigos.", "Son sus mejores amigos."], "correcta": 2 },
+          { "q": "¿Cuál de las siguientes afirmaciones describe mejor el tono general de la carta?", "opts": ["Es una carta formal.", "Es una carta de agradecimiento.", "Es una carta melancólica.", "Es una carta informal."], "correcta": 3 }
+        ],
+        "minutos": 5
+      }
+    };
+
+    const activeID = "sergio"; 
+    const isTeacher = window.location.hash === "#teacher"; // CHECK FOR #teacher in URL
+
+    const $ = (id) => document.getElementById(id);
+    const item = biblioteca[activeID];
+    
+    // Timer Logic
+    const storageKey = `timer_${activeID}`;
+    let revealAt;
+
+    if (isTeacher || item.minutos === 0) {
+        revealAt = Date.now(); // Available instantly
+        $("teacherBadge").classList.remove("hidden");
+    } else {
+        let saved = localStorage.getItem(storageKey);
+        if (!saved) {
+            revealAt = Date.now() + (item.minutos * 60 * 1000);
+            localStorage.setItem(storageKey, revealAt);
+        } else {
+            revealAt = parseInt(saved);
+        }
+    }
+
+    function init() {
+      $("pageTitle").textContent = item.titulo;
+      $("pageSubtitle").textContent = item.subtitulo;
+      $("texto").innerHTML = item.texto.map(p => `<p>${p}</p>`).join("");
+      renderQuestions();
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    function renderQuestions() {
+      $("qa").innerHTML = item.preguntas.map((qObj, idx) => `
+        <div class="p-5 rounded-xl border border-slate-200 bg-slate-50 space-y-4">
+          <div class="font-bold text-slate-900 text-lg">${idx + 1}. ${qObj.q}</div>
+          <div id="options-${idx}" class="space-y-2">
+            ${qObj.opts.map((opt, i) => `<div id="q${idx}-opt${i}" class="p-3 rounded-lg border border-slate-200 bg-white text-sm transition-all">${opt}</div>`).join("")}
+          </div>
+          <button id="btn-${idx}" onclick="revealAnswer(${idx}, ${qObj.correcta})" class="hidden w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs uppercase tracking-widest transition-colors">
+            Mostrar Respuesta
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function updateTimer() {
+      const msLeft = revealAt - Date.now();
+      const isTimeUp = msLeft <= 0;
+      
+      if (!isTimeUp) {
+        const m = Math.floor(msLeft / 60000);
+        const s = Math.floor((msLeft % 60000) / 1000);
+        $("statusTimer").textContent = `⏳ Respuestas disponibles en ${m}:${s.toString().padStart(2, '0')}`;
+      } else {
+        $("statusTimer").textContent = isTeacher ? "🔓 Estás en modo Maestro. Respuestas desbloqueadas." : "✅ ¡Tiempo cumplido! Ya puedes revisar tus respuestas.";
+        $("statusTimer").className = "mb-6 p-4 bg-green-100 rounded-lg border border-green-200 text-sm font-bold text-green-800 text-center";
+        item.preguntas.forEach((_, idx) => {
+          const btn = $(`btn-${idx}`);
+          if (btn) btn.classList.remove("hidden");
+        });
+      }
+    }
+
+    window.revealAnswer = function(qIdx, correctIdx) {
+      $(`q${qIdx}-opt${correctIdx}`).classList.add("correct-highlight");
+      $(`btn-${qIdx}`).style.display = 'none';
+    };
+
+    $("toggleViewBtn").addEventListener("click", () => {
+      $("layoutRoot").classList.toggle("lg:grid-cols-2");
+      $("toggleViewBtn").textContent = $("layoutRoot").classList.contains("lg:grid-cols-2") ? "Vista: IB" : "Vista: Stack";
+    });
+
+    init();
+  </script>
+</body>
+</html>
