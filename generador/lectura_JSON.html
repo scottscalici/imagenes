@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lectura JSON Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    textarea { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-6xl mx-auto p-6 space-y-6">
+    <header class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+      <h1 class="text-3xl font-black tracking-tight">Lectura JSON Generator</h1>
+      <p class="text-slate-600 mt-2">
+        Generates a single <span class="mono">items["id"]</span> entry that matches your current renderer, plus optional fields for future upgrades.
+      </p>
+    </header>
+
+    <!-- META -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-xl font-black">1) Metadata</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Curso</label>
+          <select id="curso" class="mt-1 w-full border rounded-lg p-2">
+            <option value="s2">s2</option>
+            <option value="s4">s4</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Slug (rosalia / redes-sociales)</label>
+          <input id="slug" class="mt-1 w-full border rounded-lg p-2" placeholder="rosalia" />
+          <p class="text-xs text-slate-500 mt-1">Used to build ID + URL path.</p>
+        </div>
+
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">ID preview</label>
+          <div id="idPreview" class="mt-1 w-full border rounded-lg p-2 bg-slate-50 mono"></div>
+          <p class="text-xs text-slate-500 mt-1">Format: <span class="mono">lectura-s4-rosalia</span></p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Título</label>
+          <input id="titulo" class="mt-1 w-full border rounded-lg p-2" placeholder="Rosalía" />
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Tag</label>
+          <input id="tag" class="mt-1 w-full border rounded-lg p-2" placeholder="España" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Subtítulo</label>
+          <input id="subtitulo" class="mt-1 w-full border rounded-lg p-2" value="Lectura 📕" />
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">URL base (auto builds: base + /ID)</label>
+          <input id="urlBase" class="mt-1 w-full border rounded-lg p-2" value="https://sites.google.com/view/srscalici/lecturas" />
+          <p class="text-xs text-slate-500 mt-1">Final URL will be: <span class="mono">/lectura-sX-slug</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGES -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-xl font-black">2) Images (optional)</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Imagen principal (top)</label>
+          <input id="imgMain" class="mt-1 w-full border rounded-lg p-2" placeholder="https://raw.githubusercontent.com/.../image.jpg" />
+          <p class="text-xs text-slate-500 mt-1">Will also populate legacy <span class="mono">imagen</span> so your current renderer keeps working.</p>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Imagen extra (bottom, above questions)</label>
+          <input id="imgExtra" class="mt-1 w-full border rounded-lg p-2" placeholder="https://raw.githubusercontent.com/.../graphic.jpg" />
+        </div>
+      </div>
+    </section>
+
+    <!-- TEXT -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-xl font-black">3) Reading text</h2>
+      <p class="text-slate-600">
+        Paste text. Paragraphs split on <b>blank lines</b>. Lines starting with <span class="mono">-</span> are kept as separate bullet lines.
+      </p>
+      <textarea id="textoRaw" rows="12" class="w-full border rounded-xl p-3" placeholder="Pega aquí el texto..."></textarea>
+
+      <div class="flex items-center gap-3">
+        <button id="previewTextBtn" class="px-4 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-black">Preview parsed lines</button>
+        <span id="textCount" class="text-sm text-slate-500"></span>
+      </div>
+
+      <div id="textPreview" class="hidden border rounded-xl p-4 bg-slate-50">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Parsed output (contenido.texto)</div>
+        <ol id="textPreviewList" class="list-decimal pl-5 space-y-1 text-sm"></ol>
+      </div>
+    </section>
+
+    <!-- REVEAL -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-xl font-black">4) Answer reveal settings</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Modo</label>
+          <select id="revealMode" class="mt-1 w-full border rounded-lg p-2">
+            <option value="blur">blur (answers hidden until time passes)</option>
+            <option value="none">none (never show answers)</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Minutos (0 = immediate)</label>
+          <input id="revealMinutes" type="number" min="0" class="mt-1 w-full border rounded-lg p-2" value="5" />
+        </div>
+        <div class="flex items-end gap-2">
+          <label class="flex items-center gap-2 text-sm">
+            <input id="revealPersist" type="checkbox" class="w-4 h-4" checked />
+            Persistir (store unlock in localStorage)
+          </label>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500">
+        Your renderer enforces this. Generator only writes the <span class="mono">contenido.revelado</span> config.
+      </p>
+    </section>
+
+    <!-- QUESTIONS -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-black">5) Questions</h2>
+          <p class="text-slate-600">Add questions. Options can be pasted as lines; correct answers selected via radio/checkbox.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="short">+ Short answer</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="abierta">+ Open-ended</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="mc">+ MC (single)</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="ms">+ MC (multi)</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="vf">+ True/False</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="matching">+ Matching</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="cloze">+ Fill in blanks</button>
+          <button class="qAdd px-3 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700" data-type="ordering">+ Ordering</button>
+        </div>
+      </div>
+
+      <div id="questionList" class="space-y-4"></div>
+    </section>
+
+    <!-- OUTPUT -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <h2 class="text-xl font-black">6) Output</h2>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <label class="flex items-center gap-2 text-sm">
+          <input id="wrapMode" type="checkbox" class="w-4 h-4" />
+          Wrap as full file (<span class="mono">{ "items": { ... } }</span>)
+        </label>
+
+        <label class="flex items-center gap-2 text-sm">
+          <input id="trailingComma" type="checkbox" class="w-4 h-4" checked />
+          Add trailing comma after entry (for easy paste into master)
+        </label>
+
+        <button id="buildBtn" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700">Build JSON</button>
+        <button id="copyBtn" class="px-4 py-2 bg-slate-900 text-white rounded-lg font-bold hover:bg-black">Copy to clipboard</button>
+        <span id="copyStatus" class="text-sm text-slate-500"></span>
+      </div>
+
+      <textarea id="output" rows="16" class="w-full border rounded-xl p-3 mono" placeholder="JSON output appears here..."></textarea>
+    </section>
+
+    <footer class="text-xs text-slate-500 pb-10">
+      Tip: If you want zero surprises, keep schema stable:
+      <span class="mono">imagen</span> (legacy) + <span class="mono">imagen_principal</span> (new).
+    </footer>
+  </div>
+
+<script>
+  // ---------- helpers ----------
+  const el = (id) => document.getElementById(id);
+  const escapeHTML = (s) => (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function slugify(raw) {
+    return (raw || "")
+      .trim()
+      .toLowerCase()
+      .replace(/['"]/g, "")
+      .replace(/[^a-z0-9áéíóúüñ\- ]/gi, "")
+      .replace(/\s+/g, "-")
+      .replace(/\-+/g, "-");
+  }
+
+  function buildId() {
+    const curso = el("curso").value;
+    const slug = slugify(el("slug").value);
+    const id = `lectura-${curso}-${slug || "sin-slug"}`;
+    el("idPreview").textContent = id;
+    return id;
+  }
+
+  function buildUrl(id) {
+    const base = (el("urlBase").value || "").replace(/\/+$/, "");
+    return `${base}/${id}`;
+  }
+
+  // Parse text into array of "lines" your renderer expects
+  // Rules:
+  // - paragraphs split on blank lines => become one string per paragraph (internal line breaks collapsed)
+  // - bullet lines starting with "-" => each bullet line becomes its own string
+  function parseTexto(raw) {
+    const text = (raw || "").replace(/\r\n/g, "\n").trim();
+    if (!text) return [];
+
+    const blocks = text.split(/\n\s*\n/g); // blank-line separated blocks
+    const out = [];
+
+    for (const block of blocks) {
+      const lines = block.split("\n").map(l => l.trim()).filter(Boolean);
+      if (!lines.length) continue;
+
+      // If the block is "mostly bullets", keep each bullet line
+      const bulletLines = lines.filter(l => l.startsWith("-"));
+      if (bulletLines.length === lines.length) {
+        bulletLines.forEach(l => out.push(l));
+        continue;
+      }
+
+      // Mixed: keep bullet lines separate, collapse non-bullets into paragraph
+      const nonBullets = [];
+      for (const l of lines) {
+        if (l.startsWith("-")) {
+          if (nonBullets.length) {
+            out.push(nonBullets.join(" "));
+            nonBullets.length = 0;
+          }
+          out.push(l);
+        } else {
+          nonBullets.push(l);
+        }
+      }
+      if (nonBullets.length) out.push(nonBullets.join(" "));
+    }
+    return out;
+  }
+
+  // ---------- question UI builders ----------
+  let qCounter = 0;
+
+  function qShell(typeLabel, type) {
+    qCounter += 1;
+    const id = `q-${Date.now()}-${qCounter}`;
+    const wrapper = document.createElement("div");
+    wrapper.className = "border rounded-2xl p-4 bg-slate-50";
+    wrapper.dataset.qid = id;
+    wrapper.dataset.qtype = type;
+
+    wrapper.innerHTML = `
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="text-[10px] font-black uppercase tracking-widest text-slate-500">${escapeHTML(typeLabel)}</div>
+          <div class="text-sm text-slate-600">Question #${qCounter}</div>
+        </div>
+        <button class="removeQ px-3 py-1 rounded-lg bg-white border font-bold text-xs hover:bg-red-50 hover:border-red-200 hover:text-red-700">Remove</button>
+      </div>
+
+      <div class="mt-3">
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Pregunta</label>
+        <input class="qPrompt mt-1 w-full border rounded-lg p-2" placeholder="Escribe la pregunta..." />
+      </div>
+
+      <div class="qBody mt-3"></div>
+    `;
+
+    wrapper.querySelector(".removeQ").addEventListener("click", () => wrapper.remove());
+    return wrapper;
+  }
+
+  function buildOptionsEditor({ multi=false } = {}) {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Opciones (1 por línea)</label>
+      <textarea class="qOptions mt-1 w-full border rounded-xl p-3" rows="5" placeholder="Opción 1&#10;Opción 2&#10;Opción 3&#10;Opción 4"></textarea>
+      <div class="mt-2 flex items-center justify-between">
+        <button class="parseOptions px-3 py-2 rounded-lg bg-white border font-bold text-xs hover:bg-slate-100">Parse options</button>
+        <span class="text-xs text-slate-500">Select correct ${multi ? "answers" : "answer"} below.</span>
+      </div>
+      <div class="qOptionPick mt-3 space-y-2"></div>
+      <div class="mt-3">
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Explicación (optional)</label>
+        <input class="qExplain mt-1 w-full border rounded-lg p-2" placeholder="(optional)" />
+      </div>
+    `;
+
+    const textarea = div.querySelector(".qOptions");
+    const pick = div.querySelector(".qOptionPick");
+
+    function renderPick() {
+      const opts = textarea.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      pick.innerHTML = "";
+      opts.forEach((opt, idx) => {
+        const row = document.createElement("label");
+        row.className = "flex items-center gap-3 bg-white border rounded-lg p-2";
+        row.innerHTML = `
+          <input type="${multi ? "checkbox" : "radio"}" name="correctPick" class="w-4 h-4" data-idx="${idx+1}">
+          <span class="text-sm">${escapeHTML(opt)}</span>
+        `;
+        pick.appendChild(row);
+      });
+    }
+    div.querySelector(".parseOptions").addEventListener("click", renderPick);
+
+    return div;
+  }
+
+  function addQuestion(type) {
+    const list = el("questionList");
+    let node;
+
+    if (type === "short") {
+      node = qShell("Short answer", "short");
+      node.querySelector(".qBody").innerHTML = `
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Respuesta (model answer)</label>
+        <textarea class="qAnswer mt-1 w-full border rounded-xl p-3" rows="3" placeholder="Respuesta..."></textarea>
+      `;
+    }
+
+    if (type === "abierta") {
+      node = qShell("Open-ended", "abierta");
+      node.querySelector(".qBody").innerHTML = `
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Respuesta sugerida</label>
+        <textarea class="qAnswer mt-1 w-full border rounded-xl p-3" rows="3" placeholder="Respuesta..."></textarea>
+      `;
+    }
+
+    if (type === "mc") {
+      node = qShell("Multiple choice (single)", "mc");
+      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi:false }));
+    }
+
+    if (type === "ms") {
+      node = qShell("Multiple choice (multi-select)", "ms");
+      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi:true }));
+    }
+
+    if (type === "vf") {
+      node = qShell("True / False (optional justification)", "vf");
+      node.querySelector(".qBody").innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Correcta</label>
+            <select class="qTF mt-1 w-full border rounded-lg p-2">
+              <option value="true">Verdadero</option>
+              <option value="false">Falso</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Justificación (optional)</label>
+            <input class="qJust mt-1 w-full border rounded-lg p-2" placeholder="Si lo dejas vacío, no se exige." />
+          </div>
+        </div>
+      `;
+    }
+
+    if (type === "matching") {
+      node = qShell("Matching (M prompts, N options)", "matching");
+      node.querySelector(".qBody").innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Prompts (1 por línea)</label>
+            <textarea class="qPrompts mt-1 w-full border rounded-xl p-3" rows="6" placeholder="1) ...&#10;2) ..."></textarea>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Options (1 por línea, can be more than prompts)</label>
+            <textarea class="qOptions mt-1 w-full border rounded-xl p-3" rows="6" placeholder="A) ...&#10;B) ...&#10;C) ..."></textarea>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Answer key (1 per prompt, e.g. 1=A, 2=C)</label>
+          <textarea class="qKey mt-1 w-full border rounded-xl p-3" rows="3" placeholder="1=A&#10;2=C&#10;3=B"></textarea>
+          <p class="text-xs text-slate-500 mt-1">Renderer can display prompts + shuffled options; key is for answer reveal.</p>
+        </div>
+      `;
+    }
+
+    if (type === "cloze") {
+      node = qShell("Fill in the blank (cloze)", "cloze");
+      node.querySelector(".qBody").innerHTML = `
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Texto con huecos (use ____ for blanks)</label>
+        <textarea class="qClozeText mt-1 w-full border rounded-xl p-3" rows="4" placeholder="Julia ____ 800 contactos porque ____ popular."></textarea>
+
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500 mt-3 block">Respuestas (1 por línea, in order)</label>
+        <textarea class="qClozeAnswers mt-1 w-full border rounded-xl p-3" rows="3" placeholder="tenía&#10;quería ser"></textarea>
+      `;
+    }
+
+    if (type === "ordering") {
+      node = qShell("Ordering", "ordering");
+      node.querySelector(".qBody").innerHTML = `
+        <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Items to order (1 por línea)</label>
+        <textarea class="qOrderItems mt-1 w-full border rounded-xl p-3" rows="5" placeholder="Primero...&#10;Luego...&#10;Después..."></textarea>
+        <p class="text-xs text-slate-500 mt-1">Correct order is the line order you paste (since you’re not auto-grading).</p>
+      `;
+    }
+
+    list.appendChild(node);
+  }
+
+  // ---------- build JSON ----------
+  function buildJSON() {
+    const id = buildId();
+    const titulo = el("titulo").value || "";
+    const subtitulo = el("subtitulo").value || "Lectura 📕";
+    const tag = el("tag").value || "";
+    const url = buildUrl(id);
+
+    const imgMain = el("imgMain").value.trim();
+    const imgExtra = el("imgExtra").value.trim();
+
+    const texto = parseTexto(el("textoRaw").value);
+
+    const revelado = {
+      modo: el("revealMode").value,
+      minutos: Number(el("revealMinutes").value || 0),
+      persistir: !!el("revealPersist").checked
+    };
+
+    // questions
+    const preguntas = [];
+    const qNodes = Array.from(document.querySelectorAll("#questionList [data-qid]"));
+
+    qNodes.forEach((qEl) => {
+      const tipo = qEl.dataset.qtype;
+      const prompt = qEl.querySelector(".qPrompt")?.value?.trim() || "";
+
+      if (!prompt) return; // skip empty prompts
+
+      if (tipo === "short" || tipo === "abierta") {
+        preguntas.push({
+          tipo,
+          pregunta: prompt,
+          respuesta: qEl.querySelector(".qAnswer")?.value?.trim() || ""
+        });
+      }
+
+      if (tipo === "mc") {
+        const opts = (qEl.querySelector(".qOptions")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const checked = qEl.querySelector('.qOptionPick input[type="radio"]:checked');
+        const correcta = checked ? Number(checked.dataset.idx) : 0; // 1-based
+        preguntas.push({
+          tipo: "mc",
+          pregunta: prompt,
+          opciones: opts,
+          correcta,
+          explicacion: qEl.querySelector(".qExplain")?.value?.trim() || ""
+        });
+      }
+
+      if (tipo === "ms") {
+        const opts = (qEl.querySelector(".qOptions")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const checked = Array.from(qEl.querySelectorAll('.qOptionPick input[type="checkbox"]:checked'))
+          .map(i => Number(i.dataset.idx));
+        preguntas.push({
+          tipo: "ms",
+          pregunta: prompt,
+          opciones: opts,
+          correctas: checked,
+          explicacion: qEl.querySelector(".qExplain")?.value?.trim() || ""
+        });
+      }
+
+      if (tipo === "vf") {
+        const val = qEl.querySelector(".qTF")?.value === "true";
+        preguntas.push({
+          tipo: "vf",
+          pregunta: prompt,
+          correcta: val,
+          justificacion: qEl.querySelector(".qJust")?.value?.trim() || ""
+        });
+      }
+
+      if (tipo === "matching") {
+        const prompts = (qEl.querySelector(".qPrompts")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const options = (qEl.querySelector(".qOptions")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const keyLines = (qEl.querySelector(".qKey")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+
+        // Parse key like "1=A"
+        const key = {};
+        keyLines.forEach(line => {
+          const m = line.match(/^(\d+)\s*=\s*([A-Za-z]|\d+)$/);
+          if (!m) return;
+          key[m[1]] = m[2].toUpperCase();
+        });
+
+        preguntas.push({
+          tipo: "matching",
+          pregunta: prompt,
+          prompts,
+          opciones: options,
+          clave: key
+        });
+      }
+
+      if (tipo === "cloze") {
+        const cText = qEl.querySelector(".qClozeText")?.value?.trim() || "";
+        const answers = (qEl.querySelector(".qClozeAnswers")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        preguntas.push({
+          tipo: "cloze",
+          pregunta: prompt,
+          texto: cText,
+          respuestas: answers
+        });
+      }
+
+      if (tipo === "ordering") {
+        const items = (qEl.querySelector(".qOrderItems")?.value || "").split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        preguntas.push({
+          tipo: "ordering",
+          pregunta: prompt,
+          items,
+          orden_correcto: items // explicit, even if same
+        });
+      }
+    });
+
+    // Entry: keep your current keys + add new image fields
+    const entry = {
+      titulo,
+      subtitulo,
+      // legacy field for current renderer
+      ...(imgMain ? { imagen: imgMain } : {}),
+      url,
+      tag,
+      // new fields for your upgraded renderer (won't break current)
+      ...(imgMain ? { imagen_principal: imgMain } : {}),
+      ...(imgExtra ? { imagen_extra: imgExtra } : {}),
+      contenido: {
+        texto,
+        ...(imgExtra ? { imagen_extra: imgExtra } : {}), // handy if your renderer expects it inside contenido
+        preguntas,
+        revelado
+      }
+    };
+
+    const wrap = !!el("wrapMode").checked;
+    const comma = !!el("trailingComma").checked;
+
+    let out;
+    if (wrap) {
+      out = { items: { [id]: entry } };
+      el("output").value = JSON.stringify(out, null, 2);
+    } else {
+      // Just the single entry line to paste into master "items"
+      const obj = { [id]: entry };
+      let s = JSON.stringify(obj, null, 2);
+      // strip outer braces
+      s = s.trim();
+      if (s.startsWith("{")) s = s.slice(1);
+      if (s.endsWith("}")) s = s.slice(0, -1);
+      s = s.trim();
+      if (comma && !s.endsWith(",")) s = s + ",";
+      el("output").value = s + "\n";
+    }
+  }
+
+  async function copyOut() {
+    const txt = el("output").value || "";
+    if (!txt.trim()) return;
+    try {
+      await navigator.clipboard.writeText(txt);
+      el("copyStatus").textContent = "Copied ✅";
+      setTimeout(() => el("copyStatus").textContent = "", 1500);
+    } catch {
+      el("copyStatus").textContent = "Copy failed (browser restrictions). Select + copy manually.";
+    }
+  }
+
+  // ---------- events ----------
+  el("curso").addEventListener("change", buildId);
+  el("slug").addEventListener("input", buildId);
+  buildId();
+
+  document.querySelectorAll(".qAdd").forEach(btn => {
+    btn.addEventListener("click", () => addQuestion(btn.dataset.type));
+  });
+
+  el("previewTextBtn").addEventListener("click", () => {
+    const arr = parseTexto(el("textoRaw").value);
+    el("textCount").textContent = `${arr.length} líneas`;
+    el("textPreview").classList.remove("hidden");
+    const list = el("textPreviewList");
+    list.innerHTML = arr.map(s => `<li>${escapeHTML(s)}</li>`).join("");
+  });
+
+  el("buildBtn").addEventListener("click", buildJSON);
+  el("copyBtn").addEventListener("click", copyOut);
+</script>
+</body>
+</html>
