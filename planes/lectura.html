@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lectura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+
+    /* Blur container uses CSS var so we can animate gradually */
+    .blurred {
+      filter: blur(var(--blur, 14px));
+      opacity: var(--op, 0.75);
+      transition: filter 600ms linear, opacity 600ms linear;
+      pointer-events: none; /* prevents copying while blurred (not bulletproof, but helps) */
+      user-select: none;
+    }
+    .unblurred {
+      filter: none;
+      opacity: 1;
+      pointer-events: auto;
+      user-select: text;
+      transition: filter 300ms linear, opacity 300ms linear;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- Header -->
+    <header class="bg-orange-500 rounded-xl p-6 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-md">
+      <div>
+        <h1 id="pageTitle" class="text-3xl sm:text-4xl font-extrabold tracking-tight">Lectura</h1>
+        <p id="pageSubtitle" class="text-white/90 italic font-medium mt-1"></p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="tagPill" class="hidden sm:inline text-xs font-black uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full"></span>
+        <button id="toggleViewBtn" class="bg-white/15 hover:bg-white/25 transition-colors px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest">
+          Vista: Stack
+        </button>
+      </div>
+    </header>
+
+    <!-- Image -->
+    <section id="imageWrap" class="bg-white rounded-xl card-shadow overflow-hidden hidden">
+      <img id="heroImg" alt="" class="w-full max-h-[360px] object-cover">
+    </section>
+
+    <!-- Status / Timer -->
+    <section id="statusCard" class="bg-white rounded-xl p-5 card-shadow border-l-[6px] border-orange-500 hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 class="font-black text-slate-900">Respuestas</h2>
+          <p id="statusText" class="text-slate-600 text-sm"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="countdownPill" class="text-[11px] font-black uppercase tracking-widest bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100 hidden"></span>
+          <button id="resetBtn" class="text-[11px] font-black uppercase tracking-widest bg-slate-100 hover:bg-slate-200 transition-colors px-3 py-2 rounded-lg hidden">
+            Reiniciar
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main layout container (we'll swap classes for IB view) -->
+    <section id="layoutRoot" class="grid grid-cols-1 gap-6 items-start">
+
+      <!-- Left: Text -->
+      <article class="bg-white rounded-xl p-6 card-shadow">
+        <h2 class="text-slate-900 font-black text-xl mb-4 flex items-center gap-2">
+          <span>📖</span> Texto
+        </h2>
+        <div id="texto" class="space-y-4 text-slate-800 leading-relaxed"></div>
+      </article>
+
+      <!-- Right: Questions + Answers -->
+      <article class="bg-white rounded-xl p-6 card-shadow">
+        <div class="flex items-center justify-between gap-3 mb-4">
+          <h2 class="text-slate-900 font-black text-xl flex items-center gap-2">
+            <span>✅</span> Preguntas
+          </h2>
+        </div>
+
+        <div id="qa" class="space-y-4"></div>
+      </article>
+
+    </section>
+
+    <!-- Error -->
+    <section id="errorCard" class="bg-white rounded-xl p-6 card-shadow border-l-[6px] border-red-500 hidden">
+      <h2 class="text-red-600 font-black text-xl mb-2">No se pudo cargar la lectura</h2>
+      <p id="errorMsg" class="text-slate-700"></p>
+    </section>
+
+    <footer class="pt-10 pb-10 text-center text-xs text-slate-400">
+      <span id="debugLine" class="hidden"></span>
+    </footer>
+  </main>
+
+  <script>
+    // ==== CONFIG ====
+    const LECTURA_JSON_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json";
+
+    // ==== Helpers ====
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(window.location.search);
+
+    function fmtMMSS(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return `${m}:${String(r).padStart(2, "0")}`;
+    }
+
+    function safeText(s) {
+      return (s ?? "").toString();
+    }
+
+    function setError(msg) {
+      $("errorMsg").textContent = msg;
+      $("errorCard").classList.remove("hidden");
+    }
+
+    function getLocalStorageKey(id) {
+      return `lectura_${id}_revealAt`;
+    }
+
+    function getViewKey(id) {
+      return `lectura_${id}_view`;
+    }
+
+    // Progressive blur mapping: remaining fraction -> blur px & opacity
+    function applyProgressiveBlur(el, fracRemaining) {
+      // fracRemaining: 1 = just started, 0 = fully revealed
+      const blur = 14 * fracRemaining;         // max blur 14px
+      const op = 0.75 + (0.25 * (1 - fracRemaining)); // 0.75 -> 1.0
+      el.style.setProperty("--blur", `${blur.toFixed(2)}px`);
+      el.style.setProperty("--op", `${op.toFixed(2)}`);
+    }
+
+    function setIBView(isIB) {
+      const root = $("layoutRoot");
+      const btn = $("toggleViewBtn");
+      if (isIB) {
+        // Side-by-side on large screens
+        root.className = "grid grid-cols-1 lg:grid-cols-2 gap-6 items-start";
+        btn.textContent = "Vista: IB";
+      } else {
+        // Stacked
+        root.className = "grid grid-cols-1 gap-6 items-start";
+        btn.textContent = "Vista: Stack";
+      }
+    }
+
+    async function fetchLectura() {
+      const res = await fetch(LECTURA_JSON_URL + "?t=" + Date.now());
+      if (!res.ok) throw new Error("No se pudo descargar lectura.json");
+      return await res.json();
+    }
+
+    function renderTexto(textoArr) {
+      const wrap = $("texto");
+      wrap.innerHTML = "";
+
+      (textoArr || []).forEach(p => {
+        const div = document.createElement("p");
+        div.textContent = safeText(p);
+        wrap.appendChild(div);
+      });
+
+      if (!textoArr || textoArr.length === 0) {
+        wrap.innerHTML = `<p class="text-slate-500 italic">No hay texto configurado para esta lectura.</p>`;
+      }
+    }
+
+    function renderQA(preguntas, revealConfig, state) {
+      // state: { isRevealed, fracRemaining }
+      const wrap = $("qa");
+      wrap.innerHTML = "";
+
+      (preguntas || []).forEach((qa, idx) => {
+        const q = safeText(qa.pregunta || qa.q || qa.question);
+        const a = safeText(qa.respuesta || qa.a || qa.answer);
+
+        const card = document.createElement("div");
+        card.className = "rounded-xl border border-slate-200 overflow-hidden";
+
+        const qHtml = `
+          <div class="p-4 bg-slate-50 border-b border-slate-200">
+            <div class="text-[11px] font-black uppercase tracking-widest text-slate-400">Pregunta ${idx + 1}</div>
+            <div class="text-slate-900 font-bold mt-1">${q}</div>
+          </div>
+        `;
+
+        // Two answer modes:
+        // - blur: show answer block blurred until revealed
+        // - toggle: use <details> but optionally lock it until timer ends
+        const modo = revealConfig?.modo || "blur";
+
+        let aBlock = "";
+
+        if (modo === "toggle") {
+          const lockUntil = !!revealConfig?.lock_toggle_until_reveal;
+          const isLocked = lockUntil && !state.isRevealed;
+
+          aBlock = `
+            <div class="p-4">
+              <details ${isLocked ? "data-locked='1'" : ""} class="group">
+                <summary class="cursor-pointer select-none font-black text-sm text-blue-700 hover:text-blue-900 flex items-center justify-between">
+                  Ver respuesta
+                  <span class="text-slate-400 group-open:rotate-180 transition-transform">▾</span>
+                </summary>
+                <div class="mt-3 p-3 rounded-lg border border-slate-200 bg-white text-slate-800">
+                  ${a ? a.replaceAll("<", "&lt;").replaceAll(">", "&gt;") : "<span class='text-slate-400 italic'>Sin respuesta</span>"}
+                </div>
+              </details>
+
+              ${isLocked ? `<div class="mt-2 text-xs text-slate-400 italic">Disponible cuando termine el tiempo.</div>` : ""}
+            </div>
+          `;
+        } else {
+          // default = blur
+          const blurClass = state.isRevealed ? "unblurred" : "blurred";
+          aBlock = `
+            <div class="p-4">
+              <div class="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Respuesta</div>
+              <div class="${blurClass} p-3 rounded-lg border border-slate-200 bg-white text-slate-800" data-answer="1">
+                ${a ? a.replaceAll("<", "&lt;").replaceAll(">", "&gt;") : "<span class='text-slate-400 italic'>Sin respuesta</span>"}
+              </div>
+            </div>
+          `;
+        }
+
+        card.innerHTML = qHtml + aBlock;
+        wrap.appendChild(card);
+      });
+
+      if (!preguntas || preguntas.length === 0) {
+        wrap.innerHTML = `<p class="text-slate-500 italic">No hay preguntas configuradas para esta lectura.</p>`;
+      }
+
+      // If blur mode and not revealed, apply progressive blur style to each answer block
+      if ((revealConfig?.modo || "blur") !== "toggle") {
+        const blocks = wrap.querySelectorAll("[data-answer='1']");
+        blocks.forEach(el => {
+          if (!state.isRevealed) applyProgressiveBlur(el, state.fracRemaining);
+        });
+      }
+
+      // If toggle mode with lock, prevent opening while locked
+      if ((revealConfig?.modo || "") === "toggle") {
+        wrap.querySelectorAll("details[data-locked='1']").forEach(d => {
+          d.addEventListener("toggle", (e) => {
+            if (d.open) d.open = false;
+          });
+        });
+      }
+    }
+
+    function computeRevealConfig(item) {
+      // You can keep this super flexible:
+      // - allow reveal config at item.revelado or item.contenido.revelado
+      const c = item.contenido || {};
+      const r = c.revelado || item.revelado || {};
+
+      // Defaults
+      return {
+        modo: r.modo || "blur",            // "blur" | "toggle"
+        minutos: Number.isFinite(+r.minutos) ? +r.minutos : 0,
+        tipo: r.tipo || "gradual",         // "gradual" | "step" (we implement gradual)
+        persistir: r.persistir !== false,  // default true
+        lock_toggle_until_reveal: !!r.lock_toggle_until_reveal
+      };
+    }
+
+    function getTexto(item) {
+      const c = item.contenido || {};
+      return c.texto || item.texto || [];
+    }
+
+    function getPreguntas(item) {
+      const c = item.contenido || {};
+      return c.preguntas || item.preguntas || [];
+    }
+
+    async function init() {
+      const id = params.get("id");
+      if (!id) {
+        setError("Falta el parámetro ?id=. Ejemplo: lectura.html?id=lect-s2-01");
+        return;
+      }
+
+      try {
+        const json = await fetchLectura();
+        const item = json?.items?.[id];
+
+        if (!item) {
+          setError(`No se encontró el ID "${id}" en lectura.json`);
+          return;
+        }
+
+        // Header basics
+        $("pageTitle").textContent = safeText(item.titulo || "Lectura");
+        $("pageSubtitle").textContent = safeText(item.subtitulo || "");
+        if (item.tag) {
+          $("tagPill").textContent = safeText(item.tag);
+          $("tagPill").classList.remove("hidden");
+        }
+
+        // Image
+        if (item.imagen) {
+          $("heroImg").src = item.imagen;
+          $("heroImg").alt = safeText(item.titulo || "Lectura");
+          $("imageWrap").classList.remove("hidden");
+        }
+
+        // View toggle (stack vs IB)
+        const savedView = localStorage.getItem(getViewKey(id));
+        let isIB = savedView === "ib";
+        setIBView(isIB);
+        $("toggleViewBtn").addEventListener("click", () => {
+          isIB = !isIB;
+          localStorage.setItem(getViewKey(id), isIB ? "ib" : "stack");
+          setIBView(isIB);
+        });
+
+        // Content
+        const textoArr = getTexto(item);
+        const preguntas = getPreguntas(item);
+        renderTexto(textoArr);
+
+        // Reveal settings
+        const reveal = computeRevealConfig(item);
+
+        // Show status card if reveal minutes > 0 or toggle lock enabled
+        const showStatus = (reveal.minutos > 0) || (reveal.modo === "toggle" && reveal.lock_toggle_until_reveal);
+        if (showStatus) $("statusCard").classList.remove("hidden");
+
+        // Timer persistence
+        const lsKey = getLocalStorageKey(id);
+        const reset = params.get("reset") === "1";
+
+        if (reset) localStorage.removeItem(lsKey);
+
+        let revealAt = null;
+        if (reveal.minutos > 0) {
+          if (reveal.persistir) {
+            const stored = localStorage.getItem(lsKey);
+            if (stored) revealAt = parseInt(stored, 10);
+          }
+          if (!revealAt) {
+            revealAt = Date.now() + (reveal.minutos * 60 * 1000);
+            if (reveal.persistir) localStorage.setItem(lsKey, String(revealAt));
+          }
+          $("resetBtn").classList.remove("hidden");
+          $("resetBtn").addEventListener("click", () => {
+            localStorage.removeItem(lsKey);
+            // reload without reset param (or add it) — simplest: force reset=1
+            const u = new URL(window.location.href);
+            u.searchParams.set("reset", "1");
+            window.location.href = u.toString();
+          });
+        }
+
+        // Render loop
+        function update() {
+          const now = Date.now();
+
+          // If no timer: revealed immediately
+          if (!revealAt || reveal.minutos <= 0) {
+            $("statusText").textContent = reveal.modo === "toggle"
+              ? "Las respuestas están disponibles."
+              : "Las respuestas están visibles.";
+
+            $("countdownPill").classList.add("hidden");
+
+            renderQA(preguntas, reveal, { isRevealed: true, fracRemaining: 0 });
+            return;
+          }
+
+          const msLeft = revealAt - now;
+          const isRevealed = msLeft <= 0;
+
+          if (isRevealed) {
+            $("statusText").textContent = "Tiempo completado. Las respuestas ya están disponibles.";
+            $("countdownPill").classList.add("hidden");
+            renderQA(preguntas, reveal, { isRevealed: true, fracRemaining: 0 });
+            return;
+          }
+
+          // Not revealed yet
+          const secLeft = msLeft / 1000;
+          const totalSec = reveal.minutos * 60;
+          const fracRemaining = Math.min(1, Math.max(0, secLeft / totalSec));
+
+          $("statusText").textContent = (reveal.modo === "toggle")
+            ? "Espera un poco antes de abrir las respuestas."
+            : "Las respuestas se van aclarando con el tiempo.";
+
+          $("countdownPill").textContent = `Disponible en ${fmtMMSS(secLeft)}`;
+          $("countdownPill").classList.remove("hidden");
+
+          renderQA(preguntas, reveal, { isRevealed: false, fracRemaining });
+
+          // Apply progressive blur on already-rendered blocks (for smoothness)
+          if (reveal.modo !== "toggle") {
+            document.querySelectorAll("[data-answer='1']").forEach(el => {
+              applyProgressiveBlur(el, fracRemaining);
+            });
+          }
+        }
+
+        update();
+        // update every 5 seconds (enough for “gradual” feel without hammering)
+        setInterval(update, 5000);
+
+        // Optional debug (hide by default)
+        // $("debugLine").textContent = `id=${id} | modo=${reveal.modo} | minutos=${reveal.minutos}`;
+        // $("debugLine").classList.remove("hidden");
+
+      } catch (err) {
+        console.error(err);
+        setError("Error cargando el contenido. Revisa lectura.json y el enlace raw.");
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
