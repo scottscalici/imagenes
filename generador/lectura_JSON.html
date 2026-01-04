@@ -285,7 +285,8 @@
     return wrapper;
   }
 
-  function buildOptionsEditor({ multi=false } = {}) {
+  // ✅ FIX: groupName isolates radio groups per question
+  function buildOptionsEditor({ multi = false, groupName = "correctPick" } = {}) {
     const div = document.createElement("div");
     div.innerHTML = `
       <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Opciones (1 por línea)</label>
@@ -311,7 +312,12 @@
         const row = document.createElement("label");
         row.className = "flex items-center gap-3 bg-white border rounded-lg p-2";
         row.innerHTML = `
-          <input type="${multi ? "checkbox" : "radio"}" name="correctPick" class="w-4 h-4" data-idx="${idx+1}">
+          <input
+            type="${multi ? "checkbox" : "radio"}"
+            name="${groupName}"
+            class="w-4 h-4"
+            data-idx="${idx + 1}"
+          >
           <span class="text-sm">${escapeHTML(opt)}</span>
         `;
         pick.appendChild(row);
@@ -344,12 +350,14 @@
 
     if (type === "mc") {
       node = qShell("Multiple choice (single)", "mc");
-      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi:false }));
+      const groupName = `correctPick-${node.dataset.qid}`; // ✅ unique per question
+      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi: false, groupName }));
     }
 
     if (type === "ms") {
       node = qShell("Multiple choice (multi-select)", "ms");
-      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi:true }));
+      const groupName = `correctPick-${node.dataset.qid}`; // optional but consistent
+      node.querySelector(".qBody").appendChild(buildOptionsEditor({ multi: true, groupName }));
     }
 
     if (type === "vf") {
@@ -537,16 +545,14 @@
     const entry = {
       titulo,
       subtitulo,
-      // legacy field for current renderer
       ...(imgMain ? { imagen: imgMain } : {}),
       url,
       tag,
-      // new fields for your upgraded renderer (won't break current)
       ...(imgMain ? { imagen_principal: imgMain } : {}),
       ...(imgExtra ? { imagen_extra: imgExtra } : {}),
       contenido: {
         texto,
-        ...(imgExtra ? { imagen_extra: imgExtra } : {}), // handy if your renderer expects it inside contenido
+        ...(imgExtra ? { imagen_extra: imgExtra } : {}),
         preguntas,
         revelado
       }
@@ -560,10 +566,8 @@
       out = { items: { [id]: entry } };
       el("output").value = JSON.stringify(out, null, 2);
     } else {
-      // Just the single entry line to paste into master "items"
       const obj = { [id]: entry };
       let s = JSON.stringify(obj, null, 2);
-      // strip outer braces
       s = s.trim();
       if (s.startsWith("{")) s = s.slice(1);
       if (s.endsWith("}")) s = s.slice(0, -1);
