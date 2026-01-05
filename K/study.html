@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Study Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdf2f8;
+            --card-bg: #ffffff;
+            --primary: #4f46e5;
+            --secondary: #ec4899;
+            --text-main: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #db2777; }
+        
+        .verb-tool {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            border-top: 8px solid;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card h2 { margin-top: 10px; font-size: 1.4rem; }
+        .card p { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-a { background-color: #ef4444; color: white; } /* Phase 1 Red */
+        .btn-b { background-color: #6366f1; color: white; } /* Phase 2 Blue */
+        .btn-verb { background-color: white; color: #4f46e5; display: inline-block; margin-top: 10px; }
+
+        .btn:hover { opacity: 0.9; }
+
+        /* Icon Colors */
+        .color-1 { border-color: #f87171; }
+        .color-2 { border-color: #60a5fa; }
+        .color-3 { border-color: #34d399; }
+        .color-4 { border-color: #fbbf24; }
+        .color-5 { border-color: #a78bfa; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>¡Hola! Ready to study?</h1>
+        <p>Choose a lesson below to start practicing.</p>
+    </header>
+
+    <div class="verb-tool">
+        <h2><i class="fas fa-sync-alt"></i> Conjugation Master</h2>
+        <p>Practice your verb endings and tenses here.</p>
+        <a href="https://scottscalici.github.io/imagenes/K/conjugatron.html" class="btn btn-verb">Open Conjugatron</a>
+    </div>
+
+    <div class="grid">
+        <div class="card color-1">
+            <i class="fas fa-hand-wave fa-3x" style="color:#f87171"></i>
+            <h2>1.1 Greetings</h2>
+            <p>Hola, ¿Cómo estás? and people titles.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/1.1A.html" class="btn btn-a">Step 1: Spanish to English</a>
+                <a href="https://scottscalici.github.io/imagenes/K/1.1B.html" class="btn btn-b">Step 2: English to Spanish</a>
+            </div>
+        </div>
+
+        <div class="card color-2">
+            <i class="fas fa-palette fa-3x" style="color:#60a5fa"></i>
+            <h2>Los Colores</h2>
+            <p>Master all the colors in Spanish.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/PreColoresA.html" class="btn btn-a">Step 1: Recognition</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreColoresB.html" class="btn btn-b">Step 2: Spelling</a>
+            </div>
+        </div>
+
+        <div class="card color-3">
+            <i class="fas fa-school fa-3x" style="color:#34d399"></i>
+            <h2>La Escuela</h2>
+            <p>Places and objects around the school.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaA.html" class="btn btn-a">Step 1: Recognition</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaB.html" class="btn btn-b">Step 2: Spelling</a>
+            </div>
+        </div>
+
+        <div class="card color-4">
+            <i class="fas fa-calendar-alt fa-3x" style="color:#fbbf24"></i>
+            <h2>El Calendario</h2>
+            <p>Days, months, and dates.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioA.html" class="btn btn-a">Step 1: Recognition</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioB.html" class="btn btn-b">Step 2: Spelling</a>
+            </div>
+        </div>
+
+        <div class="card color-5">
+            <i class="fas fa-cloud-sun fa-3x" style="color:#a78bfa"></i>
+            <h2>El Tiempo</h2>
+            <p>Talking about the weather and seasons.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoA.html" class="btn btn-a">Step 1: Recognition</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoB.html" class="btn btn-b">Step 2: Spelling</a>
+            </div>
+        </div>
+
+        <div class="card color-1">
+            <i class="fas fa-exclamation-circle fa-3x" style="color:#f87171"></i>
+            <h2>Mandatos</h2>
+            <p>Classroom commands and directions.</p>
+            <div class="btn-group">
+                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosA.html" class="btn btn-a">Step 1: Recognition</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosB.html" class="btn btn-b">Step 2: Spelling</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
