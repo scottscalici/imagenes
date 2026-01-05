@@ -7,168 +7,279 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #fdf2f8;
+            --bg-color: #f8fafc;
+            --header-gradient: linear-gradient(135deg, #4f46e5, #ec4899);
             --card-bg: #ffffff;
-            --primary: #4f46e5;
-            --secondary: #ec4899;
-            --text-main: #1f2937;
+            --phase1-red: #ef4444;
+            --phase2-blue: #3b82f6;
+            --text-main: #1e293b;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
+            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
         header {
-            text-align: center;
-            padding: 40px 0;
-        }
-
-        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #db2777; }
-        
-        .verb-tool {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
+            background: var(--header-gradient);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 50px 20px;
             text-align: center;
+            border-radius: 0 0 30px 30px;
             margin-bottom: 40px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
+        h1 { margin: 0; font-size: 2.5rem; }
+        .subtitle { opacity: 0.9; font-size: 1.1rem; }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            color: #334155;
+        }
+
+        /* Top Tool Style */
+        .verb-banner {
+            background: #ffffff;
+            border: 2px solid #6366f1;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.1);
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 18px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            border-top: 8px solid;
-        }
-
-        .card:hover { transform: translateY(-5px); }
-
-        .card h2 { margin-top: 10px; font-size: 1.4rem; }
-        .card p { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
-
-        .btn-group {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            justify-content: space-between;
         }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .icon-box {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h3 { margin: 10px 0 5px; font-size: 1.25rem; }
+        .card p { font-size: 0.9rem; color: #64748b; margin-bottom: 15px; }
+
+        .btn-stack { display: flex; flex-direction: column; gap: 8px; }
 
         .btn {
             text-decoration: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            transition: opacity 0.2s;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: filter 0.2s;
         }
 
-        .btn-a { background-color: #ef4444; color: white; } /* Phase 1 Red */
-        .btn-b { background-color: #6366f1; color: white; } /* Phase 2 Blue */
-        .btn-verb { background-color: white; color: #4f46e5; display: inline-block; margin-top: 10px; }
+        .btn-a { background: var(--phase1-red); color: white; }
+        .btn-b { background: var(--phase2-blue); color: white; }
+        .btn-main { background: #6366f1; color: white; padding: 12px 25px; }
+        .btn:hover { filter: brightness(1.1); }
 
-        .btn:hover { opacity: 0.9; }
-
-        /* Icon Colors */
-        .color-1 { border-color: #f87171; }
-        .color-2 { border-color: #60a5fa; }
-        .color-3 { border-color: #34d399; }
-        .color-4 { border-color: #fbbf24; }
-        .color-5 { border-color: #a78bfa; }
+        @media (max-width: 600px) {
+            .verb-banner { flex-direction: column; text-align: center; gap: 20px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>¡Hola! Ready to study?</h1>
-        <p>Choose a lesson below to start practicing.</p>
-    </header>
+<header>
+    <h1>Mi Portal de Español</h1>
+    <p class="subtitle">¡Sigue practicando y llegarás lejos!</p>
+</header>
 
-    <div class="verb-tool">
-        <h2><i class="fas fa-sync-alt"></i> Conjugation Master</h2>
-        <p>Practice your verb endings and tenses here.</p>
-        <a href="https://scottscalici.github.io/imagenes/K/conjugatron.html" class="btn btn-verb">Open Conjugatron</a>
+<div class="container">
+    
+    <div class="verb-banner">
+        <div>
+            <h2 style="margin:0; color:#4f46e5;"><i class="fas fa-magic"></i> El Conjugatrón</h2>
+            <p style="margin:5px 0 0; color:#64748b;">Practice your verb tenses and endings anytime.</p>
+        </div>
+        <a href="https://scottscalici.github.io/imagenes/K/conjugatron.html" class="btn btn-main">Launch Verb Tool</a>
+    </div>
+
+    <div class="section-title">
+        <i class="fas fa-star" style="color:#f59e0b"></i>
+        <h2>Para Empezar (Preliminar)</h2>
     </div>
 
     <div class="grid">
-        <div class="card color-1">
-            <i class="fas fa-hand-wave fa-3x" style="color:#f87171"></i>
-            <h2>1.1 Greetings</h2>
-            <p>Hola, ¿Cómo estás? and people titles.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/1.1A.html" class="btn btn-a">Step 1: Spanish to English</a>
-                <a href="https://scottscalici.github.io/imagenes/K/1.1B.html" class="btn btn-b">Step 2: English to Spanish</a>
+        <div class="card">
+            <div class="icon-box">👋</div>
+            <h3>Saludos</h3>
+            <p>Hellos, goodbyes, and basic pleasantries.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreSaludosA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreSaludosB.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
 
-        <div class="card color-2">
-            <i class="fas fa-palette fa-3x" style="color:#60a5fa"></i>
-            <h2>Los Colores</h2>
-            <p>Master all the colors in Spanish.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/PreColoresA.html" class="btn btn-a">Step 1: Recognition</a>
-                <a href="https://scottscalici.github.io/imagenes/K/PreColoresB.html" class="btn btn-b">Step 2: Spelling</a>
+        <div class="card">
+            <div class="icon-box">🎨</div>
+            <h3>Colores</h3>
+            <p>All the colors of the rainbow.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreColoresA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreColoresB.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
 
-        <div class="card color-3">
-            <i class="fas fa-school fa-3x" style="color:#34d399"></i>
-            <h2>La Escuela</h2>
-            <p>Places and objects around the school.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaA.html" class="btn btn-a">Step 1: Recognition</a>
-                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaB.html" class="btn btn-b">Step 2: Spelling</a>
+        <div class="card">
+            <div class="icon-box">🔢</div>
+            <h3>Números</h3>
+            <p>Counting from zero and up.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreNumerosA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreNumerosB.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
 
-        <div class="card color-4">
-            <i class="fas fa-calendar-alt fa-3x" style="color:#fbbf24"></i>
-            <h2>El Calendario</h2>
-            <p>Days, months, and dates.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioA.html" class="btn btn-a">Step 1: Recognition</a>
-                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioB.html" class="btn btn-b">Step 2: Spelling</a>
+        <div class="card">
+            <div class="icon-box">📅</div>
+            <h3>Calendario</h3>
+            <p>Days of the week and months.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreCalendarioB.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
 
-        <div class="card color-5">
-            <i class="fas fa-cloud-sun fa-3x" style="color:#a78bfa"></i>
-            <h2>El Tiempo</h2>
-            <p>Talking about the weather and seasons.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoA.html" class="btn btn-a">Step 1: Recognition</a>
-                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoB.html" class="btn btn-b">Step 2: Spelling</a>
+        <div class="card">
+            <div class="icon-box">☀️</div>
+            <h3>El Tiempo</h3>
+            <p>Weather expressions and seasons.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreTiempoB.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
 
-        <div class="card color-1">
-            <i class="fas fa-exclamation-circle fa-3x" style="color:#f87171"></i>
-            <h2>Mandatos</h2>
-            <p>Classroom commands and directions.</p>
-            <div class="btn-group">
-                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosA.html" class="btn btn-a">Step 1: Recognition</a>
-                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosB.html" class="btn btn-b">Step 2: Spelling</a>
+        <div class="card">
+            <div class="icon-box">🏫</div>
+            <h3>Escuela</h3>
+            <p>Places and subjects in school.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreEscuelaB.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">✏️</div>
+            <h3>Salón de clase</h3>
+            <p>Objects found inside a classroom.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreSalondeclaseA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreSalondeclaseB.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">📢</div>
+            <h3>Mandatos</h3>
+            <p>Commands used during class time.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosA.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/PreMandatosB.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">
+        <i class="fas fa-book" style="color:#4f46e5"></i>
+        <h2>Unidades 1 y 2</h2>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="icon-box">🤝</div>
+            <h3>Lección 1.1</h3>
+            <p>Greetings and People titles.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/1.1A.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/1.1B.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">👨‍👩‍👧</div>
+            <h3>Lección 1.2</h3>
+            <p>Family members and descriptions.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/1.2A.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/1.2B.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">🎒</div>
+            <h3>Lección 1.3</h3>
+            <p>School life and Classroom tools.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/1.3A.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/1.3B.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">⏰</div>
+            <h3>Lección 1.4</h3>
+            <p>Numbers, Telling Time, and Dates.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/1.4A.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/1.4B.html" class="btn btn-b">Step 2: EN → Spanish</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="icon-box">🏠</div>
+            <h3>Lección 2.1</h3>
+            <p>House, furniture, and rooms.</p>
+            <div class="btn-stack">
+                <a href="https://scottscalici.github.io/imagenes/K/2.1A.html" class="btn btn-a">Step 1: Spanish → EN</a>
+                <a href="https://scottscalici.github.io/imagenes/K/2.1B.html" class="btn btn-b">Step 2: EN → Spanish</a>
             </div>
         </div>
     </div>
 </div>
+
+<footer style="text-align:center; padding:50px; color:#94a3b8; font-size:0.8rem;">
+    &copy; 2026 Spanish Study Hub Dashboard
+</footer>
 
 </body>
 </html>
