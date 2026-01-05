@@ -2,472 +2,362 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Repaso de vocabulario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Práctica de Vocabulario (Descubre 2 · Lección 8)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <header class="rounded-2xl overflow-hidden shadow">
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-6 px-6">
+        <h1 class="text-2xl font-bold">Práctica de vocabulario</h1>
+        <p class="text-white/80 text-sm">Descubre 2 · Lección 8</p>
+      </div>
+    </header>
 
-<body class="bg-slate-100 min-h-screen text-slate-800">
-  <main class="max-w-3xl mx-auto px-4 py-10">
-    <section class="bg-white rounded-2xl shadow border border-slate-200 p-6 space-y-4">
-      <header class="space-y-1">
-        <h1 class="text-2xl font-bold text-indigo-700">🧠 Repaso de vocabulario</h1>
-        <p class="text-sm text-slate-600">
-          Escribe la traducción al inglés. Si fallas, empareja solo las palabras que fallaste.
-        </p>
-        <p class="text-xs text-slate-500">
-          3 bloques de hasta 10 palabras.
-        </p>
-      </header>
+    <!-- Controls (no URL field) -->
+    <section class="bg-white rounded-xl shadow p-5 space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold mb-1">Modo</label>
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2">
+              <input type="radio" name="mode" value="en2es" checked>
+              <span>English → Spanish</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="radio" name="mode" value="es2en">
+              <span>Spanish → English</span>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">En ES→EN, el prompt es <em>palabra</em>. En EN→ES, el prompt es <em>definición</em>.</p>
+        </div>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <button id="btn-reset"
-                class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold">
-          Reiniciar
-        </button>
-        <p id="global-status" class="text-xs text-slate-500"></p>
+        <div>
+          <label class="block font-semibold mb-1">Lección(es)</label>
+          <div id="lessonFilters" class="flex flex-wrap gap-2 text-sm"></div>
+          <p class="text-xs text-gray-500 mt-1">Filtra por lección</code>).</p>
+        </div>
       </div>
 
-      <div id="block-container" class="space-y-4"></div>
+      <div class="flex gap-3">
+        <button id="restartBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">Reiniciar práctica</button>
+      </div>
     </section>
-  </main>
+
+    <!-- Practice card -->
+    <section id="practiceSection" class="bg-white rounded-xl shadow p-6 space-y-4 hidden">
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-600">
+          <span id="counter">0/0</span> · Aciertos: <span id="correctCount">0</span>
+          · Racha: <span id="streak">0</span>
+        </div>
+        <div class="text-xs text-gray-500">Acentos cuentan · Mayúsculas no · Se ignoran artículos (“el/la/los/las”) y “to ” en inglés</div>
+      </div>
+
+      <div class="border rounded-xl p-4">
+        <div class="text-gray-500 text-xs mb-1" id="promptLabel">Definición (EN)</div>
+        <div id="prompt" class="text-xl font-semibold">—</div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Tu respuesta</label>
+        <input id="answerInput" class="w-full border rounded px-3 py-2" autocomplete="off" />
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <button id="checkBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">Comprobar</button>
+        <button id="rightBtn" class="bg-sky-600 hover:bg-sky-700 text-white rounded px-4 py-2">Yo tenía razón</button>
+        <button id="hintBtn" class="bg-amber-500 hover:bg-amber-600 text-white rounded px-4 py-2">Pista (primera letra)</button>
+        <button id="skipBtn" class="bg-gray-800 hover:bg-black text-white rounded px-4 py-2">Saltar</button>
+        <span id="feedback" class="ml-2 text-sm"></span>
+      </div>
+    </section>
+  </div>
 
   <script>
-    // ✅ Change this to your vocab JSON bank (use /main/... not refs/heads)
-    const VOCAB_JSON_URL =
-      'https://raw.githubusercontent.com/scottscalici/imagenes/main/K/unidadpreliminar-colores.json';
+    // ---------- Config ----------
+    const DEFAULT_BLOB = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/K/unidadpreliminar-colores.json';
 
-    // How many blocks / size
-    const BLOCK_SIZE = 10;
-    const MAX_BLOCKS = 3; // "three times"
+    // ---------- Helpers ----------
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-    // ===== State =====
-    const blockContainer = document.getElementById('block-container');
-    const globalStatus = document.getElementById('global-status');
-    const resetBtn = document.getElementById('btn-reset');
+    function toRaw(url) {
+      try {
+        const u = new URL(url.trim());
+        if (u.hostname === 'raw.githubusercontent.com') return u.toString();
+        if (u.hostname === 'github.com' && u.pathname.includes('/blob/')) {
+          const parts = u.pathname.split('/').filter(Boolean); // [user, repo, 'blob', branch, ...path]
+          const i = parts.indexOf('blob');
+          const user = parts[0], repo = parts[1], branch = parts[i+1];
+          const rest = parts.slice(i+2).join('/');
+          return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${rest}`;
+        }
+        return u.toString();
+      } catch { return url; }
+    }
 
-    const vocabState = {
-      blocks: [],         // [{ index, items: [{spanish, english}] }]
-      currentIndex: 0,
-      scores: [],         // per block {correct,total}
-      pairs: []
+    // Strip parentheses & punctuation, keep accents
+    function stripPunctAndParens(s) {
+      return s
+        .replace(/\([^)]*\)/g, ' ')
+        .replace(/[.,;:!?¿¡"“”'’]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    function lc(s){ return (s||'').toLocaleLowerCase(); }
+    function stripArticlesEs(s){ return s.replace(/^\s*(el|la|los|las)\s+/i, ''); }
+    function stripToEn(s){ return s.replace(/^\s*to\s+/i, ''); }
+
+    // Handle gender/number slash variants (e.g., "roto/a")
+    function expandSlashVariants(term){
+      const tokens = term.split(/\s+/);
+      const choices = tokens.map(tok => {
+        if (tok.includes('/')) {
+          const parts = tok.split('/');
+          const first = parts[0];
+          if (parts.length === 2 && first) {
+            const base = first;
+            const alt = base.endsWith('o') ? base.slice(0, -1) + 'a' : parts[1];
+            return [base, alt];
+          }
+          return parts;
+        }
+        return [tok];
+      });
+      const out = [];
+      (function build(i, acc){
+        if (i === choices.length) { out.push(acc.join(' ')); return; }
+        for (const c of choices[i]) build(i+1, acc.concat(c));
+      })(0, []);
+      const plusPlurals = new Set(out);
+      out.forEach(w => {
+        const last = w.split(' ').pop();
+        if (/[ao]$/.test(last)) plusPlurals.add(w + 's');
+      });
+      return Array.from(plusPlurals);
+    }
+
+    function buildAcceptables(target, lang){
+      const base = stripPunctAndParens(target);
+      let core = lc(base);
+      core = lang === 'es' ? stripArticlesEs(core) : stripToEn(core);
+      let variants = expandSlashVariants(core).map(v => v.replace(/\s+/g,' ').trim());
+      return Array.from(new Set(variants));
+    }
+
+    function matches(userInput, acceptList, lang) {
+      let ui = stripPunctAndParens(lc(userInput));
+      ui = lang === 'es' ? stripArticlesEs(ui) : stripToEn(ui);
+      ui = ui.replace(/\s+/g,' ').trim();
+      return acceptList.some(acc => ui === acc);
+    }
+
+    function firstLetter(target, lang){
+      const acc = buildAcceptables(target, lang);
+      const c = acc[0]?.trim();
+      return c ? c[0] : '';
+    }
+
+    // ---------- App state ----------
+    let allItems = [];     // full JSON (ALL entries)
+    let pool = [];         // filtered by lesson + mode
+    let index = -1;
+    let correct = 0;
+    let streak = 0;
+    let mode = 'en2es';
+
+    const els = {
+      filters: $('#lessonFilters'),
+      practice: $('#practiceSection'),
+      prompt: $('#prompt'),
+      promptLabel: $('#promptLabel'),
+      input: $('#answerInput'),
+      counter: $('#counter'),
+      correct: $('#correctCount'),
+      streak: $('#streak'),
+      feedback: $('#feedback'),
+      check: $('#checkBtn'),
+      right: $('#rightBtn'),
+      hint: $('#hintBtn'),
+      skip: $('#skipBtn'),
+      restartBtn: $('#restartBtn'),
     };
 
-    // ===== Helpers for flexible / typo-tolerant checking =====
-    function normalizeVocabPiece(str) {
-      let s = (str || '').toLowerCase().trim();
-      s = s.replace(/\([^)]*\)/g, ' ').trim(); // remove ( ... )
-      while (/^(to|the|a|an)\s+/.test(s)) s = s.replace(/^(to|the|a|an)\s+/, '');
-      s = s.replace(/\s+/g, ' ');
-      return s;
+    function uniqueLessons(data){
+      const set = new Set();
+      data.forEach(d => {
+        const m = String(d.leccion||'').match(/^(\d+(?:\.\d+)?)/);
+        if (m) set.add(m[1]);
+      });
+      return Array.from(set).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
     }
 
-    function levenshtein(a, b) {
-      a = a || '';
-      b = b || '';
-      const m = a.length, n = b.length;
-      if (m === 0) return n;
-      if (n === 0) return m;
-
-      const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-      for (let i = 0; i <= m; i++) dp[i][0] = i;
-      for (let j = 0; j <= n; j++) dp[0][j] = j;
-
-      for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-          dp[i][j] = Math.min(
-            dp[i - 1][j] + 1,
-            dp[i][j - 1] + 1,
-            dp[i - 1][j - 1] + cost
-          );
-        }
+    function renderLessonCheckboxes(data){
+      const lessons = uniqueLessons(data);
+      els.filters.innerHTML = '';
+      if (!lessons.length){
+        els.filters.innerHTML = '<span class="text-gray-500">No hay lecciones en este archivo.</span>';
+        return;
       }
-      return dp[m][n];
-    }
-
-    function isVocabCorrect(userRaw, answerRaw) {
-      const user = (userRaw || '').trim();
-      const ans = (answerRaw || '').trim();
-      if (!ans) return false;
-
-      const answerParts = ans.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
-      const userParts   = user.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
-
-      if (!answerParts.length) return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
-      if (!userParts.length) return false;
-
-      for (const up of userParts) {
-        for (const ap of answerParts) {
-          if (!ap) continue;
-          if (up === ap) return true;
-
-          const dist = levenshtein(up, ap);
-          const len = Math.max(up.length, ap.length);
-          const maxAllowed = Math.min(2, Math.floor(len * 0.25)); // forgiving but not crazy
-          if (dist > 0 && dist <= maxAllowed) return true;
-        }
-      }
-      return false;
-    }
-
-    // ===== Extractor: supports multiple vocab JSON shapes =====
-    function extractVocabPairs(data) {
-      let raw = [];
-      if (Array.isArray(data)) raw = data;
-      else if (Array.isArray(data.items)) raw = data.items;
-      else if (Array.isArray(data.vocabulario)) raw = data.vocabulario;
-
-      return raw
-        .map(entry => {
-          const spanish =
-            entry.spanish || entry.es || entry.espanol || entry.español ||
-            entry.palabra || entry.termino || entry.vocabulario || '';
-
-          let english =
-            entry.english || entry.en || entry.ingles || entry.englishText ||
-            entry.traduccion || entry.traducción || entry.definicion || '';
-
-          // If english is an array (preferred), join for the checker:
-          if (Array.isArray(english)) english = english.join('; ');
-
-          return { spanish, english };
-        })
-        .filter(p => p.spanish && p.english);
-    }
-
-    function shuffle(arr) {
-      return arr
-        .map(v => ({ v, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ v }) => v);
-    }
-
-    // ===== Build Typing Stage =====
-    function buildTypingStage(blockIdx) {
-      const totalBlocks = vocabState.blocks.length;
-      const block = vocabState.blocks[blockIdx];
-      if (!block) return;
-
-      blockContainer.innerHTML = '';
-
-      const header = document.createElement('div');
-      header.className = 'flex items-baseline justify-between gap-2';
-      header.innerHTML = `
-        <h2 class="text-lg font-semibold text-slate-800">
-          Bloque ${blockIdx + 1} de ${totalBlocks}
-        </h2>
-        <p class="text-xs text-slate-500">Escribe la traducción al inglés.</p>
-      `;
-      blockContainer.appendChild(header);
-
-      const list = document.createElement('div');
-      list.className = 'space-y-3 mt-2';
-
-      block.items.forEach((item, i) => {
-        const row = document.createElement('div');
-        row.className = 'space-y-1 vocab-item';
-        row.dataset.answer = item.english;
-
-        row.innerHTML = `
-          <label class="text-sm font-medium text-slate-800">
-            ${i + 1}. ${item.spanish}
-          </label>
-          <input type="text"
-                 class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-          <p class="text-xs text-slate-500 feedback hidden"></p>
-        `;
-        list.appendChild(row);
+      // Check ALL by default so practice starts with everything
+      lessons.forEach((L)=>{
+        const id = 'L_'+L.replace('.','_');
+        const wrapper = document.createElement('label');
+        wrapper.className = 'inline-flex items-center gap-2 bg-gray-100 rounded px-2 py-1';
+        wrapper.innerHTML = `<input type="checkbox" id="${id}" value="${L}" checked><span>${L}</span>`;
+        els.filters.appendChild(wrapper);
       });
 
-      blockContainer.appendChild(list);
+      // When lessons change, rebuild immediately & continue
+      els.filters.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+        cb.addEventListener('change', ()=>{ buildPool(); nextCard(); });
+      });
+    }
 
-      const footer = document.createElement('div');
-      footer.className = 'flex flex-wrap items-center gap-3 pt-3';
-      footer.innerHTML = `
-        <button id="btn-check"
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold">
-          Corregir respuestas
-        </button>
-        <p id="block-result" class="text-sm text-slate-700"></p>
-      `;
-      blockContainer.appendChild(footer);
+    function currentMode(){
+      const m = $$('input[name="mode"]:checked')[0]?.value || 'en2es';
+      mode = m;
+      els.promptLabel.textContent = (mode === 'en2es') ? 'Definición (EN)' : 'Palabra (ES)';
+    }
 
-      const checkBtn = footer.querySelector('#btn-check');
-      const resultEl = footer.querySelector('#block-result');
+    function pickLessons(){
+      const picked = $$(`#lessonFilters input[type="checkbox"]:checked`).map(cb=>cb.value);
+      if (!picked.length) return [];
+      return allItems.filter(x=>{
+        const m = String(x.leccion||'').match(/^(\d+(?:\.\d+)?)/);
+        const head = m ? m[1] : '';
+        return picked.includes(head);
+      });
+    }
 
-      checkBtn.addEventListener('click', () => {
-        const items = blockContainer.querySelectorAll('.vocab-item');
+    function shuffle(arr){
+      for (let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
 
-        // require all filled
-        let missing = false;
-        items.forEach(item => {
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          const val = (input.value || '').trim();
-          if (!val) {
-            missing = true;
-            input.classList.remove('border-emerald-400', 'border-red-400');
-            input.classList.add('border-yellow-400');
-            feedback.classList.add('hidden');
-          }
-        });
+    function buildPool(){
+      const base = pickLessons();
+      pool = base.map(item=>{
+        return (mode === 'en2es')
+          ? { prompt: item.definicion, answer: item.palabra, item, targetLang:'es' }
+          : { prompt: item.palabra,    answer: item.definicion, item, targetLang:'en' };
+      });
+      shuffle(pool);
+      index = -1;
+      correct = 0;
+      streak = 0;
+      updateHud();
+      // Show section once we have items
+      if (pool.length) els.practice.classList.remove('hidden');
+    }
 
-        if (missing) {
-          resultEl.textContent = 'Responde todos los campos antes de corregir.';
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-red-600');
-          return;
-        }
+    function updateHud(){
+      els.counter.textContent = `${Math.max(0,index)}/${pool.length}`;
+      els.correct.textContent = String(correct);
+      els.streak.textContent = String(streak);
+    }
 
-        let correct = 0;
-        const wrongItems = [];
-
-        items.forEach((item, idx) => {
-          const rawAnswer = (item.dataset.answer || '').trim();
-          const input = item.querySelector('input');
-          const feedback = item.querySelector('.feedback');
-          const userVal = (input.value || '').trim();
-
-          const ok = isVocabCorrect(userVal, rawAnswer);
-
-          if (ok) {
-            correct++;
-            input.classList.remove('border-red-400', 'border-yellow-400');
-            input.classList.add('border-emerald-400');
-            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-red-500');
-            feedback.classList.add('text-emerald-600');
-          } else {
-            input.classList.remove('border-emerald-400', 'border-yellow-400');
-            input.classList.add('border-red-400');
-            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
-            feedback.classList.remove('hidden', 'text-emerald-600');
-            feedback.classList.add('text-red-500');
-            wrongItems.push(block.items[idx]);
-          }
-        });
-
-        const total = items.length;
-        vocabState.scores[blockIdx] = { correct, total };
-        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round((correct/total)*100)} %).`;
-
-        if (wrongItems.length === 0) {
-          resultEl.classList.remove('text-red-600');
-          resultEl.classList.add('text-emerald-700');
-          buildNextBlockButton(blockIdx);
+    function nextCard(resetIfExhausted=true){
+      if (!pool.length) return;
+      index++;
+      if (index >= pool.length){
+        if (resetIfExhausted){
+          shuffle(pool);
+          index = 0;
         } else {
-          resultEl.classList.remove('text-emerald-700');
-          resultEl.classList.add('text-slate-700');
-          buildMatchingStage(blockIdx, wrongItems);
+          index = pool.length-1;
         }
-      });
-    }
-
-    // ===== Matching Stage (only wrong answers) =====
-    function buildMatchingStage(blockIdx, wrongItems) {
-      const existingMatch = document.getElementById('matching');
-      if (existingMatch) existingMatch.remove();
-
-      const section = document.createElement('div');
-      section.id = 'matching';
-      section.className = 'mt-5 border-t border-slate-200 pt-4 space-y-3';
-      section.innerHTML = `
-        <h3 class="text-sm font-semibold text-slate-800">Empareja las palabras que fallaste</h3>
-        <p class="text-xs text-slate-500">Haz clic primero en español y luego en inglés.</p>
-      `;
-
-      const columns = document.createElement('div');
-      columns.className = 'grid sm:grid-cols-2 gap-3';
-
-      const leftCol = document.createElement('div');
-      leftCol.className = 'space-y-2';
-      const rightCol = document.createElement('div');
-      rightCol.className = 'space-y-2';
-
-      const shuffledSpanish = shuffle(wrongItems);
-      const shuffledEnglish = shuffle(wrongItems);
-
-      shuffledSpanish.forEach(item => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option';
-        btn.textContent = item.spanish;
-        leftCol.appendChild(btn);
-      });
-
-      shuffledEnglish.forEach(item => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option';
-        btn.dataset.english = item.english;
-        btn.textContent = item.english;
-        rightCol.appendChild(btn);
-      });
-
-      columns.appendChild(leftCol);
-      columns.appendChild(rightCol);
-      section.appendChild(columns);
-
-      const status = document.createElement('p');
-      status.className = 'text-xs text-slate-500 mt-2';
-      section.appendChild(status);
-
-      blockContainer.appendChild(section);
-
-      let selectedSpanishBtn = null;
-      let remaining = wrongItems.length;
-
-      function clearSelections() {
-        blockContainer.querySelectorAll('.spanish-option, .english-option').forEach(btn => {
-          btn.classList.remove('ring-2','ring-indigo-400','bg-indigo-50');
-        });
       }
-
-      leftCol.querySelectorAll('.spanish-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (btn.disabled) return;
-          selectedSpanishBtn = btn;
-          clearSelections();
-          btn.classList.add('ring-2','ring-indigo-400','bg-indigo-50');
-          status.textContent = 'Ahora haz clic en la traducción correcta en inglés.';
-          status.className = 'text-xs text-slate-500 mt-2';
-        });
-      });
-
-      rightCol.querySelectorAll('.english-option').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (!selectedSpanishBtn || btn.disabled) return;
-
-          const spanishText = selectedSpanishBtn.textContent.trim();
-          const englishText = btn.dataset.english;
-
-          const correctPair = wrongItems.find(it => it.spanish === spanishText && it.english === englishText);
-
-          if (correctPair) {
-            selectedSpanishBtn.disabled = true;
-            btn.disabled = true;
-
-            selectedSpanishBtn.classList.remove('ring-2','ring-indigo-400','bg-indigo-50');
-            selectedSpanishBtn.classList.add('bg-emerald-50','border-emerald-400');
-            btn.classList.add('bg-emerald-50','border-emerald-400');
-
-            remaining--;
-            selectedSpanishBtn = null;
-            status.textContent = `✔ ¡Bien! Te quedan ${remaining} por emparejar.`;
-            status.className = 'text-xs text-emerald-700 mt-2';
-
-            if (remaining === 0) {
-              status.textContent = '✔ Bloque completado. Puedes pasar al siguiente bloque.';
-              buildNextBlockButton(blockIdx);
-            }
-          } else {
-            status.textContent = '❌ No es correcto. Intenta de nuevo.';
-            status.className = 'text-xs text-red-600 mt-2';
-            clearSelections();
-            selectedSpanishBtn = null;
-          }
-        });
-      });
+      const cur = pool[index];
+      els.prompt.textContent = cur.prompt;
+      els.input.value = '';
+      els.input.focus();
+      els.feedback.textContent = '';
+      els.feedback.className = 'ml-2 text-sm';
+      updateHud();
     }
 
-    // ===== Next Block Button / Finish =====
-    function buildNextBlockButton(blockIdx) {
-      const existing = document.getElementById('next-block');
-      if (existing) existing.remove();
+    function checkAnswer(manualCorrect=false){
+      const cur = pool[index];
+      if (!cur) return;
+      const user = els.input.value;
+      const accepts = buildAcceptables(cur.answer, cur.targetLang);
+      const ok = manualCorrect ? true : matches(user, accepts, cur.targetLang);
 
-      const totalBlocks = vocabState.blocks.length;
-      const isLast = blockIdx === totalBlocks - 1;
-
-      const wrapper = document.createElement('div');
-      wrapper.id = 'next-block';
-      wrapper.className = 'pt-4 flex justify-end';
-
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold';
-      btn.textContent = isLast ? 'Terminar vocabulario' : 'Siguiente bloque →';
-
-      btn.addEventListener('click', () => {
-        if (isLast) {
-          let totalCorrect = 0, totalQs = 0;
-          (vocabState.scores || []).forEach(s => {
-            if (!s) return;
-            totalCorrect += s.correct || 0;
-            totalQs += s.total || 0;
-          });
-
-          const overallPct = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
-
-          globalStatus.innerHTML =
-            `✔ Completaste el vocabulario. Total: <strong>${totalCorrect}/${totalQs}</strong> (${overallPct}%).`;
-          globalStatus.classList.remove('text-slate-500','text-red-600');
-          globalStatus.classList.add('text-emerald-700');
-
-          blockContainer.innerHTML = '';
-        } else {
-          vocabState.currentIndex = blockIdx + 1;
-          buildTypingStage(vocabState.currentIndex);
-          globalStatus.textContent = `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
-          globalStatus.className = 'text-xs text-slate-500';
-        }
-      });
-
-      wrapper.appendChild(btn);
-      blockContainer.appendChild(wrapper);
-    }
-
-    // ===== Load vocab from JSON =====
-    async function loadVocabSet() {
-      try {
-        globalStatus.textContent = 'Cargando vocabulario…';
-        const res = await fetch(VOCAB_JSON_URL);
-        const data = await res.json();
-
-        let pairs = extractVocabPairs(data);
-
-        // ✅ Shuffle, then take up to 30
-        pairs = shuffle(pairs).slice(0, BLOCK_SIZE * MAX_BLOCKS);
-
-        vocabState.pairs = pairs;
-        vocabState.scores = [];
-        vocabState.currentIndex = 0;
-
-        if (!pairs.length) {
-          blockContainer.innerHTML = '<p class="text-sm text-red-600">No se encontraron palabras en el JSON.</p>';
-          globalStatus.textContent = '';
-          return;
-        }
-
-        vocabState.blocks = [];
-        for (let i = 0; i < MAX_BLOCKS; i++) {
-          const slice = pairs.slice(i * BLOCK_SIZE, (i + 1) * BLOCK_SIZE);
-          if (slice.length) vocabState.blocks.push({ index: i, items: slice });
-        }
-
-        globalStatus.textContent = `Listo: ${vocabState.blocks.length} bloque(s) de hasta ${BLOCK_SIZE} palabras.`;
-        buildTypingStage(0);
-      } catch (err) {
-        console.error(err);
-        blockContainer.innerHTML = '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL).</p>';
-        globalStatus.textContent = '';
+      if (ok){
+        correct += 1;
+        streak += 1;
+        els.feedback.textContent = '✔️ Correcto';
+        els.feedback.className = 'ml-2 text-sm text-emerald-700';
+        setTimeout(()=>nextCard(), 400);
+      } else {
+        streak = 0;
+        els.feedback.innerHTML = `❌ <span class="text-gray-700">Correcto:</span> <span class="font-semibold">${cur.answer}</span>`;
+        els.feedback.className = 'ml-2 text-sm text-rose-700';
       }
+      updateHud();
     }
 
-    // ===== Reset =====
-    resetBtn.addEventListener('click', () => {
-      vocabState.blocks = [];
-      vocabState.currentIndex = 0;
-      vocabState.scores = [];
-      vocabState.pairs = [];
-      blockContainer.innerHTML = '';
-      globalStatus.textContent = 'Reiniciando…';
-      globalStatus.className = 'text-xs text-slate-500';
-      loadVocabSet();
+    function showHint(){
+      const cur = pool[index];
+      if (!cur) return;
+      const fl = firstLetter(cur.answer, cur.targetLang);
+      els.feedback.textContent = `Pista: empieza con “${fl}”`;
+      els.feedback.className = 'ml-2 text-sm text-amber-700';
+      els.input.focus();
+    }
+
+    // ---------- Flow ----------
+  async function init(){
+  const url = toRaw(DEFAULT_BLOB);
+  const res = await fetch(url);
+  const raw = await res.json();
+
+  // ✅ ADAPTER: allow either format
+  allItems = raw.map(d => {
+    // If it's already your Descubre-style JSON, keep it
+    if (d.palabra && d.definicion) return d;
+
+    // Otherwise convert Scott-style (unit/es/en/answers_es) -> (leccion/palabra/definicion)
+    return {
+      leccion: d.unit || d.leccion || '',
+      palabra: d.es || d.palabra || '',
+      definicion: d.en || d.definicion || '',
+      // keep answers list if present (optional use later)
+      answers_es: d.answers_es || []
+    };
+  });
+
+  renderLessonCheckboxes(allItems);
+  currentMode();
+  buildPool();
+  nextCard();
+}
+
+    // Events
+    $$('input[name="mode"]').forEach(r =>
+      r.addEventListener('change', ()=> {
+        currentMode();
+        if (pool.length) { buildPool(); nextCard(); }
+      })
+    );
+    els.restartBtn.addEventListener('click', ()=>{ currentMode(); buildPool(); nextCard(); });
+
+    $('#checkBtn').addEventListener('click', ()=>checkAnswer(false));
+    $('#rightBtn').addEventListener('click', ()=>checkAnswer(true));
+    $('#hintBtn').addEventListener('click', showHint);
+    $('#skipBtn').addEventListener('click', ()=>{ streak = 0; nextCard(); });
+    $('#answerInput').addEventListener('keydown', (e)=>{
+      if (e.key === 'Enter') checkAnswer(false);
     });
 
-    // Init
-    loadVocabSet();
+    // Go!
+    init();
   </script>
 </body>
 </html>
