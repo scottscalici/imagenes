@@ -66,7 +66,7 @@
       const calendarMap = calData.map || [];
       const todayStr = getTodayStr();
 
-      // Find the most recent Day that has already happened or is happening today
+      // Find the most recent Day that has already happened or is today
       const pastOrTodayEntries = calendarMap.filter(c => c.ciclo === CONFIG.CICLO && c.fecha <= todayStr);
       const MASTER_DAY = pastOrTodayEntries.length > 0 
         ? Math.max(...pastOrTodayEntries.map(e => e.dia)) 
@@ -75,46 +75,74 @@
       const container = document.getElementById('evalContainer');
       container.innerHTML = "";
 
-      // Counter to track how many future pills we've given out
       let futurePillCount = 0;
 
-      // Sort and Render
-      rawEvals.sort((a, b) => a.dia - b.dia).forEach(ev => {
+      // 1. Process and Assign Priorities
+      const processedEvals = rawEvals.map(ev => {
         const calEntry = calendarMap.find(c => c.dia == ev.dia && c.ciclo === CONFIG.CICLO);
-        const fechaDisplay = calEntry ? formatDate(calEntry.fecha) : "Fecha por determinar";
         const evalDateStr = calEntry ? calEntry.fecha : null;
+        
+        let priority = 0;
+        // Logic for ordering: Today > Future > Recent Past > Old Past
+        if (evalDateStr === todayStr) {
+          priority = 100; // TOP
+        } else if (ev.dia > MASTER_DAY || (ev.dia === MASTER_DAY && evalDateStr > todayStr)) {
+          priority = 90;  // NEXT
+        } else if (ev.dia === MASTER_DAY) {
+          priority = 80;  // RECIÉN
+        } else if (ev.dia >= MASTER_DAY - 2) {
+          priority = 70;  // 2 DAYS PRIOR
+        } else {
+          priority = 10;  // ARCHIVE (BOTTOM)
+        }
+
+        return { ...ev, priority, evalDateStr, calEntry };
+      });
+
+      // 2. Sort by priority (descending) and then by day (ascending) within groups
+      processedEvals.sort((a, b) => {
+        if (b.priority !== a.priority) return b.priority - a.priority;
+        return a.dia - b.dia; 
+      });
+
+      // 3. Render
+      processedEvals.forEach(ev => {
+        const fechaDisplay = ev.calEntry ? formatDate(ev.calEntry.fecha) : "Fecha por determinar";
+        const evalDateStr = ev.evalDateStr;
 
         let cardStyle = "bg-white border-slate-200 opacity-100";
         let dateColor = "text-indigo-600";
         let pill = "";
 
         if (evalDateStr === todayStr) {
-          // 1. EXACTLY TODAY
+          // HOY
           cardStyle = "bg-white border-red-500 border-l-[8px] shadow-md ring-2 ring-red-50";
           pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
-        } else if (ev.dia === MASTER_DAY && evalDateStr < todayStr) {
-          // 2. MOST RECENT (ALREADY PASSED)
-          cardStyle = "bg-white border-slate-300 border-l-[8px]";
-          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Reciente</span>';
-        } else if (ev.dia > MASTER_DAY || (ev.dia === MASTER_DAY && evalDateStr > todayStr)) {
-          // 3. FUTURE DAYS
+        } 
+        else if (ev.priority === 90) {
+          // FUTURE
           futurePillCount++;
-          
           if (futurePillCount === 1) {
-            // The VERY NEXT one
             cardStyle = "bg-white border-indigo-600 border-l-[8px] shadow-sm";
-            pill = '<span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-tight">Próximo</span>';
+            pill = '<span class="bg-indigo-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase">Próximo</span>';
           } else if (futurePillCount === 2) {
-            // The one AFTER the next
             cardStyle = "bg-white border-indigo-300 border-l-[8px]";
             pill = '<span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded uppercase border border-indigo-100">Pronto</span>';
-          } else {
-            // All other future ones (No pill)
-            cardStyle = "bg-white border-slate-200";
           }
-        } else {
-          // 4. OLD PAST
-          cardStyle = "bg-slate-50 border-slate-200 opacity-60";
+        } 
+        else if (ev.priority === 80) {
+          // RECIÉN (Just happened)
+          cardStyle = "bg-white border-slate-400 border-l-[8px]";
+          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Recién</span>';
+        }
+        else if (ev.priority === 70) {
+          // 2 DAYS PRIOR
+          cardStyle = "bg-white border-slate-300 border-l-[8px]";
+          pill = '<span class="bg-slate-50 text-slate-500 text-[10px] font-black px-2 py-1 rounded uppercase">Pasada</span>';
+        }
+        else {
+          // OLD ARCHIVE
+          cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
           dateColor = "text-slate-400";
         }
 
