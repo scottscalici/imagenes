@@ -2,32 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v3</title>
+    <title>Sr. Scalici - Factory v4 (Full 10 Tiers)</title>
     <style>
         body { font-family: sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
         .factory-box { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; border: 3px solid #3498db; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .section { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
-        h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; display: inline-block; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
         input[type="text"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .output-area { background: #2c3e50; color: #7fdbff; padding: 15px; border-radius: 5px; height: 150px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; border: 4px solid #1a252f; }
+        .output-area { background: #2c3e50; color: #7fdbff; padding: 15px; border-radius: 5px; height: 180px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; border: 4px solid #1a252f; }
         button.gen-btn { background: #27ae60; color: white; padding: 15px; width: 100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        .label-text { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="factory-box">
-    <h2>🛠️ Creador de Lecciones v3</h2>
+    <h2>🛠️ Creador de Lecciones v4</h2>
     
     <div class="section">
         <h3>1. Contenido Base</h3>
-        <label class="label-text">Link de GitHub:</label>
+        <label>Link de GitHub:</label>
         <input type="text" id="ghLink" placeholder="https://github.com/.../foto.jpg">
         <div class="grid-3" style="margin-top:10px;">
             <div>
-                <label class="label-text">Tema IB:</label>
+                <label>Tema IB:</label>
                 <select id="theme">
                     <option value="sharing">Compartimos el planeta</option>
                     <option value="identities">Identidades</option>
@@ -37,16 +35,23 @@
                 </select>
             </div>
             <div>
-                <label class="label-text">Nivel Inicial:</label>
+                <label>Nivel (Tier):</label>
                 <select id="tier">
                     <option value="1">Tier 1: 30s</option>
+                    <option value="2">Tier 2: 45s</option>
+                    <option value="3">Tier 3: 1m</option>
+                    <option value="4">Tier 4: 1.5m</option>
                     <option value="5">Tier 5: 1.75m</option>
-                    <option value="10" selected>Tier 10: 4m</option>
+                    <option value="6">Tier 6: 2m</option>
+                    <option value="7">Tier 7: 2.5m</option>
+                    <option value="8">Tier 8: 3m</option>
+                    <option value="9">Tier 9: 3.5m</option>
+                    <option value="10">Tier 10: 4m</option>
                 </select>
             </div>
             <div>
-                <label class="label-text">Otros Temas/Vocab:</label>
-                <input type="text" id="otherTopics" placeholder="ej: Medio ambiente, Salud">
+                <label>Otros Temas:</label>
+                <input type="text" id="otherTopics" placeholder="ej: Medio ambiente">
             </div>
         </div>
     </div>
@@ -62,13 +67,10 @@
             <label><input type="checkbox" value="Futuro"> Futuro</label>
             <label><input type="checkbox" value="Por vs Para"> Por vs Para</label>
             <label><input type="checkbox" value="Ser vs Estar"> Ser vs Estar</label>
-            <label><input type="checkbox" value="Mandatos"> Mandatos</label>
-            <label><input type="checkbox" value="Perfecto"> Perfecto</label>
         </div>
     </div>
 
     <button class="gen-btn" onclick="generateHTML()">Generar Código de Lección</button>
-
     <div class="output-area" id="output">El código aparecerá aquí...</div>
 </div>
 
@@ -87,131 +89,109 @@ function generateHTML() {
     document.querySelectorAll('#verbCheckboxes input:checked').forEach(cb => selectedVerbs.push(cb.value));
     if(others) selectedVerbs.push(others);
 
-    const config = {
-        1: { time: 30, bullets: 50, prep: 7 },
-        5: { time: 105, bullets: 10, prep: 12 },
-        10: { time: 240, bullets: 10, prep: 15 }
-    }[tier] || { time: 240, bullets: 10, prep: 15 };
+    const tierConfig = {
+        1: { prep: 7, goal: 30, bullets: 50, script: true },
+        2: { prep: 7, goal: 45, bullets: 50, script: true },
+        3: { prep: 10, goal: 60, bullets: 50 },
+        4: { prep: 10, goal: 90, bullets: 12 },
+        5: { prep: 10, goal: 105, bullets: 10 },
+        6: { prep: 10, goal: 120, bullets: 5, qReq: true },
+        7: { prep: 10, goal: 150, bullets: 0, qReq: true },
+        8: { prep: 15, goal: 180, bullets: 10 },
+        9: { prep: 15, goal: 210, bullets: 10 },
+        10: { prep: 15, goal: 240, bullets: 10 }
+    }[tier];
 
     const studentHTML = `
 <!DOCTYPE html>
 <html>
 <head>
 <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #fff; color: #2c3e50; margin: 10px; }
-    .header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    body { font-family: sans-serif; margin: 15px; color: #2c3e50; }
+    .header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
     .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; transition: 0.2s; margin-bottom: 5px; }
-    .btn-sim { background: #9b59b6; } .btn:hover { opacity: 0.9; }
-    .timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; transition: color 0.3s; }
-    .overtime { color: #e74c3c; animation: blink 1s infinite; }
-    @keyframes blink { 50% { opacity: 0.7; } }
-    .notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; background: #fdfdfd; min-height: 400px; }
-    .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #ccc; margin: 2px; display: inline-block; }
+    .timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }
+    .overtime { color: #e74c3c; }
+    .notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 400px; background: #fafafa; }
+    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }
+    .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #ccc; margin-right: 5px; color: #2c3e50; }
     .hidden { display: none; }
 </style>
 </head>
 <body>
     <div class="header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span>🎯 Objetivo: ${config.time}s | Prep: ${config.prep}m</span>
-            <button class="btn btn-sim" style="width:auto; margin:0;" onclick="forceSimulation()">⚠️ Modo Simulación Total</button>
+        <div>
+            <strong>🎯 Objetivo: ${tierConfig.goal}s</strong> | Prep: ${tierConfig.prep}m<br>
+            <div style="margin-top:5px;">${selectedVerbs.map(v => '<span class="tag">' + v + '</span>').join('')}</div>
         </div>
-        <div style="margin-top:10px;">${selectedVerbs.map(v => '<span class="tag">' + v + '</span>').join('')}</div>
+        <button class="btn" style="background:#9b59b6; width:auto;" onclick="forceSim()">⚠️ Modo Simulación</button>
     </div>
 
     <div class="grid">
-        <div id="leftCol">
-            <img src="${img}" style="width:100%; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div>
+            <img src="${img}" style="width:100%; border-radius:8px;">
             <div id="clock" class="timer">00:00</div>
             <button id="mainBtn" class="btn" onclick="startPrep()">Empezar Preparación</button>
         </div>
-        <div id="rightCol">
-            <div class="notes" id="notesArea">
-                <p style="color:#7f8c8d; font-style:italic; text-align:center;">Las instrucciones aparecerán al iniciar prep.</p>
-            </div>
+        <div class="notes" id="notesArea">
+            <p style="text-align:center; color:#7f8c8d;">Haz clic en empezar para ver instrucciones.</p>
         </div>
     </div>
 
     <div id="qZone" class="hidden" style="margin-top:20px; text-align:center; border-top: 2px solid #eee; padding-top:20px;">
-        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.3rem; min-height:1.5em; color:#2c3e50;"></div>
-        <div style="display:flex; gap:10px; justify-content:center;">
-            <button class="btn" style="background:#27ae60; width:auto;" onclick="ask(1)">Nivel 1</button>
-            <button class="btn" style="background:#f39c12; width:auto;" onclick="ask(2)">Nivel 2</button>
-            <button class="btn" style="background:#e74c3c; width:auto;" onclick="ask(3)">Nivel 3</button>
-        </div>
+        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.3rem;"></div>
+        <button class="btn" style="background:#27ae60; width:auto;" onclick="ask(1)">Nivel 1</button>
+        <button class="btn" style="background:orange; width:auto;" onclick="ask(2)">Nivel 2</button>
+        <button class="btn" style="background:red; width:auto;" onclick="ask(3)">Nivel 3</button>
     </div>
 
     <script>
-    let seconds = 0; let loop; let goal = ${config.time}; let isSim = false;
-    const questions = {
-        sharing: { 1:["¿Qué es lo más importante que ves?"], 2:["¿Cómo afecta esto a tu comunidad?"], 3:["¿Qué solución global propones?"] },
-        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo influye esto en su identidad?"], 3:["¿La cultura se pierde con el tiempo?"] },
-        experiences: { 1:["¿Qué actividad hacen?"], 2:["¿Lo has hecho antes?"], 3:["¿Por qué es importante viajar?"] },
-        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo facilita la vida?"], 3:["¿Tiene riesgos este invento?"] },
-        organization: { 1:["¿Quiénes son?"], 2:["¿Cómo es la escuela/trabajo allí?"], 3:["¿El individuo es más importante que el grupo?"] }
+    let seconds = 0; let loop; let goal = ${tierConfig.goal}; let isSim = false;
+    const qBank = {
+        sharing: { 1:["¿Qué ves?"], 2:["¿Hay este problema en tu casa?"], 3:["¿Qué solución propones?"] },
+        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo define esto su identidad?"], 3:["¿Afecta la globalización?"] },
+        experiences: { 1:["¿Qué actividad hacen?"], 2:["¿Has hecho algo similar?"], 3:["¿Por qué importa viajar?"] },
+        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo facilita la vida?"], 3:["¿Tiene riesgos?"] },
+        organization: { 1:["¿Quiénes son?"], 2:["¿Cómo es en tu país?"], 3:["¿Individuo vs Sociedad?"] }
     };
 
-    function forceSimulation() {
-        if(!confirm("¿Quieres cambiar a modo simulación? (15m prep / 4m habla)")) return;
-        isSim = true; goal = 240;
-        document.getElementById('clock').innerText = "15:00";
-        alert("Modo Simulación Activado.");
-    }
+    function forceSim() { isSim = true; goal = 240; alert("Simulación Activada: 15m prep / 4m habla."); }
 
-    function buildBullets() {
+    function buildNotes() {
         const area = document.getElementById('notesArea');
-        const bCount = isSim ? 10 : ${config.bullets};
-        area.innerHTML = "<strong>Instrucciones:</strong><br>1. Escribe hasta <strong>"+bCount+" balas</strong>.<br>2. Escribe <strong>una pregunta</strong> para tu grupo.<br><hr>";
-        for(let i=1; i<=bCount; i++) area.innerHTML += "<div style='margin-bottom:8px;'>"+i+". <input type='text' style='width:85%; border:none; border-bottom:1px solid #ccc; outline:none;'></div>";
+        const count = isSim ? 10 : ${tierConfig.bullets};
+        area.innerHTML = "<strong>Instrucciones:</strong><br>Escribe hasta <strong>"+count+" balas</strong> y una pregunta para tu grupo.<hr>";
+        if(${tier} == 7 && !isSim) { area.innerHTML = "<strong>Nivel 7: Sin balas.</strong> Escribe tu pregunta abajo.<hr>"; }
+        for(let i=1; i<=count; i++) area.innerHTML += "<div>"+i+". <input type='text' style='width:85%; border:none; border-bottom:1px solid #ddd; outline:none; margin-bottom:5px;'></div>";
         area.innerHTML += "<br><strong>Tu Pregunta:</strong><br><textarea style='width:95%; height:50px;'></textarea>";
     }
 
     function startPrep() {
-        seconds = isSim ? 900 : ${config.prep} * 60;
+        seconds = (isSim ? 15 : ${tierConfig.prep}) * 60;
         document.getElementById('mainBtn').innerText = "¡Listo para Hablar!";
         document.getElementById('mainBtn').onclick = startSpeaking;
-        loop = setInterval(() => {
-            seconds--;
-            updateClock(true);
-            if(seconds <= 0) startSpeaking();
-        }, 1000);
-        buildBullets();
+        buildNotes();
+        loop = setInterval(() => { seconds--; updateClock(); if(seconds<=0) startSpeaking(); }, 1000);
     }
 
     function startSpeaking() {
-        clearInterval(loop);
-        seconds = goal;
-        document.getElementById('mainBtn').innerText = "Terminar y Preguntas";
-        document.getElementById('mainBtn').onclick = endAll;
-        loop = setInterval(() => {
-            seconds--;
-            updateClock(false);
-        }, 1000);
+        clearInterval(loop); seconds = goal;
+        document.getElementById('mainBtn').innerText = "Terminar";
+        document.getElementById('mainBtn').onclick = () => { clearInterval(loop); document.getElementById('qZone').classList.remove('hidden'); };
+        loop = setInterval(() => { seconds--; updateClock(); }, 1000);
     }
 
-    function updateClock(isPrep) {
+    function updateClock() {
         const el = document.getElementById('clock');
-        let absSec = Math.abs(seconds);
-        let m = Math.floor(absSec / 60);
-        let s = absSec % 60;
-        el.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? '0' : '') + s;
-        if(!isPrep && seconds < 0) el.classList.add('overtime');
+        let abs = Math.abs(seconds);
+        el.innerText = (seconds < 0 ? "-" : "") + Math.floor(abs/60) + ":" + (abs%60 < 10 ? '0' : '') + abs%60;
+        if(seconds < 0) el.classList.add('overtime');
     }
 
-    function endAll() {
-        clearInterval(loop);
-        document.getElementById('qZone').classList.remove('hidden');
-    }
-
-    function ask(lvl) {
-        const bank = questions['${theme}'][lvl];
-        document.getElementById('qDisplay').innerText = bank[Math.floor(Math.random()*bank.length)];
-    }
+    function ask(lvl) { document.getElementById('qDisplay').innerText = qBank['${theme}'][lvl][0]; }
     <\/script>
 </body>
-</html>\`;
-
+</html>`;
     document.getElementById('output').innerText = studentHTML;
 }
 </script>
