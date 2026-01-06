@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Simulación Aleatoria - Sr. Scalici</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .timer-red { color: #ef4444; }
+        .notes-area { font-family: sans-serif; min-height: 300px; }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        
+        <header class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <div>
+                <h1 class="text-xl font-bold text-indigo-700">🎲 Simulación Aleatoria</h1>
+                <p id="lessonTitle" class="text-sm text-slate-500 italic">Haz clic para empezar</p>
+            </div>
+            <div id="clock" class="text-4xl font-mono font-bold">00:00</div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <section class="space-y-4">
+                <div class="bg-white p-2 rounded-2xl shadow-md border border-slate-200 min-h-[300px] flex items-center justify-center">
+                    <img id="mainImg" src="" class="rounded-lg max-h-[400px] w-full object-contain hidden">
+                    <div id="placeholder" class="text-slate-300 text-center p-10">
+                        <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <p class="mt-2 font-medium">Esperando imagen...</p>
+                    </div>
+                </div>
+                
+                <button id="mainBtn" onclick="pickAndPrep()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition shadow-lg">
+                    GENERAR IMAGEN Y PREPARAR (15 min)
+                </button>
+            </section>
+
+            <section id="notesSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 flex flex-col">
+                <h2 class="font-bold border-b pb-2 mb-4">Notas (10 Balas)</h2>
+                <div id="notesContainer" class="space-y-2 flex-grow">
+                    <p class="text-slate-400 text-sm italic">Las notas aparecerán al comenzar la preparación.</p>
+                </div>
+            </section>
+        </div>
+
+        <section id="qZone" class="hidden mt-8 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-8 text-center animate-bounce-in">
+            <h3 class="text-indigo-800 font-bold mb-4 italic text-lg uppercase tracking-widest">Preguntas de Discusión</h3>
+            <div id="qDisplay" class="text-2xl font-semibold text-slate-800 mb-6"></div>
+            <button onclick="nextQuestion()" class="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition">
+                Siguiente Pregunta
+            </button>
+        </section>
+    </main>
+
+    <script>
+        const JSON_URL = "image.json"; // Asegúrate de que el nombre sea exacto
+        let items = [];
+        let currentItem = null;
+        let seconds = 0;
+        let loop;
+        let currentQIndex = 0;
+
+        // Cargar JSON al iniciar
+        async function loadData() {
+            try {
+                const res = await fetch(JSON_URL, { cache: "no-store" });
+                items = await res.json();
+                console.log("Banco cargado: " + items.length + " imágenes.");
+            } catch (err) {
+                document.getElementById('lessonTitle').textContent = "Error al cargar JSON";
+            }
+        }
+        loadData();
+
+        function pickAndPrep() {
+            if (items.length === 0) return alert("Cargando banco de imágenes, espera un momento...");
+            
+            // 1. Elegir azar
+            currentItem = items[Math.floor(Math.random() * items.length)];
+            
+            // 2. Setup visual
+            document.getElementById('placeholder').classList.add('hidden');
+            const img = document.getElementById('mainImg');
+            img.src = currentItem.url || currentItem.imagen; // Soporta ambos nombres de campo
+            img.classList.remove('hidden');
+            document.getElementById('lessonTitle').textContent = "Simulación: " + (currentItem.id || "Imagen Aleatoria");
+            
+            // 3. Generar 10 balas limpias
+            const container = document.getElementById('notesContainer');
+            container.innerHTML = "";
+            for (let i = 1; i <= 10; i++) {
+                container.innerHTML += `<div class="flex gap-2 items-center text-sm">${i}. <input type="text" class="w-full border-b border-slate-200 focus:border-indigo-500 outline-none py-1"></div>`;
+            }
+
+            // 4. Iniciar Cronómetro de Preparación (15 min)
+            clearInterval(loop);
+            seconds = 900; 
+            updateClock();
+            loop = setInterval(() => {
+                seconds--;
+                updateClock();
+                if (seconds <= 0) startSpeaking();
+            }, 1000);
+
+            // 5. Cambiar botón
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "¡EMPEZAR A HABLAR AHORA!";
+            btn.classList.replace('bg-indigo-600', 'bg-green-600');
+            btn.onclick = startSpeaking;
+        }
+
+        function startSpeaking() {
+            clearInterval(loop);
+            seconds = 240; // 4 minutos de habla
+            updateClock();
+            loop = setInterval(() => {
+                seconds--;
+                updateClock();
+                if (seconds <= 0) endAll();
+            }, 1000);
+
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "FINALIZAR PRESENTACIÓN";
+            btn.classList.replace('bg-green-600', 'bg-red-600');
+            btn.onclick = endAll;
+        }
+
+        function endAll() {
+            clearInterval(loop);
+            document.getElementById('mainBtn').classList.add('hidden');
+            document.getElementById('qZone').classList.remove('hidden');
+            currentQIndex = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const qList = currentItem.preguntas;
+            // Si las preguntas son un objeto {1:[], 2:[], 3:[]}, las aplanamos
+            let allQs = [];
+            if (Array.isArray(qList)) {
+                allQs = qList;
+            } else {
+                allQs = Object.values(qList).flat();
+            }
+
+            if (allQs.length > 0) {
+                document.getElementById('qDisplay').textContent = allQs[currentQIndex % allQs.length];
+            } else {
+                document.getElementById('qDisplay').textContent = "¿Cómo se relaciona esta imagen con tu cultura?";
+            }
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            showQuestion();
+        }
+
+        function updateClock() {
+            const clock = document.getElementById('clock');
+            const absSec = Math.abs(seconds);
+            const m = Math.floor(absSec / 60);
+            const s = absSec % 60;
+            clock.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+            
+            if (seconds < 0) clock.classList.add('text-red-500');
+            else clock.classList.remove('text-red-500');
+        }
+    </script>
+</body>
+</html>
