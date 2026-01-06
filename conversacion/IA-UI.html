@@ -2,52 +2,74 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory (HTML Generator)</title>
+    <title>Sr. Scalici - Factory v3</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
-        .factory-box { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 12px; border: 3px solid #3498db; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
-        .output-area { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; height: 200px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 20px; }
-        button { background: #27ae60; color: white; padding: 15px; width: 100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
+        .factory-box { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; border: 3px solid #3498db; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
+        h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; display: inline-block; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
+        input[type="text"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .output-area { background: #2c3e50; color: #7fdbff; padding: 15px; border-radius: 5px; height: 150px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; border: 4px solid #1a252f; }
+        button.gen-btn { background: #27ae60; color: white; padding: 15px; width: 100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .label-text { font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="factory-box">
-    <h2>🛠️ Creador de Lecciones (HTML)</h2>
-    <label>Link de GitHub (Cualquier formato):</label>
-    <input type="text" id="ghLink" placeholder="https://github.com/.../foto.jpg">
+    <h2>🛠️ Creador de Lecciones v3</h2>
     
-    <label>Tema IB:</label>
-    <select id="theme">
-        <option value="sharing">Compartimos el planeta</option>
-        <option value="identities">Identidades</option>
-        <option value="experiences">Experiencias</option>
-        <option value="ingenuity">Ingenio humano</option>
-        <option value="organization">Organización social</option>
-    </select>
+    <div class="section">
+        <h3>1. Contenido Base</h3>
+        <label class="label-text">Link de GitHub:</label>
+        <input type="text" id="ghLink" placeholder="https://github.com/.../foto.jpg">
+        <div class="grid-3" style="margin-top:10px;">
+            <div>
+                <label class="label-text">Tema IB:</label>
+                <select id="theme">
+                    <option value="sharing">Compartimos el planeta</option>
+                    <option value="identities">Identidades</option>
+                    <option value="experiences">Experiencias</option>
+                    <option value="ingenuity">Ingenio humano</option>
+                    <option value="organization">Organización social</option>
+                </select>
+            </div>
+            <div>
+                <label class="label-text">Nivel Inicial:</label>
+                <select id="tier">
+                    <option value="1">Tier 1: 30s</option>
+                    <option value="5">Tier 5: 1.75m</option>
+                    <option value="10" selected>Tier 10: 4m</option>
+                </select>
+            </div>
+            <div>
+                <label class="label-text">Otros Temas/Vocab:</label>
+                <input type="text" id="otherTopics" placeholder="ej: Medio ambiente, Salud">
+            </div>
+        </div>
+    </div>
 
-    <label>Nivel (Tier 1-10):</label>
-    <select id="tier">
-        <option value="1">Tier 1: 30s - Guion Completo</option>
-        <option value="2">Tier 2: 45s - Guion Completo</option>
-        <option value="3">Tier 3: 1m - Balas ilimitadas</option>
-        <option value="4">Tier 4: 1.5m - 25 Balas</option>
-        <option value="5">Tier 5: 1.75m - 10 Balas</option>
-        <option value="6">Tier 6: 2m - 10 Balas + Escribir Pregunta</option>
-        <option value="7">Tier 7: 2.5m - 0 Balas + Escribir Pregunta</option>
-        <option value="8">Tier 8: 3m - 10 Balas (Simulación)</option>
-        <option value="9">Tier 9: 3.5m - 10 Balas (Simulación)</option>
-        <option value="10">Tier 10: 4m - 10 Balas (Simulación)</option>
-    </select>
+    <div class="section">
+        <h3>2. Enfoque Gramatical</h3>
+        <div class="checkbox-grid" id="verbCheckboxes">
+            <label><input type="checkbox" value="Presente"> Presente</label>
+            <label><input type="checkbox" value="Pretérito"> Pretérito</label>
+            <label><input type="checkbox" value="Imperfecto"> Imperfecto</label>
+            <label><input type="checkbox" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" value="Condicional"> Condicional</label>
+            <label><input type="checkbox" value="Futuro"> Futuro</label>
+            <label><input type="checkbox" value="Por vs Para"> Por vs Para</label>
+            <label><input type="checkbox" value="Ser vs Estar"> Ser vs Estar</label>
+            <label><input type="checkbox" value="Mandatos"> Mandatos</label>
+            <label><input type="checkbox" value="Perfecto"> Perfecto</label>
+        </div>
+    </div>
 
-    <label>Tiempos Verbales / Enfoque:</label>
-    <input type="text" id="verbs" placeholder="ej: Subjuntivo, Imperfecto, Por vs Para">
-
-    <button onclick="generateHTML()">Generar Código para Estudiantes</button>
+    <button class="gen-btn" onclick="generateHTML()">Generar Código de Lección</button>
 
     <div class="output-area" id="output">El código aparecerá aquí...</div>
-    <p><small>Instrucciones: Copia el código de arriba y pégalo en el bloque "Insertar > Código HTML" de tu Google Site.</small></p>
 </div>
 
 <script>
@@ -59,80 +81,99 @@ function generateHTML() {
     const img = toRaw(document.getElementById('ghLink').value);
     const tier = document.getElementById('tier').value;
     const theme = document.getElementById('theme').value;
-    const verbs = document.getElementById('verbs').value;
+    const others = document.getElementById('otherTopics').value;
     
-    // Tier Logic
+    let selectedVerbs = [];
+    document.querySelectorAll('#verbCheckboxes input:checked').forEach(cb => selectedVerbs.push(cb.value));
+    if(others) selectedVerbs.push(others);
+
     const config = {
         1: { time: 30, bullets: 50, prep: 7 },
-        2: { time: 45, bullets: 50, prep: 7 },
-        3: { time: 60, bullets: 50, prep: 10 },
-        4: { time: 90, bullets: 25, prep: 10 },
         5: { time: 105, bullets: 10, prep: 12 },
-        6: { time: 120, bullets: 10, prep: 12, q: true },
-        7: { time: 150, bullets: 0, prep: 15, q: true },
-        8: { time: 180, bullets: 10, prep: 15 },
-        9: { time: 210, bullets: 10, prep: 15 },
         10: { time: 240, bullets: 10, prep: 15 }
-    }[tier];
+    }[tier] || { time: 240, bullets: 10, prep: 15 };
 
     const studentHTML = `
 <!DOCTYPE html>
 <html>
 <head>
 <style>
-    body { font-family: sans-serif; background: white; color: #2c3e50; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; }
-    .timer { font-size: 3rem; font-weight: bold; text-align: center; margin: 10px 0; }
-    .notes { border: 1px solid #ddd; padding: 15px; height: 400px; overflow-y: auto; background: #f9f9f9; }
+    body { font-family: 'Segoe UI', sans-serif; background: #fff; color: #2c3e50; margin: 10px; }
+    .header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+    .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; transition: 0.2s; margin-bottom: 5px; }
+    .btn-sim { background: #9b59b6; } .btn:hover { opacity: 0.9; }
+    .timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; transition: color 0.3s; }
+    .overtime { color: #e74c3c; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.7; } }
+    .notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; background: #fdfdfd; min-height: 400px; }
+    .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #ccc; margin: 2px; display: inline-block; }
     .hidden { display: none; }
-    .tag { background: #e8f4fd; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 2px; display: inline-block; border: 1px solid #3498db; }
 </style>
 </head>
 <body>
-    <div id="mission" style="background:#2c3e50; color:white; padding:10px; margin-bottom:10px; border-radius:5px;">
-        Nivel ${tier} | Objetivo: ${config.time}s | Prep: ${config.prep}m
-        <div id="vTags" style="margin-top:5px;">${verbs.split(',').map(v => '<span class="tag">🎯 ' + v.trim() + '</span>').join('')}</div>
+    <div class="header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>🎯 Objetivo: ${config.time}s | Prep: ${config.prep}m</span>
+            <button class="btn btn-sim" style="width:auto; margin:0;" onclick="forceSimulation()">⚠️ Modo Simulación Total</button>
+        </div>
+        <div style="margin-top:10px;">${selectedVerbs.map(v => '<span class="tag">' + v + '</span>').join('')}</div>
     </div>
+
     <div class="grid">
-        <div>
-            <img src="${img}" style="width:100%; border-radius:8px;">
+        <div id="leftCol">
+            <img src="${img}" style="width:100%; border-radius:8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <div id="clock" class="timer">00:00</div>
             <button id="mainBtn" class="btn" onclick="startPrep()">Empezar Preparación</button>
         </div>
-        <div id="notesArea" class="notes"></div>
+        <div id="rightCol">
+            <div class="notes" id="notesArea">
+                <p style="color:#7f8c8d; font-style:italic; text-align:center;">Las instrucciones aparecerán al iniciar prep.</p>
+            </div>
+        </div>
     </div>
+
     <div id="qZone" class="hidden" style="margin-top:20px; text-align:center; border-top: 2px solid #eee; padding-top:20px;">
-        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.2rem;"></div>
-        <button class="btn" style="background:#27ae60; width:auto; margin:5px;" onclick="ask(1)">Nivel 1</button>
-        <button class="btn" style="background:orange; width:auto; margin:5px;" onclick="ask(2)">Nivel 2</button>
-        <button class="btn" style="background:red; width:auto; margin:5px;" onclick="ask(3)">Nivel 3</button>
+        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.3rem; min-height:1.5em; color:#2c3e50;"></div>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button class="btn" style="background:#27ae60; width:auto;" onclick="ask(1)">Nivel 1</button>
+            <button class="btn" style="background:#f39c12; width:auto;" onclick="ask(2)">Nivel 2</button>
+            <button class="btn" style="background:#e74c3c; width:auto;" onclick="ask(3)">Nivel 3</button>
+        </div>
     </div>
 
     <script>
-    let seconds = 0; let loop; let phase = 'init';
+    let seconds = 0; let loop; let goal = ${config.time}; let isSim = false;
     const questions = {
-        sharing: { 1:["¿Qué ves?"], 2:["¿Hay este problema en tu comunidad?"], 3:["¿Cómo ayuda el gobierno?"] },
-        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo define esto su identidad?"], 3:["¿Afecta la globalización?"] },
-        experiences: { 1:["¿Qué hacen?"], 2:["¿Has hecho algo así?"], 3:["¿Cómo cambia esto tu perspectiva?"] },
-        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo ha cambiado tu vida?"], 3:["¿Es accesible para todos?"] },
-        organization: { 1:["¿Qué relación tienen?"], 2:["¿Cómo es en tu país?"], 3:["¿Individuo vs Sociedad?"] }
+        sharing: { 1:["¿Qué es lo más importante que ves?"], 2:["¿Cómo afecta esto a tu comunidad?"], 3:["¿Qué solución global propones?"] },
+        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo influye esto en su identidad?"], 3:["¿La cultura se pierde con el tiempo?"] },
+        experiences: { 1:["¿Qué actividad hacen?"], 2:["¿Lo has hecho antes?"], 3:["¿Por qué es importante viajar?"] },
+        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo facilita la vida?"], 3:["¿Tiene riesgos este invento?"] },
+        organization: { 1:["¿Quiénes son?"], 2:["¿Cómo es la escuela/trabajo allí?"], 3:["¿El individuo es más importante que el grupo?"] }
     };
+
+    function forceSimulation() {
+        if(!confirm("¿Quieres cambiar a modo simulación? (15m prep / 4m habla)")) return;
+        isSim = true; goal = 240;
+        document.getElementById('clock').innerText = "15:00";
+        alert("Modo Simulación Activado.");
+    }
 
     function buildBullets() {
         const area = document.getElementById('notesArea');
-        if(${tier} == 7) { area.innerHTML = "<p>Escribe tu pregunta aquí:</p><textarea style='width:90%; height:100px;'></textarea>"; return; }
-        for(let i=1; i<=${config.bullets}; i++) area.innerHTML += "<div>"+i+". <input type='text' style='width:80%; border:none; border-bottom:1px solid #ccc; margin-bottom:10px;'></div>";
+        const bCount = isSim ? 10 : ${config.bullets};
+        area.innerHTML = "<strong>Instrucciones:</strong><br>1. Escribe hasta <strong>"+bCount+" balas</strong>.<br>2. Escribe <strong>una pregunta</strong> para tu grupo.<br><hr>";
+        for(let i=1; i<=bCount; i++) area.innerHTML += "<div style='margin-bottom:8px;'>"+i+". <input type='text' style='width:85%; border:none; border-bottom:1px solid #ccc; outline:none;'></div>";
+        area.innerHTML += "<br><strong>Tu Pregunta:</strong><br><textarea style='width:95%; height:50px;'></textarea>";
     }
 
     function startPrep() {
-        phase = 'prep';
-        seconds = ${config.prep} * 60;
+        seconds = isSim ? 900 : ${config.prep} * 60;
         document.getElementById('mainBtn').innerText = "¡Listo para Hablar!";
         document.getElementById('mainBtn').onclick = startSpeaking;
         loop = setInterval(() => {
             seconds--;
-            updateClock();
+            updateClock(true);
             if(seconds <= 0) startSpeaking();
         }, 1000);
         buildBullets();
@@ -140,26 +181,27 @@ function generateHTML() {
 
     function startSpeaking() {
         clearInterval(loop);
-        phase = 'speaking';
-        seconds = ${config.time};
+        seconds = goal;
         document.getElementById('mainBtn').innerText = "Terminar y Preguntas";
         document.getElementById('mainBtn').onclick = endAll;
         loop = setInterval(() => {
             seconds--;
-            updateClock();
-            if(seconds <= 0) endAll();
+            updateClock(false);
         }, 1000);
+    }
+
+    function updateClock(isPrep) {
+        const el = document.getElementById('clock');
+        let absSec = Math.abs(seconds);
+        let m = Math.floor(absSec / 60);
+        let s = absSec % 60;
+        el.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? '0' : '') + s;
+        if(!isPrep && seconds < 0) el.classList.add('overtime');
     }
 
     function endAll() {
         clearInterval(loop);
         document.getElementById('qZone').classList.remove('hidden');
-    }
-
-    function updateClock() {
-        let m = Math.floor(Math.abs(seconds)/60);
-        let s = Math.abs(seconds)%60;
-        document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
     }
 
     function ask(lvl) {
@@ -168,7 +210,7 @@ function generateHTML() {
     }
     <\/script>
 </body>
-</html>`;
+</html>\`;
 
     document.getElementById('output').innerText = studentHTML;
 }
