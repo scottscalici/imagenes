@@ -6,98 +6,116 @@
     <title>Simulación Aleatoria - Sr. Scalici</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .timer-red { color: #ef4444; }
-        .notes-area { font-family: sans-serif; min-height: 300px; }
+        .timer-red { color: #ef4444 !important; }
+        input:focus { border-color: #4f46e5 !important; }
     </style>
 </head>
 
-<body class="bg-slate-100 text-slate-800 min-h-screen">
-    <main class="max-w-4xl mx-auto px-4 py-6">
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+    <main class="max-w-5xl mx-auto px-4 py-8">
         
-        <header class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <header class="flex justify-between items-center mb-6 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div>
-                <h1 class="text-xl font-bold text-indigo-700">🎲 Simulación Aleatoria</h1>
-                <p id="lessonTitle" class="text-sm text-slate-500 italic">Haz clic para empezar</p>
+                <h1 class="text-2xl font-bold text-indigo-700">🎲 Simulación Aleatoria</h1>
+                <p id="lessonTitle" class="text-slate-500 font-medium italic">Preparado para empezar...</p>
             </div>
-            <div id="clock" class="text-4xl font-mono font-bold">00:00</div>
+            <div id="clock" class="text-5xl font-mono font-black tracking-tighter text-slate-900">00:00</div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
-            <section class="space-y-4">
-                <div class="bg-white p-2 rounded-2xl shadow-md border border-slate-200 min-h-[300px] flex items-center justify-center">
-                    <img id="mainImg" src="" class="rounded-lg max-h-[400px] w-full object-contain hidden">
-                    <div id="placeholder" class="text-slate-300 text-center p-10">
-                        <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <p class="mt-2 font-medium">Esperando imagen...</p>
+            <div class="space-y-6">
+                <div class="bg-white p-3 rounded-3xl shadow-xl border border-slate-200 min-h-[400px] flex items-center justify-center overflow-hidden">
+                    <img id="mainImg" src="" class="hidden rounded-2xl max-h-[500px] w-full object-contain">
+                    <div id="placeholder" class="text-slate-300 text-center">
+                        <svg class="w-24 h-24 mx-auto opacity-20" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>
+                        <p class="mt-4 text-lg font-semibold uppercase tracking-widest opacity-30">Esperando Imagen</p>
                     </div>
                 </div>
                 
-                <button id="mainBtn" onclick="pickAndPrep()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl hover:bg-indigo-700 transition shadow-lg">
-                    GENERAR IMAGEN Y PREPARAR (15 min)
+                <button id="mainBtn" onclick="pickAndPrep()" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl hover:bg-indigo-700 transition-all transform hover:scale-[1.01] shadow-xl text-xl uppercase tracking-wider">
+                    Generar Imagen Aleatoria
                 </button>
-            </section>
+            </div>
 
-            <section id="notesSection" class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 flex flex-col">
-                <h2 class="font-bold border-b pb-2 mb-4">Notas (10 Balas)</h2>
-                <div id="notesContainer" class="space-y-2 flex-grow">
-                    <p class="text-slate-400 text-sm italic">Las notas aparecerán al comenzar la preparación.</p>
+            <div id="notesSection" class="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 flex flex-col">
+                <div id="linksArea" class="hidden mb-6 flex gap-3">
+                    <a href="https://sites.google.com/view/srscalici/vocabulario/modismos" target="_blank" class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-sm font-bold border border-slate-200 transition">🗣️ Modismos</a>
+                    <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales" target="_blank" class="flex-1 text-center bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-sm font-bold border border-slate-200 transition">🌎 Cultura</a>
                 </div>
-            </section>
+                
+                <h2 class="text-lg font-black text-slate-700 uppercase tracking-tight border-b pb-4 mb-6 flex justify-between">
+                    Notas <span>(10 Balas)</span>
+                </h2>
+                
+                <div id="notesContainer" class="space-y-3 flex-grow overflow-y-auto">
+                    </div>
+            </div>
         </div>
 
-        <section id="qZone" class="hidden mt-8 bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-8 text-center animate-bounce-in">
-            <h3 class="text-indigo-800 font-bold mb-4 italic text-lg uppercase tracking-widest">Preguntas de Discusión</h3>
-            <div id="qDisplay" class="text-2xl font-semibold text-slate-800 mb-6"></div>
-            <button onclick="nextQuestion()" class="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-700 transition">
+        <div id="qZone" class="hidden mt-10 bg-indigo-900 text-white rounded-3xl p-10 text-center shadow-2xl ring-8 ring-indigo-50">
+            <h3 class="text-indigo-300 font-black mb-4 uppercase tracking-[0.2em] text-sm">Preguntas de Seguimiento</h3>
+            <div id="qDisplay" class="text-3xl font-bold mb-8 leading-tight min-h-[80px]"></div>
+            <button onclick="nextQuestion()" class="bg-white text-indigo-900 px-10 py-4 rounded-2xl font-black hover:bg-indigo-50 transition transform active:scale-95 shadow-lg uppercase tracking-wider">
                 Siguiente Pregunta
             </button>
-        </section>
+        </div>
     </main>
 
     <script>
-        const JSON_URL = "image.json"; // Asegúrate de que el nombre sea exacto
+        const JSON_URL = "image.json"; 
         let items = [];
         let currentItem = null;
         let seconds = 0;
         let loop;
         let currentQIndex = 0;
 
-        // Cargar JSON al iniciar
         async function loadData() {
             try {
                 const res = await fetch(JSON_URL, { cache: "no-store" });
                 items = await res.json();
-                console.log("Banco cargado: " + items.length + " imágenes.");
+                console.log("Banco cargado con " + items.length + " imágenes.");
             } catch (err) {
-                document.getElementById('lessonTitle').textContent = "Error al cargar JSON";
+                document.getElementById('lessonTitle').textContent = "Error: No se encontró image.json";
             }
         }
         loadData();
 
         function pickAndPrep() {
-            if (items.length === 0) return alert("Cargando banco de imágenes, espera un momento...");
+            if (items.length === 0) return alert("Cargando base de datos...");
             
-            // 1. Elegir azar
             currentItem = items[Math.floor(Math.random() * items.length)];
             
-            // 2. Setup visual
-            document.getElementById('placeholder').classList.add('hidden');
+            // Lógica de URL flexible (si no carga, intenta añadir la extensión)
             const img = document.getElementById('mainImg');
-            img.src = currentItem.url || currentItem.imagen; // Soporta ambos nombres de campo
-            img.classList.remove('hidden');
-            document.getElementById('lessonTitle').textContent = "Simulación: " + (currentItem.id || "Imagen Aleatoria");
+            const placeholder = document.getElementById('placeholder');
             
-            // 3. Generar 10 balas limpias
+            // Intentar encontrar la URL en cualquier campo común
+            let rawUrl = currentItem.url || currentItem.imagen || currentItem.image || currentItem.id;
+            
+            // Si el ID es solo un nombre (ej: "43"), construir la ruta
+            if (rawUrl && !rawUrl.includes('.')) {
+                img.src = `imagenes/${rawUrl}.jpg`; // Asumiendo que están en una carpeta imágenes
+            } else {
+                img.src = rawUrl;
+            }
+
+            img.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            document.getElementById('lessonTitle').textContent = "Simulación ID: " + (currentItem.id || "Aleatoria");
+            document.getElementById('linksArea').classList.remove('hidden');
+            
             const container = document.getElementById('notesContainer');
             container.innerHTML = "";
             for (let i = 1; i <= 10; i++) {
-                container.innerHTML += `<div class="flex gap-2 items-center text-sm">${i}. <input type="text" class="w-full border-b border-slate-200 focus:border-indigo-500 outline-none py-1"></div>`;
+                container.innerHTML += `<div class="flex gap-4 items-center group">
+                    <span class="text-slate-300 font-bold w-4">${i}.</span>
+                    <input type="text" class="w-full border-b-2 border-slate-100 focus:border-indigo-500 outline-none py-2 text-lg font-medium transition-colors">
+                </div>`;
             }
 
-            // 4. Iniciar Cronómetro de Preparación (15 min)
             clearInterval(loop);
-            seconds = 900; 
+            seconds = 900; // 15 Minutos Prep
             updateClock();
             loop = setInterval(() => {
                 seconds--;
@@ -105,16 +123,15 @@
                 if (seconds <= 0) startSpeaking();
             }, 1000);
 
-            // 5. Cambiar botón
             const btn = document.getElementById('mainBtn');
-            btn.innerText = "¡EMPEZAR A HABLAR AHORA!";
-            btn.classList.replace('bg-indigo-600', 'bg-green-600');
+            btn.innerText = "¡Listo para Hablar!";
+            btn.className = "w-full bg-emerald-500 text-white font-black py-5 rounded-2xl hover:bg-emerald-600 transition-all transform hover:scale-[1.01] shadow-xl text-xl uppercase tracking-wider";
             btn.onclick = startSpeaking;
         }
 
         function startSpeaking() {
             clearInterval(loop);
-            seconds = 240; // 4 minutos de habla
+            seconds = 240; // 4 Minutos Habla
             updateClock();
             loop = setInterval(() => {
                 seconds--;
@@ -123,34 +140,29 @@
             }, 1000);
 
             const btn = document.getElementById('mainBtn');
-            btn.innerText = "FINALIZAR PRESENTACIÓN";
-            btn.classList.replace('bg-green-600', 'bg-red-600');
+            btn.innerText = "Finalizar Presentación";
+            btn.className = "w-full bg-rose-500 text-white font-black py-5 rounded-2xl hover:bg-rose-600 transition-all transform hover:scale-[1.01] shadow-xl text-xl uppercase tracking-wider";
             btn.onclick = endAll;
         }
 
         function endAll() {
             clearInterval(loop);
             document.getElementById('mainBtn').classList.add('hidden');
+            document.getElementById('linksArea').classList.add('hidden');
             document.getElementById('qZone').classList.remove('hidden');
             currentQIndex = 0;
             showQuestion();
         }
 
         function showQuestion() {
-            const qList = currentItem.preguntas;
-            // Si las preguntas son un objeto {1:[], 2:[], 3:[]}, las aplanamos
+            const qList = currentItem.preguntas || currentItem.questions;
             let allQs = [];
-            if (Array.isArray(qList)) {
-                allQs = qList;
-            } else {
-                allQs = Object.values(qList).flat();
-            }
+            
+            if (Array.isArray(qList)) allQs = qList;
+            else if (typeof qList === 'object' && qList !== null) allQs = Object.values(qList).flat();
+            else allQs = ["¿Cómo se relaciona esta imagen con la cultura hispanohablante?", "¿Qué modismos podrías usar para describir esta situación?"];
 
-            if (allQs.length > 0) {
-                document.getElementById('qDisplay').textContent = allQs[currentQIndex % allQs.length];
-            } else {
-                document.getElementById('qDisplay').textContent = "¿Cómo se relaciona esta imagen con tu cultura?";
-            }
+            document.getElementById('qDisplay').textContent = allQs[currentQIndex % allQs.length];
         }
 
         function nextQuestion() {
@@ -164,7 +176,6 @@
             const m = Math.floor(absSec / 60);
             const s = absSec % 60;
             clock.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
-            
             if (seconds < 0) clock.classList.add('text-red-500');
             else clock.classList.remove('text-red-500');
         }
