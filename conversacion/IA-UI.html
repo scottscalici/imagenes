@@ -2,197 +2,185 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v4 (Full 10 Tiers)</title>
+    <title>Sr. Scalici - Factory v22</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
-        .factory-box { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; border: 3px solid #3498db; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
-        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-        input[type="text"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .output-area { background: #2c3e50; color: #7fdbff; padding: 15px; border-radius: 5px; height: 180px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 15px; font-size: 12px; border: 4px solid #1a252f; }
-        button.gen-btn { background: #27ae60; color: white; padding: 15px; width: 100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
+        .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 25px; padding: 20px; border: 1px solid #dcdde1; border-radius: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; }
+        .output-container { position: relative; margin-top: 15px; }
+        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 180px; width: 100%; font-family: monospace; box-sizing: border-box; resize: none; border: none; font-size: 11px; }
+        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; }
+        button.copy-btn { position: absolute; top: 10px; right: 20px; background: #ff5e57; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #livePreview { width: 100%; height: 800px; border: 3px dashed #dcdde1; margin-top: 25px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="factory-box">
-    <h2>🛠️ Creador de Lecciones v4</h2>
+    <h2>🚀 Factory v22: Ajuste de Tiers y Pregunta</h2>
     
     <div class="section">
-        <h3>1. Contenido Base</h3>
-        <label>Link de GitHub:</label>
-        <input type="text" id="ghLink" placeholder="https://github.com/.../foto.jpg">
-        <div class="grid-3" style="margin-top:10px;">
+        <h3>1. Configuración de la Lección</h3>
+        <div class="grid-3">
+            <div>
+                <label>Lección:</label>
+                <select id="lessonSelect"><option>Cargando GitHub...</option></select>
+            </div>
             <div>
                 <label>Tema IB:</label>
                 <select id="theme">
+                    <option value="ingenuity">Ingenio humano</option>
+                    <option value="experiences">Experiencias</option>
                     <option value="sharing">Compartimos el planeta</option>
                     <option value="identities">Identidades</option>
-                    <option value="experiences">Experiencias</option>
-                    <option value="ingenuity">Ingenio humano</option>
-                    <option value="organization">Organización social</option>
+                    <option value="social">Organización social</option>
                 </select>
             </div>
             <div>
-                <label>Nivel (Tier):</label>
+                <label>Andamiaje (Tier):</label>
                 <select id="tier">
-                    <option value="1">Tier 1: 30s</option>
-                    <option value="2">Tier 2: 45s</option>
-                    <option value="3">Tier 3: 1m</option>
-                    <option value="4">Tier 4: 1.5m</option>
-                    <option value="5">Tier 5: 1.75m</option>
-                    <option value="6">Tier 6: 2m</option>
-                    <option value="7">Tier 7: 2.5m</option>
-                    <option value="8">Tier 8: 3m</option>
-                    <option value="9">Tier 9: 3.5m</option>
-                    <option value="10">Tier 10: 4m</option>
+                    <option value="1">Tier 1: Guion (30s)</option>
+                    <option value="2">Tier 2: Guion (45s)</option>
+                    <option value="3">Tier 3: 1 Frase + 15 Balas (60s)</option>
+                    <option value="4">Tier 4: 1 Frase + 12 Balas (90s)</option>
+                    <option value="5">Tier 5: 1 Frase + 10 Balas (105s)</option>
+                    <option value="6">Tier 6: 10 Balas (120s)</option>
+                    <option value="7">Tier 7: 10 Balas (150s)</option>
+                    <option value="8">Tier 8: 10 Balas (180s)</option>
+                    <option value="9">Tier 9: Solo Pregunta (210s)</option>
+                    <option value="10" selected>Tier 10: Simulación (240s)</option>
                 </select>
-            </div>
-            <div>
-                <label>Otros Temas:</label>
-                <input type="text" id="otherTopics" placeholder="ej: Medio ambiente">
             </div>
         </div>
     </div>
 
     <div class="section">
-        <h3>2. Enfoque Gramatical</h3>
-        <div class="checkbox-grid" id="verbCheckboxes">
-            <label><input type="checkbox" value="Presente"> Presente</label>
-            <label><input type="checkbox" value="Pretérito"> Pretérito</label>
-            <label><input type="checkbox" value="Imperfecto"> Imperfecto</label>
-            <label><input type="checkbox" value="Subjuntivo"> Subjuntivo</label>
-            <label><input type="checkbox" value="Condicional"> Condicional</label>
-            <label><input type="checkbox" value="Futuro"> Futuro</label>
-            <label><input type="checkbox" value="Por vs Para"> Por vs Para</label>
-            <label><input type="checkbox" value="Ser vs Estar"> Ser vs Estar</label>
+        <h3>2. Evaluación y Gramática</h3>
+        <div class="checkbox-grid">
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Describe foto"> 📸 Foto</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Conex. Personal"> 👤 Personal</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Conex. Cultural"> 🌎 Cultural</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🗣️ Modismos"> 🗣️ Modismos</label>
+            <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
+            <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
+            <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" class="gram" value="Si + Condicional"> Si + Cond</label>
+            <label><input type="checkbox" class="gram" value="Ser vs Estar"> Ser/Estar</label>
+            <label><input type="checkbox" class="gram" value="Por vs Para"> Por/Para</label>
+            <label><input type="checkbox" class="gram" value="Pretérito Perfecto"> Pret. Perf.</label>
+            <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
         </div>
     </div>
 
-    <button class="gen-btn" onclick="generateHTML()">Generar Código de Lección</button>
-    <div class="output-area" id="output">El código aparecerá aquí...</div>
+    <button class="gen-btn" onclick="generateV22()">GENERAR v22 Y VISTA PREVIA</button>
+    
+    <div class="output-container">
+        <button class="copy-btn" onclick="copyV22()">COPIAR CÓDIGO</button>
+        <textarea id="outputArea" readonly></textarea>
+    </div>
+
+    <iframe id="livePreview"></iframe>
 </div>
 
 <script>
-function toRaw(url) {
-    return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+const GITHUB_JSON = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json";
+
+fetch(GITHUB_JSON + "?v=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+        const sel = document.getElementById('lessonSelect');
+        sel.innerHTML = "";
+        for (const id in data.items) {
+            let opt = document.createElement('option');
+            opt.value = id; opt.text = data.items[id].titulo;
+            sel.appendChild(opt);
+        }
+    });
+
+function copyV22() {
+    const area = document.getElementById("outputArea");
+    area.select();
+    document.execCommand('copy');
+    alert("Código copiado.");
 }
 
-function generateHTML() {
-    const img = toRaw(document.getElementById('ghLink').value);
-    const tier = document.getElementById('tier').value;
-    const theme = document.getElementById('theme').value;
-    const others = document.getElementById('otherTopics').value;
+function generateV22() {
+    const lessonID = document.getElementById('lessonSelect').value;
+    const tier = parseInt(document.getElementById('tier').value);
     
-    let selectedVerbs = [];
-    document.querySelectorAll('#verbCheckboxes input:checked').forEach(cb => selectedVerbs.push(cb.value));
-    if(others) selectedVerbs.push(others);
+    let tagsHTML = "";
+    document.querySelectorAll('.gram:checked').forEach(cb => {
+        tagsHTML += '<span style="background:#f0f2f5; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #ccc; margin-right:5px; color:#2c3e50; display:inline-block; margin-top:5px;">' + cb.value + '</span>';
+    });
 
-    const tierConfig = {
-        1: { prep: 7, goal: 30, bullets: 50, script: true },
-        2: { prep: 7, goal: 45, bullets: 50, script: true },
-        3: { prep: 10, goal: 60, bullets: 50 },
-        4: { prep: 10, goal: 90, bullets: 12 },
-        5: { prep: 10, goal: 105, bullets: 10 },
-        6: { prep: 10, goal: 120, bullets: 5, qReq: true },
-        7: { prep: 10, goal: 150, bullets: 0, qReq: true },
-        8: { prep: 15, goal: 180, bullets: 10 },
-        9: { prep: 15, goal: 210, bullets: 10 },
-        10: { prep: 15, goal: 240, bullets: 10 }
-    }[tier];
-
-    const studentHTML = `
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-    body { font-family: sans-serif; margin: 15px; color: #2c3e50; }
-    .header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-    .grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-    .timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }
-    .overtime { color: #e74c3c; }
-    .notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 400px; background: #fafafa; }
-    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }
-    .tag { background: #f0f2f5; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #ccc; margin-right: 5px; color: #2c3e50; }
-    .hidden { display: none; }
-</style>
-</head>
-<body>
-    <div class="header">
-        <div>
-            <strong>🎯 Objetivo: ${tierConfig.goal}s</strong> | Prep: ${tierConfig.prep}m<br>
-            <div style="margin-top:5px;">${selectedVerbs.map(v => '<span class="tag">' + v + '</span>').join('')}</div>
-        </div>
-        <button class="btn" style="background:#9b59b6; width:auto;" onclick="forceSim()">⚠️ Modo Simulación</button>
-    </div>
-
-    <div class="grid">
-        <div>
-            <img src="${img}" style="width:100%; border-radius:8px;">
-            <div id="clock" class="timer">00:00</div>
-            <button id="mainBtn" class="btn" onclick="startPrep()">Empezar Preparación</button>
-        </div>
-        <div class="notes" id="notesArea">
-            <p style="text-align:center; color:#7f8c8d;">Haz clic en empezar para ver instrucciones.</p>
-        </div>
-    </div>
-
-    <div id="qZone" class="hidden" style="margin-top:20px; text-align:center; border-top: 2px solid #eee; padding-top:20px;">
-        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.3rem;"></div>
-        <button class="btn" style="background:#27ae60; width:auto;" onclick="ask(1)">Nivel 1</button>
-        <button class="btn" style="background:orange; width:auto;" onclick="ask(2)">Nivel 2</button>
-        <button class="btn" style="background:red; width:auto;" onclick="ask(3)">Nivel 3</button>
-    </div>
-
-    <script>
-    let seconds = 0; let loop; let goal = ${tierConfig.goal}; let isSim = false;
-    const qBank = {
-        sharing: { 1:["¿Qué ves?"], 2:["¿Hay este problema en tu casa?"], 3:["¿Qué solución propones?"] },
-        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo define esto su identidad?"], 3:["¿Afecta la globalización?"] },
-        experiences: { 1:["¿Qué actividad hacen?"], 2:["¿Has hecho algo similar?"], 3:["¿Por qué importa viajar?"] },
-        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo facilita la vida?"], 3:["¿Tiene riesgos?"] },
-        organization: { 1:["¿Quiénes son?"], 2:["¿Cómo es en tu país?"], 3:["¿Individuo vs Sociedad?"] }
+    const configs = {
+        1: { prep: 420, goal: 30, type: "script" },
+        2: { prep: 420, goal: 45, type: "script" },
+        3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
+        4: { prep: 600, goal: 90, type: "hybrid", bullets: 12 },
+        5: { prep: 600, goal: 105, type: "hybrid", bullets: 10 },
+        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
+        7: { prep: 600, goal: 150, type: "bullets", bullets: 10 },
+        8: { prep: 900, goal: 180, type: "bullets", bullets: 10 },
+        9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
+        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
     };
+    const act = configs[tier];
 
-    function forceSim() { isSim = true; goal = 240; alert("Simulación Activada: 15m prep / 4m habla."); }
+    let c = "<!DOCTYPE html>\n<html>\n<head>\n<style>\n";
+    c += "body { font-family: sans-serif; margin: 15px; color: #2c3e50; }\n";
+    c += ".header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }\n";
+    c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }\n";
+    c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }\n";
+    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }\n";
+    c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }\n";
+    c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }\n";
+    c += ".q-label { background: #e8f4fd; padding: 10px; border-radius: 5px; margin-top: 15px; border: 1px solid #3498db; font-weight: bold; }\n";
+    c += "</style>\n</head>\n<body>\n";
+    
+    c += "<div class='header'><div><strong>Objetivo: " + act.goal + "s</strong><br>" + tagsHTML + "</div>";
+    c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>\n";
+    
+    c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
+    c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>\n";
+    
+    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'>";
+    c += "<div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px; min-height:40px;'></div>";
+    c += "<button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button>";
+    c += "<button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button>";
+    c += "<button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>\n";
 
-    function buildNotes() {
-        const area = document.getElementById('notesArea');
-        const count = isSim ? 10 : ${tierConfig.bullets};
-        area.innerHTML = "<strong>Instrucciones:</strong><br>Escribe hasta <strong>"+count+" balas</strong> y una pregunta para tu grupo.<hr>";
-        if(${tier} == 7 && !isSim) { area.innerHTML = "<strong>Nivel 7: Sin balas.</strong> Escribe tu pregunta abajo.<hr>"; }
-        for(let i=1; i<=count; i++) area.innerHTML += "<div>"+i+". <input type='text' style='width:85%; border:none; border-bottom:1px solid #ddd; outline:none; margin-bottom:5px;'></div>";
-        area.innerHTML += "<br><strong>Tu Pregunta:</strong><br><textarea style='width:95%; height:50px;'></textarea>";
-    }
+    c += "<script>\n";
+    c += "var seconds=0; var loop; var customQ=null; var tierNum=" + tier + ";\n";
+    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };\n";
+    c += "fetch('" + GITHUB_JSON + "?v=' + Date.now()).then(function(r){return r.json()}).then(function(d){\n";
+    c += "  var l = d.items['" + lessonID + "'];\n";
+    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; customQ = l.preguntas;\n";
+    c += "  document.getElementById('notesArea').innerText = 'Listo: ' + l.titulo; }\n";
+    c += "});\n";
+    c += "function forceSim(){ config.goal=240; document.getElementById('simBtn').style.display='none'; }\n";
+    c += "function buildNotes(){\n";
+    c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';\n";
+    c += "  if(config.type==='script') area.innerHTML = '<textarea style=\"width:95%; height:350px; font-family:sans-serif;\"></textarea>';\n";
+    c += "  else if(config.type==='hybrid') { area.innerHTML = 'Frase de Apertura:<br><input type=\"text\" style=\"width:90%; margin-bottom:15px; border:2px solid #3498db; padding:5px;\"><br>Puntos clave:<br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%; margin-bottom:5px;\"><br>'; }\n";
+    c += "  else if(config.type==='bullets') { area.innerHTML = 'Puntos clave:<br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%; margin-bottom:5px;\"><br>'; }\n";
+    c += "  if(tierNum !== 9) { area.innerHTML += '<div class=\"q-label\">Pregunta para el grupo:<br><input type=\"text\" style=\"width:95%; margin-top:5px;\"></div>'; }\n";
+    c += "}\n";
+    c += "function startPrep(){ seconds=config.prep; buildNotes(); loop=setInterval(function(){seconds--; updateC(); if(seconds<=0) startSpeak();},1000); document.getElementById('mainBtn').innerText='¡Hablar!'; document.getElementById('mainBtn').onclick=startSpeak; }\n";
+    c += "function startSpeak(){ clearInterval(loop); seconds=config.goal; loop=setInterval(function(){seconds--; updateC();},1000); document.getElementById('mainBtn').innerText='Finalizar'; document.getElementById('mainBtn').onclick=end; }\n";
+    c += "function updateC(){ var el=document.getElementById('clock'); var a=Math.abs(seconds); el.innerText=(seconds<0?'-':'')+Math.floor(a/60)+':'+(a%60<10?'0':'')+a%60; if(seconds<0) el.style.color='red'; }\n";
+    c += "function end(){ clearInterval(loop); document.getElementById('qZone').style.display='block'; }\n";
+    c += "function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }\n";
+    c += "<\/script></body></html>";
 
-    function startPrep() {
-        seconds = (isSim ? 15 : ${tierConfig.prep}) * 60;
-        document.getElementById('mainBtn').innerText = "¡Listo para Hablar!";
-        document.getElementById('mainBtn').onclick = startSpeaking;
-        buildNotes();
-        loop = setInterval(() => { seconds--; updateClock(); if(seconds<=0) startSpeaking(); }, 1000);
-    }
-
-    function startSpeaking() {
-        clearInterval(loop); seconds = goal;
-        document.getElementById('mainBtn').innerText = "Terminar";
-        document.getElementById('mainBtn').onclick = () => { clearInterval(loop); document.getElementById('qZone').classList.remove('hidden'); };
-        loop = setInterval(() => { seconds--; updateClock(); }, 1000);
-    }
-
-    function updateClock() {
-        const el = document.getElementById('clock');
-        let abs = Math.abs(seconds);
-        el.innerText = (seconds < 0 ? "-" : "") + Math.floor(abs/60) + ":" + (abs%60 < 10 ? '0' : '') + abs%60;
-        if(seconds < 0) el.classList.add('overtime');
-    }
-
-    function ask(lvl) { document.getElementById('qDisplay').innerText = qBank['${theme}'][lvl][0]; }
-    <\/script>
-</body>
-</html>`;
-    document.getElementById('output').innerText = studentHTML;
+    document.getElementById('outputArea').value = c;
+    const preview = document.getElementById('livePreview');
+    const doc = preview.contentDocument || preview.contentWindow.document;
+    doc.open(); doc.write(c); doc.close();
 }
 </script>
 </body>
