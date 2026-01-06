@@ -65,7 +65,6 @@
       const calendarMap = calData.map || [];
       const todayStr = getTodayStr();
 
-      // Find the most recent Day number that has already started (A-Day <= Today)
       const pastOrTodayEntries = calendarMap.filter(c => c.fecha <= todayStr);
       const MASTER_DAY = pastOrTodayEntries.length > 0 
         ? Math.max(...pastOrTodayEntries.map(e => e.dia)) 
@@ -76,18 +75,40 @@
 
       let futurePillCount = 0;
 
-      rawEvals.sort((a, b) => a.dia - b.dia).forEach(ev => {
+      // 1. Assign Priority Scores for Sorting
+      const processedEvals = rawEvals.map(ev => {
         const matchingDays = calendarMap.filter(c => c.dia == ev.dia);
-        
-        // Logical "Window" check:
-        // isTodayWindow = True if Today is between the first date and the last date for this Dia
         const dates = matchingDays.map(m => m.fecha).sort();
         const minDate = dates[0];
         const maxDate = dates[dates.length - 1];
+        
         const isTodayWindow = (todayStr >= minDate && todayStr <= maxDate);
+        
+        let priority = 0;
+        if (isTodayWindow) {
+          priority = 100; // TOP
+        } else if (ev.dia > MASTER_DAY) {
+          priority = 90;  // NEXT
+        } else if (ev.dia === MASTER_DAY) {
+          priority = 80;  // RECIÉN
+        } else if (ev.dia >= MASTER_DAY - 2) {
+          priority = 70;  // 2 DAYS PRIOR
+        } else {
+          priority = 10;  // ARCHIVE (BOTTOM)
+        }
 
-        // Date Display Logic
-        const formattedDates = [...new Set(matchingDays.map(d => formatDate(d.fecha)))];
+        return { ...ev, priority, matchingDays, maxDate, isTodayWindow };
+      });
+
+      // 2. Sort: Priority (Desc), then Dia (Asc)
+      processedEvals.sort((a, b) => {
+        if (b.priority !== a.priority) return b.priority - a.priority;
+        return a.dia - b.dia;
+      });
+
+      // 3. Render
+      processedEvals.forEach(ev => {
+        const formattedDates = [...new Set(ev.matchingDays.map(d => formatDate(d.fecha)))];
         const fechaDisplay = formattedDates.length > 1 
           ? formattedDates.slice(0, -1).join(', ') + ' y ' + formattedDates.slice(-1) 
           : (formattedDates[0] || "Fecha TBD");
@@ -96,16 +117,11 @@
         let dateColor = "text-emerald-600";
         let pill = "";
 
-        if (isTodayWindow) {
-          // 1. ACTIVE WINDOW (The "A day through B day" logic)
+        if (ev.priority === 100) {
           cardStyle = "bg-white border-emerald-500 border-l-[8px] shadow-md ring-2 ring-emerald-50";
           pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
-        } else if (ev.dia === MASTER_DAY && todayStr > maxDate) {
-          // 2. RECENTLY FINISHED (Master day is this one, but date has passed)
-          cardStyle = "bg-white border-slate-300 border-l-[8px]";
-          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Reciente</span>';
-        } else if (ev.dia > MASTER_DAY) {
-          // 3. FUTURE HIERARCHY
+        } 
+        else if (ev.priority === 90) {
           futurePillCount++;
           if (futurePillCount === 1) {
             cardStyle = "bg-white border-emerald-600 border-l-[8px] shadow-sm";
@@ -114,9 +130,17 @@
             cardStyle = "bg-white border-emerald-300 border-l-[8px]";
             pill = '<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded uppercase border border-emerald-100">Pronto</span>';
           }
-        } else {
-          // 4. OLD PAST
-          cardStyle = "bg-slate-50 border-slate-200 opacity-60";
+        } 
+        else if (ev.priority === 80) {
+          cardStyle = "bg-white border-slate-400 border-l-[8px]";
+          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Recién</span>';
+        }
+        else if (ev.priority === 70) {
+          cardStyle = "bg-white border-slate-300 border-l-[8px]";
+          pill = '<span class="bg-slate-50 text-slate-500 text-[10px] font-black px-2 py-1 rounded uppercase">Pasada</span>';
+        }
+        else {
+          cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
           dateColor = "text-slate-400";
         }
 
