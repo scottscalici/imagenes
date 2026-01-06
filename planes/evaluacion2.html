@@ -21,10 +21,10 @@
 
     <div class="flex gap-4 px-2">
         <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Próximas
+            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Actuales
         </span>
         <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-slate-300"></span> Pasadas
+            <span class="w-2 h-2 rounded-full bg-slate-300"></span> Archivo
         </span>
     </div>
 
@@ -66,7 +66,6 @@
       const calendarMap = calData.map || [];
       const todayStr = getTodayStr();
 
-      // Find the most recent Day that has already happened or is today
       const pastOrTodayEntries = calendarMap.filter(c => c.ciclo === CONFIG.CICLO && c.fecha <= todayStr);
       const MASTER_DAY = pastOrTodayEntries.length > 0 
         ? Math.max(...pastOrTodayEntries.map(e => e.dia)) 
@@ -81,25 +80,27 @@
       const processedEvals = rawEvals.map(ev => {
         const calEntry = calendarMap.find(c => c.dia == ev.dia && c.ciclo === CONFIG.CICLO);
         const evalDateStr = calEntry ? calEntry.fecha : null;
+        const isToday = (evalDateStr === todayStr);
         
         let priority = 0;
-        // Logic for ordering: Today > Future > Recent Past > Old Past
-        if (evalDateStr === todayStr) {
-          priority = 100; // TOP
+        
+        // Logical Order: Recent Past > Today > Future > Old Archive
+        if (ev.dia === MASTER_DAY && !isToday) {
+          priority = 115; // Highest: Recién (Last class held)
+        } else if (ev.dia >= MASTER_DAY - 2 && ev.dia < MASTER_DAY) {
+          priority = 110; // High: Recent class
+        } else if (isToday) {
+          priority = 100; // Middle: Today
         } else if (ev.dia > MASTER_DAY || (ev.dia === MASTER_DAY && evalDateStr > todayStr)) {
-          priority = 90;  // NEXT
-        } else if (ev.dia === MASTER_DAY) {
-          priority = 80;  // RECIÉN
-        } else if (ev.dia >= MASTER_DAY - 2) {
-          priority = 70;  // 2 DAYS PRIOR
+          priority = 90;  // Lower: Future
         } else {
-          priority = 10;  // ARCHIVE (BOTTOM)
+          priority = 10;  // Bottom: Archive
         }
 
         return { ...ev, priority, evalDateStr, calEntry };
       });
 
-      // 2. Sort by priority (descending) and then by day (ascending) within groups
+      // 2. Sort: Priority (Desc), then Day (Asc)
       processedEvals.sort((a, b) => {
         if (b.priority !== a.priority) return b.priority - a.priority;
         return a.dia - b.dia; 
@@ -114,7 +115,12 @@
         let dateColor = "text-indigo-600";
         let pill = "";
 
-        if (evalDateStr === todayStr) {
+        if (ev.priority >= 110) {
+          // RECIÉN / PASADA (TOP OF PAGE)
+          cardStyle = "bg-white border-slate-400 border-l-[8px]";
+          pill = `<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">${ev.priority === 115 ? 'Reciente' : 'Pasada'}</span>`;
+        } 
+        else if (ev.priority === 100) {
           // HOY
           cardStyle = "bg-white border-red-500 border-l-[8px] shadow-md ring-2 ring-red-50";
           pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
@@ -130,16 +136,6 @@
             pill = '<span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded uppercase border border-indigo-100">Pronto</span>';
           }
         } 
-        else if (ev.priority === 80) {
-          // RECIÉN (Just happened)
-          cardStyle = "bg-white border-slate-400 border-l-[8px]";
-          pill = '<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">Recién</span>';
-        }
-        else if (ev.priority === 70) {
-          // 2 DAYS PRIOR
-          cardStyle = "bg-white border-slate-300 border-l-[8px]";
-          pill = '<span class="bg-slate-50 text-slate-500 text-[10px] font-black px-2 py-1 rounded uppercase">Pasada</span>';
-        }
         else {
           // OLD ARCHIVE
           cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
