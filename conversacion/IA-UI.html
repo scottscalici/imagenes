@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Spanish Oral Generator</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --success: #27ae60;
+            --warning: #f1c40f;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); padding: 20px; color: var(--primary); }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        /* Header & Settings */
+        .settings-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; }
+        select, input { padding: 8px; border-radius: 4px; border: 1px solid #ddd; width: 100%; }
+        
+        /* Layout */
+        .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stimulus-box { border: 2px dashed #ccc; border-radius: 8px; min-height: 300px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; position: relative; }
+        .stimulus-box img { max-width: 100%; height: auto; }
+        
+        /* Timer & Status */
+        .timer-display { font-size: 3rem; font-weight: bold; text-align: center; margin: 10px 0; color: var(--primary); }
+        .mission-box { background: #e8f4fd; border-left: 5px solid var(--accent); padding: 10px; margin-bottom: 15px; font-style: italic; }
+
+        /* Notes Section */
+        .notes-area { border: 1px solid #ddd; padding: 10px; border-radius: 8px; background: #fff; height: 350px; overflow-y: auto; }
+        .bullet-line { display: flex; align-items: center; margin-bottom: 5px; }
+        .bullet-line span { margin-right: 10px; font-weight: bold; color: #7f8c8d; }
+        .bullet-input { width: 90%; border: none; border-bottom: 1px solid #eee; outline: none; padding: 5px; }
+        
+        /* Interaction Buttons */
+        .interaction-zone { margin-top: 20px; display: none; text-align: center; border-top: 2px solid #eee; padding-top: 20px; }
+        .btn-group { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        button { cursor: pointer; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; transition: 0.3s; color: white; }
+        .btn-lvl1 { background: var(--success); }
+        .btn-lvl2 { background: var(--warning); color: #333; }
+        .btn-lvl3 { background: var(--danger); }
+        .btn-extra { background: var(--primary); }
+        .btn-start { background: var(--accent); width: 100%; font-size: 1.2rem; margin-top: 10px; }
+        
+        /* Question Display */
+        #question-text { font-size: 1.2rem; font-weight: bold; color: #2c3e50; min-height: 50px; padding: 15px; background: #fdfefe; border: 1px solid #eee; border-radius: 8px; margin-top: 10px; }
+        
+        /* Resources Section */
+        .resource-links { margin-top: 20px; text-align: center; }
+        .resource-links a { margin: 0 10px; color: var(--accent); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .resource-links a:hover { text-decoration: underline; }
+
+        @media (max-width: 600px) { .main-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="settings-bar">
+        <div>
+            <label>Tema IB:</label>
+            <select id="themeSelect">
+                <option value="sharing">Compartimos el planeta</option>
+                <option value="identities">Identidades</option>
+                <option value="experiences">Experiencias</option>
+                <option value="ingenuity">Ingenio humano</option>
+                <option value="organization">Organización social</option>
+            </select>
+        </div>
+        <div>
+            <label>Nivel (Tier):</label>
+            <select id="tierSelect" onchange="updateTierSettings()">
+                <option value="1">Tier 1</option>
+                <option value="5">Tier 5 (10 Bullets)</option>
+                <option value="8">Tier 8 (Simulación)</option>
+                <option value="10">Tier 10 (Mastery)</option>
+            </select>
+        </div>
+        <div>
+            <label>Prep (min):</label>
+            <input type="number" id="prepTimerInput" value="15">
+        </div>
+        <div>
+            <label>Modo:</label>
+            <select id="modeSelect">
+                <option value="practice">🏋️ Práctica (Count Up)</option>
+                <option value="sim">⏱️ Simulación (Count Down)</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="mission-display" class="mission-box">Misión: Describe lo que ves.</div>
+
+    <div class="main-layout">
+        <div class="left-col">
+            <div class="stimulus-box" id="stimulus-box">
+                <p>Haz clic en "Iniciar" para ver la imagen</p>
+            </div>
+            <div class="timer-display" id="timer">00:00</div>
+            <button class="btn-start" onclick="togglePhase()" id="actionBtn">Iniciar Preparación</button>
+        </div>
+
+        <div class="right-col">
+            <div class="notes-area" id="notes-container">
+                </div>
+            <div class="resource-links">
+                <a href="https://sites.google.com/view/srscalici/vocabulario/modismos" target="_blank">🔗 Modismos</a>
+                <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales" target="_blank">🔗 Conexiones Culturales</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="interaction-zone" id="interaction-zone">
+        <h3>Fase de Preguntas</h3>
+        <div id="question-text">Selecciona un nivel de pregunta para comenzar.</div>
+        <div class="btn-group">
+            <button class="btn-lvl1" onclick="generateQuestion(1)">Nivel 1</button>
+            <button class="btn-lvl2" onclick="generateQuestion(2)">Nivel 2</button>
+            <button class="btn-lvl3" onclick="generateQuestion(3)">Nivel 3</button>
+            <button class="btn-extra" onclick="generateQuestion('extra')">¡Explica más!</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Data Banks ---
+    const tierData = {
+        1: { prep: 7, pres: 30, bullets: 50, mission: "Superficial: ¿Qué ves en la foto?" },
+        5: { prep: 10, pres: 105, bullets: 10, mission: "¡Busca conexiones en el sitio de Sr. Scalici!" },
+        8: { prep: 15, pres: 180, bullets: 10, mission: "Simulación: Usa preguntas del sitio para guiarte." },
+        10: { prep: 15, pres: 240, bullets: 10, mission: "Full IB Simulation: 4 minutos de habla." }
+    };
+
+    const questions = {
+        sharing: {
+            1: ["¿Qué es lo más importante que ves en la foto?", "¿Qué tiempo hace?"],
+            2: ["¿Haces algo similar en tu casa?", "¿Es un problema común en tu comunidad?"],
+            3: ["¿Cómo cambiaría la situación sin el gobierno?", "¿Cuál es el mayor desafío global aquí?"]
+        },
+        // (Add other themes here following the same structure)
+        extra: ["¿Puedes darme un ejemplo específico?", "¿Qué diría alguien que no está de acuerdo?", "¿Cómo afectará esto al futuro?"]
+    };
+
+    // --- State Management ---
+    let phase = "setup"; // setup, prep, speaking
+    let timerInterval;
+    let seconds = 0;
+
+    function updateTierSettings() {
+        const tier = document.getElementById('tierSelect').value;
+        document.getElementById('prepTimerInput').value = tierData[tier].prep;
+        document.getElementById('mission-display').innerText = "Misión: " + tierData[tier].mission;
+        renderBullets(tierData[tier].bullets);
+    }
+
+    function renderBullets(count) {
+        const container = document.getElementById('notes-container');
+        container.innerHTML = "";
+        for (let i = 1; i <= count; i++) {
+            container.innerHTML += `<div class="bullet-line"><span>${i}.</span><input type="text" class="bullet-input" placeholder="..."></div>`;
+        }
+    }
+
+    function togglePhase() {
+        if (phase === "setup") {
+            startPrep();
+        } else if (phase === "prep") {
+            startSpeaking();
+        } else {
+            resetAll();
+        }
+    }
+
+    function startPrep() {
+        phase = "prep";
+        seconds = document.getElementById('prepTimerInput').value * 60;
+        document.getElementById('actionBtn').innerText = "¡Listo para Hablar!";
+        document.getElementById('stimulus-box').innerHTML = '<img src="https://via.placeholder.com/400x300?text=Imagen+de+Examen" alt="Stimulus">'; // Replace with your image logic
+        startTimer(true);
+    }
+
+    function startSpeaking() {
+        phase = "speaking";
+        clearInterval(timerInterval);
+        const mode = document.getElementById('modeSelect').value;
+        const tier = document.getElementById('tierSelect').value;
+        
+        if (mode === "sim") {
+            seconds = tierData[tier].pres;
+            startTimer(true);
+        } else {
+            seconds = 0;
+            startTimer(false);
+        }
+        
+        document.getElementById('actionBtn').innerText = "Terminar y Preguntas";
+        document.getElementById('actionBtn').onclick = endPresentation;
+    }
+
+    function endPresentation() {
+        clearInterval(timerInterval);
+        document.getElementById('interaction-zone').style.display = "block";
+        document.getElementById('actionBtn').innerText = "Reiniciar Todo";
+        document.getElementById('actionBtn').onclick = () => location.reload();
+    }
+
+    function startTimer(isCountdown) {
+        timerInterval = setInterval(() => {
+            if (isCountdown) {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    if(phase === "prep") startSpeaking();
+                    else endPresentation();
+                }
+            } else {
+                seconds++;
+            }
+            displayTime();
+        }, 1000);
+    }
+
+    function displayTime() {
+        const m = Math.floor(Math.abs(seconds) / 60);
+        const s = Math.abs(seconds) % 60;
+        document.getElementById('timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function generateQuestion(lvl) {
+        const theme = document.getElementById('themeSelect').value;
+        const bank = lvl === 'extra' ? questions.extra : questions.sharing[lvl]; // Fallback to sharing for demo
+        const randomQ = bank[Math.floor(Math.random() * bank.length)];
+        document.getElementById('question-text').innerText = randomQ;
+    }
+
+    // Initialize
+    updateTierSettings();
+</script>
+
+</body>
+</html>
