@@ -2,103 +2,176 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - IA Generator</title>
+    <title>Sr. Scalici - Factory (HTML Generator)</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --success: #27ae60; --light: #ecf0f1; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); padding: 20px; }
-        .factory-panel { background: #fff; padding: 20px; border-radius: 12px; border: 3px solid var(--accent); margin-bottom: 20px; }
-        .student-view { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .hidden { display: none !important; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .timer { font-size: 3.5rem; font-weight: bold; text-align: center; color: var(--primary); }
-        .notes-area { border: 1px solid #ddd; padding: 15px; border-radius: 8px; height: 400px; overflow-y: auto; background: #fafafa; }
-        .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; }
-        .btn-launch { background: var(--success); width: 100%; margin-top: 10px; }
-        .mission-header { background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 8px solid var(--accent); }
-        .verb-tag { display: inline-block; background: #eee; padding: 4px 10px; border-radius: 15px; margin: 5px; font-size: 0.8rem; border: 1px solid #ccc; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; }
+        .factory-box { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 12px; border: 3px solid #3498db; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+        .output-area { background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; height: 200px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; margin-top: 20px; }
+        button { background: #27ae60; color: white; padding: 15px; width: 100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="factory" class="factory-panel">
-    <h2>🛠️ Generador de Enlaces para Estudiantes</h2>
-    <p>Configura la sesión y copia el URL de la barra de direcciones para dárselo a los alumnos.</p>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <input type="text" id="ghUrl" placeholder="Link de GitHub (blob)..." oninput="updateLink()">
-        <select id="tSelect" onchange="updateLink()">
-            <option value="1">Tier 1-2 (Guion)</option>
-            <option value="5">Tier 5 (10 Balas)</option>
-            <option value="10">Tier 10 (IB Sim)</option>
-        </select>
-        <select id="themeSelect" onchange="updateLink()">
-            <option value="sharing">Compartimos el planeta</option>
-            <option value="identities">Identidades</option>
-            <option value="experiences">Experiencias</option>
-        </select>
-        <input type="text" id="verbs" placeholder="Verbos (ej: Subjuntivo, Pretérito...)" oninput="updateLink()">
-    </div>
-    <div style="margin-top:20px; padding:10px; background:#eee; word-break: break-all;" id="finalUrl">URL para estudiantes aparecerá aquí...</div>
-</div>
+<div class="factory-box">
+    <h2>🛠️ Creador de Lecciones (HTML)</h2>
+    <label>Link de GitHub (Cualquier formato):</label>
+    <input type="text" id="ghLink" placeholder="https://github.com/.../foto.jpg">
+    
+    <label>Tema IB:</label>
+    <select id="theme">
+        <option value="sharing">Compartimos el planeta</option>
+        <option value="identities">Identidades</option>
+        <option value="experiences">Experiencias</option>
+        <option value="ingenuity">Ingenio humano</option>
+        <option value="organization">Organización social</option>
+    </select>
 
-<div id="product" class="student-view hidden">
-    <div class="mission-header">
-        <div id="mText"></div>
-        <div id="vText" style="margin-top:10px;"></div>
-    </div>
-    <div class="grid">
-        <div>
-            <img id="stimulus" style="width:100%; border-radius:8px;">
-            <div class="timer" id="clock">00:00</div>
-            <button id="actBtn" class="btn btn-launch" onclick="handleLogic()">Empezar Preparación</button>
-        </div>
-        <div class="notes-area" id="notes"></div>
-    </div>
-    <div id="qZone" class="hidden" style="margin-top:20px; text-align:center;">
-        <div id="qText" style="font-weight:bold; font-size:1.2rem; margin-bottom:15px;"></div>
-        <button class="btn" style="background:var(--success)" onclick="ask(1)">Nivel 1</button>
-        <button class="btn" style="background:orange" onclick="ask(2)">Nivel 2</button>
-        <button class="btn" style="background:red" onclick="ask(3)">Nivel 3</button>
-    </div>
+    <label>Nivel (Tier 1-10):</label>
+    <select id="tier">
+        <option value="1">Tier 1: 30s - Guion Completo</option>
+        <option value="2">Tier 2: 45s - Guion Completo</option>
+        <option value="3">Tier 3: 1m - Balas ilimitadas</option>
+        <option value="4">Tier 4: 1.5m - 25 Balas</option>
+        <option value="5">Tier 5: 1.75m - 10 Balas</option>
+        <option value="6">Tier 6: 2m - 10 Balas + Escribir Pregunta</option>
+        <option value="7">Tier 7: 2.5m - 0 Balas + Escribir Pregunta</option>
+        <option value="8">Tier 8: 3m - 10 Balas (Simulación)</option>
+        <option value="9">Tier 9: 3.5m - 10 Balas (Simulación)</option>
+        <option value="10">Tier 10: 4m - 10 Balas (Simulación)</option>
+    </select>
+
+    <label>Tiempos Verbales / Enfoque:</label>
+    <input type="text" id="verbs" placeholder="ej: Subjuntivo, Imperfecto, Por vs Para">
+
+    <button onclick="generateHTML()">Generar Código para Estudiantes</button>
+
+    <div class="output-area" id="output">El código aparecerá aquí...</div>
+    <p><small>Instrucciones: Copia el código de arriba y pégalo en el bloque "Insertar > Código HTML" de tu Google Site.</small></p>
 </div>
 
 <script>
-// RAW CONVERSION: github.com/.../blob/... -> raw.githubusercontent.com/.../...
 function toRaw(url) {
     return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
 }
 
-function updateLink() {
-    const params = new URLSearchParams();
-    params.set('img', toRaw(document.getElementById('ghUrl').value));
-    params.set('tier', document.getElementById('tSelect').value);
-    params.set('theme', document.getElementById('themeSelect').value);
-    params.set('v', document.getElementById('verbs').value);
-    params.set('view', 'student');
-    const fullLink = window.location.origin + window.location.pathname + '?' + params.toString();
-    document.getElementById('finalUrl').innerText = fullLink;
-}
-
-// ON LOAD: CHECK IF STUDENT VIEW
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('view') === 'student') {
-    document.getElementById('factory').classList.add('hidden');
-    document.getElementById('product').classList.remove('hidden');
-    document.getElementById('stimulus').src = urlParams.get('img');
-    document.getElementById('mText').innerText = "Tier " + urlParams.get('tier') + ": " + (urlParams.get('tier') == 10 ? "Simulación Completa" : "Práctica");
+function generateHTML() {
+    const img = toRaw(document.getElementById('ghLink').value);
+    const tier = document.getElementById('tier').value;
+    const theme = document.getElementById('theme').value;
+    const verbs = document.getElementById('verbs').value;
     
-    // Process Verbs
-    const vList = urlParams.get('v').split(',');
-    vList.forEach(v => {
-        if(v) document.getElementById('vText').innerHTML += `<span class="verb-tag">🎯 Incluye: ${v.trim()}</span>`;
-    });
+    // Tier Logic
+    const config = {
+        1: { time: 30, bullets: 50, prep: 7 },
+        2: { time: 45, bullets: 50, prep: 7 },
+        3: { time: 60, bullets: 50, prep: 10 },
+        4: { time: 90, bullets: 25, prep: 10 },
+        5: { time: 105, bullets: 10, prep: 12 },
+        6: { time: 120, bullets: 10, prep: 12, q: true },
+        7: { time: 150, bullets: 0, prep: 15, q: true },
+        8: { time: 180, bullets: 10, prep: 15 },
+        9: { time: 210, bullets: 10, prep: 15 },
+        10: { time: 240, bullets: 10, prep: 15 }
+    }[tier];
 
-    // Build Bullets
-    const n = document.getElementById('notes');
-    let limit = urlParams.get('tier') >= 5 ? 10 : 20;
-    for(let i=1; i<=limit; i++) n.innerHTML += `<div>${i}. <input type="text" style="width:85%; border:none; border-bottom:1px solid #ddd; margin-bottom:10px;"></div>`;
+    const studentHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    body { font-family: sans-serif; background: white; color: #2c3e50; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; }
+    .timer { font-size: 3rem; font-weight: bold; text-align: center; margin: 10px 0; }
+    .notes { border: 1px solid #ddd; padding: 15px; height: 400px; overflow-y: auto; background: #f9f9f9; }
+    .hidden { display: none; }
+    .tag { background: #e8f4fd; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 2px; display: inline-block; border: 1px solid #3498db; }
+</style>
+</head>
+<body>
+    <div id="mission" style="background:#2c3e50; color:white; padding:10px; margin-bottom:10px; border-radius:5px;">
+        Nivel ${tier} | Objetivo: ${config.time}s | Prep: ${config.prep}m
+        <div id="vTags" style="margin-top:5px;">${verbs.split(',').map(v => '<span class="tag">🎯 ' + v.trim() + '</span>').join('')}</div>
+    </div>
+    <div class="grid">
+        <div>
+            <img src="${img}" style="width:100%; border-radius:8px;">
+            <div id="clock" class="timer">00:00</div>
+            <button id="mainBtn" class="btn" onclick="startPrep()">Empezar Preparación</button>
+        </div>
+        <div id="notesArea" class="notes"></div>
+    </div>
+    <div id="qZone" class="hidden" style="margin-top:20px; text-align:center; border-top: 2px solid #eee; padding-top:20px;">
+        <div id="qDisplay" style="font-weight:bold; margin-bottom:15px; font-size:1.2rem;"></div>
+        <button class="btn" style="background:#27ae60; width:auto; margin:5px;" onclick="ask(1)">Nivel 1</button>
+        <button class="btn" style="background:orange; width:auto; margin:5px;" onclick="ask(2)">Nivel 2</button>
+        <button class="btn" style="background:red; width:auto; margin:5px;" onclick="ask(3)">Nivel 3</button>
+    </div>
+
+    <script>
+    let seconds = 0; let loop; let phase = 'init';
+    const questions = {
+        sharing: { 1:["¿Qué ves?"], 2:["¿Hay este problema en tu comunidad?"], 3:["¿Cómo ayuda el gobierno?"] },
+        identities: { 1:["¿Cómo van vestidos?"], 2:["¿Cómo define esto su identidad?"], 3:["¿Afecta la globalización?"] },
+        experiences: { 1:["¿Qué hacen?"], 2:["¿Has hecho algo así?"], 3:["¿Cómo cambia esto tu perspectiva?"] },
+        ingenuity: { 1:["¿Qué tecnología ves?"], 2:["¿Cómo ha cambiado tu vida?"], 3:["¿Es accesible para todos?"] },
+        organization: { 1:["¿Qué relación tienen?"], 2:["¿Cómo es en tu país?"], 3:["¿Individuo vs Sociedad?"] }
+    };
+
+    function buildBullets() {
+        const area = document.getElementById('notesArea');
+        if(${tier} == 7) { area.innerHTML = "<p>Escribe tu pregunta aquí:</p><textarea style='width:90%; height:100px;'></textarea>"; return; }
+        for(let i=1; i<=${config.bullets}; i++) area.innerHTML += "<div>"+i+". <input type='text' style='width:80%; border:none; border-bottom:1px solid #ccc; margin-bottom:10px;'></div>";
+    }
+
+    function startPrep() {
+        phase = 'prep';
+        seconds = ${config.prep} * 60;
+        document.getElementById('mainBtn').innerText = "¡Listo para Hablar!";
+        document.getElementById('mainBtn').onclick = startSpeaking;
+        loop = setInterval(() => {
+            seconds--;
+            updateClock();
+            if(seconds <= 0) startSpeaking();
+        }, 1000);
+        buildBullets();
+    }
+
+    function startSpeaking() {
+        clearInterval(loop);
+        phase = 'speaking';
+        seconds = ${config.time};
+        document.getElementById('mainBtn').innerText = "Terminar y Preguntas";
+        document.getElementById('mainBtn').onclick = endAll;
+        loop = setInterval(() => {
+            seconds--;
+            updateClock();
+            if(seconds <= 0) endAll();
+        }, 1000);
+    }
+
+    function endAll() {
+        clearInterval(loop);
+        document.getElementById('qZone').classList.remove('hidden');
+    }
+
+    function updateClock() {
+        let m = Math.floor(Math.abs(seconds)/60);
+        let s = Math.abs(seconds)%60;
+        document.getElementById('clock').innerText = m + ":" + (s < 10 ? '0' : '') + s;
+    }
+
+    function ask(lvl) {
+        const bank = questions['${theme}'][lvl];
+        document.getElementById('qDisplay').innerText = bank[Math.floor(Math.random()*bank.length)];
+    }
+    <\/script>
+</body>
+</html>`;
+
+    document.getElementById('output').innerText = studentHTML;
 }
-
-// Logic for Timers and Questions would go here as per previous versions
 </script>
 </body>
 </html>
