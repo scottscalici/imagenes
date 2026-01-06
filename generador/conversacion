@@ -1,110 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Generador: Conversación</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Sr. Scalici - Factory v22</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
+        .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .section { margin-bottom: 25px; padding: 20px; border: 1px solid #dcdde1; border-radius: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; }
+        .output-container { position: relative; margin-top: 15px; }
+        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 180px; width: 100%; font-family: monospace; box-sizing: border-box; resize: none; border: none; font-size: 11px; }
+        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; }
+        button.copy-btn { position: absolute; top: 10px; right: 20px; background: #ff5e57; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #livePreview { width: 100%; height: 800px; border: 3px dashed #dcdde1; margin-top: 25px; border-radius: 10px; }
+    </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-4xl mx-auto space-y-6">
+<body>
 
-    <!-- Input Area -->
-    <section class="mb-6 space-y-4 bg-white shadow rounded-xl p-6">
-      <h1 class="text-2xl font-bold text-gray-800 mb-2">Generador: Conversación</h1>
+<div class="factory-box">
+    <h2>🚀 Factory v22: Ajuste de Tiers y Pregunta</h2>
+    
+    <div class="section">
+        <h3>1. Configuración de la Lección</h3>
+        <div class="grid-3">
+            <div>
+                <label>Lección:</label>
+                <select id="lessonSelect"><option>Cargando GitHub...</option></select>
+            </div>
+            <div>
+                <label>Tema IB:</label>
+                <select id="theme">
+                    <option value="ingenuity">Ingenio humano</option>
+                    <option value="experiences">Experiencias</option>
+                    <option value="sharing">Compartimos el planeta</option>
+                    <option value="identities">Identidades</option>
+                    <option value="social">Organización social</option>
+                </select>
+            </div>
+            <div>
+                <label>Andamiaje (Tier):</label>
+                <select id="tier">
+                    <option value="1">Tier 1: Guion (30s)</option>
+                    <option value="2">Tier 2: Guion (45s)</option>
+                    <option value="3">Tier 3: 1 Frase + 15 Balas (60s)</option>
+                    <option value="4">Tier 4: 1 Frase + 12 Balas (90s)</option>
+                    <option value="5">Tier 5: 1 Frase + 10 Balas (105s)</option>
+                    <option value="6">Tier 6: 10 Balas (120s)</option>
+                    <option value="7">Tier 7: 10 Balas (150s)</option>
+                    <option value="8">Tier 8: 10 Balas (180s)</option>
+                    <option value="9">Tier 9: Solo Pregunta (210s)</option>
+                    <option value="10" selected>Tier 10: Simulación (240s)</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-      <div>
-        <label class="block font-semibold mb-1">Título (opcional):</label>
-        <input type="text" id="convTitle" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Conversación">
-      </div>
+    <div class="section">
+        <h3>2. Evaluación y Gramática</h3>
+        <div class="checkbox-grid">
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Describe foto"> 📸 Foto</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Conex. Personal"> 👤 Personal</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Conex. Cultural"> 🌎 Cultural</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🗣️ Modismos"> 🗣️ Modismos</label>
+            <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
+            <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
+            <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" class="gram" value="Si + Condicional"> Si + Cond</label>
+            <label><input type="checkbox" class="gram" value="Ser vs Estar"> Ser/Estar</label>
+            <label><input type="checkbox" class="gram" value="Por vs Para"> Por/Para</label>
+            <label><input type="checkbox" class="gram" value="Pretérito Perfecto"> Pret. Perf.</label>
+            <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
+        </div>
+    </div>
 
-      <div>
-        <label class="block font-semibold mb-1">Imagen URL (opcional):</label>
-        <input type="text" id="convImg" class="w-full p-2 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="https://...">
-      </div>
+    <button class="gen-btn" onclick="generateV22()">GENERAR v22 Y VISTA PREVIA</button>
+    
+    <div class="output-container">
+        <button class="copy-btn" onclick="copyV22()">COPIAR CÓDIGO</button>
+        <textarea id="outputArea" readonly></textarea>
+    </div>
 
-      <div>
-        <label class="block font-semibold mb-1">Instrucciones / Texto:</label>
-        <textarea id="convText" class="w-full h-32 p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Escribe aquí tus instrucciones o preguntas..."></textarea>
-      </div>
+    <iframe id="livePreview"></iframe>
+</div>
 
-      <button type="button" onclick="generateConversacion()" class="mt-4 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md">
-        Generar sección
-      </button>
-    </section>
+<script>
+const GITHUB_JSON = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json";
 
-    <!-- Preview -->
-    <section id="convSection" class="hidden mb-6">
-      <h2 class="text-xl font-semibold mb-2">Vista previa</h2>
-      <div id="convPreview"></div>
-    </section>
+fetch(GITHUB_JSON + "?v=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+        const sel = document.getElementById('lessonSelect');
+        sel.innerHTML = "";
+        for (const id in data.items) {
+            let opt = document.createElement('option');
+            opt.value = id; opt.text = data.items[id].titulo;
+            sel.appendChild(opt);
+        }
+    });
 
-    <!-- Code Output -->
-    <section id="codeOutput" class="hidden">
-      <h2 class="text-xl font-semibold mb-2">Código HTML:</h2>
-      <textarea id="htmlCode" class="w-full h-64 p-4 border rounded-xl font-mono text-sm bg-gray-50"></textarea>
-    </section>
+function copyV22() {
+    const area = document.getElementById("outputArea");
+    area.select();
+    document.execCommand('copy');
+    alert("Código copiado.");
+}
 
-  </div>
+function generateV22() {
+    const lessonID = document.getElementById('lessonSelect').value;
+    const tier = parseInt(document.getElementById('tier').value);
+    
+    let tagsHTML = "";
+    document.querySelectorAll('.gram:checked').forEach(cb => {
+        tagsHTML += '<span style="background:#f0f2f5; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #ccc; margin-right:5px; color:#2c3e50; display:inline-block; margin-top:5px;">' + cb.value + '</span>';
+    });
 
-  <script>
-    window.generateConversacion = function() {
-      const title = document.getElementById("convTitle").value.trim() || "Conversación";
-      const imgUrl = document.getElementById("convImg").value.trim();
-      const text = document.getElementById("convText").value.trim();
-
-     const htmlSnippet = [
-  '<section class="bg-white shadow rounded-xl border-l-4 border-yellow-500 overflow-hidden">',
-  `  <h2 class="text-yellow-600 font-semibold text-lg px-4 pt-4">${title}</h2>`,
-  '  <div class="p-4 text-gray-800 space-y-4">',
-  imgUrl ? `    <img src="${imgUrl}" alt="${title}" class="rounded-lg shadow-md max-h-64 object-cover">` : "",
-  text ? `    <p class="whitespace-pre-line">${text}</p>` : "",
-  '    <div class="flex items-center gap-3 mt-4">',
-  '      <button onclick="startTimer(this)" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">Iniciar</button>',
-  '      <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">Reiniciar</button>',
-  '      <span class="font-mono" data-timer>00:00</span>',
-  '    </div>',
-  '    <div class="mt-4 space-y-1 text-sm">',
-  '      <p>🔗 Recursos útiles:</p>',
-  '      <ul class="list-disc list-inside text-blue-600">',
-  '        <li><a href="https://sites.google.com/view/srscalici/vocabulario/modismos" target="_blank" class="hover:underline">📘 Expresiones idiomáticas</a></li>',
-  '        <li><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales" target="_blank" class="hover:underline">🌍 Conexiones culturales</a></li>',
-  '      </ul>',
-  '    </div>',
-  '  </div>',
-  '</section>'
-].join("\n");
-
-
-      // Show preview
-      document.getElementById("convPreview").innerHTML = htmlSnippet;
-      document.getElementById("convSection").classList.remove("hidden");
-
-      // Show output
-      document.getElementById("htmlCode").value = htmlSnippet;
-      document.getElementById("codeOutput").classList.remove("hidden");
+    const configs = {
+        1: { prep: 420, goal: 30, type: "script" },
+        2: { prep: 420, goal: 45, type: "script" },
+        3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
+        4: { prep: 600, goal: 90, type: "hybrid", bullets: 12 },
+        5: { prep: 600, goal: 105, type: "hybrid", bullets: 10 },
+        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
+        7: { prep: 600, goal: 150, type: "bullets", bullets: 10 },
+        8: { prep: 900, goal: 180, type: "bullets", bullets: 10 },
+        9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
+        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
     };
+    const act = configs[tier];
 
-    // Timer logic
-    window.startTimer = function(btn) {
-      const container = btn.closest("div");
-      const display = container.querySelector("[data-timer]");
-      let seconds = 0;
-      clearInterval(container.timer);
-      container.timer = setInterval(() => {
-        seconds++;
-        const m = String(Math.floor(seconds / 60)).padStart(2, "0");
-        const s = String(seconds % 60).padStart(2, "0");
-        display.textContent = `${m}:${s}`;
-      }, 1000);
-    };
+    let c = "<!DOCTYPE html>\n<html>\n<head>\n<style>\n";
+    c += "body { font-family: sans-serif; margin: 15px; color: #2c3e50; }\n";
+    c += ".header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }\n";
+    c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }\n";
+    c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }\n";
+    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }\n";
+    c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }\n";
+    c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }\n";
+    c += ".q-label { background: #e8f4fd; padding: 10px; border-radius: 5px; margin-top: 15px; border: 1px solid #3498db; font-weight: bold; }\n";
+    c += "</style>\n</head>\n<body>\n";
+    
+    c += "<div class='header'><div><strong>Objetivo: " + act.goal + "s</strong><br>" + tagsHTML + "</div>";
+    c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>\n";
+    
+    c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
+    c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>\n";
+    
+    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'>";
+    c += "<div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px; min-height:40px;'></div>";
+    c += "<button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button>";
+    c += "<button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button>";
+    c += "<button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>\n";
 
-    window.resetTimer = function(btn) {
-      const container = btn.closest("div");
-      const display = container.querySelector("[data-timer]");
-      clearInterval(container.timer);
-      display.textContent = "00:00";
-    };
-  </script>
+    c += "<script>\n";
+    c += "var seconds=0; var loop; var customQ=null; var tierNum=" + tier + ";\n";
+    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };\n";
+    c += "fetch('" + GITHUB_JSON + "?v=' + Date.now()).then(function(r){return r.json()}).then(function(d){\n";
+    c += "  var l = d.items['" + lessonID + "'];\n";
+    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; customQ = l.preguntas;\n";
+    c += "  document.getElementById('notesArea').innerText = 'Listo: ' + l.titulo; }\n";
+    c += "});\n";
+    c += "function forceSim(){ config.goal=240; document.getElementById('simBtn').style.display='none'; }\n";
+    c += "function buildNotes(){\n";
+    c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';\n";
+    c += "  if(config.type==='script') area.innerHTML = '<textarea style=\"width:95%; height:350px; font-family:sans-serif;\"></textarea>';\n";
+    c += "  else if(config.type==='hybrid') { area.innerHTML = 'Frase de Apertura:<br><input type=\"text\" style=\"width:90%; margin-bottom:15px; border:2px solid #3498db; padding:5px;\"><br>Puntos clave:<br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%; margin-bottom:5px;\"><br>'; }\n";
+    c += "  else if(config.type==='bullets') { area.innerHTML = 'Puntos clave:<br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%; margin-bottom:5px;\"><br>'; }\n";
+    c += "  if(tierNum !== 9) { area.innerHTML += '<div class=\"q-label\">Pregunta para el grupo:<br><input type=\"text\" style=\"width:95%; margin-top:5px;\"></div>'; }\n";
+    c += "}\n";
+    c += "function startPrep(){ seconds=config.prep; buildNotes(); loop=setInterval(function(){seconds--; updateC(); if(seconds<=0) startSpeak();},1000); document.getElementById('mainBtn').innerText='¡Hablar!'; document.getElementById('mainBtn').onclick=startSpeak; }\n";
+    c += "function startSpeak(){ clearInterval(loop); seconds=config.goal; loop=setInterval(function(){seconds--; updateC();},1000); document.getElementById('mainBtn').innerText='Finalizar'; document.getElementById('mainBtn').onclick=end; }\n";
+    c += "function updateC(){ var el=document.getElementById('clock'); var a=Math.abs(seconds); el.innerText=(seconds<0?'-':'')+Math.floor(a/60)+':'+(a%60<10?'0':'')+a%60; if(seconds<0) el.style.color='red'; }\n";
+    c += "function end(){ clearInterval(loop); document.getElementById('qZone').style.display='block'; }\n";
+    c += "function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }\n";
+    c += "<\/script></body></html>";
+
+    document.getElementById('outputArea').value = c;
+    const preview = document.getElementById('livePreview');
+    const doc = preview.contentDocument || preview.contentWindow.document;
+    doc.open(); doc.write(c); doc.close();
+}
+</script>
 </body>
 </html>
