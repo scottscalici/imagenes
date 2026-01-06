@@ -1124,5 +1124,130 @@
 
     init();
   </script>
+<style>
+  #cls-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9999; 
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center; padding: 15px; font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  #cls-modal-card {
+    background: white; width: 98%; max-width: 1400px; height: 95vh; 
+    border-radius: 12px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .cls-reveal-box {
+    cursor: pointer; transition: all 0.2s; display: inline-block; width: 100%; text-align: center;
+    background-color: #f1f5f9; color: transparent !important; border-radius: 4px; user-select: none;
+    border: 1px solid #e2e8f0;
+  }
+  .cls-reveal-box.is-revealed {
+    background-color: transparent; color: #0284c7 !important; border-color: transparent;
+  }
+  .cls-scroll { overflow-y: auto; padding: 20px; flex-grow: 1; }
+  
+  /* LANDSCAPE GRID OPTIMIZATION */
+  .cls-verb-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px;
+  }
+  .cls-vocab-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: x-large; gap: 15px;
+  }
+  
+  .cls-btn-main {
+    background: #f59e0b; color: white; font-weight: bold; padding: 12px; 
+    border-radius: 12px; width: 100%; margin-bottom: 15px; cursor: pointer; border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<script>
+(function() {
+  window.addEventListener('load', function() {
+    const sidebar = document.querySelector('aside');
+    if (sidebar) {
+      const btn = document.createElement('button');
+      btn.innerHTML = "📺 Vista de Proyector";
+      btn.className = "cls-btn-main";
+      btn.onclick = openClassroomView;
+      sidebar.prepend(btn);
+    }
+  });
+
+  const modalHtml = `
+    <div id="cls-modal-overlay">
+      <div id="cls-modal-card">
+        <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+          <h2 id="cls-header-title" style="margin: 0; color: #1e293b; font-size: 1.2rem; font-weight: 800;">REPASO</h2>
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <button id="cls-reveal-all" style="padding: 6px 15px; background: #0ea5e9; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Revelar Todo</button>
+            <button id="cls-close" style="background: none; border: none; font-size: 2.5rem; color: #94a3b8; cursor: pointer; line-height: 1;">&times;</button>
+          </div>
+        </div>
+        <div id="cls-content" class="cls-scroll"></div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  const overlay = document.getElementById('cls-modal-overlay');
+  const content = document.getElementById('cls-content');
+  
+  document.getElementById('cls-close').onclick = () => overlay.style.display = 'none';
+  document.getElementById('cls-reveal-all').onclick = () => {
+    document.querySelectorAll('.cls-reveal-box').forEach(el => el.classList.add('is-revealed'));
+  };
+
+  async function openClassroomView() {
+    overlay.style.display = 'flex';
+    document.getElementById('cls-header-title').textContent = (runtime.title || "REPASO").toUpperCase();
+    content.innerHTML = '<p style="text-align:center; padding: 50px; color:#94a3b8;">Cargando pantalla panorámica...</p>';
+    
+    try {
+      const [vRes, cRes] = await Promise.all([
+        fetch(runtime.verbsUrl + "?t=" + Date.now()),
+        fetch(runtime.vocabUrl + "?t=" + Date.now())
+      ]);
+      const verbs = await vRes.json();
+      const vocab = await cRes.json();
+
+      const verbItems = Array.isArray(verbs) ? verbs : (verbs.items || []);
+      const vocabItems = Array.isArray(vocab) ? vocab : (vocab.items || vocab.vocabulario || []);
+
+      let html = '<div style="background:#f0f9ff; padding: 5px 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0ea5e9;"><b style="color:#0369a1;">VERBOS:</b> ' + runtime.verbsLabel + '</div>';
+      html += '<div class="cls-verb-grid">';
+      
+      verbItems.forEach(v => {
+        html += `
+          <div style="padding: 8px; border: 1px solid #e2e8f0; background: white; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+            <div style="text-align: left; line-height: 1.1;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: bold;">${v.sujeto}</div>
+              <div style="font-size: 0.75rem; color: #94a3b8; font-style: italic;">${v.infinitivo}</div>
+            </div>
+            <div class="cls-reveal-box" style="font-family: monospace; font-size: 1.1rem; font-weight: bold; flex-grow: 1;" onclick="this.classList.add('is-revealed')">${v.forma}</div>
+          </div>`;
+      });
+
+      html += '</div>';
+      html += '<div style="background:#f0fdf4; padding: 5px 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #22c55e;"><b style="color:#15803d;">VOCABULARIO:</b> ' + runtime.vocabLabel + '</div>';
+      html += '<div class="cls-vocab-grid">';
+      
+      vocabItems.forEach(v => {
+        const es = v.spanish || v.es || v.palabra;
+        const en = v.english || v.en || v.traducción;
+        html += `
+          <div style="display: flex; align-items: center; border-bottom: 1px solid #f1f5f9; padding: 5px; gap: 10px;">
+            <span style="font-weight: bold; color: #334155; font-size: 0.95rem; white-space: nowrap;">${es}</span>
+            <span class="cls-reveal-box" style="font-size: 0.95rem; flex-grow: 1;" onclick="this.classList.add('is-revealed')">${en}</span>
+          </div>`;
+      });
+      
+      html += '</div>';
+      content.innerHTML = html;
+
+    } catch (e) {
+      content.innerHTML = '<p style="color:red; text-align:center;">Error al cargar datos panorámicos.</p>';
+    }
+  }
+})();
+</script>
 </body>
 </html>
