@@ -162,6 +162,7 @@
         vocab: r[5], apuntes: r[6], extras: r[7],
         musica: r[8], lectura: r[9], cultura: r[10], conv: r[11]
       };
+      
     } catch (e) { console.error("Error loading data", e); }
   }
 
@@ -176,8 +177,7 @@
     if (!data) return;
 
     const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 35; 
-
+   let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.dia));
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
     // 1. HEADER & CALENDAR
