@@ -2,25 +2,26 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v34</title>
+    <title>Sr. Scalici - Factory v35</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .section { margin-bottom: 25px; padding: 20px; border: 1px solid #dcdde1; border-radius: 10px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
-        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; }
         .output-container { position: relative; margin-top: 15px; }
         #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 180px; width: 100%; font-family: monospace; box-sizing: border-box; resize: none; border: none; font-size: 11px; }
         button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; }
         button.copy-btn { position: absolute; top: 10px; right: 20px; background: #ff5e57; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #livePreview { width: 100%; height: 850px; border: 3px dashed #dcdde1; margin-top: 25px; border-radius: 10px; }
+        .custom-focus { margin-top: 15px; padding: 10px; background: #eef2ff; border-radius: 8px; border: 1px solid #c7d2fe; }
     </style>
 </head>
 <body>
 
 <div class="factory-box">
-    <h2>🚀 Factory v34: Simulación (Con Aviso 3 min)</h2>
+    <h2>🚀 Factory v35: Simulación + Enfoque Personalizado</h2>
     
     <div class="section">
         <h3>1. Configuración de la Lección</h3>
@@ -72,12 +73,17 @@
             <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
             <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
         </div>
+        
+        <div class="custom-focus">
+            <label style="font-weight:bold; color: #4338ca;">🎯 Enfoque Personalizado (Opcional):</label>
+            <input type="text" id="customTag" placeholder="Ejem: Vocabulario de medio ambiente, Futuro simple, etc.">
+        </div>
     </div>
 
-    <button class="gen-btn" onclick="generateV34()">GENERAR v34 Y PROBAR</button>
+    <button class="gen-btn" onclick="generateV35()">GENERAR v35 Y PROBAR</button>
     
     <div class="output-container">
-        <button class="copy-btn" onclick="copyV34()">COPIAR</button>
+        <button class="copy-btn" onclick="copyV35()">COPIAR</button>
         <textarea id="outputArea" readonly></textarea>
     </div>
 
@@ -99,22 +105,27 @@ fetch(GITHUB_JSON + "?v=" + Date.now())
         }
     });
 
-function copyV34() {
+function copyV35() {
     const area = document.getElementById("outputArea");
     area.select();
     document.execCommand('copy');
     alert("Código copiado.");
 }
 
-function generateV34() {
+function generateV35() {
     const lessonID = document.getElementById('lessonSelect').value;
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
+    const customValue = document.getElementById('customTag').value.trim();
     
     let tagsHTML = "";
     document.querySelectorAll('.gram:checked').forEach(cb => {
         tagsHTML += '<span style="background:#f0f2f5; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #ccc; margin-right:5px; color:#2c3e50; display:inline-block; margin-top:5px;">' + cb.value + '</span>';
     });
+    
+    if(customValue !== "") {
+        tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
+    }
 
     const configs = {
         1: { prep: 420, goal: 30, type: "script" },
@@ -146,7 +157,6 @@ function generateV34() {
     c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>\n";
     
     c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
-    // MENSAJE DE ÉXITO AÑADIDO AQUÍ
     c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-top:-10px; margin-bottom:10px;'>✨ TIEMPO MÍNIMO ALCANZADO ✨</div>";
     c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
     c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>\n";
@@ -167,7 +177,6 @@ function generateV34() {
     c += "  document.getElementById('notesArea').innerText = 'Listo: ' + l.titulo; }\n";
     c += "});\n";
 
-    // FUNCIÓN DE RELOJ ACTUALIZADA CON LÓGICA DE COLOR VERDE
     c += "function updateC(){ \n";
     c += "  var el=document.getElementById('clock'); \n";
     c += "  var msg=document.getElementById('success_msg'); \n";
