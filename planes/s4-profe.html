@@ -217,10 +217,10 @@ let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.d
     });
 
 // 8. UNIFIED CONTENT LOOP (Respects JSON Order)
-  const contentBlock = document.getElementById('extrasBlock');
-  contentBlock.innerHTML = "";
+const contentBlock = document.getElementById('extrasBlock');
+contentBlock.innerHTML = ""; // Clear once at the very start
 
-  (todayPlan?.blocks || []).forEach(blockRef => {
+(todayPlan?.blocks || []).forEach(blockRef => {
     
     // --- A. STANDARD EXTRAS (Links & Sentences) ---
     if (blockRef.kind === "extras") {
@@ -230,6 +230,7 @@ let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.d
           ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` 
           : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
         
+        // Use += to APPEND to the container
         contentBlock.innerHTML += `
           <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
             <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
@@ -254,6 +255,7 @@ let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.d
       const style = colors[type] || "border-slate-500 bg-slate-50 text-slate-600";
       const cArr = style.split(' ');
 
+      // Use += to APPEND to the container
       contentBlock.innerHTML += `
         <section class="bg-white rounded-xl border-l-[6px] ${cArr[0]} overflow-hidden card-shadow mb-6 hover:shadow-lg transition-all group">
           <div class="flex flex-col md:flex-row">
@@ -275,7 +277,7 @@ let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.d
           </div>
         </section>`;
     }
-  });
+});
       
     // 6. DASHBOARD (Multi-Block Grammar & Descubre 3 Vocab)
     const grammarGrid = document.getElementById('grammarResources');
