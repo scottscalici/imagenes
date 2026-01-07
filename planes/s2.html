@@ -275,59 +275,65 @@
       }
     });
     
-    // 5. EXTRAS (Resetting content)
-    const extrasBlock = document.getElementById('extrasBlock');
-    extrasBlock.innerHTML = "";
-    const exRef = todayPlan?.blocks?.find(b => b.kind === "extras")?.ref;
-    const exItem = data.extras.items.find(i => i.id === exRef);
-    if (exItem) {
-      let content = exItem.kind === "sentences" 
-        ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`
-        : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-      extrasBlock.innerHTML = `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
-    }
+// 8. UNIFIED CONTENT LOOP (Follows JSON order exactly)
+  const contentBlock = document.getElementById('extrasBlock');
+  contentBlock.innerHTML = "";
 
-    // 5.5 NEW ACTIVITIES (Detecting and rendering from specialized JSONs)
-    const activityTypes = ["musica", "cultura", "lectura", "conv"];
-    activityTypes.forEach(type => {
-      const activeBlocks = (todayPlan?.blocks || []).filter(b => b.kind === type);
-      activeBlocks.forEach(blockRef => {
-        const item = data[type]?.items?.[blockRef.ref];
-        if (!item) return;
+  (todayPlan?.blocks || []).forEach(blockRef => {
+    
+    // A. HANDLE STANDARD EXTRAS (Links & Sentences)
+    if (blockRef.kind === "extras") {
+      const exItem = data.extras.items.find(i => i.id === blockRef.ref);
+      if (exItem) {
+        let content = exItem.kind === "sentences" 
+          ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` 
+          : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+        
+        contentBlock.innerHTML += `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
+      }
+    }
 
-        const colors = {
-          musica: "border-pink-500 bg-pink-50 text-pink-600",
-          cultura: "border-purple-500 bg-purple-50 text-purple-600",
-          lectura: "border-orange-500 bg-orange-50 text-orange-600",
-          conv: "border-cyan-500 bg-cyan-50 text-cyan-600"
-        };
-        const style = colors[type] || "border-slate-500 bg-slate-50 text-slate-600";
-        const cArr = style.split(' ');
+    // B. HANDLE SPECIAL ACTIVITIES (conv, musica, cultura, lectura)
+    const specialTypes = ["musica", "cultura", "lectura", "conv"];
+    if (specialTypes.includes(blockRef.kind)) {
+      const type = blockRef.kind;
+      const item = data[type]?.items?.[blockRef.ref];
+      if (!item) return;
 
-        extrasBlock.innerHTML += `
-          <section class="bg-white rounded-xl border-l-[6px] ${cArr[0]} overflow-hidden card-shadow mb-6 hover:shadow-lg transition-all group">
-            <div class="flex flex-col md:flex-row">
-              <div class="md:w-48 h-40 overflow-hidden bg-slate-100 flex-shrink-0">
-                <img src="${item.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-              </div>
-              <div class="p-6 flex flex-col justify-between flex-grow">
-                <div>
-                  <div class="flex justify-between items-start mb-2">
-                    <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${cArr[1]} ${cArr[2]}">
-                      ${item.tag}
-                    </span>
-                  </div>
-                  <h3 class="text-2xl font-black text-slate-900 leading-tight mb-1">${item.titulo}</h3>
-                  <p class="text-slate-500 font-medium italic text-sm">${item.subtitulo}</p>
-                </div>
-                <a href="${item.url}" target="_blank" class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">
-                  Abrir actividad <span>→</span>
-                </a>
-              </div>
-            </div>
-          </section>`;
-      });
-    });
+      const colors = {
+        musica: "border-pink-500 bg-pink-50 text-pink-600",
+        cultura: "border-purple-500 bg-purple-50 text-purple-600",
+        lectura: "border-orange-500 bg-orange-50 text-orange-600",
+        conv: "border-cyan-500 bg-cyan-50 text-cyan-600"
+      };
+      const style = colors[type] || "border-slate-500 bg-slate-50 text-slate-600";
+      const cArr = style.split(' ');
+
+      contentBlock.innerHTML += `
+        <section class="bg-white rounded-xl border-l-[6px] ${cArr[0]} overflow-hidden card-shadow mb-6 hover:shadow-lg transition-all group">
+          <div class="flex flex-col md:flex-row">
+            <div class="md:w-48 h-40 overflow-hidden bg-slate-100 flex-shrink-0">
+              <img src="${item.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-6 flex flex-col justify-between flex-grow">
+              <div>
+                <div class="flex justify-between items-start mb-2">
+                  <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${cArr[1]} ${cArr[2]}">
+                    ${item.tag}
+                  </span>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 leading-tight mb-1">${item.titulo}</h3>
+                <p class="text-slate-500 font-medium italic text-sm">${item.subtitulo}</p>
+              </div>
+              <a href="${item.url}" target="_blank" class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-800 transition-colors">
+                Abrir actividad <span>→</span>
+              </a>
+            </div>
+          </div>
+        </section>`;
+    }
+  });
+
     
     // 6. RESOURCE DASHBOARD
     const grammarGrid = document.getElementById('grammarResources');
