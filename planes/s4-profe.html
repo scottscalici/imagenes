@@ -171,8 +171,7 @@
     if (!data) return;
 
     const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia')) || 35; 
-
+let DIA = parseInt(params.get('dia')) || Math.max(...data.plan.days.map(d => d.dia));
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
     // 1. DATE LOGIC
