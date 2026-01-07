@@ -1,0 +1,151 @@
+<div style="font-family:system-ui, -apple-system, sans-serif; max-width:900px; margin:0 auto; padding:12px;">
+  <div style="background:#fff; border:2px solid #e2e8f0; border-radius:20px; padding:20px; box-shadow:0 10px 25px rgba(0,0,0,.05);">
+    
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
+      <div>
+        <h2 style="margin:0; color:#4338ca; font-size:20px;">🎲 Simulación IA: Elige tu opción</h2>
+        <p id="ri_status" style="margin:2px 0 0; font-size:12px; color:#64748b; font-style:italic;">Haz clic en el botón para ver las opciones</p>
+      </div>
+      <div id="ri_clock" style="font-size:32px; font-weight:800; font-family:monospace; color:#1e293b;">00:00</div>
+    </div>
+
+    <button id="ri_gen_btn" onclick="getOptions()" style="width:100%; padding:16px; border-radius:14px; border:0; background:#4f46e5; color:#fff; font-weight:800; cursor:pointer; font-size:16px; box-shadow:0 4px 12px rgba(79,70,229,0.3);">
+      GENERAR DOS OPCIONES AL AZAR
+    </button>
+
+    <div id="selection_zone" style="display:none; margin-top:20px;">
+      <p style="text-align:center; font-weight:bold; color:#475569; margin-bottom:15px;">Haz clic sobre la imagen que prefieras:</p>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+        <div onclick="selectOption(0)" style="cursor:pointer; border:3px solid #e2e8f0; border-radius:16px; overflow:hidden; hover:border-indigo-500;">
+          <img id="img_opt_1" style="width:100%; display:block; background:#f8fafc;">
+          <div style="padding:10px; text-align:center; background:#f1f5f9; font-weight:bold; font-size:14px;">OPCIÓN A</div>
+        </div>
+        <div onclick="selectOption(1)" style="cursor:pointer; border:3px solid #e2e8f0; border-radius:16px; overflow:hidden;">
+          <img id="img_opt_2" style="width:100%; display:block; background:#f8fafc;">
+          <div style="padding:10px; text-align:center; background:#f1f5f9; font-weight:bold; font-size:14px;">OPCIÓN B</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="work_zone" style="display:none; margin-top:20px;">
+      <div style="display:grid; grid-template-columns: 1fr; gap:20px;" id="main_layout">
+        <div>
+          <img id="ri_img_final" style="width:100%; border-radius:16px; border:1px solid #e2e8f0; display:block;" />
+          <div id="support_links" style="margin-top:12px; display:flex; gap:8px;">
+            <a href="https://sites.google.com/view/srscalici/vocabulario/modismos" target="_blank" style="flex:1; background:#f1f5f9; color:#475569; text-decoration:none; padding:8px; border-radius:8px; font-size:12px; font-weight:700; text-align:center; border:1px solid #e2e8f0;">🗣️ Modismos</a>
+            <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales" target="_blank" style="flex:1; background:#f1f5f9; color:#475569; text-decoration:none; padding:8px; border-radius:8px; font-size:12px; font-weight:700; text-align:center; border:1px solid #e2e8f0;">🌎 Cultura</a>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:15px;">
+          <h4 style="margin:0 0 12px; font-size:14px; text-transform:uppercase; color:#64748b;">Notas (10 Balas)</h4>
+          <div id="bullets_container" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+      </div>
+      
+      <button id="action_btn" onclick="handleAction()" style="width:100%; padding:16px; border-radius:14px; border:0; background:#10b981; color:#fff; font-weight:800; cursor:pointer; margin-top:20px; font-size:16px;">¡LISTO PARA HABLAR!</button>
+      
+      <div id="questions_zone" style="display:none; margin-top:20px; background:#f0f7ff; padding:25px; border-radius:16px; border:2px dashed #3b82f6;">
+        <h3 style="margin:0 0 15px; font-size:20px; font-weight:800; color:#1e3a8a; text-align:center;">PREGUNTAS DE SEGUIMIENTO</h3>
+        <ol id="questions_list" style="margin:0; padding-left:25px; font-weight:600; color:#1e293b; font-size:19px; line-height:1.5;"></ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const RI_JSON_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/image.json";
+  let items = [];
+  let options = [];
+  let selectedImg = null;
+  let seconds = 0;
+  let loop;
+  let currentPhase = "prep"; // prep, speak, end
+
+  const genBtn = document.getElementById("ri_gen_btn");
+  const actionBtn = document.getElementById("action_btn");
+  const selectionZone = document.getElementById("selection_zone");
+  const workZone = document.getElementById("work_zone");
+  const clock = document.getElementById("ri_clock");
+  const status = document.getElementById("ri_status");
+
+  function updateClock() {
+    const a = Math.abs(seconds);
+    const m = Math.floor(a / 60);
+    const s = a % 60;
+    clock.textContent = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+    clock.style.color = seconds < 0 ? "#ef4444" : "#1e293b";
+  }
+
+  async function getOptions() {
+    status.textContent = "Cargando banco...";
+    try {
+      const res = await fetch(RI_JSON_URL, { cache: "no-store" });
+      items = await res.json();
+      options = items.sort(() => 0.5 - Math.random()).slice(0, 2);
+      
+      document.getElementById("img_opt_1").src = options[0].img;
+      document.getElementById("img_opt_2").src = options[1].img;
+      
+      genBtn.style.display = "none";
+      selectionZone.style.display = "block";
+      status.textContent = "Elige una opción para comenzar";
+    } catch(e) { status.textContent = "Error de conexión"; }
+  }
+
+  function selectOption(idx) {
+    selectedImg = options[idx];
+    selectionZone.style.display = "none";
+    workZone.style.display = "block";
+    document.getElementById("ri_img_final").src = selectedImg.img;
+    
+    // Generar balas
+    const bc = document.getElementById("bullets_container");
+    bc.innerHTML = "";
+    for(let i=1; i<=10; i++) bc.innerHTML += `<div style="display:flex; align-items:center; gap:8px; border-bottom:1px solid #f1f5f9;">${i}. <input type="text" style="width:100%; border:0; outline:none; padding:5px; background:transparent; font-size:15px;"></div>`;
+
+    // Timer Prep
+    currentPhase = "prep";
+    seconds = 900;
+    status.textContent = "Fase: Preparación";
+    updateClock();
+    loop = setInterval(() => {
+      seconds--;
+      updateClock();
+      if(seconds === 0) handleAction(); // Salto automático al terminar tiempo
+    }, 1000);
+  }
+
+  function handleAction() {
+    if (currentPhase === "prep") {
+      // Pasar a Hablar
+      clearInterval(loop);
+      currentPhase = "speak";
+      seconds = 240; // 4 min
+      updateClock();
+      status.textContent = "Fase: Presentación (Hablando)";
+      document.getElementById("support_links").style.display = "none";
+      
+      actionBtn.textContent = "FINALIZAR Y VER PREGUNTAS";
+      actionBtn.style.background = "#f43f5e";
+      
+      loop = setInterval(() => {
+        seconds--;
+        updateClock();
+      }, 1000);
+      
+    } else if (currentPhase === "speak") {
+      // Finalizar y ver preguntas
+      clearInterval(loop);
+      currentPhase = "end";
+      actionBtn.style.display = "none";
+      document.getElementById("main_layout").style.display = "none";
+      document.getElementById("questions_zone").style.display = "block";
+      status.textContent = "Simulación terminada: Preguntas";
+      
+      const qs = selectedImg.texto || [];
+      document.getElementById("questions_list").innerHTML = qs.length > 0 
+        ? qs.map(q => `<li style="margin-bottom:15px;">${q}</li>`).join("")
+        : "<li>No hay preguntas registradas.</li>";
+    }
+  }
+</script>
