@@ -156,46 +156,48 @@
     ],
     "fecha": "2026-01-05"
 },
-        {
+{
     "dia": 37,
     "blocks": [
         {
-            "kind": "extras",
-            "ref": "extra-s2-d36"
-        },
-        {
             "kind": "estructura",
-            "ref": "mandatos",
-            "title": "Los Mandatos",
-            "introducir": [
-                "ud_uds"
-            ],
+            "ref": "futuro",
+            "title": "Futuro",
+            "introducir": [],
             "repasar": [
-                "tu_pos",
-                "tu_neg"
+                "notas_generales"
             ],
             "recursos_gramatica": [
-                "mandatos"
+                "futuro",
+                "condicional"
             ]
         },
         {
             "kind": "estructura",
-            "ref": "objetos",
-            "title": "Objetos",
+            "ref": "condicional",
+            "title": "Condicional",
             "introducir": [],
-            "repasar": [],
+            "repasar": [
+                "notas_generales"
+            ],
             "recursos_gramatica": [
-                "futuro",
-                "condicional",
-                "preterito"
-                
+                "condicional"
             ]
         },
         {
             "kind": "vocabulario",
             "ref": "L7"
+        },
+        {
+            "kind": "conv",
+            "ref": "conv-s2-03"
+        },
+        {
+            "kind": "extras",
+            "ref": "IA-practice"
         }
-    ]
+    ],
+    "fecha": "2026-01-08"
 }
     ]
 }
