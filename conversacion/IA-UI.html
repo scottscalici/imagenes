@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v37</title>
+    <title>Sr. Scalici - Factory v38</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -21,7 +21,7 @@
 <body>
 
 <div class="factory-box">
-    <h2>🚀 Factory v37: Título + Tiempo Amigable</h2>
+    <h2>🚀 Factory v38: Completa + Pausa + Título</h2>
     
     <div class="section">
         <h3>1. Configuración de la Lección</h3>
@@ -40,9 +40,16 @@
             <div>
                 <label>Andamiaje (Tier):</label>
                 <select id="tier">
-                    <option value="6">Tier 6: 120s (2m)</option>
-                    <option value="8">Tier 8: 180s (3m)</option>
-                    <option value="10" selected>Tier 10: 240s (4m)</option>
+                    <option value="1">Tier 1: Guion (30s)</option>
+                    <option value="2">Tier 2: Guion (45s)</option>
+                    <option value="3">Tier 3: 1 Frase + 15 Balas (60s)</option>
+                    <option value="4">Tier 4: 1 Frase + 12 Balas (90s)</option>
+                    <option value="5">Tier 5: 1 Frase + 10 Balas (105s)</option>
+                    <option value="6">Tier 6: 10 Balas (120s)</option>
+                    <option value="7">Tier 7: 10 Balas (150s)</option>
+                    <option value="8">Tier 8: 10 Balas (180s)</option>
+                    <option value="9">Tier 9: Solo Pregunta (210s)</option>
+                    <option value="10" selected>Tier 10: Simulación (240s)</option>
                 </select>
             </div>
         </div>
@@ -51,24 +58,29 @@
     <div class="section">
         <span style="font-weight:bold;">2. Estrategias y Gramática</span>
         <div class="checkbox-grid">
-            <label><input type="checkbox" class="gram" value="📸 Foto" checked> 📸 Foto</label>
-            <label><input type="checkbox" class="gram" value="👤 Personal" checked> 👤 Personal</label>
-            <label><input type="checkbox" class="gram" value="🌎 Cultural" checked> 🌎 Cultural</label>
-            <label><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🗣️ Modismos"> 🗣️ Modismos</label>
+            <label style="color:#3498db; font-weight:bold;"><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
+            <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
+            <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
+            <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" class="gram" value="Si+Cond"> Si + Cond</label>
+            <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
+            <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
         </div>
         <div class="custom-focus">
             <label style="font-weight:bold; color: #4338ca;">🎯 Enfoque Personalizado:</label>
-            <input type="text" id="customTag" placeholder="Ejem: Usa el Imperfecto...">
+            <input type="text" id="customTag" placeholder="Ejem: Usa conectores de contraste...">
         </div>
     </div>
 
-    <button class="gen-btn" onclick="generateV37()">GENERAR v37 Y PROBAR</button>
-    
+    <button class="gen-btn" onclick="generateV38()">GENERAR v38 Y PROBAR</button>
     <div class="output-container">
-        <button class="copy-btn" onclick="copyV37()">COPIAR</button>
+        <button class="copy-btn" onclick="copyV38()">COPIAR</button>
         <textarea id="outputArea" readonly></textarea>
     </div>
-
     <iframe id="livePreview"></iframe>
 </div>
 
@@ -85,13 +97,13 @@ fetch(GITHUB_JSON).then(r => r.json()).then(data => {
     }
 });
 
-function copyV37() {
+function copyV38() {
     const area = document.getElementById("outputArea");
     area.select(); document.execCommand('copy');
     alert("Código copiado.");
 }
 
-function generateV37() {
+function generateV38() {
     const lessonID = document.getElementById('lessonSelect').value;
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
@@ -104,13 +116,18 @@ function generateV37() {
     if(customValue !== "") tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
 
     const configs = {
-        6: { prep: 600, goal: 120, bullets: 10 },
-        8: { prep: 900, goal: 180, bullets: 10 },
-        10: { prep: 900, goal: 240, bullets: 10 }
+        1: { prep: 420, goal: 30, type: "script" },
+        2: { prep: 420, goal: 45, type: "script" },
+        3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
+        4: { prep: 600, goal: 90, type: "hybrid", bullets: 12 },
+        5: { prep: 600, goal: 105, type: "hybrid", bullets: 10 },
+        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
+        7: { prep: 600, goal: 150, type: "bullets", bullets: 10 },
+        8: { prep: 900, goal: 180, type: "bullets", bullets: 10 },
+        9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
+        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
     };
     const act = configs[tier];
-    
-    // Función para convertir segundos a formato M:SS
     const formatGoal = (s) => Math.floor(s/60) + ":" + (s%60 < 10 ? '0' : '') + (s%60);
 
     let c = "<!DOCTYPE html><html><head><style>";
@@ -118,27 +135,32 @@ function generateV37() {
     c += ".header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }";
     c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }";
     c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }";
-    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; }";
-    c += ".btn { cursor: pointer; border: none; padding: 15px; border-radius: 8px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; font-size: 1.1rem; }";
+    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }";
+    c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }";
     c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }";
+    c += ".link-btn { display: inline-block; padding: 8px 12px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; margin-right: 5px; font-weight: bold; }";
     c += "</style></head><body>";
     
-    c += "<div class='header'><div><span id='pageTitle' style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>Cargando título...</span><br><strong>Objetivo: " + formatGoal(act.goal) + "</strong><br>" + tagsHTML + "</div></div>";
+    c += "<div class='header'><div><span id='pageTitle' style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>Cargando...</span><br><strong>Objetivo: " + formatGoal(act.goal) + "</strong><br>" + tagsHTML + "</div>";
+    c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>";
     
     c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
     c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-top:-10px; margin-bottom:10px;'>✨ TIEMPO MÍNIMO ALCANZADO ✨</div>";
-    c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación (15m)</button></div>";
-    c += "<div id='right'><div class='notes' id='notesArea'>Listo para comenzar...</div></div></div>";
+    c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>";
     
-    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'><div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div><button class='btn' style='background:#27ae60; width:auto;' onclick='ask()'>Siguiente Pregunta</button></div>";
+    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'><div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div>";
+    c += "<button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button>";
+    c += "<button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button>";
+    c += "<button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>";
 
     c += "<script>";
-    c += "var seconds=0, loop, customQ=null, isSpeaking=false;";
-    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + " };";
+    c += "var seconds=0, loop, customQ=null, isSim=false, isSpeaking=false, hasQ=" + hasQ + ";";
+    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };";
     
     c += "fetch('" + GITHUB_JSON + "').then(r=>r.json()).then(d=>{";
     c += "  var l = d.items['" + lessonID + "'];";
-    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; customQ = l.preguntas[1]; document.getElementById('pageTitle').innerText = l.titulo; }";
+    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; customQ = l.preguntas; document.getElementById('pageTitle').innerText = l.titulo; }";
     c += "});";
 
     c += "function updateC(){";
@@ -150,24 +172,28 @@ function generateV37() {
     c += "  else { el.style.color='black'; msg.style.display='none'; }";
     c += "}";
 
-    c += "function startPrep(){";
-    c += "  clearInterval(loop); seconds=config.prep; isSpeaking=false;";
-    c += "  var area=document.getElementById('notesArea'); area.innerHTML='<strong>Notas:</strong><br>';";
-    c += "  for(var i=1;i<=10;i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%; border:none; border-bottom:1px solid #ccc; margin-bottom:8px;\"><br>';";
-    c += "  document.getElementById('mainBtn').innerText='¡PASAR AL HABLA!';";
-    c += "  document.getElementById('mainBtn').onclick=startSpeak;";
-    c += "  loop=setInterval(()=>{seconds--; updateC(); if(seconds<=0){ clearInterval(loop); document.getElementById('clock').style.color='orange'; document.getElementById('mainBtn').style.background='#f39c12'; document.getElementById('mainBtn').innerText='TIEMPO DE PREP AGOTADO - ¡CLICK PARA EMPEZAR!'; }},1000);";
+    c += "function forceSim(){ isSim=true; config.goal=240; config.prep=900; config.bullets=10; config.type='bullets'; document.getElementById('simBtn').innerText='MODO SIMULACIÓN ACTIVADO'; document.getElementById('simBtn').style.opacity='0.5'; seconds=0; updateC(); }";
+
+    c += "function buildNotes(){";
+    c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';";
+    c += "  if(!isSim){ area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a><a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a><hr>'; }";
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px;\"></textarea>';";
+    c += "  else if(config.type==='hybrid') { area.innerHTML += '<strong>Frase:</strong><br><input type=\"text\" style=\"width:90%;\"><br><strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
+    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
     c += "}";
 
-    c += "function startSpeak(){";
-    c += "  clearInterval(loop); isSpeaking=true; seconds=config.goal; updateC();";
-    c += "  document.getElementById('mainBtn').innerText='FINALIZAR EXAMEN'; document.getElementById('mainBtn').style.background='#e74c3c';";
-    c += "  document.getElementById('mainBtn').onclick=end;";
+    c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
+    c += "  document.getElementById('mainBtn').innerText='¡HABLAR!'; document.getElementById('mainBtn').onclick=startSpeak;";
+    c += "  loop=setInterval(()=>{seconds--; updateC(); if(seconds<=0){ clearInterval(loop); document.getElementById('clock').style.color='orange'; document.getElementById('mainBtn').innerText='PREP TERMINADA - CLICK PARA HABLAR'; document.getElementById('mainBtn').style.background='#f39c12'; }},1000);";
+    c += "}";
+
+    c += "function startSpeak(){ clearInterval(loop); isSpeaking=true; seconds=config.goal; updateC();";
+    c += "  document.getElementById('mainBtn').innerText='FINALIZAR'; document.getElementById('mainBtn').style.background='#e74c3c'; document.getElementById('mainBtn').onclick=end;";
     c += "  loop=setInterval(()=>{seconds--; updateC();},1000);";
     c += "}";
 
-    c += "function end(){ clearInterval(loop); document.getElementById('qZone').style.display='block'; ask(); }";
-    c += "function ask(){ if(customQ) document.getElementById('qDisplay').innerText = customQ[Math.floor(Math.random()*customQ.length)]; }";
+    c += "function end(){ clearInterval(loop); document.getElementById('qZone').style.display='block'; }";
+    c += "function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }";
     c += "<\/script></body></html>";
 
     document.getElementById('outputArea').value = c;
