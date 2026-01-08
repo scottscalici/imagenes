@@ -112,14 +112,14 @@ function copyV42() {
     alert("Código copiado.");
 }
 
-function generateV42() { // Manteniendo el nombre por consistencia con tu script
+function generateV42() {
     const lessonID = document.getElementById('lessonSelect').value;
     const themeVal = document.getElementById('themeInput').value || "General";
     const promptVal = document.getElementById('promptText').value.trim();
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
     
-    // Captura de Estrategias y Gramática seleccionadas
+    // CAPTURA DE REQUISITOS (Checkboxes)
     const selectedGrams = Array.from(document.querySelectorAll('.gram:checked')).map(cb => cb.value);
 
     const configs = {
@@ -149,12 +149,12 @@ function generateV42() { // Manteniendo el nombre por consistencia con tu script
     c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }";
     c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }";
     c += ".prompt-box { background: #fff9db; padding: 10px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; font-size: 0.9rem; }";
-    c += ".q-box { background: #e3f2fd; padding: 12px; border-radius: 8px; border-left: 5px solid #2196f3; margin-bottom: 10px; font-size: 0.95rem; }";
-    c += ".gram-tag { display: inline-block; background: #ecf0f1; color: #2c3e50; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 4px; margin-bottom: 4px; border: 1px solid #bdc3c7; font-weight: bold; }";
-    c += ".link-btn { display: inline-block; text-decoration: none; background: #e67e22; color: white; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; text-align: center; margin-right: 5px; margin-bottom: 10px; }";
+    c += ".q-box { background: #e3f2fd; padding: 12px; border-radius: 8px; border-left: 5px solid #2196f3; margin-bottom: 10px; color: #1565c0; font-weight: 500; }";
+    c += ".req-pill { display: inline-block; background: #34495e; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; margin: 0 4px 6px 0; font-weight: bold; }";
+    c += ".link-btn { display: inline-block; text-decoration: none; background: #e67e22; color: white; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-right: 5px; margin-bottom: 10px; }";
     c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }";
     c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }";
-    c += "input[type='text'] { width: 85%; border: none; border-bottom: 1px solid #ccc; margin-bottom: 8px; background: transparent; padding: 5px; }";
+    c += "input[type='text'] { width: 85%; border: none; border-bottom: 1px solid #ccc; margin-bottom: 8px; background: transparent; padding: 5px; font-size: 1rem; }";
     c += "</style></head><body>";
     
     c += "<div class='header'><div><span style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>" + themeVal + "</span><br><span id='pageTitle'>Cargando...</span> | <strong>Objetivo: <span id='goalText'>" + formatGoal(act.goal) + "</span></strong></div>";
@@ -166,42 +166,48 @@ function generateV42() { // Manteniendo el nombre por consistencia con tu script
     c += "<div id='right'><div class='notes' id='notesArea'>Esperando inicio...</div></div></div>";
     
     c += "<script>";
-    c += "var seconds=0, loop, questionsObj=null, isSpeaking=false;";
+    c += "var seconds=0, loop, questionsRaw=null, isSpeaking=false;";
     c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + ", showQ: " + hasQ + " };";
-    c += "var requirements = " + JSON.stringify(selectedGrams) + ";";
+    c += "var reqList = " + JSON.stringify(selectedGrams) + ";";
     c += "var promptHTML = `" + (promptVal ? `<div class='prompt-box'><strong>Instrucciones:</strong><br>${promptVal}</div>` : "") + "`;";
     
     c += "fetch('" + GITHUB_JSON + "').then(r=>r.json()).then(d=>{";
     c += "  var l = d.items['" + lessonID + "'];";
-    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; questionsObj = l.preguntas; document.getElementById('pageTitle').innerText = l.titulo; }";
+    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; questionsRaw = l.preguntas; document.getElementById('pageTitle').innerText = l.titulo; }";
     c += "});";
 
     c += "function buildNotes(){";
     c += "  var area = document.getElementById('notesArea'); area.innerHTML = promptHTML;";
     
-    // Mostrar Requisitos (Gramática/Estrategias)
+    // 1. Mostrar REQUISITOS (Presente, Subjuntivo, etc.)
     if (selectedGrams.length > 0) {
-        c += "  var reqHTML = '<div style=\"margin-bottom:10px;\">'; requirements.forEach(r => { reqHTML += '<span class=\"gram-tag\">' + r + '</span>'; }); reqHTML += '</div>'; area.innerHTML += reqHTML;";
+        c += "  var rH = '<div style=\"margin-bottom:10px;\">'; reqList.forEach(r => { rH += '<span class=\"req-pill\">' + r + '</span>'; }); rH += '</div>'; area.innerHTML += rH;";
     }
 
-    // Enlaces SL
+    // 2. Enlaces de Cultura y Modismos
     c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a>';";
     c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a>';";
     
-    // Lógica Corregida de Preguntas (Evita [object Object])
-    c += "  if(config.showQ && questionsObj) {";
-    c += "    var qHTML = '<div class=\"q-box\">';";
-    c += "    if(typeof questionsObj === 'string') qHTML += '<strong>❓ Pregunta:</strong><br>' + questionsObj;";
-    c += "    else { qHTML += '<strong>❓ Preguntas por Nivel:</strong><br>';";
-    c += "           if(questionsObj.nivel1) qHTML += '• L1: ' + questionsObj.nivel1 + '<br>';";
-    c += "           if(questionsObj.nivel2) qHTML += '• L2: ' + questionsObj.nivel2 + '<br>';";
-    c += "           if(questionsObj.nivel3) qHTML += '• L3: ' + questionsObj.nivel3; }";
-    c += "    qHTML += '</div>'; area.innerHTML += qHTML;";
+    // 3. Lógica de PREGUNTA (Arreglando el [object Object])
+    c += "  if(config.showQ && questionsRaw) {";
+    c += "    var qText = '';";
+    c += "    if(typeof questionsRaw === 'string') { qText = questionsRaw; }";
+    c += "    else { qText = questionsRaw.nivel1 || questionsRaw.nivel2 || questionsRaw.nivel3 || 'Pregunta no disponible'; }";
+    c += "    area.innerHTML += '<div class=\"q-box\"><strong>❓ Pregunta:</strong><br>' + qText + '</div>';";
     c += "  }";
 
-    // Inputs
-    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:300px; border:1px solid #ddd; border-radius:5px; padding:10px;\"></textarea>';";
+    // 4. Área de Escritura
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:300px; border:1px solid #ddd; border-radius:5px; padding:10px; font-family:inherit;\"></textarea>';";
     c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\"><br>'; }";
+    c += "}";
+
+    c += "function updateC(){";
+    c += "  var el=document.getElementById('clock'), msg=document.getElementById('success_msg');";
+    c += "  var a=Math.abs(seconds), m=Math.floor(a/60), s=a%60;";
+    c += "  el.innerText=(seconds<0?'-':'')+m+':'+(s<10?'0':'')+s;";
+    c += "  if(isSpeaking && config.goal === 240 && seconds <= 60 && seconds >= 0) { el.style.color='#27ae60'; msg.style.display='block'; }";
+    c += "  else if(seconds<0) { el.style.color='red'; msg.style.display='none'; }";
+    c += "  else { el.style.color='black'; msg.style.display='none'; }";
     c += "}";
 
     c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
@@ -216,8 +222,11 @@ function generateV42() { // Manteniendo el nombre por consistencia con tu script
     c += "  var btn=document.getElementById('mainBtn'); btn.innerText='FINALIZAR'; btn.style.background='#e74c3c'; btn.onclick=()=>clearInterval(loop);";
     c += "  loop=setInterval(()=>{seconds--; updateC();},1000);";
     c += "}";
+
+    c += "function forceSim(){ config.goal=240; config.prep=900; config.bullets=10; config.type='bullets';";
+    c += "  document.getElementById('goalText').innerText='4:00'; document.getElementById('simBtn').innerText='SIMULACIÓN ACTIVADA';";
+    c += "  document.getElementById('simBtn').style.opacity='0.5'; seconds=0; updateC(); }";
     
-    c += "function updateC(){ var el=document.getElementById('clock'); var a=Math.abs(seconds), m=Math.floor(a/60), s=a%60; el.innerText=(seconds<0?'-':'')+m+':'+(s<10?'0':'')+s; if(seconds<0) el.style.color='red'; }";
     c += "<\/script></body></html>";
 
     document.getElementById('outputArea').value = c;
