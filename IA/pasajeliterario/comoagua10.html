@@ -3,219 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pasaje literario – Como agua para chocolate</title>
+  <title>Simulador Oral Final - Como agua para chocolate</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-font { font-family: 'Courier New', Courier, monospace; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
 
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+<body class="bg-slate-100 min-h-screen p-4 md:p-8">
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Diciembre - Chiles de Nogada</span></p>
-          </div>
+  <div class="max-w-6xl mx-auto space-y-6">
+    
+    <header class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="bg-purple-900 p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight text-amber-400">Pasaje Literario Final (#10)</h1>
+          <p class="text-purple-200 text-sm italic font-medium text-center md:text-left">Como agua para chocolate — Diciembre (El Desenlace)</p>
         </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2010.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden md:block border-r border-purple-400 pr-4">
+            <p class="text-[10px] uppercase tracking-widest opacity-70">Cierre de Obra</p>
+            <p class="font-bold">Efecto Circular</p>
           </div>
-        </div>
-      </header>
-
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
-            <p class="mb-4">En ese momento los cuerpos ardientes de Pedro y Tita empezaron a lanzar brillantes chispas. Éstas encendieron la, colcha que a su vez incendió todo el rancho. ¡Qué a tiempo habían emigrado los animales, para salvarse del incendio! El cuarto oscuro se convirtió en un volcán voluptuoso. Lanzaba piedras y ceniza por doquier. Las piedras en cuanto alcanzaban altura estallaban, convirtiéndose en luces de todos los colores. Los habitantes de las comunidades cercanas observaban el espectáculo a varios kilómetros de distancia, creyendo que se trataba de los fuegos artificiales de la boda de Alex y Esperanza. Pero cuando estos fuegos se prolongaron por una semana se acercaron con curiosidad. <br>Una capa de ceniza de varios metros de altura cubría todo el rancho. Cuando Esperanza, mi madre, regresó de su viaje de bodas, sólo encontró bajo los restos de lo que fue el rancho este libro de cocina que me heredó al morir y que narra en cada una de sus recetas esta historia de amor enterrada. <br>Dicen que bajo las cenizas floreció todo tipo de vida, convirtiendo ese terreno en el más fértil de la región. <br>Durante mi niñez yo tuve la fortuna de gozar de las deliciosas frutas y verduras que ahí se producían. Con el tiempo, mi mamá mandó construir en ese terreno un pequeño edificio de departamentos. En uno de ellos aún vive Alex, mi padre. El día de hoy va a venir a mi casa a celebrar mi cumpleaños. Por eso estoy preparando tortas de Navidad, mi platillo favorito. Mi mamá me las preparaba cada año. ¡Mi mamá...! ¡Cómo extraño su sazón, el olor de su cocina, sus pláticas mientras preparaba la comida, sus tortas de Navidad! Yo no sé por qué a mí nunca me han quedado como a ella y tampoco sé por qué derramo tantas lágrimas cuando las preparo, tal vez porque soy igual de sensible a la cebolla que Tita, mi tía abuela, quien seguirá viviendo mientras haya alguien que cocine sus recetas.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1.	¿Qué simboliza el incendio del rancho provocado por Tita y Pedro?</li>
-              <li>2.	¿Cómo se relaciona el fuego con la pasión en este pasaje?</li>
-              <li>3.	¿Por qué es importante que solo quede el libro de cocina entre las cenizas?</li>
-              <li>4.	¿Qué significado tiene que la tierra se vuelva más fértil después del incendio?</li>
-              <li>5.	¿Cómo se conecta la voz de la narradora con la historia de Tita?</li>
-              <li>6.	¿Qué revela la nostalgia de la narradora por las tortas de Navidad de su madre?</li>
-              <li>7.	¿Por qué crees que la narradora nunca logra que las tortas le queden igual que a su mamá?</li>
-              <li>8.	¿Qué indica el hecho de que la narradora llore al preparar las tortas de Navidad?</li>
-              <li>9.	¿Cómo se presenta la cocina como un lugar de memoria intergeneracional?</li>
-              <li>10.	¿Qué papel tiene la frase “Tita… seguirá viviendo mientras haya alguien que cocine sus recetas”?</li>
-              <li>11.	¿Cómo se relacionan destrucción y renovación en este final de la novela?</li>
-              <li>12.	¿Qué importancia tiene que Alex y la narradora sigan viviendo en ese terreno?</li>
-              <li>13.	¿Cómo refuerza este pasaje la idea de que la comida puede contar historias?</li>
-              <li>14.	¿Qué efecto produce el uso del realismo mágico en la descripción de los cuerpos de Tita y Pedro?</li>
-              <li>15.	¿Qué reflexión personal te inspira la manera en que el amor y la memoria se entrelazan en este fragmento?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como10" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 10</p>
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Obra" class="h-14 w-14 rounded-full border-2 border-amber-400 object-cover">
         </div>
       </div>
-    </a>
-    -->
+    </header>
 
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <div class="lg:col-span-2 space-y-6">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center justify-between mb-4 border-b pb-4">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <span class="bg-amber-100 text-amber-700 p-1.5 rounded-lg">🔥</span>
+              El Clímax y la Herencia
+            </h2>
+            <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2010.pdf?raw=1" 
+               target="_blank"
+               class="text-xs font-bold text-purple-600 hover:text-purple-800 transition uppercase tracking-wider">
+               Descargar PDF ↓
+            </a>
+          </div>
+          
+          <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed font-serif bg-slate-50 p-6 rounded-xl border border-slate-100 scroll-custom overflow-y-auto max-h-[550px]">
+            <p class="mb-4 text-justify">En ese momento los cuerpos ardientes de Pedro y Tita empezaron a lanzar brillantes chispas. Éstas encendieron la colcha que a su vez incendió todo el rancho. ¡Qué a tiempo habían emigrado los animales, para salvarse del incendio! El cuarto oscuro se convirtió en un volcán voluptuoso. Lanzaba piedras y ceniza por doquier. Las piedras en cuanto alcanzaban altura estallaban, convirtiéndose en luces de todos los colores. Los habitantes de las comunidades cercanas observaban el espectáculo a varios kilómetros de distancia, creyendo que se trataba de los fuegos artificiales de la boda de Alex y Esperanza. Pero cuando estos fuegos se prolongaron por una semana se acercaron con curiosidad.</p>
+            
+            <p class="mb-4 text-justify">Una capa de ceniza de varios metros de altura cubría todo el rancho. Cuando Esperanza, mi madre, regresó de su viaje de bodas, sólo encontró bajo los restos de lo que fue el rancho este libro de cocina que me heredó al morir y que narra en cada una de sus recetas esta historia de amor enterrada. Dicen que bajo las cenizas floreció todo tipo de vida, convirtiendo ese terreno en el más fértil de la región.</p>
+            
+            <p class="mb-4 text-justify font-bold italic text-purple-900 border-l-4 border-purple-200 pl-4">
+              "Tita… seguirá viviendo mientras haya alguien que cocine sus recetas."
+            </p>
+
+            <p class="text-justify">Durante mi niñez yo tuve la fortuna de gozar de las deliciosas frutas y verduras que ahí se producían. Con el tiempo, mi mamá mandó construir en ese terreno un pequeño edificio de departamentos. En uno de ellos aún vive Alex, mi padre. El día de hoy va a venir a mi casa a celebrar mi cumpleaños. Por eso estoy preparando tortas de Navidad, mi platillo favorito. Mi mamá me las preparaba cada año. ¡Mi mamá...! ¡Cómo extraño su sazón, el olor de su cocina, sus pláticas mientras preparaba la comida, sus tortas de Navidad! Yo no sé por qué a mí nunca me han quedado como a ella y tampoco sé por qué derramo tantas lágrimas cuando las preparo, tal vez porque soy igual de sensible a la cebolla que Tita, mi tía abuela.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="space-y-6">
+        
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Cronómetro Oral Final</h3>
+          <div id="timer" class="text-5xl font-bold text-slate-800 mb-6 timer-font">00:00</div>
+          <div class="flex gap-2">
+            <button onclick="startTimer()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition-all shadow-md active:scale-95">Iniciar</button>
+            <button onclick="resetTimer()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 rounded-xl transition-all active:scale-95">Reiniciar</button>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <button onclick="toggleQuestions()" id="qBtn" class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition mb-4">
+            Mostrar Preguntas de Análisis
+          </button>
+          
+          <div id="questions" class="hidden space-y-3 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>1.</strong> ¿Qué simboliza el incendio del rancho provocado por Tita y Pedro?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>2.</strong> ¿Cómo se relaciona el fuego con la pasión en este pasaje?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>3.</strong> ¿Por qué es importante que solo quede el libro de cocina entre las cenizas?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>4.</strong> ¿Qué significado tiene que la tierra se vuelva más fértil después del incendio?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>5.</strong> ¿Cómo se conecta la voz de la narradora con la historia de Tita?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>6.</strong> ¿Qué revela la nostalgia de la narradora por las tortas de Navidad?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>7.</strong> ¿Por qué la narradora siente que nunca le quedan igual que a su madre?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>8.</strong> ¿Qué indica el hecho de que la narradora llore al preparar las tortas?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>9.</strong> ¿Cómo se presenta la cocina como un lugar de memoria intergeneracional?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>10.</strong> ¿Qué importancia tiene la inmortalidad a través de las recetas?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>11.</strong> ¿Cómo se relacionan destrucción y renovación en este final?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>12.</strong> ¿Qué importancia tiene que Alex y la narradora sigan en ese terreno?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>13.</strong> ¿Cómo refuerza este pasaje la idea de que la comida cuenta historias?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>14.</strong> ¿Qué efecto produce el Realismo Mágico en la muerte de los protagonistas?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>15.</strong> ¿Cómo se cierra la estructura circular de la novela con este fragmento?</div>
+          </div>
+        </section>
+
+        <section class="bg-indigo-50 rounded-2xl p-6 border border-indigo-100 text-indigo-900 shadow-inner">
+          <h3 class="font-bold text-sm mb-2 flex items-center gap-2">
+            <span>🎓</span> Conclusión de Obra
+          </h3>
+          <p class="text-[11px] leading-relaxed">
+            Este pasaje es la <strong>clave del narrador</strong>. Aquí descubrimos que quien cuenta la historia es la sobrina nieta de Tita, validando que el amor y la cocina vencieron a la represión de Mamá Elena.
+          </p>
+        </section>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Shared JavaScript -->
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
-        } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
-        }
-      });
-    })();
-
-    // Conversación timer
     let timerInterval;
-    let seconds = 0;
+    let totalSeconds = 0;
 
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
+    function startTimer() {
+      if (timerInterval) return;
       timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
+        totalSeconds++;
+        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `${mins}:${secs}`;
       }, 1000);
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+    function resetTimer() {
       clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+      timerInterval = null;
+      totalSeconds = 0;
+      document.getElementById('timer').textContent = "00:00";
+    }
+
+    function toggleQuestions() {
+      const q = document.getElementById('questions');
+      const btn = document.getElementById('qBtn');
+      if (q.classList.contains('hidden')) {
+        q.classList.remove('hidden');
+        btn.textContent = "Ocultar Preguntas";
+      } else {
+        q.classList.add('hidden');
+        btn.textContent = "Mostrar Preguntas de Análisis";
+      }
     }
   </script>
 </body>
