@@ -3,219 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pasaje literario – Como agua para chocolate</title>
+  <title>Simulador Oral - Como agua para chocolate</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-font { font-family: 'Courier New', Courier, monospace; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
 
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+<body class="bg-slate-100 min-h-screen p-4 md:p-8">
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Octubre - Torrejas de Natas</span></p>
-          </div>
+  <div class="max-w-6xl mx-auto space-y-6">
+    
+    <header class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div class="bg-purple-800 p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight">Pasaje Literario #08</h1>
+          <p class="text-purple-200 text-sm italic font-medium text-center md:text-left">Como agua para chocolate — Octubre</p>
         </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2008.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
+        <div class="flex items-center gap-4">
+          <div class="text-right hidden md:block border-r border-purple-400 pr-4">
+            <p class="text-[10px] uppercase tracking-widest opacity-70">Tiempo Sugerido</p>
+            <p class="font-bold">2 - 4 Minutos</p>
           </div>
-        </div>
-      </header>
-
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
-            <p class="mb-4">Con tanta gente por toda la casa y los patios, era imposible conversar con Pedro, ya no se diga encontrarse con él en el cuarto obscuro. Esto tranquilizaba a Tita, pues aún no estaba preparada para hablar con él. Antes de hacerlo quería analizar bien las posibles soluciones que tenía el problema de su embarazo, y tomar una determinación. Por un lado estaban ella y Pedro y, por otro, estaba su hermana en total desventaja. Rosaura no tenía carácter, le importaba mucho aparentar en la sociedad, seguía gorda y pestilente, pues ni con el remedio que Tita le dio pudo aminorar su intenso problema. ¿Qué pasaría si Pedro la abandonaba por ella? ¿Qué tanto le afectaría a Rosaura? ¿Qué sería de Esperanza? <br>-Ya te aburrí con mi plática, ¿verdad? <br>-Claro que no Gertrudis, ¿por qué dices eso? <br>-Nada más porque te veo con la mirada perdida desde hace un rato. Dime, ¿qué es lo que te pasa? Se trata de Pedro, ¿verdad? <br>-Sí. -Si lo sigues queriendo, ¿cómo es entonces que te vas a casar con John? <br>-Ya no me voy a casar con él, no puedo hacerlo. <br>Tita se abrazó a Gertrudis y lloró en su hombro, en silencio. <br>Gertrudis le acariciaba el pelo con ternura, pero sin descuidar el dulce de torrejas que estaba sobre la lumbre. Sería una pena que no pudiera comerlo. Cuando estaba a punto de empezar a quemarse, separó á Tita de su lado y con dulzura le dijo: <br>-Nada más déjame quitar esto de la lumbre y ahorita sigues llorando, ¿sí? <br>A Tita no pudo menos que causarle risa que en estos momentos Gertrudis estuviera más preocupada por el futuro de las torrejas que por el de ella. Claro que esta actitud era comprensible, pues por un lado Gertrudis ignoraba la gravedad del problema de su hermana y por el otro, tenía un gran antojo de comer torrejas. <br>Secándose las lágrimas, Tita misma retiró del fuego la cazuela, pues Gertrudis se quemó la mano al tratar de hacerlo. <br>Cuando están frías las natas, se cortan en pequeños cuadros, de un tamaño que no los haga quebradizos. Por su parte se baten las claras, para rebozar en ellas los cuadros de natas y después freírlos en aceite. Por último se echan en almíbar y se polvorean con canela molida.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1.	¿Por qué Tita se siente aliviada de no poder hablar todavía con Pedro?</li>
-              <li>2.	¿Qué dilema moral enfrenta Tita con respecto a Rosaura y Esperanza?</li>
-              <li>3.	¿Qué revela la opinión de Tita sobre el carácter de Rosaura?</li>
-              <li>4.	¿Por qué decide Tita no casarse con John a pesar de que es un buen hombre?</li>
-              <li>5.	¿Cómo muestra Gertrudis su apoyo hacia Tita en esta escena?</li>
-              <li>6.	¿Qué efecto tiene el comentario de Gertrudis sobre las torrejas en el estado emocional de Tita?</li>
-              <li>7.	¿Qué nos dice esta escena sobre la forma en que Gertrudis maneja las emociones ajenas?</li>
-              <li>8.	¿Cómo se combina el consuelo emocional con la cocina en este pasaje?</li>
-              <li>9.	¿Qué simboliza el hecho de que Tita termine retirando ella misma la cazuela del fuego?</li>
-              <li>10.	¿Cómo se refleja el conflicto entre deber y deseo en los pensamientos de Tita?</li>
-              <li>11.	¿Qué papel juega Esperanza en las decisiones de Tita?</li>
-              <li>12.	¿Por qué crees que Tita llora “en silencio” sobre el hombro de Gertrudis?</li>
-              <li>13.	¿Qué función cumple el toque de humor en medio del conflicto interno de Tita?</li>
-              <li>14.	¿Cómo se representa la sororidad entre Tita y Gertrudis en esta escena?</li>
-              <li>15.	¿Qué importancia tiene que la receta de las torrejas aparezca inmediatamente después del momento emocional?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como8" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 08</p>
+          <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Obra" class="h-14 w-14 rounded-full border-2 border-white object-cover">
         </div>
       </div>
-    </a>
-    -->
+    </header>
 
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <div class="lg:col-span-2 space-y-6">
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center justify-between mb-4 border-b pb-4">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <span class="bg-purple-100 text-purple-700 p-1.5 rounded-lg">📖</span>
+              Análisis del Fragmento
+            </h2>
+            <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2008.pdf?raw=1" 
+               target="_blank"
+               class="text-xs font-bold text-purple-600 hover:text-purple-800 transition uppercase tracking-wider">
+               Descargar PDF ↓
+            </a>
+          </div>
+          
+          <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed font-serif bg-slate-50 p-6 rounded-xl border border-slate-100 scroll-custom overflow-y-auto max-h-[550px]">
+            <p class="mb-4 italic text-sm text-slate-500 border-b pb-2">Contexto: Tita enfrenta el dilema de su supuesto embarazo y su relación con Pedro...</p>
+            
+            <p class="mb-4 text-justify">Con tanta gente por toda la casa y los patios, era imposible conversar con Pedro, ya no se diga encontrarse con él en el cuarto obscuro. Esto tranquilizaba a Tita, pues aún no estaba preparada para hablar con él. Antes de hacerlo quería analizar bien las posibles soluciones que tenía el problema de su embarazo, y tomar una determinación. Por un lado estaban ella y Pedro y, por otro, estaba su hermana en total desventaja. Rosaura no tenía carácter, le importaba mucho aparentar en la sociedad, seguía gorda y pestilente, pues ni con el remedio que Tita le dio pudo aminorar su intenso problema. ¿Qué pasaría si Pedro la abandonaba por ella? ¿Qué tanto le afectaría a Rosaura? ¿Qué sería de Esperanza?</p>
+
+            <p class="mb-4">—Ya te aburrí con mi plática, ¿verdad?<br>
+            —Claro que no Gertrudis, ¿por qué dices eso?<br>
+            —Nada más porque te veo con la mirada perdida desde hace un rato. Dime, ¿qué es lo que te pasa? Se trata de Pedro, ¿verdad?<br>
+            —Sí.<br>
+            —Si lo sigues queriendo, ¿cómo es entonces que te vas a casar con John?<br>
+            —Ya no me voy a casar con él, no puedo hacerlo.</p>
+
+            <p class="mb-4">Tita se abrazó a Gertrudis y lloró en su hombro, en silencio. Gertrudis le acariciaba el pelo con ternura, pero sin descuidar el dulce de torrejas que estaba sobre la lumbre. Sería una pena que no pudiera comerlo. Cuando estaba a punto de empezar a quemarse, separó a Tita de su lado y con dulzura le dijo:</p>
+
+            <p class="mb-4">—Nada más déjame quitar esto de la lumbre y ahorita sigues llorando, ¿sí?</p>
+
+            <p class="mb-4">A Tita no pudo menos que causarle risa que en estos momentos Gertrudis estuviera más preocupada por el futuro de las torrejas que por el de ella. Claro que esta actitud era comprensible, pues por un lado Gertrudis ignoraba la gravedad del problema de su hermana y por el otro, tenía un gran antojo de comer torrejas. Secándose las lágrimas, Tita misma retiró del fuego la cazuela, pues Gertrudis se quemó la mano al tratar de hacerlo.</p>
+
+            <p class="mb-4 border-t pt-4 text-sm font-sans text-slate-600 italic">Cuando están frías las natas, se cortan en pequeños cuadros, de un tamaño que no los haga quebradizos. Por su parte se baten las claras, para rebozar en ellas los cuadros de natas y después freírlos en aceite. Por último se echan en almíbar y se polvorean con canela molida.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="space-y-6">
+        
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Cronómetro de Práctica</h3>
+          <div id="timer" class="text-5xl font-bold text-slate-800 mb-6 timer-font">00:00</div>
+          <div class="flex gap-2">
+            <button onclick="startTimer()" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition-all shadow-md active:scale-95">Iniciar</button>
+            <button onclick="resetTimer()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-3 rounded-xl transition-all active:scale-95">Reiniciar</button>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <button onclick="toggleQuestions()" id="qBtn" class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition mb-4">
+            Mostrar Preguntas de Guía
+          </button>
+          
+          <div id="questions" class="hidden space-y-3 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>1.</strong> ¿Por qué Tita se siente aliviada de no poder hablar todavía con Pedro?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>2.</strong> ¿Qué dilema moral enfrenta Tita con respecto a Rosaura y Esperanza?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>3.</strong> ¿Qué revela la opinión de Tita sobre el carácter de Rosaura?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>4.</strong> ¿Por qué decide Tita no casarse con John a pesar de que es un buen hombre?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>5.</strong> ¿Cómo muestra Gertrudis su apoyo hacia Tita en esta escena?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>6.</strong> ¿Qué efecto tiene el comentario de Gertrudis sobre las torrejas en el estado emocional de Tita?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>7.</strong> ¿Qué nos dice esta escena sobre la forma en que Gertrudis maneja las emociones ajenas?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>8.</strong> ¿Cómo se combina el consuelo emocional con la cocina en este pasaje?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>9.</strong> ¿Qué simboliza el hecho de que Tita termine retirando ella misma la cazuela del fuego?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>10.</strong> ¿Cómo se refleja el conflicto entre deber y deseo en los pensamientos de Tita?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>11.</strong> ¿Qué papel juega Esperanza en las decisiones de Tita?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>12.</strong> ¿Por qué crees que Tita llora “en silencio” sobre el hombro de Gertrudis?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>13.</strong> ¿Qué función cumple el toque de humor en medio del conflicto interno de Tita?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>14.</strong> ¿Cómo se representa la sororidad entre Tita y Gertrudis en esta escena?</div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm text-slate-700"><strong>15.</strong> ¿Qué importancia tiene que la receta de las torrejas aparezca inmediatamente después del momento emocional?</div>
+          </div>
+        </section>
+
+        <section class="bg-amber-50 rounded-2xl p-6 border border-amber-100">
+          <h3 class="text-amber-800 font-bold text-sm mb-2 flex items-center gap-2">
+            <span>💡</span> Meta Oral
+          </h3>
+          <p class="text-xs text-amber-700 leading-relaxed">
+            Identifica el <strong>humor involuntario</strong> de Gertrudis. Analiza cómo la narrativa mezcla la tragedia del embarazo con la técnica culinaria (Realismo Mágico).
+          </p>
+        </section>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Shared JavaScript -->
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
-        } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
-        }
-      });
-    })();
-
-    // Conversación timer
     let timerInterval;
-    let seconds = 0;
+    let totalSeconds = 0;
 
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
+    function startTimer() {
+      if (timerInterval) return;
       timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
+        totalSeconds++;
+        const mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+        const secs = String(totalSeconds % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `${mins}:${secs}`;
       }, 1000);
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
+    function resetTimer() {
       clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+      timerInterval = null;
+      totalSeconds = 0;
+      document.getElementById('timer').textContent = "00:00";
+    }
+
+    function toggleQuestions() {
+      const q = document.getElementById('questions');
+      const btn = document.getElementById('qBtn');
+      if (q.classList.contains('hidden')) {
+        q.classList.remove('hidden');
+        btn.textContent = "Ocultar Preguntas";
+      } else {
+        q.classList.add('hidden');
+        btn.textContent = "Mostrar Preguntas de Guía";
+      }
     }
   </script>
 </body>
