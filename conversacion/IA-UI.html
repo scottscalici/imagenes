@@ -66,9 +66,11 @@
             <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
             <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
             <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
-            <label><input type="checkbox" class="gram" value="Si+Cond"> Si + Cond</label>
+            <label><input type="checkbox" class="gram" value="Si+Cond"> Cláusula con Si</label>
             <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
             <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
+            <label><input type="checkbox" class="gram" value="Condicional"> Condicional</label>
+            <label><input type="checkbox" class="gram" value="preteritoperfecto"> Pretérito Perfecto</label>
         </div>
         <div class="custom-focus">
             <label style="font-weight:bold; color: #4338ca;">🎯 Enfoque Personalizado:</label>
@@ -116,6 +118,10 @@ function generateV39() {
     if(customValue !== "") tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
 
     const configs = {
+        A: { prep: 300, goal: 30, type: "script" },
+        B: { prep: 420, goal: 30, type: "script" },
+        C: { prep: 480, goal: 30, type: "script" },
+        D: { prep: 600, goal: 30, type: "script" },
         1: { prep: 420, goal: 30, type: "script" },
         2: { prep: 420, goal: 45, type: "script" },
         3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
