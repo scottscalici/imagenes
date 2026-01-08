@@ -39,15 +39,23 @@
                 </datalist>
             </div>
             <div>
-                <label>Andamiaje (Tier):</label>
+                                <label>Andamiaje (Tier):</label>
                 <select id="tier">
                     <option value="1">Tier 1: Guion (30s)</option>
+                    <option value="2">Tier 2: Guion (45s)</option>
+                    <option value="3">Tier 3: 1 Frase + 15 Balas (60s)</option>
+                    <option value="4">Tier 4: 1 Frase + 12 Balas (90s)</option>
+                    <option value="5">Tier 5: 1 Frase + 10 Balas (105s)</option>
                     <option value="6">Tier 6: 10 Balas (120s)</option>
+                    <option value="7">Tier 7: 10 Balas (150s)</option>
+                    <option value="8">Tier 8: 10 Balas (180s)</option>
+                    <option value="9">Tier 9: Solo Pregunta (210s)</option>
                     <option value="10" selected>Tier 10: Simulación (240s)</option>
-                    <option value="11">Tier 2-A: Práctica (300s prep)</option>
-                    <option value="12">Tier 2-B: Práctica (420s prep)</option>
-                    <option value="13">Tier 2-C: Práctica (480s prep)</option>
-                    <option value="14">Tier 2-D: Práctica (600s prep)</option>
+                    <option value="11" selected>Tier 2-A: Práctica (300s prep)</option>
+                    <option value="12" selected>Tier 2-B: Práctica (420s prep)</option>
+                    <option value="13" selected>Tier 2-C: Práctica (480s prep)</option>
+                    <option value="14" selected>Tier 2-D: Práctica (600s prep)</option>
+
                 </select>
             </div>
         </div>
@@ -61,14 +69,20 @@
     <div class="section">
         <span style="font-weight:bold;">3. Estrategias y Gramática</span>
         <div class="checkbox-grid">
-            <label><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
-            <label><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
-            <label><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
-            <label><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
+            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🗣️ Modismos"> 🗣️ Modismos</label>
+            <label style="color:#3498db; font-weight:bold;"><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
             <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
             <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
             <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" class="gram" value="Si+Cond"> Cláusula con Si</label>
+            <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
             <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
+            <label><input type="checkbox" class="gram" value="Condicional"> Condicional</label>
+            <label><input type="checkbox" class="gram" value="preteritoperfecto"> Pretérito Perfecto</label>
+
         </div>
         <div class="custom-focus">
             <input type="text" id="customTag" placeholder="🎯 Enfoque extra (ej: Usa el imperfecto)">
@@ -116,15 +130,23 @@ function generateV41() {
     });
     if(customValue !== "") tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
 
-    const configs = {
-        1: { prep: 420, goal: 30, type: "script" },
-        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
-        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 },
+        const configs = {
         11: { prep: 300, goal: 30, type: "script" },
         12: { prep: 420, goal: 30, type: "script" },
         13: { prep: 480, goal: 30, type: "script" },
-        14: { prep: 600, goal: 30, type: "script" }
+        14: { prep: 600, goal: 30, type: "script" },
+        1: { prep: 420, goal: 30, type: "script" },
+        2: { prep: 420, goal: 45, type: "script" },
+        3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
+        4: { prep: 600, goal: 90, type: "hybrid", bullets: 12 },
+        5: { prep: 600, goal: 105, type: "hybrid", bullets: 10 },
+        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
+        7: { prep: 600, goal: 150, type: "bullets", bullets: 10 },
+        8: { prep: 900, goal: 180, type: "bullets", bullets: 10 },
+        9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
+        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
     };
+
     const act = configs[tier] || configs[10];
     const formatGoal = (s) => Math.floor(s/60) + ":" + (s%60 < 10 ? '0' : '') + (s%60);
 
