@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v38</title>
+    <title>Sr. Scalici - Factory v39</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -21,7 +21,7 @@
 <body>
 
 <div class="factory-box">
-    <h2>🚀 Factory v38: Completa + Pausa + Título</h2>
+    <h2>🚀 Factory v39: Pausa Manual Garantizada</h2>
     
     <div class="section">
         <h3>1. Configuración de la Lección</h3>
@@ -76,9 +76,9 @@
         </div>
     </div>
 
-    <button class="gen-btn" onclick="generateV38()">GENERAR v38 Y PROBAR</button>
+    <button class="gen-btn" onclick="generateV39()">GENERAR v39 Y PROBAR</button>
     <div class="output-container">
-        <button class="copy-btn" onclick="copyV38()">COPIAR</button>
+        <button class="copy-btn" onclick="copyV39()">COPIAR</button>
         <textarea id="outputArea" readonly></textarea>
     </div>
     <iframe id="livePreview"></iframe>
@@ -97,13 +97,13 @@ fetch(GITHUB_JSON).then(r => r.json()).then(data => {
     }
 });
 
-function copyV38() {
+function copyV39() {
     const area = document.getElementById("outputArea");
     area.select(); document.execCommand('copy');
     alert("Código copiado.");
 }
 
-function generateV38() {
+function generateV39() {
     const lessonID = document.getElementById('lessonSelect').value;
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
@@ -177,18 +177,21 @@ function generateV38() {
     c += "function buildNotes(){";
     c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';";
     c += "  if(!isSim){ area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a><a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a><hr>'; }";
-    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px;\"></textarea>';";
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea id=\"mainScript\" style=\"width:95%; height:320px;\"></textarea>';";
     c += "  else if(config.type==='hybrid') { area.innerHTML += '<strong>Frase:</strong><br><input type=\"text\" style=\"width:90%;\"><br><strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
     c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
     c += "}";
 
     c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
-    c += "  document.getElementById('mainBtn').innerText='¡HABLAR!'; document.getElementById('mainBtn').onclick=startSpeak;";
-    c += "  loop=setInterval(()=>{seconds--; updateC(); if(seconds<=0){ clearInterval(loop); document.getElementById('clock').style.color='orange'; document.getElementById('mainBtn').innerText='PREP TERMINADA - CLICK PARA HABLAR'; document.getElementById('mainBtn').style.background='#f39c12'; }},1000);";
+    c += "  document.getElementById('mainBtn').innerText='TERMINAR PREP (PAUSAR)'; document.getElementById('mainBtn').onclick=waitToSpeak;";
+    c += "  loop=setInterval(()=>{seconds--; updateC(); if(seconds<=0){ clearInterval(loop); waitToSpeak(); }},1000);";
     c += "}";
 
+    c += "function waitToSpeak(){ clearInterval(loop); document.getElementById('clock').style.color='#3498db';";
+    c += "  var btn=document.getElementById('mainBtn'); btn.style.background='#f39c12'; btn.innerText='LISTO - CLIC PARA HABLAR'; btn.onclick=startSpeak; }";
+
     c += "function startSpeak(){ clearInterval(loop); isSpeaking=true; seconds=config.goal; updateC();";
-    c += "  document.getElementById('mainBtn').innerText='FINALIZAR'; document.getElementById('mainBtn').style.background='#e74c3c'; document.getElementById('mainBtn').onclick=end;";
+    c += "  var btn=document.getElementById('mainBtn'); btn.innerText='FINALIZAR'; btn.style.background='#e74c3c'; btn.onclick=end;";
     c += "  loop=setInterval(()=>{seconds--; updateC();},1000);";
     c += "}";
 
