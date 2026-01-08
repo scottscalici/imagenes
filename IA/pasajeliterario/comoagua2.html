@@ -3,219 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pasaje literario – Como agua para chocolate</title>
+  <title>NS Oral - Como agua para chocolate (Febrero)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-huge { font-size: 4rem; font-weight: bold; font-family: monospace; }
+    .question-card { cursor: pointer; transition: all 0.2s; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); width: 100%; }
+    .question-card:hover { transform: translateY(-2px); border-color: #6d28d9; background: #f5f3ff; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
+<body class="bg-slate-50 min-h-screen pb-20">
 
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+  <header class="bg-purple-900 text-white p-6 shadow-xl mb-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-purple-200 tracking-tight">NS: Evaluación Interna (Oral)</h1>
+        <p class="text-lg opacity-90 font-medium">Como agua para chocolate — <span class="italic">Febrero: Pastel Chabela</span></p>
+      </div>
+      <div class="text-right">
+        <div id="statusLabel" class="bg-purple-800 border border-purple-400 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Estado: En espera</div>
+        <p class="text-[10px] mt-1 opacity-70 uppercase font-bold">Prep: 20:00 | Meta: 4:00</p>
+      </div>
+    </div>
+  </header>
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Febrero – Pastel Chabela</span></p>
-          </div>
+  <main class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex gap-4 mb-4">
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" class="h-24 rounded-lg shadow-md border border-slate-100">
+            <div>
+                <h2 class="font-bold text-xl text-slate-800">Pasaje Literario</h2>
+                <p class="text-xs text-slate-500 mb-2 font-serif italic">Análisis del conflicto y realismo mágico.</p>
+                <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2002.pdf?raw=1" target="_blank" class="text-indigo-600 text-xs font-bold hover:underline">📥 DESCARGAR PDF</a>
+            </div>
         </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2002.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
-            <p class="mb-4">«¿Qué te pasa? ¿Por qué tiemblas, vamos a empezar con problemas?» Tita levantó la vista y la miró. Tenía ganas de gritarle que sí, que había problemas, se había elegido mal al sujeto apropiado para capar, la adecuada era ella, de esta manera habría al menos una justificación real para que le estuviera negado el matrimonio y Rosaura tomara su lugar al lado del hombre que ella amaba. Mamá Elena, leyéndole la mirada, enfureció y le propinó a Tita una bofetada fenomenal que la hizo rodar por el suelo, junto con el pollo, que pereció por la mala operación. <br>Tita batía y batía con frenesí, como queriendo terminar de una vez por todas con el martirio. Sólo tenía que batir dos huevos más y la masa para el pastel quedaría lista. Era lo único que faltaba, todo lo demás, incluyendo los platillos para una comida de 20 platos y los bocadillos de entrada, estaban listos para el banquete. En la cocina sólo quedaban Tita, Nacha y Mamá Elena. Chencha, Gertrudis y Rosaura estaban dando los últimos toques al vestido de novia. Nacha, con un gran alivio, tomó el penúltimo huevo para partirlo. Tita, con un grito, impidió que lo hiciera. <br>-¡No! <br>Suspendió la batida y tomó el huevo entre sus manos. Claramente escuchaba piar a un pollo dentro del cascarón. Acercó el huevo a su oído y escuchó con más fuerza los pillidos. <br>Mamá Elena suspendió su labor y con voz autoritaria preguntó: <br>-¿Qué pasa? ¿Qué fue ese grito? <br>-¡Es que dentro de este huevo hay un pollo! Nacha de seguro no lo puede oír, pero yo sí. <br>-¿Un pollo? ¿Está loca? ¡Nunca ha pasado algo parecido con los huevos en conserva! <br>De dos zancadas, llegó hasta donde estaba Tita, le arrebató el huevo de las manos y lo partió. Tita cerró los ojos con fuerza. <br>-¡Abre los ojos y mira tu pollo! <br>Tita abrió los ojos lentamente. Con sorpresa vio que lo que creía un pollo no era más que un huevo y bastante fresco, por cierto. <br>-Escúchame bien Tita, me estás colmando la paciencia, no te voy a permitir que empieces con locuras. ¡Esta es la primera y la última! i0 te aseguro que te arrepentirás!</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1. ¿Qué emoción crees que siente Tita justo antes de recibir la bofetada? ¿Miedo, rabia, tristeza…? ¿Por qué?</li>
-              <li>2. Cuando Tita piensa que la “adecuada” para capar es ella, ¿qué nos revela eso sobre cómo ve su propio destino?</li>
-              <li>3. ¿Qué te dice esta escena sobre la relación de poder entre Mamá Elena y Tita?</li>
-              <li>4. ¿Te parece que la reacción de Mamá Elena (la bofetada y el regaño) está motivada más por el control o por el “qué dirán”? Explica.</li>
-              <li>5. ¿Qué simboliza para ti el hecho de que el pollo “perezca por la mala operación”?</li>
-              <li>6. ¿Cómo cambia el ambiente en la cocina desde el inicio del fragmento hasta el momento en que Mamá Elena rompe el huevo?</li>
-              <li>7. ¿Qué podría representar que Tita escuche “piar” dentro del huevo cuando en realidad no hay pollo?</li>
-              <li>8. Si fueras Nacha y vieras esta escena, ¿qué pensarías de Tita? ¿Te preocuparías por ella, la creerías, la regañarías?</li>
-              <li>9. Mamá Elena le dice a Tita: «me estás colmando la paciencia». ¿Crees que Tita realmente está haciendo algo “mal” o solo está manifestando su sufrimiento de otra manera?</li>
-              <li>10. ¿En qué sentido este episodio refuerza la idea de que la cocina es el lugar donde Tita vive sus mayores alegrías y también sus peores tormentos?</li>
-              <li>11. ¿Te parece justo que la familia interprete las reacciones de Tita como “locuras”? ¿Qué otra interpretación podríamos darle?</li>
-              <li>12. Si tuvieras que explicar esta escena con una sola palabra (por ejemplo: represión, miedo, injusticia, desesperación, locura…), ¿cuál escogerías y por qué?</li>
-              <li>13. ¿Cómo crees que este momento influirá en la forma en que Tita vive la boda de Rosaura y Pedro?</li>
-              <li>14. ¿Qué detalles concretos del lenguaje o de las imágenes (el huevo, el piar, la bofetada, el banquete) te ayudan a sentir la tensión del pasaje?</li>
-              <li>15. Si pudieras decirle una frase a Tita justo después de que Mamá Elena rompe el huevo, ¿qué le dirías y por qué?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como2" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 02</p>
+        
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-slate-800 leading-relaxed text-base scroll-custom overflow-y-auto max-h-[500px] font-serif">
+            <p class="mb-4">«¿Qué te pasa? ¿Por qué tiemblas, vamos a empezar con problemas?» Tita levantó la vista y la miró. Tenía ganas de gritarle que sí, que había problemas, se había elegido mal al sujeto apropiado para capar, la adecuada era ella, de esta manera habría al menos una justificación real para que le estuviera negado el matrimonio y Rosaura tomara su lugar al lado del hombre que ella amaba. Mamá Elena, leyéndole la mirada, enfureció y le propinó a Tita una bofetada fenomenal que la hizo rodar por el suelo, junto con el pollo, que pereció por la mala operación.</p>
+            <p class="mb-4">Tita batía y batía con frenesí, como queriendo terminar de una vez por todas con el martirio. Sólo tenía que batir dos huevos más y la masa para el pastel quedaría lista. Era lo único que faltaba, todo lo demás, incluyendo los platillos para una comida de 20 platos y los bocadillos de entrada, estaban listos para el banquete. En la cocina sólo quedaban Tita, Nacha y Mamá Elena. Chencha, Gertrudis y Rosaura estaban dando los últimos toques al vestido de novia. Nacha, con un gran alivio, tomó el penúltimo huevo para partirlo. Tita, con un grito, impidió que lo hiciera.</p>
+            <p class="mb-4">-¡No!<br>Suspendió la batida y tomó el huevo entre sus manos. Claramente escuchaba piar a un pollo dentro del cascarón. Acercó el huevo a su oído y escuchó con más fuerza los pillidos.<br>Mamá Elena suspendió su labor y con voz autoritaria preguntó:<br>-¿Qué pasa? ¿Qué fue ese grito?<br>-¡Es que dentro de este huevo hay un pollo! Nacha de seguro no lo puede oír, pero yo sí.<br>-¿Un pollo? ¿Está loca? ¡Nunca ha pasado algo parecido con los huevos en conserva!</p>
+            <p>De dos zancadas, llegó hasta donde estaba Tita, le arrebató el huevo de las manos y lo partió. Tita cerró los ojos con fuerza.<br>-¡Abre los ojos y mira tu pollo!<br>Tita abrió los ojos lentamente. Con sorpresa vio que lo que creía un pollo no era más que un huevo y bastante fresco, por cierto.<br>-Escúchame bien Tita, me estás colmando la paciencia, no te voy a permitir que empieces con locuras. ¡Esta es la primera y la última! iO te aseguro que te arrepentirás!</p>
         </div>
       </div>
-    </a>
-    -->
+    </div>
 
-  </div>
+    <div class="lg:col-span-5 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-purple-600 text-center">
+        <div id="clock" class="timer-huge text-slate-900 tracking-tighter">00:00</div>
+        <div id="success_msg" class="hidden text-emerald-600 font-bold text-sm animate-pulse mb-2">✨ LÍMITE MÍNIMO ALCANZADO (3:00+) ✨</div>
+        <button id="mainBtn" onclick="startPrep()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all active:scale-95">
+          EMPEZAR PREPARACIÓN (20:00)
+        </button>
+      </div>
 
-  <!-- Shared JavaScript -->
+      <div id="dynamicContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[400px]">
+        <div id="notesBlock">
+            <h3 class="font-bold text-slate-700 mb-4 flex items-center justify-between">
+                <span>📝 Notas NS (10 balas)</span>
+            </h3>
+            <div id="notesList" class="space-y-3">
+                <p class="text-slate-400 text-sm italic">Esperando inicio...</p>
+            </div>
+        </div>
+
+        <div id="qZone" class="hidden space-y-4">
+            <div class="bg-indigo-950 text-white p-5 rounded-xl border-l-4 border-indigo-400">
+                <p id="qDisplay" class="text-lg font-medium leading-tight italic">Selecciona una pregunta de práctica...</p>
+            </div>
+            <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+                <button onclick="ask(this)" class="question-card">1. ¿Qué emoción crees que siente Tita justo antes de la bofetada?</button>
+                <button onclick="ask(this)" class="question-card">2. ¿Qué revela el pensamiento de Tita sobre ser ella "la adecuada para capar"?</button>
+                <button onclick="ask(this)" class="question-card">3. ¿Qué dice esta escena sobre el poder de Mamá Elena?</button>
+                <button onclick="ask(this)" class="question-card">4. ¿La reacción de Mamá Elena es por control o por el "qué dirán"?</button>
+                <button onclick="ask(this)" class="question-card">5. ¿Qué simboliza que el pollo "perezca por la mala operación"?</button>
+                <button onclick="ask(this)" class="question-card">6. ¿Cómo cambia el ambiente en la cocina durante el fragmento?</button>
+                <button onclick="ask(this)" class="question-card">7. ¿Qué representa que Tita escuche "piar" el huevo vacío?</button>
+                <button onclick="ask(this)" class="question-card">8. Como Nacha, ¿qué pensarías de Tita en ese momento?</button>
+                <button onclick="ask(this)" class="question-card">9. «Me estás colmando la paciencia»: ¿Tita hace algo mal o solo sufre?</button>
+                <button onclick="ask(this)" class="question-card">10. ¿Cómo refuerza esto que la cocina es refugio y tormento?</button>
+                <button onclick="ask(this)" class="question-card">11. ¿Es justo llamar "locuras" a las reacciones de Tita?</button>
+                <button onclick="ask(this)" class="question-card">12. Define la escena en una palabra: ¿Represión, miedo o injusticia?</button>
+                <button onclick="ask(this)" class="question-card">13. ¿Cómo influirá este momento en la boda de Rosaura y Pedro?</button>
+                <button onclick="ask(this)" class="question-card">14. ¿Qué imágenes concretas ayudan a sentir la tensión del pasaje?</button>
+                <button onclick="ask(this)" class="question-card">15. Si pudieras decirle algo a Tita tras romperse el huevo, ¿qué sería?</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
-        } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
-        }
-      });
-    })();
+    let seconds = 0, loop, isSpeaking = false;
+    const PREP_TIME = 1200; // 20 min
+    const SPEAK_TIME = 240;  // 4 min
 
-    // Conversación timer
-    let timerInterval;
-    let seconds = 0;
-
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
-      }, 1000);
+    function updateClock() {
+      const clockEl = document.getElementById('clock');
+      const msg = document.getElementById('success_msg');
+      const absSec = Math.abs(seconds);
+      const m = Math.floor(absSec / 60);
+      const s = absSec % 60;
+      clockEl.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      
+      if (isSpeaking) {
+        if (seconds <= 60 && seconds >= 0) {
+            clockEl.style.color = "#10b981"; 
+            msg.classList.remove('hidden');
+        } else if (seconds < 0) {
+            clockEl.style.color = "#ef4444";
+            msg.classList.add('hidden');
+        } else { clockEl.style.color = "#0f172a"; }
+      }
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+    function startPrep() {
+      clearInterval(loop);
+      seconds = PREP_TIME;
+      isSpeaking = false;
+      document.getElementById('statusLabel').innerText = "Fase: Preparación";
+      document.getElementById('statusLabel').className = "bg-amber-600 border border-amber-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const list = document.getElementById('notesList');
+      list.innerHTML = "";
+      for(let i=1; i<=10; i++) {
+        list.innerHTML += `<div class="flex gap-2 items-center"><span class="text-purple-500 font-bold text-xs">${i}.</span><input type="text" class="w-full border-b border-slate-100 focus:border-purple-400 outline-none py-1 text-sm"></div>`;
+      }
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "TERMINAR PREPARACIÓN (PAUSA)";
+      btn.className = "w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = waitToSpeak;
+      loop = setInterval(() => { seconds--; updateClock(); if (seconds <= 0) { clearInterval(loop); waitToSpeak(); } }, 1000);
+    }
+
+    function waitToSpeak() {
+      clearInterval(loop);
+      document.getElementById('clock').style.color = "#2563eb";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "LISTO - INICIAR DISCURSO (4 MIN)";
+      btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = startSpeak;
+    }
+
+    function startSpeak() {
+      isSpeaking = true; seconds = SPEAK_TIME;
+      document.getElementById('statusLabel').innerText = "Fase: Discurso";
+      document.getElementById('statusLabel').className = "bg-red-600 border border-red-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "FINALIZAR PRESENTACIÓN";
+      btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = finishExam;
+      loop = setInterval(() => { seconds--; updateClock(); }, 1000);
+    }
+
+    function finishExam() {
+      clearInterval(loop);
+      document.getElementById('notesBlock').classList.add('hidden');
+      document.getElementById('qZone').classList.remove('hidden');
+      document.getElementById('mainBtn').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = "Fase: Preguntas";
+      document.getElementById('statusLabel').className = "bg-indigo-600 border border-indigo-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+    }
+
+    function ask(btn) {
+      document.getElementById('qDisplay').innerText = btn.innerText;
     }
   </script>
 </body>
