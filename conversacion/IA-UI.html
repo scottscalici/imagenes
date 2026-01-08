@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v42</title>
+    <title>Sr. Scalici - Factory v42----</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
@@ -119,7 +119,7 @@ function generateV42() {
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
     
-      const configs = {
+    const configs = {
         11: { prep: 300, goal: 30, type: "script" },
         12: { prep: 420, goal: 30, type: "script" },
         13: { prep: 480, goal: 30, type: "script" },
@@ -146,8 +146,11 @@ function generateV42() {
     c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }";
     c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }";
     c += ".prompt-box { background: #fff9db; padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 15px; font-size: 0.95rem; }";
+    c += ".q-box { background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 5px solid #2196f3; margin-bottom: 15px; }";
     c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }";
+    c += ".link-btn { display: inline-block; text-decoration: none; background: #e67e22; color: white; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; text-align: center; margin-right: 5px; margin-bottom: 15px; }";
     c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }";
+    c += "input[type='text'] { width: 85%; border: none; border-bottom: 1px solid #ccc; margin-bottom: 8px; background: transparent; padding: 5px; }";
     c += "</style></head><body>";
     
     c += "<div class='header'><div><span style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>" + themeVal + "</span><br><span id='pageTitle'>Cargando...</span> | <strong>Objetivo: <span id='goalText'>" + formatGoal(act.goal) + "</span></strong></div>";
@@ -156,13 +159,11 @@ function generateV42() {
     c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
     c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-bottom:10px;'>✨ LÍMITE MÍNIMO ALCANZADO ✨</div>";
     c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
-    c += "<div id='right'><div class='notes' id='notesArea'>";
-    if(promptVal !== "") c += "<div class='prompt-box'><strong>Instrucciones:</strong><br>" + promptVal + "</div>";
-    c += "Esperando inicio...</div></div></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>Esperando inicio...</div></div></div>";
     
     c += "<script>";
     c += "var seconds=0, loop, customQ=null, isSpeaking=false, isSim=false;";
-    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };";
+    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + ", showQ: " + hasQ + " };";
     c += "var promptHTML = `" + (promptVal ? `<div class='prompt-box'><strong>Instrucciones:</strong><br>${promptVal}</div>` : "") + "`;";
     
     c += "fetch('" + GITHUB_JSON + "').then(r=>r.json()).then(d=>{";
@@ -185,8 +186,14 @@ function generateV42() {
 
     c += "function buildNotes(){";
     c += "  var area = document.getElementById('notesArea'); area.innerHTML = promptHTML;";
-    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px;\"></textarea>';";
-    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%; border:none; border-bottom:1px solid #ccc; margin-bottom:5px; background:transparent;\"><br>'; }";
+    // Enlaces de Cultura y Modismos actualizados para SL
+    c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Conexiones Culturales</a>';";
+    c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a>';";
+    // Lógica de la Pregunta
+    c += "  if(config.showQ && customQ) area.innerHTML += '<div class=\"q-box\"><strong>❓ Pregunta:</strong><br>'+customQ+'</div>';";
+    // Área de entrada
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px; border:1px solid #ddd; border-radius:5px; padding:10px;\"></textarea>';";
+    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\"><br>'; }";
     c += "}";
 
     c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
