@@ -2,17 +2,17 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v40</title>
+    <title>Sr. Scalici - Factory v41</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .section { margin-bottom: 25px; padding: 20px; border: 1px solid #dcdde1; border-radius: 10px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
-        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; }
+        select, input, textarea { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
         .output-container { position: relative; margin-top: 15px; }
-        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 180px; width: 100%; font-family: monospace; box-sizing: border-box; resize: none; border: none; font-size: 11px; }
-        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; }
+        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 150px; width: 100%; font-family: monospace; font-size: 11px; }
+        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; margin-top:10px; }
         button.copy-btn { position: absolute; top: 10px; right: 20px; background: #ff5e57; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #livePreview { width: 100%; height: 850px; border: 3px dashed #dcdde1; margin-top: 25px; border-radius: 10px; }
         .custom-focus { margin-top: 15px; padding: 10px; background: #eef2ff; border-radius: 8px; border: 1px solid #c7d2fe; }
@@ -21,70 +21,63 @@
 <body>
 
 <div class="factory-box">
-    <h2>🚀 Factory v40: Más Andamiaje</h2>
+    <h2>🚀 Factory v41: Instrucciones + Títulos Flexibles</h2>
     
     <div class="section">
         <h3>1. Configuración de la Lección</h3>
         <div class="grid-3">
-            <div><label>Lección:</label><select id="lessonSelect"><option>Cargando GitHub...</option></select></div>
+            <div><label>Lección (JSON):</label><select id="lessonSelect"><option>Cargando...</option></select></div>
             <div>
-                <label>Tema IB:</label>
-                <select id="theme">
-                    <option value="ingenuity">Ingenio humano</option>
-                    <option value="experiences">Experiencias</option>
-                    <option value="sharing">Compartimos el planeta</option>
-                    <option value="identities">Identidades</option>
-                    <option value="social">Organización social</option>
-                </select>
+                <label>Tema / Unidad:</label>
+                <input list="themes" id="themeInput" placeholder="Escribe o selecciona...">
+                <datalist id="themes">
+                    <option value="Identidades">
+                    <option value="Experiencias">
+                    <option value="Ingenio humano">
+                    <option value="Organización social">
+                    <option value="Compartimos el planeta">
+                </datalist>
             </div>
             <div>
                 <label>Andamiaje (Tier):</label>
                 <select id="tier">
                     <option value="1">Tier 1: Guion (30s)</option>
-                    <option value="2">Tier 2: Guion (45s)</option>
-                    <option value="3">Tier 3: 1 Frase + 15 Balas (60s)</option>
-                    <option value="4">Tier 4: 1 Frase + 12 Balas (90s)</option>
-                    <option value="5">Tier 5: 1 Frase + 10 Balas (105s)</option>
                     <option value="6">Tier 6: 10 Balas (120s)</option>
-                    <option value="7">Tier 7: 10 Balas (150s)</option>
-                    <option value="8">Tier 8: 10 Balas (180s)</option>
-                    <option value="9">Tier 9: Solo Pregunta (210s)</option>
                     <option value="10" selected>Tier 10: Simulación (240s)</option>
-                    <option value="11" selected>Tier 2-A: Práctica (300s prep)</option>
-                    <option value="12" selected>Tier 2-B: Práctica (420s prep)</option>
-                    <option value="13" selected>Tier 2-C: Práctica (480s prep)</option>
-                    <option value="14" selected>Tier 2-D: Práctica (600s prep)</option>
+                    <option value="11">Tier 2-A: Práctica (300s prep)</option>
+                    <option value="12">Tier 2-B: Práctica (420s prep)</option>
+                    <option value="13">Tier 2-C: Práctica (480s prep)</option>
+                    <option value="14">Tier 2-D: Práctica (600s prep)</option>
                 </select>
             </div>
         </div>
     </div>
 
     <div class="section">
-        <span style="font-weight:bold;">2. Estrategias y Gramática</span>
+        <h3>2. Instrucciones para el Estudiante (Opcional)</h3>
+        <textarea id="promptText" rows="3" placeholder="Escribe aquí las instrucciones específicas del assignment..."></textarea>
+    </div>
+
+    <div class="section">
+        <span style="font-weight:bold;">3. Estrategias y Gramática</span>
         <div class="checkbox-grid">
-            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
-            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
-            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
-            <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🗣️ Modismos"> 🗣️ Modismos</label>
-            <label style="color:#3498db; font-weight:bold;"><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
+            <label><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
+            <label><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
+            <label><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
+            <label><input type="checkbox" id="includeQ"> ❓ Pregunta</label>
             <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
             <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
             <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
-            <label><input type="checkbox" class="gram" value="Si+Cond"> Cláusula con Si</label>
-            <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
             <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
-            <label><input type="checkbox" class="gram" value="Condicional"> Condicional</label>
-            <label><input type="checkbox" class="gram" value="preteritoperfecto"> Pretérito Perfecto</label>
         </div>
         <div class="custom-focus">
-            <label style="font-weight:bold; color: #4338ca;">🎯 Enfoque Personalizado:</label>
-            <input type="text" id="customTag" placeholder="Ejem: Usa conectores de contraste...">
+            <input type="text" id="customTag" placeholder="🎯 Enfoque extra (ej: Usa el imperfecto)">
         </div>
     </div>
 
-    <button class="gen-btn" onclick="generateV39()">GENERAR v39- Y PROBAR</button>
+    <button class="gen-btn" onclick="generateV41()">GENERAR v41 Y PROBAR</button>
     <div class="output-container">
-        <button class="copy-btn" onclick="copyV39()">COPIAR</button>
+        <button class="copy-btn" onclick="copyV41()">COPIAR</button>
         <textarea id="outputArea" readonly></textarea>
     </div>
     <iframe id="livePreview"></iframe>
@@ -103,14 +96,16 @@ fetch(GITHUB_JSON).then(r => r.json()).then(data => {
     }
 });
 
-function copyV39() {
+function copyV41() {
     const area = document.getElementById("outputArea");
     area.select(); document.execCommand('copy');
     alert("Código copiado.");
 }
 
-function generateV39() {
+function generateV41() {
     const lessonID = document.getElementById('lessonSelect').value;
+    const themeVal = document.getElementById('themeInput').value || "General";
+    const promptVal = document.getElementById('promptText').value.trim();
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
     const customValue = document.getElementById('customTag').value.trim();
@@ -122,22 +117,15 @@ function generateV39() {
     if(customValue !== "") tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
 
     const configs = {
+        1: { prep: 420, goal: 30, type: "script" },
+        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
+        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 },
         11: { prep: 300, goal: 30, type: "script" },
         12: { prep: 420, goal: 30, type: "script" },
         13: { prep: 480, goal: 30, type: "script" },
-        14: { prep: 600, goal: 30, type: "script" },
-        1: { prep: 420, goal: 30, type: "script" },
-        2: { prep: 420, goal: 45, type: "script" },
-        3: { prep: 600, goal: 60, type: "hybrid", bullets: 15 },
-        4: { prep: 600, goal: 90, type: "hybrid", bullets: 12 },
-        5: { prep: 600, goal: 105, type: "hybrid", bullets: 10 },
-        6: { prep: 600, goal: 120, type: "bullets", bullets: 10 },
-        7: { prep: 600, goal: 150, type: "bullets", bullets: 10 },
-        8: { prep: 900, goal: 180, type: "bullets", bullets: 10 },
-        9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
-        10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
+        14: { prep: 600, goal: 30, type: "script" }
     };
-    const act = configs[tier];
+    const act = configs[tier] || configs[10];
     const formatGoal = (s) => Math.floor(s/60) + ":" + (s%60 < 10 ? '0' : '') + (s%60);
 
     let c = "<!DOCTYPE html><html><head><style>";
@@ -146,27 +134,24 @@ function generateV39() {
     c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }";
     c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }";
     c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }";
+    c += ".prompt-box { background: #fff9db; padding: 15px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 15px; font-style: italic; font-size: 0.95rem; }";
     c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }";
     c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }";
-    c += ".link-btn { display: inline-block; padding: 8px 12px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; margin-right: 5px; font-weight: bold; }";
     c += "</style></head><body>";
     
-    c += "<div class='header'><div><span id='pageTitle' style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>Cargando...</span><br><strong>Objetivo: " + formatGoal(act.goal) + "</strong><br>" + tagsHTML + "</div>";
+    c += "<div class='header'><div><span style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>" + themeVal + "</span><br><span id='pageTitle'>Cargando...</span> | <strong>Objetivo: " + formatGoal(act.goal) + "</strong><br>" + tagsHTML + "</div>";
     c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>";
     
     c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
-    c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-top:-10px; margin-bottom:10px;'>✨ TIEMPO MÍNIMO ALCANZADO ✨</div>";
     c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
-    c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>";
+    if(promptVal !== "") c += "<div class='prompt-box'><strong>Instrucciones:</strong><br>" + promptVal.replace(/\n/g, '<br>') + "</div>";
+    c += "Esperando inicio...</div></div></div>";
     
-    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'><div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div>";
-    c += "<button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button>";
-    c += "<button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button>";
-    c += "<button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>";
-
     c += "<script>";
-    c += "var seconds=0, loop, customQ=null, isSim=false, isSpeaking=false, hasQ=" + hasQ + ";";
+    c += "var seconds=0, loop, customQ=null, isSpeaking=false, isSim=false;";
     c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };";
+    c += "var promptHTML = `" + (promptVal ? `<div class='prompt-box'><strong>Instrucciones:</strong><br>${promptVal.replace(/\n/g, '<br>')}</div>` : "") + "`;";
     
     c += "fetch('" + GITHUB_JSON + "').then(r=>r.json()).then(d=>{";
     c += "  var l = d.items['" + lessonID + "'];";
@@ -174,22 +159,15 @@ function generateV39() {
     c += "});";
 
     c += "function updateC(){";
-    c += "  var el=document.getElementById('clock'), msg=document.getElementById('success_msg');";
-    c += "  var a=Math.abs(seconds), m=Math.floor(a/60), s=a%60;";
+    c += "  var el=document.getElementById('clock'), a=Math.abs(seconds), m=Math.floor(a/60), s=a%60;";
     c += "  el.innerText=(seconds<0?'-':'')+m+':'+(s<10?'0':'')+s;";
-    c += "  if(isSpeaking && config.goal === 240 && seconds <= 60 && seconds >= 0) { el.style.color='#27ae60'; msg.style.display='block'; }";
-    c += "  else if(seconds<0) { el.style.color='red'; msg.style.display='none'; }";
-    c += "  else { el.style.color='black'; msg.style.display='none'; }";
+    c += "  el.style.color = (seconds < 0) ? 'red' : 'black';";
     c += "}";
 
-    c += "function forceSim(){ isSim=true; config.goal=240; config.prep=900; config.bullets=10; config.type='bullets'; document.getElementById('simBtn').innerText='MODO SIMULACIÓN ACTIVADO'; document.getElementById('simBtn').style.opacity='0.5'; seconds=0; updateC(); }";
-
     c += "function buildNotes(){";
-    c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';";
-    c += "  if(!isSim){ area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a><a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a><hr>'; }";
-    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea id=\"mainScript\" style=\"width:95%; height:320px;\"></textarea>';";
-    c += "  else if(config.type==='hybrid') { area.innerHTML += '<strong>Frase:</strong><br><input type=\"text\" style=\"width:90%;\"><br><strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
-    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%;\"><br>'; }";
+    c += "  var area = document.getElementById('notesArea'); area.innerHTML = promptHTML;";
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px;\"></textarea>';";
+    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\" style=\"width:80%; border:none; border-bottom:1px solid #ccc; margin-bottom:5px; background:transparent;\"><br>'; }";
     c += "}";
 
     c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
@@ -201,12 +179,9 @@ function generateV39() {
     c += "  var btn=document.getElementById('mainBtn'); btn.style.background='#f39c12'; btn.innerText='LISTO - CLIC PARA HABLAR'; btn.onclick=startSpeak; }";
 
     c += "function startSpeak(){ clearInterval(loop); isSpeaking=true; seconds=config.goal; updateC();";
-    c += "  var btn=document.getElementById('mainBtn'); btn.innerText='FINALIZAR'; btn.style.background='#e74c3c'; btn.onclick=end;";
+    c += "  var btn=document.getElementById('mainBtn'); btn.innerText='FINALIZAR'; btn.style.background='#e74c3c'; btn.onclick=()=>clearInterval(loop);";
     c += "  loop=setInterval(()=>{seconds--; updateC();},1000);";
     c += "}";
-
-    c += "function end(){ clearInterval(loop); document.getElementById('qZone').style.display='block'; }";
-    c += "function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }";
     c += "<\/script></body></html>";
 
     document.getElementById('outputArea').value = c;
