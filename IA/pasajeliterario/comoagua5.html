@@ -3,220 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pasaje literario – Como agua para chocolate</title>
+  <title>NS Oral - Como agua para chocolate (Pasaje 05)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-huge { font-size: 4rem; font-weight: bold; font-family: monospace; }
+    .question-card { cursor: pointer; transition: all 0.2s; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); width: 100%; }
+    .question-card:hover { transform: translateY(-2px); border-color: #6d28d9; background: #f5f3ff; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
+<body class="bg-slate-50 min-h-screen pb-20">
 
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+  <header class="bg-purple-900 text-white p-6 shadow-xl mb-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-purple-200 tracking-tight">NS: Evaluación Interna (Oral)</h1>
+        <p class="text-lg opacity-90 font-medium">Como agua para chocolate — <span class="italic">Junio: Mole de guajolote</span></p>
+      </div>
+      <div class="text-right">
+        <div id="statusLabel" class="bg-purple-800 border border-purple-400 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white">Estado: En espera</div>
+        <p class="text-[10px] mt-1 opacity-70 uppercase font-bold">Prep: 20:00 | Meta NS: 4:00</p>
+      </div>
+    </div>
+  </header>
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Junio – Mole de guajolote con almendra y ajonjolí</span></p>
-          </div>
+  <main class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex gap-4 mb-4">
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" class="h-24 rounded-lg shadow-md border border-slate-100">
+            <div>
+                <h2 class="font-bold text-xl text-slate-800">Pasaje Literario 05</h2>
+                <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2005.pdf?raw=1" target="_blank" class="text-indigo-600 text-xs font-bold hover:underline">📥 DESCARGAR PDF</a>
+            </div>
         </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2005.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
-          </div>
+
+        <div class="mb-6 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-r-lg">
+            <h3 class="font-bold text-purple-900 text-sm mb-1 italic">🧭 Instrucciones:</h3>
+            <p class="text-purple-800 text-sm">Lee el pasaje literario con atención. Analiza el contexto, los personajes, el tono y los recursos literarios.</p>
         </div>
-      </header>
-
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
-            <p class="mb-4">Entre todos los invitados ella era realmente la única molesta, pues curiosamente, después de comer el mole, todos habían entrado en un estado de euforia que los hizo tener reacciones de alegría poco comunes. Reían y alborotaban como nunca lo habían hecho y pasaría bastante tiempo antes de que lo volvieran a hacer. La lucha revolucionaria amenazaba con acarrear hambre y muerte por doquier. Pero en esos momentos parecía que todos trataban de olvidar que en el pueblo había muchos balazos. <br>La única que no perdió la compostura fue Mamá Elena, que estaba muy ocupada en buscar una solución a su resquemor, y aprovechando un momento en que Tita estaba lo suficientemente cerca como para no perder una sola de las palabras que ella pronunciara, le comentó al padre Ignacio en voz alta: <br>-Por cómo se están presentando las cosas padre, me preocupa que un día mi hija Rosaura necesite un médico y no lo podamos traer, como el día en que dio a luz. Creo que lo más conveniente sería que en cuanto tenga más fuerzas se vaya junto con su esposo y su hijito a vivir a San Antonio, Texas, con mi primo. Ahí tendrá mejor atención médica. <br>-Yo no opino lo mismo doña Elena, precisamente por cómo está la situación política, usted necesita de un hombre en casa que la defienda. <br>-Nunca lo he necesitado para nada, sola he podido con el rancho y con mis hijas. Los hombres no son tan importantes para vivir padre -recalcó-. Ni la revolución es tan peligrosa como la pintan, ¡peor es el chile y el agua lejos! <br>-¡No, pues eso sí! -respondió riéndose-. ¡Ah, qué doña Elena! Siempre tan ocurrente. Y, dígame, ¿ya pensó dónde trabajaría Pedro en San Antonio? <br>-Puede entrar a trabajar como contador en la compañía de mi primo, no tendrá problema, pues habla inglés a la perfección. <br>Las palabras que Tita escuchó resonaron como cañonazos dentro de su cerebro. No podía permitir que esto pasara. No era posible que ahora le quitaran al niño. Tenía que impedirlo a como diera lugar. Por lo pronto, Mamá Elena logró arruinarle la fiesta. La primera fiesta que gozaba en su vida.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1.	¿Qué revela la alegría colectiva causada por el mole sobre el poder de la comida en la novela?</li>
-              <li>2.	¿Por qué crees que Mamá Elena es la única que no se deja llevar por la euforia del momento?</li>
-              <li>3.	¿Cómo refleja este fragmento la tensión entre la felicidad personal y el deber familiar?</li>
-              <li>4.	¿Qué nos dice el comentario de Mamá Elena sobre “los hombres” acerca de su visión del mundo?</li>
-              <li>5.	¿Cómo afecta la conversación entre Mamá Elena y el padre Ignacio el bienestar emocional de Tita?</li>
-              <li>6.	¿Qué simboliza para Tita la posible mudanza a San Antonio?</li>
-              <li>7.	¿Por qué crees que Mamá Elena hace el anuncio de la mudanza en voz alta, frente al padre?</li>
-              <li>8.	¿Qué nos dice la reacción de Tita sobre su relación emocional con el bebé?</li>
-              <li>9.	¿Cómo contribuye la Revolución Mexicana al ambiente de incertidumbre en la familia?</li>
-              <li>10.	¿Qué revela este fragmento sobre la necesidad de control de Mamá Elena?</li>
-              <li>11.	¿Por qué la primera fiesta feliz de Tita se convierte en una experiencia amarga?</li>
-              <li>12.	¿Cómo usa el autor el contraste entre euforia y angustia en esta escena?</li>
-              <li>13.	¿Qué importancia tiene el hecho de que Tita esté “lo suficientemente cerca” para escuchar?</li>
-              <li>14.	¿Qué papel juega el padre Ignacio en esta conversación y qué representa?</li>
-              <li>15.	¿Cómo anticipa este fragmento los conflictos futuros entre Tita y Rosaura?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como5" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 05</p>
+        
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-slate-800 leading-relaxed text-base scroll-custom overflow-y-auto max-h-[500px] font-serif">
+            <p class="mb-4">Entre todos los invitados ella era realmente la única molesta, pues curiosamente, después de comer el mole, todos habían entrado en un estado de euforia que los hizo tener reacciones de alegría poco comunes. Reían y alborotaban como nunca lo habían hecho y pasaría bastante tiempo antes de que lo volvieran a hacer. La lucha revolucionaria amenazaba con acarrear hambre y muerte por doquier. Pero en esos momentos parecía que todos trataban de olvidar que en el pueblo había muchos balazos. </p>
+            <p class="mb-4">La única que no perdió la compostura fue Mamá Elena, que estaba muy ocupada en buscar una solución a su resquemor, y aprovechando un momento en que Tita estaba lo suficientemente cerca como para no perder una sola de las palabras que ella pronunciara, le comentó al padre Ignacio en voz alta:</p>
+            <p class="mb-4">-Por cómo se están presentando las cosas padre, me preocupa que un día mi hija Rosaura necesite un médico y no lo podamos traer, como el día en que dio a luz. Creo que lo más conveniente sería que en cuanto tenga más fuerzas se vaya junto con su esposo y su hijito a vivir a San Antonio, Texas, con mi primo. Ahí tendrá mejor atención médica. <br>-Yo no opino lo mismo doña Elena, precisamente por cómo está la situación política, usted necesita de un hombre en casa que la defienda. <br>-Nunca lo he necesitado para nada, sola he podido con el rancho y con mis hijas. Los hombres no son tan importantes para vivir padre -recalcó-. Ni la revolución es tan peligrosa como la pintan, ¡peor es el chile y el agua lejos!</p>
+            <p class="mb-4">-¡No, pues eso sí! -respondió riéndose-. ¡Ah, qué doña Elena! Siempre tan ocurrente. Y, dígame, ¿ya pensó dónde trabajaría Pedro en San Antonio? <br>-Puede entrar a trabajar como contador en la compañía de mi primo, no tendrá problema, pues habla inglés a la perfección.</p>
+            <p>Las palabras que Tita escuchó resonaron como cañonazos dentro de su cerebro. No podía permitir que esto pasara. No era posible que ahora le quitaran al niño. Tenía que impedirlo a como diera lugar. Por lo pronto, Mamá Elena logró arruinarle la fiesta. La primera fiesta que gozaba en su vida.</p>
         </div>
       </div>
-    </a>
-    -->
+    </div>
 
-  </div>
+    <div class="lg:col-span-5 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-purple-600 text-center">
+        <div id="clock" class="timer-huge text-slate-900 tracking-tighter">00:00</div>
+        <div id="success_msg" class="hidden text-emerald-600 font-bold text-sm animate-pulse mb-2">✨ LÍMITE MÍNIMO ALCANZADO (3:00+) ✨</div>
+        <button id="mainBtn" onclick="startPrep()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all active:scale-95">
+          EMPEZAR PREPARACIÓN NS (20:00)
+        </button>
+      </div>
 
-  <!-- Shared JavaScript -->
+      <div id="dynamicContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[400px]">
+        <div id="notesBlock">
+            <h3 class="font-bold text-slate-700 mb-4 flex items-center justify-between">
+                <span>📝 Notas NS (10 balas)</span>
+            </h3>
+            <div id="notesList" class="space-y-3">
+                <p class="text-slate-400 text-sm italic">Esperando inicio para habilitar notas...</p>
+            </div>
+        </div>
+
+        <div id="qZone" class="hidden space-y-4">
+            <div class="bg-indigo-950 text-white p-5 rounded-xl border-l-4 border-indigo-400">
+                <p id="qDisplay" class="text-lg font-medium leading-tight italic">Selecciona una pregunta para el diálogo NS...</p>
+            </div>
+            <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+                <button onclick="ask(this)" class="question-card">1. ¿Qué revela la alegría por el mole sobre el poder de la comida?</button>
+                <button onclick="ask(this)" class="question-card">2. ¿Por qué Mamá Elena no se deja llevar por la euforia colectiva?</button>
+                <button onclick="ask(this)" class="question-card">3. ¿Cómo refleja el texto la tensión entre felicidad y deber?</button>
+                <button onclick="ask(this)" class="question-card">4. ¿Qué revela la visión de Mamá Elena sobre "los hombres"?</button>
+                <button onclick="ask(this)" class="question-card">5. ¿Cómo afecta la charla con el cura al bienestar de Tita?</button>
+                <button onclick="ask(this)" class="question-card">6. ¿Qué simboliza para Tita la mudanza de Pedro a Texas?</button>
+                <button onclick="ask(this)" class="question-card">7. ¿Por qué Mamá Elena hace el anuncio en voz alta frente a Tita?</button>
+                <button onclick="ask(this)" class="question-card">8. ¿Qué nos dice la reacción de Tita sobre su vínculo con el bebé?</button>
+                <button onclick="ask(this)" class="question-card">9. ¿Cómo influye la Revolución en el ambiente de este pasaje?</button>
+                <button onclick="ask(this)" class="question-card">10. ¿Qué revela el fragmento sobre el control de Mamá Elena?</button>
+                <button onclick="ask(this)" class="question-card">11. ¿Por qué la primera fiesta de Tita termina en amargura?</button>
+                <button onclick="ask(this)" class="question-card">12. Analiza el contraste entre euforia y angustia en la escena.</button>
+                <button onclick="ask(this)" class="question-card">13. ¿Qué importancia tiene que Tita escuche "cañonazos" en su cerebro?</button>
+                <button onclick="ask(this)" class="question-card">14. ¿Qué papel juega el padre Ignacio en esta dinámica familiar?</button>
+                <button onclick="ask(this)" class="question-card">15. ¿Cómo anticipa esto los conflictos futuros con Rosaura?</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
-        } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
-        }
-      });
-    })();
+    let seconds = 0, loop, isSpeaking = false;
+    const PREP_TIME = 1200; 
+    const SPEAK_TIME = 240;  
 
-    // Conversación timer
-    let timerInterval;
-    let seconds = 0;
-
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
-      }, 1000);
+    function updateClock() {
+      const clockEl = document.getElementById('clock');
+      const msg = document.getElementById('success_msg');
+      const absSec = Math.abs(seconds);
+      const m = Math.floor(absSec / 60);
+      const s = absSec % 60;
+      clockEl.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      if (isSpeaking) {
+        if (seconds <= 60 && seconds >= 0) { clockEl.style.color = "#10b981"; msg.classList.remove('hidden'); }
+        else if (seconds < 0) { clockEl.style.color = "#ef4444"; msg.classList.add('hidden'); }
+        else { clockEl.style.color = "#0f172a"; }
+      }
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+    function startPrep() {
+      clearInterval(loop);
+      seconds = PREP_TIME; isSpeaking = false;
+      document.getElementById('statusLabel').innerText = "Fase: Preparación NS";
+      document.getElementById('statusLabel').className = "bg-amber-600 border border-amber-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const list = document.getElementById('notesList');
+      list.innerHTML = "";
+      for(let i=1; i<=10; i++) {
+        list.innerHTML += `<div class="flex gap-2 items-center"><span class="text-purple-500 font-bold text-xs">${i}.</span><input type="text" class="w-full border-b border-slate-100 focus:border-purple-400 outline-none py-1 text-sm"></div>`;
+      }
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "TERMINAR PREPARACIÓN (PAUSA)";
+      btn.className = "w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = waitToSpeak;
+      loop = setInterval(() => { seconds--; updateClock(); if (seconds <= 0) { clearInterval(loop); waitToSpeak(); } }, 1000);
     }
+
+    function waitToSpeak() {
+      clearInterval(loop);
+      document.getElementById('clock').style.color = "#2563eb";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "LISTO - INICIAR DISCURSO NS (4 MIN)";
+      btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = startSpeak;
+    }
+
+    function startSpeak() {
+      isSpeaking = true; seconds = SPEAK_TIME;
+      document.getElementById('statusLabel').innerText = "Fase: Discurso NS";
+      document.getElementById('statusLabel').className = "bg-red-600 border border-red-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "FINALIZAR PRESENTACIÓN";
+      btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = finishExam;
+      loop = setInterval(() => { seconds--; updateClock(); }, 1000);
+    }
+
+    function finishExam() {
+      clearInterval(loop);
+      document.getElementById('notesBlock').classList.add('hidden');
+      document.getElementById('qZone').classList.remove('hidden');
+      document.getElementById('mainBtn').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = "Fase: Diálogo NS";
+      document.getElementById('statusLabel').className = "bg-indigo-600 border border-indigo-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+    }
+
+    function ask(btn) { document.getElementById('qDisplay').innerText = btn.innerText; }
   </script>
 </body>
 </html>
