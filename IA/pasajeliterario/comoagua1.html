@@ -3,244 +3,207 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pasaje literario – Como agua para chocolate</title>
+  <title>HL Oral - Como agua para chocolate (Completo)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-huge { font-size: 4rem; font-weight: bold; font-family: monospace; }
+    .question-card { cursor: pointer; transition: all 0.2s; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .question-card:hover { transform: translateY(-2px); border-color: #6d28d9; background: #f5f3ff; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+<body class="bg-slate-50 min-h-screen pb-20">
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Enero: Tortas de Navidad</span></p>
-          </div>
-        </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2001.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
-            <p class="mb-4">
-              La cebolla tiene que estar finamente picada. Les sugiero <br>
-              ponerse un pequeño trozo de cebolla en la mollera con <br>
-              el fin de evitar el molesto lagrimeo que se produce<br>
-              cuando uno la está cortando. Lo malo de llorar cuando uno pica cebolla no es el simple hecho <br>
-              de llorar, sino que a veces uno empieza, como quien dice, se pica, y ya no puede parar. No sé si <br>
-              a ustedes les ha pasado pero a mí la mera verdad sí. Infinidad de veces. Mamá decía que era <br>
-              porque yo soy igual de sensible a la cebolla que Tita, mi tía abuela.
-            </p>
-            <p class="mb-4">
-              Dicen que Tita era tan sensible que desde que estaba en el vientre de mi bisabuela lloraba<br>
-              y lloraba cuando ésta picaba cebolla; su llanto era tan fuerte que Nacha, la cocinera de la<br>
-              casa, que era medio sorda, lo escuchaba sin esforzarse. Un día los sollozos fueron tan fuertes<br>
-              que provocaron que el parto se adelantara. Y sin que mi bisabuela pudiera decir ni pío, Tita<br>
-              arribó a este mundo prematuramente, sobre la mesa de la cocina, entre los olores de una<br>
-              sopa de fideos que estaba cocinando, los del tomillo, el laurel, el cilantro, el de la leche<br>
-              hervida, el de los ajos y, por supuesto, el de la cebolla. Como se imaginarán, la consabida<br>
-              nalgada no fue necesaria, pues Tita nació llorando de antemano, tal vez porque ella sabía<br>
-              que su oráculo determinaba que en esta vida le estaba negado el matrimonio. Contaba Nacha<br>
-              que Tita fue literalmente empujada a este mundo por un torrente impresionante de lágrimas<br>
-              que se desbordaron sobre la mesa y el piso de la cocina.
-            </p>
-            <p class="mb-4">
-              En la tarde, ya cuando el susto había pasado y el agua, gracias al efecto de los rayos del<br>
-              sol, se había evaporado, Nacha barrió el residuo de las lágrimas que había quedado sobre la<br>
-              loseta roja que cubría el piso: Con esta sal rellenó un costal de cinco kilos que utilizaron para<br>
-              cocinar bastante tiempo. Este inusitado nacimiento determinó el hecho de que Tita sintiera<br>
-              un inmenso amor por la cocina…
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1. ¿Qué detalle del nacimiento de Tita en este pasaje te llamó más la atención? ¿Por qué?</li>
-              <li>2. Después de haber leído toda la novela, ¿cómo interpretas ahora este nacimiento tan inusual?</li>
-              <li>3. ¿Te parece más sorprendente que Tita llorara en el vientre o que naciera en la cocina? Explica brevemente.</li>
-              <li>4. ¿Qué impresión te da Nacha en este pasaje? ¿Cómo conecta con lo que sabemos de ella más adelante?</li>
-              <li>5. Aquí se describe a Tita como extremadamente sensible. ¿Cómo encaja esa sensibilidad con su personalidad en el resto de la novela?</li>
-              <li>6. La escena está llena de olores y sabores. ¿Qué efecto te produce esta descripción y qué relación ves con la conexión de Tita con la cocina?</li>
-              <li>7. ¿Cómo te imaginas el ambiente en la cocina durante el nacimiento, según lo que describe el pasaje?</li>
-              <li>8. ¿Qué sentimiento domina este fragmento para ti: humor, ternura, tristeza, exageración? ¿Por qué?</li>
-              <li>9. ¿Qué opinas de la idea de usar la sal de las lágrimas para cocinar? ¿Es algo más cómico, mágico o simbólico?</li>
-              <li>10. La narradora menciona que ella también es sensible a la cebolla. ¿Qué aporta este detalle a la historia?</li>
-              <li>11. ¿Qué relación crees que Tita tiene con la cocina en este momento inicial, antes de conocer otros conflictos de la novela?</li>
-              <li>12. ¿Este pasaje te parece una pista sobre el destino de Tita? ¿Por qué sí o no?</li>
-              <li>13. Si comparas este inicio con la Tita adulta que aparece más tarde, ¿ves continuidad o contraste?</li>
-              <li>14. ¿Te parece que la familia interpreta correctamente la sensibilidad de Tita, o la malinterpreta desde el principio?</li>
-              <li>15. ¿Qué otra escena de la novela te recuerda a esta combinación de emoción intensa y elementos mágicos?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como1" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 01</p>
+  <header class="bg-purple-900 text-white p-6 shadow-xl mb-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-purple-200 tracking-tight">HL: Evaluación Interna (Oral)</h1>
+        <p class="text-lg opacity-90 font-medium">Como agua para chocolate — <span class="italic">Enero: Tortas de Navidad</span></p>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="text-right">
+            <div id="statusLabel" class="bg-purple-800 border border-purple-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Estado: En espera</div>
+            <p class="text-[10px] mt-1 opacity-70 uppercase font-bold">Prep: 20:00 | Meta: 4:00</p>
         </div>
       </div>
-    </a>
-    -->
+    </div>
+  </header>
 
-  </div>
+  <main class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex justify-between items-start mb-4">
+            <div class="flex gap-4">
+                <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" class="h-24 rounded-lg shadow-md border border-slate-100">
+                <div>
+                    <h2 class="font-bold text-xl text-slate-800 tracking-tight">Pasaje Seleccionado</h2>
+                    <p class="text-xs text-slate-500 mb-2">Analiza el contexto y recursos literarios.</p>
+                    <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2001.pdf?raw=1" target="_blank" class="inline-flex items-center text-indigo-600 text-xs font-bold hover:text-indigo-800">
+                        <span class="mr-1">📥</span> DESCARGAR PDF COMPLETO
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-slate-800 leading-relaxed text-base scroll-custom overflow-y-auto max-h-[500px] font-serif">
+            <p class="mb-4 italic text-slate-500 text-sm">
+                Lee este fragmento con calma. Puedes subrayar ideas clave y pensar en la relación con la obra completa.
+            </p>
+            <p class="mb-4">
+                La cebolla tiene que estar finamente picada. Les sugiero ponerse un pequeño trozo de cebolla en la mollera con el fin de evitar el molesto lagrimeo que se produce cuando uno la está cortando. Lo malo de llorar cuando uno pica cebolla no es el simple hecho de llorar, sino que a veces uno empieza, como quien dice, se pica, y ya no puede parar. No sé si a ustedes les ha pasado pero a mí la mera verdad sí. Infinidad de veces. Mamá decía que era porque yo soy igual de sensible a la cebolla que Tita, mi tía abuela.
+            </p>
+            <p class="mb-4">
+                Dicen que Tita era tan sensible que desde que estaba en el vientre de mi bisabuela lloraba y lloraba cuando ésta picaba cebolla; su llanto era tan fuerte que Nacha, la cocinera de la casa, que era medio sorda, lo escuchaba sin esforzarse. Un día los sollozos fueron tan fuertes que provocaron que el parto se adelantara. Y sin que mi bisabuela pudiera decir ni pío, Tita arribó a este mundo prematuramente, sobre la mesa de la cocina, entre los olores de una sopa de fideos que estaba cocinando, los del tomillo, el laurel, el cilantro, el de la leche hervida, el de los ajos y, por supuesto, el de la cebolla. Como se imaginarán, la consabida nalgada no fue necesaria, pues Tita nació llorando de antemano, tal vez porque ella sabía que su oráculo determinaba que en esta vida le estaba negado el matrimonio. Contaba Nacha que Tita fue literalmente empujada a este mundo por un torrente impresionante de lágrimas que se desbordaron sobre la mesa y el piso de la cocina.
+            </p>
+            <p>
+                En la tarde, ya cuando el susto había pasado y el agua, gracias al efecto de los rayos del sol, se había evaporado, Nacha barrió el residuo de las lágrimas que había quedado sobre la loseta roja que cubría el piso: Con esta sal rellenó un costal de cinco kilos que utilizaron para cocinar bastante tiempo. Este inusitado nacimiento determinó el hecho de que Tita sintiera un inmenso amor por la cocina…
+            </p>
+        </div>
+      </div>
+    </div>
 
-  <!-- Shared JavaScript -->
+    <div class="lg:col-span-5 space-y-6">
+      
+      <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-purple-600 text-center">
+        <div id="clock" class="timer-huge text-slate-900 tracking-tighter">00:00</div>
+        <div id="success_msg" class="hidden text-emerald-600 font-bold text-sm animate-pulse mb-2">✨ LÍMITE MÍNIMO ALCANZADO (3:00+) ✨</div>
+        <button id="mainBtn" onclick="startPrep()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all active:scale-95">
+          EMPEZAR PREPARACIÓN (20:00)
+        </button>
+      </div>
+
+      <div id="dynamicContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[400px]">
+        
+        <div id="notesBlock">
+            <h3 class="font-bold text-slate-700 mb-4 flex items-center justify-between">
+                <span>📝 Notas del Estudiante</span>
+                <span class="text-[10px] text-slate-400 font-normal uppercase">Máximo 10 puntos</span>
+            </h3>
+            <div id="notesList" class="space-y-3">
+                <p class="text-slate-400 text-sm italic">Haz clic en empezar preparación para activar el formulario de notas...</p>
+            </div>
+        </div>
+
+        <div id="qZone" class="hidden space-y-4">
+            <div class="bg-indigo-950 text-white p-5 rounded-xl border-l-4 border-indigo-400">
+                <h4 class="text-[10px] uppercase tracking-widest opacity-60 mb-1 font-bold">Intervención del Examinador:</h4>
+                <p id="qDisplay" class="text-lg font-medium leading-tight">Selecciona una pregunta de la lista para simular la discusión...</p>
+            </div>
+            <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+                <button onclick="ask(this)" class="question-card">1. ¿Qué detalle del nacimiento de Tita te llamó más la atención? ¿Por qué?</button>
+                <button onclick="ask(this)" class="question-card">2. ¿Cómo interpretas ahora este nacimiento tan inusual tras leer la novela?</button>
+                <button onclick="ask(this)" class="question-card">3. ¿Es más sorprendente que llorara en el vientre o que naciera en la cocina?</button>
+                <button onclick="ask(this)" class="question-card">4. ¿Qué impresión te da Nacha en este pasaje? ¿Cómo conecta con su futuro?</button>
+                <button onclick="ask(this)" class="question-card">5. ¿Cómo encaja su sensibilidad extrema con su personalidad adulta?</button>
+                <button onclick="ask(this)" class="question-card">6. Escena llena de olores y sabores: ¿Qué efecto te produce esta descripción?</button>
+                <button onclick="ask(this)" class="question-card">7. ¿Cómo imaginas el ambiente en la cocina durante el nacimiento?</button>
+                <button onclick="ask(this)" class="question-card">8. ¿Qué sentimiento domina: humor, ternura, tristeza o exageración?</button>
+                <button onclick="ask(this)" class="question-card">9. Usar sal de lágrimas para cocinar: ¿Cómico, mágico o simbólico?</button>
+                <button onclick="ask(this)" class="question-card">10. La narradora dice ser sensible a la cebolla: ¿Qué aporta este detalle?</button>
+                <button onclick="ask(this)" class="question-card">11. ¿Qué relación tiene Tita con la cocina en este momento inicial?</button>
+                <button onclick="ask(this)" class="question-card">12. ¿Te parece este pasaje una pista sobre el destino de Tita? ¿Por qué?</button>
+                <button onclick="ask(this)" class="question-card">13. ¿Ves continuidad o contraste con la Tita adulta que aparece luego?</button>
+                <button onclick="ask(this)" class="question-card">14. ¿La familia interpreta correctamente su sensibilidad o la malinterpreta?</button>
+                <button onclick="ask(this)" class="question-card">15. ¿Qué otra escena de la novela te recuerda a esta combinación mágica?</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
+    let seconds = 0, loop, isSpeaking = false;
+    const PREP_TIME = 1200; // 20 min oficiales HL
+    const SPEAK_TIME = 240;  // 4 min meta inicial discurso
+
+    function updateClock() {
+      const clockEl = document.getElementById('clock');
+      const msg = document.getElementById('success_msg');
+      const absSec = Math.abs(seconds);
+      const m = Math.floor(absSec / 60);
+      const s = absSec % 60;
+      clockEl.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      
+      if (isSpeaking) {
+        // En el examen oficial el tiempo de discurso es 4-5 min. 
+        // Marcamos éxito si llega al último minuto (3:00 a 4:00)
+        if (seconds <= 60 && seconds >= 0) {
+            clockEl.style.color = "#10b981"; 
+            msg.classList.remove('hidden');
+        } else if (seconds < 0) {
+            clockEl.style.color = "#ef4444";
+            msg.classList.add('hidden');
         } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
+            clockEl.style.color = "#0f172a";
         }
-      });
-    })();
+      }
+    }
 
-    // Conversación timer
-    let timerInterval;
-    let seconds = 0;
+    function startPrep() {
+      clearInterval(loop);
+      seconds = PREP_TIME;
+      isSpeaking = false;
+      document.getElementById('statusLabel').innerText = "Fase: Preparación";
+      document.getElementById('statusLabel').className = "bg-amber-600 border border-amber-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      
+      const list = document.getElementById('notesList');
+      list.innerHTML = "";
+      for(let i=1; i<=10; i++) {
+        list.innerHTML += `<div class="flex gap-3 items-center"><span class="text-purple-500 font-bold text-xs w-4">${i}.</span><input type="text" placeholder="..." class="w-full border-b border-slate-100 focus:border-purple-400 focus:bg-slate-50 outline-none py-1 text-sm transition-all"></div>`;
+      }
 
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "TERMINAR PREPARACIÓN (PAUSA)";
+      btn.className = "w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = waitToSpeak;
+
+      loop = setInterval(() => {
+        seconds--;
+        updateClock();
+        if (seconds <= 0) { clearInterval(loop); waitToSpeak(); }
       }, 1000);
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+    function waitToSpeak() {
+      clearInterval(loop);
+      document.getElementById('clock').style.color = "#2563eb";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "LISTO - INICIAR DISCURSO (4 MIN)";
+      btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = startSpeak;
+    }
+
+    function startSpeak() {
+      isSpeaking = true;
+      seconds = SPEAK_TIME;
+      document.getElementById('statusLabel').innerText = "Fase: Exposición Oral";
+      document.getElementById('statusLabel').className = "bg-red-600 border border-red-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "FINALIZAR Y PASAR A PREGUNTAS";
+      btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = finishExam;
+
+      loop = setInterval(() => {
+        seconds--;
+        updateClock();
+      }, 1000);
+    }
+
+    function finishExam() {
+      clearInterval(loop);
+      document.getElementById('notesBlock').classList.add('hidden');
+      document.getElementById('qZone').classList.remove('hidden');
+      document.getElementById('mainBtn').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = "Fase: Discusión";
+      document.getElementById('statusLabel').className = "bg-indigo-600 border border-indigo-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+    }
+
+    function ask(btn) {
+      document.getElementById('qDisplay').innerText = btn.innerText;
+      document.getElementById('qDisplay').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   </script>
 </body>
