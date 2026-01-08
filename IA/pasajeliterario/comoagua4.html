@@ -3,224 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pasaje literario – Como agua para chocolate</title>
+  <title>NS Oral - Como agua para chocolate (Pasaje 04)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .timer-huge { font-size: 4rem; font-weight: bold; font-family: monospace; }
+    .question-card { cursor: pointer; transition: all 0.2s; text-align: left; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background: white; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); width: 100%; }
+    .question-card:hover { transform: translateY(-2px); border-color: #6d28d9; background: #f5f3ff; }
+    .scroll-custom::-webkit-scrollbar { width: 6px; }
+    .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+  </style>
 </head>
+<body class="bg-slate-50 min-h-screen pb-20">
 
-<body class="font-sans bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
+  <header class="bg-purple-900 text-white p-6 shadow-xl mb-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-purple-200 tracking-tight">NS: Evaluación Interna (Oral)</h1>
+        <p class="text-lg opacity-90 font-medium">Como agua para chocolate — <span class="italic">Pasaje 04</span></p>
+      </div>
+      <div class="text-right">
+        <div id="statusLabel" class="bg-purple-800 border border-purple-400 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white">Estado: En espera</div>
+        <p class="text-[10px] mt-1 opacity-70 uppercase font-bold">Prep: 20:00 | Meta NS: 4:00</p>
+      </div>
+    </div>
+  </header>
 
-    <!-- ===== Pasaje literario – PÁGINA DEL ESTUDIANTE ===== -->
-    <section class="space-y-6">
-
-      <!-- HEADER + IMAGEN + PDF -->
-      <header class="shadow rounded-xl overflow-hidden bg-white">
-        <!-- Banda morada -->
-        <div class="bg-purple-700 text-white py-6 px-6 flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-          <div>
-            <h1 class="text-3xl font-bold drop-shadow">Pasaje literario</h1>
-            <p class="italic text-sm md:text-base opacity-90">
-              Práctica independiente para el oral individual
-            </p>
-          </div>
-          <div class="text-sm md:text-base text-right space-y-1">
-            <p class="font-semibold">Obra: <span class="font-normal">Como agua para chocolate</span></p>
-            <p class="font-semibold">Pasaje: <span class="font-normal">Marzo – Codornices en pétalos de rosas</span></p>
-          </div>
+  <main class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <div class="lg:col-span-7 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex gap-4 mb-4">
+            <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" class="h-24 rounded-lg shadow-md border border-slate-100">
+            <div>
+                <h2 class="font-bold text-xl text-slate-800">Pasaje Literario</h2>
+                <a href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2004.pdf?raw=1" target="_blank" class="text-indigo-600 text-xs font-bold hover:underline">📥 DESCARGAR PDF</a>
+            </div>
         </div>
-        <!-- Imagen + PDF -->
-        <div class="p-4 md:p-6 flex flex-col md:flex-row items-start gap-4">
-          <img
-            src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg"
-            alt="Como agua para chocolate"
-            class="rounded-lg shadow-md max-h-64 w-auto object-cover"
-          >
-          <div class="space-y-3 text-gray-800">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>📎 Descarga del pasaje</span>
-            </h2>
-            <p class="text-sm text-gray-600">
-              Si lo prefieres, puedes trabajar con el pasaje en formato PDF.
-            </p>
-            
-            <a
-              href="https://github.com/scottscalici/imagenes/blob/main/IA/pasajeliterario/pdf/pasaje%20literario%20-%20Como%20agua%20para%20chocolate%20-%20pr%C3%A1ctica%2004.pdf?raw=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition"
-            >
-              📥 Descargar PDF del pasaje
-            </a>
-          </div>
-        </div>
-      </header>
 
-      <!-- INSTRUCCIONES -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-3">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>🧭 Instrucciones</span>
-          </h2>
-          <ol class="list-decimal list-inside space-y-2 text-gray-800 text-sm md:text-base">
-            <li>Lee el pasaje literario con atención.</li>
-            <li>Analiza el contexto, los personajes, el tono y los recursos literarios.</li>
-            <li>Piensa en un posible enfoque o pregunta guía para tu oral individual.</li>
-            <li>Cuando estés listo, haz clic en el botón para mostrar las preguntas de práctica.</li>
-          </ol>
+        <div class="mb-6 p-4 bg-purple-50 border-l-4 border-purple-500 rounded-r-lg">
+            <h3 class="font-bold text-purple-900 text-sm mb-1 italic">🧭 Instrucciones:</h3>
+            <p class="text-purple-800 text-sm">Lee el pasaje literario con atención. Analiza el contexto, los personajes, el tono y los recursos literarios.</p>
         </div>
-      </section>
-
-      <!-- PASAJE -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <h2 class="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
-            <span>📖 Pasaje literario</span>
-          </h2>
-          <p class="text-sm text-gray-500 italic">
-            Lee este fragmento con calma. Puedes subrayar, anotar ideas clave y pensar en la relación con la obra completa.
-          </p>
-          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 leading-relaxed text-gray-900 text-sm md:text-base">
+        
+        <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-slate-800 leading-relaxed text-base scroll-custom overflow-y-auto max-h-[500px] font-serif">
             <p class="mb-4">¡Se sentía tan sola y abandonada! Un chile en nogada olvidado en una charola después de un gran banquete no se sentirla peor que ella. Cuántas veces sola en la cocina se habla tenido que comer una de estas delicias antes de permitir que se echara a perder. El que nadie se coma el último chile de una charola, generalmente sucede cuando la gente no quiere demostrar su gula y aunque les encantaría devorarlo, nadie se atreve. Y es así como se rechaza un chile relleno que contiene todos los sabores imaginables, lo dulce del acitrón, lo picoso del chile, lo sutil de la nogada, lo refrescante de la granada, ¡un maravilloso chile en nogada! ¡Qué delicia! Que contiene en su interior todos los secretos del amor, pero que nadie podrá desentrañar a causa de la decencia.</p>
             <p class="mb-4">¡Maldita decencia! ¡Maldito manual de Carreño! Por su culpa su cuerpo quedaba destinado a marchitarse poco a poco, sin remedio alguno. ¡Y maldito Pedro tan decente, tan correcto, tan varonil, tan... tan amado!</p>
             <p class="mb-4">Si Tita hubiera sabido entonces que no tendrían que pasar muchos años para que su cuerpo conociera el amor no se habría desesperado tanto en ese momento.</p>
             <p class="mb-4">El segundo grito de Mamá Elena la sacó de sus cavilaciones y la hizo buscar rápidamente una respuesta. No sabia qué era lo que le iba a decir a su mamá, si primero le decía que estaba ardiendo la parte trasera del patio, o que Gertrudis se había ido con un villista a lomo de caballo... y desnuda.</p>
-            <p class="mb-4">Se decidió por dar una versión en la cual, los federales, a los que Tita aborrecía, habían entrado en tropel, habían prendido fuego a los baños y habían raptado a Gertrudis. Mamá Elena se creyó toda la historia y enfermó de la pena, pero estuvo a punto de morir cuando se enteró una semana después por boca del padre Ignacio, el párroco del pueblo -que quién sabe cómo se enteró-, que Gertrudis estaba trabajando en un burdel en la frontera. Prohibió volver a mencionar el nombre de su hija y mandó quemar sus fotos y su acta de nacimiento.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- META + IDEAS ÚTILES + TIMER -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <p class="whitespace-pre-line text-sm md:text-base text-gray-800">
-🎯 Meta: 2 minutos 😱 (y animo que hables más)
-
-💬 Usa:
-Tiempos verbales: presente (de indicativo y subjuntivo, pasado: pretérito e/o imperfecto (...de subjuntivo) y presente progresivo 
-Conectores: porque / ya que · por eso · además
-Opiniones: para mí · en mi opinión · creo que · pienso que
-Expresar con el modo subjuntivo: es importante que · es necesario que · es bueno que · me gusta que
-Ideas útiles: El pasaje muestra… · La narradora explica que… · En este fragmento, vemos que… · Aquí aparece… / surge… / ocurre… · Se introduce la idea de… · Se presenta…
-
-✅ Incluye:
-Qué ves en el pasaje
-Qué está pasando en ese momento de la historia
-Qué emociones transmite el pasaje
-Qué anticipa el pasaje
-También puedo mencionar que...
-          </p>
-
-          <div class="flex items-center gap-3">
-            <button onclick="startTimer(this)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-              Iniciar
-            </button>
-            <button onclick="resetTimer(this)" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm font-semibold">
-              Reiniciar
-            </button>
-            <span class="font-mono text-lg" data-timer>00:00</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- PREGUNTAS DE PRÁCTICA -->
-      <section class="bg-white rounded-xl shadow border-l-4" style="border-color:#6D28D9;">
-        <div class="p-6 space-y-4">
-          <div class="flex items-center justify-between gap-4">
-            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-              <span>🎤 Preguntas de práctica</span>
-            </h2>
-            <button
-              id="toggleQuestionsBtn"
-              class="px-4 py-2 text-sm font-semibold rounded-full border border-purple-500 text-purple-700 hover:bg-amber-50 transition"
-            >
-              Mostrar preguntas
-            </button>
-          </div>
-          <p class="text-sm text-gray-500 italic">
-            Primero prepara tus ideas sin ver estas preguntas. Después, úsalas para practicar como si el profesor estuviera contigo.
-          </p>
-
-          <div id="questionsBlock" class="space-y-3" style="display:none;">
-            <ul class="list-disc list-inside space-y-2 text-gray-800 text-sm md:text-base">
-              <li>1.	¿Qué revela la metáfora del chile en nogada sobre el estado emocional de Tita?</li>
-              <li>2.	¿Cómo critica el pasaje la “decencia” y las normas sociales?</li>
-              <li>3.	¿Qué efecto tiene el “manual de Carreño” en la vida de Tita?</li>
-              <li>4.	¿Por qué crees que Tita menciona a Pedro como “maldito” y a la vez “tan amado”?</li>
-              <li>5.	¿Qué nos dice el pasaje sobre el poder emocional de la comida en la novela?</li>
-              <li>6.	¿Cómo afecta el destino de Gertrudis a la dinámica familiar?</li>
-              <li>7.	¿Qué revela la reacción de Mamá Elena sobre su carácter?</li>
-              <li>8.	¿Por qué Tita decide mentir sobre lo que pasó con Gertrudis?</li>
-              <li>9.	¿Qué indica la forma en que Tita imagina varias versiones de la historia?</li>
-              <li>10.	¿Cómo utiliza el autor el humor oscuro en este fragmento?</li>
-              <li>11.	¿Qué simboliza el fuego en la parte trasera del patio?</li>
-              <li>12.	¿Cómo se contrasta la libertad de Gertrudis con la represión de Tita?</li>
-              <li>13.	¿Por qué Mamá Elena decide borrar todo rastro de Gertrudis?</li>
-              <li>14.	¿Qué emociones experimenta Tita a lo largo del fragmento?</li>
-              <li>15.	¿Qué papel juega el realismo mágico en este pasaje en comparación con otros capítulos?</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-    </section>
-    <!-- ===== Fin página del estudiante ===== -->
-
-
-    <!--ENLACE
-    <a href="https://sites.google.com/view/srscalici/conversaci%C3%B3n/como-agua-para-chocolate/como4" class="block bg-white rounded-xl shadow border-l-4 border-amber-400 hover:shadow-lg hover:ring-amber-300 hover:ring-2 transition">
-      <div class="flex items-center gap-4 p-4">
-        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/como.jpg" alt="Como agua para chocolate" class="max-h-24 w-auto object-cover rounded-md">
-        <div class="min-w-0">
-          <h3 class="font-semibold text-amber-600 truncate">Como agua para chocolate</h3>
-          <p class="text-sm text-gray-600 mt-0.5 line-clamp-2">📖 Pasaje literario – práctica 04</p>
+            <p>Se decidió por dar una versión en la cual, los federales, a los que Tita aborrecía, habían entrado en tropel, habían prendido fuego a los baños y habían raptado a Gertrudis. Mamá Elena se creyó toda la historia y enfermó de la pena, pero estuvo a punto de morir cuando se enteró una semana después por boca del padre Ignacio, el párroco del pueblo -que quién sabe cómo se enteró-, que Gertrudis estaba trabajando en un burdel en la frontera. Prohibió volver a mencionar el nombre de su hija y mandó quemar sus fotos y su acta de nacimiento.</p>
         </div>
       </div>
-    </a>
-    -->
+    </div>
 
-  </div>
+    <div class="lg:col-span-5 space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-purple-600 text-center">
+        <div id="clock" class="timer-huge text-slate-900 tracking-tighter">00:00</div>
+        <div id="success_msg" class="hidden text-emerald-600 font-bold text-sm animate-pulse mb-2">✨ LÍMITE MÍNIMO ALCANZADO (3:00+) ✨</div>
+        <button id="mainBtn" onclick="startPrep()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all active:scale-95">
+          EMPEZAR PREPARACIÓN NS (20:00)
+        </button>
+      </div>
 
-  <!-- Shared JavaScript -->
+      <div id="dynamicContainer" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[400px]">
+        <div id="notesBlock">
+            <h3 class="font-bold text-slate-700 mb-4 flex items-center justify-between">
+                <span>📝 Notas NS (10 balas)</span>
+            </h3>
+            <div id="notesList" class="space-y-3">
+                <p class="text-slate-400 text-sm italic">Haz clic para iniciar preparación...</p>
+            </div>
+        </div>
+
+        <div id="qZone" class="hidden space-y-4">
+            <div class="bg-indigo-950 text-white p-5 rounded-xl border-l-4 border-indigo-400">
+                <p id="qDisplay" class="text-lg font-medium leading-tight italic">Preguntas de discusión NS...</p>
+            </div>
+            <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 scroll-custom">
+                <button onclick="ask(this)" class="question-card">1. ¿Qué revela la metáfora del chile en nogada sobre Tita?</button>
+                <button onclick="ask(this)" class="question-card">2. ¿Cómo critica el pasaje la “decencia” y las normas sociales?</button>
+                <button onclick="ask(this)" class="question-card">3. ¿Qué efecto tiene el “manual de Carreño” en la vida de Tita?</button>
+                <button onclick="ask(this)" class="question-card">4. ¿Por qué Tita llama a Pedro “maldito” y a la vez “tan amado”?</button>
+                <button onclick="ask(this)" class="question-card">5. ¿Qué nos dice el pasaje sobre el poder emocional de la comida?</button>
+                <button onclick="ask(this)" class="question-card">6. ¿Cómo afecta el destino de Gertrudis a la dinámica familiar?</button>
+                <button onclick="ask(this)" class="question-card">7. ¿Qué revela la reacción de Mamá Elena sobre su carácter?</button>
+                <button onclick="ask(this)" class="question-card">8. ¿Por qué Tita decide mentir sobre lo que pasó con Gertrudis?</button>
+                <button onclick="ask(this)" class="question-card">9. ¿Qué indica la forma en que Tita imagina varias versiones de la historia?</button>
+                <button onclick="ask(this)" class="question-card">10. ¿Cómo utiliza el autor el humor oscuro en este fragmento?</button>
+                <button onclick="ask(this)" class="question-card">11. ¿Qué simboliza el fuego en la parte trasera del patio?</button>
+                <button onclick="ask(this)" class="question-card">12. ¿Cómo se contrasta la libertad de Gertrudis con la represión de Tita?</button>
+                <button onclick="ask(this)" class="question-card">13. ¿Por qué Mamá Elena decide borrar todo rastro de Gertrudis?</button>
+                <button onclick="ask(this)" class="question-card">14. ¿Qué emociones experimenta Tita a lo largo del fragmento?</button>
+                <button onclick="ask(this)" class="question-card">15. ¿Qué papel juega el realismo mágico en este pasaje?</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
   <script>
-    // Toggle preguntas
-    (function () {
-      const btn = document.getElementById('toggleQuestionsBtn');
-      const block = document.getElementById('questionsBlock');
-      if (!btn || !block) return;
-      btn.addEventListener('click', function () {
-        const isHidden = block.style.display === 'none' || block.style.display === '';
-        if (isHidden) {
-          block.style.display = 'block';
-          btn.textContent = 'Ocultar preguntas';
-        } else {
-          block.style.display = 'none';
-          btn.textContent = 'Mostrar preguntas';
-        }
-      });
-    })();
+    let seconds = 0, loop, isSpeaking = false;
+    const PREP_TIME = 1200; 
+    const SPEAK_TIME = 240;  
 
-    // Conversación timer
-    let timerInterval;
-    let seconds = 0;
-
-    function startTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        seconds++;
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        timerDisplay.textContent = mins + ":" + secs;
-      }, 1000);
+    function updateClock() {
+      const clockEl = document.getElementById('clock');
+      const msg = document.getElementById('success_msg');
+      const absSec = Math.abs(seconds);
+      const m = Math.floor(absSec / 60);
+      const s = absSec % 60;
+      clockEl.innerText = (seconds < 0 ? "-" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+      if (isSpeaking) {
+        if (seconds <= 60 && seconds >= 0) { clockEl.style.color = "#10b981"; msg.classList.remove('hidden'); }
+        else if (seconds < 0) { clockEl.style.color = "#ef4444"; msg.classList.add('hidden'); }
+        else { clockEl.style.color = "#0f172a"; }
+      }
     }
 
-    function resetTimer(btn) {
-      const timerDisplay = btn.parentElement.querySelector("[data-timer]");
-      clearInterval(timerInterval);
-      seconds = 0;
-      timerDisplay.textContent = "00:00";
+    function startPrep() {
+      clearInterval(loop);
+      seconds = PREP_TIME; isSpeaking = false;
+      document.getElementById('statusLabel').innerText = "Fase: Preparación NS";
+      document.getElementById('statusLabel').className = "bg-amber-600 border border-amber-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const list = document.getElementById('notesList');
+      list.innerHTML = "";
+      for(let i=1; i<=10; i++) {
+        list.innerHTML += `<div class="flex gap-2 items-center"><span class="text-purple-500 font-bold text-xs">${i}.</span><input type="text" class="w-full border-b border-slate-100 focus:border-purple-400 outline-none py-1 text-sm"></div>`;
+      }
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "TERMINAR PREPARACIÓN (PAUSA)";
+      btn.className = "w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = waitToSpeak;
+      loop = setInterval(() => { seconds--; updateClock(); if (seconds <= 0) { clearInterval(loop); waitToSpeak(); } }, 1000);
     }
+
+    function waitToSpeak() {
+      clearInterval(loop);
+      document.getElementById('clock').style.color = "#2563eb";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "LISTO - INICIAR DISCURSO NS (4 MIN)";
+      btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = startSpeak;
+    }
+
+    function startSpeak() {
+      isSpeaking = true; seconds = SPEAK_TIME;
+      document.getElementById('statusLabel').innerText = "Fase: Discurso NS";
+      document.getElementById('statusLabel').className = "bg-red-600 border border-red-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+      const btn = document.getElementById('mainBtn');
+      btn.innerText = "FINALIZAR PRESENTACIÓN";
+      btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition-all";
+      btn.onclick = finishExam;
+      loop = setInterval(() => { seconds--; updateClock(); }, 1000);
+    }
+
+    function finishExam() {
+      clearInterval(loop);
+      document.getElementById('notesBlock').classList.add('hidden');
+      document.getElementById('qZone').classList.remove('hidden');
+      document.getElementById('mainBtn').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = "Fase: Diálogo NS";
+      document.getElementById('statusLabel').className = "bg-indigo-600 border border-indigo-300 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-white";
+    }
+
+    function ask(btn) { document.getElementById('qDisplay').innerText = btn.innerText; }
   </script>
 </body>
 </html>
