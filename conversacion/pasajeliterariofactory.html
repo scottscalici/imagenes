@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>IO Master Generator V7 - Header Image</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; max-width: 950px; margin: 0 auto; padding: 20px; background: #f0f2f5; color: #1a1f36; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        h1 { color: #4c1d95; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-top: 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .field { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9em; color: #4b5563; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+        textarea { height: 120px; font-family: inherit; }
+        .main-btn { background: #4c1d95; color: white; padding: 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .main-btn:hover { background: #6d28d9; }
+        #output-area { margin-top: 30px; display: none; background: #1e1e1e; padding: 20px; border-radius: 8px; }
+        #html-output { width: 100%; height: 250px; background: transparent; color: #d4d4d4; font-family: 'Consolas', monospace; border: none; resize: vertical; outline: none; font-size: 13px; }
+        .copy-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #10b981; font-weight: bold; }
+        .btn-copy { background: #10b981; color: white; padding: 6px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>IO Generator: Header Image Layout</h1>
+    
+    <div class="grid">
+        <div class="field">
+            <label>Obra:</label>
+            <select id="novel">
+                <option value="Como agua para chocolate">Como agua para chocolate</option>
+                <option value="Marina">Marina</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Número de Práctica (Ej: 1):</label>
+            <input type="number" id="pracNum" placeholder="1" min="1">
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Nombre del Capítulo / Mes:</label>
+        <input type="text" id="chapName" placeholder="Enero: Tortas de Navidad">
+    </div>
+
+    <div class="field">
+        <label>Texto del Pasaje:</label>
+        <textarea id="extract"></textarea>
+    </div>
+
+    <div class="field">
+        <label>Preguntas (una por línea):</label>
+        <textarea id="questions"></textarea>
+    </div>
+
+    <button class="main-btn" onclick="generateCode()">GENERAR PÁGINA FINAL</button>
+
+    <div id="output-area">
+        <div class="copy-header">
+            <span>¡Código de página generado!</span>
+            <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">Copiar Código</button>
+        </div>
+        <textarea id="html-output" readonly></textarea>
+    </div>
+</div>
+
+<script>
+function generateCode() {
+    const novel = document.getElementById('novel').value;
+    const rawNum = document.getElementById('pracNum').value;
+    const num = rawNum ? rawNum.toString().padStart(2, '0') : "01";
+    const pracString = "práctica " + num;
+    const chapter = document.getElementById('chapName').value || "Sin Capítulo";
+    const extract = document.getElementById('extract').value;
+    const questionsArr = document.getElementById('questions').value.split('\n').filter(q => q.trim() !== "");
+    
+    const imgUrl = novel.includes("Como") 
+        ? "https://github.com/scottscalici/imagenes/blob/main/IA/fotos/como.jpg?raw=true"
+        : "https://github.com/scottscalici/imagenes/blob/main/IA/fotos/marina.jpg?raw=true";
+    
+    const pdfUrl = "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/pasajeliterario/pdf/" + 
+                   encodeURIComponent("pasaje literario - " + novel + " - " + pracString + ".pdf");
+
+    const qHtml = questionsArr.map(q => "<li>" + q.replace(/^\d+[\.\-\s]+/, "") + "</li>").join("\n                ");
+
+    let code = '<!DOCTYPE html>\n<html lang="es">\n<head>\n    <meta charset="UTF-8">\n';
+    code += '    <title>IO: ' + novel + ' - ' + pracString + '</title>\n';
+    code += '    <script src="https://cdn.tailwindcss.com"><\/script>\n';
+    code += '    <style>\n        .extract-box { white-space: pre-wrap; font-style: italic; }\n        #questions-area { display: none; }\n    </style>\n</head>\n';
+    code += '<body class="bg-gray-100 min-h-screen pb-20">\n';
+    
+    // NEW HEADER: Image inside the purple bar
+    code += '    <header class="bg-purple-900 text-white p-4 shadow-xl mb-6">\n';
+    code += '        <div class="max-w-7xl mx-auto flex items-center justify-between gap-6">\n';
+    code += '            <div class="flex items-center gap-6">\n';
+    code += '                <img src="' + imgUrl + '" class="h-28 w-20 object-cover rounded shadow-md border border-purple-400">\n';
+    code += '                <div>\n';
+    code += '                    <h1 class="text-2xl font-bold text-purple-200 tracking-tight">NS: Evaluación Interna (Oral)</h1>\n';
+    code += '                    <p class="text-lg opacity-90 font-medium">' + novel + ' — <span class="italic">' + chapter + '</span></p>\n';
+    code += '                </div>\n';
+    code += '            </div>\n';
+    code += '            <div class="text-right">\n';
+    code += '                <div id="statusLabel" class="bg-purple-800 border border-purple-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest inline-block">Estado: En espera</div>\n';
+    code += '                <p class="text-[10px] mt-2 opacity-70 uppercase font-bold">Prep: 20:00 | Meta: 4:00</p>\n';
+    code += '            </div>\n';
+    code += '        </div>\n';
+    code += '    </header>\n\n';
+
+    code += '    <main class="max-w-7xl mx-auto px-6">\n';
+    // EXTRACT BOX: Now full width above the split area
+    code += '        <div class="bg-white rounded-lg shadow-md p-6 mb-6">\n';
+    code += '            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 extract-box text-gray-700 text-xl leading-relaxed">' + extract + '</div>\n';
+    code += '            <div class="mt-4 text-right">\n';
+    code += '                <a href="' + pdfUrl + '" target="_blank" class="inline-flex items-center bg-blue-600 text-white px-4 py-2 rounded font-bold text-sm hover:bg-blue-700">📄 Ver PDF Original</a>\n';
+    code += '            </div>\n';
+    code += '        </div>\n\n';
+
+    code += '        <div class="grid md:grid-cols-3 gap-8">\n';
+    code += '            <div class="md:col-span-2 bg-white rounded-lg shadow p-6">\n';
+    code += '                <h3 class="text-orange-700 font-bold mb-3 uppercase tracking-wider text-sm">📝 Puntos clave (Máx 10):</h3>\n';
+    code += '                <textarea id="notes" class="w-full h-[500px] border-none focus:ring-0 text-xl p-2 bg-gray-50 rounded" placeholder="Escribe aquí tus 10 puntos..."></textarea>\n';
+    code += '            </div>\n\n';
+
+    code += '            <div class="bg-slate-800 text-white rounded-lg shadow p-8 text-center sticky top-6 h-fit">\n';
+    code += '                <div id="timerLabel" class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2">Preparación</div>\n';
+    code += '                <div id="display" class="text-7xl font-mono font-bold mb-8 text-white">20:00</div>\n';
+    code += '                <button id="btnAction" onclick="handleTimer()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl transition shadow-lg">INICIAR PREPARACIÓN</button>\n';
+    code += '                <div id="minReached" class="hidden mt-4 text-red-400 font-bold animate-pulse text-sm">¡MÍNIMO ALCANZADO! (3:00)</div>\n';
+    code += '            </div>\n';
+    code += '        </div>\n\n';
+
+    code += '        <div id="questions-area" class="mt-8 bg-white rounded-lg shadow p-8 border-t-8 border-purple-600 mb-20">\n';
+    code += '            <h3 class="text-purple-800 font-bold text-xl mb-6">Preguntas de Apoyo:</h3>\n';
+    code += '            <ol class="grid md:grid-cols-2 gap-x-12 gap-y-4 list-decimal list-inside text-gray-800 text-lg">\n';
+    code += '                ' + qHtml + '\n';
+    code += '            </ol>\n';
+    code += '        </div>\n';
+    code += '    </main>\n\n';
+
+    // TIMER SCRIPT (Identical robust logic to V6)
+    code += '    <script>\n';
+    code += '        let seconds = 1200; let timerInterval = null; let phase = "idle"; \n';
+    code += '        function updateDisplay() {\n';
+    code += '            const m = Math.floor(seconds / 60); const s = seconds % 60;\n';
+    code += '            document.getElementById("display").innerText = m + ":" + (s < 10 ? "0" : "") + s;\n';
+    code += '        }\n';
+    code += '        function handleTimer() {\n';
+    code += '            const btn = document.getElementById("btnAction");\n';
+    code += '            const status = document.getElementById("statusLabel");\n';
+    code += '            if (phase === "idle") {\n';
+    code += '                phase = "prep"; status.innerText = "Estado: En preparación";\n';
+    code += '                btn.innerText = "PASAR A EXPOSICIÓN";\n';
+    code += '                btn.className = "w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
+    code += '                timerInterval = setInterval(tick, 1000);\n';
+    code += '            } else if (phase === "prep") {\n';
+    code += '                switchToSpeak();\n';
+    code += '            } else if (phase === "readyToSpeak") {\n';
+    code += '                phase = "speak"; status.innerText = "Estado: Exponiendo";\n';
+    code += '                btn.innerText = "FINALIZAR TODO";\n';
+    code += '                btn.className = "w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
+    code += '                timerInterval = setInterval(tick, 1000);\n';
+    code += '            } else if (phase === "speak") {\n';
+    code += '                finish();\n';
+    code += '            }\n';
+    code += '        }\n';
+    code += '        function tick() {\n';
+    code += '            if (seconds <= 0) {\n';
+    code += '                clearInterval(timerInterval);\n';
+    code += '                if (phase === "prep") switchToSpeak();\n';
+    code += '                else finish();\n';
+    code += '                return;\n';
+    code += '            }\n';
+    code += '            seconds--; updateDisplay();\n';
+    code += '            if (phase === "speak" && seconds <= 60) document.getElementById("minReached").classList.remove("hidden");\n';
+    code += '        }\n';
+    code += '        function switchToSpeak() {\n';
+    code += '            clearInterval(timerInterval); phase = "readyToSpeak"; seconds = 240;\n';
+    code += '            document.getElementById("timerLabel").innerText = "Exposición";\n';
+    code += '            document.getElementById("display").style.color = "#22c55e";\n';
+    code += '            const btn = document.getElementById("btnAction");\n';
+    code += '            btn.innerText = "INICIAR EXPOSICIÓN";\n';
+    code += '            btn.className = "w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
+    code += '            document.getElementById("statusLabel").innerText = "Estado: Listo para hablar";\n';
+    code += '            updateDisplay();\n';
+    code += '        }\n';
+    code += '        function finish() {\n';
+    code += '            clearInterval(timerInterval); phase = "done";\n';
+    code += '            document.getElementById("statusLabel").innerText = "Estado: Discusión";\n';
+    code += '            document.getElementById("btnAction").style.display = "none";\n';
+    code += '            document.getElementById("questions-area").style.display = "block";\n';
+    code += '            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });\n';
+    code += '        }\n';
+    code += '    <\/script>\n</body>\n</html>';
+
+    document.getElementById('html-output').value = code;
+    document.getElementById('output-area').style.display = 'block';
+}
+
+function copyToClipboard() {
+    const output = document.getElementById('html-output');
+    output.select();
+    document.execCommand('copy');
+    const btn = document.getElementById('copyBtn');
+    btn.innerText = '¡Copiado!';
+    setTimeout(() => btn.innerText = 'Copiar Código', 2000);
+}
+</script>
+</body>
+</html>
