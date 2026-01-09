@@ -150,13 +150,13 @@ function generateCode() {
     code += '            const status = document.getElementById("statusLabel");\n';
     code += '            if (phase === "idle") {\n';
     code += '                phase = "prep"; status.innerText = "Estado: En preparación";\n';
-    code += '                btn.innerText = "PASAR A EXPOSICIÓN";\n';
+    code += '                btn.innerText = "PASAR A PRESENTACIÓN";\n';
     code += '                btn.className = "w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
     code += '                timerInterval = setInterval(tick, 1000);\n';
     code += '            } else if (phase === "prep") {\n';
     code += '                switchToSpeak();\n';
     code += '            } else if (phase === "readyToSpeak") {\n';
-    code += '                phase = "speak"; status.innerText = "Estado: Exponiendo";\n';
+    code += '                phase = "speak"; status.innerText = "Estado: Presentando";\n';
     code += '                btn.innerText = "FINALIZAR TODO";\n';
     code += '                btn.className = "w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
     code += '                timerInterval = setInterval(tick, 1000);\n';
@@ -176,10 +176,10 @@ function generateCode() {
     code += '        }\n';
     code += '        function switchToSpeak() {\n';
     code += '            clearInterval(timerInterval); phase = "readyToSpeak"; seconds = 240;\n';
-    code += '            document.getElementById("timerLabel").innerText = "Exposición";\n';
+    code += '            document.getElementById("timerLabel").innerText = "Presentación";\n';
     code += '            document.getElementById("display").style.color = "#22c55e";\n';
     code += '            const btn = document.getElementById("btnAction");\n';
-    code += '            btn.innerText = "INICIAR EXPOSICIÓN";\n';
+    code += '            btn.innerText = "INICIAR PRESENTACIÓN";\n';
     code += '            btn.className = "w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl transition shadow-lg";\n';
     code += '            document.getElementById("statusLabel").innerText = "Estado: Listo para hablar";\n';
     code += '            updateDisplay();\n';
