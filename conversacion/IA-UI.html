@@ -2,40 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sr. Scalici - Factory v43</title>
+    <title>Sr. Scalici - Factory v46 (Restauración v35 + Pausa)</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding: 20px; }
         .factory-box { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; border: 4px solid #2c3e50; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .section { margin-bottom: 25px; padding: 20px; border: 1px solid #dcdde1; border-radius: 10px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
         .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
-        select, input, textarea { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-family: inherit; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; }
         .output-container { position: relative; margin-top: 15px; }
-        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 150px; width: 100%; font-family: monospace; font-size: 11px; }
-        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; margin-top:10px; }
+        #outputArea { background: #1e272e; color: #00d8d6; padding: 20px; border-radius: 8px; height: 180px; width: 100%; font-family: monospace; box-sizing: border-box; resize: none; border: none; font-size: 11px; }
+        button.gen-btn { background: #05c46b; color: white; padding: 20px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.3rem; }
         button.copy-btn { position: absolute; top: 10px; right: 20px; background: #ff5e57; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         #livePreview { width: 100%; height: 850px; border: 3px dashed #dcdde1; margin-top: 25px; border-radius: 10px; }
+        .custom-focus { margin-top: 15px; padding: 10px; background: #eef2ff; border-radius: 8px; border: 1px solid #c7d2fe; }
     </style>
 </head>
 <body>
 
 <div class="factory-box">
-    <h2>🚀 Factory v42: Simulación Corregida + Pausa</h2>
+    <h2>🚀 Factory v46: Restauración v35 + Pausa</h2>
     
     <div class="section">
         <h3>1. Configuración de la Lección</h3>
         <div class="grid-3">
-            <div><label>Lección (JSON):</label><select id="lessonSelect"><option>Cargando...</option></select></div>
             <div>
-                <label>Tema / Unidad:</label>
-                <input list="themes" id="themeInput" placeholder="Escribe o selecciona...">
-                <datalist id="themes">
-                    <option value="Identidades">
-                    <option value="Experiencias">
-                    <option value="Ingenio humano">
-                    <option value="Organización social">
-                    <option value="Compartimos el planeta">
-                </datalist>
+                <label>Lección:</label>
+                <select id="lessonSelect"><option>Cargando GitHub...</option></select>
+            </div>
+            <div>
+                <label>Tema IB:</label>
+                <select id="theme">
+                    <option value="ingenuity">Ingenio humano</option>
+                    <option value="experiences">Experiencias</option>
+                    <option value="sharing">Compartimos el planeta</option>
+                    <option value="identities">Identidades</option>
+                    <option value="social">Organización social</option>
+                </select>
             </div>
             <div>
                 <label>Andamiaje (Tier):</label>
@@ -54,20 +57,15 @@
                     <option value="12" selected>Tier 2-B: Práctica (420s prep)</option>
                     <option value="13" selected>Tier 2-C: Práctica (480s prep)</option>
                     <option value="14" selected>Tier 2-D: Práctica (600s prep)</option>
-
-                </select>
+                    </select>
             </div>
         </div>
     </div>
 
     <div class="section">
-        <h3>2. Instrucciones para el Estudiante (Opcional)</h3>
-        <textarea id="promptText" rows="2" placeholder="Instrucciones específicas..."></textarea>
-    </div>
-
-    <div class="section">
-        <span style="font-weight:bold;">3. Estrategias y Gramática</span>
+        <span style="font-weight:bold;">2. Estrategias y Gramática</span>
         <div class="checkbox-grid">
+            
             <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="📸 Foto"> 📸 Foto</label>
             <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="👤 Personal"> 👤 Personal</label>
             <label style="color:#e67e22; font-weight:bold;"><input type="checkbox" class="gram" value="🌎 Cultural"> 🌎 Cultural</label>
@@ -76,51 +74,70 @@
             <label><input type="checkbox" class="gram" value="Presente"> Presente</label>
             <label><input type="checkbox" class="gram" value="Pasado"> Pasado</label>
             <label><input type="checkbox" class="gram" value="Subjuntivo"> Subjuntivo</label>
+            <label><input type="checkbox" class="gram" value="imperfectodeSubjuntivo"> Imperfecto de Subjuntivo</label>
             <label><input type="checkbox" class="gram" value="Si+Cond"> Cláusula con Si</label>
             <label><input type="checkbox" class="gram" value="Por/Para"> Por/Para</label>
             <label><input type="checkbox" class="gram" value="Futuro"> Futuro</label>
             <label><input type="checkbox" class="gram" value="Condicional"> Condicional</label>
             <label><input type="checkbox" class="gram" value="preteritoperfecto"> Pretérito Perfecto</label>
-
+            <label><input type="checkbox" class="gram" value="mandatoformal"> Mandato Formal</label>
+            <label><input type="checkbox" class="gram" value="mandatoinformal"> Mandato Informal</label>
+            <label><input type="checkbox" class="gram" value="mandatoplural"> Mandato Plural</label>
+            <label><input type="checkbox" class="gram" value="mandatoformal"> Mandato Formal</label>
+        </div>
+        
+        <div class="custom-focus">
+            <label style="font-weight:bold; color: #4338ca;">🎯 Enfoque Personalizado (Opcional):</label>
+            <input type="text" id="customTag" placeholder="Ejem: Vocabulario de medio ambiente, Futuro simple, etc.">
         </div>
     </div>
 
-    <button class="gen-btn" onclick="generateV42()">GENERAR v42 Y PROBAR</button>
+    <button class="gen-btn" onclick="generateV46()">GENERAR v46 Y PROBAR</button>
+    
     <div class="output-container">
-        <button class="copy-btn" onclick="copyV42()">COPIAR</button>
+        <button class="copy-btn" onclick="copyV46()">COPIAR</button>
         <textarea id="outputArea" readonly></textarea>
     </div>
+
     <iframe id="livePreview"></iframe>
 </div>
 
 <script>
 const GITHUB_JSON = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json";
 
-fetch(GITHUB_JSON).then(r => r.json()).then(data => {
-    const sel = document.getElementById('lessonSelect');
-    sel.innerHTML = "";
-    for (const id in data.items) {
-        let opt = document.createElement('option');
-        opt.value = id; opt.text = data.items[id].titulo;
-        sel.appendChild(opt);
-    }
-});
+fetch(GITHUB_JSON + "?v=" + Date.now())
+    .then(r => r.json())
+    .then(data => {
+        const sel = document.getElementById('lessonSelect');
+        sel.innerHTML = "";
+        for (const id in data.items) {
+            let opt = document.createElement('option');
+            opt.value = id; opt.text = data.items[id].titulo;
+            sel.appendChild(opt);
+        }
+    });
 
-function copyV42() {
+function copyV46() {
     const area = document.getElementById("outputArea");
-    area.select(); document.execCommand('copy');
+    area.select();
+    document.execCommand('copy');
     alert("Código copiado.");
 }
 
-function generateV42() {
+function generateV46() {
     const lessonID = document.getElementById('lessonSelect').value;
-    const themeVal = document.getElementById('themeInput').value || "General";
-    const promptVal = document.getElementById('promptText').value.trim();
     const tier = parseInt(document.getElementById('tier').value);
     const hasQ = document.getElementById('includeQ').checked;
+    const customValue = document.getElementById('customTag').value.trim();
     
-    // CAPTURA DE REQUISITOS (Checkboxes)
-    const selectedGrams = Array.from(document.querySelectorAll('.gram:checked')).map(cb => cb.value);
+    let tagsHTML = "";
+    document.querySelectorAll('.gram:checked').forEach(cb => {
+        tagsHTML += '<span style="background:#f0f2f5; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #ccc; margin-right:5px; color:#2c3e50; display:inline-block; margin-top:5px;">' + cb.value + '</span>';
+    });
+    
+    if(customValue !== "") {
+        tagsHTML += '<span style="background:#e0e7ff; padding:4px 10px; border-radius:12px; font-size:0.8rem; border:1px solid #4338ca; margin-right:5px; color:#4338ca; display:inline-block; margin-top:5px; font-weight:bold;">🎯 ' + customValue + '</span>';
+    }
 
     const configs = {
         11: { prep: 300, goal: 30, type: "script" },
@@ -138,95 +155,81 @@ function generateV42() {
         9: { prep: 900, goal: 210, type: "qonly", bullets: 0 },
         10: { prep: 900, goal: 240, type: "bullets", bullets: 10 }
     };
-
     const act = configs[tier];
-    const formatGoal = (s) => Math.floor(s/60) + ":" + (s%60 < 10 ? '0' : '') + (s%60);
 
-    let c = "<!DOCTYPE html><html><head><style>";
-    c += "body { font-family: sans-serif; margin: 15px; color: #2c3e50; }";
-    c += ".header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }";
-    c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }";
-    c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }";
-    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }";
-    c += ".prompt-box { background: #fff9db; padding: 10px; border-radius: 8px; border-left: 5px solid #f1c40f; margin-bottom: 10px; font-size: 0.9rem; }";
-    c += ".q-box { background: #e3f2fd; padding: 12px; border-radius: 8px; border-left: 5px solid #2196f3; margin-bottom: 10px; color: #1565c0; font-weight: 500; }";
-    c += ".req-pill { display: inline-block; background: #34495e; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; margin: 0 4px 6px 0; font-weight: bold; }";
-    c += ".link-btn { display: inline-block; text-decoration: none; background: #e67e22; color: white; padding: 8px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-right: 5px; margin-bottom: 10px; }";
-    c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }";
-    c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }";
-    c += "input[type='text'] { width: 85%; border: none; border-bottom: 1px solid #ccc; margin-bottom: 8px; background: transparent; padding: 5px; font-size: 1rem; }";
-    c += "</style></head><body>";
+    let c = "<!DOCTYPE html>\n<html>\n<head>\n<style>\n";
+    c += "body { font-family: sans-serif; margin: 15px; color: #2c3e50; }\n";
+    c += ".header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }\n";
+    c += ".grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }\n";
+    c += ".timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }\n";
+    c += ".notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }\n";
+    c += ".btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }\n";
+    c += "img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }\n";
+    c += ".link-btn { display: inline-block; padding: 8px 12px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; margin-right: 5px; font-weight: bold; }\n";
+    c += ".q-box { background: #fff9db; padding: 12px; border-radius: 8px; margin-top: 15px; border: 2px dashed #f1c40f; }\n";
+    c += "</style>\n</head>\n<body>\n";
     
-    c += "<div class='header'><div><span style='font-size:1.2rem; color:#00d8d6; font-weight:bold;'>" + themeVal + "</span><br><span id='pageTitle'>Cargando...</span> | <strong>Objetivo: <span id='goalText'>" + formatGoal(act.goal) + "</span></strong></div>";
-    c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>";
+    c += "<div class='header'><div><strong>Objetivo: <span id='goalText'>" + act.goal + "</span>s</strong><br>" + tagsHTML + "</div>";
+    c += "<button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>\n";
     
     c += "<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div>";
-    c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-bottom:10px;'>✨ LÍMITE MÍNIMO ALCANZADO ✨</div>";
+    c += "<div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-top:-10px; margin-bottom:10px;'>✨ TIEMPO MÍNIMO ALCANZADO ✨</div>";
     c += "<button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div>";
-    c += "<div id='right'><div class='notes' id='notesArea'>Esperando inicio...</div></div></div>";
+    c += "<div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>\n";
     
-    c += "<script>";
-    c += "var seconds=0, loop, questionsRaw=null, isSpeaking=false;";
-    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + ", showQ: " + hasQ + " };";
-    c += "var reqList = " + JSON.stringify(selectedGrams) + ";";
-    c += "var promptHTML = `" + (promptVal ? `<div class='prompt-box'><strong>Instrucciones:</strong><br>${promptVal}</div>` : "") + "`;";
+    c += "<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'>";
+    c += "<div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div>";
+    c += "<button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button>";
+    c += "<button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button>";
+    c += "<button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>\n";
+
+    c += "<script>\n";
+    c += "var seconds=0; var loop; var customQ=null; var isSim = false; var hasQ=" + hasQ + "; var isSpeaking = false;\n";
+    c += "var config = { prep: " + act.prep + ", goal: " + act.goal + ", type: '" + act.type + "', bullets: " + (act.bullets || 0) + " };\n";
     
-    c += "fetch('" + GITHUB_JSON + "').then(r=>r.json()).then(d=>{";
-    c += "  var l = d.items['" + lessonID + "'];";
-    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; questionsRaw = l.preguntas; document.getElementById('pageTitle').innerText = l.titulo; }";
-    c += "});";
+    c += "fetch('" + GITHUB_JSON + "?v=' + Date.now()).then(function(r){return r.json()}).then(function(d){\n";
+    c += "  var l = d.items['" + lessonID + "'];\n";
+    c += "  if(l){ document.getElementById('mainImg').src = l.imagen; customQ = l.preguntas;\n";
+    c += "  document.getElementById('notesArea').innerText = 'Listo: ' + l.titulo; }\n";
+    c += "});\n";
 
-    c += "function buildNotes(){";
-    c += "  var area = document.getElementById('notesArea'); area.innerHTML = promptHTML;";
-    
-    // 1. Mostrar REQUISITOS (Presente, Subjuntivo, etc.)
-    if (selectedGrams.length > 0) {
-        c += "  var rH = '<div style=\"margin-bottom:10px;\">'; reqList.forEach(r => { rH += '<span class=\"req-pill\">' + r + '</span>'; }); rH += '</div>'; area.innerHTML += rH;";
-    }
+    c += "function updateC(){ \n";
+    c += "  var el=document.getElementById('clock'); \n";
+    c += "  var msg=document.getElementById('success_msg'); \n";
+    c += "  var a=Math.abs(seconds); \n";
+    c += "  el.innerText=(seconds<0?'-':'')+Math.floor(a/60)+':'+(a%60<10?'0':'')+a%60; \n";
+    c += "  if(isSpeaking && config.goal === 240 && seconds <= 60 && seconds >= 0) { \n";
+    c += "     el.style.color='#27ae60'; if(msg) msg.style.display='block'; \n";
+    c += "  } else if(seconds<0) { \n";
+    c += "     el.style.color='red'; if(msg) msg.style.display='none'; \n";
+    c += "  } else { \n";
+    c += "     el.style.color='black'; if(msg) msg.style.display='none'; \n";
+    c += "  }\n";
+    c += "}\n";
 
-    // 2. Enlaces de Cultura y Modismos
-    c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a>';";
-    c += "  area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a>';";
-    
-    // 3. Lógica de PREGUNTA (Arreglando el [object Object])
-    c += "  if(config.showQ && questionsRaw) {";
-    c += "    var qText = '';";
-    c += "    if(typeof questionsRaw === 'string') { qText = questionsRaw; }";
-    c += "    else { qText = questionsRaw.nivel1 || questionsRaw.nivel2 || questionsRaw.nivel3 || 'Pregunta no disponible'; }";
-    c += "    area.innerHTML += '<div class=\"q-box\"><strong>❓ Pregunta:</strong><br>' + qText + '</div>';";
-    c += "  }";
+    c += "function forceSim(){ isSim = true; config.prep = 900; config.goal = 240; config.bullets = 10; config.type = 'bullets';\n";
+    c += "document.getElementById('goalText').innerText = '240';\n";
+    c += "document.getElementById('simBtn').innerText = 'MODO SIMULACIÓN ACTIVADO';\n";
+    c += "document.getElementById('simBtn').style.opacity = '0.5';\n";
+    c += "seconds = 0; isSpeaking = false; updateC(); }\n";
 
-    // 4. Área de Escritura
-    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:300px; border:1px solid #ddd; border-radius:5px; padding:10px; font-family:inherit;\"></textarea>';";
-    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1;i<=config.bullets;i++) area.innerHTML+=i+'. <input type=\"text\"><br>'; }";
-    c += "}";
+    c += "function buildNotes(){\n";
+    c += "  var area = document.getElementById('notesArea'); area.innerHTML = '';\n";
+    c += "  if(!isSim){\n";
+    c += "    area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/vocabulario/modismos\" target=\"_blank\" class=\"link-btn\">🗣️ Modismos</a>';\n";
+    c += "    area.innerHTML += '<a href=\"https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales\" target=\"_blank\" class=\"link-btn\">🌎 Cultura</a><hr>';\n";
+    c += "  }\n";
+    c += "  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style=\"width:95%; height:320px;\"></textarea>';\n";
+    c += "  else if(config.type==='hybrid') { area.innerHTML += '<strong>Frase:</strong><br><input type=\"text\" style=\"width:90%;\"><br><strong>Notas:</strong><br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%;\"><br>'; }\n";
+    c += "  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type=\"text\" style=\"width:80%;\"><br>'; }\n";
+    c += "  if(hasQ && !isSim) { area.innerHTML += '<div class=\"q-box\"><strong>Pregunta:</strong><br><input type=\"text\" style=\"width:90%;\"></div>'; }\n";
+    c += "}\n";
 
-    c += "function updateC(){";
-    c += "  var el=document.getElementById('clock'), msg=document.getElementById('success_msg');";
-    c += "  var a=Math.abs(seconds), m=Math.floor(a/60), s=a%60;";
-    c += "  el.innerText=(seconds<0?'-':'')+m+':'+(s<10?'0':'')+s;";
-    c += "  if(isSpeaking && config.goal === 240 && seconds <= 60 && seconds >= 0) { el.style.color='#27ae60'; msg.style.display='block'; }";
-    c += "  else if(seconds<0) { el.style.color='red'; msg.style.display='none'; }";
-    c += "  else { el.style.color='black'; msg.style.display='none'; }";
-    c += "}";
-
-    c += "function startPrep(){ clearInterval(loop); seconds=config.prep; isSpeaking=false; buildNotes();";
-    c += "  document.getElementById('mainBtn').innerText='TERMINAR PREP (PAUSAR)'; document.getElementById('mainBtn').onclick=waitToSpeak;";
-    c += "  loop=setInterval(()=>{seconds--; updateC(); if(seconds<=0){ clearInterval(loop); waitToSpeak(); }},1000);";
-    c += "}";
-
-    c += "function waitToSpeak(){ clearInterval(loop); document.getElementById('clock').style.color='#3498db';";
-    c += "  var btn=document.getElementById('mainBtn'); btn.style.background='#f39c12'; btn.innerText='LISTO - CLIC PARA HABLAR'; btn.onclick=startSpeak; }";
-
-    c += "function startSpeak(){ clearInterval(loop); isSpeaking=true; seconds=config.goal; updateC();";
-    c += "  var btn=document.getElementById('mainBtn'); btn.innerText='FINALIZAR'; btn.style.background='#e74c3c'; btn.onclick=()=>clearInterval(loop);";
-    c += "  loop=setInterval(()=>{seconds--; updateC();},1000);";
-    c += "}";
-
-    c += "function forceSim(){ config.goal=240; config.prep=900; config.bullets=10; config.type='bullets';";
-    c += "  document.getElementById('goalText').innerText='4:00'; document.getElementById('simBtn').innerText='SIMULACIÓN ACTIVADA';";
-    c += "  document.getElementById('simBtn').style.opacity='0.5'; seconds=0; updateC(); }";
-    
+    c += "function startPrep(){ clearInterval(loop); isSpeaking = false; seconds=config.prep; buildNotes(); loop=setInterval(function(){seconds--; updateC(); if(seconds<=0) waitToSpeak();},1000); document.getElementById('mainBtn').innerText='TERMINAR PREPARACIÓN'; document.getElementById('mainBtn').onclick=waitToSpeak; }\n";
+    c += "function waitToSpeak(){ clearInterval(loop); document.getElementById('clock').style.color='#3498db'; document.getElementById('mainBtn').innerText='LISTO PARA HABLAR'; document.getElementById('mainBtn').style.background='#f39c12'; document.getElementById('mainBtn').onclick=startSpeak; }\n";
+    c += "function startSpeak(){ clearInterval(loop); isSpeaking = true; seconds=config.goal; document.getElementById('mainBtn').style.background='#e74c3c'; loop=setInterval(function(){seconds--; updateC();},1000); document.getElementById('mainBtn').innerText='Finalizar'; document.getElementById('mainBtn').onclick=end; }\n";
+    c += "function end(){ clearInterval(loop); isSpeaking = false; document.getElementById('qZone').style.display='block'; }\n";
+    c += "function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }\n";
     c += "<\/script></body></html>";
 
     document.getElementById('outputArea').value = c;
