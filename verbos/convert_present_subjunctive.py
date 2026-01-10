@@ -191,11 +191,7 @@ def main():
 
     with open(in_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-data = [r for r in data if isinstance(r, dict)]
-
-
-    if not isinstance(data, list):
-        raise TypeError("Input JSON must be a list (array) of objects.")
+        data = [r for r in data if isinstance(r, dict)]
 
     # filter source tense
     source_rows = [r for r in data if r.get(KEY_TENSE) == SOURCE_TENSE]
@@ -260,3 +256,4 @@ data = [r for r in data if isinstance(r, dict)]
 
 if __name__ == "__main__":
     main()
+
