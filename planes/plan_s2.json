@@ -51,13 +51,28 @@
     "dia": 38,
     "fecha": "2026-01-12",
     "blocks": [
-        {
-            "kind": "lectura",
-            "ref": "lectura-s4-cartaparasergio"
+       {
+            "kind": "conv",
+            "ref": "conv-s2-02"
         },
         {
-            "kind": "lectura",
-            "ref": "lect-s4-cartaparasergio"
+            "kind": "vocabulario",
+            "ref": "L3"
+        },
+                   {
+            "kind": "estructura",
+            "ref": "mandatos",
+            "title": "Los Mandatos",
+            "introducir": [
+                "pronombres"
+            ],
+            "repasar": [
+                "ud_uds"
+            ],
+            "recursos_gramatica": [
+                "mandatos",
+                "subjuntivo"
+            ]
         }
     ]
         },
@@ -79,6 +94,10 @@
             "recursos_gramatica": [
                 "mandatos"
             ]
+        },
+        {
+            "kind": "vocabulario",
+            "ref": "L3"
         }
     ]
 },
