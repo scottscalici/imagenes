@@ -4,6 +4,7 @@
     "days": [
         {
     "dia": 39,
+    "fecha": "2026-01-15",
     "blocks": [
         {
             "kind": "vocabulario",
@@ -16,12 +17,39 @@
         {
             "kind": "conv",
             "ref": "conv-s4-02"
-        }
-    ],
-    "fecha": "2026-01-12"
+        },
+                {
+            "kind": "estructura",
+            "ref": "mandatos",
+            "title": "Los Mandatos",
+            "introducir": [
+                "pronombres"
+            ],
+            "repasar": [
+                "ud_uds"
+            ],
+            "recursos_gramatica": [
+                "mandatos",
+                "subjuntivo"
+            ]
+        },
+        {
+            "kind": "estructura",
+            "ref": "subjuntivo",
+            "title": "Presente de subjuntivo",
+            "introducir": [
+                "conjugaciones"
+            ],
+            "repasar": [],
+            "recursos_gramatica": [
+                "subjuntivo"
+            ]
+        }  
+    ]
 },       
         {
     "dia": 38,
+    "fecha": "2026-01-12",
     "blocks": [
         {
             "kind": "lectura",
@@ -31,11 +59,11 @@
             "kind": "lectura",
             "ref": "lect-s4-cartaparasergio"
         }
-    ],
-    "fecha": "2026-01-12"
-},
-         {
+    ]
+        },
+            {
     "dia": 37,
+    "fecha": "2026-01-08",
     "blocks": [
                 {
             "kind": "estructura",
@@ -51,7 +79,9 @@
             "recursos_gramatica": [
                 "mandatos"
             ]
-        },
+        }
+    ]
+},
         {
     "dia": 36,
     "blocks": [
@@ -152,11 +182,7 @@
                 {
                     "kind": "extras",
                     "ref": "extra-s2-d33-02"
-                }
-            ]
-        },
-        
-       
+                },
         {
             "kind": "estructura",
             "ref": "objetos",
