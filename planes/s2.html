@@ -118,7 +118,7 @@
 
     <div class="mt-20 pt-8 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity flex justify-center">
       <div class="flex items-center gap-4 text-xs">
-        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1" value="35">
+        <input id="diaInput" type="number" class="w-16 border rounded px-2 py-1">
         <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Cargar</button>
       </div>
     </div>
@@ -175,38 +175,43 @@
     const data = await loadData();
     if (!data) return;
 
-    // --- START TIME GATE LOGIC ---
-    const now = new Date();
-    // Use the filter to only look at days that have actually happened or are happening today
-    const allowedEntries = data.cal.map.filter(entry => {
-      if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
-      const entryDate = new Date(entry.fecha + "T00:00:00");
-      return entryDate <= now; 
-    });
+   // --- START TIME GATE LOGIC ---
+const now = new Date();
 
-    // Find the absolute maximum day number allowed right now
-    const maxAllowedDia = allowedEntries.length > 0 
-      ? Math.max(...allowedEntries.map(e => e.dia)) 
-      : 1; // Fallback to Day 1 if nothing matches
+const allowedEntries = (data.cal.map || []).filter(entry => {
+  if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
+  if (entry.dia == null) return false; // ignore no-school rows
+  const entryDate = new Date(entry.fecha + "T00:00:00");
+  return entryDate <= now;
+});
 
-    const params = new URLSearchParams(window.location.search);
-    let requestedDia = parseInt(params.get('dia'));
-    
-    let DIA;
-    if (!requestedDia) {
-      // If no day is requested, always show the most recent lesson
-      DIA = maxAllowedDia;
-    } else if (requestedDia > maxAllowedDia) {
-      // If they try to look ahead, force them back to the current day
-      DIA = maxAllowedDia;
-      console.warn("Intento de acceso a día futuro bloqueado.");
-      // Optional: Update the URL so it matches what they see
-      window.history.replaceState({}, '', `?dia=${DIA}`);
-    } else {
-      // If they request a past day, that's fine!
-      DIA = requestedDia;
-    }
-    // --- END TIME GATE LOGIC ---
+// Choose the most recent *date* (not the highest dia)
+allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+const latestEntry = allowedEntries[allowedEntries.length - 1];
+const maxAllowedDia = latestEntry ? latestEntry.dia : 1;
+
+const params = new URLSearchParams(window.location.search);
+let requestedDia = parseInt(params.get('dia'), 10);
+
+let DIA;
+if (!requestedDia) {
+  DIA = maxAllowedDia;
+} else if (requestedDia > maxAllowedDia) {
+  DIA = maxAllowedDia;
+  console.warn("Intento de acceso a día futuro bloqueado.");
+  window.history.replaceState({}, '', `?dia=${DIA}`);
+} else {
+  DIA = requestedDia;
+}
+
+// Set selector defaults + bounds
+const diaInput = document.getElementById('diaInput');
+if (diaInput) {
+  diaInput.min = 1;
+  diaInput.max = maxAllowedDia;
+  diaInput.value = DIA;
+}
+// --- END TIME GATE LOGIC ---
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
