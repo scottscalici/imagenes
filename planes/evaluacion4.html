@@ -32,7 +32,7 @@
 
 </main>
 
-<script>
+    <script>
   const CONFIG = {
     COURSE: "s4",
     EVALS_URL: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
@@ -74,7 +74,7 @@
 
       let futurePillCount = 0;
 
-      // 1. Assign Priority Scores (Grouped for chronological flow)
+      // 1. Assign Priority Scores
       const processedEvals = rawEvals.map(ev => {
         const matchingDays = calendarMap.filter(c => c.dia == ev.dia);
         const dates = matchingDays.map(m => m.fecha).sort();
@@ -83,23 +83,22 @@
         const isTodayWindow = (todayStr >= minDate && todayStr <= maxDate);
         
         let priority = 0;
-        
-        // Group 37, 38, 39, 40 etc. into the same high-priority bucket
+        // Group everything from (Last 2 classes) up to (Future) in the top bucket
         if (ev.dia >= MASTER_DAY - 2 || isTodayWindow || ev.dia > MASTER_DAY) {
-          priority = 100; // Active/Future bucket
+          priority = 100; 
         } else {
-          priority = 10;  // Archive bucket
+          priority = 10;  // Archive
         }
 
         return { ...ev, priority, matchingDays, isTodayWindow };
       });
 
-      // 2. Sort by Priority (Desc), then by Day (Asc)
+      // 2. Sort: Top bucket first, then numerical order (37, 38, 39, 40...)
       processedEvals.sort((a, b) => {
         if (b.priority !== a.priority) return b.priority - a.priority;
-        return a.dia - b.dia; // This ensures 37 < 38 < 39 < 40
+        return a.dia - b.dia;
       });
-        
+
       // 3. Render
       processedEvals.forEach(ev => {
         const formattedDates = [...new Set(ev.matchingDays.map(d => formatDate(d.fecha)))];
@@ -111,25 +110,22 @@
         let dateColor = "text-emerald-600";
         let pill = "";
 
-        // --- NEW LOGIC STARTS HERE ---
         if (ev.priority === 10) {
-          // OLD ARCHIVE (Priority 10)
           cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
           dateColor = "text-slate-400";
         } 
         else if (ev.isTodayWindow) {
-          // HOY
           cardStyle = "bg-white border-emerald-500 border-l-[8px] shadow-md ring-2 ring-emerald-50";
           pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
         } 
-        else if (ev.dia < MASTER_DAY) {
-          // PASADA / RECIENTE (Day 37, 38, etc.)
+        else if (ev.dia <= MASTER_DAY) {
+          // It's in the past relative to right now
           cardStyle = "bg-white border-slate-400 border-l-[8px]";
-          const label = (ev.dia === MASTER_DAY - 1) ? 'Reciente' : 'Pasada';
+          const label = (ev.dia === MASTER_DAY) ? 'Reciente' : 'Pasada';
           pill = `<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">${label}</span>`;
         } 
-        else if (ev.dia >= MASTER_DAY) {
-          // FUTURE (Day 40, 41, etc.)
+        else {
+          // It's in the future
           futurePillCount++;
           if (futurePillCount === 1) {
             cardStyle = "bg-white border-emerald-600 border-l-[8px] shadow-sm";
@@ -139,7 +135,6 @@
             pill = '<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded uppercase border border-emerald-100">Pronto</span>';
           }
         }
-        // --- NEW LOGIC ENDS HERE ---
 
         container.innerHTML += `
           <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
@@ -154,6 +149,11 @@
           </div>
         `;
       });
+    } catch (e) {
+      console.error("Error", e);
+    }
+  }
+
   init();
 </script>
 </body>
