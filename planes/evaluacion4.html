@@ -124,18 +124,23 @@
           const label = (ev.dia === MASTER_DAY) ? 'Reciente' : 'Pasada';
           pill = `<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">${label}</span>`;
         } 
-        else {
+     else {
           // It's in the future
           futurePillCount++;
           if (futurePillCount === 1) {
+            // Only the very next one gets "Próxima"
             cardStyle = "bg-white border-emerald-600 border-l-[8px] shadow-sm";
             pill = '<span class="bg-emerald-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase">Próxima</span>';
-          } else {
+          } else if (futurePillCount === 2) {
+            // Only the second one gets "Pronto"
             cardStyle = "bg-white border-emerald-300 border-l-[8px]";
             pill = '<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded uppercase border border-emerald-100">Pronto</span>';
+          } else {
+            // Everything else in the future has no pill and standard styling
+            cardStyle = "bg-white border-slate-200";
+            pill = ""; 
           }
         }
-
         container.innerHTML += `
           <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
             <div class="flex items-center gap-3 mb-2">
