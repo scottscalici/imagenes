@@ -14,28 +14,29 @@
             "kind": "conv",
             "ref": "conv-s2-d2-3-2"
         }, 
+           {
+            "kind": "estructura",
+            "ref": "pronombresrelativos",
+            "title": "que, lo que, quien, quienes",
+            "introducir": [
+                "que_lo_que_quien"
+            ],
+               "recursos_gramatica": [
+                "subjuntivo",
+                "mandatos",
+                "pronombresrelativos"
+            ]
+
+        },
         {
             "kind": "estructura",
             "ref": "subjuntivo",
             "title": "Presente de subjuntivo",
             "introducir": [
                        ],
-            "repasar": ["conjugaciones"],
-            "recursos_gramatica": [
-                "subjuntivo",
-                "mandatos",
-                "pronombresrelativos"
-            ]
-        },
-                {
-            "kind": "estructura",
-            "ref": "pronombresrelativos",
-            "title": "que, lo que, quien, quienes",
-            "introducir": [
-                "que_lo_que_quien"
-            ]
-        }  
-    ]
+            "repasar": ["conjugaciones"]
+                    }
+                ]
 },  
         {
     "dia": 39,
