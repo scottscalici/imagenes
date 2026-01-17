@@ -74,7 +74,7 @@
 
       let futurePillCount = 0;
 
-      // 1. Assign Priority Scores
+      // 1. Assign Priority Scores (Grouped for chronological flow)
       const processedEvals = rawEvals.map(ev => {
         const matchingDays = calendarMap.filter(c => c.dia == ev.dia);
         const dates = matchingDays.map(m => m.fecha).sort();
@@ -84,16 +84,11 @@
         
         let priority = 0;
         
-        if (ev.dia === MASTER_DAY && !isTodayWindow) {
-          priority = 115; // Highest: Recién (last class)
-        } else if (ev.dia >= MASTER_DAY - 2 && ev.dia < MASTER_DAY) {
-          priority = 110; // High: 2nd last class
-        } else if (isTodayWindow) {
-          priority = 100; // Middle: Today
-        } else if (ev.dia > MASTER_DAY) {
-          priority = 90;  // Lower: Future
+        // Group 37, 38, 39, 40 etc. into the same high-priority bucket
+        if (ev.dia >= MASTER_DAY - 2 || isTodayWindow || ev.dia > MASTER_DAY) {
+          priority = 100; // Active/Future bucket
         } else {
-          priority = 10;  // Bottom: Old Archive
+          priority = 10;  // Archive bucket
         }
 
         return { ...ev, priority, matchingDays, isTodayWindow };
@@ -102,9 +97,9 @@
       // 2. Sort by Priority (Desc), then by Day (Asc)
       processedEvals.sort((a, b) => {
         if (b.priority !== a.priority) return b.priority - a.priority;
-        return a.dia - b.dia;
+        return a.dia - b.dia; // This ensures 37 < 38 < 39 < 40
       });
-
+        
       // 3. Render
       processedEvals.forEach(ev => {
         const formattedDates = [...new Set(ev.matchingDays.map(d => formatDate(d.fecha)))];
@@ -116,32 +111,35 @@
         let dateColor = "text-emerald-600";
         let pill = "";
 
-        if (ev.priority >= 110) {
-          // RECIÉN / PASADA (Now at the top)
-          cardStyle = "bg-white border-slate-400 border-l-[8px]";
-          pill = `<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">${ev.priority === 115 ? 'Reciente' : 'Pasada'}</span>`;
+        // --- NEW LOGIC STARTS HERE ---
+        if (ev.priority === 10) {
+          // OLD ARCHIVE (Priority 10)
+          cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
+          dateColor = "text-slate-400";
         } 
-        else if (ev.priority === 100) {
+        else if (ev.isTodayWindow) {
           // HOY
           cardStyle = "bg-white border-emerald-500 border-l-[8px] shadow-md ring-2 ring-emerald-50";
           pill = '<span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded animate-pulse uppercase">¡Hoy!</span>';
         } 
-        else if (ev.priority === 90) {
-          // FUTURE
+        else if (ev.dia < MASTER_DAY) {
+          // PASADA / RECIENTE (Day 37, 38, etc.)
+          cardStyle = "bg-white border-slate-400 border-l-[8px]";
+          const label = (ev.dia === MASTER_DAY - 1) ? 'Reciente' : 'Pasada';
+          pill = `<span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2 py-1 rounded uppercase">${label}</span>`;
+        } 
+        else if (ev.dia >= MASTER_DAY) {
+          // FUTURE (Day 40, 41, etc.)
           futurePillCount++;
           if (futurePillCount === 1) {
             cardStyle = "bg-white border-emerald-600 border-l-[8px] shadow-sm";
             pill = '<span class="bg-emerald-600 text-white text-[10px] font-black px-2 py-1 rounded uppercase">Próxima</span>';
-          } else if (futurePillCount === 2) {
+          } else {
             cardStyle = "bg-white border-emerald-300 border-l-[8px]";
             pill = '<span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded uppercase border border-emerald-100">Pronto</span>';
           }
-        } 
-        else {
-          // OLD ARCHIVE
-          cardStyle = "bg-slate-50 border-slate-200 opacity-60 scale-[0.98]";
-          dateColor = "text-slate-400";
         }
+        // --- NEW LOGIC ENDS HERE ---
 
         container.innerHTML += `
           <div class="rounded-xl border p-6 flex flex-col justify-between transition-all ${cardStyle}">
@@ -156,11 +154,6 @@
           </div>
         `;
       });
-    } catch (e) {
-      console.error("Error", e);
-    }
-  }
-
   init();
 </script>
 </body>
