@@ -1,0 +1,45 @@
+{
+  "themes": [
+    {
+      "id": "invierno",
+      "name": "Modo Invierno",
+      "start": "01-01",
+      "end": "02-14",
+      "styles": {
+        "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
+        "accent": "#0ea5e9",
+        "fontHeading": "'Mountains of Christmas', cursive",
+        "fontBody": "'Inter', sans-serif"
+      },
+      "mascot": "perezoso-bufanda.png",
+      "effect": "snow"
+    },
+    {
+      "id": "halloween",
+      "name": "Modo Fantasma",
+      "start": "10-20",
+      "end": "10-31",
+      "styles": {
+        "header": "bg-gradient-to-r from-orange-600 to-purple-900",
+        "accent": "#7c3aed",
+        "fontHeading": "'Creepster', cursive",
+        "fontBody": "'Inter', sans-serif"
+      },
+      "mascot": "perezoso-brujo.png",
+      "effect": "bats",
+      "overlay": "cobweb.png"
+    },
+    {
+      "id": "classic",
+      "name": "Classic Señor",
+      "styles": {
+        "header": "bg-[#6366f1]",
+        "accent": "#6366f1",
+        "fontHeading": "'Inter', sans-serif",
+        "fontBody": "'Inter', sans-serif"
+      },
+      "mascot": "perezoso-default.png",
+      "effect": "none"
+    }
+  ]
+}
