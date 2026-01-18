@@ -165,8 +165,10 @@ async function init() {
   
   // Find the day number for today (checking both cycles A and B)
   const currentEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-  const liveDia = currentEntry ? parseInt(currentEntry.dia) : 35; // Default to 35 if date not found
-
+  // This finds the highest day number available in your calendar data
+const maxCalDia = data.cal?.map ? Math.max(...data.cal.map.map(c => parseInt(c.dia))) : 1;
+const liveDia = currentEntry ? parseInt(currentEntry.dia) : maxCalDia;
+    
   // 2. GET REQUESTED DAY FROM URL
   const params = new URLSearchParams(window.location.search);
   let requestedDia = parseInt(params.get('dia')) || liveDia;
