@@ -4,30 +4,27 @@
       "id": "invierno",
       "name": "Modo Invierno",
       "start": "01-01",
-      "end": "02-14",
+      "end": "02-15",
       "styles": {
         "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
         "accent": "#0ea5e9",
-        "fontHeading": "'Mountains of Christmas', cursive",
-        "fontBody": "'Inter', sans-serif"
+        "fontHeading": "'Mountains of Christmas', cursive"
       },
-      "mascot": "perezoso-bufanda.png",
+      "mascot": "perezoso-invierno.png",
       "effect": "snow"
     },
     {
       "id": "halloween",
       "name": "Modo Fantasma",
       "start": "10-20",
-      "end": "10-31",
+      "end": "11-02",
       "styles": {
         "header": "bg-gradient-to-r from-orange-600 to-purple-900",
         "accent": "#7c3aed",
-        "fontHeading": "'Creepster', cursive",
-        "fontBody": "'Inter', sans-serif"
+        "fontHeading": "'Creepster', cursive"
       },
       "mascot": "perezoso-brujo.png",
-      "effect": "bats",
-      "overlay": "cobweb.png"
+      "effect": "bats"
     },
     {
       "id": "classic",
@@ -35,8 +32,7 @@
       "styles": {
         "header": "bg-[#6366f1]",
         "accent": "#6366f1",
-        "fontHeading": "'Inter', sans-serif",
-        "fontBody": "'Inter', sans-serif"
+        "fontHeading": "'Inter', sans-serif"
       },
       "mascot": "perezoso-default.png",
       "effect": "none"
