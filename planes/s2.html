@@ -158,17 +158,19 @@ async function applyTheme(data, currentDia) {
 
         if (!theme) return;
 
+        // FIX: Defining these here so the loop below doesn't crash
         const overrides = theme.styles.cardOverrides || {};
-        const accent = theme.styles.accent;
+        const accent = theme.styles.accent || "#60a5fa";
 
-        // 1. Header
+        // 1. Header & Font
         const header = document.querySelector('header');
-        if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
-        
+        if (header) {
+            header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
+        }
         const dayTitle = document.getElementById('dayTitle');
         if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
-        // 2. Hero
+        // 2. Hero Card
         const heroSlot = document.getElementById('heroSlot');
         if (theme.hero && theme.hero.active) {
             heroSlot.classList.remove('hidden');
@@ -180,15 +182,15 @@ async function applyTheme(data, currentDia) {
         }
 
         // 3. Mascots
-        const sloth = document.getElementById('slothMascot');
-        const tutor = document.getElementById('tutorMascot');
-        if (sloth && theme.mascots?.sloth) sloth.src = theme.mascots.sloth;
-        if (tutor && theme.mascots?.tutor) tutor.src = theme.mascots.tutor;
+        const slothImg = document.querySelector('img[src*="sloth"]');
+        if (slothImg && theme.mascots?.sloth) slothImg.src = theme.mascots.sloth;
+        const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
+        if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
 
-        // 4. Colors Logic
+        // 4. Individual Card Overrides
         document.querySelectorAll('section, article').forEach(el => {
             const text = el.innerText || "";
-            let targetColor = accent;
+            let targetColor = accent; 
 
             if (text.includes("Evaluación")) targetColor = overrides.evaluacion || accent;
             else if (text.includes("Calentamiento")) targetColor = overrides.calentamiento || accent;
@@ -201,20 +203,678 @@ async function applyTheme(data, currentDia) {
 
             el.style.setProperty('border-left-color', targetColor, 'important');
         });
-
-        const tBox = document.getElementById('tareasBox');
+        
+        // Sidebar Borders
+        const tBox = document.querySelector('#tareasColumn > div');
         const pBox = document.getElementById('evalSidebarBlock');
         if (tBox) tBox.style.setProperty('border-color', overrides.tareas || accent, 'important');
         if (pBox) pBox.style.setProperty('border-color', overrides.pruebas || accent, 'important');
 
         // 5. Effects
-        if (typeof stopSnow === 'function') stopSnow();
+        if (typeof stopSnow === 'function') stopSnow(); 
         if (theme.effect === 'snow' && typeof startSnow === 'function') startSnow();
 
-    } catch (e) { console.error("Theme Engine Error:", e); }
+    } catch (e) {
+        console.error("Theme Engine Error:", e);
+    }
 }
 
-// ... Keep your formatSpanishDate, loadData, renderManual, init, and startSnow functions exactly as they were ...
+    function formatSpanishDate(dateStr) {
+
+    if (!dateStr) return "";
+
+    const date = new Date(dateStr + "T00:00:00");
+
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+
+  }
+
+
+
+  async function loadData() {
+
+    const urls = [
+
+      CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, 
+
+      CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS,
+
+      CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV
+
+    ];
+
+    try {
+
+      const r = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(res => res.json())));
+
+      return { 
+
+        plan: r[0], evals: r[1], cal: r[2], curios: r[3], tareas: r[4], 
+
+        vocab: r[5], apuntes: r[6], extras: r[7],
+
+        musica: r[8], lectura: r[9], cultura: r[10], conv: r[11]
+
+      };
+
+    } catch (e) { console.error("Error loading data", e); }
+
+  }
+
+
+
+  function renderManual() {
+
+    const d = document.getElementById('diaInput').value;
+
+    window.history.pushState({}, '', `?dia=${d}`);
+
+    init();
+
+  }
+
+
+
+  async function init() {
+
+    const data = await loadData();
+
+    if (!data) return;
+
+
+
+   // --- START TIME GATE LOGIC ---
+
+const now = new Date();
+
+
+
+const allowedEntries = (data.cal.map || []).filter(entry => {
+
+  if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
+
+  if (entry.dia == null) return false; // ignore no-school rows
+
+  const entryDate = new Date(entry.fecha + "T00:00:00");
+
+  return entryDate <= now;
+
+});
+
+
+
+// Choose the most recent *date* (not the highest dia)
+
+allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+const latestEntry = allowedEntries[allowedEntries.length - 1];
+
+const maxAllowedDia = latestEntry ? latestEntry.dia : 1;
+
+
+
+const params = new URLSearchParams(window.location.search);
+
+let requestedDia = parseInt(params.get('dia'), 10);
+
+
+
+let DIA;
+
+if (!requestedDia) {
+
+  DIA = maxAllowedDia;
+
+} else if (requestedDia > maxAllowedDia) {
+
+  DIA = maxAllowedDia;
+
+  console.warn("Intento de acceso a día futuro bloqueado.");
+
+  window.history.replaceState({}, '', `?dia=${DIA}`);
+
+} else {
+
+  DIA = requestedDia;
+
+}
+
+
+
+// Set selector defaults + bounds
+
+const diaInput = document.getElementById('diaInput');
+
+if (diaInput) {
+
+  diaInput.min = 1;
+
+  diaInput.max = maxAllowedDia;
+
+  diaInput.value = DIA;
+
+}
+
+// --- END TIME GATE LOGIC ---
+
+
+
+    const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
+
+    
+
+    // 1. HEADER & CALENDAR
+
+    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+
+    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+
+    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+
+
+
+    // 2. EVALS (Optional: Filter these too if you don't want them to see future test labels)
+
+    const evalList = data.evals.courses[CONFIG.COURSE] || [];
+
+    const findEval = (d) => {
+
+        // Only show the label if that day is also <= maxAllowedDia
+
+        if (d > maxAllowedDia + 5) return "Próximamente"; // Hide labels too far in future
+
+        return (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+
+    };
+
+    
+
+    document.getElementById('currentEval').textContent = findEval(DIA);
+
+    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
+
+    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+
+
+
+    // ... (The rest of your rendering code remains exactly the same)
+
+    // 3. CURIOSIDAD
+
+    const curBlock = document.getElementById('curiosityBlock');
+
+    const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+
+    curBlock.innerHTML = cur ? `
+
+      <article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4">
+
+        <h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3>
+
+        <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
+
+        ${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}
+
+        <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
+
+      </article>` : "";
+
+
+
+    // 4. ESTRUCTURA
+
+    const estBlock = document.getElementById('estructuraBlock');
+
+    estBlock.innerHTML = ""; 
+
+    const grammarBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "estructura");
+
+
+
+    grammarBlocks.forEach(blockRef => {
+
+      const topic = data.apuntes?.[blockRef.ref];
+
+      if (!topic) return;
+
+      let cardLinksHtml = "";
+
+      const buildBigButton = (id, label) => {
+
+        const link = topic.links?.[id];
+
+        if (!link) return "";
+
+        const color = label === "Introducir" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700";
+
+        return `
+
+          <a href="${link.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all mb-2 group">
+
+            <div class="flex flex-col">
+
+              <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase ${color} mb-1">${label}</span>
+
+              <span class="text-slate-800 font-bold text-sm md:text-base">${link.title}</span>
+
+            </div>
+
+            <span class="text-blue-500 group-hover:translate-x-1 transition-transform">↗</span>
+
+          </a>`;
+
+      };
+
+      if (blockRef.introducir) blockRef.introducir.forEach(id => cardLinksHtml += buildBigButton(id, "Introducir"));
+
+      if (blockRef.repasar) blockRef.repasar.forEach(id => cardLinksHtml += buildBigButton(id, "Repasar"));
+
+      if (cardLinksHtml) {
+
+        estBlock.innerHTML += `
+
+          <section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] border-blue-600 p-6 card-shadow mb-6">
+
+            <div class="flex items-center gap-3 mb-4">
+
+              <div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div>
+
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight">${blockRef.title || topic.title}</h2>
+
+            </div>
+
+            <div class="space-y-1">${cardLinksHtml}</div>
+
+          </section>`;
+
+      }
+
+    });
+
+    
+
+// 8. UNIFIED CONTENT LOOP (Respects JSON Order)
+
+  const contentBlock = document.getElementById('extrasBlock');
+
+  contentBlock.innerHTML = "";
+
+
+
+  (todayPlan?.blocks || []).forEach(blockRef => {
+
+    
+
+    // --- A. STANDARD EXTRAS (Links & Sentences) ---
+
+    if (blockRef.kind === "extras") {
+
+      const exItem = data.extras.items.find(i => i.id === blockRef.ref);
+
+      if (exItem) {
+
+        let content = exItem.kind === "sentences" 
+
+          ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` 
+
+          : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+
+        
+
+        contentBlock.innerHTML += `
+
+          <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
+
+            <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
+
+            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div>
+
+          </section>`;
+
+      }
+
+    }
+
+
+
+    // --- B. SPECIAL ACTIVITIES (conv, musica, cultura, lectura) ---
+
+    const specialTypes = ["musica", "cultura", "lectura", "conv"];
+
+    if (specialTypes.includes(blockRef.kind)) {
+
+      const type = blockRef.kind;
+
+      const item = data[type]?.items?.[blockRef.ref];
+
+      if (!item) return;
+
+
+
+      const colors = {
+
+        musica: "border-pink-500 bg-pink-50 text-pink-600",
+
+        cultura: "border-purple-500 bg-purple-50 text-purple-600",
+
+        lectura: "border-orange-500 bg-orange-50 text-orange-600",
+
+        conv: "border-cyan-500 bg-cyan-50 text-cyan-600"
+
+      };
+
+      const style = colors[type] || "border-slate-500 bg-slate-50 text-slate-600";
+
+      const cArr = style.split(' ');
+
+
+
+      contentBlock.innerHTML += `
+
+        <section class="bg-white rounded-xl border-l-[6px] ${cArr[0]} overflow-hidden card-shadow mb-6 hover:shadow-lg transition-all group">
+
+          <div class="flex flex-col md:flex-row">
+
+            <div class="md:w-40 h-32 overflow-hidden bg-slate-100 flex-shrink-0">
+
+              <img src="${item.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+            </div>
+
+            <div class="p-4 flex flex-col justify-between flex-grow">
+
+              <div>
+
+                <span class="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${cArr[1]} ${cArr[2]}">
+
+                  ${item.tag}
+
+                </span>
+
+                <h3 class="text-xl font-black text-slate-900 leading-tight mt-1">${item.titulo}</h3>
+
+                <p class="text-slate-500 font-medium italic text-xs">${item.subtitulo}</p>
+
+              </div>
+
+              <a href="${item.url}" target="_blank" class="mt-2 inline-flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">
+
+                Abrir actividad <span>→</span>
+
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>`;
+
+    }
+
+  });
+
+    
+
+    // 6. RESOURCE DASHBOARD
+
+    const grammarGrid = document.getElementById('grammarResources');
+
+    const vocabContainer = document.getElementById('vocabPlacement');
+
+    grammarGrid.innerHTML = "";
+
+    vocabContainer.innerHTML = "";
+
+
+
+    const grammarBlock = todayPlan?.blocks?.find(b => b.kind === "estructura");
+
+    const grammarKeys = grammarBlock?.recursos_gramatica || [];
+
+
+
+    grammarKeys.forEach(key => {
+
+      const parentSet = data.apuntes[key];
+
+      if (!parentSet || !parentSet.links) return;
+
+      const linksHtml = Object.values(parentSet.links).map(link => `
+
+        <a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">
+
+          ${link.title} <span class="text-[10px] opacity-40">↗</span>
+
+        </a>`).join('');
+
+
+
+      grammarGrid.innerHTML += `
+
+        <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+
+          <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">
+
+            <span class="text-xl">⚙️</span> ${parentSet.title}
+
+          </h3>
+
+          <div class="flex flex-col gap-1">${linksHtml}</div>
+
+        </div>`;
+
+    });
+
+
+
+    const vBlock = todayPlan?.blocks?.find(b => b.kind === "vocabulario");
+
+    const ch = vBlock ? data.vocab.descubre2.chapters[vBlock.ref] : null;
+
+    if (ch) {
+
+      vocabContainer.innerHTML = `
+
+        <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+
+          <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div>
+
+          <div class="p-5 flex flex-col flex-grow justify-between">
+
+            <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
+
+            <div class="flex gap-2">
+
+              <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
+
+              <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
+
+            </div>
+
+          </div>
+
+        </div>`;
+
+    }
+
+    
+
+  // 7. TAREAS (Date + Status Restoration)
+
+    const tList = document.getElementById('tareasList');
+
+    tList.innerHTML = "";
+
+    
+
+    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+
+    
+
+    activeTareas.forEach(t => {
+
+      let statusPill = "";
+
+      
+
+      // Determine Status Pill
+
+      if (t.day_due == DIA) {
+
+        statusPill = '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>';
+
+      } else if (t.day_assigned == DIA) {
+
+        statusPill = '<span class="bg-emerald-100 text-emerald-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-emerald-200 uppercase">Nuevo</span>';
+
+      } else if (t.day_due == DIA + 1) {
+
+        statusPill = '<span class="bg-amber-100 text-amber-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-amber-200 uppercase">Pronto</span>';
+
+      }
+
+
+
+      tList.innerHTML += `
+
+        <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3">
+
+          <div class="flex justify-between items-center mb-2">
+
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>
+
+            ${statusPill}
+
+          </div>
+
+          <h4 class="font-bold text-slate-800 text-sm leading-tight mb-2">${t.titulo}</h4>
+
+          <div class="pt-2 border-t border-slate-50 flex justify-between items-center">
+
+             <span class="text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</span>
+
+          </div>
+
+        </div>`;
+
+    });
+
+    
+
+    if (activeTareas.length === 0) {
+
+      tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+
+    }
+
+
+
+    await applyTheme(data, DIA)
+
+
+
+  }
+
+      let snowInterval; 
+
+function startSnow() {
+
+  const canvas = document.getElementById('snow-canvas');
+
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+
+  canvas.height = window.innerHeight;
+
+
+
+  const flakes = Array.from({ length: 100 }, () => ({
+
+    x: Math.random() * canvas.width,
+
+    y: Math.random() * canvas.height,
+
+    r: Math.random() * 3 + 1, // Flake size
+
+    d: Math.random() * 1      // Density/Speed
+
+  }));
+
+
+
+  function draw() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+
+    ctx.beginPath();
+
+    flakes.forEach(f => {
+
+      ctx.moveTo(f.x, f.y);
+
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+
+    });
+
+    ctx.fill();
+
+    move();
+
+  }
+
+
+
+  function move() {
+
+    flakes.forEach(f => {
+
+      f.y += Math.pow(f.d, 2) + 1;
+
+      f.x += Math.sin(f.d) * 1;
+
+      if (f.y > canvas.height) {
+
+        f.y = -10;
+
+        f.x = Math.random() * canvas.width;
+
+      }
+
+    });
+
+  }
+
+  if (snowInterval) clearInterval(snowInterval);
+
+  snowInterval = setInterval(draw, 30);
+
+}
+
+
+
+function stopSnow() {
+
+  const canvas = document.getElementById('snow-canvas');
+
+  if (canvas) {
+
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  }
+
+  clearInterval(snowInterval);
+
+}
+
+  init();
+
 </script>
 </body>
 </html>
