@@ -459,6 +459,55 @@ if (diaInput) {
     await applyTheme(data, DIA)
 
   }
+      let snowInterval; 
+function startSnow() {
+  const canvas = document.getElementById('snow-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const flakes = Array.from({ length: 100 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 3 + 1, // Flake size
+    d: Math.random() * 1      // Density/Speed
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.beginPath();
+    flakes.forEach(f => {
+      ctx.moveTo(f.x, f.y);
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+    });
+    ctx.fill();
+    move();
+  }
+
+  function move() {
+    flakes.forEach(f => {
+      f.y += Math.pow(f.d, 2) + 1;
+      f.x += Math.sin(f.d) * 1;
+      if (f.y > canvas.height) {
+        f.y = -10;
+        f.x = Math.random() * canvas.width;
+      }
+    });
+  }
+  if (snowInterval) clearInterval(snowInterval);
+  snowInterval = setInterval(draw, 30);
+}
+
+function stopSnow() {
+  const canvas = document.getElementById('snow-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  clearInterval(snowInterval);
+}
   init();
 </script>
     
