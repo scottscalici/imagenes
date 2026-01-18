@@ -144,46 +144,60 @@
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/temas.json"
   }; // Fixed: Removed the double extra brace that was here
-    async function applyTheme(data, currentDia) {
-  // 1. Fetch the Theme JSON
-  const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
-  const themeData = await themeRes.json();
-// Add this inside applyTheme to color all cards:
-document.querySelectorAll('section').forEach(s => {
-  s.style.borderColor = activeTheme.styles.accent; 
-});
-  // 2. Find the date for the DAY we are looking at
-  const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
-  if (!dayEntry) return;
+ async function applyTheme(data, currentDia) {
+  try {
+    // 1. Fetch the Theme JSON
+    const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
+    const themeData = await themeRes.json();
 
-  const dateParts = dayEntry.fecha.split('-'); // [YYYY, MM, DD]
-  const compareDate = `${dateParts[1]}-${dateParts[2]}`; // "MM-DD"
+    // 2. Find the date for the DAY we are looking at
+    const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+    if (!dayEntry) return;
 
-  // 3. Find matching theme
-  const activeTheme = themeData.themes.find(t => {
-    if (!t.start) return false;
-    return compareDate >= t.start && compareDate <= t.end;
-  }) || themeData.themes.find(t => t.id === 'classic');
+    const dateParts = dayEntry.fecha.split('-'); // [YYYY, MM, DD]
+    const compareDate = `${dateParts[1]}-${dateParts[2]}`; // "MM-DD"
 
-  // 4. Apply Visuals
-  const header = document.querySelector('header');
-  header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${activeTheme.styles.header}`;
-  
-  // Update Sloth Image (Mascot)
-  const slothImg = document.querySelector('img[src*="sloth"]');
-  if (slothImg) slothImg.src = activeTheme.mascot;
+    // 3. Find matching theme
+    const activeTheme = themeData.themes.find(t => {
+      if (!t.start) return false;
+      return compareDate >= t.start && compareDate <= t.end;
+    }) || themeData.themes.find(t => t.id === 'classic');
 
-  // Update Fonts
-  document.getElementById('dayTitle').style.fontFamily = activeTheme.styles.fontHeading;
-  
-  // Handle Special Effects (Snow, etc.)
-  if (activeTheme.effect === 'snow') {
-    startSnow(); // We'll add this function next!
-  } else {
-    stopSnow();
+    // 4. APPLY VISUALS (Now that activeTheme is defined!)
+    
+    // Header
+    const header = document.querySelector('header');
+    if (header) {
+      header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${activeTheme.styles.header}`;
+    }
+
+    // Sloth Mascot
+    const slothImg = document.querySelector('img[src*="sloth"]');
+    if (slothImg) slothImg.src = activeTheme.mascot;
+
+    // Font for Title
+    const dayTitle = document.getElementById('dayTitle');
+    if (dayTitle) dayTitle.style.fontFamily = activeTheme.styles.fontHeading;
+
+    // NEW: Color all card borders (The part that caused the crash)
+    if (activeTheme.styles.accent) {
+      document.querySelectorAll('section, article, .bg-white.rounded-xl').forEach(s => {
+        s.style.borderLeftColor = activeTheme.styles.accent;
+      });
+    }
+
+    // Handle Special Effects
+    if (activeTheme.effect === 'snow') {
+      startSnow();
+    } else {
+      stopSnow();
+    }
+
+  } catch (e) {
+    console.error("Theme Error:", e);
   }
 }
-
+      
   function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
