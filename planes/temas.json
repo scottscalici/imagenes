@@ -4,37 +4,24 @@
       "id": "invierno",
       "name": "Modo Invierno",
       "start": "01-01",
-      "end": "02-15",
+      "end": "02-14",
       "styles": {
-        "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
-        "accent": "#0ea5e9",
-        "fontHeading": "'Mountains of Christmas', cursive"
+        "header": "bg-gradient-to-r from-blue-500 to-cyan-400",
+        "accent": "border-blue-400",
+        "fontHeading": "'Inter', sans-serif"
       },
-      "mascot": "perezoso-invierno.png",
+      "mascot": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg",
       "effect": "snow"
-    },
-    {
-      "id": "halloween",
-      "name": "Modo Fantasma",
-      "start": "10-20",
-      "end": "11-02",
-      "styles": {
-        "header": "bg-gradient-to-r from-orange-600 to-purple-900",
-        "accent": "#7c3aed",
-        "fontHeading": "'Creepster', cursive"
-      },
-      "mascot": "perezoso-brujo.png",
-      "effect": "bats"
     },
     {
       "id": "classic",
       "name": "Classic Señor",
       "styles": {
-        "header": "bg-[#6366f1]",
-        "accent": "#6366f1",
+        "header": "bg-[#79c9f2]",
+        "accent": "border-emerald-500",
         "fontHeading": "'Inter', sans-serif"
       },
-      "mascot": "perezoso-default.png",
+      "mascot": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg",
       "effect": "none"
     }
   ]
