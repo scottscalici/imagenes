@@ -148,7 +148,10 @@
   // 1. Fetch the Theme JSON
   const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
   const themeData = await themeRes.json();
-
+// Add this inside applyTheme to color all cards:
+document.querySelectorAll('section').forEach(s => {
+  s.style.borderColor = activeTheme.styles.accent; 
+});
   // 2. Find the date for the DAY we are looking at
   const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
   if (!dayEntry) return;
