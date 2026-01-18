@@ -60,7 +60,28 @@
           <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
           <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="block text-center py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs hover:bg-emerald-700 transition-colors">Ver calendario completo</a>
         </div>
-
+<div class="bg-gradient-to-br from-red-600 to-red-800 rounded-xl p-5 shadow-lg border-4 border-white text-white">
+  <h3 class="text-xs font-black uppercase tracking-widest opacity-80 mb-2">Cuenta regresiva: Examen Oral</h3>
+  <div class="flex justify-between items-center">
+    <div class="text-center">
+      <span id="cd-days" class="text-2xl font-black block leading-none">00</span>
+      <span class="text-[10px] uppercase font-bold opacity-70">Días</span>
+    </div>
+    <div class="text-xl font-bold opacity-50">:</div>
+    <div class="text-center">
+      <span id="cd-hours" class="text-2xl font-black block leading-none">00</span>
+      <span class="text-[10px] uppercase font-bold opacity-70">Horas</span>
+    </div>
+    <div class="text-xl font-bold opacity-50">:</div>
+    <div class="text-center">
+      <span id="cd-mins" class="text-2xl font-black block leading-none">00</span>
+      <span class="text-[10px] uppercase font-bold opacity-70">Mins</span>
+    </div>
+  </div>
+  <div class="mt-3 pt-3 border-t border-white/20 flex items-center gap-2">
+    <span class="text-[10px] font-bold bg-white/20 px-2 py-1 rounded">9 de marzo, 7:30 AM</span>
+  </div>
+</div>
         <div class="bg-slate-50 rounded-xl overflow-hidden shadow-md border-8 border-slate-300 flex flex-col group">
           <div class="h-28 overflow-hidden p-2 text-center"> 
             <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png" class="inline-block h-full object-contain"> 
@@ -340,8 +361,34 @@ async function init() {
     tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusPill}</div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-2">${t.titulo}</h4><div class="pt-2 border-t border-slate-50 flex justify-between items-center"><span class="text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</span></div></div>`;
   });
   if (activeTareas.length === 0) { tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>'; }
+startCountdown();
 }      
+function startCountdown() {
+    const targetDate = new Date("March 9, 2026 07:30:00").getTime();
 
+    const timer = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+            clearInterval(timer);
+            document.getElementById("cd-days").innerText = "¡YA!";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.getElementById("cd-days").innerText = days.toString().padStart(2, '0');
+        document.getElementById("cd-hours").innerText = hours.toString().padStart(2, '0');
+        document.getElementById("cd-mins").innerText = minutes.toString().padStart(2, '0');
+    }, 1000);
+}
+
+// Inside your init function at the end, add:
+// startCountdown();
+    
 init();
 </script>
 </body>
