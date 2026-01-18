@@ -7,7 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&display=swap" rel="stylesheet">
     <style>
+        #headerDate {
+    font-family: inherit; /* This makes it follow the heading font */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+}
         body { font-family: 'Inter', sans-serif; }
+        
         
         /* NEW: Support for dynamic textures and fonts */
         .card-texture {
@@ -35,8 +42,7 @@
         <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
             <div>
                 <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
-                <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
-            </div>
+                <p id="headerDate" class="text-sm opacity-90 font-bold uppercase tracking-widest mt-1" style="font-family: inherit;"></p>   
             <div class="text-right hidden sm:block">
                 <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
             </div>
@@ -168,6 +174,19 @@ const CONFIG = {
 };
 
 async function applyTheme(data, currentDia) {
+    if (theme.styles.fonts) {
+    const fontNames = Object.values(theme.styles.fonts);
+    fontNames.forEach(font => {
+        const fontId = 'font-' + font.replace(/\s+/g, '-').toLowerCase();
+        if (!document.getElementById(fontId)) {
+            const link = document.createElement('link');
+            link.id = fontId;
+            link.rel = 'stylesheet';
+            link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/'/g, '').replace(/\s+/g, '+')}&display=swap`;
+            document.head.appendChild(link);
+        }
+    });
+}
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
@@ -216,16 +235,27 @@ document.querySelectorAll('section, article').forEach(el => {
     let targetColor = accent; 
     let type = "";
 
-    // Identify the card type
-    if (text.includes("Evaluación")) { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
-    else if (text.includes("Calentamiento")) { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
-    else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
-    else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
-    else if (text.includes("Conversación")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
-    else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
-    else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
-    else if (el.closest('#estructuraBlock')) { targetColor = overrides.estructura || accent; type = "estructura"; }
+  // Inside the querySelectorAll('section, article') loop:
 
+// Identify the card type
+if (text.includes("Evaluación")) { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
+else if (text.includes("Calentamiento")) { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
+else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
+else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
+// ADD THIS LINE FOR CONVERSACIÓN
+else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
+else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
+else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
+else if (el.closest('#estructuraBlock')) { targetColor = overrides.estructura || accent; type = "estructura"; }
+
+// APPLY THE FONT DIRECTLY TO THE HEADING
+if (type && theme.styles.fonts && theme.styles.fonts[type]) {
+    const heading = el.querySelector('h2, h3');
+    if (heading) {
+        heading.style.fontFamily = theme.styles.fonts[type];
+        heading.style.fontSize = "1.5rem"; // Optional: boost size for fancy fonts
+    }
+}
     // Apply Border Color
     el.style.setProperty('border-left-color', targetColor, 'important');
 
