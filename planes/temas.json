@@ -1,28 +1,26 @@
 {
-  "themes": [
-    {
-      "id": "invierno",
-      "name": "Modo Invierno",
-      "start": "01-01",
-      "end": "02-14",
-      "styles": {
-        "header": "bg-gradient-to-r from-blue-500 to-cyan-400",
-        "accent": "border-blue-400",
-        "fontHeading": "'Mountains of Christmas', cursive"
-      },
-      "mascot": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_winter.png",
-      "effect": "snow"
-    },
-    {
-      "id": "classic",
-      "name": "Classic Señor",
-      "styles": {
-        "header": "bg-[#79c9f2]",
-        "accent": "border-emerald-500",
-        "fontHeading": "'Inter', sans-serif"
-      },
-      "mascot": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg",
-      "effect": "none"
+  "id": "invierno",
+  "start": "01-01",
+  "end": "02-14",
+  "styles": {
+    "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
+    "fontHeading": "'Mountains of Christmas', cursive",
+    "accent": "#60a5fa",
+    "cardOverrides": {
+      "evaluacion": "#60a5fa",
+      "calentamiento": "#93c5fd",
+      "tareas": "#2563eb",
+      "pruebas": "#1d4ed8"
     }
-  ]
+  },
+  "hero": {
+    "active": true,
+    "img": "URL_TO_WINTER_SCENE",
+    "msg": "¡Bienvenidos al semestre de invierno!"
+  },
+  "mascots": {
+    "sloth": "URL_TO_WINTER_SLOTH",
+    "tutor": "URL_TO_WINTER_SENOR_PLUS"
+  },
+  "effect": "snow"
 }
