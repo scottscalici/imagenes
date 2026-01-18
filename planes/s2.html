@@ -140,8 +140,45 @@
     MUSICA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
     LECTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
     CULTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
-    CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json"
+    CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+    TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/temas.json"
   }; // Fixed: Removed the double extra brace that was here
+    async function applyTheme(data, currentDia) {
+  // 1. Fetch the Theme JSON
+  const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
+  const themeData = await themeRes.json();
+
+  // 2. Find the date for the DAY we are looking at
+  const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+  if (!dayEntry) return;
+
+  const dateParts = dayEntry.fecha.split('-'); // [YYYY, MM, DD]
+  const compareDate = `${dateParts[1]}-${dateParts[2]}`; // "MM-DD"
+
+  // 3. Find matching theme
+  const activeTheme = themeData.themes.find(t => {
+    if (!t.start) return false;
+    return compareDate >= t.start && compareDate <= t.end;
+  }) || themeData.themes.find(t => t.id === 'classic');
+
+  // 4. Apply Visuals
+  const header = document.querySelector('header');
+  header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${activeTheme.styles.header}`;
+  
+  // Update Sloth Image (Mascot)
+  const slothImg = document.querySelector('img[src*="sloth"]');
+  if (slothImg) slothImg.src = activeTheme.mascot;
+
+  // Update Fonts
+  document.getElementById('dayTitle').style.fontFamily = activeTheme.styles.fontHeading;
+  
+  // Handle Special Effects (Snow, etc.)
+  if (activeTheme.effect === 'snow') {
+    startSnow(); // We'll add this function next!
+  } else {
+    stopSnow();
+  }
+}
 
   function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
@@ -417,8 +454,10 @@ if (diaInput) {
     if (activeTareas.length === 0) {
       tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
     }
-  }
 
+    await applyTheme(data, DIA)
+
+  }
   init();
 </script>
     
