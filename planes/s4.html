@@ -160,14 +160,17 @@ async function init() {
   const data = await loadData();
   if (!data) return;
 
-  // 1. DETERMINE CURRENT "LIVE" DAY FROM CALENDAR
+ // 1. DETERMINE CURRENT "LIVE" DAY (Look back for most recent)
   const todayStr = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0];
   
-  // Find the day number for today (checking both cycles A and B)
-  const currentEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-  // This finds the highest day number available in your calendar data
-const maxCalDia = data.cal?.map ? Math.max(...data.cal.map.map(c => parseInt(c.dia))) : 1;
-const liveDia = currentEntry ? parseInt(currentEntry.dia) : maxCalDia;
+  // Sort calendar by date descending to find the closest past date easily
+  const sortedCal = [...data.cal.map].sort((a, b) => b.fecha.localeCompare(a.fecha));
+  
+  // Find the first entry that is NOT in the future
+  const recentEntry = sortedCal.find(c => c.fecha <= todayStr);
+  
+  // Default to the very first day if nothing is found, otherwise use the found day
+  const liveDia = recentEntry ? parseInt(recentEntry.dia) : 1;
     
   // 2. GET REQUESTED DAY FROM URL
   const params = new URLSearchParams(window.location.search);
