@@ -174,19 +174,6 @@ const CONFIG = {
 };
 
 async function applyTheme(data, currentDia) {
-    if (theme.styles.fonts) {
-    const fontNames = Object.values(theme.styles.fonts);
-    fontNames.forEach(font => {
-        const fontId = 'font-' + font.replace(/\s+/g, '-').toLowerCase();
-        if (!document.getElementById(fontId)) {
-            const link = document.createElement('link');
-            link.id = fontId;
-            link.rel = 'stylesheet';
-            link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/'/g, '').replace(/\s+/g, '+')}&display=swap`;
-            document.head.appendChild(link);
-        }
-    });
-}
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
@@ -201,6 +188,20 @@ async function applyTheme(data, currentDia) {
 
         if (!theme) return;
 
+        // 0. Dynamic Font Loader
+        if (theme.styles.fonts) {
+            Object.values(theme.styles.fonts).forEach(font => {
+                const fontId = 'font-' + font.replace(/\s+/g, '-').toLowerCase();
+                if (!document.getElementById(fontId)) {
+                    const link = document.createElement('link');
+                    link.id = fontId;
+                    link.rel = 'stylesheet';
+                    link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/'/g, '').replace(/\s+/g, '+')}&display=swap`;
+                    document.head.appendChild(link);
+                }
+            });
+        }
+
         const overrides = theme.styles.cardOverrides || {};
         const accent = theme.styles.accent || "#60a5fa";
 
@@ -210,7 +211,11 @@ async function applyTheme(data, currentDia) {
             header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
         }
         const dayTitle = document.getElementById('dayTitle');
-        if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
+        if (dayTitle) {
+            dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
+            // Sync the Date font to match the Title font
+            document.getElementById('headerDate').style.fontFamily = theme.styles.fontHeading || 'inherit';
+        }
 
         // 2. Hero Card
         const heroSlot = document.getElementById('heroSlot');
@@ -229,54 +234,40 @@ async function applyTheme(data, currentDia) {
         const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
         if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
 
-        // 4. Individual Card Overrides (Colors, Fonts, Textures)
-document.querySelectorAll('section, article').forEach(el => {
-    const text = el.innerText || "";
-    let targetColor = accent; 
-    let type = "";
+        // 4. Integrated Card Overrides
+        document.querySelectorAll('section, article').forEach(el => {
+            const text = el.innerText || "";
+            let targetColor = accent; 
+            let type = "";
 
-  // Inside the querySelectorAll('section, article') loop:
+            // Mapping types to IDs and Overrides
+            if (text.includes("Evaluación")) { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
+            else if (text.includes("Calentamiento")) { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
+            else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
+            else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
+            else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
+            else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
+            else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
+            else if (el.closest('#estructuraBlock')) { targetColor = overrides.estructura || accent; type = "estructura"; }
 
-// Identify the card type
-if (text.includes("Evaluación")) { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
-else if (text.includes("Calentamiento")) { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
-else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
-else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
-// ADD THIS LINE FOR CONVERSACIÓN
-else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
-else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
-else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
-else if (el.closest('#estructuraBlock')) { targetColor = overrides.estructura || accent; type = "estructura"; }
+            // Apply Unified Styles
+            el.style.setProperty('border-left-color', targetColor, 'important');
+            
+            const heading = el.querySelector('h2, h3');
+            if (heading) {
+                heading.style.color = targetColor;
+                // Apply custom fonts if defined in JSON
+                if (type && theme.styles.fonts && theme.styles.fonts[type]) {
+                    heading.style.fontFamily = theme.styles.fonts[type];
+                }
+            }
 
-// APPLY THE FONT DIRECTLY TO THE HEADING
-if (type && theme.styles.fonts && theme.styles.fonts[type]) {
-    const heading = el.querySelector('h2, h3');
-    if (heading) {
-        heading.style.fontFamily = theme.styles.fonts[type];
-        heading.style.fontSize = "1.5rem"; // Optional: boost size for fancy fonts
-    }
-}
-    // Apply Border Color
-    el.style.setProperty('border-left-color', targetColor, 'important');
-
-    // NEW: Apply Font Color to the Heading (H2 or H3)
-    const heading = el.querySelector('h2, h3');
-    if (heading) {
-        heading.style.color = targetColor;
-    }
-
-    // Apply custom fonts
-    if (type && theme.styles.fonts && theme.styles.fonts[type]) {
-        el.style.setProperty('--activity-font', theme.styles.fonts[type]);
-        el.classList.add('font-activity');
-    }
-
-    // Apply background texture
-    if (type && theme.styles.textures && theme.styles.textures[type]) {
-        el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
-        el.classList.add('card-texture');
-    }
-});
+            // Apply background texture
+            if (type && theme.styles.textures && theme.styles.textures[type]) {
+                el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
+                el.classList.add('card-texture');
+            }
+        });
         
         // Sidebar Borders
         const tBox = document.querySelector('#tareasBox');
@@ -293,6 +284,7 @@ if (type && theme.styles.fonts && theme.styles.fonts[type]) {
     }
 }
 
+// REST OF YOUR FUNCTIONS (formatSpanishDate, loadData, renderManual, init, startSnow, stopSnow)
 function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
