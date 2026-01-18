@@ -1,26 +1,50 @@
 {
-  "id": "invierno",
-  "start": "01-01",
-  "end": "02-14",
-  "styles": {
-    "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
-    "fontHeading": "'Mountains of Christmas', cursive",
-    "accent": "#60a5fa",
-    "cardOverrides": {
-      "evaluacion": "#60a5fa",
-      "calentamiento": "#93c5fd",
-      "tareas": "#2563eb",
-      "pruebas": "#1d4ed8"
+  "themes": [
+    {
+      "id": "invierno",
+      "start": "01-01",
+      "end": "02-14",
+      "styles": {
+        "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
+        "fontHeading": "'Mountains of Christmas', cursive",
+        "accent": "#60a5fa",
+        "cardOverrides": {
+          "evaluacion": "#60a5fa",
+          "calentamiento": "#93c5fd",
+          "tareas": "#2563eb",
+          "pruebas": "#1d4ed8"
+        }
+      },
+      "hero": {
+        "active": true,
+        "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/winter_banner.jpg",
+        "msg": "¡Bienvenidos al semestre de invierno!"
+      },
+      "mascots": {
+        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/sloth_winter.png",
+        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/senor_plus_winter.png"
+      },
+      "effect": "snow"
+    },
+    {
+      "id": "classic",
+      "styles": {
+        "header": "bg-[#79c9f2]",
+        "fontHeading": "'Inter', sans-serif",
+        "accent": "#4771fa",
+        "cardOverrides": {
+          "evaluacion": "#10b981",
+          "calentamiento": "#ef4444",
+          "tareas": "#000000",
+          "pruebas": "#10b981"
+        }
+      },
+      "hero": { "active": false },
+      "mascots": {
+        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg",
+        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png"
+      },
+      "effect": "none"
     }
-  },
-  "hero": {
-    "active": true,
-    "img": "URL_TO_WINTER_SCENE",
-    "msg": "¡Bienvenidos al semestre de invierno!"
-  },
-  "mascots": {
-    "sloth": "URL_TO_WINTER_SLOTH",
-    "tutor": "URL_TO_WINTER_SENOR_PLUS"
-  },
-  "effect": "snow"
+  ]
 }
