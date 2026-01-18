@@ -191,6 +191,12 @@
         s.style.borderLeftWidth = "6px"; // Ensures the "stripe" stays thick
       });
     }
+    // Optional: Target the sidebar blocks specifically
+    const tareasBox = document.querySelector('#tareasColumn > div');
+    const evalSidebar = document.getElementById('evalSidebarBlock');
+    
+    if (tareasBox) tareasBox.style.borderColor = activeTheme.styles.accent;
+    if (evalSidebar) evalSidebar.style.borderColor = activeTheme.styles.accent;
     // Handle Special Effects
     if (activeTheme.effect === 'snow') {
       startSnow();
