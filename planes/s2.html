@@ -146,56 +146,57 @@
   }; // Fixed: Removed the double extra brace that was here
 async function applyTheme(data, currentDia) {
   try {
-    // 1. Fetch the Theme JSON
     const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
     const themeData = await themeRes.json();
 
-    // 2. Find the date for the DAY we are looking at
     const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
     if (!dayEntry) return;
 
-    const dateParts = dayEntry.fecha.split('-'); // [YYYY, MM, DD]
-    const compareDate = `${dateParts[1]}-${dateParts[2]}`; // "MM-DD"
+    const dateParts = dayEntry.fecha.split('-');
+    const compareDate = `${dateParts[1]}-${dateParts[2]}`;
 
-    // 3. Find matching theme
     const activeTheme = themeData.themes.find(t => {
       if (!t.start) return false;
       return compareDate >= t.start && compareDate <= t.end;
     }) || themeData.themes.find(t => t.id === 'classic');
 
-    // 4. APPLY VISUALS
-    
-    // Header
+    // 1. Header & Title Font
     const header = document.querySelector('header');
     if (header) {
       header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${activeTheme.styles.header}`;
     }
-
-    // Sloth Mascot
-    const slothImg = document.querySelector('img[src*="sloth"]');
-    if (slothImg) slothImg.src = activeTheme.mascot;
-
-    // Font for Title
+    
     const dayTitle = document.getElementById('dayTitle');
     if (dayTitle) dayTitle.style.fontFamily = activeTheme.styles.fontHeading;
 
-    // 5. COLOR ALL CARDS AND SIDEBARS
+    // 2. Sloth Mascot
+    const slothImg = document.querySelector('img[src*="sloth"]');
+    if (slothImg) slothImg.src = activeTheme.mascot;
+
+    // 3. FORCE COLORS ON CARDS (The Fix)
     if (activeTheme.styles.accent) {
-      // Targets sections, articles, the curiosity block, and the sidebar containers
-      const allCards = document.querySelectorAll('section, article, .card-shadow, #tareasColumn > div, #evalSidebarBlock');
+      // Find every section or div that has a left-border stripe
+      const styledElements = document.querySelectorAll('section, article, .card-shadow, [class*="border-l-"]');
       
-      allCards.forEach(card => {
-        // Force the left border color (for the 6px stripes)
-        card.style.setProperty('border-left-color', activeTheme.styles.accent, 'important');
-        
-        // Specifically for the Tareas and Pruebas boxes with the thick 8px border
-        if (card.classList.contains('border-8')) {
-          card.style.setProperty('border-color', activeTheme.styles.accent, 'important');
+      styledElements.forEach(el => {
+        // Force the left border color
+        el.style.setProperty('border-left-color', activeTheme.styles.accent, 'important');
+      });
+
+      // Target the sidebar containers with the thick black/green borders
+      const sidebarBoxes = [
+        document.querySelector('#tareasColumn > div'),
+        document.getElementById('evalSidebarBlock')
+      ];
+
+      sidebarBoxes.forEach(box => {
+        if (box) {
+          box.style.setProperty('border-color', activeTheme.styles.accent, 'important');
         }
       });
     }
 
-    // 6. Handle Special Effects
+    // 4. Effects
     if (activeTheme.effect === 'snow' && typeof startSnow === 'function') {
       startSnow();
     } else {
