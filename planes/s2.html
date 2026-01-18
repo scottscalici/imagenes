@@ -164,56 +164,77 @@ async function applyTheme(data, currentDia) {
     const dateParts = dayEntry.fecha.split('-');
     const compareDate = `${dateParts[1]}-${dateParts[2]}`;
 
-    const activeTheme = themeData.themes.find(t => {
-      if (!t.start) return false;
-      return compareDate >= t.start && compareDate <= t.end;
-    }) || themeData.themes.find(t => t.id === 'classic');
+    // Find active theme or fallback to 'classic'
+    const theme = themeData.themes.find(t => compareDate >= t.start && compareDate <= t.end) 
+                || themeData.themes.find(t => t.id === 'classic');
 
-    // 1. Header & Title Font
+    // 1. Header & Font
     const header = document.querySelector('header');
-    if (header) {
-      header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${activeTheme.styles.header}`;
-    }
+    if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
     
     const dayTitle = document.getElementById('dayTitle');
-    if (dayTitle) dayTitle.style.fontFamily = activeTheme.styles.fontHeading;
+    if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
-    // 2. Sloth Mascot
-    const slothImg = document.querySelector('img[src*="sloth"]');
-    if (slothImg) slothImg.src = activeTheme.mascot;
-
-    // 3. FORCE COLORS ON CARDS (The Fix)
-    if (activeTheme.styles.accent) {
-      // Find every section or div that has a left-border stripe
-      const styledElements = document.querySelectorAll('section, article, .card-shadow, [class*="border-l-"]');
-      
-      styledElements.forEach(el => {
-        // Force the left border color
-        el.style.setProperty('border-left-color', activeTheme.styles.accent, 'important');
-      });
-
-      // Target the sidebar containers with the thick black/green borders
-      const sidebarBoxes = [
-        document.querySelector('#tareasColumn > div'),
-        document.getElementById('evalSidebarBlock')
-      ];
-
-      sidebarBoxes.forEach(box => {
-        if (box) {
-          box.style.setProperty('border-color', activeTheme.styles.accent, 'important');
-        }
-      });
-    }
-
-    // 4. Effects
-    if (activeTheme.effect === 'snow' && typeof startSnow === 'function') {
-      startSnow();
+    // 2. The Hero Card Slot
+    const heroSlot = document.getElementById('heroSlot');
+    if (theme.hero && theme.hero.active) {
+      heroSlot.classList.remove('hidden');
+      document.getElementById('heroImg').src = theme.hero.img;
+      document.getElementById('heroMsg').textContent = theme.hero.msg;
+      document.getElementById('heroCard').style.borderColor = theme.styles.accent;
     } else {
-      if (typeof stopSnow === 'function') stopSnow();
+      heroSlot.classList.add('hidden');
     }
+
+    // 3. The Mascot Duo
+    const slothImg = document.querySelector('img[src*="sloth"]');
+    if (slothImg && theme.mascots?.sloth) slothImg.src = theme.mascots.sloth;
+
+    const tutorImg = document.querySelector('img[src*="se%C3%B1or%2B"]'); // Finds the Señor+ logo
+    if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
+
+    // 4. Individual Card Overrides
+    const overrides = theme.styles.cardOverrides || {};
+    const accent = theme.styles.accent;
+
+    // Mapping: HTML ID or Section Type -> JSON Key
+    const cardMap = [
+      { selector: 'section:has(h2:contains("Evaluación"))', key: 'evaluacion' },
+      { selector: 'section:has(h2:contains("Calentamiento"))', key: 'calentamiento' },
+      { selector: 'section:has(h2:contains("Estructura"))', key: 'estructura' },
+      { selector: '#curiosityBlock article', key: 'curiosidad' },
+      { selector: '#tareasColumn > div', key: 'tareas', isSidebar: true },
+      { selector: '#evalSidebarBlock', key: 'pruebas', isSidebar: true }
+    ];
+
+    // Note: Since ":has" and ":contains" are tricky in vanilla JS, we'll use a safer loop:
+    document.querySelectorAll('section, article, [class*="border-l-"]').forEach(el => {
+      const text = el.textContent;
+      let targetColor = accent; // Default to theme accent
+
+      if (text.includes("Evaluación")) targetColor = overrides.evaluacion || accent;
+      else if (text.includes("Calentamiento")) targetColor = overrides.calentamiento || accent;
+      else if (text.includes("Curiosidad")) targetColor = overrides.curiosidad || accent;
+      else if (el.closest('#estructuraBlock')) targetColor = overrides.estructura || accent;
+
+      el.style.setProperty('border-left-color', targetColor, 'important');
+    });
+
+    // Sidebar Specific (The boxes with full borders)
+    const tBox = document.querySelector('#tareasColumn > div');
+    const pBox = document.getElementById('evalSidebarBlock');
+    if (tBox) tBox.style.setProperty('border-color', overrides.tareas || accent, 'important');
+    if (pBox) pBox.style.setProperty('border-color', overrides.pruebas || accent, 'important');
+
+    // 5. Effects Logic
+    if (typeof stopSnow === 'function') stopSnow(); // Clear any existing effects
+    // Add other stopEffect functions here as you build them
+    
+    if (theme.effect === 'snow' && typeof startSnow === 'function') startSnow();
+    if (theme.effect === 'bats' && typeof startBats === 'function') startBats();
 
   } catch (e) {
-    console.error("Theme Error:", e);
+    console.error("Theme Engine Error:", e);
   }
 }
       function formatSpanishDate(dateStr) {
