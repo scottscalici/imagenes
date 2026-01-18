@@ -198,11 +198,7 @@ async function applyTheme(data, currentDia) {
     const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
     if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
 
-    // 4. Individual Card Overrides
-    const overrides = theme.styles.cardOverrides || {};
-    const accent = theme.styles.accent;
-
-    // Color main column cards
+// 4. Individual Card Overrides (Updated for Musica, Conv, etc.)
     document.querySelectorAll('section, article').forEach(el => {
       const text = el.innerText || "";
       let targetColor = accent; 
@@ -210,11 +206,18 @@ async function applyTheme(data, currentDia) {
       if (text.includes("Evaluación")) targetColor = overrides.evaluacion || accent;
       else if (text.includes("Calentamiento")) targetColor = overrides.calentamiento || accent;
       else if (text.includes("Curiosidad")) targetColor = overrides.curiosidad || accent;
-      else if (el.closest('#estructuraBlock') || text.includes("⚙️")) targetColor = overrides.estructura || accent;
+      
+      // New Specific Activity Checks
+      else if (text.includes("Música")) targetColor = overrides.musica || accent;
+      else if (text.includes("Conversación")) targetColor = overrides.conversacion || accent;
+      else if (text.includes("Cultura")) targetColor = overrides.cultura || accent;
+      else if (text.includes("Lectura")) targetColor = overrides.lectura || accent;
+      
+      else if (el.closest('#estructuraBlock')) targetColor = overrides.estructura || accent;
 
       el.style.setProperty('border-left-color', targetColor, 'important');
     });
-
+    
     // Sidebar Specific
     const tBox = document.querySelector('#tareasColumn > div');
     const pBox = document.getElementById('evalSidebarBlock');
