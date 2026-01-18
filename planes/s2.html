@@ -144,7 +144,7 @@
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/temas.json"
   }; // Fixed: Removed the double extra brace that was here
- async function applyTheme(data, currentDia) {
+async function applyTheme(data, currentDia) {
   try {
     // 1. Fetch the Theme JSON
     const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
@@ -163,7 +163,7 @@
       return compareDate >= t.start && compareDate <= t.end;
     }) || themeData.themes.find(t => t.id === 'classic');
 
-    // 4. APPLY VISUALS (Now that activeTheme is defined!)
+    // 4. APPLY VISUALS
     
     // Header
     const header = document.querySelector('header');
@@ -179,37 +179,34 @@
     const dayTitle = document.getElementById('dayTitle');
     if (dayTitle) dayTitle.style.fontFamily = activeTheme.styles.fontHeading;
 
-// 4. Color all card borders (The Upgrade)
+    // 5. COLOR ALL CARDS AND SIDEBARS
     if (activeTheme.styles.accent) {
-      // This looks for anything that looks like a card (section, article, or specifically your white cards)
-      document.querySelectorAll('section, article, [class*="border-l-[6px]"]').forEach(s => {
-        // 1. Remove any existing Tailwind border-color classes so they don't override our JS
-        s.className = s.className.replace(/border-(emerald|red|indigo|blue|purple|orange|cyan)-\d+/g, '');
+      // Targets sections, articles, the curiosity block, and the sidebar containers
+      const allCards = document.querySelectorAll('section, article, .card-shadow, #tareasColumn > div, #evalSidebarBlock');
+      
+      allCards.forEach(card => {
+        // Force the left border color (for the 6px stripes)
+        card.style.setProperty('border-left-color', activeTheme.styles.accent, 'important');
         
-        // 2. Apply the new theme color
-        s.style.borderLeftColor = activeTheme.styles.accent;
-        s.style.borderLeftWidth = "6px"; // Ensures the "stripe" stays thick
+        // Specifically for the Tareas and Pruebas boxes with the thick 8px border
+        if (card.classList.contains('border-8')) {
+          card.style.setProperty('border-color', activeTheme.styles.accent, 'important');
+        }
       });
     }
-    // Optional: Target the sidebar blocks specifically
-    const tareasBox = document.querySelector('#tareasColumn > div');
-    const evalSidebar = document.getElementById('evalSidebarBlock');
-    
-    if (tareasBox) tareasBox.style.borderColor = activeTheme.styles.accent;
-    if (evalSidebar) evalSidebar.style.borderColor = activeTheme.styles.accent;
-    // Handle Special Effects
-    if (activeTheme.effect === 'snow') {
+
+    // 6. Handle Special Effects
+    if (activeTheme.effect === 'snow' && typeof startSnow === 'function') {
       startSnow();
     } else {
-      stopSnow();
+      if (typeof stopSnow === 'function') stopSnow();
     }
 
   } catch (e) {
     console.error("Theme Error:", e);
   }
 }
-      
-  function formatSpanishDate(dateStr) {
+      function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
