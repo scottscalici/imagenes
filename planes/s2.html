@@ -179,13 +179,18 @@
     const dayTitle = document.getElementById('dayTitle');
     if (dayTitle) dayTitle.style.fontFamily = activeTheme.styles.fontHeading;
 
-    // NEW: Color all card borders (The part that caused the crash)
+// 4. Color all card borders (The Upgrade)
     if (activeTheme.styles.accent) {
-      document.querySelectorAll('section, article, .bg-white.rounded-xl').forEach(s => {
+      // This looks for anything that looks like a card (section, article, or specifically your white cards)
+      document.querySelectorAll('section, article, [class*="border-l-[6px]"]').forEach(s => {
+        // 1. Remove any existing Tailwind border-color classes so they don't override our JS
+        s.className = s.className.replace(/border-(emerald|red|indigo|blue|purple|orange|cyan)-\d+/g, '');
+        
+        // 2. Apply the new theme color
         s.style.borderLeftColor = activeTheme.styles.accent;
+        s.style.borderLeftWidth = "6px"; // Ensures the "stripe" stays thick
       });
     }
-
     // Handle Special Effects
     if (activeTheme.effect === 'snow') {
       startSnow();
