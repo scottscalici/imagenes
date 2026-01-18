@@ -160,29 +160,42 @@ async function init() {
   const data = await loadData();
   if (!data) return;
 
- // 1. DETERMINE CURRENT "LIVE" DAY (Look back for most recent)
-  const todayStr = new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+  // 1. DETERMINE CURRENT "LIVE" DAY
+  const now = new Date();
+  const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
   
-  // Sort calendar by date descending to find the closest past date easily
-  const sortedCal = [...data.cal.map].sort((a, b) => b.fecha.localeCompare(a.fecha));
+  // Find if today is a school day
+  const currentEntry = data.cal?.map?.find(c => c.fecha === todayStr);
   
-  // Find the first entry that is NOT in the future
-  const recentEntry = sortedCal.find(c => c.fecha <= todayStr);
-  
-  // Default to the very first day if nothing is found, otherwise use the found day
-  const liveDia = recentEntry ? parseInt(recentEntry.dia) : 1;
-    
+  let liveDia;
+  if (currentEntry) {
+      liveDia = parseInt(currentEntry.dia);
+  } else {
+      // If today isn't in the calendar (weekend/holiday), find the most recent past date
+      const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
+      if (pastEntries && pastEntries.length > 0) {
+          // Sort by date descending and take the first one
+          pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha));
+          liveDia = parseInt(pastEntries[0].dia);
+      } else {
+          // If no past dates exist (e.g., start of semester), just take the highest day number in the calendar
+          const allDays = data.cal?.map?.map(c => parseInt(c.dia)) || [1];
+          liveDia = Math.max(...allDays);
+      }
+  }
+
   // 2. GET REQUESTED DAY FROM URL
   const params = new URLSearchParams(window.location.search);
   let requestedDia = parseInt(params.get('dia')) || liveDia;
 
-  // 3. ANTI-PEEKING LOCK: If requested day is in the future, force back to liveDia
+  // 3. ANTI-PEEKING LOCK: Only lock if requestedDia is actually higher than our liveDia
   if (requestedDia > liveDia) {
       requestedDia = liveDia;
       window.history.replaceState({}, '', `?dia=${liveDia}`);
   }
 
   const DIA = requestedDia;
+  // Use "==" to handle potential string/number mismatches in JSON
   const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
   // 4. HEADER: SHOW BOTH A and B DATES
@@ -191,6 +204,7 @@ async function init() {
   
   document.getElementById('dayTitle').textContent = `Día ${DIA}`;
   document.getElementById('headerDate').textContent = dateString;
+
 
   // 5. EVALS
   const evalList = data.evals.courses[CONFIG.COURSE] || [];
