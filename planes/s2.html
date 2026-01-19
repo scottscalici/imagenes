@@ -286,10 +286,15 @@ document.querySelectorAll('section, article, .card-shadow').forEach(el => {
         if (tBox) tBox.style.setProperty('border-color', overrides.tareas || accent, 'important');
         if (pBox) pBox.style.setProperty('border-color', overrides.pruebas || accent, 'important');
 
-        // 5. Effects
-        if (typeof stopSnow === 'function') stopSnow(); 
-        if (theme.effect === 'snow' && typeof startSnow === 'function') startSnow();
+// 5. Dynamic Effects Engine
+if (typeof stopSnow === 'function') stopSnow(); 
+if (typeof stopHearts === 'function') stopHearts(); // You'll add this
 
+if (theme.effect === 'snow') {
+    startSnow();
+} else if (theme.effect === 'hearts') {
+    startHearts(); 
+}
     } catch (e) {
         console.error("Theme Engine Error:", e);
     }
