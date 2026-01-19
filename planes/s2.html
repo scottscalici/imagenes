@@ -227,17 +227,8 @@ async function applyTheme(data, currentDia) {
         }
 
         if (!theme) return;
-        
-            const dateParts = dayEntry.fecha.split('-');
-            const compareDate = `${dateParts[1]}-${dateParts[2]}`;
-
-            theme = themeData.themes.find(t => t.start && compareDate >= t.start && compareDate <= t.end) 
-                    || themeData.themes.find(t => t.id === 'classic');
-        }
-        
-        // ... rest of the font loader and style overrides ...
-        if (!theme) return;
-        
+        // ... rest of your font/style code ...
+            
         if (theme.styles.fonts) {
             Object.values(theme.styles.fonts).forEach(font => {
                 const fontId = 'font-' + font.replace(/\s+/g, '-').toLowerCase();
