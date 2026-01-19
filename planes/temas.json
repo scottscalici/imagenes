@@ -1,54 +1,59 @@
 {
   "themes": [
     {
-      "id": "invierno",
-      "start": "01-01",
-      "end": "02-14",
-      "styles": {
-        "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
-        "fontHeading": "'Mountains of Christmas', cursive",
-        "accent": "#60a5fa",
-        "cardOverrides": {
-          "evaluacion": "#60a5fa",
-          "calentamiento": "#93c5fd",
-          "curiosidad": "#0ea5e9",
-          "musica": "#f472b6",
-          "conversacion": "#22d3ee",
-          "cultura": "#a855f7",
-          "lectura": "#fb923c",
-          "sidebarEvalList": "#fb923c", 
-          "tareas": "#2563eb",
-          "pruebas": "#1d4ed8",
-          "estructura": "#1d4ed8"
-        },
-        "fonts": {
-          "estructura": "'berkshire swash', system-ui",
-          "evaluacion": "berkshire swash",
-          "calentamiento": "berkshire swash",
-          "curiosidad": "berkshire swash",
-          "musica": "'berkshire swash', serif",
-          "conversacion": "'berkshire swash', system-ui",
-          "tareas": "'berkshire swash', system-ui",
-          "sidebarEvalList": "berkshire swash", 
-          "gramatica": "'berkshire swash', serif"
-        },
-        "textures": {
-          "evaluacion": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/cobweb.png",
-          "musica": "https://img.icons8.com/ios-filled/100/3b82f6/musical-notes.png",
-      "curiosidad": "https://img.icons8.com/ios-filled/100/3b82f6/idea.png"
-        }
-      },
-      "hero": {
-        "active": true,
-        "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/africa.png",
-        "msg": "¡Bienvenidos al semestre de invierno!"
-      },
-      "mascots": {
-        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_winter.png",
-        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/senor_winter.png"
-      },
-      "effect": "snow"
+  "id": "invierno",
+  "name": "Invierno",
+  "start": "01-01",
+  "end": "02-14",
+  "styles": {
+    "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
+    "fontHeading": "Mountains of Christmas",
+    "accent": "#60a5fa",
+    "cardOverrides": {
+      "evaluacion": "#60a5fa",
+      "calentamiento": "#93c5fd",
+      "curiosidad": "#0ea5e9",
+      "musica": "#f472b6",
+      "conversacion": "#22d3ee",
+      "cultura": "#a855f7",
+      "lectura": "#fb923c",
+      "tareas": "#2563eb",
+      "pruebas": "#1d4ed8",
+      "estructura": "#1d4ed8"
     },
+    "fonts": {
+      "estructura": "Berkshire Swash",
+      "evaluacion": "Berkshire Swash",
+      "calentamiento": "Berkshire Swash",
+      "curiosidad": "Berkshire Swash",
+      "musica": "Berkshire Swash",
+      "conversacion": "Berkshire Swash",
+      "tareas": "Berkshire Swash",
+      "pruebas": "Berkshire Swash"
+    },
+    "textures": {
+      "evaluacion": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/cobweb.png",
+      "musica": "https://img.icons8.com/ios-filled/100/3b82f6/musical-notes.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/3b82f6/idea.png"
+    }
+  },
+  "hero": {
+    "active": false,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/winter_hero.png",
+    "msg": "¡Bienvenidos al semestre de invierno!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_winter.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_winter.png"
+  },
+  "effectConfig": {
+    "char": "❄",
+    "color": "white",
+    "direction": "down",
+    "speed": 1,
+    "count": 60
+  }
+},
      {
       "id": "valentine",
       "start": "02-11",
