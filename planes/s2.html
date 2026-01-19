@@ -234,41 +234,48 @@ async function applyTheme(data, currentDia) {
         const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
         if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
 
-        // 4. Integrated Card Overrides
-        document.querySelectorAll('section, article').forEach(el => {
-            const text = el.innerText || "";
-            let targetColor = accent; 
-            let type = "";
+// 4. Integrated Card Overrides
+document.querySelectorAll('section, article, .card-shadow').forEach(el => {
+    const text = el.innerText || "";
+    let targetColor = accent; 
+    let type = "";
 
-            // Mapping types to IDs and Overrides
-            if (text.includes("Evaluación")) { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
-            else if (text.includes("Calentamiento")) { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
-            else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
-            else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
-            else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
-            else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
-            else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
-            else if (el.closest('#estructuraBlock')) { targetColor = overrides.estructura || accent; type = "estructura"; }
+    // 1. Identify the card type (Added all categories here)
+    if (text.includes("Evaluación") || el.id === "evalSection") { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
+    else if (text.includes("Calentamiento") || el.id === "calentamientoSection") { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
+    else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
+    else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
+    else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
+    else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
+    else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
+    else if (text.includes("✨") || text.includes("Extras")) { targetColor = overrides.extras || accent; type = "extras"; }
+    else if (el.closest('#estructuraBlock') || text.includes("⚙️")) { targetColor = overrides.estructura || accent; type = "estructura"; }
+    else if (el.id === "tareasBox") { targetColor = overrides.tareas || accent; type = "tareas"; }
+    else if (el.id === "evalSidebarBlock") { targetColor = overrides.pruebas || accent; type = "pruebas"; }
 
-            // Apply Unified Styles
-            el.style.setProperty('border-left-color', targetColor, 'important');
-            
-            const heading = el.querySelector('h2, h3');
-            if (heading) {
-                heading.style.color = targetColor;
-                // Apply custom fonts if defined in JSON
-                if (type && theme.styles.fonts && theme.styles.fonts[type]) {
-                    heading.style.fontFamily = theme.styles.fonts[type];
-                }
-            }
-
-            // Apply background texture
-            if (type && theme.styles.textures && theme.styles.textures[type]) {
-                el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
-                el.classList.add('card-texture');
-            }
-        });
+    // 2. Apply Border Color
+    el.style.setProperty('border-left-color', targetColor, 'important');
+    
+    // 3. Apply Heading Color & Font
+    const heading = el.querySelector('h2, h3');
+    if (heading) {
+        heading.style.color = targetColor;
         
+        // This checks your JSON for a specific font for this card type
+        if (type && theme.styles.fonts && theme.styles.fonts[type]) {
+            heading.style.fontFamily = theme.styles.fonts[type];
+        } else {
+            // Default to the main heading font if no specific one is set
+            heading.style.fontFamily = theme.styles.fontHeading || 'inherit';
+        }
+    }
+
+    // 4. Apply background texture
+    if (type && theme.styles.textures && theme.styles.textures[type]) {
+        el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
+        el.classList.add('card-texture');
+    }
+});        
         // Sidebar Borders
         const tBox = document.querySelector('#tareasBox');
         const pBox = document.getElementById('evalSidebarBlock');
