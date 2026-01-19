@@ -155,6 +155,10 @@
                 <button onclick="renderManual()" class="bg-slate-800 text-white px-3 py-1 rounded hover:bg-black">Cargar</button>
             </div>
         </div>
+        <div class="flex items-center gap-4 bg-white/10 p-2 rounded-lg">
+  <label class="text-xs font-bold uppercase">Ir a Fecha:</label>
+  <input type="date" id="datePicker" class="bg-slate-800 text-white border border-slate-600 rounded px-2 py-1 text-sm">
+</div>
     </main>
 <script>
 const CONFIG = {
@@ -181,17 +185,35 @@ async function applyTheme(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
-        if (!dayEntry) return;
+        
+        // 1. Get Today's Date String (YYYY-MM-DD)
+        const now = new Date();
+        const todayDateString = now.toISOString().split('T')[0];
 
-        const dateParts = dayEntry.fecha.split('-');
-        const compareDate = `${dateParts[1]}-${dateParts[2]}`;
+        // 2. Check if TODAY is a special status (like snow-day) in calendario.json
+        const todayStatus = data.cal?.map?.find(c => c.fecha === todayDateString);
+        
+        let theme;
 
-        const theme = themeData.themes.find(t => t.start && compareDate >= t.start && compareDate <= t.end) 
+        // 3. Priority: If it's a Snow Day, force that theme
+        if (todayStatus && todayStatus.status === "snow-day") {
+            theme = themeData.themes.find(t => t.id === 'snowday');
+        }
+
+        // 4. If no Snow Day, use the date of the PLAN being viewed
+        if (!theme) {
+            const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+            if (!dayEntry) return;
+
+            const dateParts = dayEntry.fecha.split('-');
+            const compareDate = `${dateParts[1]}-${dateParts[2]}`;
+
+            theme = themeData.themes.find(t => t.start && compareDate >= t.start && compareDate <= t.end) 
                     || themeData.themes.find(t => t.id === 'classic');
+        }
 
         if (!theme) return;
-
+        
         // 0. Dynamic Font Loader
         if (theme.styles.fonts) {
             Object.values(theme.styles.fonts).forEach(font => {
@@ -382,7 +404,29 @@ async function init() {
         const entryDate = new Date(entry.fecha + "T00:00:00");
         return entryDate <= now;
     });
+// Add this inside your init() function or as a listener
+document.getElementById('datePicker').addEventListener('change', function(e) {
+    const selectedDate = e.target.value; // Format: YYYY-MM-DD
+    
+    // Look for this date in your calendario.json data
+    const dayMatch = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
 
+    if (dayMatch && dayMatch.dia) {
+        // It's a normal class day! Go to that dia.
+        window.location.search = `?dia=${dayMatch.dia}`;
+    } else {
+        // It's a snow day, weekend, or holiday.
+        // Find the nearest "dia" that happened BEFORE this date.
+        const pastDays = data.cal.map
+            .filter(c => c.fecha <= selectedDate && c.ciclo === CONFIG.CICLO_FILTER && c.dia != null)
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        if (pastDays.length > 0) {
+            // Take them to the most recent actual plan
+            window.location.search = `?dia=${pastDays[0].dia}`;
+        }
+    }
+});
     allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
     const latestEntry = allowedEntries[allowedEntries.length - 1];
     const maxAllowedDia = latestEntry ? latestEntry.dia : 1;
