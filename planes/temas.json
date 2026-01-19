@@ -1,10 +1,60 @@
 {
   "themes": [
+ {
+  "id": "snowday",
+  "name": "Día de Nieve",
+  "styles": {
+    "header": "bg-gradient-to-r from-slate-400 to-blue-200",
+    "fontHeading": "Mountains of Christmas",
+    "accent": "#f8fafc",
+    "cardOverrides": {
+      "evaluacion": "#94a3b8",
+      "calentamiento": "#cbd5e1",
+      "curiosidad": "#334155",
+      "musica": "#64748b",
+      "conversacion": "#94a3b8",
+      "cultura": "#475569",
+      "lectura": "#94a3b8",
+      "tareas": "#1e293b",
+      "pruebas": "#0f172a",
+      "estructura": "#334155"
+    },
+    "fonts": {
+      "estructura": "Berkshire Swash",
+      "evaluacion": "Berkshire Swash",
+      "calentamiento": "Berkshire Swash",
+      "curiosidad": "Berkshire Swash",
+      "musica": "Berkshire Swash",
+      "conversacion": "Berkshire Swash",
+      "tareas": "Berkshire Swash",
+      "pruebas": "Berkshire Swash"
+    },
+    "textures": {
+      "evaluacion": "https://www.transparenttextures.com/patterns/snow.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://img.icons8.com/fluency/240/snow-storm.png",
+    "msg": "❄️ ¡Día de nieve! Clases canceladas o en línea. ❄️"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_winter.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_winter.png"
+  },
+  "effectConfig": {
+    "char": "❄",
+    "color": "white",
+    "direction": "down",
+    "speed": 3,
+    "count": 120
+  }
+},
     {
   "id": "invierno",
   "name": "Invierno",
-  "start": "01-01",
-  "end": "02-14",
+  "start": "01-15",
+  "end": "01-15",
   "styles": {
     "header": "bg-gradient-to-r from-blue-600 to-cyan-500",
     "fontHeading": "Mountains of Christmas",
