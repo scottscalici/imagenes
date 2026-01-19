@@ -39,15 +39,19 @@
     <canvas id="snow-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;"></canvas>
     
     <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
-            <div>
-                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
-                <p id="headerDate" class="text-sm opacity-90 font-bold uppercase tracking-widest mt-1" style="font-family: inherit;"></p>   
-            <div class="text-right hidden sm:block">
-                <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full">Español 2</span>
-            </div>
-        </header>
+      <header class="bg-[#79c9f2] rounded-xl p-6 text-white flex justify-between items-center shadow-md">
+    <div>
+        <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase text-white">Día —</h1>
+        <p id="headerDate" class="text-sm opacity-90 font-bold uppercase tracking-widest mt-1"></p>
+    </div>
 
+    <div class="text-right hidden sm:block">
+        <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">
+            Español 2
+        </span>
+    </div>
+</header>
+        
         <div id="heroSlot" class="hidden mb-6">
             <div id="heroCard" class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row border-t-8">
                 <div class="md:w-1/3 h-48 bg-slate-100">
