@@ -209,17 +209,15 @@ async function applyTheme(data, currentDia) {
         const overrides = theme.styles.cardOverrides || {};
         const accent = theme.styles.accent || "#60a5fa";
 
-        // 1. Header & Font
+        // 1. Header & Font Sync
         const header = document.querySelector('header');
         if (header) {
             header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
         }
         const dayTitle = document.getElementById('dayTitle');
-        if (dayTitle) {
-            dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
-            // Sync the Date font to match the Title font
-            document.getElementById('headerDate').style.fontFamily = theme.styles.fontHeading || 'inherit';
-        }
+        const headerDate = document.getElementById('headerDate');
+        if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
+        if (headerDate) headerDate.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
         // 2. Hero Card
         const heroSlot = document.getElementById('heroSlot');
@@ -238,70 +236,116 @@ async function applyTheme(data, currentDia) {
         const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
         if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
 
-// 4. Integrated Card Overrides
-document.querySelectorAll('section, article, .card-shadow').forEach(el => {
-    const text = el.innerText || "";
-    let targetColor = accent; 
-    let type = "";
+        // 4. Universal Card Loop (Colors, Fonts, Textures)
+        document.querySelectorAll('section, article, .card-shadow').forEach(el => {
+            const text = el.innerText || "";
+            let targetColor = accent; 
+            let type = "";
 
-    // 1. Identify the card type (Added all categories here)
-    if (text.includes("Evaluación") || el.id === "evalSection") { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
-    else if (text.includes("Calentamiento") || el.id === "calentamientoSection") { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
-    else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
-    else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
-    else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
-    else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
-    else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
-    else if (text.includes("✨") || text.includes("Extras")) { targetColor = overrides.extras || accent; type = "extras"; }
-    else if (el.closest('#estructuraBlock') || text.includes("⚙️")) { targetColor = overrides.estructura || accent; type = "estructura"; }
-    else if (el.id === "tareasBox") { targetColor = overrides.tareas || accent; type = "tareas"; }
-    else if (el.id === "evalSidebarBlock") { targetColor = overrides.pruebas || accent; type = "pruebas"; }
+            if (text.includes("Evaluación") || el.id === "evalSection") { targetColor = overrides.evaluacion || accent; type = "evaluacion"; }
+            else if (text.includes("Calentamiento") || el.id === "calentamientoSection") { targetColor = overrides.calentamiento || accent; type = "calentamiento"; }
+            else if (text.includes("Curiosidad")) { targetColor = overrides.curiosidad || accent; type = "curiosidad"; }
+            else if (text.includes("Música")) { targetColor = overrides.musica || accent; type = "musica"; }
+            else if (text.includes("Conversación") || text.includes("Chat")) { targetColor = overrides.conversacion || accent; type = "conversacion"; }
+            else if (text.includes("Cultura")) { targetColor = overrides.cultura || accent; type = "cultura"; }
+            else if (text.includes("Lectura")) { targetColor = overrides.lectura || accent; type = "lectura"; }
+            else if (text.includes("✨") || text.includes("Extras")) { targetColor = overrides.extras || accent; type = "extras"; }
+            else if (el.closest('#estructuraBlock') || text.includes("⚙️")) { targetColor = overrides.estructura || accent; type = "estructura"; }
+            else if (el.id === "tareasBox") { targetColor = overrides.tareas || accent; type = "tareas"; }
+            else if (el.id === "evalSidebarBlock") { targetColor = overrides.pruebas || accent; type = "pruebas"; }
 
-    // 2. Apply Border Color
-    el.style.setProperty('border-left-color', targetColor, 'important');
-    
-    // 3. Apply Heading Color & Font
-    const heading = el.querySelector('h2, h3');
-    if (heading) {
-        heading.style.color = targetColor;
+            el.style.setProperty('border-left-color', targetColor, 'important');
+            
+            const heading = el.querySelector('h2, h3');
+            if (heading) {
+                heading.style.color = targetColor;
+                if (type && theme.styles.fonts && theme.styles.fonts[type]) {
+                    heading.style.fontFamily = theme.styles.fonts[type];
+                } else {
+                    heading.style.fontFamily = theme.styles.fontHeading || 'inherit';
+                }
+            }
+
+            if (type && theme.styles.textures && theme.styles.textures[type]) {
+                el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
+                el.classList.add('card-texture');
+            } else {
+                el.style.backgroundImage = 'none';
+            }
+        });
         
-        // This checks your JSON for a specific font for this card type
-        if (type && theme.styles.fonts && theme.styles.fonts[type]) {
-            heading.style.fontFamily = theme.styles.fonts[type];
-        } else {
-            // Default to the main heading font if no specific one is set
-            heading.style.fontFamily = theme.styles.fontHeading || 'inherit';
-        }
-    }
-
-    // 4. Apply background texture
-    if (type && theme.styles.textures && theme.styles.textures[type]) {
-        el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
-        el.classList.add('card-texture');
-    }
-});        
-        // Sidebar Borders
         const tBox = document.querySelector('#tareasBox');
         const pBox = document.getElementById('evalSidebarBlock');
         if (tBox) tBox.style.setProperty('border-color', overrides.tareas || accent, 'important');
         if (pBox) pBox.style.setProperty('border-color', overrides.pruebas || accent, 'important');
 
-// 5. Dynamic Effects Engine
-if (typeof stopSnow === 'function') stopSnow(); 
-if (typeof stopHearts === 'function') stopHearts(); // You'll add this
+        // 5. Universal Effects Engine
+        if (theme.effectConfig) {
+            startEffect(theme.effectConfig);
+        } else {
+            stopEffect();
+        }
 
-if (theme.effect === 'snow') {
-    startSnow();
-} else if (theme.effect === 'hearts') {
-    startHearts(); 
-}
     } catch (e) {
         console.error("Theme Engine Error:", e);
     }
 }
 
-// REST OF YOUR FUNCTIONS (formatSpanishDate, loadData, renderManual, init, startSnow, stopSnow)
-function formatSpanishDate(dateStr) {
+let effectInterval;
+function startEffect(config) {
+    const canvas = document.getElementById('snow-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const char = config.char || "❄";
+    const color = config.color || "rgba(255, 255, 255, 0.8)";
+    const speed = config.speed || 1;
+    const direction = config.direction || "down"; 
+
+    const particles = Array.from({ length: config.count || 80 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 15 + 10,
+        drift: Math.random() * 2 - 1,
+        opacity: Math.random() * 0.5 + 0.3
+    }));
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = color;
+        particles.forEach(p => {
+            ctx.font = `${p.size}px serif`;
+            ctx.globalAlpha = p.opacity;
+            ctx.fillText(char, p.x, p.y);
+        });
+        move();
+    }
+
+    function move() {
+        particles.forEach(p => {
+            if (direction === "down") {
+                p.y += speed + (p.size / 10);
+                if (p.y > canvas.height) p.y = -20;
+            } else {
+                p.y -= speed + (p.size / 10);
+                if (p.y < -20) p.y = canvas.height + 20;
+            }
+            p.x += p.drift;
+        });
+    }
+    if (effectInterval) clearInterval(effectInterval);
+    effectInterval = setInterval(draw, 30);
+}
+
+function stopEffect() {
+    const canvas = document.getElementById('snow-canvas');
+    if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    if (effectInterval) clearInterval(effectInterval);
+}
+
+    function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
@@ -494,82 +538,63 @@ async function init() {
     await applyTheme(data, DIA);
 }
 
-let snowInterval; 
-function startSnow() {
-  const canvas = document.getElementById('snow-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const flakes = Array.from({ length: 100 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 3 + 1, d: Math.random() * 1 }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-    ctx.beginPath();
-    flakes.forEach(f => { ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true); });
-    ctx.fill();
-    move();
-  }
-  function move() {
-    flakes.forEach(f => { f.y += Math.pow(f.d, 2) + 1; f.x += Math.sin(f.d) * 1; if (f.y > canvas.height) { f.y = -10; f.x = Math.random() * canvas.width; } });
-  }
-  if (snowInterval) clearInterval(snowInterval);
-  snowInterval = setInterval(draw, 30);
-}
-
-function stopSnow() {
-  const canvas = document.getElementById('snow-canvas');
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  clearInterval(snowInterval);
-}
-    let heartsInterval;
-function startHearts() {
+let effectInterval;
+function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
-    if (!canvas) return;
+    if (!canvas || !config || config.type === 'none') return stopEffect();
+    
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Create "Heart" particles instead of flakes
-    const hearts = Array.from({ length: 50 }, () => ({
+    // Set defaults based on common themes
+    const char = config.char || "❄";
+    const color = config.color || "rgba(255, 255, 255, 0.8)";
+    const speed = config.speed || 1;
+    const direction = config.direction || "down"; // "up" or "down"
+
+    const particles = Array.from({ length: config.count || 80 }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 10 + 5,
-        speed: Math.random() * 2 + 1,
+        size: Math.random() * 15 + 10,
+        drift: Math.random() * 2 - 1,
         opacity: Math.random() * 0.5 + 0.3
     }));
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        hearts.forEach(h => {
-            ctx.fillStyle = `rgba(225, 29, 72, ${h.opacity})`; // Rose Red
-            ctx.font = `${h.size}px serif`;
-            ctx.fillText("❤", h.x, h.y); // Draw a heart emoji
+        ctx.fillStyle = color;
+        particles.forEach(p => {
+            ctx.font = `${p.size}px serif`;
+            ctx.globalAlpha = p.opacity;
+            ctx.fillText(char, p.x, p.y);
         });
         move();
     }
 
     function move() {
-        hearts.forEach(h => {
-            h.y -= h.speed; // Hearts float UP
-            h.x += Math.sin(h.y / 30) * 1; // Sway side to side
-            if (h.y < -20) {
-                h.y = canvas.height + 20;
-                h.x = Math.random() * canvas.width;
+        particles.forEach(p => {
+            if (direction === "down") {
+                p.y += speed + (p.size / 10);
+                if (p.y > canvas.height) p.y = -20;
+            } else {
+                p.y -= speed + (p.size / 10);
+                if (p.y < -20) p.y = canvas.height + 20;
             }
+            p.x += p.drift;
         });
     }
-    if (heartsInterval) clearInterval(heartsInterval);
-    heartsInterval = setInterval(draw, 30);
+    
+    if (effectInterval) clearInterval(effectInterval);
+    effectInterval = setInterval(draw, 30);
 }
 
-function stopHearts() {
-    clearInterval(heartsInterval);
+function stopEffect() {
+    const canvas = document.getElementById('snow-canvas');
+    if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    if (effectInterval) clearInterval(effectInterval);
 }
-
+    
 init();
 </script>
 </body>
