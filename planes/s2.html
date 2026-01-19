@@ -525,6 +525,50 @@ function stopSnow() {
   }
   clearInterval(snowInterval);
 }
+    let heartsInterval;
+function startHearts() {
+    const canvas = document.getElementById('snow-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Create "Heart" particles instead of flakes
+    const hearts = Array.from({ length: 50 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 10 + 5,
+        speed: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.5 + 0.3
+    }));
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hearts.forEach(h => {
+            ctx.fillStyle = `rgba(225, 29, 72, ${h.opacity})`; // Rose Red
+            ctx.font = `${h.size}px serif`;
+            ctx.fillText("❤", h.x, h.y); // Draw a heart emoji
+        });
+        move();
+    }
+
+    function move() {
+        hearts.forEach(h => {
+            h.y -= h.speed; // Hearts float UP
+            h.x += Math.sin(h.y / 30) * 1; // Sway side to side
+            if (h.y < -20) {
+                h.y = canvas.height + 20;
+                h.x = Math.random() * canvas.width;
+            }
+        });
+    }
+    if (heartsInterval) clearInterval(heartsInterval);
+    heartsInterval = setInterval(draw, 30);
+}
+
+function stopHearts() {
+    clearInterval(heartsInterval);
+}
 
 init();
 </script>
