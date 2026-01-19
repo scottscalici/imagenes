@@ -348,12 +348,32 @@ async function runRender(data, DIA) {
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
     // Evals
-    const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
-    document.getElementById('currentEval').textContent = findEval(DIA);
-    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${DIA+1}:</b> ${findEval(DIA+1)}</li><li><b>Día ${DIA+2}:</b> ${findEval(DIA+2)}</li>`;
-    document.getElementById('calBtn').href = `${CONFIG.CAL_BASE}/${DIA}`;
+    // Inside runRender(data, DIA)
 
+// 1. Get the list for the current course (s2)
+const evalList = data.evals.courses[CONFIG.COURSE] || [];
+
+// 2. Helper function to find the label for any given day
+const findEval = (d) => {
+    const match = evalList.find(e => e.dia == d);
+    return match ? match.label : "Sin evaluaciones";
+};
+
+// 3. Update the UI elements
+const currentEvalEl = document.getElementById('currentEval');
+const nextEvalsEl = document.getElementById('nextEvals');
+
+if (currentEvalEl) {
+    currentEvalEl.textContent = findEval(DIA);
+}
+
+if (nextEvalsEl) {
+    // This ensures that when you are on Day 15, it looks for 16 and 17
+    nextEvalsEl.innerHTML = `
+        <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
+        <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
+    `;
+}
     // Curiosidad
     const curBlock = document.getElementById('curiosityBlock');
     const cur = data.curios.find(c => c.id === `cur-${DIA}`);
