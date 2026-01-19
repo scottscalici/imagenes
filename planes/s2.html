@@ -194,33 +194,40 @@ const CONFIG = {
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json"
 };
-
-// --- THEME ENGINE ---
+    
 // --- THEME ENGINE ---
 async function applyTheme(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
         
-        // 1. Get Today's Date String (YYYY-MM-DD)
-        const now = new Date();
-        const todayStr = now.toLocaleDateString('en-CA'); // Matches YYYY-MM-DD
+        // 1. Get the specific calendar entry for the DAY being viewed
+        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+        if (!dayEntry) return;
 
-        // 2. Check if TODAY has a "Snow day" note in calendario.json
-        const todayCalEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-        
+        // 2. This is the date we care about (the date that 'Día X' actually happened)
+        const viewedDate = dayEntry.fecha; 
+        const dateParts = viewedDate.split('-'); // [2026, 01, 15]
+        const compareMD = `${dateParts[1]}-${dateParts[2]}`; // "01-15"
+
         let theme;
 
-        // 3. Priority: If the NOTE says "Snow day", force the 'snowday' ID
-        if (todayCalEntry && todayCalEntry.note === "Snow day") {
+        // 3. Priority: Did THAT specific date have a "Snow day" note?
+        // Note: This requires the Snow Day entry in calendario.json to have the same "dia" number 
+        // OR we check the date directly.
+        const specificDateEntry = data.cal?.map?.find(c => c.fecha === viewedDate);
+        if (specificDateEntry && specificDateEntry.note === "Snow day") {
             theme = themeData.themes.find(t => t.id === 'snowday');
         }
 
-        // 4. Fallback: If no snow day, look for the theme based on the date of the dia being viewed
+        // 4. Fallback: Seasonal theme based on the viewed date
         if (!theme) {
-            const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
-            if (!dayEntry) return;
+            theme = themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) 
+                    || themeData.themes.find(t => t.id === 'classic');
+        }
 
+        if (!theme) return;
+        
             const dateParts = dayEntry.fecha.split('-');
             const compareDate = `${dateParts[1]}-${dateParts[2]}`;
 
