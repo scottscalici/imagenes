@@ -185,36 +185,26 @@ async function applyTheme(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        
-        // 1. Get Today's Date String (YYYY-MM-DD)
         const now = new Date();
         const todayDateString = now.toISOString().split('T')[0];
-
-        // 2. Check if TODAY is a special status (like snow-day) in calendario.json
         const todayStatus = data.cal?.map?.find(c => c.fecha === todayDateString);
         
         let theme;
-
-        // 3. Priority: If it's a Snow Day, force that theme
         if (todayStatus && todayStatus.status === "snow-day") {
             theme = themeData.themes.find(t => t.id === 'snowday');
         }
 
-        // 4. If no Snow Day, use the date of the PLAN being viewed
         if (!theme) {
             const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
             if (!dayEntry) return;
-
             const dateParts = dayEntry.fecha.split('-');
             const compareDate = `${dateParts[1]}-${dateParts[2]}`;
-
             theme = themeData.themes.find(t => t.start && compareDate >= t.start && compareDate <= t.end) 
                     || themeData.themes.find(t => t.id === 'classic');
         }
 
         if (!theme) return;
         
-        // 0. Dynamic Font Loader
         if (theme.styles.fonts) {
             Object.values(theme.styles.fonts).forEach(font => {
                 const fontId = 'font-' + font.replace(/\s+/g, '-').toLowerCase();
@@ -231,17 +221,14 @@ async function applyTheme(data, currentDia) {
         const overrides = theme.styles.cardOverrides || {};
         const accent = theme.styles.accent || "#60a5fa";
 
-        // 1. Header & Font Sync
         const header = document.querySelector('header');
-        if (header) {
-            header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
-        }
+        if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${theme.styles.header}`;
+        
         const dayTitle = document.getElementById('dayTitle');
         const headerDate = document.getElementById('headerDate');
         if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
         if (headerDate) headerDate.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
-        // 2. Hero Card
         const heroSlot = document.getElementById('heroSlot');
         if (theme.hero && theme.hero.active) {
             heroSlot.classList.remove('hidden');
@@ -252,13 +239,6 @@ async function applyTheme(data, currentDia) {
             heroSlot.classList.add('hidden');
         }
 
-        // 3. Mascots
-        const slothImg = document.querySelector('img[src*="sloth"]');
-        if (slothImg && theme.mascots?.sloth) slothImg.src = theme.mascots.sloth;
-        const tutorImg = document.querySelector('img[src*="señor"], img[src*="se%C3%B1or"]');
-        if (tutorImg && theme.mascots?.tutor) tutorImg.src = theme.mascots.tutor;
-
-        // 4. Universal Card Loop
         document.querySelectorAll('section, article, .card-shadow').forEach(el => {
             const text = el.innerText || "";
             let targetColor = accent; 
@@ -277,18 +257,12 @@ async function applyTheme(data, currentDia) {
             else if (el.id === "evalSidebarBlock") { targetColor = overrides.pruebas || accent; type = "pruebas"; }
 
             el.style.setProperty('border-left-color', targetColor, 'important');
-            
             const heading = el.querySelector('h2, h3');
             if (heading) {
                 heading.style.color = targetColor;
-                if (type && theme.styles.fonts && theme.styles.fonts[type]) {
-                    heading.style.fontFamily = theme.styles.fonts[type];
-                } else {
-                    heading.style.fontFamily = theme.styles.fontHeading || 'inherit';
-                }
+                heading.style.fontFamily = (type && theme.styles.fonts?.[type]) ? theme.styles.fonts[type] : (theme.styles.fontHeading || 'inherit');
             }
-
-            if (type && theme.styles.textures && theme.styles.textures[type]) {
+            if (type && theme.styles.textures?.[type]) {
                 el.style.backgroundImage = `url('${theme.styles.textures[type]}')`;
                 el.classList.add('card-texture');
             } else {
@@ -296,16 +270,10 @@ async function applyTheme(data, currentDia) {
             }
         });
 
-        // 5. Universal Effects Engine
-        if (theme.effectConfig) {
-            startEffect(theme.effectConfig);
-        } else {
-            stopEffect();
-        }
+        if (theme.effectConfig) startEffect(theme.effectConfig);
+        else stopEffect();
 
-    } catch (e) {
-        console.error("Theme Engine Error:", e);
-    }
+    } catch (e) { console.error("Theme Engine Error:", e); }
 }
 
 // --- PARTICLE ENGINE ---
@@ -313,131 +281,42 @@ let effectInterval;
 function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
     if (!canvas || !config || config.type === 'none') return stopEffect();
-    
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    const char = config.char || "❄";
-    const color = config.color || "rgba(255, 255, 255, 0.8)";
-    const speed = config.speed || 1;
-    const direction = config.direction || "down";
-
     const particles = Array.from({ length: config.count || 80 }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 15 + 10,
-        drift: Math.random() * 2 - 1,
-        opacity: Math.random() * 0.5 + 0.3
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+        size: Math.random() * 15 + 10, drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
     }));
-
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = color;
+        ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = config.color || "white";
         particles.forEach(p => {
-            ctx.font = `${p.size}px serif`;
-            ctx.globalAlpha = p.opacity;
-            ctx.fillText(char, p.x, p.y);
+            ctx.font = `${p.size}px serif`; ctx.globalAlpha = p.opacity;
+            ctx.fillText(config.char || "❄", p.x, p.y);
         });
-        move();
-    }
-
-    function move() {
         particles.forEach(p => {
-            if (direction === "down") {
-                p.y += speed + (p.size / 10);
-                if (p.y > canvas.height) p.y = -20;
-            } else {
-                p.y -= speed + (p.size / 10);
-                if (p.y < -20) p.y = canvas.height + 20;
-            }
+            p.y += (config.speed || 1) + (p.size / 10);
+            if (p.y > canvas.height) p.y = -20;
             p.x += p.drift;
         });
     }
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
-
 function stopEffect() {
     const canvas = document.getElementById('snow-canvas');
     if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (effectInterval) clearInterval(effectInterval);
 }
 
-// --- DATA & RENDERING ---
+// --- CORE RENDERING ENGINE ---
 function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
 }
 
-async function loadData() {
-    const urls = [
-      CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, 
-      CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS,
-      CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV
-    ];
-    try {
-      const r = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(res => res.json())));
-      return { 
-        plan: r[0], evals: r[1], cal: r[2], curios: r[3], tareas: r[4], 
-        vocab: r[5], apuntes: r[6], extras: r[7],
-        musica: r[8], lectura: r[9], cultura: r[10], conv: r[11]
-      };
-    } catch (e) { console.error("Error loading data", e); }
-}
-
-function renderManual() {
-    const d = document.getElementById('diaInput').value;
-    window.history.pushState({}, '', `?dia=${d}`);
-    init();
-}
-
-async function init() {
-    const data = await loadData();
-    if (!data) return;
-
-    const now = new Date();
-    const allowedEntries = (data.cal.map || []).filter(entry => {
-        if (entry.ciclo !== CONFIG.CICLO_FILTER) return false;
-        if (entry.dia == null) return false;
-        const entryDate = new Date(entry.fecha + "T00:00:00");
-        return entryDate <= now;
-    });
-// Add this inside your init() function or as a listener
-document.getElementById('datePicker').addEventListener('change', function(e) {
-    const selectedDate = e.target.value; // Format: YYYY-MM-DD
-    
-    // Look for this date in your calendario.json data
-    const dayMatch = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
-
-    if (dayMatch && dayMatch.dia) {
-        // It's a normal class day! Go to that dia.
-        window.location.search = `?dia=${dayMatch.dia}`;
-    } else {
-        // It's a snow day, weekend, or holiday.
-        // Find the nearest "dia" that happened BEFORE this date.
-        const pastDays = data.cal.map
-            .filter(c => c.fecha <= selectedDate && c.ciclo === CONFIG.CICLO_FILTER && c.dia != null)
-            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
-        if (pastDays.length > 0) {
-            // Take them to the most recent actual plan
-            window.location.search = `?dia=${pastDays[0].dia}`;
-        }
-    }
-});
-    allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    const latestEntry = allowedEntries[allowedEntries.length - 1];
-    const maxAllowedDia = latestEntry ? latestEntry.dia : 1;
-
-    const params = new URLSearchParams(window.location.search);
-    let requestedDia = parseInt(params.get('dia'), 10);
-    let DIA = (!requestedDia || requestedDia > maxAllowedDia) ? maxAllowedDia : requestedDia;
-
-    const diaInput = document.getElementById('diaInput');
-    if (diaInput) { diaInput.min = 1; diaInput.max = maxAllowedDia; diaInput.value = DIA; }
-
+async function runRender(data, DIA) {
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
     
@@ -459,8 +338,7 @@ document.getElementById('datePicker').addEventListener('change', function(e) {
     // Estructura
     const estBlock = document.getElementById('estructuraBlock');
     estBlock.innerHTML = ""; 
-    const grammarBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "estructura");
-    grammarBlocks.forEach(blockRef => {
+    (todayPlan?.blocks || []).filter(b => b.kind === "estructura").forEach(blockRef => {
       const topic = data.apuntes?.[blockRef.ref];
       if (!topic) return;
       let cardLinksHtml = "";
@@ -475,7 +353,7 @@ document.getElementById('datePicker').addEventListener('change', function(e) {
       if (cardLinksHtml) estBlock.innerHTML += `<section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] border-blue-600 p-6 card-shadow mb-6"><div class="flex items-center gap-3 mb-4"><div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${cardLinksHtml}</div></section>`;
     });
 
-    // Content Loop
+    // Content Loop (Special Types)
     const contentBlock = document.getElementById('extrasBlock');
     contentBlock.innerHTML = "";
     (todayPlan?.blocks || []).forEach(blockRef => {
@@ -501,10 +379,9 @@ document.getElementById('datePicker').addEventListener('change', function(e) {
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
-    const grammarBlock = todayPlan?.blocks?.find(b => b.kind === "estructura");
-    (grammarBlock?.recursos_gramatica || []).forEach(key => {
-        const parentSet = data.apuntes[key];
-        if (!parentSet || !parentSet.links) return;
+    const gBlock = todayPlan?.blocks?.find(b => b.kind === "estructura");
+    (gBlock?.recursos_gramatica || []).forEach(key => {
+        const parentSet = data.apuntes[key]; if (!parentSet || !parentSet.links) return;
         const linksHtml = Object.values(parentSet.links).map(link => `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`).join('');
         grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full"><h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3><div class="flex flex-col gap-1">${linksHtml}</div></div>`;
     });
@@ -523,6 +400,61 @@ document.getElementById('datePicker').addEventListener('change', function(e) {
     if (activeTareas.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
 
     await applyTheme(data, DIA);
+}
+
+// --- DATA LOADING & INIT ---
+async function loadData() {
+    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
+    try {
+      const r = await Promise.all(urls.map(url => fetch(url + "?t=" + Date.now()).then(res => res.json())));
+      return { plan: r[0], evals: r[1], cal: r[2], curios: r[3], tareas: r[4], vocab: r[5], apuntes: r[6], extras: r[7], musica: r[8], lectura: r[9], cultura: r[10], conv: r[11] };
+    } catch (e) { console.error("Error loading data", e); }
+}
+
+async function init() {
+    const data = await loadData();
+    if (!data) return;
+
+    // Date Picker Setup
+    const datePicker = document.getElementById('datePicker');
+    if (datePicker) {
+        datePicker.addEventListener('change', async (e) => {
+            const selectedDate = e.target.value;
+            if (!selectedDate) return;
+            const match = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
+            let targetDia;
+            if (match && match.dia) targetDia = match.dia;
+            else {
+                const validDays = data.cal.map.filter(c => c.ciclo === CONFIG.CICLO_FILTER && c.dia != null && c.fecha <= selectedDate).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                if (validDays.length > 0) targetDia = validDays[0].dia;
+            }
+            if (targetDia) {
+                document.getElementById('diaInput').value = targetDia;
+                await runRender(data, targetDia);
+            }
+        });
+    }
+
+    // Day Input Setup
+    const diaInput = document.getElementById('diaInput');
+    if (diaInput) {
+        diaInput.addEventListener('change', async (e) => {
+            await runRender(data, e.target.value);
+        });
+    }
+
+    const now = new Date();
+    const allowedEntries = (data.cal.map || []).filter(entry => entry.ciclo === CONFIG.CICLO_FILTER && entry.dia != null && new Date(entry.fecha + "T00:00:00") <= now);
+    allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const maxAllowedDia = allowedEntries.length ? allowedEntries[allowedEntries.length - 1].dia : 1;
+    if (diaInput) { diaInput.max = maxAllowedDia; }
+
+    const params = new URLSearchParams(window.location.search);
+    let DIA = parseInt(params.get('dia'), 10) || maxAllowedDia;
+    if (DIA > maxAllowedDia) DIA = maxAllowedDia;
+    if (diaInput) diaInput.value = DIA;
+
+    await runRender(data, DIA);
 }
 
 init();
