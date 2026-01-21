@@ -347,6 +347,11 @@ async function runRender(data, DIA) {
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
+    const calBtn = document.getElementById('calBtn');
+    if (calBtn) {
+        calBtn.href = `${CONFIG.CAL_BASE}/${DIA}`;
+    }
+
     // Evals
     // Inside runRender(data, DIA)
 
