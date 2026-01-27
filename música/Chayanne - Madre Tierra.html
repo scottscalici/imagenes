@@ -1,66 +1,190 @@
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-body { font-family: sans-serif; margin: 15px; color: #2c3e50; }
-.header { background: #2c3e50; color: white; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom:15px; }
-.grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
-.timer { font-size: 3.5rem; font-weight: bold; text-align: center; margin: 10px 0; }
-.notes { border: 2px solid #eee; padding: 15px; border-radius: 8px; min-height: 500px; background: #fafafa; overflow-y: auto; }
-.btn { cursor: pointer; border: none; padding: 12px; border-radius: 6px; font-weight: bold; color: white; background: #3498db; width: 100%; margin-bottom: 5px; }
-img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; object-fit: contain; }
-.link-btn { display: inline-block; padding: 8px 12px; background: #7f8c8d; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; margin-right: 5px; font-weight: bold; }
-.q-box { background: #fff9db; padding: 12px; border-radius: 8px; margin-top: 15px; border: 2px dashed #f1c40f; }
-</style>
-</head>
-<body>
-<div class='header'><div><strong>Objetivo: <span id='goalText'>:00</span></strong> | <strong>Organización social</strong><br><span id='tTitle' style='font-size:1.3rem; font-weight:bold; color:#ecf0f1;'>Cargando...</span><br></div><button id='simBtn' class='btn' style='background:#9b59b6; width:auto;' onclick='forceSim()'>⚠️ Simulación</button></div>
-<div class='grid'><div id='left'><img id='mainImg' src=''><div id='clock' class='timer'>00:00</div><div id='success_msg' style='display:none; color:#27ae60; font-weight:bold; text-align:center; margin-top:-10px; margin-bottom:10px;'>✨ TIEMPO MÍNIMO ALCANZADO ✨</div><button id='mainBtn' class='btn' onclick='startPrep()'>Empezar Preparación</button></div><div id='right'><div class='notes' id='notesArea'>Sincronizando...</div></div></div>
-<div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'><div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div><button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button><button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button><button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>
+<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>Chayanne – “Madre Tierra (Oye)”</title><script src='https://cdn.tailwindcss.com'></script></head><body class='font-sans bg-gray-100 min-h-screen p-6'><div class='max-w-5xl mx-auto space-y-6'><!-- music-meta {"artist":"Chayanne","song":"Madre Tierra (Oye)","theme":"Nostálgico","image":"https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/m%C3%BAsica/chayanne.jpg"} -->
+<header class="shadow-2xl rounded-2xl overflow-hidden mb-6">
+  <div class="bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-500 text-white text-center py-10 px-6">
+    <h1 class="text-5xl font-extrabold tracking-wide drop-shadow-lg">Chayanne</h1>
+    <p class="text-2xl italic text-white/90 mt-2 drop-shadow">“Madre Tierra (Oye)”</p>
+  </div>
+</header>
+<section class="bg-white rounded-xl shadow p-6 border border-sky-400 mb-4">
+  <h3 class="text-lg font-semibold mb-3 text-sky-600">Chayanne</h3>
+  <figure class="p-2">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/m%C3%BAsica/chayanne.jpg" alt="imagen" class="rounded-xl shadow w-1/3 mx-auto" />
+    
+  </figure>
+</section>
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-400 mb-4">
+  <h2 class="font-semibold text-lg mb-3 text-sky-600">📝 Completa la letra</h2>
+  <div class="leading-relaxed text-gray-800">Debes brindar <span class="font-semibold">1)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="amor" aria-label="Hueco 1"> para <span class="font-semibold">2)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="después" aria-label="Hueco 2"> pedir<br>Hay que perdonar para <span class="font-semibold">3)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="poder" aria-label="Hueco 3"> seguir<br>Recuerda que <span class="font-semibold">4)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="tenemos" aria-label="Hueco 4"> sólo un viaje de ida<br>Y hay que darle <span class="font-semibold">5)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="gracias" aria-label="Hueco 5"> siempre a la vida<br>A la vida, a la vida, a la vida, a la vida<br><br>[Coro]<br>Oye, <span class="font-semibold">6)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="Abre" aria-label="Hueco 6"> tus ojos, <span class="font-semibold">7)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="Mira" aria-label="Hueco 7"> hacia arriba<br>Disfruta las <span class="font-semibold">8)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="cosas" aria-label="Hueco 8"> buenas que <span class="font-semibold">9)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="tiene" aria-label="Hueco 9"> la vida<br>Oye, <span class="font-semibold">10)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="Abre" aria-label="Hueco 10"> tus ojos, <span class="font-semibold">11)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="Mira" aria-label="Hueco 11"> hacia arriba<br>Disfruta las <span class="font-semibold">12)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="cosas" aria-label="Hueco 12"> buenas que <span class="font-semibold">13)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="tiene" aria-label="Hueco 13"> la vida<br>Lala lala…<br><br>[Verso 1]<br>Cuando estés <span class="font-semibold">14)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="perdido" aria-label="Hueco 14"> y no <span class="font-semibold">15)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="sepas" aria-label="Hueco 15"> donde vas<br>Recuerda de dónde <span class="font-semibold">16)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="vienes" aria-label="Hueco 16"> y que bien te sentirás<br>Siempre que llueve escampa son consejos de <span class="font-semibold">17)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="mamá" aria-label="Hueco 17"><br>Que con la bendición de tus ancestros llegarás<br><br>[Pre-coro]<br>Tambor, tambor, tambor, que llama a tambor<br>Tambor, tambor, tambor de mi madre tierra<br>Tambor, tambor, tambor, que llama a tambor<br>Tambor, tambor, tambor de mi madre tierra<br><br>[Coro]<br><br>[Verso 2]<br><span class="font-semibold">18)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="Caer" aria-label="Hueco 18"> es permitido y <span class="font-semibold">19)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="levantarse" aria-label="Hueco 19"> es obligado<br>No tires piedras al <span class="font-semibold">20)</span>_<input type="text" class="cloze-inp border rounded px-2 py-0.5 mx-1 w-28 align-baseline" data-answer="vecino" aria-label="Hueco 20"> si de cristal es tu tejado<br>Perro que ladra no te asustes, Nunca te morderá<br>Que con la bendición de tus ancestros llegarás<br><br>[Pre-coro]<br><br>[Coro]<br></div>
+  <div class="mt-4 flex gap-3">
+    <button type="button" class="cloze-check bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-sm">Revisar</button>
+    <button type="button" class="cloze-reset bg-gray-600 hover:bg-gray-700 text-white rounded-lg px-3 py-1.5 text-sm">Reiniciar</button>
+  </div>
+  <p class="text-xs text-gray-500 mt-2">Enter = revisar campo actual · Tab = siguiente campo</p>
+</section>
+
 <script>
-var seconds=0; var loop; var customQ=null; var isSim = false; var hasQ=false; var isSpeaking = false;
-var config = { prep: 60, goal: 0, type: 'script', bullets: 0 };
-fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json?v=' + Date.now()).then(function(r){return r.json()}).then(function(d){
-  var l = d.items['conv-s2-madretierra'];
-  if(l){ 
-    document.getElementById('mainImg').src = l.imagen; 
-    customQ = l.preguntas;
-    document.getElementById('tTitle').innerText = l.titulo; 
-    document.getElementById('notesArea').innerText = 'Listo: ' + l.titulo; 
+(function(){
+  const sect = document.currentScript.previousElementSibling;
+  const inputs = sect.querySelectorAll('.cloze-inp');
+  const checkBtn = sect.querySelector('.cloze-check');
+  const resetBtn = sect.querySelector('.cloze-reset');
+
+  function normalize(s){ return (s||"").trim().toLowerCase(); }
+  function checkOne(el){
+    const ok = normalize(el.value) === normalize(el.dataset.answer);
+    el.classList.remove('ring-2','ring-red-400','ring-emerald-400');
+    el.classList.add('ring-2', ok ? 'ring-emerald-400' : 'ring-red-400');
+    return ok;
   }
-});
-function updateC(){ 
-  var el=document.getElementById('clock'); 
-  var msg=document.getElementById('success_msg'); 
-  var a=Math.abs(seconds); 
-  el.innerText=(seconds<0?'-':'')+Math.floor(a/60)+':'+(a%60<10?'0':'')+a%60; 
-  if(isSpeaking && config.goal === 240 && seconds <= 60 && seconds >= 0) { 
-     el.style.color='#27ae60'; if(msg) msg.style.display='block'; 
-  } else if(seconds<0) { 
-     el.style.color='red'; if(msg) msg.style.display='none'; 
-  } else { 
-     el.style.color='black'; if(msg) msg.style.display='none'; 
+  inputs.forEach((inp, i)=>{
+    inp.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const correct = checkOne(inp);
+        if(correct && inputs[i+1]) inputs[i+1].focus();
+      }
+    });
+  });
+  checkBtn.addEventListener('click', ()=> inputs.forEach(checkOne));
+  resetBtn.addEventListener('click', ()=>{
+    inputs.forEach(i=>{ i.value=''; i.classList.remove('ring-2','ring-red-400','ring-emerald-400'); });
+    inputs[0]?.focus();
+  });
+})();
+</script>
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-400 mb-4">
+  <h2 class="font-semibold text-lg mb-4 text-sky-600">🔗 Empareja los consejos</h2>
+
+  <p class="text-sm text-gray-600 mb-4">
+    Relaciona cada idea con el refrán correspondiente que aparece en la canción.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <!-- Left column -->
+    <ul class="space-y-2" id="match-left">
+      <li data-id="a" class="match-item">a. No critiques a los demás si tienes faltas también</li>
+      <li data-id="b" class="match-item">b. No prestes atención a las amenazas vacías</li>
+      <li data-id="c" class="match-item">c. No te olvides de tus raíces</li>
+      <li data-id="d" class="match-item">d. No te rindas. Sigue adelante.</li>
+      <li data-id="e" class="match-item">e. Sé optimista</li>
+    </ul>
+
+    <!-- Right column -->
+    <ul class="space-y-2" id="match-right">
+      <li data-id="e" class="match-item">Siempre que llueve escampa</li>
+      <li data-id="b" class="match-item">Perro que ladra… nunca te morderá</li>
+      <li data-id="a" class="match-item">No tires piedras al vecino si de cristal es tu tejado</li>
+      <li data-id="d" class="match-item">Caer es permitido, levantarse es obligado</li>
+      <li data-id="c" class="match-item">Recuerda de dónde vienes</li>
+    </ul>
+  </div>
+
+  <div class="mt-5 flex gap-3">
+    <button id="match-reset" class="bg-gray-600 hover:bg-gray-700 text-white rounded-lg px-4 py-2 text-sm">
+      Reiniciar
+    </button>
+  </div>
+</section>
+
+<style>
+  .match-item {
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
   }
-}
-function forceSim(){ isSim = true; config.prep = 900; config.goal = 240; config.bullets = 10; config.type = 'bullets';
-document.getElementById('goalText').innerText = '4:00';
-document.getElementById('simBtn').innerText = 'MODO SIMULACIÓN ACTIVADO';
-document.getElementById('simBtn').style.opacity = '0.5';
-seconds = 0; isSpeaking = false; updateC(); }
-function buildNotes(){
-  var area = document.getElementById('notesArea'); area.innerHTML = '';
-  if(!isSim){
-    area.innerHTML += '<a href="https://sites.google.com/view/srscalici/vocabulario/modismos" target="_blank" class="link-btn">🗣️ Modismos</a>';
-    area.innerHTML += '<a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/conexiones-culturales" target="_blank" class="link-btn">🌎 Cultura</a><hr>';
+  .match-item.selected {
+    background: #e0f2fe;
+    border-color: #38bdf8;
   }
-  if(config.type==='script') area.innerHTML += '<strong>Guion:</strong><textarea style="width:95%; height:320px;"></textarea>';
-  else if(config.type==='hybrid') { area.innerHTML += '<strong>Frase:</strong><br><input type="text" style="width:90%;"><br><strong>Notas:</strong><br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type="text" style="width:80%;"><br>'; }
-  else { area.innerHTML += '<strong>Notas:</strong><br>'; for(var i=1; i<=config.bullets; i++) area.innerHTML += i + '. <input type="text" style="width:80%;"><br>'; }
-  if(hasQ && !isSim) { area.innerHTML += '<div class="q-box"><strong>Pregunta:</strong><br><input type="text" style="width:90%;"></div>'; }
-}
-function startPrep(){ clearInterval(loop); isSpeaking = false; seconds=config.prep; buildNotes(); loop=setInterval(function(){seconds--; updateC(); if(seconds<=0) waitToSpeak();},1000); document.getElementById('mainBtn').innerText='TERMINAR PREPARACIÓN'; document.getElementById('mainBtn').onclick=waitToSpeak; }
-function waitToSpeak(){ clearInterval(loop); document.getElementById('clock').style.color='#3498db'; document.getElementById('mainBtn').innerText='LISTO PARA HABLAR'; document.getElementById('mainBtn').style.background='#f39c12'; document.getElementById('mainBtn').onclick=startSpeak; }
-function startSpeak(){ clearInterval(loop); isSpeaking = true; seconds=config.goal; document.getElementById('mainBtn').style.background='#e74c3c'; loop=setInterval(function(){seconds--; updateC();},1000); document.getElementById('mainBtn').innerText='Finalizar'; document.getElementById('mainBtn').onclick=end; }
-function end(){ clearInterval(loop); isSpeaking = false; document.getElementById('qZone').style.display='block'; }
-function ask(l){ if(customQ && customQ[l]) document.getElementById('qDisplay').innerText = customQ[l][Math.floor(Math.random()*customQ[l].length)]; }
-</script></body></html>
+  .match-item.correct {
+    background: #dcfce7;
+    border-color: #22c55e;
+  }
+  .match-item.incorrect {
+    background: #fee2e2;
+    border-color: #ef4444;
+  }
+</style>
+
+<script>
+(function(){
+  const leftItems = document.querySelectorAll('#match-left .match-item');
+  const rightItems = document.querySelectorAll('#match-right .match-item');
+  const resetBtn = document.getElementById('match-reset');
+
+  let selectedLeft = null;
+  let selectedRight = null;
+
+  function clearSelections() {
+    leftItems.forEach(i => i.classList.remove('selected'));
+    rightItems.forEach(i => i.classList.remove('selected'));
+    selectedLeft = null;
+    selectedRight = null;
+  }
+
+  function tryMatch() {
+    if (!selectedLeft || !selectedRight) return;
+
+    const correct = selectedLeft.dataset.id === selectedRight.dataset.id;
+
+    selectedLeft.classList.remove('selected');
+    selectedRight.classList.remove('selected');
+
+    selectedLeft.classList.add(correct ? 'correct' : 'incorrect');
+    selectedRight.classList.add(correct ? 'correct' : 'incorrect');
+
+    selectedLeft = null;
+    selectedRight = null;
+  }
+
+  leftItems.forEach(item => {
+    item.addEventListener('click', () => {
+      leftItems.forEach(i => i.classList.remove('selected'));
+      selectedLeft = item;
+      item.classList.add('selected');
+      tryMatch();
+    });
+  });
+
+  rightItems.forEach(item => {
+    item.addEventListener('click', () => {
+      rightItems.forEach(i => i.classList.remove('selected'));
+      selectedRight = item;
+      item.classList.add('selected');
+      tryMatch();
+    });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    [...leftItems, ...rightItems].forEach(i => {
+      i.classList.remove('correct', 'incorrect', 'selected');
+    });
+    clearSelections();
+  });
+})();
+</script>
+
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-400 mb-4">
+  <h2 class="font-semibold text-lg mb-2 text-sky-600">🎧 Escucha en Spotify</h2>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2wlptOJ1g5fvLdu6ruKCKU?utm_source=generator" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+</section>
+<section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-400 mb-4">
+  <h2 class="font-semibold text-lg mb-2 text-sky-600">🎬 Video</h2>
+  <div class="aspect-video">
+    <iframe class="w-full h-full rounded-md" src="https://www.youtube.com/embed/VkuRIZ7QyDM" title="YouTube video"
+      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
+</section>
+  <section class="bg-white rounded-xl shadow p-6 border-l-4 border-sky-400 mb-4">
+  <h2 class="font-semibold text-lg mb-2 text-sky-600">🎬 La versión por Ozuna</h2>
+  <div class="aspect-video">
+    <iframe class="w-full h-full rounded-md" src="https://www.youtube.com/embed/vH4k7vtqhEo?si=47IwVvqE-YKaIxN9" title="YouTube video"
+      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>
+  </div>
+</section>
+  
+  <footer class='text-center text-xs text-gray-500 pt-6'>Creado para clase · Chayanne – “Madre Tierra (Oye)”</footer></div></body></html>
