@@ -19,7 +19,7 @@ img { width: 100%; border-radius: 8px; background: #eee; min-height: 250px; obje
 <div id='qZone' style='display:none; text-align:center; padding-top:20px; border-top:1px solid #eee;'><div id='qDisplay' style='font-weight:bold; font-size:1.4rem; margin-bottom:15px;'></div><button class='btn' style='background:#27ae60; width:auto; margin:5px;' onclick='ask(1)'>Nivel 1</button><button class='btn' style='background:orange; width:auto; margin:5px;' onclick='ask(2)'>Nivel 2</button><button class='btn' style='background:red; width:auto; margin:5px;' onclick='ask(3)'>Nivel 3</button></div>
 <script>
 var seconds=0; var loop; var customQ=null; var isSim = false; var hasQ=false; var isSpeaking = false;
-var config = { prep: 480, goal: 0, type: 'script', bullets: 0 };
+var config = { prep: 60, goal: 0, type: 'script', bullets: 0 };
 fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json?v=' + Date.now()).then(function(r){return r.json()}).then(function(d){
   var l = d.items['conv-s2-madretierra'];
   if(l){ 
