@@ -3,8 +3,27 @@
   "course": "s4",
   "days": [
     {
+      "dia": 45,
+      "fecha": "2026-02-05",
+      "blocks": [
+        { "kind": "vocabulario", "ref": "L8" },
+        {
+          "kind": "estructura",
+          "ref": "siclauses",
+          "title": "Cláusulas con si",
+          "introducir": [],
+          "repasar": ["siclaus", "impdesubj", "cond"],
+          "recursos_gramatica": ["siclauses", "imperfectodesubjuntivo", "condicional", "subjuntivo"]
+        },
+        { "kind": "conv", "ref": "conv-s4-15" },
+        { "kind": "conv", "ref": "lect-s4-comoagua04" },
+        { "kind": "extras", "ref": "IA-practice" },
+        { "kind": "extras", "ref": "extra-fotos" }
+      ]
+    },
+    {
       "dia": 44,
-      "fecha": "2026-01-30",
+      "fecha": "2026-02-03",
       "blocks": [
         { "kind": "vocabulario", "ref": "L8" },
         {
@@ -23,7 +42,7 @@
     },
     {
       "dia": 43,
-      "fecha": "2026-01-28",
+      "fecha": "2026-01-30",
       "blocks": [
         { "kind": "vocabulario", "ref": "L7" },
         {
