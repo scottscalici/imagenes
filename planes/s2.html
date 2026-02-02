@@ -474,48 +474,58 @@ async function loadData() {
 }
 
 async function init() {
+    // 1. Fetch all data first and wait for it
     const data = await loadData();
-    if (!data) return;
-
-    // Date Picker Setup
-    const datePicker = document.getElementById('datePicker');
-    if (datePicker) {
-        datePicker.addEventListener('change', async (e) => {
-            const selectedDate = e.target.value;
-            if (!selectedDate) return;
-            const match = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
-            let targetDia;
-            if (match && match.dia) targetDia = match.dia;
-            else {
-                const validDays = data.cal.map.filter(c => c.ciclo === CONFIG.CICLO_FILTER && c.dia != null && c.fecha <= selectedDate).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-                if (validDays.length > 0) targetDia = validDays[0].dia;
-            }
-            if (targetDia) {
-                document.getElementById('diaInput').value = targetDia;
-                await runRender(data, targetDia);
-            }
-        });
+    if (!data) {
+        console.error("Data failed to load.");
+        return;
     }
 
-    // Day Input Setup
     const diaInput = document.getElementById('diaInput');
+    const datePicker = document.getElementById('datePicker');
+
+    // 2. Setup the logic for finding the "Current" Day
+    const now = new Date();
+    // Ensure we only look at entries that actually have a date and match our cycle
+    const allowedEntries = (data.cal.map || []).filter(entry => 
+        entry.ciclo === CONFIG.CICLO_FILTER && 
+        entry.dia != null && 
+        entry.fecha &&
+        new Date(entry.fecha + "T00:00:00") <= now
+    );
+    
+    allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    
+    // Determine the starting DIA
+    const params = new URLSearchParams(window.location.search);
+    const urlDia = parseInt(params.get('dia'), 10);
+    const maxAllowedDia = allowedEntries.length ? allowedEntries[allowedEntries.length - 1].dia : 1;
+    
+    let DIA = urlDia || maxAllowedDia;
+
+    // 3. Set up Input Listeners (before first render)
     if (diaInput) {
+        diaInput.max = maxAllowedDia;
+        diaInput.value = DIA;
         diaInput.addEventListener('change', async (e) => {
             await runRender(data, e.target.value);
         });
     }
 
-    const now = new Date();
-    const allowedEntries = (data.cal.map || []).filter(entry => entry.ciclo === CONFIG.CICLO_FILTER && entry.dia != null && new Date(entry.fecha + "T00:00:00") <= now);
-    allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    const maxAllowedDia = allowedEntries.length ? allowedEntries[allowedEntries.length - 1].dia : 1;
-    if (diaInput) { diaInput.max = maxAllowedDia; }
+    if (datePicker) {
+        datePicker.addEventListener('change', async (e) => {
+            const selectedDate = e.target.value;
+            if (!selectedDate) return;
+            const match = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
+            if (match && match.dia) {
+                diaInput.value = match.dia;
+                await runRender(data, match.dia);
+            }
+        });
+    }
 
-    const params = new URLSearchParams(window.location.search);
-    let DIA = parseInt(params.get('dia'), 10) || maxAllowedDia;
-    if (DIA > maxAllowedDia) DIA = maxAllowedDia;
-    if (diaInput) diaInput.value = DIA;
-
+    // 4. THE CRITICAL STEP: Final check of data before rendering
+    console.log("Initializing Render for Day:", DIA);
     await runRender(data, DIA);
 }
 
