@@ -256,8 +256,7 @@ async function applyTheme(data, currentDia) {
 // --- HERO & MASCOT ENGINE ---
         const heroSlot = document.getElementById('heroSlot');
         
-        // Handle the Hero Banner
-        if (theme.hero && theme.hero.active) {
+        if (theme && theme.hero && theme.hero.active) {
             heroSlot.classList.remove('hidden');
             document.getElementById('heroImg').src = theme.hero.img;
             document.getElementById('heroMsg').textContent = theme.hero.msg;
@@ -266,12 +265,12 @@ async function applyTheme(data, currentDia) {
             heroSlot.classList.add('hidden');
         }
 
-        // Handle the Sidebar Mascots (Independent of Hero)
-        if (theme.mascots) {
+        // Handle the Sidebar Mascots
+        // This 'else' is critical: it forces the images back to normal if no theme is found
+        if (theme && theme.mascots) {
             if (theme.mascots.sloth) document.getElementById('slothMascot').src = theme.mascots.sloth;
             if (theme.mascots.tutor) document.getElementById('tutorMascot').src = theme.mascots.tutor;
         } else {
-            // Default images when no theme is active
             document.getElementById('slothMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg";
             document.getElementById('tutorMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png";
         }
