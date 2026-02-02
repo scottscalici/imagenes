@@ -253,26 +253,14 @@ async function applyTheme(data, currentDia) {
         if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
         if (headerDate) headerDate.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
-// --- HERO & MASCOT ENGINE ---
         const heroSlot = document.getElementById('heroSlot');
-        
-        if (theme && theme.hero && theme.hero.active) {
+        if (theme.hero && theme.hero.active) {
             heroSlot.classList.remove('hidden');
             document.getElementById('heroImg').src = theme.hero.img;
             document.getElementById('heroMsg').textContent = theme.hero.msg;
             document.getElementById('heroCard').style.borderTopColor = accent;
         } else {
             heroSlot.classList.add('hidden');
-        }
-
-        // Handle the Sidebar Mascots
-        // This 'else' is critical: it forces the images back to normal if no theme is found
-        if (theme && theme.mascots) {
-            if (theme.mascots.sloth) document.getElementById('slothMascot').src = theme.mascots.sloth;
-            if (theme.mascots.tutor) document.getElementById('tutorMascot').src = theme.mascots.tutor;
-        } else {
-            document.getElementById('slothMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg";
-            document.getElementById('tutorMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png";
         }
 
         document.querySelectorAll('section, article, .card-shadow').forEach(el => {
@@ -359,31 +347,39 @@ async function runRender(data, DIA) {
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-    const calBtn = document.getElementById('calBtn');
-    if (calBtn) { calBtn.href = `${CONFIG.CAL_BASE}/${DIA}`; }
+    // Evals
+    // Inside runRender(data, DIA)
 
-    // --- EVALUACIONES ---
-    const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => {
-        const match = evalList.find(e => e.dia == d);
-        return match ? match.label : "Sin evaluaciones";
-    };
-    const currentEvalEl = document.getElementById('currentEval');
-    const nextEvalsEl = document.getElementById('nextEvals');
-    if (currentEvalEl) currentEvalEl.textContent = findEval(DIA);
-    if (nextEvalsEl) {
-        nextEvalsEl.innerHTML = `
-            <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
-            <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
-        `;
-    }
+// 1. Get the list for the current course (s2)
+const evalList = data.evals.courses[CONFIG.COURSE] || [];
 
-    // --- CURIOSIDAD ---
+// 2. Helper function to find the label for any given day
+const findEval = (d) => {
+    const match = evalList.find(e => e.dia == d);
+    return match ? match.label : "Sin evaluaciones";
+};
+
+// 3. Update the UI elements
+const currentEvalEl = document.getElementById('currentEval');
+const nextEvalsEl = document.getElementById('nextEvals');
+
+if (currentEvalEl) {
+    currentEvalEl.textContent = findEval(DIA);
+}
+
+if (nextEvalsEl) {
+    // This ensures that when you are on Day 15, it looks for 16 and 17
+    nextEvalsEl.innerHTML = `
+        <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
+        <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
+    `;
+}
+    // Curiosidad
     const curBlock = document.getElementById('curiosityBlock');
     const cur = data.curios.find(c => c.id === `cur-${DIA}`);
     curBlock.innerHTML = cur ? `<article class="bg-white rounded-xl border-l-[6px] border-indigo-400 p-6 card-shadow space-y-4"><h3 class="text-indigo-600 font-bold text-xs uppercase tracking-widest">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>${cur.img ? `<div class="w-full aspect-video bg-slate-100 rounded-lg border border-slate-100 flex items-center justify-center overflow-hidden"><img src="${cur.img}" class="max-w-full max-h-full object-contain block"></div>` : ''}<p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p></article>` : "";
 
-    // --- ESTRUCTURA ---
+    // Estructura
     const estBlock = document.getElementById('estructuraBlock');
     estBlock.innerHTML = ""; 
     (todayPlan?.blocks || []).filter(b => b.kind === "estructura").forEach(blockRef => {
@@ -401,32 +397,19 @@ async function runRender(data, DIA) {
       if (cardLinksHtml) estBlock.innerHTML += `<section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] border-blue-600 p-6 card-shadow mb-6"><div class="flex items-center gap-3 mb-4"><div class="bg-blue-600 text-white p-2 rounded-lg text-xl shadow-sm">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${cardLinksHtml}</div></section>`;
     });
 
-    // --- CONTENT LOOP (Extras & Special Content) ---
+    // Content Loop (Special Types)
     const contentBlock = document.getElementById('extrasBlock');
     contentBlock.innerHTML = "";
     (todayPlan?.blocks || []).forEach(blockRef => {
-        // 1. Handle EXTRAS
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
-                let innerContent = "";
-                if (exItem.kind === "sentences") {
-                    innerContent = `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
-                } else if (exItem.kind === "links") {
-                    innerContent = `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
-                }
-                let imageHtml = exItem.img ? `<div class="mb-4 overflow-hidden rounded-lg border border-slate-100 bg-slate-50"><img src="${exItem.img}" class="w-full h-auto object-contain max-h-[400px] block mx-auto"></div>` : '';
-                
-                contentBlock.innerHTML += `
-                    <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
-                        <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
-                        <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
-                            ${imageHtml}${innerContent}
-                        </div>
-                    </section>`;
+                let content = exItem.kind === "sentences" 
+                    ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` 
+                    : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+                contentBlock.innerHTML += `<section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6"><h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2><div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div></section>`;
             }
         }
-        // 2. Handle Special Blocks (Musica, Cultura, etc.)
         const specialTypes = ["musica", "cultura", "lectura", "conv"];
         if (specialTypes.includes(blockRef.kind)) {
             const item = data[blockRef.kind]?.items?.[blockRef.ref];
@@ -435,86 +418,34 @@ async function runRender(data, DIA) {
             }
         }
     });
-    
-  
-// --- DASHBOARD (Grammar & Vocab) ---
-const grammarGrid = document.getElementById('grammarResources');
-const vocabContainer = document.getElementById('vocabPlacement');
 
-// Clear them out before rebuilding
-grammarGrid.innerHTML = ""; 
-vocabContainer.innerHTML = "";
+    // Dashboard
+    const grammarGrid = document.getElementById('grammarResources');
+    const vocabContainer = document.getElementById('vocabPlacement');
+    grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
+    const gBlock = todayPlan?.blocks?.find(b => b.kind === "estructura");
+    (gBlock?.recursos_gramatica || []).forEach(key => {
+        const parentSet = data.apuntes[key]; if (!parentSet || !parentSet.links) return;
+        const linksHtml = Object.values(parentSet.links).map(link => `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`).join('');
+        grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full"><h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3><div class="flex flex-col gap-1">${linksHtml}</div></div>`;
+    });
+    const vBlock = todayPlan?.blocks?.find(b => b.kind === "vocabulario");
+    const ch = vBlock ? data.vocab.descubre2.chapters[vBlock.ref] : null;
+    if (ch) vocabContainer.innerHTML = `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow"><div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a></div></div></div>`;
 
-const allBlocks = todayPlan?.blocks || [];
-
-// 1. IMPROVED GRAMMAR LOGIC (Scans all blocks for resources)
-let allGrammarKeys = [];
-allBlocks.forEach(b => { 
-    if(b.recursos_gramatica) allGrammarKeys = [...allGrammarKeys, ...b.recursos_gramatica]; 
-});
-
-// Remove duplicates and render grammar cards
-[...new Set(allGrammarKeys)].forEach(key => {
-    const parentSet = data.apuntes[key];
-    if (!parentSet || !parentSet.links) return;
-    
-    const linksHtml = Object.values(parentSet.links).map(link => 
-        `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">
-            ${link.title} ↗
-        </a>`
-    ).join('');
-    
-    grammarGrid.innerHTML += `
-        <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-lg transition-shadow">
-            <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3>
-            <div class="flex flex-col gap-1">${linksHtml}</div>
-        </div>`;
-});
-
-// 2. FIXED VOCAB LOGIC
-const vBlock = allBlocks.find(b => b.kind === "vocabulario");
-if (vBlock) {
-    // S2 uses 'descubre2', S4 uses 'descubre3' or 'ib'
-    const ch = data.vocab.descubre2?.chapters[vBlock.ref];
-    if (ch) {
-        vocabContainer.innerHTML = `
-            <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div>
-                <div class="p-5 flex flex-col flex-grow justify-between">
-                    <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
-                    <div class="flex gap-2">
-                        <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
-                        <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
-                    </div>
-                </div>
-            </div>`;
-    }
-}
-    
-// --- TAREAS ---
+    // Tareas
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
-    
-    // Look for the homework block for the current day
-    const tareaBlock = (todayPlan?.blocks || []).find(b => b.kind === "tareas");
-    if (tareaBlock && data.tareas[tareaBlock.ref]) {
-        const homework = data.tareas[tareaBlock.ref];
-        homework.items.forEach(item => {
-            tList.innerHTML += `
-                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm mb-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">Tarea</span>
-                    </div>
-                    <h4 class="font-bold text-slate-800 text-sm leading-tight">${item}</h4>
-                </div>`;
-        });
-    } else {
-        tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas asignadas para hoy.</p>';
-    }
-    
+    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+    activeTareas.forEach(t => {
+      let statusPill = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : (t.day_assigned == DIA) ? '<span class="bg-emerald-100 text-emerald-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-emerald-200 uppercase">Nuevo</span>' : (t.day_due == DIA + 1) ? '<span class="bg-amber-100 text-amber-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-amber-200 uppercase">Pronto</span>' : "";
+      tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusPill}</div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-2">${t.titulo}</h4><div class="pt-2 border-t border-slate-50 flex justify-between items-center"><span class="text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</span></div></div>`;
+    });
+    if (activeTareas.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+
     await applyTheme(data, DIA);
 }
-    
+
 // --- DATA LOADING & INIT ---
 async function loadData() {
     const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
@@ -525,31 +456,48 @@ async function loadData() {
 }
 
 async function init() {
-    // 1. Fetch all data first and WAIT until it's 100% finished
     const data = await loadData();
     if (!data) return;
 
-    const diaInput = document.getElementById('diaInput');
-    const now = new Date();
+    // Date Picker Setup
+    const datePicker = document.getElementById('datePicker');
+    if (datePicker) {
+        datePicker.addEventListener('change', async (e) => {
+            const selectedDate = e.target.value;
+            if (!selectedDate) return;
+            const match = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
+            let targetDia;
+            if (match && match.dia) targetDia = match.dia;
+            else {
+                const validDays = data.cal.map.filter(c => c.ciclo === CONFIG.CICLO_FILTER && c.dia != null && c.fecha <= selectedDate).sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                if (validDays.length > 0) targetDia = validDays[0].dia;
+            }
+            if (targetDia) {
+                document.getElementById('diaInput').value = targetDia;
+                await runRender(data, targetDia);
+            }
+        });
+    }
 
-    // 2. Find the current day based on the calendar
-    const allowedEntries = (data.cal.map || []).filter(entry => 
-        entry.ciclo === CONFIG.CICLO_FILTER && 
-        entry.dia != null && 
-        new Date(entry.fecha + "T00:00:00") <= now
-    );
+    // Day Input Setup
+    const diaInput = document.getElementById('diaInput');
+    if (diaInput) {
+        diaInput.addEventListener('change', async (e) => {
+            await runRender(data, e.target.value);
+        });
+    }
+
+    const now = new Date();
+    const allowedEntries = (data.cal.map || []).filter(entry => entry.ciclo === CONFIG.CICLO_FILTER && entry.dia != null && new Date(entry.fecha + "T00:00:00") <= now);
     allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
     const maxAllowedDia = allowedEntries.length ? allowedEntries[allowedEntries.length - 1].dia : 1;
+    if (diaInput) { diaInput.max = maxAllowedDia; }
 
     const params = new URLSearchParams(window.location.search);
     let DIA = parseInt(params.get('dia'), 10) || maxAllowedDia;
+    if (DIA > maxAllowedDia) DIA = maxAllowedDia;
+    if (diaInput) diaInput.value = DIA;
 
-    if (diaInput) {
-        diaInput.max = maxAllowedDia;
-        diaInput.value = DIA;
-    }
-
-    // 3. ONLY NOW run the render (now that we are sure 'data' is full)
     await runRender(data, DIA);
 }
 
