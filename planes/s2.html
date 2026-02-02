@@ -474,58 +474,31 @@ async function loadData() {
 }
 
 async function init() {
-    // 1. Fetch all data first and wait for it
+    // 1. Fetch all data first and WAIT until it's 100% finished
     const data = await loadData();
-    if (!data) {
-        console.error("Data failed to load.");
-        return;
-    }
+    if (!data) return;
 
     const diaInput = document.getElementById('diaInput');
-    const datePicker = document.getElementById('datePicker');
-
-    // 2. Setup the logic for finding the "Current" Day
     const now = new Date();
-    // Ensure we only look at entries that actually have a date and match our cycle
+
+    // 2. Find the current day based on the calendar
     const allowedEntries = (data.cal.map || []).filter(entry => 
         entry.ciclo === CONFIG.CICLO_FILTER && 
         entry.dia != null && 
-        entry.fecha &&
         new Date(entry.fecha + "T00:00:00") <= now
     );
-    
     allowedEntries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    
-    // Determine the starting DIA
-    const params = new URLSearchParams(window.location.search);
-    const urlDia = parseInt(params.get('dia'), 10);
     const maxAllowedDia = allowedEntries.length ? allowedEntries[allowedEntries.length - 1].dia : 1;
-    
-    let DIA = urlDia || maxAllowedDia;
 
-    // 3. Set up Input Listeners (before first render)
+    const params = new URLSearchParams(window.location.search);
+    let DIA = parseInt(params.get('dia'), 10) || maxAllowedDia;
+
     if (diaInput) {
         diaInput.max = maxAllowedDia;
         diaInput.value = DIA;
-        diaInput.addEventListener('change', async (e) => {
-            await runRender(data, e.target.value);
-        });
     }
 
-    if (datePicker) {
-        datePicker.addEventListener('change', async (e) => {
-            const selectedDate = e.target.value;
-            if (!selectedDate) return;
-            const match = data.cal.map.find(c => c.fecha === selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
-            if (match && match.dia) {
-                diaInput.value = match.dia;
-                await runRender(data, match.dia);
-            }
-        });
-    }
-
-    // 4. THE CRITICAL STEP: Final check of data before rendering
-    console.log("Initializing Render for Day:", DIA);
+    // 3. ONLY NOW run the render (now that we are sure 'data' is full)
     await runRender(data, DIA);
 }
 
