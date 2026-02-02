@@ -441,11 +441,15 @@ async function runRender(data, DIA) {
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     
+    // Clear them out before rebuilding to prevent duplicates
     grammarGrid.innerHTML = ""; 
     vocabContainer.innerHTML = "";
 
-    // 1. Look through ALL blocks for Grammar Resources
-    (todayPlan?.blocks || []).forEach(block => {
+    // 1. Find and render ALL Grammar (Estructura) Blocks
+    const allBlocks = todayPlan?.blocks || [];
+    
+    allBlocks.forEach(block => {
+        // Look for grammar resources inside ANY 'estructura' block
         if (block.kind === "estructura" && block.recursos_gramatica) {
             block.recursos_gramatica.forEach(key => {
                 const parentSet = data.apuntes[key]; 
@@ -464,8 +468,8 @@ async function runRender(data, DIA) {
         }
     });
 
-    // 2. Look through ALL blocks for Vocabulario
-    const vBlock = (todayPlan?.blocks || []).find(b => b.kind === "vocabulario");
+    // 2. Find and render Vocabulario Block
+    const vBlock = allBlocks.find(b => b.kind === "vocabulario");
     if (vBlock && data.vocab.descubre2?.chapters) {
         const ch = data.vocab.descubre2.chapters[vBlock.ref];
         if (ch) {
@@ -483,16 +487,24 @@ async function runRender(data, DIA) {
         }
     }
     
-    // --- TAREAS ---
+  // --- TAREAS PENDIENTES ---
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
-    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-    activeTareas.forEach(t => {
-      let statusPill = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡PARA HOY!</span>' : (t.day_assigned == DIA) ? '<span class="bg-emerald-100 text-emerald-700 font-extrabold text-[10px] px-2 py-1 rounded-md border border-emerald-200 uppercase">Nuevo</span>' : "";
-      tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm transition-all hover:shadow-md mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-blue-50 text-blue-500 tracking-wider">${t.tipo}</span>${statusPill}</div><h4 class="font-bold text-slate-800 text-sm leading-tight mb-2">${t.titulo}</h4><div class="pt-2 border-t border-slate-50 flex justify-between items-center"><span class="text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</span></div></div>`;
-    });
-    if (activeTareas.length === 0) tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
-
+    
+    // Look for a "tareas" block in today's plan
+    const tareaBlock = allBlocks.find(b => b.kind === "tareas");
+    if (tareaBlock && data.tareas[tareaBlock.ref]) {
+        const homework = data.tareas[tareaBlock.ref];
+        homework.items.forEach(item => {
+            tList.innerHTML += `
+                <div class="bg-white rounded-lg p-4 border border-blue-100 shadow-sm mb-3">
+                    <h4 class="font-bold text-slate-800 text-sm leading-tight">${item}</h4>
+                </div>`;
+        });
+    } else {
+        tList.innerHTML = '<p class="text-slate-400 italic text-center text-sm py-4">No hay tareas pendientes.</p>';
+    }
+    
     await applyTheme(data, DIA);
 }
     
