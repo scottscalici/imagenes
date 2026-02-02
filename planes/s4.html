@@ -206,15 +206,16 @@ async function init() {
   }
 
   // 2. GET REQUESTED DAY FROM URL
-  const params = new URLSearchParams(window.location.search);
-  let requestedDia = parseInt(params.get('dia')) || liveDia;
+const params = new URLSearchParams(window.location.search);
+const isProfe = params.get('view') === 'prof'; // Check for the secret tag
+let requestedDia = parseInt(params.get('dia')) || liveDia;
 
-  // 3. ANTI-PEEKING LOCK: Only lock if requestedDia is actually higher than our liveDia
-  if (requestedDia > liveDia) {
-      requestedDia = liveDia;
-      window.history.replaceState({}, '', `?dia=${liveDia}`);
-  }
-
+// 3. ANTI-PEEKING LOCK
+// If you are NOT the profe, you get locked to the current day.
+if (!isProfe && requestedDia > liveDia) {
+    requestedDia = liveDia;
+    window.history.replaceState({}, '', `?dia=${liveDia}`);
+}
   const DIA = requestedDia;
   // Use "==" to handle potential string/number mismatches in JSON
   const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
