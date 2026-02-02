@@ -245,22 +245,38 @@
 
   (todayPlan?.blocks || []).forEach(blockRef => {
     
-    // --- A. STANDARD EXTRAS (Links & Sentences) ---
+  // --- A. STANDARD EXTRAS (Links, Sentences, & Images) ---
     if (blockRef.kind === "extras") {
       const exItem = data.extras.items.find(i => i.id === blockRef.ref);
       if (exItem) {
-        let content = exItem.kind === "sentences" 
-          ? `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>` 
-          : `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+        let content = "";
+        
+        // Check for sentences
+        if (exItem.kind === "sentences") {
+          content = `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
+        } 
+        // Check for links
+        else if (exItem.kind === "links") {
+          content = `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+        }
+
+        // ADDED: Logic to display an image if "img" exists in the JSON
+        let imageHtml = exItem.img ? `
+          <div class="mb-4 overflow-hidden rounded-lg border border-slate-100">
+            <img src="${exItem.img}" class="w-full h-auto object-cover max-h-96" alt="${exItem.title}">
+          </div>` : '';
         
         contentBlock.innerHTML += `
           <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
             <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
-            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div>
+            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">
+              ${imageHtml}
+              ${content}
+            </div>
           </section>`;
       }
     }
-
+    
     // --- B. SPECIAL ACTIVITIES (conv, musica, cultura, lectura) ---
     const specialTypes = ["musica", "cultura", "lectura", "conv"];
     if (specialTypes.includes(blockRef.kind)) {
