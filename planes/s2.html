@@ -441,50 +441,51 @@ async function runRender(data, DIA) {
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     
-    // Clear them first so they don't double up
+    // 1. Clear containers
     grammarGrid.innerHTML = ""; 
     vocabContainer.innerHTML = "";
 
-    // 1. Scan EVERY block for grammar links
-    const dayBlocks = todayPlan?.blocks || [];
-    
-    dayBlocks.forEach(block => {
-        // If this block has grammar links, draw them
-        if (block.kind === "estructura" && block.recursos_gramatica) {
-            block.recursos_gramatica.forEach(key => {
-                const parentSet = data.apuntes[key]; 
-                if (!parentSet || !parentSet.links) return;
-                
-                const linksHtml = Object.values(parentSet.links).map(link => 
-                    `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`
-                ).join('');
-                
-                grammarGrid.innerHTML += `
-                    <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
-                        <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3>
-                        <div class="flex flex-col gap-1">${linksHtml}</div>
-                    </div>`;
-            });
-        }
-        
-        // 2. Scan for Vocabulario
-        if (block.kind === "vocabulario" && data.vocab.descubre2?.chapters) {
-            const ch = data.vocab.descubre2.chapters[block.ref];
-            if (ch) {
-                vocabContainer.innerHTML = `
-                    <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                        <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div>
-                        <div class="p-5 flex flex-col flex-grow justify-between">
-                            <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
-                            <div class="flex gap-2">
-                                <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
-                                <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
-                            </div>
-                        </div>
-                    </div>`;
+    // 2. We scan ALL blocks to ensure we find everything (like Day 43's second block)
+    if (todayPlan && todayPlan.blocks) {
+        todayPlan.blocks.forEach(block => {
+            
+            // Check for Grammar Resources
+            if (block.kind === "estructura" && block.recursos_gramatica) {
+                block.recursos_gramatica.forEach(key => {
+                    const parentSet = data.apuntes[key]; 
+                    if (parentSet && parentSet.links) {
+                        const linksHtml = Object.values(parentSet.links).map(link => 
+                            `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`
+                        ).join('');
+                        
+                        grammarGrid.innerHTML += `
+                            <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+                                <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3>
+                                <div class="flex flex-col gap-1">${linksHtml}</div>
+                            </div>`;
+                    }
+                });
             }
-        }
-    });
+
+            // Check for Vocabulario
+            if (block.kind === "vocabulario" && data.vocab.descubre2?.chapters) {
+                const ch = data.vocab.descubre2.chapters[block.ref];
+                if (ch) {
+                    vocabContainer.innerHTML = `
+                        <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+                            <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100 text-4xl">Vocabulario 📚</div>
+                            <div class="p-5 flex flex-col flex-grow justify-between">
+                                <h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3>
+                                <div class="flex gap-2">
+                                    <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Lista</a>
+                                    <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100">Cards</a>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            }
+        });
+    }
     
 // --- TAREAS ---
     const tList = document.getElementById('tareasList');
