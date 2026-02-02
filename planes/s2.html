@@ -253,7 +253,10 @@ async function applyTheme(data, currentDia) {
         if (dayTitle) dayTitle.style.fontFamily = theme.styles.fontHeading || 'inherit';
         if (headerDate) headerDate.style.fontFamily = theme.styles.fontHeading || 'inherit';
 
+// --- HERO & MASCOT ENGINE ---
         const heroSlot = document.getElementById('heroSlot');
+        
+        // Handle the Hero Banner
         if (theme.hero && theme.hero.active) {
             heroSlot.classList.remove('hidden');
             document.getElementById('heroImg').src = theme.hero.img;
@@ -261,6 +264,16 @@ async function applyTheme(data, currentDia) {
             document.getElementById('heroCard').style.borderTopColor = accent;
         } else {
             heroSlot.classList.add('hidden');
+        }
+
+        // Handle the Sidebar Mascots (Independent of Hero)
+        if (theme.mascots) {
+            if (theme.mascots.sloth) document.getElementById('slothMascot').src = theme.mascots.sloth;
+            if (theme.mascots.tutor) document.getElementById('tutorMascot').src = theme.mascots.tutor;
+        } else {
+            // Default images when no theme is active
+            document.getElementById('slothMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/sloth_orig.jpg";
+            document.getElementById('tutorMascot').src = "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/se%C3%B1or%2B.png";
         }
 
         document.querySelectorAll('section, article, .card-shadow').forEach(el => {
