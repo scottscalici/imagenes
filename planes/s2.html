@@ -436,34 +436,35 @@ async function runRender(data, DIA) {
         }
     });
     
-   // --- DASHBOARD (Grammar & Vocab) ---
+  
+// --- DASHBOARD (Grammar & Vocab) ---
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     
-    // Clear them out before rebuilding
     grammarGrid.innerHTML = ""; 
     vocabContainer.innerHTML = "";
 
-    // 1. Find Grammar (Estructura) Blocks
-    const grammarBlocks = (todayPlan?.blocks || []).filter(b => b.kind === "estructura");
-    grammarBlocks.forEach(gBlock => {
-        (gBlock.recursos_gramatica || []).forEach(key => {
-            const parentSet = data.apuntes[key]; 
-            if (!parentSet || !parentSet.links) return;
-            
-            const linksHtml = Object.values(parentSet.links).map(link => 
-                `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`
-            ).join('');
-            
-            grammarGrid.innerHTML += `
-                <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
-                    <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3>
-                    <div class="flex flex-col gap-1">${linksHtml}</div>
-                </div>`;
-        });
+    // 1. Look through ALL blocks for Grammar Resources
+    (todayPlan?.blocks || []).forEach(block => {
+        if (block.kind === "estructura" && block.recursos_gramatica) {
+            block.recursos_gramatica.forEach(key => {
+                const parentSet = data.apuntes[key]; 
+                if (!parentSet || !parentSet.links) return;
+                
+                const linksHtml = Object.values(parentSet.links).map(link => 
+                    `<a href="${link.url}" target="_blank" class="block text-[#4771fa] hover:underline text-[13px] font-bold uppercase tracking-tight py-1 transition-all">${link.title} ↗</a>`
+                ).join('');
+                
+                grammarGrid.innerHTML += `
+                    <div class="bg-white rounded-xl border border-blue-100 border-l-[6px] border-[#4771fa] p-6 shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+                        <h3 class="text-[#4771fa] font-black text-lg mb-4 flex items-center gap-2">⚙️ ${parentSet.title}</h3>
+                        <div class="flex flex-col gap-1">${linksHtml}</div>
+                    </div>`;
+            });
+        }
     });
 
-    // 2. Find Vocabulario Blocks
+    // 2. Look through ALL blocks for Vocabulario
     const vBlock = (todayPlan?.blocks || []).find(b => b.kind === "vocabulario");
     if (vBlock && data.vocab.descubre2?.chapters) {
         const ch = data.vocab.descubre2.chapters[vBlock.ref];
@@ -481,6 +482,7 @@ async function runRender(data, DIA) {
                 </div>`;
         }
     }
+    
     // --- TAREAS ---
     const tList = document.getElementById('tareasList');
     tList.innerHTML = "";
