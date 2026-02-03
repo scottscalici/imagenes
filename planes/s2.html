@@ -403,32 +403,39 @@ if (nextEvalsEl) {
     const contentBlock = document.getElementById('extrasBlock');
     contentBlock.innerHTML = "";
     (todayPlan?.blocks || []).forEach(blockRef => {
-      // --- A. STANDARD EXTRAS (Now supports Images!) ---
+  // --- A. EXTRAS TIPO "CARD" (Sin errores si borras los links) ---
     if (blockRef.kind === "extras") {
       const exItem = data.extras.items.find(i => i.id === blockRef.ref);
       if (exItem) {
-        let content = "";
-        
-        if (exItem.kind === "sentences") {
-          content = `<ul class="space-y-2">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
-        } else if (exItem.img) {
-          // This handles the new image version you were trying to add
-          content = `<div class="space-y-4">
-                      <img src="${exItem.img}" class="w-full rounded-lg border border-slate-100 shadow-sm">
-                      <div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>
-                    </div>`;
-        } else {
-          content = `<div class="flex flex-wrap gap-3">${exItem.links.map(l => `<a href="${l.url}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}</div>`;
+        let innerHtml = "";
+
+        // Imagen (Opcional)
+        if (exItem.img) {
+          innerHtml += `<img src="${exItem.img}" class="w-full max-h-40 object-contain mb-4 rounded-lg bg-slate-50 p-4 border border-slate-100">`;
+        }
+
+        // Frases (Opcional)
+        if (exItem.sentences) {
+          innerHtml += `<ul class="space-y-2 mb-4">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}</ul>`;
+        }
+
+        // Links (Solo si existen y tienen algo dentro)
+        if (exItem.links && exItem.links.length > 0) {
+          innerHtml += `<div class="flex flex-wrap gap-2">
+            ${exItem.links.map(l => {
+              const targetUrl = l.url || l.sentences || "#"; 
+              return `<a href="${targetUrl}" target="_blank" class="flex-1 text-center py-2 bg-indigo-600 text-white rounded-lg font-bold text-xs hover:bg-indigo-700 transition-colors uppercase tracking-tight">${l.label} ↗</a>`;
+            }).join('')}
+          </div>`;
         }
         
         contentBlock.innerHTML += `
-          <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
-            <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
-            <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${content}</div>
+          <section class="bg-white rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6 border border-slate-100">
+            <h2 class="text-indigo-700 font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
+            <div>${innerHtml}</div>
           </section>`;
       }
-    }
-        const specialTypes = ["musica", "cultura", "lectura", "conv"];
+    }      const specialTypes = ["musica", "cultura", "lectura", "conv"];
         if (specialTypes.includes(blockRef.kind)) {
             const item = data[blockRef.kind]?.items?.[blockRef.ref];
             if (item) {
