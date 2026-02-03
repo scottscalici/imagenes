@@ -170,12 +170,19 @@
     } catch (e) { console.error("Error loading data", e); }
   }
 
-  function renderManual() {
+ function renderManual() {
     const d = document.getElementById('diaInput').value;
     if(!d) return;
-    window.history.pushState({}, '', `?dia=${d}`);
+    
+    const params = new URLSearchParams(window.location.search);
+    const isProfe = params.get('view') === 'prof';
+    
+    // Build the new URL: if you're a prof, keep the tag; if not, just the day.
+    const newUrl = isProfe ? `?dia=${d}&view=prof` : `?dia=${d}`;
+    
+    window.history.pushState({}, '', newUrl);
     init();
-  }
+}
 
 async function init() {
   const data = await loadData();
