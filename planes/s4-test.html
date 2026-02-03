@@ -57,7 +57,7 @@
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
                         <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Actividad ↗</a>
+                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica interactiva ↗</a>
                     </div>
                     <div id="calDetail" class="text-slate-700 text-md italic">Cargando práctica...</div>
                 </section>
@@ -74,7 +74,7 @@
                 </div>
 
                 <div id="evalSidebarBlock" class="bg-white rounded-xl p-6 shadow-md border-8">
-                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Fechas Límite</h3>
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span>Próximas Pruebas</h3>
                     <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
                     <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calendario" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase">Ver Calendario</a>
                 </div>
@@ -90,7 +90,7 @@
                 </div>
 
                 <div id="countdownCard" class="bg-white rounded-xl p-6 shadow-md border-l-[6px] border-slate-200">
-                    <h3 class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center">Examen Final IB</h3>
+                    <h3 class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center">Cuenta regresiva: Examen Oral</h3>
                     <div id="countdownDisplay" class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-days" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Días</span></div>
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-hours" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Hrs</span></div>
@@ -113,8 +113,8 @@
                         <img id="ibLogo" src="" class="max-w-[100px] object-contain">
                     </div>
                     <div class="p-5 flex flex-col flex-grow justify-between text-center">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Portal Evaluación IB</h3>
-                        <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib" target="_blank" class="w-full btn-theme py-2.5 rounded-lg font-bold text-sm uppercase">Abrir Recursos</a>
+                        <h3 class="text-slate-900 font-bold text-lg mb-4">Recusros sobre el IB</h3>
+                        <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="w-full btn-theme py-2.5 rounded-lg font-bold text-sm uppercase">Abrir Recursos</a>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@ async function runRender(data, DIA) {
     
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? new Date(calendarEntry.fecha + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : "Fecha TBD";
-    document.getElementById('cycleIndicator').textContent = `Español 4 — Ciclo ${currentCycle}`;
+    document.getElementById('cycleIndicator').textContent = `IB Español B II ${currentCycle}`;
 
     // Evaluations
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
@@ -383,7 +383,7 @@ async function runRender(data, DIA) {
     if (ch) {
         vocabContainer.innerHTML = `
             <div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: #f59e0b">
-                <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b text-4xl">📚</div>
+                <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b text-4xl">VOCABULARIO 📚</div>
                 <div class="p-5 flex flex-grow flex-col justify-between">
                     <h3 class="font-bold text-lg mb-4 text-amber-600">${ch.label}</h3>
                     <div class="flex gap-2">
