@@ -240,13 +240,12 @@ async function runRender(data, DIA) {
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-    // Header Logic: Fechas limpias sin etiquetas Ciclo A/B
+    // Header Logic
     const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
     const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     const formatD = (f) => f ? new Date(f + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : "";
-    const dateStr = [formatD(entryA?.fecha), formatD(entryB?.fecha)].filter(Boolean).join(' / ');
-    document.getElementById('headerDate').textContent = dateStr;
+    document.getElementById('headerDate').textContent = [formatD(entryA?.fecha), formatD(entryB?.fecha)].filter(Boolean).join(' / ');
 
     // Calentamiento Dinámico
     document.getElementById('calBtn').href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
@@ -258,18 +257,31 @@ async function runRender(data, DIA) {
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Próximo:</b> ${findEval(parseInt(DIA) + 1)}</li>`;
 
-    // Reset Containers
+    // Containers
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
-    estBlock.innerHTML = ""; contentBlock.innerHTML = "";
+    const curBlock = document.getElementById('curiosityBlock');
+    estBlock.innerHTML = ""; contentBlock.innerHTML = ""; curBlock.innerHTML = "";
 
     (todayPlan?.blocks || []).forEach(blockRef => {
-        // Bloques de Estructura / Gramática
+        // Curiosidad
+        if (blockRef.kind === "curiosidad") {
+            const item = data.curios?.items?.[blockRef.ref];
+            if (item) {
+                curBlock.innerHTML = `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border-slate-300">
+                    <h2 class="font-bold text-sm uppercase tracking-widest mb-4 text-slate-500">¿Sabías que...?</h2>
+                    <p class="text-slate-800 italic text-lg leading-relaxed">"${item.texto}"</p>
+                </section>`;
+            }
+        }
+
+        // Estructura (Corrección de Enlaces)
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
                 const estColor = overrides.estructura || accent;
                 let linksHtml = "";
+                // Renderizamos los IDs específicos solicitados en el plan
                 (blockRef.introducir || []).forEach(id => {
                     const l = topic.links?.[id];
                     if (l) {
@@ -279,11 +291,14 @@ async function runRender(data, DIA) {
                         </a>`;
                     }
                 });
-                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><h2 class="text-2xl font-black text-slate-900 mb-4" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
+                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}">
+                    <h2 class="text-2xl font-black text-slate-900 mb-4" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2>
+                    <div>${linksHtml}</div>
+                </section>`;
             }
         }
 
-        // Bloques de Extras
+        // Extras
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -293,7 +308,7 @@ async function runRender(data, DIA) {
             }
         }
 
-        // Media Blocks: Musica, Cultura, Lectura, Conversacion
+        // Media (Música, Cultura, etc.)
         const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
         if (mediaTypes[blockRef.kind]) {
             const item = data[blockRef.kind]?.items?.[blockRef.ref];
@@ -304,16 +319,22 @@ async function runRender(data, DIA) {
         }
     });
 
-    // Grammar & Vocab (Footer section)
+    // Grammar Grid & Vocab
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
-    (todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
-        const parent = data.apuntes[key]; if (!parent?.links) return;
-        const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
-        grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">${parent.title}</h3><div>${links}</div></div>`;
-    });
+    
+    // Recursos Gramaticales del bloque estructura
+    const estPlan = todayPlan?.blocks?.find(b => b.kind === "estructura");
+    if (estPlan && estPlan.recursos_gramatica) {
+        estPlan.recursos_gramatica.forEach(key => {
+            const parent = data.apuntes[key]; if (!parent?.links) return;
+            const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
+            grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">${parent.title}</h3><div>${links}</div></div>`;
+        });
+    }
 
+    // Vocabulario
     const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
     const ch = vRef ? data.vocab.descubre3.chapters[vRef] : null;
     if (ch) {
