@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #6366f1; }
+        :root { --accent: #6366f1; --header-bg: #4f46e5; }
         body { font-family: 'Inter', sans-serif; }
         .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
@@ -24,7 +24,7 @@
         <header id="mainHeader" class="rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700">
             <div>
                 <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
-                <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
+                <p id="headerDate" class="text-lg italic opacity-90 font-medium mt-1"></p>
             </div>
             <div class="text-right hidden sm:block">
                 <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">IB Español B II</span>
@@ -56,7 +56,7 @@
             </div>
 
             <div id="tareasColumn" class="space-y-6">
-                <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
+                <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-black">
                     <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
@@ -72,7 +72,7 @@
                 </div>
 
                 <div id="countdownCard" class="bg-white rounded-xl p-6 shadow-md border-l-[6px] border-slate-200">
-                    <h3 id="countdownTitle" class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center">Cuenta regresiva: Examen Oral</h3>
+                    <h3 class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center italic">Cuenta regresiva: Examen Oral</h3>
                     <div id="countdownDisplay" class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-days" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Días</span></div>
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-hours" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Hrs</span></div>
@@ -131,6 +131,7 @@ const CONFIG = {
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+    CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
     TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
     VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
     APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
@@ -142,6 +143,7 @@ const CONFIG = {
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json"
 };
 
+// --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
@@ -155,7 +157,6 @@ async function applyThemeStyles(data, currentDia) {
                     themeData.themes.find(t => t.id === 'classic');
 
         if (!theme) return;
-
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
@@ -173,6 +174,7 @@ async function applyThemeStyles(data, currentDia) {
         }
 
         const overrides = s.cardOverrides || {};
+        const textures = s.textures || {};
         const fonts = s.fonts || {};
         const cards = [{ id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' }, { id: 'tareasBox', key: 'tareas' }, { id: 'countdownCard', key: 'curiosidad' }];
 
@@ -183,12 +185,13 @@ async function applyThemeStyles(data, currentDia) {
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
                 if (h) { h.style.color = color; if (fonts[card.key]) h.style.fontFamily = fonts[card.key]; }
+                if (textures[card.key]) { el.style.backgroundImage = `url('${textures[card.key]}')`; el.classList.add('card-texture'); }
             }
         });
 
         if (theme.effectConfig) startEffect(theme.effectConfig); else stopEffect();
         return theme;
-    } catch (e) { console.error("Theme Error:", e); }
+    } catch (e) { console.error("Theme Engine Error:", e); }
 }
 
 let effectInterval;
@@ -228,11 +231,16 @@ function startCountdown() {
     }, 1000);
 }
 
+// --- RENDER CORE ---
 async function runRender(data, DIA) {
-    await applyThemeStyles(data, DIA);
+    const activeTheme = await applyThemeStyles(data, DIA);
+    const overrides = activeTheme?.styles?.cardOverrides || {};
+    const fonts = activeTheme?.styles?.fonts || {};
+    const accent = activeTheme?.styles?.accent || "#6366f1";
+
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-    // Header: Fechas duales limpias
+    // Header Logic: Fechas limpias sin etiquetas Ciclo A/B
     const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
     const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
@@ -240,26 +248,27 @@ async function runRender(data, DIA) {
     const dateStr = [formatD(entryA?.fecha), formatD(entryB?.fecha)].filter(Boolean).join(' / ');
     document.getElementById('headerDate').textContent = dateStr;
 
-    // Link de Calentamiento dinámico
-    const calBtn = document.getElementById('calBtn');
-    calBtn.href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
+    // Calentamiento Dinámico
+    document.getElementById('calBtn').href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
     document.getElementById('calDetail').textContent = `Actividades de autoevaluación para el Día ${DIA}`;
 
-    // Evaluación
+    // Evaluations
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Seguimiento preparación IB");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Próximo:</b> ${findEval(parseInt(DIA) + 1)}</li>`;
 
-    // Bloques de Contenido
+    // Reset Containers
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
     estBlock.innerHTML = ""; contentBlock.innerHTML = "";
 
     (todayPlan?.blocks || []).forEach(blockRef => {
+        // Bloques de Estructura / Gramática
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
+                const estColor = overrides.estructura || accent;
                 let linksHtml = "";
                 (blockRef.introducir || []).forEach(id => {
                     const l = topic.links?.[id];
@@ -270,9 +279,11 @@ async function runRender(data, DIA) {
                         </a>`;
                     }
                 });
-                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6"><h2 class="text-2xl font-black text-slate-900 mb-4">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
+                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><h2 class="text-2xl font-black text-slate-900 mb-4" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
             }
         }
+
+        // Bloques de Extras
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -282,6 +293,7 @@ async function runRender(data, DIA) {
             }
         }
 
+        // Media Blocks: Musica, Cultura, Lectura, Conversacion
         const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
         if (mediaTypes[blockRef.kind]) {
             const item = data[blockRef.kind]?.items?.[blockRef.ref];
@@ -292,7 +304,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // Grammar & Vocab
+    // Grammar & Vocab (Footer section)
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
@@ -316,10 +328,10 @@ async function runRender(data, DIA) {
 }
 
 async function loadData() {
-    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
+    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
     try {
       const results = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(res => res.json())));
-      return { plan: results[0], evals: results[1], cal: results[2], tareas: results[3], vocab: results[4], apuntes: results[5], extras: results[6], musica: results[7], lectura: results[8], cultura: results[9], conv: results[10] };
+      return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6], extras: results[7], musica: results[8], lectura: results[9], cultura: results[10], conv: results[11] };
     } catch (e) { console.error("Load Error", e); }
 }
 
@@ -330,7 +342,9 @@ async function init() {
     const liveEntry = data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0];
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
     const params = new URLSearchParams(window.location.search);
+    const isProfe = params.get('view') === 'prof';
     let requestedDia = parseInt(params.get('dia')) || liveDia;
+    if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
     startCountdown();
