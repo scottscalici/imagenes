@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Español 4 - Plan de Clase</title>
+    <title>Español IB (S4) - Plan de Clase</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&family=Pacifico&display=swap" rel="stylesheet">
     <style>
@@ -47,7 +47,7 @@
             <p id="headerDate" class="text-sm opacity-90"></p>
         </div>
         <div class="text-right hidden sm:block">
-            <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">Español 4 (IB)</span>
+            <span id="cycleIndicator" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">Cargando Ciclo...</span>
         </div>
       </header>
         
@@ -57,7 +57,7 @@
                     <img id="heroImg" src="" class="w-full h-full object-cover">
                 </div>
                 <div class="p-8 flex items-center justify-center flex-grow text-center">
-                    <h2 id="heroMsg" class="text-3xl font-black italic text-slate-800"></h2>
+                    <h2 id="heroMsg" class="text-3xl font-black italic text-slate-800 leading-tight"></h2>
                 </div>
             </div>
         </div>
@@ -65,10 +65,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div class="lg:col-span-2 space-y-6">
                 <section id="evalSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
-                    <h2 class="font-bold text-xl mb-3 flex items-center gap-2"><span>📋</span> Evaluación</h2>
+                    <h2 class="font-bold text-xl mb-3 flex items-center gap-2"><span>📋</span> Evaluación Interna</h2>
                     <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
                     <div class="pt-4 border-t border-slate-100">
-                        <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas metas (IB)</h3>
+                        <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximos pasos IB</h3>
                         <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
                     </div>
                 </section>
@@ -76,9 +76,9 @@
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
                         <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica ↗</a>
+                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Actividad ↗</a>
                     </div>
-                    <div id="calDetail" class="text-slate-700 text-md italic">Iniciando la sesión...</div>
+                    <div id="calDetail" class="text-slate-700 text-md italic">Cargando práctica del día...</div>
                 </section>
 
                 <div id="curiosityBlock"></div>
@@ -88,14 +88,14 @@
 
             <div id="tareasColumn" class="space-y-6">
                 <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
-                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas (Canvas/VHL)</h3>
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
 
                 <div id="evalSidebarBlock" class="bg-white rounded-xl p-6 shadow-md border-8">
-                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Fechas Importantes</h3>
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Fechas Límite</h3>
                     <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
-                    <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calendario" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs">Ver calendario IB</a>
+                    <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calendario" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs">Calendario IB NS/NM</a>
                 </div>
 
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col">
@@ -104,7 +104,7 @@
                     </div>
                     <div class="p-4 flex flex-col flex-grow bg-white text-center">
                         <h3 class="text-slate-900 font-bold text-md mb-2 italic">Señor+ IA Tutor</h3>
-                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Interacción IA</a>
+                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Chat de Práctica</a>
                     </div>
                 </div>
             </div> 
@@ -112,27 +112,33 @@
 
         <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
             <div id="grammarPlacement" class="col-span-full mb-8">
-                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos Gramaticales</h2>
+                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática Avanzada</h2>
                 <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div id="vocabPlacement"></div>
+                
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
-                        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png" class="max-w-[150px] object-contain">
+                    <div id="ibLogoHeader" class="h-32 p-4 flex items-center justify-center border-b border-slate-100 transition-colors duration-500" style="background-color: var(--accent);">
+                        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/images/ib-logo-white.png" class="max-w-[100px] object-contain brightness-0 invert">
                     </div>
                     <div class="p-5 flex flex-col flex-grow justify-between text-center">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Portal MISD</h3>
-                        <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white py-2.5 rounded-lg font-bold text-sm">Acceso Directo</a>
+                        <h3 class="text-slate-900 font-bold text-lg mb-4">Recursos de Evaluación</h3>
+                        <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib" target="_blank" class="w-full btn-theme py-2.5 rounded-lg font-bold text-sm">Portal IB</a>
                     </div>
                 </div>
+
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
                     <div class="h-32 overflow-hidden border-b border-slate-100">
                         <img id="slothMascot" src="" class="w-full h-full object-cover">
                     </div>
                     <div class="p-5 flex flex-col flex-grow justify-between text-center">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Metas de Clase</h3>
-                        <a href="#" class="w-full btn-theme py-2.5 rounded-lg font-bold text-sm">Plan de Estudios</a>
+                        <h3 class="text-slate-900 font-bold text-lg mb-4 italic">Countdown</h3>
+                        <div id="countdownDisplay" class="grid grid-cols-3 gap-1 mb-4">
+                            <div class="bg-slate-50 p-2 rounded"><span id="cd-days" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Días</span></div>
+                            <div class="bg-slate-50 p-2 rounded"><span id="cd-hours" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Hrs</span></div>
+                            <div class="bg-slate-50 p-2 rounded"><span id="cd-mins" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Min</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,7 +147,7 @@
         <div class="max-w-4xl mx-auto mb-8">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
                 <div class="flex items-center gap-3">
-                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día</label>
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día Plan S4</label>
                     <div class="flex items-center">
                         <input type="number" id="diaInput" class="w-16 bg-slate-100 border-none rounded-l-lg px-3 py-2 font-bold text-center">
                         <button onclick="renderManual()" class="btn-theme px-4 py-2 rounded-r-lg font-bold text-sm">Ir</button>
@@ -152,10 +158,8 @@
     </main>
 
 <script>
-// CONFIG for Senior Class
 const CONFIG = {
     COURSE: "s4",
-    CICLO_FILTER: "B",
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
@@ -171,13 +175,15 @@ const CONFIG = {
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json"
 };
 
+let currentCycle = "B"; // Default
+
 // --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
         
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === currentCycle);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
@@ -275,10 +281,24 @@ function startEffect(config) {
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
+
 function stopEffect() {
     if (effectInterval) clearInterval(effectInterval);
     const canvas = document.getElementById('snow-canvas');
     if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Countdown
+function startCountdown() {
+    const targetDate = new Date("March 9, 2026 07:30:00").getTime();
+    setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        if (distance < 0) return;
+        document.getElementById("cd-days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+        document.getElementById("cd-hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById("cd-mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    }, 1000);
 }
 
 // Main Render
@@ -289,17 +309,18 @@ async function runRender(data, DIA) {
     const accent = activeTheme?.styles?.accent || "#6366f1";
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
-    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === currentCycle);
     
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? new Date(calendarEntry.fecha + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : "Fecha TBD";
+    document.getElementById('cycleIndicator').textContent = `Español 4 — Ciclo ${currentCycle}`;
 
     // Eval
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin pruebas programadas");
+    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Continuar preparación IB");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `
-        <li><b>Próxima Sesión:</b> ${findEval(parseInt(DIA) + 1)}</li>
+        <li><b>Meta Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
     `;
 
     // Blocks
@@ -317,9 +338,9 @@ async function runRender(data, DIA) {
                 const buildBtn = (id, label) => {
                     const l = topic.links?.[id];
                     if (!l) return "";
-                    return `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 transition-all mb-2 group"><div class="flex flex-col"><span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase bg-white border mb-1">${label}</span><span class="text-slate-800 font-bold">${l.title}</span></div><span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span></a>`;
+                    return `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 transition-all mb-2 group"><div class="flex flex-col"><span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase bg-white border mb-1">${label}</span><span class="text-slate-800 font-bold text-sm">${l.title}</span></div><span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span></a>`;
                 };
-                if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += buildBtn(id, "Gramática"));
+                if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += buildBtn(id, "Tema"));
                 
                 estBlock.innerHTML += `
                     <section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}">
@@ -333,7 +354,7 @@ async function runRender(data, DIA) {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
                 const exColor = overrides.extras || accent;
-                let inner = exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain mb-4 rounded-lg bg-slate-50 p-4">` : "";
+                let inner = exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain mb-4 rounded-lg bg-slate-50 p-4 border border-slate-100">` : "";
                 if (exItem.links) inner += `<div class="flex flex-wrap gap-2">${exItem.links.map(l => `<a href="${l.url || l.sentences || '#'}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase tracking-tight">${l.label}</a>`).join('')}</div>`;
                 
                 contentBlock.innerHTML += `
@@ -355,7 +376,7 @@ async function runRender(data, DIA) {
                             <div class="md:w-40 h-32 overflow-hidden bg-slate-100 flex-shrink-0"><img src="${item.imagen}" class="w-full h-full object-cover"></div>
                             <div class="p-4 flex flex-col justify-between flex-grow">
                                 <h3 class="text-xl font-black text-slate-900" style="font-family: ${fonts[mediaTypes[blockRef.kind]] || 'inherit'}">${item.titulo}</h3>
-                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Explorar →</a>
+                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Recurso →</a>
                             </div>
                         </div>
                     </section>`;
@@ -363,7 +384,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // Dashboards (Vocab descubre3 for S4)
+    // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
     grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
@@ -395,13 +416,13 @@ async function runRender(data, DIA) {
     const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
     activeTareas.forEach(t => {
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3">
-            <h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4>
-            <div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Entrega: Día ${t.day_due}</div>
+            <h4 class="font-bold text-slate-800 text-sm mb-1">${t.titulo}</h4>
+            <div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</div>
         </div>`;
     });
 }
 
-// Data Loaders
+// Initializers
 async function loadData() {
     const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
     try {
@@ -414,16 +435,22 @@ async function init() {
     const data = await loadData(); if (!data) return;
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
+    
+    // Auto-detect Cycle A or B
+    const cycleEntry = data.cal?.map?.find(c => c.fecha === todayStr);
+    if (cycleEntry) currentCycle = cycleEntry.ciclo;
+
+    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr && c.ciclo === currentCycle);
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
 
     const params = new URLSearchParams(window.location.search);
     const isProfe = params.get('view') === 'prof';
     let requestedDia = parseInt(params.get('dia')) || liveDia;
-    if (!isProfe && requestedDia > liveDia) { requestedDia = liveDia; window.history.replaceState({}, '', `?dia=${liveDia}`); }
+    if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
 
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
+    startCountdown();
 }
 
 function renderManual() {
