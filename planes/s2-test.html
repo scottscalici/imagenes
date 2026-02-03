@@ -308,7 +308,22 @@ async function runRender(data, DIA) {
     
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+const calSection = document.getElementById('calentamientoSection');
+    const calBtn = document.getElementById('calBtn');
+    const calDetail = document.getElementById('calDetail');
+    const calColor = overrides.calentamiento || accent; // Pull del JSON de temas
 
+    if (calSection) {
+        calSection.style.borderColor = calColor;
+    }
+    if (calBtn) {
+        calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/${DIA}`;
+        calBtn.style.backgroundColor = calColor;
+        calBtn.style.borderColor = calColor;
+    }
+    if (calDetail) {
+        calDetail.textContent = `Práctica interactiva para empezar la clase.`;
+    }
     // Evaluations
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
