@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #6366f1; --header-bg: #4f46e5; }
+        :root { --accent: #6366f1; }
         body { font-family: 'Inter', sans-serif; }
         .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
@@ -24,10 +24,7 @@
         <header id="mainHeader" class="rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700">
             <div>
                 <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
-                <div id="headerDatesContainer" class="flex flex-col sm:flex-row gap-2 sm:gap-6 mt-1">
-                    <p id="dateA" class="text-sm italic opacity-90 font-medium"></p>
-                    <p id="dateB" class="text-sm italic opacity-90 font-medium"></p>
-                </div>
+                <p id="headerDate" class="text-lg italic opacity-90 font-medium"></p>
             </div>
             <div class="text-right hidden sm:block">
                 <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">IB Español B II</span>
@@ -40,7 +37,7 @@
                     <h2 class="font-bold text-xl mb-3 flex items-center gap-2"><span>📋</span> Evaluación</h2>
                     <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
                     <div class="pt-4 border-t border-slate-100">
-                        <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas metas</h3>
+                        <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
                         <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
                     </div>
                 </section>
@@ -48,7 +45,7 @@
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
                         <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Actividad ↗</a>
+                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica interactiva ↗</a>
                     </div>
                     <div id="calDetail" class="text-slate-700 text-md italic">Cargando práctica...</div>
                 </section>
@@ -70,12 +67,12 @@
                     </div>
                     <div class="p-4 flex flex-col flex-grow bg-white text-center">
                         <h3 class="text-slate-900 font-bold text-md mb-2 italic">Señor+ IA Tutor</h3>
-                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Chat de Práctica</a>
+                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors uppercase">Practicar ahora</a>
                     </div>
                 </div>
 
                 <div id="countdownCard" class="bg-white rounded-xl p-6 shadow-md border-l-[6px] border-slate-200">
-                    <h3 class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center italic">Examen Oral</h3>
+                    <h3 id="countdownTitle" class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center">Cuenta regresiva: Examen Oral</h3>
                     <div id="countdownDisplay" class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-days" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Días</span></div>
                         <div class="bg-slate-50 p-2 rounded"><span id="cd-hours" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Hrs</span></div>
@@ -118,7 +115,7 @@
         <div class="max-w-4xl mx-auto mb-8">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
                 <div class="flex items-center gap-3">
-                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Cambiar Día</label>
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día Plan S4</label>
                     <div class="flex items-center">
                         <input type="number" id="diaInput" class="w-16 bg-slate-100 border-none rounded-l-lg px-3 py-2 font-bold text-center">
                         <button onclick="renderManual()" class="btn-theme px-4 py-2 rounded-r-lg font-bold text-sm uppercase">Ir</button>
@@ -134,7 +131,6 @@ const CONFIG = {
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
-    CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
     TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
     VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
     APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
@@ -146,13 +142,10 @@ const CONFIG = {
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json"
 };
 
-// --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        
-        // Buscamos fecha de referencia para el tema (usamos ciclo A como base)
         const dayEntry = data.cal?.map?.find(c => c.dia == currentDia);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
@@ -166,7 +159,6 @@ async function applyThemeStyles(data, currentDia) {
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
-
         root.style.setProperty('--accent', accent);
         root.style.setProperty('--font-heading', s.fontHeading || 'inherit');
 
@@ -174,24 +166,15 @@ async function applyThemeStyles(data, currentDia) {
             document.getElementById('mainHeader').className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
         }
         
-        // Update Mascots (Sloth/MISD, Tutor, IB)
         if (theme.mascots) {
-            // Si el tema tiene "misd" lo usamos, si no usamos "sloth" como fallback
             document.getElementById('slothMascot').src = theme.mascots.misd || theme.mascots.sloth;
             document.getElementById('tutorMascot').src = theme.mascots.tutor;
             document.getElementById('ibLogo').src = theme.mascots.ib || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB.png";
         }
 
         const overrides = s.cardOverrides || {};
-        const textures = s.textures || {};
         const fonts = s.fonts || {};
-
-        const cards = [
-            { id: 'evalSection', key: 'evaluacion' },
-            { id: 'calentamientoSection', key: 'calentamiento' },
-            { id: 'tareasBox', key: 'tareas' },
-            { id: 'countdownCard', key: 'curiosidad' }
-        ];
+        const cards = [{ id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' }, { id: 'tareasBox', key: 'tareas' }, { id: 'countdownCard', key: 'curiosidad' }];
 
         cards.forEach(card => {
             const el = document.getElementById(card.id);
@@ -199,25 +182,15 @@ async function applyThemeStyles(data, currentDia) {
                 const color = overrides[card.key] || accent;
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
-                if (h) {
-                    h.style.color = color;
-                    if (fonts[card.key]) h.style.fontFamily = fonts[card.key];
-                }
-                if (textures[card.key]) {
-                    el.style.backgroundImage = `url('${textures[card.key]}')`;
-                    el.classList.add('card-texture');
-                }
+                if (h) { h.style.color = color; if (fonts[card.key]) h.style.fontFamily = fonts[card.key]; }
             }
         });
 
-        if (theme.effectConfig) startEffect(theme.effectConfig);
-        else stopEffect();
-
+        if (theme.effectConfig) startEffect(theme.effectConfig); else stopEffect();
         return theme;
-    } catch (e) { console.error("Theme Engine Error:", e); }
+    } catch (e) { console.error("Theme Error:", e); }
 }
 
-// Particle Engine
 let effectInterval;
 function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
@@ -241,11 +214,7 @@ function startEffect(config) {
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
-function stopEffect() {
-    if (effectInterval) clearInterval(effectInterval);
-    const canvas = document.getElementById('snow-canvas');
-    if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-}
+function stopEffect() { if (effectInterval) clearInterval(effectInterval); }
 
 function startCountdown() {
     const targetDate = new Date("March 9, 2026 07:30:00").getTime();
@@ -259,31 +228,30 @@ function startCountdown() {
     }, 1000);
 }
 
-// --- RENDER CORE ---
 async function runRender(data, DIA) {
-    const activeTheme = await applyThemeStyles(data, DIA);
-    const overrides = activeTheme?.styles?.cardOverrides || {};
-    const fonts = activeTheme?.styles?.fonts || {};
-    const accent = activeTheme?.styles?.accent || "#6366f1";
-
+    await applyThemeStyles(data, DIA);
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-    // Header Logic: Get Dates for both cycles
+    // Header: Fechas duales limpias
     const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
     const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
-    
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    const formatD = (f) => f ? new Date(f + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : "---";
-    document.getElementById('dateA').innerHTML = `<span class="opacity-60 not-italic mr-1 text-[10px] font-black uppercase">Ciclo A:</span> ${formatD(entryA?.fecha)}`;
-    document.getElementById('dateB').innerHTML = `<span class="opacity-60 not-italic mr-1 text-[10px] font-black uppercase">Ciclo B:</span> ${formatD(entryB?.fecha)}`;
+    const formatD = (f) => f ? new Date(f + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : "";
+    const dateStr = [formatD(entryA?.fecha), formatD(entryB?.fecha)].filter(Boolean).join(' / ');
+    document.getElementById('headerDate').textContent = dateStr;
 
-    // Evaluations
+    // Link de Calentamiento dinámico
+    const calBtn = document.getElementById('calBtn');
+    calBtn.href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
+    document.getElementById('calDetail').textContent = `Actividades de autoevaluación para el Día ${DIA}`;
+
+    // Evaluación
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Seguimiento preparación IB");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Próximo:</b> ${findEval(parseInt(DIA) + 1)}</li>`;
 
-    // Reset Containers
+    // Bloques de Contenido
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
     estBlock.innerHTML = ""; contentBlock.innerHTML = "";
@@ -292,7 +260,6 @@ async function runRender(data, DIA) {
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
-                const estColor = overrides.estructura || accent;
                 let linksHtml = "";
                 (blockRef.introducir || []).forEach(id => {
                     const l = topic.links?.[id];
@@ -303,10 +270,9 @@ async function runRender(data, DIA) {
                         </a>`;
                     }
                 });
-                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><h2 class="text-2xl font-black text-slate-900 mb-4" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
+                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6"><h2 class="text-2xl font-black text-slate-900 mb-4">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
             }
         }
-
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -345,16 +311,15 @@ async function runRender(data, DIA) {
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
-        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Día Entrega: ${t.day_due}</div></div>`;
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence Día: ${t.day_due}</div></div>`;
     });
 }
 
-// Initialization
 async function loadData() {
-    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
+    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
     try {
       const results = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(res => res.json())));
-      return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6], extras: results[7], musica: results[8], lectura: results[9], cultura: results[10], conv: results[11] };
+      return { plan: results[0], evals: results[1], cal: results[2], tareas: results[3], vocab: results[4], apuntes: results[5], extras: results[6], musica: results[7], lectura: results[8], cultura: results[9], conv: results[10] };
     } catch (e) { console.error("Load Error", e); }
 }
 
@@ -364,12 +329,8 @@ async function init() {
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     const liveEntry = data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0];
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
-
     const params = new URLSearchParams(window.location.search);
-    const isProfe = params.get('view') === 'prof';
     let requestedDia = parseInt(params.get('dia')) || liveDia;
-    if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
-
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
     startCountdown();
