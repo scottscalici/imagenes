@@ -106,55 +106,60 @@
     "count": 60
   }
 },
-     {
-      "id": "valentine",
-      "start": "02-11",
-      "end": "02-15",
-      "styles": {
-        "header": "bg-gradient-to-r from-red-600 to-pink-500",
-        "fontHeading": "'Berkshire Swash', cursive",
-        "accent": "#60a5fa",
-        "cardOverrides": {
-          "evaluacion": "#60a5fa",
-          "calentamiento": "#93c5fd",
-          "curiosidad": "#0ea5e9",
-          "musica": "#f472b6",
-          "conversacion": "#22d3ee",
-          "cultura": "#a855f7",
-          "lectura": "#fb923c",
-          "sidebarEvalList": "#fb923c", 
-          "tareas": "#2563eb",
-          "pruebas": "#1d4ed8",
-          "estructura": "#1d4ed8"
-        },
-        "fonts": {
-          "estructura": "Pacifico, system-ui",
-          "evaluacion": "Pacifico",
-          "calentamiento": "berkshire swash",
-          "curiosidad": "berkshire swash",
-          "musica": "'berkshire swash', serif",
-          "conversacion": "'berkshire swash', system-ui",
-          "tareas": "'berkshire swash', system-ui",
-          "sidebarEvalList": "berkshire swash", 
-          "gramatica": "'berkshire swash', serif"
-        },
-        "textures": {
-          "evaluacion": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/cobweb.png",
-          "musica": "https://img.icons8.com/ios-filled/100/3b82f6/musical-notes.png",
-      "curiosidad": "https://img.icons8.com/ios-filled/100/3b82f6/idea.png"
-        }
-      },
-      "hero": {
-        "active": true,
-        "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/africa.png",
-        "msg": "¡Bienvenidos al semestre de invierno!"
-      },
-      "mascots": {
-        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_winter.png",
-        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/senor_winter.png"
-      },
-      "effect": "snow"
+    {
+  "id": "valentine",
+  "start": "02-11",
+  "end": "02-15",
+  "styles": {
+    "header": "bg-gradient-to-r from-red-600 to-pink-500",
+    "fontHeading": "'Berkshire Swash', cursive",
+    "accent": "#ff4d6d",
+    "cardOverrides": {
+      "evaluacion": "#ff4d6d",
+      "calentamiento": "#fb7185",
+      "curiosidad": "#f472b6",
+      "musica": "#db2777",
+      "conversacion": "#ec4899",
+      "cultura": "#be185d",
+      "lectura": "#f43f5e",
+      "sidebarEvalList": "#e11d48", 
+      "tareas": "#9f1239",
+      "pruebas": "#881337",
+      "estructura": "#fb7185"
     },
+    "fonts": {
+      "estructura": "Pacifico, system-ui",
+      "evaluacion": "Pacifico",
+      "calentamiento": "berkshire swash",
+      "curiosidad": "berkshire swash",
+      "musica": "'berkshire swash', serif",
+      "conversacion": "'berkshire swash', system-ui",
+      "tareas": "'berkshire swash', system-ui",
+      "sidebarEvalList": "berkshire swash", 
+      "gramatica": "'berkshire swash', serif"
+    },
+    "textures": {
+      "evaluacion": "https://www.transparenttextures.com/patterns/hearts.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/hearts.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/San-Valentin.png",
+    "msg": "Un chiste: Un hombre le pregunta a su esposa:\n- Mi amor, ¿tú crees en el amor a primera vista?\nY ella le responde: - Claro que sí mi cielo, porque si te hubiese visto más de una vez, no estaría casada contigo."
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/senor-valentin.png"
+  },
+  "effectConfig": {
+    "char": "❤️",
+    "color": "#ff4d6d",
+    "direction": "down",
+    "speed": 2,
+    "count": 50
+  }
+},
     {
       "id": "classic",
       "styles": {
@@ -175,8 +180,8 @@
       },
       "hero": { "active": false },
       "mascots": {
-        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_winter.png",
-        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/robot-turkey-79801.jpg"
+        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png",
+        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/senor-valentin.png"
       },
       "effect": "none"
     },
