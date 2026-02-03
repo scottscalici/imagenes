@@ -50,7 +50,11 @@
                     <div id="calDetail" class="text-slate-700 text-md italic">Cargando práctica...</div>
                 </section>
 
-                <div id="curiosityBlock"></div>
+                <section id="curiosityCard" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow border-slate-300">
+                    <h2 class="font-bold text-sm uppercase tracking-widest mb-4 text-slate-500">¿Sabías que...?</h2>
+                    <p id="curiosityText" class="text-slate-800 italic text-lg leading-relaxed">Cargando dato curioso...</p>
+                </section>
+
                 <div id="estructuraBlock"></div>
                 <div id="extrasBlock"></div> 
             </div>
@@ -172,7 +176,7 @@ async function applyThemeStyles(data, currentDia) {
         const overrides = s.cardOverrides || {};
         const textures = s.textures || {};
         const fonts = s.fonts || {};
-        const cards = [{ id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' }, { id: 'tareasBox', key: 'tareas' }, { id: 'countdownCard', key: 'curiosidad' }];
+        const cards = [{ id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' }, { id: 'curiosityCard', key: 'curiosidad' }, { id: 'tareasBox', key: 'tareas' }, { id: 'countdownCard', key: 'curiosidad' }];
 
         cards.forEach(card => {
             const el = document.getElementById(card.id);
@@ -226,7 +230,6 @@ function startCountdown() {
     }, 1000);
 }
 
-// --- RENDER CORE ---
 async function runRender(data, DIA) {
     const activeTheme = await applyThemeStyles(data, DIA);
     const overrides = activeTheme?.styles?.cardOverrides || {};
@@ -235,7 +238,7 @@ async function runRender(data, DIA) {
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
-    // 1. Header
+    // 1. Header Date
     const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
     const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
@@ -246,88 +249,135 @@ async function runRender(data, DIA) {
     document.getElementById('calBtn').href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
     document.getElementById('calDetail').textContent = `Práctica interactiva para empezar la clase.`;
 
-    // 3. Evaluación (HOY + PRÓXIMAS 2)
+    // 3. Evaluación
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Seguimiento preparación IB");
-    
     document.getElementById('currentEval').textContent = findEval(DIA);
-    
-    const p1 = findEval(parseInt(DIA) + 1);
-    const p2 = findEval(parseInt(DIA) + 2);
     document.getElementById('nextEvals').innerHTML = `
-        <li class="flex flex-col"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 1}</span><span class="font-semibold">${p1}</span></li>
-        <li class="flex flex-col mt-2"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 2}</span><span class="font-semibold">${p2}</span></li>
+        <li class="flex flex-col"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 1}</span><span class="font-semibold">${findEval(parseInt(DIA) + 1)}</span></li>
+        <li class="flex flex-col mt-2"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 2}</span><span class="font-semibold">${findEval(parseInt(DIA) + 2)}</span></li>
     `;
 
-    // 4. Containers Reset
-    const curBlock = document.getElementById('curiosityBlock');
+    // 4. CURIOSIDAD (SISTEMA PROTEGIDO)
+    const curBlock = document.getElementById('curiosityCard');
+    try {
+        let item = null;
+        const curiosArray = Array.isArray(data.curios) ? data.curios : (data.curios?.items || []);
+        
+        // Buscar por ID específico (ej: cur-44) o por el ID que pida el plan
+        const explicitRef = todayPlan?.blocks?.find(b => b.kind === "curiosidad")?.ref;
+        item = curiosArray.find(i => i.id === explicitRef) || curiosArray.find(i => i.id === `cur-${DIA}`);
+
+        if (item) {
+        curBlock.style.display = "block";
+        curBlock.innerHTML = `
+            <h2 class="font-bold text-sm uppercase tracking-widest mb-2 text-slate-500">Curiosidad #${DIA}</h2>
+            <h3 class="text-2xl font-black text-slate-900 mb-4 leading-tight">${item.title}</h3>
+            <div class="space-y-4">
+                ${item.img ? `<img src="${item.img}" class="w-full max-h-80 object-contain rounded-lg bg-slate-50 border p-2 shadow-sm">` : ""}
+            </div>
+        `;
+    } else {
+            curBlock.style.display = "none"; // Ocultar si no hay dato para ese día
+        }
+    } catch (err) {
+        console.error("Error en Curiosidad:", err);
+        curBlock.style.display = "none";
+    }
+
+// 5. BLOQUES DINÁMICOS (Estructura, Extras, Música, etc.)
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
-    curBlock.innerHTML = ""; estBlock.innerHTML = ""; contentBlock.innerHTML = "";
+    
+    // Limpiar contenedores antes de renderizar
+    estBlock.innerHTML = ""; 
+    contentBlock.innerHTML = "";
 
-    // Lógica para Curiosidad (Forzada)
-    let curiosidadRenderizada = false;
-    const drawCuriosity = (item) => {
-        curBlock.innerHTML = `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border-slate-300">
-            <h2 class="font-bold text-sm uppercase tracking-widest mb-4 text-slate-500">¿Sabías que...?</h2>
-            <p class="text-slate-800 italic text-lg leading-relaxed">"${item.texto}"</p>
-        </section>`;
-        curiosidadRenderizada = true;
-    };
-
-    // 5. Bloques del Plan
+    // Un solo bucle para procesar todos los bloques del plan del día
     (todayPlan?.blocks || []).forEach(blockRef => {
-        if (blockRef.kind === "curiosidad") {
-            const item = data.curios?.items?.[blockRef.ref];
-            if (item) drawCuriosity(item);
-        }
-
+        
+        // --- LÓGICA DE ESTRUCTURA ---
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
-            if (topic) {
-                const estColor = overrides.estructura || accent;
-                let linksHtml = "";
-                (blockRef.introducir || []).forEach(id => {
-                    const l = topic.links?.[id];
-                    if (l) {
-                        linksHtml += `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 mb-2 group">
-                            <div class="flex flex-col"><span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-white border mb-1">Recurso</span><span class="text-slate-800 font-bold">${l.title}</span></div>
-                            <span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span>
-                        </a>`;
-                    }
-                });
-                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><h2 class="text-2xl font-black text-slate-900 mb-4" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2><div>${linksHtml}</div></section>`;
-            }
+            if (!topic) return;
+
+            const estColor = overrides.estructura || accent;
+            let cardLinksHtml = "";
+
+            const buildBigButton = (id, label) => {
+                const link = topic.links?.[id];
+                if (!link) return "";
+                
+                const labelStyle = label === "Introducir" 
+                    ? "bg-emerald-100 text-emerald-700 border-emerald-200" 
+                    : "bg-blue-100 text-blue-700 border-blue-200";
+
+                return `
+                    <a href="${link.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all mb-2 group">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase border ${labelStyle} mb-1">${label}</span>
+                            <span class="text-slate-800 font-bold text-sm md:text-base">${link.title}</span>
+                        </div>
+                        <span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span>
+                    </a>`;
+            };
+
+            if (blockRef.introducir) blockRef.introducir.forEach(id => cardLinksHtml += buildBigButton(id, "Introducir"));
+            if (blockRef.repasar) blockRef.repasar.forEach(id => cardLinksHtml += buildBigButton(id, "Repasar"));
+
+            estBlock.innerHTML += `
+                <section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] p-6 card-shadow mb-6" style="border-left-color: ${estColor}">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div>
+                        <h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">
+                            ${blockRef.title || topic.title}
+                        </h2>
+                    </div>
+                    <div class="space-y-1">${cardLinksHtml}</div>
+                </section>`;
         }
 
+        // --- LÓGICA DE EXTRAS ---
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
                 const exColor = overrides.extras || accent;
-                let links = exItem.links ? exItem.links.map(l => `<a href="${l.url}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase">${l.label}</a>`).join('') : "";
-                contentBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}"><h2 class="font-bold text-sm uppercase tracking-widest mb-4" style="color: ${exColor}">${exItem.title}</h2><div class="flex flex-col gap-4">${exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain rounded-lg bg-slate-50 border p-2">` : ""}<div class="flex gap-2">${links}</div></div></section>`;
+                const linksHtml = exItem.links ? exItem.links.map(l => 
+                    `<a href="${l.url}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase">${l.label}</a>`
+                ).join('') : "";
+
+                contentBlock.innerHTML += `
+                    <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}">
+                        <h2 class="font-bold text-sm uppercase tracking-widest mb-4" style="color: ${exColor}">${exItem.title}</h2>
+                        <div class="flex flex-col gap-4">
+                            ${exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain rounded-lg bg-slate-50 border p-2">` : ""}
+                            <div class="flex gap-2">${linksHtml}</div>
+                        </div>
+                    </section>`;
             }
         }
 
+        // --- LÓGICA DE MEDIOS (Musica, Cultura, Lectura, Conv) ---
         const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
         if (mediaTypes[blockRef.kind]) {
             const item = data[blockRef.kind]?.items?.[blockRef.ref];
             if (item) {
                 const mColor = overrides[mediaTypes[blockRef.kind]] || accent;
-                contentBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 overflow-hidden bg-slate-100"><img src="${item.imagen}" class="w-full h-full object-cover"></div><div class="p-4 flex flex-col justify-between flex-grow"><h3 class="text-xl font-black text-slate-900" style="font-family: ${fonts[mediaTypes[blockRef.kind]] || 'inherit'}">${item.titulo}</h3><a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a></div></div></section>`;
+                contentBlock.innerHTML += `
+                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                                <img src="${item.imagen}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4 flex flex-col justify-between flex-grow">
+                                <h3 class="text-xl font-black text-slate-900" style="font-family: ${fonts[mediaTypes[blockRef.kind]] || 'inherit'}">${item.titulo}</h3>
+                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
+                            </div>
+                        </div>
+                    </section>`;
             }
         }
     });
-
-    // REFUERZO DE CURIOSIDAD: Si no estaba en el plan, buscar por índice de día
-    if (!curiosidadRenderizada) {
-        const keys = Object.keys(data.curios?.items || {});
-        if (keys.length > 0) {
-            const autoKey = keys[DIA % keys.length];
-            drawCuriosity(data.curios.items[autoKey]);
-        }
-    }
-
     // 6. Grammar & Vocab
     const grammarGrid = document.getElementById('grammarResources');
     const vocabContainer = document.getElementById('vocabPlacement');
@@ -345,16 +395,16 @@ async function runRender(data, DIA) {
     const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
     const ch = vRef ? data.vocab.descubre3.chapters[vRef] : null;
     if (ch) {
-        vocabContainer.innerHTML = `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: #f59e0b"><div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b text-4xl">📚</div><div class="p-5 flex flex-grow flex-col justify-between"><h3 class="font-bold text-lg mb-4 text-amber-600">${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border hover:bg-slate-50 uppercase">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border hover:bg-slate-50 uppercase">Cards</a></div></div></div>`;
+        vocabContainer.innerHTML = `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: #f59e0b"><div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b text-4xl">VOCABULARIO📚</div><div class="p-5 flex flex-grow flex-col justify-between"><h3 class="font-bold text-lg mb-4 text-amber-600">${ch.label}</h3><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border hover:bg-slate-50 uppercase">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border hover:bg-slate-50 uppercase">Cards</a></div></div></div>`;
     }
 
     // 7. Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
-    (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
+    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
+    activeTareas.forEach(t => {
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence Día: ${t.day_due}</div></div>`;
     });
 }
-
 async function loadData() {
     const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
     try {
