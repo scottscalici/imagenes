@@ -251,11 +251,11 @@ async function runRender(data, DIA) {
 
     // 3. Evaluación
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Seguimiento preparación IB");
+    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `
-        <li class="flex flex-col"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 1}</span><span class="font-semibold">${findEval(parseInt(DIA) + 1)}</span></li>
-        <li class="flex flex-col mt-2"><span class="text-[9px] font-black uppercase opacity-50">Día ${parseInt(DIA) + 2}</span><span class="font-semibold">${findEval(parseInt(DIA) + 2)}</span></li>
+        <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
+        <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
     `;
 
     // 4. CURIOSIDAD (SISTEMA PROTEGIDO)
