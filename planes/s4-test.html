@@ -8,6 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #6366f1; --header-bg: #4f46e5; }
+       #headerDate { 
+    font-family: var(--font-heading, inherit); 
+    text-transform: uppercase; 
+    letter-spacing: 0.1em; /* Add this line */
+    font-weight: 800; 
+}
+
+/* Add this for the Día title specifically */
+#dayTitle {
+    font-family: var(--font-heading, inherit);
+}
         body { font-family: 'Inter', sans-serif; }
         .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
@@ -454,17 +465,49 @@ async function loadData() {
 }
 
 async function init() {
-    const data = await loadData(); if (!data) return;
+    const data = await loadData(); 
+    if (!data) return;
+
+    // --- NEW THEME LOGIC STARTS HERE ---
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+
+    // 1. Identify the active theme from your calendario.json
+    const themeKey = data.cal?.themes?.find(t => todayStr >= t.start && todayStr <= t.end)?.theme || "default";
+    const activeTheme = data.temas?.[themeKey] || data.temas?.["default"];
+
+    // 2. Apply theme to CSS variables (This fixes the font difference)
+    if (activeTheme) {
+        document.documentElement.style.setProperty('--font-heading', activeTheme.fontFamily || 'inherit');
+        document.documentElement.style.setProperty('--accent', activeTheme.accent || '#6366f1');
+        document.documentElement.style.setProperty('--header-bg', activeTheme.headerColor || '#4f46e5');
+        
+        // Update banner if it exists
+        if (activeTheme.banner) {
+            const header = document.querySelector('header');
+            if (header) {
+                header.style.backgroundImage = `url(${activeTheme.banner})`;
+                header.style.backgroundSize = 'cover';
+                header.style.backgroundPosition = 'center';
+            }
+        }
+    }
+    // --- NEW THEME LOGIC ENDS HERE ---
+
+    // Your existing logic continues below
     const liveEntry = data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0];
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
+    
     const params = new URLSearchParams(window.location.search);
-const manualInput = document.getElementById('diaInput').value;
+    const manualInput = document.getElementById('diaInput').value;
     const isProfe = params.get('view') === 'prof';
-let requestedDia = parseInt(params.get('dia')) || parseInt(manualInput) || liveDia;
+    
+    let requestedDia = parseInt(params.get('dia')) || parseInt(manualInput) || liveDia;
+    
     if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
+    
     document.getElementById('diaInput').value = requestedDia;
+    
     await runRender(data, requestedDia);
     startCountdown();
 }
