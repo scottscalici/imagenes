@@ -432,9 +432,9 @@ const calSection = document.getElementById('calentamientoSection');
     const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
     const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
     if (ch) {
-    // 1. Look for the image in your theme data first
-    // Fallback to a default if the theme doesn't have a specific 'vocabTree' key
-    const themeImg = data.temas?.[currentTema]?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+  // 1. Look for the image inside the mascots object of the active theme
+// Fallback to the standard tree if the theme or specific mascot is missing
+const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
     
     vocabContainer.innerHTML = `
       <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
