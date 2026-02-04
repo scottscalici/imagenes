@@ -420,21 +420,35 @@ async function init() {
     const liveEntry = data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0];
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
     const params = new URLSearchParams(window.location.search);
+const manualInput = document.getElementById('diaInput').value;
     const isProfe = params.get('view') === 'prof';
-    let requestedDia = parseInt(params.get('dia')) || liveDia;
+let requestedDia = parseInt(params.get('dia')) || parseInt(manualInput) || liveDia;
     if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
     startCountdown();
 }
 
-function renderManual() {
-    const val = document.getElementById('diaInput').value;
-    const params = new URLSearchParams(window.location.search);
-    params.set('dia', val);
-    window.location.search = params.toString();
-}
+async function renderManual() {
+    const input = document.getElementById('diaInput');
+    const d = input.value;
+    if (!d) return;
 
+    // 1. Update the URL for GitHub/direct access
+    try {
+        const url = new URL(window.location);
+        url.searchParams.set('dia', d);
+        window.history.pushState({}, '', url);
+    } catch (e) {
+        console.warn("URL update blocked by Google Sites sandbox; proceeding with render.");
+    }
+
+    // 2. Re-run init to refresh all content blocks
+    await init();
+    
+    // 3. Scroll to top so the user sees the new day header
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 init();
 </script>
 </body>
