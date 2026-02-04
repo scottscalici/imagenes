@@ -418,29 +418,36 @@ const calSection = document.getElementById('calentamientoSection');
         }
     });
 
-    // Grammar & Vocab Dashboards
-    const grammarGrid = document.getElementById('grammarResources');
-    const vocabContainer = document.getElementById('vocabPlacement');
-    grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
-    
-    (todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
-        const parent = data.apuntes[key]; if (!parent?.links) return;
-        const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
-        grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
-    });
+ // Grammar & Vocab Dashboards
+const grammarGrid = document.getElementById('grammarResources');
+const vocabContainer = document.getElementById('vocabPlacement');
+grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
 
-    const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
-    const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
-    if (ch) {
-  // 1. Look for the image inside the mascots object of the active theme
-// Fallback to the standard tree if the theme or specific mascot is missing
-const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+// 1. Render Grammar Cards
+(todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
+    const parent = data.apuntes[key]; 
+    if (!parent?.links) return;
+    const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
+    grammarGrid.innerHTML += `
+        <div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}">
+            <h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3>
+            <div class="flex flex-col gap-1">${links}</div>
+        </div>`;
+});
+
+// 2. Render Vocab Card with Theme-Aware Mascot
+const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
+const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
+
+if (ch) {
+    // Corrected variable logic: Checks activeTheme -> mascots -> vocabTree
+    const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
     
     vocabContainer.innerHTML = `
       <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
         
         <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
-          <img src="${themeImg}" class="max-h-full object-contain">
+          <img src="${vocabImg}" class="max-h-full object-contain">
         </div>
         
         <div class="p-5 flex flex-col flex-grow justify-between">
@@ -455,7 +462,7 @@ const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubuserconte
           </div>
         </div>
       </div>`;
-  }
+}
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
