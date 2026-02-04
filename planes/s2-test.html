@@ -111,11 +111,14 @@
             </div> 
         </div> 
 
-        <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
-            <div id="grammarPlacement" class="col-span-full mb-8">
-                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
-                <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            </div>
+       <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
+    <div id="grammarPlacement" class="col-span-full mb-8">
+        <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
+        <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+    
+    <div id="dynamicCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div id="vocabPlacement"></div>
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
@@ -419,11 +422,13 @@ const calSection = document.getElementById('calentamientoSection');
     });
 
  // Grammar & Vocab Dashboards
+// 1. Setup Containers
 const grammarGrid = document.getElementById('grammarResources');
-const vocabContainer = document.getElementById('vocabPlacement');
-grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
+const dynamicGrid = document.getElementById('dynamicCardGrid');
+grammarGrid.innerHTML = ""; 
+if (dynamicGrid) dynamicGrid.innerHTML = "";
 
-// 1. Render Grammar Cards
+// 2. Render Grammar Cards
 (todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
     const parent = data.apuntes[key]; 
     if (!parent?.links) return;
@@ -435,33 +440,56 @@ grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
         </div>`;
 });
 
-// 2. Render Vocab Card with Theme-Aware Mascot
+// 3. Prepare Mascot URLs
 const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
 const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
 
-if (ch) {
-    // Corrected variable logic: Checks activeTheme -> mascots -> vocabTree
-    const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
-    
-    vocabContainer.innerHTML = `
-      <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-        
-        <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
-          <img src="${vocabImg}" class="max-h-full object-contain">
+const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+const misdImg = activeTheme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
+const slothImg = activeTheme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
+
+// 4. Render the Triple Card Row
+if (dynamicGrid) {
+    dynamicGrid.innerHTML = `
+        <div id="vocabPlacement">
+            ${ch ? `
+            <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+                <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
+                    <img src="${vocabImg}" class="max-h-full object-contain">
+                </div>
+                <div class="p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
+                        <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch.label}</h3>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
+                        <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
+                    </div>
+                </div>
+            </div>` : `<div class="p-8 text-center text-slate-400 italic">No hay vocabulario para hoy</div>`}
         </div>
-        
-        <div class="p-5 flex flex-col flex-grow justify-between">
-          <div>
-            <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
-            <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch.label}</h3>
-          </div>
-          
-          <div class="flex gap-2">
-            <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
-            <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
-          </div>
+
+        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+            <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
+                <img src="${misdImg}" class="max-w-[150px] object-contain">
+            </div>
+            <div class="p-5 flex flex-col flex-grow justify-between">
+                <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
+                <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-black transition-colors">Abrir Portal</a>
+            </div>
         </div>
-      </div>`;
+
+        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+            <div class="h-32 overflow-hidden border-b border-slate-100">
+                <img src="${slothImg}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-5 flex flex-col flex-grow justify-between">
+                <h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3>
+                <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm">Ver Detalles</a>
+            </div>
+        </div>
+    `;
 }
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
