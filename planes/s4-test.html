@@ -339,24 +339,42 @@ async function runRender(data, DIA) {
 
         // --- LÓGICA DE EXTRAS ---
         if (blockRef.kind === "extras") {
-            const exItem = data.extras.items.find(i => i.id === blockRef.ref);
-            if (exItem) {
-                const exColor = overrides.extras || accent;
-                const linksHtml = exItem.links ? exItem.links.map(l => 
-                    `<a href="${l.url}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase">${l.label}</a>`
-                ).join('') : "";
+  const exItem = data.extras.items.find(i => i.id === blockRef.ref && (i.course === "s4" || i.course === "all"));
+  if (exItem) {
+    let inner = "";
 
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}">
-                        <h2 class="font-bold text-sm uppercase tracking-widest mb-4" style="color: ${exColor}">${exItem.title}</h2>
-                        <div class="flex flex-col gap-4">
-                            ${exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain rounded-lg bg-slate-50 border p-2">` : ""}
-                            <div class="flex gap-2">${linksHtml}</div>
-                        </div>
-                    </section>`;
-            }
-        }
+    // 1. Render Image if it exists
+    if (exItem.img) {
+      inner += `<img src="${exItem.img}" class="w-full max-h-64 object-contain mb-4 rounded-lg bg-slate-50 p-2 border border-indigo-100">`;
+    }
 
+    // 2. Render Instructions
+    if (exItem.instructions) {
+      inner += `<p class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">${exItem.instructions}</p>`;
+    }
+
+    // 3. Render Sentences
+    if (exItem.sentences && Array.isArray(exItem.sentences)) {
+      inner += `<ul class="space-y-2 mb-4">
+        ${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}
+      </ul>`;
+    }
+
+    // 4. Render Links (Handling the "sentences" vs "url" key issue)
+    if (exItem.links && exItem.links.length > 0) {
+      inner += `<div class="flex flex-wrap gap-3">
+        ${exItem.links.map(l => `<a href="${l.url || l.sentences || '#'}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}
+      </div>`;
+    }
+    
+    contentBlock.innerHTML += `
+      <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
+        <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
+        <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${inner}</div>
+      </section>`;
+  }
+}
+        
         // --- LÓGICA DE MEDIOS (Musica, Cultura, Lectura, Conv) ---
         const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
         if (mediaTypes[blockRef.kind]) {
