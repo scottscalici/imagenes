@@ -404,21 +404,40 @@ async function loadData() {
 }
 
 async function init() {
-    const data = await loadData(); if (!data) return;
+    const data = await loadData(); 
+    if (!data) return;
+
+    // 1. Determine the "Live" day based on the calendar
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
 
+    // 2. Check the URL for a specific day request
     const params = new URLSearchParams(window.location.search);
     let requestedDia = parseInt(params.get('dia')) || liveDia;
     
+    // 3. Sync the input box and run the render
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
 }
 
 async function renderManual() {
-    await init(); 
+    const newDia = document.getElementById('diaInput').value;
+    if (!newDia) return;
+
+    // Update the URL so refreshing the page stays on this day
+    try {
+        const url = new URL(window.location);
+        url.searchParams.set('dia', newDia);
+        window.history.pushState({}, '', url);
+    } catch (e) {
+        console.warn("URL update blocked by sandbox/Sites, proceeding with render.");
+    }
+
+    // Fetch data and re-render for the new day
+    const data = await loadData();
+    await runRender(data, parseInt(newDia));
 }
 
 init();
