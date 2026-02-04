@@ -119,28 +119,7 @@
     
     <div id="dynamicCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div id="vocabPlacement"></div>
-                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
-                        <img src="https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png" class="max-w-[150px] object-contain">
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow justify-between">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
-                        <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-black transition-colors">Abrir Portal</a>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div class="h-32 overflow-hidden border-b border-slate-100">
-                        <img id="slothMascot" src="" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow justify-between">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3>
-                        <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm">Ver Detalles</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+           
         
         <div class="max-w-4xl mx-auto mb-8">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
@@ -190,33 +169,26 @@ async function applyThemeStyles(data, currentDia) {
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
+        // Selection Logic
         let theme = themeData.themes.find(t => t.id === 'snowday' && dayEntry?.note === "Snow day") ||
                     themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) ||
                     themeData.themes.find(t => t.id === 'classic');
 
-        if (!theme) return;
+        if (!theme) return null;
 
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
 
-        // Set Global CSS Variables
         root.style.setProperty('--accent', accent);
         root.style.setProperty('--font-heading', s.fontHeading || 'inherit');
 
-        // Header & Global Fonts
+        // Header
         const header = document.getElementById('mainHeader');
-        if (header) {
-            header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
-        }
-        document.getElementById('dayTitle').style.fontFamily = s.fontHeading;
-        document.getElementById('headerDate').style.fontFamily = s.fontHeading;
-
-        // Mascots
-        if (theme.mascots) {
-            document.getElementById('slothMascot').src = theme.mascots.sloth;
-            document.getElementById('tutorMascot').src = theme.mascots.tutor;
-        }
+        if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
+        
+        document.getElementById('dayTitle').style.fontFamily = s.fontHeading || 'inherit';
+        document.getElementById('headerDate').style.fontFamily = s.fontHeading || 'inherit';
 
         // Hero Card
         const heroSlot = document.getElementById('heroSlot');
@@ -254,6 +226,8 @@ async function applyThemeStyles(data, currentDia) {
                 if (textures[card.key]) {
                     el.style.backgroundImage = `url('${textures[card.key]}')`;
                     el.classList.add('card-texture');
+                } else {
+                    el.style.backgroundImage = 'none';
                 }
             }
         });
@@ -261,8 +235,11 @@ async function applyThemeStyles(data, currentDia) {
         if (theme.effectConfig) startEffect(theme.effectConfig);
         else stopEffect();
 
-        return theme; // Return for use in block rendering
-    } catch (e) { console.error("Theme Error:", e); }
+        return theme; 
+    } catch (e) { 
+        console.error("Theme Error:", e); 
+        return null;
+    }
 }
 
 // --- PARTICLE ENGINE ---
@@ -303,32 +280,25 @@ function formatSpanishDate(dateStr) {
 }
 
 async function runRender(data, DIA) {
-    const activeTheme = await applyThemeStyles(data, DIA);
-    const overrides = activeTheme?.styles?.cardOverrides || {};
-    const fonts = activeTheme?.styles?.fonts || {};
-    const accent = activeTheme?.styles?.accent || "#6366f1";
+    const theme = await applyThemeStyles(data, DIA);
+    const overrides = theme?.styles?.cardOverrides || {};
+    const fonts = theme?.styles?.fonts || {};
+    const accent = theme?.styles?.accent || "#6366f1";
 
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
     
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
-const calSection = document.getElementById('calentamientoSection');
-    const calBtn = document.getElementById('calBtn');
-    const calDetail = document.getElementById('calDetail');
-    const calColor = overrides.calentamiento || accent; // Pull del JSON de temas
 
-    if (calSection) {
-        calSection.style.borderColor = calColor;
-    }
+    // Calentamiento
+    const calBtn = document.getElementById('calBtn');
+    const calColor = overrides.calentamiento || accent;
     if (calBtn) {
         calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/${DIA}`;
         calBtn.style.backgroundColor = calColor;
-        calBtn.style.borderColor = calColor;
     }
-    if (calDetail) {
-        calDetail.textContent = `Práctica interactiva para empezar la clase.`;
-    }
+
     // Evaluations
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
@@ -352,13 +322,12 @@ const calSection = document.getElementById('calentamientoSection');
             </article>`;
     } else { curBlock.innerHTML = ""; }
 
-    // Estructura & Extras (The Unified Loop)
+    // Estructura & Extras
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
     estBlock.innerHTML = ""; contentBlock.innerHTML = "";
 
     (todayPlan?.blocks || []).forEach(blockRef => {
-        // Estructura
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
@@ -366,141 +335,62 @@ const calSection = document.getElementById('calentamientoSection');
                 let linksHtml = "";
                 const buildBtn = (id, label) => {
                     const l = topic.links?.[id];
-                    if (!l) return "";
-                    return `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 transition-all mb-2 group"><div class="flex flex-col"><span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase bg-white border mb-1">${label}</span><span class="text-slate-800 font-bold">${l.title}</span></div><span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span></a>`;
+                    return l ? `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 transition-all mb-2 group"><div class="flex flex-col"><span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase bg-white border mb-1">${label}</span><span class="text-slate-800 font-bold">${l.title}</span></div><span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span></a>` : "";
                 };
                 if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += buildBtn(id, "Introducir"));
                 if (blockRef.repasar) blockRef.repasar.forEach(id => linksHtml += buildBtn(id, "Repasar"));
-                
-                estBlock.innerHTML += `
-                    <section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div>
-                            <h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2>
-                        </div>
-                        <div class="space-y-1">${linksHtml}</div>
-                    </section>`;
+                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-4"><div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${linksHtml}</div></section>`;
             }
         }
-
-        // Extras / Cards
         if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
                 const exColor = overrides.extras || accent;
                 let inner = exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain mb-4 rounded-lg bg-slate-50 p-4 border border-slate-100">` : "";
                 if (exItem.sentences) inner += `<ul class="space-y-2 mb-4">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 pl-4 italic" style="border-color: ${exColor}">"${s}"</li>`).join('')}</ul>`;
-                if (exItem.links) inner += `<div class="flex flex-wrap gap-2">${exItem.links.map(l => `<a href="${l.url || l.sentences || '#'}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase tracking-tight">${l.label} ↗</a>`).join('')}</div>`;
-                
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}">
-                        <h2 class="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2" style="color: ${exColor}"><span>✨</span> ${exItem.title}</h2>
-                        <div>${inner}</div>
-                    </section>`;
-            }
-        }
-
-        // Special Media Types
-        const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
-        if (mediaTypes[blockRef.kind]) {
-            const item = data[blockRef.kind]?.items?.[blockRef.ref];
-            if (item) {
-                const mColor = overrides[mediaTypes[blockRef.kind]] || accent;
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6 group" style="border-color: ${mColor}">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100 flex-shrink-0"><img src="${item.imagen}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"></div>
-                            <div class="p-4 flex flex-col justify-between flex-grow">
-                                <div><span class="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">${item.tag}</span>
-                                <h3 class="text-xl font-black text-slate-900 leading-tight mt-1" style="font-family: ${fonts[mediaTypes[blockRef.kind]] || 'inherit'}">${item.titulo}</h3></div>
-                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir actividad →</a>
-                            </div>
-                        </div>
-                    </section>`;
+                if (exItem.links) inner += `<div class="flex flex-wrap gap-2">${exItem.links.map(l => `<a href="${l.url || '#'}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase tracking-tight" style="background-color:${exColor}">${l.label} ↗</a>`).join('')}</div>`;
+                contentBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}"><h2 class="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2" style="color: ${exColor}"><span>✨</span> ${exItem.title}</h2><div>${inner}</div></section>`;
             }
         }
     });
 
- // Grammar & Vocab Dashboards
-// 1. Setup Containers
-const grammarGrid = document.getElementById('grammarResources');
-const dynamicGrid = document.getElementById('dynamicCardGrid');
-grammarGrid.innerHTML = ""; 
-if (dynamicGrid) dynamicGrid.innerHTML = "";
+    // Dashboards
+    const grammarGrid = document.getElementById('grammarResources');
+    const dynamicGrid = document.getElementById('dynamicCardGrid');
+    grammarGrid.innerHTML = ""; if (dynamicGrid) dynamicGrid.innerHTML = "";
 
-// 2. Render Grammar Cards
-(todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
-    const parent = data.apuntes[key]; 
-    if (!parent?.links) return;
-    const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
-    grammarGrid.innerHTML += `
-        <div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}">
-            <h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3>
-            <div class="flex flex-col gap-1">${links}</div>
-        </div>`;
-});
+    (todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
+        const parent = data.apuntes[key]; 
+        if (!parent?.links) return;
+        const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
+        grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
+    });
 
-// 3. Prepare Mascot URLs
-const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
-const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
+    const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
+    const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
 
-const vocabImg = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
-const misdImg = activeTheme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
-const slothImg = activeTheme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
+    // Mascot Logic
+    const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+    const misdLogo = theme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
+    const slothImg = theme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
+    const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
 
-// 4. Render the Triple Card Row
-if (dynamicGrid) {
-    dynamicGrid.innerHTML = `
-        <div id="vocabPlacement">
-            ${ch ? `
-            <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
-                    <img src="${vocabImg}" class="max-h-full object-contain">
-                </div>
-                <div class="p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
-                        <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch.label}</h3>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
-                        <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
-                    </div>
-                </div>
-            </div>` : `<div class="p-8 text-center text-slate-400 italic">No hay vocabulario para hoy</div>`}
-        </div>
+    document.getElementById('tutorMascot').src = tutorImg;
 
-        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-            <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
-                <img src="${misdImg}" class="max-w-[150px] object-contain">
+    if (dynamicGrid) {
+        dynamicGrid.innerHTML = `
+            <div>
+                ${ch ? `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100"><img src="${vTree}" class="max-h-full object-contain"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3><h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border">No hay vocabulario</div>`}
             </div>
-            <div class="p-5 flex flex-col flex-grow justify-between">
-                <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
-                <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm hover:bg-black transition-colors">Abrir Portal</a>
-            </div>
-        </div>
+            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100"><img src="${misdLogo}" class="max-w-[150px] object-contain"></div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3><a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm">Abrir Portal</a></div></div>
+            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 overflow-hidden border-b border-slate-100"><img src="${slothImg}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm" style="background-color:${accent}">Ver Detalles</a></div></div>`;
+    }
 
-        <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-            <div class="h-32 overflow-hidden border-b border-slate-100">
-                <img src="${slothImg}" class="w-full h-full object-cover">
-            </div>
-            <div class="p-5 flex flex-col flex-grow justify-between">
-                <h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3>
-                <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm">Ver Detalles</a>
-            </div>
-        </div>
-    `;
-}
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
-    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-    activeTareas.forEach(t => {
-        const status = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : (t.day_assigned == DIA) ? '<span class="text-emerald-600 font-extrabold text-[10px] uppercase">Nuevo</span>' : "";
-        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3">
-            <div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${status}</div>
-            <h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4>
-            <div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</div>
-        </div>`;
+    (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
+        const status = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${status}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</div></div>`;
     });
 }
 
@@ -508,8 +398,8 @@ if (dynamicGrid) {
 async function loadData() {
     const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
     try {
-      const results = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(res => res.json())));
-      return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6], extras: results[7], musica: results[8], lectura: results[9], cultura: results[10], conv: results[11] };
+        const results = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(res => res.json())));
+        return { plan: results[0], evals: results[1], cal: results[2], curios: results[3], tareas: results[4], vocab: results[5], apuntes: results[6], extras: results[7], musica: results[8], lectura: results[9], cultura: results[10], conv: results[11] };
     } catch (e) { console.error("Load Error", e); }
 }
 
@@ -521,36 +411,16 @@ async function init() {
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
 
     const params = new URLSearchParams(window.location.search);
-    const isProfe = params.get('view') === 'prof';
     let requestedDia = parseInt(params.get('dia')) || liveDia;
-    if (!isProfe && requestedDia > liveDia) { requestedDia = liveDia; window.history.replaceState({}, '', `?dia=${liveDia}`); }
-
+    
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
 }
 
 async function renderManual() {
-    const d = document.getElementById('diaInput').value;
-    if (!d) return;
-
-    // 1. Force the global requestedDia to update
-    const newDia = parseInt(d);
-    
-    // 2. Update the URL (for GitHub/Direct users), 
-    // but wrap in try/catch so Google Sites doesn't crash the script
-    try {
-        const url = new URL(window.location);
-        url.searchParams.set('dia', newDia);
-        window.history.pushState({}, '', url);
-    } catch (e) {
-        console.warn("URL update blocked by sandbox, proceeding with render.");
-    }
-
-    // 3. Re-run init() entirely to pull fresh data for the new day
-    // This is the most reliable way to ensure all data-bound elements refresh
     await init(); 
 }
-    
+
 init();
 </script>
 </body>
