@@ -303,7 +303,7 @@ async function runRender(data, DIA) {
     const videoContainer = document.getElementById('videoBlock');
 
     if (videoContainer) {
-        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
+        // Use .filter to get all matches for the day that also match the COURSE tag
         const dayVideos = data.videos.daily_tags.filter(v => 
             v.dia == DIA && 
             v.tags.includes(CONFIG.COURSE)
@@ -311,7 +311,7 @@ async function runRender(data, DIA) {
         
         if (dayVideos.length > 0) {
             videoContainer.innerHTML = dayVideos.map(videoData => {
-                    if (videoData.page_url) {
+                if (videoData.page_url) {
                     // Clickable Card Version
                     return `
                         <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
@@ -336,12 +336,12 @@ async function runRender(data, DIA) {
                             <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
                         </article>`;
                 }
-            }).join(''); // Join the array of strings into one big block of HTML
+            }).join(''); // Merges all video cards into one string
         } else {
             videoContainer.innerHTML = ""; 
         }
     }
-
+    
 // 5. BLOQUES DINÁMICOS (Estructura, Extras, Música, etc.)
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
