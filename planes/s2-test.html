@@ -283,11 +283,34 @@ function formatSpanishDate(dateStr) {
 }
 
 async function runRender(data, DIA) {
+    // 1. Check for Prof View and the "Live" Day
+    const params = new URLSearchParams(window.location.search);
+    const isProfView = params.get('view') === 'prof';
+    
+    const now = new Date();
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
+    const liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
+
+    // 2. The Quick Restriction
+    if (DIA > liveDia && !isProfView) {
+        // Show a quick alert (you can style this as a toast later)
+        alert(`🚫 ¡Todavía no! El Día ${DIA} no está disponible. Volviendo al Día ${liveDia}.`);
+        
+        // Reset the input box visually
+        document.getElementById('diaInput').value = liveDia;
+        
+        // Re-run the render for the live day instead of the future day
+        return runRender(data, liveDia);
+    }
+
+    // 3. Define the Theme (Crucial: This must happen before using 'overrides' or 'fonts')
     const theme = await applyThemeStyles(data, DIA);
     const overrides = theme?.styles?.cardOverrides || {};
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
+    // 4. Content Rendering
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
     
@@ -301,7 +324,8 @@ async function runRender(data, DIA) {
         calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/${DIA}`;
         calBtn.style.backgroundColor = calColor;
     }
-
+    
+    
     // Evaluations
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
