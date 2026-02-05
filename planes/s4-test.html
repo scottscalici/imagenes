@@ -153,7 +153,8 @@ const CONFIG = {
     LECTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
     CULTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
-    TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json"
+    TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json",
+    VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
 async function applyThemeStyles(data, currentDia) {
@@ -294,6 +295,51 @@ async function runRender(data, DIA) {
     } catch (err) {
         console.error("Error en Curiosidad:", err);
         curBlock.style.display = "none";
+    }
+
+// --- VIDEO BLOCK LOGIC (Multiple Videos & Course Filtering) ---
+    const vidColor = overrides.video || accent; 
+    const vidFont = fonts.video || 'inherit';
+    const videoContainer = document.getElementById('videoBlock');
+
+    if (videoContainer) {
+        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
+        const dayVideos = data.videos.daily_tags.filter(v => 
+            v.dia == DIA && 
+            v.tags.includes(CONFIG.COURSE)
+        );
+        
+        if (dayVideos.length > 0) {
+            videoContainer.innerHTML = dayVideos.map(videoData => {
+                    if (videoData.page_url) {
+                    // Clickable Card Version
+                    return `
+                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
+                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
+                            <a href="${videoData.page_url}" target="_blank" class="block group">
+                                <img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md">
+                                <h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2>
+                            </a>
+                            <p class="text-slate-700 italic text-sm">${videoData.description || ""}</p>
+                        </article>`;
+                } else {
+                    // Embedded Player Version
+                    const width = videoData.is_short ? "315" : "100%";
+                    const height = videoData.is_short ? "560" : "315";
+                    return `
+                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
+                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
+                            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2>
+                            <div class="${videoData.is_short ? 'flex justify-center' : ''}">
+                                <iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe>
+                            </div>
+                            <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
+                        </article>`;
+                }
+            }).join(''); // Join the array of strings into one big block of HTML
+        } else {
+            videoContainer.innerHTML = ""; 
+        }
     }
 
 // 5. BLOQUES DINÁMICOS (Estructura, Extras, Música, etc.)
