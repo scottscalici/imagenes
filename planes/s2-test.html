@@ -349,19 +349,21 @@ async function runRender(data, DIA) {
             </article>`;
     } else { curBlock.innerHTML = ""; }
 
-// --- VIDEO BLOCK LOGIC (Multiple Videos Support) ---
+// --- VIDEO BLOCK LOGIC (Multiple Videos & Course Filtering) ---
     const vidColor = overrides.video || accent; 
     const vidFont = fonts.video || 'inherit';
     const videoContainer = document.getElementById('videoBlock');
 
     if (videoContainer) {
-        // Use .filter() instead of .find() to get ALL matches for the day
-        const dayVideos = data.videos.daily_tags.filter(v => v.dia == DIA);
+        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
+        const dayVideos = data.videos.daily_tags.filter(v => 
+            v.dia == DIA && 
+            v.tags.includes(CONFIG.COURSE)
+        );
         
         if (dayVideos.length > 0) {
-            // Map through the array to create HTML for every video found
             videoContainer.innerHTML = dayVideos.map(videoData => {
-                if (videoData.page_url) {
+                    if (videoData.page_url) {
                     // Clickable Card Version
                     return `
                         <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
