@@ -503,10 +503,19 @@ async function runRender(data, DIA) {
     });
 }
 async function loadData() {
-    const urls = [CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV];
+    const urls = [
+        CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, 
+        CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, 
+        CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV, CONFIG.VIDEOS
+    ];
     try {
       const res = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(r => r.json())));
-      return { plan: res[0], evals: res[1], cal: res[2], curios: res[3], tareas: res[4], vocab: res[5], apuntes: res[6], extras: res[7], musica: res[8], lectura: res[9], cultura: res[10], conv: res[11] };
+      return { 
+          plan: res[0], evals: res[1], cal: res[2], curios: res[3], 
+          tareas: res[4], vocab: res[5], apuntes: res[6], extras: res[7], 
+          musica: res[8], lectura: res[9], cultura: res[10], conv: res[11],
+          videos: res[12] // Add this line
+      };
     } catch (e) { console.error("Load Error", e); }
 }
 
