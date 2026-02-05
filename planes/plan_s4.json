@@ -102,16 +102,16 @@
       "fecha": "2026-02-05",
       "blocks": [
         { "kind": "vocabulario", "ref": "L8" },
-        {
+       {
           "kind": "estructura",
-          "ref": "siclauses",
-          "title": "Cláusulas con si",
-          "introducir": [],
-          "repasar": ["siclaus", "impdesubj", "cond"],
+          "ref": "perfectos",
+          "title": "Futuro perfecto y Condicional perfecto",
+          "introducir": ["futperf", "condperf"],
+          "repasar": [],
           "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses", "subjuntivo"]
         },
-        { "kind": "conv", "ref": "conv-s4-15" },
-        { "kind": "conv", "ref": "lect-s4-comoagua04" },
+        { "kind": "conv", "ref": "conv-s4-16" },
+        { "kind": "extras", "ref": "HL-read-marina" },
         { "kind": "extras", "ref": "IA-practice" },
         { "kind": "extras", "ref": "extra-fotos" }
       ]
