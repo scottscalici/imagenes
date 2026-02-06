@@ -45,32 +45,43 @@
 </div>
 
 <script>
-// ---------- VOCAB JSON (your data) ----------
+// ---------------- VOCAB (Unidad 2.2) ----------------
 const vocab = [
-  { es: "el armario", en: "closet" },
-  { es: "la mesita de noche", en: "nightstand" },
-  { es: "la cama", en: "bed" },
-  { es: "la cómoda", en: "dresser" },
-  { es: "el lavabo", en: "sink" },
-  { es: "la ducha", en: "shower" },
-  { es: "la bañera", en: "bathtub" },
-  { es: "el inodoro", en: "toilet" },
-  { es: "el televisor", en: "TV" },
-  { es: "la estantería", en: "shelf" },
-  { es: "la mesa", en: "table" },
-  { es: "la silla", en: "chair" },
-  { es: "el sofá", en: "sofa" },
-  { es: "el refrigerador", en: "refrigerator" },
-  { es: "la estufa", en: "stove" },
-  { es: "el microondas", en: "microwave" },
-  { es: "el lavaplatos", en: "dishwasher" }
+  "el armario",
+  "la mesita de noche",
+  "la cama",
+  "la cómoda",
+  "el lavabo",
+  "la ducha",
+  "la bañera",
+  "el inodoro",
+  "el televisor",
+  "la estantería",
+  "la mesa",
+  "la silla",
+  "el sofá",
+  "el refrigerador",
+  "la estufa",
+  "el microondas",
+  "el lavaplatos"
 ];
 
+// ---------------- LOCATIONS ----------------
+const locations = [
+  "en mi mochila",
+  "en mi dormitorio",
+  "en mi sala",
+  "en mi cocina",
+  "en mi baño"
+];
+
+// ---------------- STATE ----------------
 let mode = "hay";
 let current = 0;
 let currentCount = 1;
+let currentLocation = "";
 
-// ---------- HELPERS ----------
+// ---------------- HELPERS ----------------
 function normalize(text) {
   return text.toLowerCase()
     .normalize("NFD")
@@ -78,7 +89,7 @@ function normalize(text) {
     .trim();
 }
 
-function articleAndNoun(word) {
+function splitNoun(word) {
   const parts = word.split(" ");
   return { article: parts[0], noun: parts.slice(1).join(" ") };
 }
@@ -94,28 +105,30 @@ function numberWord(n) {
   return n === 1 ? "un" : n === 3 ? "tres" : "cinco";
 }
 
-// ---------- PROMPTS ----------
+// ---------------- LOAD PROMPT ----------------
 function loadPrompt() {
   const item = vocab[current];
-  const { article, noun } = articleAndNoun(item.es);
+  const { noun } = splitNoun(item);
 
   if (mode === "hay") {
     document.getElementById("prompt").textContent =
-      `There is a ${item.en}.`;
+      `There is a ${noun}.`;
   } else {
     currentCount = [1, 3, 5][Math.floor(Math.random() * 3)];
+    currentLocation = locations[Math.floor(Math.random() * locations.length)];
+
     document.getElementById("prompt").textContent =
-      `¿Cuántos ${pluralize(noun)} hay en tu mochila? (${currentCount})`;
+      `¿Cuántos ${pluralize(noun)} hay ${currentLocation}? (${currentCount})`;
   }
 
   document.getElementById("answer").value = "";
   document.getElementById("feedback").textContent = "";
 }
 
-// ---------- CHECK ANSWER ----------
+// ---------------- CHECK ANSWER ----------------
 function checkAnswer() {
   const item = vocab[current];
-  const { article, noun } = articleAndNoun(item.es);
+  const { article, noun } = splitNoun(item);
   const user = normalize(document.getElementById("answer").value);
 
   let correct;
@@ -126,23 +139,24 @@ function checkAnswer() {
   } else {
     const num = numberWord(currentCount);
     const nounForm = currentCount === 1 ? noun : pluralize(noun);
-    correct = normalize(`hay ${num} ${nounForm} en mi mochila`);
+    correct = normalize(`hay ${num} ${nounForm} ${currentLocation}`);
   }
 
   if (user === correct) {
-    feedback("✅ ¡Correcto!", "green");
+    showFeedback("✅ ¡Correcto!", "green");
   } else {
-    feedback(`❌ Ejemplo: ${correct}`, "red");
+    showFeedback(`❌ Ejemplo: ${correct}`, "red");
   }
 }
 
-function feedback(text, color) {
+// ---------------- FEEDBACK ----------------
+function showFeedback(text, color) {
   const el = document.getElementById("feedback");
   el.textContent = text;
   el.className = `mt-4 font-semibold text-${color}-600`;
 }
 
-// ---------- NAV ----------
+// ---------------- NAV ----------------
 function nextWord() {
   current = (current + 1) % vocab.length;
   loadPrompt();
