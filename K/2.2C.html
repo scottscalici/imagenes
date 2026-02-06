@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Práctica con HAY – Unidad 2.2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl text-center">
+  <h1 class="text-2xl font-bold mb-4">
+    Práctica con <span class="text-blue-600">HAY</span>
+  </h1>
+
+  <div class="mb-4">
+    <button onclick="setMode('hay')" class="px-3 py-1 bg-blue-100 rounded mr-2">
+      Hay + objeto
+    </button>
+    <button onclick="setMode('cuantos')" class="px-3 py-1 bg-green-100 rounded">
+      ¿Cuántos?
+    </button>
+  </div>
+
+  <p id="prompt" class="text-lg mb-4"></p>
+
+  <input
+    id="answer"
+    class="w-full border p-2 rounded mb-3"
+    placeholder="Escribe tu respuesta…"
+  />
+
+  <button
+    onclick="checkAnswer()"
+    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+  >
+    Comprobar
+  </button>
+
+  <p id="feedback" class="mt-4 font-semibold"></p>
+
+  <button onclick="nextWord()" class="mt-4 text-sm text-gray-600 underline">
+    Siguiente
+  </button>
+</div>
+
+<script>
+// ---------- VOCAB JSON (your data) ----------
+const vocab = [
+  { es: "el armario", en: "closet" },
+  { es: "la mesita de noche", en: "nightstand" },
+  { es: "la cama", en: "bed" },
+  { es: "la cómoda", en: "dresser" },
+  { es: "el lavabo", en: "sink" },
+  { es: "la ducha", en: "shower" },
+  { es: "la bañera", en: "bathtub" },
+  { es: "el inodoro", en: "toilet" },
+  { es: "el televisor", en: "TV" },
+  { es: "la estantería", en: "shelf" },
+  { es: "la mesa", en: "table" },
+  { es: "la silla", en: "chair" },
+  { es: "el sofá", en: "sofa" },
+  { es: "el refrigerador", en: "refrigerator" },
+  { es: "la estufa", en: "stove" },
+  { es: "el microondas", en: "microwave" },
+  { es: "el lavaplatos", en: "dishwasher" }
+];
+
+let mode = "hay";
+let current = 0;
+let currentCount = 1;
+
+// ---------- HELPERS ----------
+function normalize(text) {
+  return text.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function articleAndNoun(word) {
+  const parts = word.split(" ");
+  return { article: parts[0], noun: parts.slice(1).join(" ") };
+}
+
+function pluralize(noun) {
+  if (noun.endsWith("a") || noun.endsWith("o") || noun.endsWith("e")) {
+    return noun + "s";
+  }
+  return noun + "es";
+}
+
+function numberWord(n) {
+  return n === 1 ? "un" : n === 3 ? "tres" : "cinco";
+}
+
+// ---------- PROMPTS ----------
+function loadPrompt() {
+  const item = vocab[current];
+  const { article, noun } = articleAndNoun(item.es);
+
+  if (mode === "hay") {
+    document.getElementById("prompt").textContent =
+      `There is a ${item.en}.`;
+  } else {
+    currentCount = [1, 3, 5][Math.floor(Math.random() * 3)];
+    document.getElementById("prompt").textContent =
+      `¿Cuántos ${pluralize(noun)} hay en tu mochila? (${currentCount})`;
+  }
+
+  document.getElementById("answer").value = "";
+  document.getElementById("feedback").textContent = "";
+}
+
+// ---------- CHECK ANSWER ----------
+function checkAnswer() {
+  const item = vocab[current];
+  const { article, noun } = articleAndNoun(item.es);
+  const user = normalize(document.getElementById("answer").value);
+
+  let correct;
+
+  if (mode === "hay") {
+    const unUna = article === "la" ? "una" : "un";
+    correct = normalize(`hay ${unUna} ${noun}`);
+  } else {
+    const num = numberWord(currentCount);
+    const nounForm = currentCount === 1 ? noun : pluralize(noun);
+    correct = normalize(`hay ${num} ${nounForm} en mi mochila`);
+  }
+
+  if (user === correct) {
+    feedback("✅ ¡Correcto!", "green");
+  } else {
+    feedback(`❌ Ejemplo: ${correct}`, "red");
+  }
+}
+
+function feedback(text, color) {
+  const el = document.getElementById("feedback");
+  el.textContent = text;
+  el.className = `mt-4 font-semibold text-${color}-600`;
+}
+
+// ---------- NAV ----------
+function nextWord() {
+  current = (current + 1) % vocab.length;
+  loadPrompt();
+}
+
+function setMode(m) {
+  mode = m;
+  loadPrompt();
+}
+
+loadPrompt();
+</script>
+
+</body>
+</html>
