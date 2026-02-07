@@ -1,1 +1,1255 @@
+<!--futuro perfecto y condicional perfecto -->
+<!--D3-7-4-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calentamiento – Práctica</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+  <!-- STICKY HEADER WITH PROGRESS -->
+  <header class="sticky top-0 z-20 bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div>
+        <h1 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-800">
+          Calentamiento – Módulo de práctica
+        </h1>
+        <p id="pageSubtitle" class="text-xs sm:text-sm text-slate-500">
+          Cargando…
+        </p>
+        <p id="pageMeta" class="text-[10px] sm:text-xs text-slate-400"></p>
+      </div>
+      <div class="w-40 sm:w-64">
+        <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div id="progress-fill" class="h-2 bg-emerald-500 transition-all duration-300" style="width: 0%;"></div>
+        </div>
+        <p id="progress-label" class="text-[10px] sm:text-xs text-slate-600 mt-1 text-right">
+          0 % completado
+        </p>
+      </div>
+    </div>
+  </header>
 
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- Status / errors -->
+    <div id="topStatus" class="hidden mb-4 rounded-xl border border-slate-200 bg-white p-4 text-sm"></div>
+
+    <div class="grid md:grid-cols-[230px,1fr] gap-6">
+      <!-- SIDEBAR -->
+      <aside class="bg-white rounded-2xl shadow p-4 text-sm space-y-3">
+        <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+          Módulos
+        </h2>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-sky-50 text-sky-800 border border-sky-200 text-sm"
+                data-module="1">
+          <span>Módulo 1.1 · Verbos</span>
+          <span id="badge-1" class="text-xs">●</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="2" disabled>
+          <span>Módulo 1.2 · Verbos</span>
+          <span id="badge-2" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="3" disabled>
+          <span>Módulo 1.3 · Verbos</span>
+          <span id="badge-3" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="4" disabled>
+          <span>Módulo 1.4 · Verbos</span>
+          <span id="badge-4" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="5" disabled>
+          <span>Módulo 2 · Repaso vocabulario</span>
+          <span id="badge-5" class="text-xs">🔒</span>
+        </button>
+
+        <button class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between gap-2 bg-slate-50 text-slate-500 border border-slate-200 text-sm"
+                data-module="6" disabled>
+          <span>¡Finalizado!</span>
+  <span id="badge-6" class="text-xs">🔒</span>
+        </button>
+      </aside>
+
+      <!-- MAIN PANEL -->
+      <section class="bg-white rounded-2xl shadow p-5 md:p-6 min-h-[320px]">
+        <!-- Module 1.1 -->
+        <div id="module-1" class="module-view space-y-4">
+          <h2 class="text-xl font-semibold text-slate-800">
+            Módulo 1.1 · Verbos (futuro perfecto)
+          </h2>
+          <p class="text-sm text-slate-600">
+            Completa las formas verbales. Necesitas al menos <strong>50&nbsp;%</strong> para avanzar al siguiente módulo.
+          </p>
+
+          <div id="module-1-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-1"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-1-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-end pt-4 border-t border-slate-100 mt-4">
+            <button id="btn-next-from-1"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.2) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 1.2 -->
+        <div id="module-2" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">
+            Módulo 1.2 · Verbos (futuro perfecto)
+          </h2>
+          <p class="text-sm text-slate-600">
+            Segundo bloque de este conjunto de práctica.
+          </p>
+
+          <div id="module-2-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-2"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-2-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                    data-go-module="1">
+              ← Volver a 1.1
+            </button>
+            <button id="btn-next-from-2"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.3) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 1.3 -->
+        <div id="module-3" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">
+            Módulo 1.3 · Verbos (condicional perfecto)
+          </h2>
+          <p class="text-sm text-slate-600">
+            Tercer bloque de este conjunto de práctica.
+          </p>
+
+          <div id="module-3-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-3"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-3-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                    data-go-module="2">
+              ← Volver a 1.2
+            </button>
+            <button id="btn-next-from-3"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Siguiente módulo (1.4) →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 1.4 -->
+        <div id="module-4" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">
+            Módulo 1.4 · Verbos (condicional perfecto)
+          </h2>
+          <p class="text-sm text-slate-600">
+            Último bloque de verbos de este conjunto. Al completar con éxito, se desbloquea el Módulo 2.
+          </p>
+
+          <div id="module-4-questions" class="space-y-3"></div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <button id="btn-check-module-4"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+              Corregir respuestas
+            </button>
+            <p id="module-4-result" class="text-sm text-slate-700"></p>
+          </div>
+
+          <div class="flex justify-between pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                    data-go-module="3">
+              ← Volver a 1.3
+            </button>
+            <button id="btn-next-from-4"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Ir al Módulo 2 →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 2 – vocab real -->
+        <div id="module-5" class="module-view space-y-4 hidden">
+          <h2 class="text-xl font-semibold text-slate-800">
+            Módulo 2 · Repaso de vocabulario
+          </h2>
+          <p class="text-sm text-slate-600">
+            Escribe la traducción al inglés. Luego, empareja solo las palabras que fallaste.
+          </p>
+          <p class="text-xs text-slate-500">
+            Este módulo usa 30 palabras (3 bloques de 10) desde un archivo JSON de vocabulario.
+          </p>
+
+          <div id="vocab-block-container" class="space-y-4 mt-4"></div>
+          <p id="vocab-global-status" class="text-xs text-slate-500"></p>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-slate-100 mt-4">
+            <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+                    data-go-module="4">
+              ← Volver a 1.4
+            </button>
+
+            <button id="btn-reset-vocab"
+                    class="px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold">
+              Reiniciar vocabulario
+            </button>
+
+            <button id="btn-next-from-5"
+                    class="px-4 py-2 rounded-lg bg-slate-300 text-slate-600 text-sm font-semibold cursor-not-allowed"
+                    disabled>
+              Ir al Módulo 3 →
+            </button>
+          </div>
+        </div>
+
+        <!-- Module 3 – curiosidad placeholder -->
+       <div id="module-6" class="module-view space-y-6 hidden text-center py-8">
+  <div class="space-y-2">
+    <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+      </svg>
+    </div>
+    <h2 class="text-2xl font-bold text-slate-800">¡Felicidades!</h2>
+    <p class="text-slate-600 max-w-sm mx-auto">
+      Has completado con éxito el calentamiento de verbos y vocabulario.
+    </p>
+  </div>
+
+  <div class="bg-sky-50 border border-sky-100 rounded-xl p-4 max-w-xs mx-auto">
+    <p class="text-sm text-sky-800 font-medium">
+      Ya puedes cerrar esta pestaña y continuar con las actividades en <strong>Schoology</strong>.
+    </p>
+  </div>
+
+  <div class="pt-6 border-t border-slate-100">
+    <button class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold"
+            data-go-module="5">
+      ← Volver al Vocabulario
+    </button>
+  </div>
+</div>
+  </main>
+
+  <script>
+    /******************************************************************
+     * OPTION A SUPPORT:
+     * - Accept ?cal=<id>
+     * - Fetch calentamientos.json
+     * - Resolve verbs/vocab sources dynamically
+     ******************************************************************/
+    const CALENTAMIENTOS_URL =
+      "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calentamientos.json";
+
+    // Fallback defaults (used if no ?cal= provided or lookup fails)
+    const DEFAULT_VERBS_URL =
+      "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/dailyJSON/futuro-perfecto-y-condicional-perfecto1.json";
+
+    const DEFAULT_VOCAB_URL =
+      "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/rdv/D3-7-4.json";
+
+    const TOTAL_MODULES = 6;
+    const PASS_THRESHOLD = 0.5;
+
+    /***********************
+     * DOM
+     ***********************/
+    const pageTitleEl = document.getElementById("pageTitle");
+    const pageSubtitleEl = document.getElementById("pageSubtitle");
+    const pageMetaEl = document.getElementById("pageMeta");
+    const topStatusEl = document.getElementById("topStatus");
+
+    const progressFill = document.getElementById("progress-fill");
+    const progressLabel = document.getElementById("progress-label");
+
+    /***********************
+     * STATE
+     ***********************/
+    const modulePassed = {};
+    let completedModules = 0;
+
+    const runtime = {
+      calId: null,
+      verbsUrl: DEFAULT_VERBS_URL,
+      vocabUrl: DEFAULT_VOCAB_URL,
+      verbsLabel: "futuro perfecto y condicional perfecto",
+      vocabLabel: "Vocabulario",
+      title: "Calentamiento – Módulo de práctica",
+      subtitle: "Calentamiento",
+      teacherNote: ""
+    };
+
+    /***********************
+     * UTILS
+     ***********************/
+    function showTopStatus(msg, kind = "info") {
+      const styles = {
+        info: "border-slate-200 text-slate-700",
+        ok: "border-emerald-200 text-emerald-800",
+        err: "border-red-200 text-red-700",
+      };
+      topStatusEl.className = `mb-4 rounded-xl bg-white p-4 text-sm border ${styles[kind] || styles.info}`;
+      topStatusEl.textContent = msg;
+      topStatusEl.classList.remove("hidden");
+    }
+
+    function hideTopStatus() {
+      topStatusEl.classList.add("hidden");
+      topStatusEl.textContent = "";
+    }
+
+    async function getJSON(url) {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Fetch failed (${res.status}) for ${url}`);
+      return await res.json();
+    }
+
+    function getCalIdFromURL() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get("cal");
+      return id && id.trim() ? id.trim() : null;
+    }
+
+    function safeText(v) {
+      return String(v ?? "").trim();
+    }
+
+    /***********************
+     * HEADER / PROGRESS
+     ***********************/
+    function updateProgress() {
+      const percent = Math.round((completedModules / TOTAL_MODULES) * 100);
+      progressFill.style.width = percent + "%";
+      progressLabel.textContent = percent + "% completado";
+    }
+
+    function markModuleCompleted(n) {
+      if (!modulePassed[n]) {
+        modulePassed[n] = true;
+        completedModules = Object.keys(modulePassed).length;
+        updateProgress();
+        const badge = document.getElementById("badge-" + n);
+        if (badge) badge.textContent = "✔";
+      }
+    }
+
+    function unlockModuleBtn(n) {
+      const tab = document.querySelector('.module-tab[data-module="' + n + '"]');
+      const badge = document.getElementById("badge-" + n);
+      if (tab) {
+        tab.disabled = false;
+        tab.classList.remove("text-slate-500");
+      }
+      if (badge && badge.textContent === "🔒") badge.textContent = "●";
+    }
+
+    function showModule(n) {
+      document.querySelectorAll(".module-view").forEach(view => view.classList.add("hidden"));
+      const active = document.getElementById("module-" + n);
+      if (active) active.classList.remove("hidden");
+
+      document.querySelectorAll(".module-tab").forEach(btn => {
+        const m = btn.dataset.module;
+        if (String(m) === String(n)) {
+          btn.classList.add("bg-sky-50", "text-sky-800", "border-sky-300");
+          btn.classList.remove("bg-slate-50", "text-slate-500", "border-slate-200");
+        } else {
+          btn.classList.remove("bg-sky-50", "text-sky-800", "border-sky-300");
+          btn.classList.add("bg-slate-50", "text-slate-500", "border-slate-200");
+        }
+      });
+    }
+
+    function applyHeaderFromRuntime() {
+      pageTitleEl.textContent = runtime.title || "Calentamiento – Módulo de práctica";
+      pageSubtitleEl.textContent = runtime.subtitle || "Calentamiento";
+      const bits = [];
+      if (runtime.calId) bits.push(`id: ${runtime.calId}`);
+      if (runtime.verbsLabel) bits.push(`Verbos: ${runtime.verbsLabel}`);
+      if (runtime.vocabLabel) bits.push(`Vocab: ${runtime.vocabLabel}`);
+      pageMetaEl.textContent = bits.join(" · ");
+    }
+
+    /***********************
+     * RESOLVE FROM LIBRARY
+     ***********************/
+    async function resolveFromLibraryIfPossible() {
+      runtime.calId = getCalIdFromURL();
+      if (!runtime.calId) {
+        runtime.subtitle = "Calentamiento (modo manual)";
+        applyHeaderFromRuntime();
+        hideTopStatus();
+        return;
+      }
+
+      try {
+        const lib = await getJSON(CALENTAMIENTOS_URL);
+        const items = Array.isArray(lib.items) ? lib.items : [];
+        const entry = items.find(x => x && x.id === runtime.calId);
+
+        if (!entry) {
+          runtime.subtitle = "Calentamiento (id no encontrado)";
+          applyHeaderFromRuntime();
+          showTopStatus(`⚠ No encontré "${runtime.calId}" en calentamientos.json. Usando valores por defecto.`, "err");
+          return;
+        }
+
+        // Apply metadata
+        runtime.title = safeText(entry.title) ? `Calentamiento – ${safeText(entry.title)}` : runtime.title;
+        runtime.subtitle = safeText(entry.teacher_note) ? "Calentamiento (con nota)" : "Calentamiento";
+        runtime.teacherNote = safeText(entry.teacher_note);
+
+        // Apply labels + URLs
+        runtime.verbsLabel = safeText(entry?.sources?.verbs?.label) || runtime.verbsLabel;
+        runtime.vocabLabel = safeText(entry?.sources?.vocab?.label) || runtime.vocabLabel;
+
+        runtime.verbsUrl = safeText(entry?.sources?.verbs?.url) || runtime.verbsUrl;
+        runtime.vocabUrl = safeText(entry?.sources?.vocab?.url) || runtime.vocabUrl;
+
+        applyHeaderFromRuntime();
+
+        const msg = `Cargado desde biblioteca: ${runtime.calId} · ${runtime.verbsLabel} + ${runtime.vocabLabel}`;
+        showTopStatus(msg, "ok");
+
+        // Optional: show teacher note in status
+        if (runtime.teacherNote) {
+          showTopStatus(`${msg} — Nota: ${runtime.teacherNote}`, "ok");
+        }
+      } catch (err) {
+        runtime.subtitle = "Calentamiento (error al cargar biblioteca)";
+        applyHeaderFromRuntime();
+        showTopStatus(`⚠ No pude cargar calentamientos.json. Usando valores por defecto. (${err.message})`, "err");
+      }
+    }
+
+    /***********************
+     * VERB MODULES
+     ***********************/
+    function buildVerbModule(moduleNumber, items) {
+  const container = document.getElementById("module-" + moduleNumber + "-questions");
+  if (!container) return;
+  container.innerHTML = "";
+
+  items.forEach((item, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "space-y-1 quiz-item";
+    wrapper.dataset.answer = item.forma;
+
+    const sujeto = item.sujeto || "";
+    const contexto = item.contexto || "___";
+    const infinitivo = item.infinitivo || "";
+    // Get the translation from the JSON
+    const traducción = item.traducción ? ` — ${item.traducción}` : "";
+
+    wrapper.innerHTML = `
+      <label class="text-sm font-medium text-slate-800">
+        ${index + 1}. ${sujeto} ${contexto} <span class="text-slate-500 font-normal">(${infinitivo}${traducción})</span>
+      </label>
+      <input type="text"
+             class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+      <p class="text-xs text-slate-500 feedback hidden"></p>
+    `;
+    container.appendChild(wrapper);
+  });
+}
+ 
+    function buildAllVerbModules(items) {
+      const chunkSize = 5; // 4 modules x 5 = 20
+      for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
+        const start = (moduleNum - 1) * chunkSize;
+        const slice = items.slice(start, start + chunkSize);
+        if (!slice.length) break;
+        buildVerbModule(moduleNum, slice);
+      }
+    }
+
+    function attachQuizHandler(moduleNumber) {
+      const btnCheck = document.getElementById("btn-check-module-" + moduleNumber);
+      if (!btnCheck) return;
+
+      btnCheck.addEventListener("click", () => {
+        const selector = "#module-" + moduleNumber + " .quiz-item";
+        const items = document.querySelectorAll(selector);
+        const resultEl = document.getElementById("module-" + moduleNumber + "-result");
+
+        let missing = false;
+        items.forEach(item => {
+          const input = item.querySelector("input");
+          const feedback = item.querySelector(".feedback");
+          if (!input) return;
+          const value = (input.value || "").trim();
+          if (value === "") {
+            missing = true;
+            input.classList.remove("border-emerald-400", "border-red-400");
+            input.classList.add("border-yellow-400");
+            if (feedback) feedback.classList.add("hidden");
+          }
+        });
+
+        if (missing) {
+          resultEl.textContent = "Responde todos los campos antes de corregir tus respuestas.";
+          resultEl.classList.remove("text-emerald-700");
+          resultEl.classList.add("text-red-600");
+          return;
+        }
+
+        let correct = 0;
+        items.forEach(item => {
+          const rawAnswer = (item.dataset.answer || "").trim();
+          const answer = rawAnswer.toLowerCase();
+          const input = item.querySelector("input");
+          const feedback = item.querySelector(".feedback");
+          if (!input) return;
+          const userValue = (input.value || "").trim().toLowerCase();
+
+          if (userValue === answer) {
+            correct++;
+            input.classList.remove("border-red-400", "border-yellow-400");
+            input.classList.add("border-emerald-400");
+            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+            feedback.classList.remove("hidden", "text-red-500");
+            feedback.classList.add("text-emerald-600");
+          } else {
+            input.classList.remove("border-emerald-400", "border-yellow-400");
+            input.classList.add("border-red-400");
+            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+            feedback.classList.remove("hidden", "text-emerald-600");
+            feedback.classList.add("text-red-500");
+          }
+        });
+
+        const total = items.length;
+        const score = total ? correct / total : 0;
+        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        const nextBtn = document.getElementById("btn-next-from-" + moduleNumber);
+
+        if (score >= PASS_THRESHOLD) {
+          resultEl.classList.remove("text-red-600");
+          resultEl.classList.add("text-emerald-700");
+
+          if (nextBtn) {
+            nextBtn.disabled = false;
+            nextBtn.classList.remove("bg-slate-300", "text-slate-600", "cursor-not-allowed");
+            nextBtn.classList.add("bg-emerald-600", "hover:bg-emerald-700", "text-white");
+          }
+
+          markModuleCompleted(moduleNumber);
+          const nextModule = moduleNumber + 1;
+          if (nextModule <= 6) unlockModuleBtn(nextModule);
+        } else {
+          resultEl.classList.remove("text-emerald-700");
+          resultEl.classList.add("text-red-600");
+        }
+      });
+    }
+
+    async function loadPracticeSet() {
+      try {
+        const data = await getJSON(runtime.verbsUrl);
+
+        // Your practice JSON is typically an array already.
+        const items = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
+        if (!items.length) throw new Error("El JSON de verbos no contiene items.");
+
+        buildAllVerbModules(items);
+        [1, 2, 3, 4].forEach(attachQuizHandler);
+      } catch (err) {
+        console.error("Error al cargar el JSON de práctica:", err);
+        const result = document.getElementById("module-1-result");
+        if (result) {
+          result.textContent = "No se pudo cargar el conjunto de práctica (revisa la URL del JSON).";
+          result.classList.add("text-red-600");
+        }
+        showTopStatus(`⚠ Error cargando verbos: ${err.message}`, "err");
+      }
+    }
+
+    /***********************
+     * VOCAB MODULE (Módulo 2)
+     ***********************/
+    const vocabBlockContainer = document.getElementById("vocab-block-container");
+    const vocabGlobalStatus = document.getElementById("vocab-global-status");
+    const nextFrom5Btn = document.getElementById("btn-next-from-5");
+    const resetVocabBtn = document.getElementById("btn-reset-vocab");
+
+    const vocabState = {
+      blocks: [],
+      currentIndex: 0,
+      completedBlocks: 0,
+      scores: [],
+      pairs: []
+    };
+
+    function normalizeVocabPiece(str) {
+      let s = (str || "").toLowerCase().trim();
+      s = s.replace(/\([^)]*\)/g, " ").trim();
+      while (/^(to|the|a|an)\s+/.test(s)) s = s.replace(/^(to|the|a|an)\s+/, "");
+      s = s.replace(/\s+/g, " ");
+      return s;
+    }
+
+    function levenshtein(a, b) {
+      a = a || "";
+      b = b || "";
+      const m = a.length, n = b.length;
+      if (m === 0) return n;
+      if (n === 0) return m;
+
+      const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+      for (let i = 0; i <= m; i++) dp[i][0] = i;
+      for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+      for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          dp[i][j] = Math.min(
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1,
+            dp[i - 1][j - 1] + cost
+          );
+        }
+      }
+      return dp[m][n];
+    }
+
+    function isVocabCorrect(userRaw, answerRaw) {
+      const user = (userRaw || "").trim();
+      const ans = (answerRaw || "").trim();
+      if (!ans) return false;
+
+      const answerParts = ans.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
+      const userParts = user.split(/[;,/]/).map(normalizeVocabPiece).filter(Boolean);
+
+      if (!answerParts.length) return normalizeVocabPiece(user) === normalizeVocabPiece(ans);
+      if (!userParts.length) return false;
+
+      for (const up of userParts) {
+        for (const ap of answerParts) {
+          if (!ap) continue;
+          if (up === ap) return true;
+
+          const dist = levenshtein(up, ap);
+          const len = Math.max(up.length, ap.length);
+          const maxAllowed = Math.min(2, Math.floor(len * 0.25));
+          if (dist > 0 && dist <= maxAllowed) return true;
+        }
+      }
+      return false;
+    }
+
+    function extractVocabPairs(data) {
+      let raw = [];
+      if (Array.isArray(data)) raw = data;
+      else if (Array.isArray(data.items)) raw = data.items;
+      else if (Array.isArray(data.vocabulario)) raw = data.vocabulario;
+
+      return raw
+        .map(entry => {
+          const spanish =
+            entry.spanish || entry.es || entry.espanol || entry.español ||
+            entry.palabra || entry.termino || entry.vocabulario || "";
+          const english =
+            entry.english || entry.en || entry.ingles || entry.englishText ||
+            entry.traducción || entry.definicion || "";
+          return { spanish, english };
+        })
+        .filter(p => p.spanish && p.english);
+    }
+
+    function buildTypingStage(blockIdx) {
+      const totalBlocks = vocabState.blocks.length;
+      const block = vocabState.blocks[blockIdx];
+      if (!block) return;
+
+      vocabBlockContainer.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "flex items-baseline justify-between gap-2";
+      header.innerHTML = `
+        <h3 class="text-lg font-semibold text-slate-800">
+          Bloque ${blockIdx + 1} de ${totalBlocks}
+        </h3>
+        <p class="text-xs text-slate-500">
+          Escribe la traducción al inglés para cada palabra.
+        </p>
+      `;
+      vocabBlockContainer.appendChild(header);
+
+      const list = document.createElement("div");
+      list.className = "space-y-3 mt-2";
+
+      block.items.forEach((item, i) => {
+        const row = document.createElement("div");
+        row.className = "space-y-1 vocab-item";
+        row.dataset.answer = item.english;
+
+        row.innerHTML = `
+          <label class="text-sm font-medium text-slate-800">
+            ${i + 1}. ${item.spanish}
+          </label>
+          <input type="text"
+                class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+          <p class="text-xs text-slate-500 feedback hidden"></p>
+        `;
+        list.appendChild(row);
+      });
+
+      vocabBlockContainer.appendChild(list);
+
+      const footer = document.createElement("div");
+      footer.className = "flex flex-wrap items-center gap-3 pt-3";
+      footer.innerHTML = `
+        <button id="btn-vocab-check"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold">
+          Corregir respuestas
+        </button>
+        <p id="vocab-block-result" class="text-sm text-slate-700"></p>
+      `;
+      vocabBlockContainer.appendChild(footer);
+
+      const checkBtn = footer.querySelector("#btn-vocab-check");
+      const resultEl = footer.querySelector("#vocab-block-result");
+
+      checkBtn.addEventListener("click", () => {
+        const items = vocabBlockContainer.querySelectorAll(".vocab-item");
+
+        let missing = false;
+        items.forEach(item => {
+          const input = item.querySelector("input");
+          const feedback = item.querySelector(".feedback");
+          const val = (input.value || "").trim();
+          if (!val) {
+            missing = true;
+            input.classList.remove("border-emerald-400", "border-red-400");
+            input.classList.add("border-yellow-400");
+            feedback.classList.add("hidden");
+          }
+        });
+
+        if (missing) {
+          resultEl.textContent = "Responde todos los campos antes de corregir.";
+          resultEl.classList.remove("text-emerald-700");
+          resultEl.classList.add("text-red-600");
+          return;
+        }
+
+        let correct = 0;
+        const wrongItems = [];
+
+        items.forEach(item => {
+          const rawAnswer = (item.dataset.answer || "").trim();
+          const input = item.querySelector("input");
+          const feedback = item.querySelector(".feedback");
+          const userVal = (input.value || "").trim();
+
+          const ok = isVocabCorrect(userVal, rawAnswer);
+
+          if (ok) {
+            correct++;
+            input.classList.remove("border-red-400", "border-yellow-400");
+            input.classList.add("border-emerald-400");
+            feedback.textContent = `✅ Correcto: ${rawAnswer}`;
+            feedback.classList.remove("hidden", "text-red-500");
+            feedback.classList.add("text-emerald-600");
+          } else {
+            input.classList.remove("border-emerald-400", "border-yellow-400");
+            input.classList.add("border-red-400");
+            feedback.textContent = `❌ Correcto: ${rawAnswer}`;
+            feedback.classList.remove("hidden", "text-emerald-600");
+            feedback.classList.add("text-red-500");
+
+            const idx = Number(item.querySelector("label").textContent.split(".")[0]) - 1;
+            wrongItems.push(block.items[idx]);
+          }
+        });
+
+        const total = items.length;
+        const score = total ? correct / total : 0;
+        vocabState.scores[blockIdx] = { correct, total };
+
+        resultEl.textContent = `Obtuviste ${correct} de ${total} (${Math.round(score * 100)} %).`;
+
+        if (wrongItems.length === 0) {
+          resultEl.classList.remove("text-red-600");
+          resultEl.classList.add("text-emerald-700");
+          buildNextBlockButton(blockIdx);
+        } else {
+          resultEl.classList.remove("text-emerald-700");
+          resultEl.classList.add("text-slate-700");
+          buildMatchingStage(blockIdx, wrongItems);
+        }
+      });
+    }
+
+    function buildMatchingStage(blockIdx, wrongItems) {
+      const existingMatch = document.getElementById("vocab-matching-section");
+      if (existingMatch) existingMatch.remove();
+
+      const matchSection = document.createElement("div");
+      matchSection.id = "vocab-matching-section";
+      matchSection.className = "mt-5 border-t border-slate-200 pt-4 space-y-3";
+
+      matchSection.innerHTML = `
+        <h4 class="text-sm font-semibold text-slate-800">
+          Empareja las palabras que fallaste
+        </h4>
+        <p class="text-xs text-slate-500">
+          Haz clic primero en la palabra en español y luego en su traducción correcta en inglés.
+        </p>
+      `;
+
+      const columns = document.createElement("div");
+      columns.className = "grid sm:grid-cols-2 gap-3";
+
+      const leftCol = document.createElement("div");
+      leftCol.className = "space-y-2";
+
+      const rightCol = document.createElement("div");
+      rightCol.className = "space-y-2";
+
+      function shuffle(arr) {
+        return arr
+          .map(v => ({ v, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ v }) => v);
+      }
+
+      const shuffledSpanish = shuffle(wrongItems);
+      const shuffledEnglish = shuffle(wrongItems);
+
+      shuffledSpanish.forEach((item, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 spanish-option";
+        btn.dataset.key = String(idx);
+        btn.textContent = item.spanish;
+        leftCol.appendChild(btn);
+      });
+
+      shuffledEnglish.forEach(item => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "w-full text-left px-3 py-1.5 rounded-lg border border-slate-200 text-sm bg-slate-50 hover:bg-slate-100 english-option";
+        btn.dataset.spanish = item.spanish;
+        btn.dataset.english = item.english;
+        btn.textContent = item.english;
+        rightCol.appendChild(btn);
+      });
+
+      columns.appendChild(leftCol);
+      columns.appendChild(rightCol);
+      matchSection.appendChild(columns);
+
+      const status = document.createElement("p");
+      status.className = "text-xs text-slate-500 mt-2";
+      matchSection.appendChild(status);
+
+      vocabBlockContainer.appendChild(matchSection);
+
+      let selectedSpanishBtn = null;
+      let remaining = wrongItems.length;
+
+      function clearSelections() {
+        vocabBlockContainer
+          .querySelectorAll(".spanish-option, .english-option")
+          .forEach(btn => btn.classList.remove("ring-2", "ring-sky-400", "bg-sky-50"));
+      }
+
+      leftCol.querySelectorAll(".spanish-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (btn.disabled) return;
+          selectedSpanishBtn = btn;
+          clearSelections();
+          btn.classList.add("ring-2", "ring-sky-400", "bg-sky-50");
+          status.textContent = "Ahora haz clic en la traducción correcta en inglés.";
+          status.classList.remove("text-red-600", "text-emerald-700");
+          status.classList.add("text-slate-500");
+        });
+      });
+
+      rightCol.querySelectorAll(".english-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (!selectedSpanishBtn || btn.disabled) return;
+
+          const spanishText = selectedSpanishBtn.textContent.trim();
+          const englishText = btn.dataset.english;
+
+          const correctPair = wrongItems.find(it => it.spanish === spanishText && it.english === englishText);
+
+          if (correctPair) {
+            selectedSpanishBtn.disabled = true;
+            btn.disabled = true;
+
+            selectedSpanishBtn.classList.remove("ring-2", "ring-sky-400");
+            selectedSpanishBtn.classList.add("bg-emerald-50", "border-emerald-400");
+            btn.classList.add("bg-emerald-50", "border-emerald-400");
+
+            remaining--;
+            selectedSpanishBtn = null;
+
+            status.textContent = `✔ ¡Bien! Te quedan ${remaining} por emparejar.`;
+            status.classList.remove("text-red-600", "text-slate-500");
+            status.classList.add("text-emerald-700");
+
+            if (remaining === 0) {
+              status.textContent = "✔ Bloque completado. Puedes pasar al siguiente bloque.";
+              buildNextBlockButton(blockIdx);
+            }
+          } else {
+            status.textContent = "❌ No es la traducción correcta. Intenta de nuevo.";
+            status.classList.remove("text-slate-500", "text-emerald-700");
+            status.classList.add("text-red-600");
+            clearSelections();
+            selectedSpanishBtn = null;
+          }
+        });
+      });
+    }
+
+    function buildNextBlockButton(blockIdx) {
+      const existing = document.getElementById("vocab-next-block");
+      if (existing) existing.remove();
+
+      const totalBlocks = vocabState.blocks.length;
+      const wrapper = document.createElement("div");
+      wrapper.id = "vocab-next-block";
+      wrapper.className = "pt-4 flex justify-end";
+
+      const isLast = blockIdx === totalBlocks - 1;
+      const label = isLast ? "Terminar vocabulario" : "Siguiente bloque de vocabulario →";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold";
+      btn.textContent = label;
+
+      btn.addEventListener("click", () => {
+        vocabState.completedBlocks++;
+
+        if (isLast) {
+          let totalCorrect = 0;
+          let totalQs = 0;
+          (vocabState.scores || []).forEach(s => {
+            if (!s) return;
+            totalCorrect += s.correct || 0;
+            totalQs += s.total || 0;
+          });
+          const overallPct = totalQs ? Math.round((totalCorrect / totalQs) * 100) : 0;
+
+          vocabGlobalStatus.innerHTML =
+            `✔ Has completado los 3 bloques de vocabulario. ` +
+            `Resultado total: <strong>${totalCorrect} / ${totalQs}</strong> (` +
+            `${overallPct}&nbsp;%).`;
+
+          vocabGlobalStatus.classList.remove("text-slate-500", "text-red-600");
+          vocabGlobalStatus.classList.add("text-emerald-700");
+
+          markModuleCompleted(5);
+          unlockModuleBtn(6);
+
+          if (nextFrom5Btn) {
+            nextFrom5Btn.disabled = false;
+            nextFrom5Btn.classList.remove("bg-slate-300", "text-slate-600", "cursor-not-allowed");
+            nextFrom5Btn.classList.add("bg-emerald-600", "hover:bg-emerald-700", "text-white");
+          }
+        } else {
+          vocabState.currentIndex = blockIdx + 1;
+          buildTypingStage(vocabState.currentIndex);
+          vocabGlobalStatus.textContent = `Bloque ${vocabState.currentIndex + 1} de ${totalBlocks}.`;
+        }
+      });
+
+      wrapper.appendChild(btn);
+      vocabBlockContainer.appendChild(wrapper);
+    }
+
+    if (resetVocabBtn) {
+      resetVocabBtn.addEventListener("click", () => {
+        if (!vocabState.pairs.length) {
+          loadVocabSet();
+          return;
+        }
+
+        vocabState.currentIndex = 0;
+        vocabState.completedBlocks = 0;
+        vocabState.scores = [];
+
+        vocabGlobalStatus.textContent = "Módulo reiniciado. Empieza de nuevo con el Bloque 1 de 3.";
+        vocabGlobalStatus.classList.remove("text-emerald-700", "text-red-600");
+        vocabGlobalStatus.classList.add("text-slate-500");
+
+        if (nextFrom5Btn) {
+          nextFrom5Btn.disabled = true;
+          nextFrom5Btn.classList.add("bg-slate-300", "text-slate-600", "cursor-not-allowed");
+          nextFrom5Btn.classList.remove("bg-emerald-600", "hover:bg-emerald-700", "text-white");
+        }
+
+        buildTypingStage(0);
+      });
+    }
+
+    async function loadVocabSet() {
+      if (!runtime.vocabUrl || !vocabBlockContainer) return;
+
+      try {
+        const data = await getJSON(runtime.vocabUrl);
+        let pairs = extractVocabPairs(data);
+
+        pairs = pairs.slice(0, 30);
+        vocabState.pairs = pairs;
+        vocabState.scores = [];
+        vocabState.currentIndex = 0;
+        vocabState.completedBlocks = 0;
+
+        if (!pairs.length) {
+          vocabBlockContainer.innerHTML =
+            '<p class="text-sm text-red-600">No se encontraron palabras en el archivo de vocabulario.</p>';
+          return;
+        }
+
+        const blockSize = 10;
+        vocabState.blocks = [];
+
+        for (let i = 0; i < 3; i++) {
+          const slice = pairs.slice(i * blockSize, (i + 1) * blockSize);
+          if (slice.length) vocabState.blocks.push({ index: i, items: slice });
+        }
+
+        vocabGlobalStatus.textContent =
+          `Módulo de vocabulario listo: ${vocabState.blocks.length} bloques de hasta 10 palabras.`;
+
+        buildTypingStage(0);
+      } catch (err) {
+        console.error("Error al cargar vocabulario:", err);
+        vocabBlockContainer.innerHTML =
+          '<p class="text-sm text-red-600">No se pudo cargar el vocabulario (revisa la URL del JSON).</p>';
+        showTopStatus(`⚠ Error cargando vocabulario: ${err.message}`, "err");
+      }
+    }
+
+    /***********************
+     * NAV / BUTTONS
+     ***********************/
+    function wireNavigation() {
+      // Next buttons 1–4
+      for (let i = 1; i <= 4; i++) {
+        const nextBtn = document.getElementById("btn-next-from-" + i);
+        if (!nextBtn) continue;
+        nextBtn.addEventListener("click", () => {
+          const target = i + 1;
+          const tab = document.querySelector('.module-tab[data-module="' + target + '"]');
+          if (tab && !tab.disabled) showModule(target);
+        });
+      }
+
+      // Module 5 → 6
+      if (nextFrom5Btn) {
+        nextFrom5Btn.addEventListener("click", () => {
+          markModuleCompleted(5);
+          unlockModuleBtn(6);
+          showModule(6);
+          markModuleCompleted(6);
+        });
+      }
+
+      // Sidebar tabs
+      document.querySelectorAll(".module-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const num = Number(btn.dataset.module);
+          if (btn.disabled) return;
+          showModule(num);
+        });
+      });
+
+      // "Volver a módulo X" buttons
+      document.querySelectorAll("[data-go-module]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const num = Number(btn.dataset.goModule);
+          showModule(num);
+        });
+      });
+    }
+
+    /***********************
+     * INIT
+     ***********************/
+    async function init() {
+      updateProgress();
+      showModule(1);
+      wireNavigation();
+
+      await resolveFromLibraryIfPossible(); // sets runtime URLs/labels
+      await loadPracticeSet();
+      await loadVocabSet();
+    }
+
+    init();
+  </script>
+<style>
+  #cls-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 9999; 
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+    align-items: center; justify-content: center; padding: 15px; font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  #cls-modal-card {
+    background: white; width: 98%; max-width: 1400px; height: 95vh; 
+    border-radius: 12px; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .cls-reveal-box {
+    cursor: pointer; transition: all 0.2s; display: inline-block; width: 100%; text-align: center;
+    background-color: #f1f5f9; color: transparent !important; border-radius: 4px; user-select: none;
+    border: 1px solid #e2e8f0;
+  }
+  .cls-reveal-box.is-revealed {
+    background-color: transparent; color: #0284c7 !important; border-color: transparent;
+  }
+  .cls-scroll { overflow-y: auto; padding: 20px; flex-grow: 1; }
+  
+  /* LANDSCAPE GRID OPTIMIZATION */
+  .cls-verb-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px;
+  }
+  .cls-vocab-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: x-large; gap: 15px;
+  }
+  
+  .cls-btn-main {
+    background: #f59e0b; color: white; font-weight: bold; padding: 12px; 
+    border-radius: 12px; width: 100%; margin-bottom: 15px; cursor: pointer; border: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<script>
+(function() {
+  window.addEventListener('load', function() {
+    const sidebar = document.querySelector('aside');
+    if (sidebar) {
+      const btn = document.createElement('button');
+      btn.innerHTML = "📺 Vista de Proyector";
+      btn.className = "cls-btn-main";
+      btn.onclick = openClassroomView;
+      sidebar.prepend(btn);
+    }
+  });
+
+  const modalHtml = `
+    <div id="cls-modal-overlay">
+      <div id="cls-modal-card">
+        <div style="padding: 15px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+          <h2 id="cls-header-title" style="margin: 0; color: #1e293b; font-size: 1.2rem; font-weight: 800;">REPASO</h2>
+          <div style="display: flex; gap: 15px; align-items: center;">
+            <button id="cls-reveal-all" style="padding: 6px 15px; background: #0ea5e9; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">Revelar Todo</button>
+            <button id="cls-close" style="background: none; border: none; font-size: 2.5rem; color: #94a3b8; cursor: pointer; line-height: 1;">&times;</button>
+          </div>
+        </div>
+        <div id="cls-content" class="cls-scroll"></div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  const overlay = document.getElementById('cls-modal-overlay');
+  const content = document.getElementById('cls-content');
+  
+  document.getElementById('cls-close').onclick = () => overlay.style.display = 'none';
+  document.getElementById('cls-reveal-all').onclick = () => {
+    document.querySelectorAll('.cls-reveal-box').forEach(el => el.classList.add('is-revealed'));
+  };
+
+  async function openClassroomView() {
+    overlay.style.display = 'flex';
+    document.getElementById('cls-header-title').textContent = (runtime.title || "REPASO").toUpperCase();
+    content.innerHTML = '<p style="text-align:center; padding: 50px; color:#94a3b8;">Cargando pantalla panorámica...</p>';
+    
+    try {
+      const [vRes, cRes] = await Promise.all([
+        fetch(runtime.verbsUrl + "?t=" + Date.now()),
+        fetch(runtime.vocabUrl + "?t=" + Date.now())
+      ]);
+      const verbs = await vRes.json();
+      const vocab = await cRes.json();
+
+      const verbItems = Array.isArray(verbs) ? verbs : (verbs.items || []);
+      const vocabItems = Array.isArray(vocab) ? vocab : (vocab.items || vocab.vocabulario || []);
+
+      let html = '<div style="background:#f0f9ff; padding: 5px 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #0ea5e9;"><b style="color:#0369a1;">VERBOS:</b> ' + runtime.verbsLabel + '</div>';
+      html += '<div class="cls-verb-grid">';
+      
+      verbItems.forEach(v => {
+        html += `
+          <div style="padding: 8px; border: 1px solid #e2e8f0; background: white; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+            <div style="text-align: left; line-height: 1.1;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: bold;">${v.sujeto}</div>
+              <div style="font-size: 0.75rem; color: #94a3b8; font-style: italic;">${v.infinitivo}</div>
+            </div>
+            <div class="cls-reveal-box" style="font-family: monospace; font-size: 1.1rem; font-weight: bold; flex-grow: 1;" onclick="this.classList.add('is-revealed')">${v.forma}</div>
+          </div>`;
+      });
+
+      html += '</div>';
+      html += '<div style="background:#f0fdf4; padding: 5px 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #22c55e;"><b style="color:#15803d;">VOCABULARIO:</b> ' + runtime.vocabLabel + '</div>';
+      html += '<div class="cls-vocab-grid">';
+      
+      vocabItems.forEach(v => {
+        const es = v.spanish || v.es || v.palabra;
+        const en = v.english || v.en || v.traducción;
+        html += `
+          <div style="display: flex; align-items: center; border-bottom: 1px solid #f1f5f9; padding: 5px; gap: 10px;">
+            <span style="font-weight: bold; color: #334155; font-size: 0.95rem; white-space: nowrap;">${es}</span>
+            <span class="cls-reveal-box" style="font-size: 0.95rem; flex-grow: 1;" onclick="this.classList.add('is-revealed')">${en}</span>
+          </div>`;
+      });
+      
+      html += '</div>';
+      content.innerHTML = html;
+
+    } catch (e) {
+      content.innerHTML = '<p style="color:red; text-align:center;">Error al cargar datos panorámicos.</p>';
+    }
+  }
+})();
+</script>
+</body>
+</html>
