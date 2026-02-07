@@ -398,11 +398,13 @@ const liveDia = pastEntries && pastEntries.length > 0
     }
     
 
-// --- LÓGICA DE BLOQUES DE CONTENIDO (CONSOLIDADA) ---
+// --- 1. LIMPIAR CONTENEDORES ---
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
-    estBlock.innerHTML = ""; contentBlock.innerHTML = "";
+    estBlock.innerHTML = ""; 
+    contentBlock.innerHTML = "";
 
+    // --- 2. MAPEO DE TIPOS DE MEDIOS ---
     const mediaTypes = { 
         musica: 'musica', 
         cultura: 'cultura', 
@@ -410,8 +412,10 @@ const liveDia = pastEntries && pastEntries.length > 0
         conv: 'conv' 
     };
 
+    // --- 3. BUCLE PRINCIPAL DE BLOQUES (TODO DEBE IR AQUÍ DENTRO) ---
     (todayPlan?.blocks || []).forEach(blockRef => {
-        // 1. ESTRUCTURA
+        
+        // A. ESTRUCTURA
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
@@ -427,7 +431,7 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
         
-        // 2. EXTRAS
+        // B. EXTRAS
         else if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -439,7 +443,7 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
 
-        // 3. MEDIOS (MUSICA, CONV, LECTURA, CULTURA)
+        // C. MEDIOS (Música, Conversación, Cultura, Lectura)
         else if (mediaTypes[blockRef.kind]) {
             const dataKey = mediaTypes[blockRef.kind];
             const item = data[dataKey]?.items?.[blockRef.ref];
@@ -459,8 +463,7 @@ const liveDia = pastEntries && pastEntries.length > 0
                     </section>`;
             }
         }
-    });
-    
+    }); // <--- AQUÍ TERMINA EL BUCLE CORRECTAMENTE    
 
     
     // Dashboards
