@@ -248,7 +248,7 @@ async function runRender(data, DIA) {
     const overrides = activeTheme?.styles?.cardOverrides || {};
     const fonts = activeTheme?.styles?.fonts || {};
     const accent = activeTheme?.styles?.accent || "#6366f1";
-
+    const vTree = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
     const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     
     // 1. Header Date
