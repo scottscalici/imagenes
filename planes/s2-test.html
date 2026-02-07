@@ -398,12 +398,11 @@ const liveDia = pastEntries && pastEntries.length > 0
     }
     
 
-// Estructura & Extras
+// --- LÓGICA DE BLOQUES DE CONTENIDO (CONSOLIDADA) ---
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
     estBlock.innerHTML = ""; contentBlock.innerHTML = "";
 
-    // Mapeo de medios (definido una vez para usar dentro del loop)
     const mediaTypes = { 
         musica: 'musica', 
         cultura: 'cultura', 
@@ -412,7 +411,7 @@ const liveDia = pastEntries && pastEntries.length > 0
     };
 
     (todayPlan?.blocks || []).forEach(blockRef => {
-        // LÓGICA DE ESTRUCTURA
+        // 1. ESTRUCTURA
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
@@ -428,7 +427,7 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
         
-        // LÓGICA DE EXTRAS
+        // 2. EXTRAS
         else if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -440,7 +439,7 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
 
-        // LÓGICA DE MEDIOS (Musica, Conv, etc.) - AHORA DENTRO DEL LOOP
+        // 3. MEDIOS (MUSICA, CONV, LECTURA, CULTURA)
         else if (mediaTypes[blockRef.kind]) {
             const dataKey = mediaTypes[blockRef.kind];
             const item = data[dataKey]?.items?.[blockRef.ref];
@@ -461,7 +460,6 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
     });
-
     
 
     
