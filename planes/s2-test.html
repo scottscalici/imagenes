@@ -429,7 +429,32 @@ const liveDia = pastEntries && pastEntries.length > 0
         }
         
     });
+// Add this to map the JSON 'kind' to your data variables
+const mediaTypes = { 
+    musica: 'musica', 
+    cultura: 'cultura', 
+    lectura: 'lectura', 
+    conv: 'conv' 
+};
 
+    if (mediaTypes[blockRef.kind]) {
+    const item = data[mediaTypes[blockRef.kind]]?.items?.[blockRef.ref];
+    if (item) {
+        const mColor = overrides[blockRef.kind] || accent;
+        contentBlock.innerHTML += `
+            <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                        <img src="${item.imagen}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
+                        <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
+                    </div>
+                </div>
+            </section>`;
+    }
+}
     // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
     const dynamicGrid = document.getElementById('dynamicCardGrid');
