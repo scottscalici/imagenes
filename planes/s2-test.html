@@ -290,8 +290,11 @@ async function runRender(data, DIA) {
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-    const liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
-
+    // Find the most recent day that is less than or equal to today
+const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
+const liveDia = pastEntries && pastEntries.length > 0 
+    ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) 
+    : 1;    
     // 2. The Quick Restriction
     if (DIA > liveDia && !isProfView) {
         // Show a quick alert (you can style this as a toast later)
