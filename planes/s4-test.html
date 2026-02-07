@@ -470,32 +470,32 @@ async function runRender(data, DIA) {
 
     const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
     const ch = vRef ? data.vocab.descubre3.chapters[vRef] : null;
-   if (ch) {
-    // 1. Look for the image in your theme data first
-    // Fallback to a default if the theme doesn't have a specific 'vocabTree' key
-    const themeImg = data.temas?.[currentTema]?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+ if (ch || vTree) {
+        vocabContainer.innerHTML = `
+          <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+            
+            <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
+              <img src="${vTree}" class="max-h-full object-contain">
+            </div>
+            
+            <div class="p-5 flex flex-col flex-grow justify-between">
+              <div>
+                <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
+                <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch ? ch.label : 'Repaso de Vocabulario'}</h3>
+              </div>
+              
+              <div class="flex gap-2">
+                ${ch ? `
+                    <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
+                    <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
+                ` : `
+                    <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/vocabulario" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Ver Todo</a>
+                `}
+              </div>
+            </div>
+          </div>`;
+    }
     
-    vocabContainer.innerHTML = `
-      <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-        
-        <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
-          <img src="${themeImg}" class="max-h-full object-contain">
-        </div>
-        
-        <div class="p-5 flex flex-col flex-grow justify-between">
-          <div>
-            <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
-            <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch.label}</h3>
-          </div>
-          
-          <div class="flex gap-2">
-            <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
-            <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
-          </div>
-        </div>
-      </div>`;
-  }
- 
     // 7. Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
