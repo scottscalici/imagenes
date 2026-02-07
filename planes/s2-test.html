@@ -397,12 +397,22 @@ const liveDia = pastEntries && pastEntries.length > 0
         }
     }
     
-    // Estructura & Extras
+
+// Estructura & Extras
     const estBlock = document.getElementById('estructuraBlock');
     const contentBlock = document.getElementById('extrasBlock');
     estBlock.innerHTML = ""; contentBlock.innerHTML = "";
 
+    // Mapeo de medios (definido una vez para usar dentro del loop)
+    const mediaTypes = { 
+        musica: 'musica', 
+        cultura: 'cultura', 
+        lectura: 'lectura', 
+        conv: 'conv' 
+    };
+
     (todayPlan?.blocks || []).forEach(blockRef => {
+        // LÓGICA DE ESTRUCTURA
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
@@ -417,7 +427,9 @@ const liveDia = pastEntries && pastEntries.length > 0
                 estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-4"><div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${linksHtml}</div></section>`;
             }
         }
-        if (blockRef.kind === "extras") {
+        
+        // LÓGICA DE EXTRAS
+        else if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
                 const exColor = overrides.extras || accent;
@@ -427,34 +439,32 @@ const liveDia = pastEntries && pastEntries.length > 0
                 contentBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}"><h2 class="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2" style="color: ${exColor}"><span>✨</span> ${exItem.title}</h2><div>${inner}</div></section>`;
             }
         }
-        
-    });
-// Add this to map the JSON 'kind' to your data variables
-const mediaTypes = { 
-    musica: 'musica', 
-    cultura: 'cultura', 
-    lectura: 'lectura', 
-    conv: 'conv' 
-};
 
-    if (mediaTypes[blockRef.kind]) {
-    const item = data[mediaTypes[blockRef.kind]]?.items?.[blockRef.ref];
-    if (item) {
-        const mColor = overrides[blockRef.kind] || accent;
-        contentBlock.innerHTML += `
-            <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                <div class="flex flex-col md:flex-row">
-                    <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                        <img src="${item.imagen}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4 flex flex-col justify-between flex-grow">
-                        <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
-                        <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
-                    </div>
-                </div>
-            </section>`;
-    }
-}
+        // LÓGICA DE MEDIOS (Musica, Conv, etc.) - AHORA DENTRO DEL LOOP
+        else if (mediaTypes[blockRef.kind]) {
+            const dataKey = mediaTypes[blockRef.kind];
+            const item = data[dataKey]?.items?.[blockRef.ref];
+            if (item) {
+                const mColor = overrides[blockRef.kind] || accent;
+                contentBlock.innerHTML += `
+                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                                <img src="${item.imagen}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4 flex flex-col justify-between flex-grow">
+                                <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
+                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+        }
+    });
+
+    
+
+    
     // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
     const dynamicGrid = document.getElementById('dynamicCardGrid');
