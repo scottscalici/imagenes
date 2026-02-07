@@ -409,7 +409,7 @@ const liveDia = pastEntries && pastEntries.length > 0
         musica: 'musica', 
         cultura: 'cultura', 
         lectura: 'lectura', 
-        conv: 'conv' 
+        conversacion: 'conv' 
     };
 
     // --- 3. BUCLE PRINCIPAL DE BLOQUES (TODO DEBE IR AQUÍ DENTRO) ---
@@ -445,24 +445,38 @@ const liveDia = pastEntries && pastEntries.length > 0
 
         // C. MEDIOS (Música, Conversación, Cultura, Lectura)
         else if (mediaTypes[blockRef.kind]) {
-            const dataKey = mediaTypes[blockRef.kind];
-            const item = data[dataKey]?.items?.[blockRef.ref];
-            if (item) {
-                const mColor = overrides[blockRef.kind] || accent;
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                                <img src="${item.imagen}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="p-4 flex flex-col justify-between flex-grow">
-                                <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
-                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
-                            </div>
-                        </div>
-                    </section>`;
-            }
-        }
+    const dataKey = mediaTypes[blockRef.kind];
+
+    const item = data[dataKey]?.items?.find(
+        i => i.id === blockRef.ref
+    );
+
+    if (item) {
+        const mColor = overrides[blockRef.kind] || accent;
+
+        contentBlock.innerHTML += `
+            <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6"
+                     style="border-color: ${mColor}">
+                <div class="flex flex-col md:flex-row">
+                    <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                        <img src="${item.imagen}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4 flex flex-col justify-between flex-grow">
+                        <h3 class="text-xl font-black text-slate-900">
+                            ${item.titulo}
+                        </h3>
+                        <a href="${item.url}" target="_blank"
+                           class="mt-2 text-xs font-bold"
+                           style="color: ${mColor}">
+                           Abrir Actividad →
+                        </a>
+                    </div>
+                </div>
+            </section>
+        `;
+    }
+}
+
     }); // <--- AQUÍ TERMINA EL BUCLE CORRECTAMENTE    
 
     
@@ -542,21 +556,36 @@ async function renderByDate() {
 async function loadData() {
     try {
         // We need to fetch EVERYTHING in one go
-        const [plan, temas, cal, curios, evals, tareas, vocab, apuntes, extras, videos] = await Promise.all([
-            fetch(CONFIG.PLAN).then(r => r.json()),
-            fetch(CONFIG.TEMAS).then(r => r.json()),
-            fetch(CONFIG.CALENDARIO).then(r => r.json()),
-            fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
-            fetch(CONFIG.EVALS).then(r => r.json()),
-            fetch(CONFIG.TAREAS).then(r => r.json()),
-            fetch(CONFIG.VOCAB_BANK).then(r => r.json()),
-            fetch(CONFIG.APUNTES_BANK).then(r => r.json()),
-            fetch(CONFIG.EXTRAS).then(r => r.json()),
-            fetch(CONFIG.VIDEOS).then(r => r.json()) // Load the videos file
-        ]);
+const [
+    plan, temas, cal, curios, evals, tareas,
+    vocab, apuntes, extras,
+    musica, lectura, cultura, conv,
+    videos
+] = await Promise.all([
+    fetch(CONFIG.PLAN).then(r => r.json()),
+    fetch(CONFIG.TEMAS).then(r => r.json()),
+    fetch(CONFIG.CALENDARIO).then(r => r.json()),
+    fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
+    fetch(CONFIG.EVALS).then(r => r.json()),
+    fetch(CONFIG.TAREAS).then(r => r.json()),
+    fetch(CONFIG.VOCAB_BANK).then(r => r.json()),
+    fetch(CONFIG.APUNTES_BANK).then(r => r.json()),
+    fetch(CONFIG.EXTRAS).then(r => r.json()),
+    fetch(CONFIG.MUSICA).then(r => r.json()),
+    fetch(CONFIG.LECTURA).then(r => r.json()),
+    fetch(CONFIG.CULTURA).then(r => r.json()),
+    fetch(CONFIG.CONV).then(r => r.json()),
+    fetch(CONFIG.VIDEOS).then(r => r.json())
+]);
         
         // Return everything so runRender can use it
-        return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extras, videos };
+       return {
+    plan, temas, cal, curios, evals, tareas,
+    vocab, apuntes, extras,
+    musica, lectura, cultura, conv,
+    videos
+};
+
     } catch (e) { 
         console.error("Load Error", e); 
     }
