@@ -113,6 +113,64 @@
   }
 },
     {
+  "id": "superbowl",
+  "name": "Super Bowl LX",
+  "start": "02-09",
+  "end": "02-10",
+  "styles": {
+    "header": "bg-gradient-to-r from-green-700 to-green-500",
+    "fontHeading": "Alfa Slab One",
+    "accent": "#facc15",
+    "cardOverrides": {
+      "evaluacion": "#1e3a8a",
+      "calentamiento": "#15803d",
+      "curiosidad": "#facc15",
+      "musica": "#1e3a8a",
+      "conversacion": "#15803d",
+      "cultura": "#facc15",
+      "lectura": "#1e3a8a",
+      "tareas": "#15803d",
+      "pruebas": "#b91c1c",
+      "estructura": "#475569",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Graduate",
+      "evaluacion": "Graduate",
+      "calentamiento": "Graduate",
+      "curiosidad": "Graduate",
+      "musica": "Graduate",
+      "conversacion": "Graduate",
+      "tareas": "Graduate",
+      "pruebas": "Graduate"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/american-football.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/stadium.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/whistle.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/football_hero.png",
+    "msg": "¡Bienvenidos al Gran Juego!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_football.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_referee.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_football.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_football.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_football.png"
+  },
+  "effectConfig": {
+    "char": "🏈",
+    "color": "#92400e",
+    "direction": "down",
+    "speed": 2,
+    "count": 30
+  }
+},
+    {
   "id": "valentine",
   "start": "02-11",
   "end": "02-15",
