@@ -171,6 +171,64 @@
   }
 },
     {
+  "id": "winter_olympics_2026",
+  "name": "Milano Cortina 2026",
+  "start": "02-06",
+  "end": "02-22",
+  "styles": {
+    "header": "bg-gradient-to-r from-cyan-900 via-blue-800 to-indigo-900",
+    "fontHeading": "Montserrat",
+    "accent": "#d4af37",
+    "cardOverrides": {
+      "evaluacion": "#d4af37",
+      "calentamiento": "#e5e7eb",
+      "curiosidad": "#0ea5e9",
+      "musica": "#d4af37",
+      "conversacion": "#e5e7eb",
+      "cultura": "#0ea5e9",
+      "lectura": "#d4af37",
+      "tareas": "#e5e7eb",
+      "pruebas": "#1e3a8a",
+      "estructura": "#475569",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Inter",
+      "evaluacion": "Inter",
+      "calentamiento": "Inter",
+      "curiosidad": "Inter",
+      "musica": "Inter",
+      "conversacion": "Inter",
+      "tareas": "Inter",
+      "pruebas": "Inter"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/gold-medal.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/ice-skating.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/olympic-torch.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/olympic_rings_winter.png",
+    "msg": "¡Bienvenidos a los Juegos de Invierno 2026!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/tina_mascot.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/milo_mascot.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_olympic.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_olympic.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_olympic.png"
+  },
+  "effectConfig": {
+    "char": "🏅",
+    "color": "#d4af37",
+    "direction": "down",
+    "speed": 1.2,
+    "count": 10
+  }
+},
+    {
   "id": "valentine",
   "start": "02-11",
   "end": "02-15",
