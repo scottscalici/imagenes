@@ -413,9 +413,10 @@ const liveDia = pastEntries && pastEntries.length > 0
     };
 
     // --- 3. BUCLE PRINCIPAL DE BLOQUES (TODO DEBE IR AQUÍ DENTRO) ---
+  // --- LÓGICA DE BLOQUES DE CONTENIDO ---
     (todayPlan?.blocks || []).forEach(blockRef => {
         
-        // A. ESTRUCTURA
+        // 1. ESTRUCTURA
         if (blockRef.kind === "estructura") {
             const topic = data.apuntes?.[blockRef.ref];
             if (topic) {
@@ -431,7 +432,7 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
         
-        // B. EXTRAS
+        // 2. EXTRAS
         else if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
@@ -443,42 +444,31 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
 
-        // C. MEDIOS (Música, Conversación, Cultura, Lectura)
-        else if (mediaTypes[blockRef.kind]) {
-    const dataKey = mediaTypes[blockRef.kind];
-
-    const item = data[dataKey]?.items?.find(
-        i => i.id === blockRef.ref
-    );
-
-    if (item) {
-        const mColor = overrides[blockRef.kind] || accent;
-
-        contentBlock.innerHTML += `
-            <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6"
-                     style="border-color: ${mColor}">
-                <div class="flex flex-col md:flex-row">
-                    <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                        <img src="${item.imagen}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4 flex flex-col justify-between flex-grow">
-                        <h3 class="text-xl font-black text-slate-900">
-                            ${item.titulo}
-                        </h3>
-                        <a href="${item.url}" target="_blank"
-                           class="mt-2 text-xs font-bold"
-                           style="color: ${mColor}">
-                           Abrir Actividad →
-                        </a>
-                    </div>
-                </div>
-            </section>
-        `;
-    }
-}
-
-    }); // <--- AQUÍ TERMINA EL BUCLE CORRECTAMENTE    
-
+        // 3. MEDIOS (CONV, MUSICA, CULTURA, LECTURA)
+        else {
+            const mediaMap = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conv' };
+            const dataKey = mediaMap[blockRef.kind];
+            
+            if (dataKey) {
+                const item = data[dataKey]?.items?.[blockRef.ref];
+                if (item) {
+                    const mColor = overrides[blockRef.kind] || accent;
+                    contentBlock.innerHTML += `
+                        <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                                    <img src="${item.imagen}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="p-4 flex flex-col justify-between flex-grow">
+                                    <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
+                                    <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
+                                </div>
+                            </div>
+                        </section>`;
+                }
+            }
+        }
+    }); // <--- Esta llave debe cerrar el bucle después de todas las condiciones
     
     // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
