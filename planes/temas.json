@@ -113,6 +113,64 @@
   }
 },
     {
+  "id": "candelaria",
+  "name": "Fiesta de la Candelaria",
+  "start": "01-28",
+  "end": "02-05",
+  "styles": {
+    "header": "bg-gradient-to-r from-blue-900 via-indigo-900 to-amber-600",
+    "fontHeading": "Cinzel",
+    "accent": "#fcd34d",
+    "cardOverrides": {
+      "evaluacion": "#1e1b4b",
+      "calentamiento": "#fcd34d",
+      "curiosidad": "#ffffff",
+      "musica": "#1e1b4b",
+      "conversacion": "#fcd34d",
+      "cultura": "#ffffff",
+      "lectura": "#1e1b4b",
+      "tareas": "#fcd34d",
+      "pruebas": "#4338ca",
+      "estructura": "#78350f",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Lustria",
+      "evaluacion": "Lustria",
+      "calentamiento": "Lustria",
+      "curiosidad": "Lustria",
+      "musica": "Lustria",
+      "conversacion": "Lustria",
+      "tareas": "Lustria",
+      "pruebas": "Lustria"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/candle.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/sparkling-light.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/church.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/candelaria_hero.png",
+    "msg": "¡Luz y tradición en la Fiesta de la Candelaria!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_candelaria.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_candelaria.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_candelaria.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_candelaria.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_candelaria.png"
+  },
+  "effectConfig": {
+    "char": "🕯️",
+    "color": "#fbbf24",
+    "direction": "up",
+    "speed": 0.8,
+    "count": 25
+  }
+},
+    {
   "id": "superbowl",
   "name": "Super Bowl LX",
   "start": "02-05",
@@ -231,7 +289,7 @@
     {
   "id": "valentine",
   "start": "02-12",
-  "end": "02-15",
+  "end": "02-14",
   "styles": {
     "header": "bg-gradient-to-r from-red-600 to-pink-500",
     "fontHeading": "'Berkshire Swash', cursive",
@@ -287,6 +345,899 @@
     "speed": 2,
     "count": 50
   }
+},
+    {
+  "id": "carnaval",
+  "name": "Carnaval",
+  "start": "02-15",
+  "end": "02-23",
+  "styles": {
+    "header": "bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400",
+    "fontHeading": "Bungee",
+    "accent": "#fde047",
+    "cardOverrides": {
+      "evaluacion": "#7c3aed",
+      "calentamiento": "#db2777",
+      "curiosidad": "#fde047",
+      "musica": "#7c3aed",
+      "conversacion": "#db2777",
+      "cultura": "#fde047",
+      "lectura": "#7c3aed",
+      "tareas": "#db2777",
+      "pruebas": "#4c1d95",
+      "estructura": "#831843",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Fatface",
+      "evaluacion": "Fatface",
+      "calentamiento": "Fatface",
+      "curiosidad": "Fatface",
+      "musica": "Fatface",
+      "conversacion": "Fatface",
+      "tareas": "Fatface",
+      "pruebas": "Fatface"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/theater-mask.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/maracas.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/confetti.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/carnaval_hero.png",
+    "msg": "¡A bailar! Es tiempo de Carnaval"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_carnaval.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_carnaval.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_carnaval.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_carnaval.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_carnaval.png"
+  },
+  "effectConfig": {
+    "char": "🎉",
+    "color": "#fde047",
+    "direction": "down",
+    "speed": 2,
+    "count": 60
+  }
+},
+    {
+  "id": "fallas",
+  "name": "Las Fallas",
+  "start": "03-15",
+  "end": "03-19",
+  "styles": {
+    "header": "bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500",
+    "fontHeading": "Luckiest Guy",
+    "accent": "#fbbf24",
+    "cardOverrides": {
+      "evaluacion": "#ea580c",
+      "calentamiento": "#f97316",
+      "curiosidad": "#fbbf24",
+      "musica": "#ea580c",
+      "conversacion": "#f97316",
+      "cultura": "#fbbf24",
+      "lectura": "#ea580c",
+      "tareas": "#f97316",
+      "pruebas": "#991b1b",
+      "estructura": "#451a03",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Bangers",
+      "evaluacion": "Bangers",
+      "calentamiento": "Bangers",
+      "curiosidad": "Bangers",
+      "musica": "Bangers",
+      "conversacion": "Bangers",
+      "tareas": "Bangers",
+      "pruebas": "Bangers"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/fire-element.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/fireworks.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/flower-delivery.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/fallas_hero.png",
+    "msg": "¡Bienvenidos a las Fallas de Valencia!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_fallas.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_fallas.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_fallas.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_fallas.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_fallas.png"
+  },
+  "effectConfig": {
+    "char": "🔥",
+    "color": "#f97316",
+    "direction": "up",
+    "speed": 2,
+    "count": 50
+  }
+},
+    {
+  "id": "semanasanta",
+  "name": "Semana Santa",
+  "start": "03-25",
+  "end": "04-06",
+  "styles": {
+    "header": "bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-800",
+    "fontHeading": "Uncial Antiqua",
+    "accent": "#fbbf24",
+    "cardOverrides": {
+      "evaluacion": "#4c1d95",
+      "calentamiento": "#7e22ce",
+      "curiosidad": "#fbbf24",
+      "musica": "#4c1d95",
+      "conversacion": "#7e22ce",
+      "cultura": "#fbbf24",
+      "lectura": "#4c1d95",
+      "tareas": "#7e22ce",
+      "pruebas": "#2e1065",
+      "estructura": "#1e1b4b",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "MedievalSharp",
+      "evaluacion": "MedievalSharp",
+      "calentamiento": "MedievalSharp",
+      "curiosidad": "MedievalSharp",
+      "musica": "MedievalSharp",
+      "conversacion": "MedievalSharp",
+      "tareas": "MedievalSharp",
+      "pruebas": "MedievalSharp"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/church.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/trumpet.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/olive-branch.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/semanasanta_hero.png",
+    "msg": "Tradición y reflexión en Semana Santa"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_semanasanta.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_semanasanta.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_semanasanta.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_semanasanta.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_semanasanta.png"
+  },
+  "effectConfig": {
+    "char": "🌿",
+    "color": "#16a34a",
+    "direction": "down",
+    "speed": 0.5,
+    "count": 20
+  }
+},
+    {
+  "id": "memorialday",
+  "name": "Memorial Day",
+  "start": "05-18",
+  "end": "05-26",
+  "styles": {
+    "header": "bg-gradient-to-r from-blue-800 via-blue-700 to-red-600",
+    "fontHeading": "Graduate",
+    "accent": "#ffffff",
+    "cardOverrides": {
+      "evaluacion": "#1e3a8a",
+      "calentamiento": "#dc2626",
+      "curiosidad": "#ffffff",
+      "musica": "#1e3a8a",
+      "conversacion": "#dc2626",
+      "cultura": "#ffffff",
+      "lectura": "#1e3a8a",
+      "tareas": "#dc2626",
+      "pruebas": "#0f172a",
+      "estructura": "#475569",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Arvo",
+      "evaluacion": "Arvo",
+      "calentamiento": "Arvo",
+      "curiosidad": "Arvo",
+      "musica": "Arvo",
+      "conversacion": "Arvo",
+      "tareas": "Arvo",
+      "pruebas": "Arvo"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/usa-flag.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/military-medal.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/star.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/memorialday_hero.png",
+    "msg": "Honor y Recuerdo: Memorial Day"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_memorialday.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_memorialday.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_memorialday.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_memorialday.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_memorialday.png"
+  },
+  "effectConfig": {
+    "char": "⭐",
+    "color": "#ffffff",
+    "direction": "down",
+    "speed": 1.2,
+    "count": 35
+  }
+},
+    {
+  "id": "spring_easter",
+  "name": "Primavera y Pascua",
+  "start": "04-07",
+  "end": "04-18",
+  "styles": {
+    "header": "bg-gradient-to-r from-green-200 via-pink-200 to-blue-200",
+    "fontHeading": "Cherry Swash",
+    "accent": "#f472b6",
+    "cardOverrides": {
+      "evaluacion": "#fb7185",
+      "calentamiento": "#6EE7B7",
+      "curiosidad": "#FBBF24",
+      "musica": "#60A5FA",
+      "conversacion": "#A78BFA",
+      "cultura": "#F472B6",
+      "lectura": "#34D399",
+      "tareas": "#818CF8",
+      "pruebas": "#F87171",
+      "estructura": "#4ade80",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Quicksand",
+      "evaluacion": "Quicksand",
+      "calentamiento": "Quicksand",
+      "curiosidad": "Quicksand",
+      "musica": "Quicksand",
+      "conversacion": "Quicksand",
+      "tareas": "Quicksand",
+      "pruebas": "Quicksand"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/rabbit.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/flower-delivery.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/easter-egg.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/spring_hero.png",
+    "msg": "¡La primavera ha llegado!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_spring.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_spring.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_spring.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_spring.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_spring.png"
+  },
+  "effectConfig": {
+    "char": "🌸",
+    "color": "pink",
+    "direction": "down",
+    "speed": 0.5,
+    "count": 30
+  }
+},
+    {
+  "id": "feria_abril",
+  "name": "Feria de Abril",
+  "start": "04-20",
+  "end": "04-27",
+  "styles": {
+    "header": "bg-gradient-to-r from-red-600 via-white to-red-600",
+    "fontHeading": "Lobster",
+    "accent": "#000000",
+    "cardOverrides": {
+      "evaluacion": "#dc2626",
+      "calentamiento": "#2563eb",
+      "curiosidad": "#16a34a",
+      "musica": "#dc2626",
+      "conversacion": "#2563eb",
+      "cultura": "#16a34a",
+      "lectura": "#dc2626",
+      "tareas": "#2563eb",
+      "pruebas": "#000000",
+      "estructura": "#450a0a",
+      "extras": "#ffffff"
+    },
+    "fonts": {
+      "estructura": "Courgette",
+      "evaluacion": "Courgette",
+      "calentamiento": "Courgette",
+      "curiosidad": "Courgette",
+      "musica": "Courgette",
+      "conversacion": "Courgette",
+      "tareas": "Courgette",
+      "pruebas": "Courgette"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/hand-fan.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/guitar.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/polka-dots.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/feria_hero.png",
+    "msg": "¡Vámonos a la Feria de Sevilla!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_feria.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_feria.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_feria.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_feria.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_feria.png"
+  },
+  "effectConfig": {
+    "char": "💃",
+    "color": "#dc2626",
+    "direction": "down",
+    "speed": 1,
+    "count": 20
+  }
+},
+    {
+  "id": "cinco_mayo",
+  "name": "Cinco de Mayo",
+  "start": "05-01",
+  "end": "05-06",
+  "styles": {
+    "header": "bg-gradient-to-r from-green-600 via-white to-red-600",
+    "fontHeading": "Eater",
+    "accent": "#f59e0b",
+    "cardOverrides": {
+      "evaluacion": "#15803d",
+      "calentamiento": "#ea580c",
+      "curiosidad": "#be185d",
+      "musica": "#15803d",
+      "conversacion": "#ea580c",
+      "cultura": "#be185d",
+      "lectura": "#15803d",
+      "tareas": "#ea580c",
+      "pruebas": "#450a0a",
+      "estructura": "#064e3b",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Sancreek",
+      "evaluacion": "Sancreek",
+      "calentamiento": "Sancreek",
+      "curiosidad": "Sancreek",
+      "musica": "Sancreek",
+      "conversacion": "Sancreek",
+      "tareas": "Sancreek",
+      "pruebas": "Sancreek"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/taco.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/maracas.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/cactus.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/cinco_hero.png",
+    "msg": "¡Feliz Cinco de Mayo!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_cinco.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_cinco.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_cinco.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_cinco.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_cinco.png"
+  },
+  "effectConfig": {
+    "char": "🌵",
+    "color": "#16a34a",
+    "direction": "down",
+    "speed": 1.5,
+    "count": 25
+  }
+},
+    {
+  "id": "summer_break",
+  "name": "Vacaciones de Verano",
+  "start": "06-01",
+  "end": "08-15",
+  "styles": {
+    "header": "bg-gradient-to-r from-cyan-400 via-blue-500 to-yellow-400",
+    "fontHeading": "Pacifico",
+    "accent": "#facc15",
+    "cardOverrides": {
+      "evaluacion": "#0891b2",
+      "calentamiento": "#f59e0b",
+      "curiosidad": "#10b981",
+      "musica": "#0891b2",
+      "conversacion": "#f59e0b",
+      "cultura": "#10b981",
+      "lectura": "#0891b2",
+      "tareas": "#f59e0b",
+      "pruebas": "#b91c1c",
+      "estructura": "#1e3a8a",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Fredoka One",
+      "evaluacion": "Fredoka One",
+      "calentamiento": "Fredoka One",
+      "curiosidad": "Fredoka One",
+      "musica": "Fredoka One",
+      "conversacion": "Fredoka One",
+      "tareas": "Fredoka One",
+      "pruebas": "Fredoka One"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/sun-bathe.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/beach-ball.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/palm-tree.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/summer_hero.png",
+    "msg": "¡Disfruta del sol y las vacaciones!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_summer.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_summer.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_summer.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_summer.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_summer.png"
+  },
+  "effectConfig": {
+    "char": "☀️",
+    "color": "#facc15",
+    "direction": "down",
+    "speed": 0.7,
+    "count": 20
+  }
+},
+    {
+  "id": "back_to_school",
+  "name": "Regreso a Clases",
+  "start": "09-01",
+  "end": "09-06",
+  "styles": {
+    "header": "bg-gradient-to-r from-yellow-400 via-yellow-500 to-red-500",
+    "fontHeading": "Schoolbell",
+    "accent": "#2563eb",
+    "cardOverrides": {
+      "evaluacion": "#dc2626",
+      "calentamiento": "#f59e0b",
+      "curiosidad": "#16a34a",
+      "musica": "#2563eb",
+      "conversacion": "#9333ea",
+      "cultura": "#0891b2",
+      "lectura": "#dc2626",
+      "tareas": "#f59e0b",
+      "pruebas": "#000000",
+      "estructura": "#4b5563",
+      "extras": "#ffffff"
+    },
+    "fonts": {
+      "estructura": "Architects Daughter",
+      "evaluacion": "Architects Daughter",
+      "calentamiento": "Architects Daughter",
+      "curiosidad": "Architects Daughter",
+      "musica": "Architects Daughter",
+      "conversacion": "Architects Daughter",
+      "tareas": "Architects Daughter",
+      "pruebas": "Architects Daughter"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/pencil.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/backpack.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/light-bulb.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/backtoschool_hero.png",
+    "msg": "¡Bienvenidos al nuevo año escolar!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_backtoschool.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_backtoschool.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_backtoschool.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_backtoschool.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_backtoschool.png"
+  },
+  "effectConfig": {
+    "char": "✏️",
+    "color": "#facc15",
+    "direction": "down",
+    "speed": 1.5,
+    "count": 25
+  }
+},
+        {
+  "id": "tomatina",
+  "name": "La Tomatina",
+  "start": "08-20",
+  "end": "08-31",
+  "styles": {
+    "header": "bg-gradient-to-r from-red-600 via-red-500 to-orange-500",
+    "fontHeading": "Fugaz One",
+    "accent": "#4c5a23",
+    "cardOverrides": {
+      "evaluacion": "#d62e2e",
+      "calentamiento": "#ff6347",
+      "curiosidad": "#4c5a23",
+      "musica": "#d62e2e",
+      "conversacion": "#ff6347",
+      "cultura": "#4c5a23",
+      "lectura": "#d62e2e",
+      "tareas": "#ff6347",
+      "pruebas": "#600000",
+      "estructura": "#2a100c",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Titan One",
+      "evaluacion": "Titan One",
+      "calentamiento": "Titan One",
+      "curiosidad": "Titan One",
+      "musica": "Titan One",
+      "conversacion": "Titan One",
+      "tareas": "Titan One",
+      "pruebas": "Titan One"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/tomato.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/splash.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/t-shirt.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/tomatina_hero.png",
+    "msg": "¡Prepárate para la batalla de tomates!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_tomatina.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_tomatina.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_tomatina.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_tomatina.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_tomatina.png"
+  },
+  "effectConfig": {
+    "char": "🍅",
+    "color": "#ff6347",
+    "direction": "down",
+    "speed": 2.5,
+    "count": 45
+  }
+},
+
+    {
+  "id": "hispanic_heritage",
+  "name": "Herencia Hispana",
+  "start": "09-15",
+  "end": "10-15",
+  "styles": {
+    "header": "bg-gradient-to-r from-pink-500 via-orange-500 to-teal-500",
+    "fontHeading": "Lobster Two",
+    "accent": "#ffffff",
+    "cardOverrides": {
+      "evaluacion": "#db2777",
+      "calentamiento": "#ea580c",
+      "curiosidad": "#0d9488",
+      "musica": "#2563eb",
+      "conversacion": "#9333ea",
+      "cultura": "#dc2626",
+      "lectura": "#db2777",
+      "tareas": "#ea580c",
+      "pruebas": "#431407",
+      "estructura": "#134e4a",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Cabin Sketch",
+      "evaluacion": "Cabin Sketch",
+      "calentamiento": "Cabin Sketch",
+      "curiosidad": "Cabin Sketch",
+      "musica": "Cabin Sketch",
+      "conversacion": "Cabin Sketch",
+      "tareas": "Cabin Sketch",
+      "pruebas": "Cabin Sketch"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/maracas.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/guitar.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/sun-symbol.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/heritage_hero.png",
+    "msg": "Celebrando nuestra rica cultura e historia"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_heritage.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_heritage.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_heritage.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_heritage.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_heritage.png"
+  },
+  "effectConfig": {
+    "char": "✨",
+    "color": "white",
+    "direction": "down",
+    "speed": 1,
+    "count": 40
+  }
+},
+    {
+  "id": "halloween",
+  "name": "Halloween",
+  "start": "10-20",
+  "end": "10-31",
+  "styles": {
+    "header": "bg-gradient-to-r from-purple-900 via-orange-600 to-black",
+    "fontHeading": "Creepster",
+    "accent": "#f97316",
+    "cardOverrides": {
+      "evaluacion": "#4c1d95",
+      "calentamiento": "#ea580c",
+      "curiosidad": "#16a34a",
+      "musica": "#4c1d95",
+      "conversacion": "#ea580c",
+      "cultura": "#16a34a",
+      "lectura": "#4c1d95",
+      "tareas": "#ea580c",
+      "pruebas": "#000000",
+      "estructura": "#1e1b4b",
+      "extras": "#ffffff"
+    },
+    "fonts": {
+      "estructura": "Nosifer",
+      "evaluacion": "Nosifer",
+      "calentamiento": "Nosifer",
+      "curiosidad": "Nosifer",
+      "musica": "Nosifer",
+      "conversacion": "Nosifer",
+      "tareas": "Nosifer",
+      "pruebas": "Nosifer"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/jack-o-lantern.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/ghost.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/bat.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/halloween_hero.png",
+    "msg": "¡Noche de brujas y espantos!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_halloween.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_halloween.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_halloween.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_halloween.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_halloween.png"
+  },
+  "effectConfig": {
+    "char": "🎃",
+    "color": "#f97316",
+    "direction": "down",
+    "speed": 1.8,
+    "count": 30
+  }
+},
+    {
+  "id": "muertos",
+  "name": "Día de los Muertos",
+  "start": "11-01",
+  "end": "11-03",
+  "styles": {
+    "header": "bg-gradient-to-r from-pink-600 via-orange-500 to-yellow-400",
+    "fontHeading": "FrederickatheGreat",
+    "accent": "#f59e0b",
+    "cardOverrides": {
+      "evaluacion": "#be185d",
+      "calentamiento": "#f97316",
+      "curiosidad": "#0d9488",
+      "musica": "#be185d",
+      "conversacion": "#f97316",
+      "cultura": "#0d9488",
+      "lectura": "#be185d",
+      "tareas": "#f97316",
+      "pruebas": "#431407",
+      "estructura": "#451a03",
+      "extras": "#ffffff"
+    },
+    "fonts": {
+      "estructura": "Jolly Lodger",
+      "evaluacion": "Jolly Lodger",
+      "calentamiento": "Jolly Lodger",
+      "curiosidad": "Jolly Lodger",
+      "musica": "Jolly Lodger",
+      "conversacion": "Jolly Lodger",
+      "tareas": "Jolly Lodger",
+      "pruebas": "Jolly Lodger"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/sugar-skull.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/guitar.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/marigold.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/muertos_hero.png",
+    "msg": "¡Honrando a nuestros antepasados!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_muertos.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_muertos.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_muertos.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_muertos.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_muertos.png"
+  },
+  "effectConfig": {
+    "char": "🌼",
+    "color": "#fbbf24",
+    "direction": "down",
+    "speed": 0.8,
+    "count": 40
+  }
+},
+    {
+  "id": "raza",
+  "name": "Día de la Raza",
+  "start": "10-05",
+  "end": "10-20",
+  "styles": {
+    "header": "bg-gradient-to-r from-orange-800 via-amber-700 to-yellow-600",
+    "fontHeading": "Chango",
+    "accent": "#d97706",
+    "cardOverrides": {
+      "evaluacion": "#9a3412",
+      "calentamiento": "#f59e0b",
+      "curiosidad": "#065f46",
+      "musica": "#9a3412",
+      "conversacion": "#f59e0b",
+      "cultura": "#065f46",
+      "lectura": "#9a3412",
+      "tareas": "#f59e0b",
+      "pruebas": "#78350f",
+      "estructura": "#451a03",
+      "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Merienda",
+      "evaluacion": "Merienda",
+      "calentamiento": "Merienda",
+      "curiosidad": "Merienda",
+      "musica": "Merienda",
+      "conversacion": "Merienda",
+      "tareas": "Merienda",
+      "pruebas": "Merienda"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/earth-globe.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/pan-flute.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/sun-symbol.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/raza_hero.png",
+    "msg": "¡Celebrando nuestra herencia y diversidad!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_raza.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_raza.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_raza.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_raza.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_raza.png"
+  },
+  "effectConfig": {
+    "char": "🌎",
+    "color": "#f59e0b",
+    "direction": "down",
+    "speed": 1,
+    "count": 30
+  }
+},
+  {
+  "id": "thanksgiving",
+  "name": "Acción de Gracias",
+  "start": "11-20",
+  "end": "11-30",
+  "styles": {
+    "header": "bg-gradient-to-r from-orange-800 via-amber-700 to-yellow-700",
+    "fontHeading": "Kalam",
+    "accent": "#78350f",
+    "cardOverrides": {
+      "evaluacion": "#9a3412", "calentamiento": "#d97706", "curiosidad": "#451a03",
+      "musica": "#9a3412", "conversacion": "#d97706", "cultura": "#451a03",
+      "lectura": "#9a3412", "tareas": "#d97706", "pruebas": "#431407",
+      "estructura": "#78350f", "extras": "#000000"
+    },
+    "fonts": {
+      "estructura": "Courgette", "evaluacion": "Courgette", "calentamiento": "Courgette",
+      "curiosidad": "Courgette", "musica": "Courgette", "conversacion": "Courgette",
+      "tareas": "Courgette", "pruebas": "Courgette"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/turkey.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/thanksgiving.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/pie.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/thanksgiving_hero.png",
+    "msg": "¡Feliz día de Acción de Gracias!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_thanksgiving.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_thanksgiving.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_thanksgiving.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_thanksgiving.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_thanksgiving.png"
+  },
+  "effectConfig": { "char": "🍂", "color": "#d97706", "direction": "down", "speed": 1, "count": 25 }
+},
+    {
+  "id": "navidad",
+  "name": "Navidad",
+  "start": "12-01",
+  "end": "12-31",
+  "styles": {
+    "header": "bg-gradient-to-r from-red-700 via-green-800 to-red-700",
+    "fontHeading": "Mountains of Christmas",
+    "accent": "#facc15",
+    "cardOverrides": {
+      "evaluacion": "#b91c1c", "calentamiento": "#166534", "curiosidad": "#facc15",
+      "musica": "#b91c1c", "conversacion": "#166534", "cultura": "#facc15",
+      "lectura": "#b91c1c", "tareas": "#166534", "pruebas": "#000000",
+      "estructura": "#064e3b", "extras": "#ffffff"
+    },
+    "fonts": {
+      "estructura": "Berkshire Swash", "evaluacion": "Berkshire Swash", "calentamiento": "Berkshire Swash",
+      "curiosidad": "Berkshire Swash", "musica": "Berkshire Swash", "conversacion": "Berkshire Swash",
+      "tareas": "Berkshire Swash", "pruebas": "Berkshire Swash"
+    },
+    "textures": {
+      "evaluacion": "https://img.icons8.com/ios-filled/100/ffffff/christmas-star.png",
+      "musica": "https://img.icons8.com/ios-filled/100/ffffff/bells.png",
+      "curiosidad": "https://img.icons8.com/ios-filled/100/ffffff/gift.png"
+    }
+  },
+  "hero": {
+    "active": true,
+    "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/navidad_hero.png",
+    "msg": "¡Felices Fiestas!"
+  },
+  "mascots": {
+    "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_navidad.png",
+    "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_navidad.png",
+    "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_navidad.png",
+    "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_navidad.png",
+    "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_navidad.png"
+  },
+  "effectConfig": { "char": "✨", "color": "white", "direction": "down", "speed": 1.2, "count": 50 }
 },
     {
       "id": "classic",
