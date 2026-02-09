@@ -1,152 +1,192 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lectura Dual Generator (JSON + HTML)</title>
+  <meta charset="UTF-8">
+  <title>Lectura Master v22 - Student View Controls</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <style>
     body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
-    textarea { font-family: ui-monospace, monospace; font-size: 0.85rem; }
-    .mono { font-family: ui-monospace, monospace; }
+    textarea { font-family: ui-monospace, monospace; font-size: 0.75rem; }
+    .opt-pill { cursor: pointer; border: 2px solid #e2e8f0; transition: all 0.2s; user-select: none; }
+    .opt-pill.is-correct { background-color: #f97316; border-color: #ea580c; color: white; }
+    
+    /* Global Reveal UI */
+    #master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }
+    #master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }
+    .answer-text { display: none; }
+    .answer-text.visible { display: block; }
+
+    .correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }
+    .wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-900">
-  <div class="max-w-6xl mx-auto p-6 space-y-6">
-    
-    <header class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-      <h1 class="text-3xl font-black tracking-tight text-orange-600">Lectura Dual Generator</h1>
-      <p class="text-slate-600 mt-2">Generate both the <b>Data (JSON)</b> and the <b>Layout (HTML)</b> for Lectora.</p>
+<body class="bg-slate-100 p-4">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+    <header class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-black text-orange-600 tracking-tight">Lectura Master v22</h1>
+        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Client-Side View Engine</p>
+      </div>
     </header>
 
-    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-      <h2 class="text-xl font-black">1) Metadata & Content</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input id="titulo" class="w-full border rounded-lg p-2" placeholder="Título (e.g. Rosalía)" />
-        <input id="subtitulo" class="w-full border rounded-lg p-2" placeholder="Subtítulo" value="Lectura 📕" />
-        <input id="imgMain" class="w-full border rounded-lg p-2" placeholder="URL de Imagen Principal" />
-        <input id="tag" class="w-full border rounded-lg p-2" placeholder="Tag (e.g. España)" />
-      </div>
-      <textarea id="textoRaw" rows="8" class="w-full border rounded-xl p-3" placeholder="Pega el texto aquí..."></textarea>
-    </section>
-
-    <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-black">2) Questions</h2>
-            <button onclick="addShortQuestion()" class="bg-blue-600 text-white px-4 py-1 rounded-lg text-sm font-bold">+ Add Question</button>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-1 space-y-4">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-3">
+          <input id="in_titulo" class="w-full border rounded p-2 text-sm font-bold" placeholder="Título de la Actividad">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="in_curso" value="s4" class="border rounded p-2 text-sm" placeholder="Curso">
+            <input id="in_mins" type="number" value="5" class="border rounded p-2 text-sm" placeholder="Minutos">
+          </div>
+          <input id="in_slug" class="w-full border rounded p-2 text-sm font-mono" placeholder="slug-identificador">
+          <input type="text" id="in_img_url" class="w-full border rounded p-2 text-xs" placeholder="URL de la Imagen (opcional)">
+          <textarea id="in_texto" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Pega aquí el texto de lectura..."></textarea>
         </div>
-        <div id="questionList" class="space-y-4"></div>
-    </section>
+      </section>
 
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-        <h2 class="text-lg font-black flex justify-between">
-            JSON Data 
-            <button onclick="copyToClipboard('jsonOutput')" class="text-xs bg-slate-200 px-2 py-1 rounded">Copy</button>
-        </h2>
-        <textarea id="jsonOutput" rows="15" class="w-full border rounded-xl p-3 bg-slate-50 text-blue-800" readonly></textarea>
-      </div>
-
-      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
-        <h2 class="text-lg font-black flex justify-between">
-            Static HTML (for Lectora)
-            <button onclick="copyToClipboard('htmlOutput')" class="text-xs bg-slate-200 px-2 py-1 rounded">Copy</button>
-        </h2>
-        <textarea id="htmlOutput" rows="15" class="w-full border rounded-xl p-3 bg-slate-50 text-emerald-800" readonly></textarea>
-      </div>
-    </section>
-
-    <div class="text-center">
-        <button onclick="generateBoth()" class="bg-orange-600 text-white px-10 py-4 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-lg">
-            GENERATE OUTPUTS
-        </button>
+      <section class="lg:col-span-2 space-y-4">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex flex-wrap gap-2 mb-4 border-b pb-4">
+              <button onclick="addQ('short')" class="bg-slate-800 text-white px-3 py-1 rounded text-[10px] font-bold">+ CORTA</button>
+              <button onclick="addQ('mc')" class="bg-slate-800 text-white px-3 py-1 rounded text-[10px] font-bold">+ SELECCIÓN</button>
+              <button onclick="addQ('vf')" class="bg-slate-800 text-white px-3 py-1 rounded text-[10px] font-bold">+ V/F</button>
+              <button onclick="addQ('matching')" class="bg-slate-800 text-white px-3 py-1 rounded text-[10px] font-bold">+ UNIR</button>
+              <button onclick="addQ('ordering')" class="bg-slate-800 text-white px-3 py-1 rounded text-[10px] font-bold">+ ORDENAR</button>
+          </div>
+          <div id="q_list" class="space-y-4"></div>
+          <button onclick="generate()" class="w-full mt-6 bg-orange-600 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:bg-orange-700 transition-colors">GENERAR ARCHIVO FINAL</button>
+        </div>
+        <textarea id="out_html" rows="8" class="w-full border rounded-xl p-4 bg-slate-900 text-blue-300 text-[10px]" readonly placeholder="Código HTML resultante..."></textarea>
+      </section>
     </div>
   </div>
 
 <script>
-  // Simplified Question Logic for demonstration
-  function addShortQuestion() {
-      const div = document.createElement('div');
-      div.className = "p-3 border rounded-lg bg-slate-50 flex gap-2";
-      div.innerHTML = `
-        <input class="qPrompt flex-1 border p-1 rounded" placeholder="Pregunta">
-        <input class="qAnswer flex-1 border p-1 rounded" placeholder="Respuesta">
-      `;
-      document.getElementById('questionList').appendChild(div);
-  }
+    function addQ(type) {
+        const list = document.getElementById('q_list');
+        const qIdx = Date.now();
+        const div = document.createElement('div');
+        div.className = "q-item bg-slate-50 p-4 rounded-xl border border-slate-200 relative mb-4";
+        div.dataset.type = type;
+        let fields = `<input class="qP w-full border rounded p-2 text-sm font-bold mb-2" placeholder="Escribe la pregunta aquí...">`;
+        if (type === 'mc') fields += `<textarea class="qOpts w-full border rounded p-2 text-sm mb-2" placeholder="Opciones (una por línea)" oninput="updatePills(${qIdx}, this.value)"></textarea><div id="pills-${qIdx}" class="flex flex-wrap gap-2"></div>`;
+        else if (type === 'short') fields += `<input class="qA w-full border rounded p-2 text-sm" placeholder="Respuesta correcta">`;
+        else if (type === 'vf') fields += `<select class="qA border rounded p-2 text-sm w-full mb-2"><option value="Verdadero">Verdadero</option><option value="Falso">Falso</option></select><input class="qJust w-full border rounded p-2 text-sm" placeholder="Justificación (Clave)">`;
+        else if (type === 'matching') fields += `<textarea class="qPairs w-full border rounded p-2 text-sm" placeholder="Término A = Pareja A"></textarea>`;
+        else if (type === 'ordering') fields += `<textarea class="qOrder w-full border rounded p-2 text-sm" placeholder="Elementos en orden correcto"></textarea>`;
+        div.innerHTML = `<button onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-slate-300">✕</button><div class="text-[9px] font-black text-orange-500 uppercase mb-1">${type}</div>${fields}`;
+        list.appendChild(div);
+    }
 
-  function generateBoth() {
-      const titulo = document.getElementById('titulo').value;
-      const subtitulo = document.getElementById('subtitulo').value;
-      const textoRaw = document.getElementById('textoRaw').value;
-      const imagen = document.getElementById('imgMain').value;
-      
-      const paragraphs = textoRaw.split(/\n\s*\n/).filter(Boolean);
-      
-      const questions = [];
-      document.querySelectorAll('#questionList div').forEach(qDiv => {
-          questions.push({
-              tipo: "short",
-              pregunta: qDiv.querySelector('.qPrompt').value,
-              respuesta: qDiv.querySelector('.qAnswer').value
-          });
-      });
+    function updatePills(id, val) {
+        const container = document.getElementById(`pills-${id}`);
+        const opts = val.split('\n').filter(o => o.trim() !== "");
+        container.innerHTML = opts.map(o => `<div onclick="this.classList.toggle('is-correct')" class="opt-pill px-2 py-1 rounded border bg-white text-[10px] font-bold">${o.trim()}</div>`).join('');
+    }
 
-      // 1. GENERATE JSON
-      const jsonData = {
-          titulo,
-          subtitulo,
-          imagen,
-          contenido: { texto: paragraphs, preguntas: questions }
-      };
-      document.getElementById('jsonOutput').value = JSON.stringify(jsonData, null, 2);
+    function generate() {
+        const slug = document.getElementById('in_slug').value || 'temp';
+        const curso = document.getElementById('in_curso').value;
+        const fullId = `lectura-${curso}-${slug}`;
+        const paragraphs = document.getElementById('in_texto').value.split(/\n\s*\n/).filter(Boolean);
+        const mins = document.getElementById('in_mins').value;
+        const titulo = document.getElementById('in_titulo').value || "Lectura";
+        const imgUrl = document.getElementById('in_img_url').value.trim();
+        
+        let qHtml = ''; 
+        let config = {};
 
-      // 2. GENERATE STATIC HTML
-      // This builds the exact HTML structure your "lectura.html" renderer expects
-      let textHtml = paragraphs.map(p => `<p class="mb-4">${p}</p>`).join('');
-      
-      let qaHtml = questions.map((q, i) => `
-        <div class="rounded-xl border border-slate-200 overflow-hidden mb-4">
-          <div class="p-4 bg-slate-50 border-b border-slate-200">
-            <div class="text-[11px] font-black uppercase tracking-widest text-slate-400">Pregunta ${i+1}</div>
-            <div class="text-slate-900 font-bold mt-1">${q.pregunta}</div>
-          </div>
-          <div class="p-4">
-            <div class="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2">Respuesta</div>
-            <div class="p-3 rounded-lg border border-slate-200 bg-white text-slate-800">
-              ${q.respuesta}
-            </div>
-          </div>
-        </div>`).join('');
+        document.querySelectorAll('.q-item').forEach((div, i) => {
+            const type = div.dataset.type;
+            const p = div.querySelector('.qP').value;
+            let ui = ''; 
+            config[i] = { type: type };
+            if (type === 'mc') {
+                const opts = div.querySelector('.qOpts').value.split('\n').filter(o => o.trim() !== "");
+                const corrects = [...div.querySelectorAll('.opt-pill.is-correct')].map(el => el.innerText);
+                config[i].correct = corrects;
+                ui = `<div class="space-y-1 mt-2">${opts.map(o => `<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="checkbox" name="q${i}" value="${o}"> ${o}</label>`).join('')}</div>`;
+            } else if (type === 'short') {
+                config[i].correct = div.querySelector('.qA').value;
+                ui = `<input id="ans-${i}" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí...">`;
+            } else if (type === 'vf') {
+                config[i].correct = div.querySelector('.qA').value;
+                config[i].just = div.querySelector('.qJust').value;
+                ui = `<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q${i}" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q${i}" value="Falso"> F</label></div><textarea class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica..."></textarea>`;
+            } else if (type === 'matching' || type === 'ordering') {
+                const lines = div.querySelector(type==='matching'?'.qPairs':'.qOrder').value.split('\n').filter(Boolean);
+                let correct;
+                if(type==='matching') {
+                    const left = lines.map(x => x.split('=')[0].trim());
+                    correct = lines.map(x => x.split('=')[1].trim());
+                    const shuffled = [...correct].sort(() => Math.random() - 0.5);
+                    ui = `<div class="flex gap-2 mt-2"><div class="w-1/2 space-y-1">${left.map(l => `<div class="h-10 border rounded bg-slate-50 flex items-center px-2 text-[10px] font-bold">${l}</div>`).join('')}</div><div id="sort-${i}" class="w-1/2 space-y-1 sortable">${shuffled.map(s => `<div class="h-10 border rounded bg-white flex items-center px-2 text-[10px] cursor-move shadow-sm" data-v="${s}">⠿ ${s}</div>`).join('')}</div></div>`;
+                } else {
+                    correct = lines;
+                    const shuffled = [...correct].sort(() => Math.random() - 0.5);
+                    ui = `<div id="sort-${i}" class="mt-2 space-y-1 sortable">${shuffled.map(s => `<div class="p-2 border rounded bg-white text-xs cursor-move shadow-sm" data-v="${s}">⠿ ${s}</div>`).join('')}</div>`;
+                }
+                config[i].correct = correct;
+            }
 
-      const fullHtml = `
-<div class="max-w-4xl mx-auto p-4 space-y-6">
-  <header class="bg-orange-500 rounded-xl p-6 text-white shadow-md">
-    <h1 class="text-3xl font-extrabold">${titulo}</h1>
-    <p class="italic">${subtitulo}</p>
-  </header>
-  ${imagen ? `<img src="${imagen}" class="w-full h-64 object-cover rounded-xl shadow-md">` : ''}
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <article class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-      <h2 class="font-black mb-4">📖 Texto</h2>
-      <div class="text-slate-800 leading-relaxed">${textHtml}</div>
-    </article>
-    <article class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-      <h2 class="font-black mb-4">✅ Preguntas</h2>
-      <div>${qaHtml}</div>
-    </article>
-  </div>
-</div>`;
+            qHtml += `<div id="card-${i}" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P${i+1}</span><button data-idx="${i}" class="check-btn text-[9px] bg-orange-600 text-white px-3 py-1 rounded-full font-bold">CHECK</button></div><div class="text-sm font-bold text-slate-800 leading-snug">${p}</div>${ui}<div id="key-${i}" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>`;
+        });
 
-      document.getElementById('htmlOutput').value = fullHtml.trim();
-  }
+        const imageHtml = imgUrl ? `<div class="w-full max-w-4xl mx-auto h-80 bg-white rounded-3xl mb-8 overflow-hidden border border-slate-200 flex items-center justify-center p-2 shadow-sm"><img src="${imgUrl}" class="max-w-full max-h-full object-contain rounded-xl"></div>` : '';
 
-  function copyToClipboard(id) {
-      const copyText = document.getElementById(id);
-      copyText.select();
-      document.execCommand("copy");
-      alert("Copied to clipboard!");
-  }
+        const finalHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"><\/script><script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"><\/script><style>#master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }#master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }.answer-text { display: none; }.answer-text.visible { display: block; }.correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }.wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }.active-tab { background-color: #ea580c !important; color: white !important; }</style></head><body class="bg-slate-50 p-4 pb-20 font-sans"><div class="max-w-6xl mx-auto space-y-4"><header class="bg-orange-600 rounded-3xl p-8 text-white shadow-lg mb-4 flex flex-col md:flex-row justify-between items-center gap-4"><h1 class="text-3xl font-black">${titulo}</h1><button id="master-reveal-btn" onclick="document.querySelectorAll('.answer-text').forEach(a=>a.classList.toggle('visible'))" class="bg-white text-orange-600 px-6 py-3 rounded-2xl font-black text-sm shadow-md">MOSTRAR RESPUESTAS</button></header><div class="bg-white p-4 rounded-2xl shadow-sm border-l-8 border-orange-500 flex flex-wrap justify-between items-center gap-4"><div class="flex items-center gap-4 text-[11px] font-black text-slate-400 uppercase">TIEMPO: <span id="timer" class="text-orange-600 font-mono text-lg">--:--</span></div><div class="flex bg-slate-100 p-1 rounded-xl h-10"><button id="v-par" onclick="setView('IB')" class="active-tab px-4 rounded-lg text-[10px] font-bold transition-all">VISTA: PARALELA</button><button id="v-ver" onclick="setView('STACK')" class="px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400">VISTA: VERTICAL</button></div><button onclick="document.querySelectorAll('.check-btn').forEach(b=>b.click())" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[11px] font-black hover:bg-slate-700 transition-all">COMPROBAR TODO</button></div>
+        ${imageHtml}
+        <div id="main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"><div id="text-col" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-xl leading-relaxed text-slate-700">${paragraphs.map(p=>`<p class="mb-6">${p}</p>`).join('')}</div><div id="q-col">${qHtml}</div></div></div>
+        <script>
+        const CONFIG = ${JSON.stringify(config)};
+        const key = "l_${fullId}", mins = ${mins};
+        function setView(v) {
+            const grid = document.getElementById('main-grid');
+            const qCol = document.getElementById('q-col');
+            const bPar = document.getElementById('v-par'), bVer = document.getElementById('v-ver');
+            if(v === 'IB') {
+                grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start";
+                qCol.className = "";
+                bPar.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all";
+                bVer.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400";
+            } else {
+                grid.className = "grid grid-cols-1 gap-8 items-start";
+                qCol.className = "max-w-3xl mx-auto w-full";
+                bVer.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all";
+                bPar.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400";
+            }
+        }
+        function mark(i, ok) { const c = document.getElementById('card-'+i); c.classList.remove('correct-card', 'wrong-card'); c.classList.add(ok ? 'correct-card' : 'wrong-card'); }
+        document.querySelectorAll('.check-btn').forEach(btn => {
+            btn.onclick = () => {
+                const i = btn.dataset.idx, conf = CONFIG[i]; let ok = false;
+                if(conf.type === 'mc') { const s = [...document.querySelectorAll('input[name="q'+i+'"]:checked')].map(e=>e.value).sort(); ok = JSON.stringify(s) === JSON.stringify([...conf.correct].sort()); }
+                else if(conf.type === 'short') { ok = document.getElementById('ans-'+i).value.trim().toLowerCase() === conf.correct.toLowerCase(); }
+                else if(conf.type === 'vf') { ok = document.querySelector('input[name="q'+i+'"]:checked')?.value === conf.correct; }
+                else if(conf.type === 'matching' || conf.type === 'ordering') { const cur = [...document.getElementById('sort-'+i).children].map(c=>c.dataset.v); ok = JSON.stringify(cur) === JSON.stringify(conf.correct); }
+                mark(i, ok);
+            };
+        });
+        document.querySelectorAll('.sortable').forEach(el => new Sortable(el, { animation: 150 }));
+        function initKeys() { Object.keys(CONFIG).forEach(i => { const c = CONFIG[i]; const b = document.getElementById('key-'+i); let t = "Correcto: " + (Array.isArray(c.correct) ? c.correct.join(' | ') : c.correct); if(c.just) t += " (" + c.just + ")"; b.innerText = t; }); }
+        initKeys();
+        let end = localStorage.getItem(key) || (Date.now() + mins * 60000);
+        localStorage.setItem(key, end);
+        function tick() {
+            const left = end - Date.now();
+            if (left <= 0) { 
+                document.getElementById('timer').innerText = "DISPONIBLE";
+                document.getElementById('master-reveal-btn').classList.add('active');
+            } else { 
+                const m = Math.floor(left/60000), s = Math.floor((left%60000)/1000);
+                document.getElementById('timer').innerText = m + ":" + (s<10?'0':'') + s;
+            }
+        }
+        setInterval(tick, 1000); tick();
+        <\/script></body></html>`;
+        document.getElementById('out_html').value = finalHtml;
+    }
 </script>
 </body>
 </html>
