@@ -76,7 +76,12 @@
                     <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
-
+<div id="evaluacionesCard" class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] border-slate-200 flex flex-col group">
+        <div class="p-5 text-center">
+            <h3 class="text-slate-900 font-bold text-lg mb-4 italic">Próximas Pruebas</h3>
+            <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="block w-full btn-theme py-2.5 rounded-lg font-bold text-xs hover:opacity-90 transition-opacity uppercase">Ver calendario completo</a>
+        </div>
+    </div>
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col group">
                     <div class="h-28 overflow-hidden p-2"> 
                         <img id="tutorMascot" src="" class="w-full h-full object-contain"> 
@@ -270,7 +275,23 @@ async function runRender(data, DIA) {
         <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
         <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
     `;
-
+const evalCard = document.getElementById('evaluacionesCard');
+if (evalCard) {
+    const evalColor = overrides.evaluaciones || accent; 
+    const evalFont = fonts.evaluaciones || 'inherit';
+    
+    evalCard.style.borderLeftColor = evalColor;
+    const evalHeader = evalCard.querySelector('h3');
+    if (evalHeader) {
+        evalHeader.style.color = evalColor;
+        evalHeader.style.fontFamily = evalFont;
+    }
+    
+    const evalBtn = evalCard.querySelector('a');
+    if (evalBtn) {
+        evalBtn.style.backgroundColor = evalColor;
+    }
+}
     // 4. CURIOSIDAD (SISTEMA PROTEGIDO)
     const curBlock = document.getElementById('curiosityCard');
     try {
