@@ -28,11 +28,11 @@
         { "kind": "vocabulario", "ref": "L8" },
         {
           "kind": "estructura",
-          "ref": "siclauses",
-          "title": "Cláusulas con si",
+          "ref": "perfectos",
+          "title": "Cláusulas con si: Segundo condicional, tercer condicional",
           "introducir": [],
-          "repasar": ["siclaus", "impdesubj", "cond"],
-          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses", "subjuntivo"]
+          "repasar": ["pluscuamsub", "condperf"],
+          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses"]
         },
         { "kind": "conv", "ref": "conv-s4-25" },
         { "kind": "conv", "ref": "lect-s4-comoagua04" },
@@ -45,16 +45,14 @@
       "fecha": "2026-02-13",
       "blocks": [
         { "kind": "vocabulario", "ref": "L8" },
-        {
+         {
           "kind": "estructura",
-          "ref": "siclauses",
-          "title": "Cláusulas con si",
+          "ref": "perfectos",
+          "title": "Cláusulas con si: Segundo condicional, tercer condicional",
           "introducir": [],
-          "repasar": ["siclaus", "impdesubj", "cond"],
-          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses", "subjuntivo"]
+          "repasar": ["pluscuamsub", "condperf"],
+          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses"]
         },
-         { "kind": "extras", "ref": "condicionales-practica-2-en" },
-        { "kind": "extras", "ref": "condicionales-practica-2" },
         { "kind": "conv", "ref": "conv-s4-24" },
         { "kind": "conv", "ref": "lect-s4-comoagua04" },
         { "kind": "extras", "ref": "IA-practice" },
@@ -68,13 +66,15 @@
         { "kind": "vocabulario", "ref": "L8" },
         {
           "kind": "estructura",
-          "ref": "siclauses",
-          "title": "Cláusulas con si",
+          "ref": "perfectos",
+          "title": "Cláusulas con si: Segundo condicional, tercer condicional",
           "introducir": [],
-          "repasar": ["siclaus", "impdesubj", "cond"],
-          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses", "subjuntivo"]
+          "repasar": ["pluscuamsub", "condperf"],
+          "recursos_gramatica": ["perfectos", "imperfectodesubjuntivo", "siclauses"]
         },
-       
+        { "kind": "extras", "ref": "condicionales-practica-2-en" },
+        { "kind": "extras", "ref": "condicionales-practica-2" },
+        
         { "kind": "lectura", "ref": "lect-s4-antesdelfin" },
         { "kind": "conv", "ref": "conv-s4-23" },
         { "kind": "extras", "ref": "HL-read-marina" },
