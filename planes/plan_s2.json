@@ -46,30 +46,27 @@
             "ref": "L4"
         },
                 {
-            "kind": "conv",
-            "ref": "conv-s2-d2-3-casaideal"
+            "kind": "extras",
+            "ref": "subjuntivo-modelos-influencia-emocion"
         }, 
-                   {
+        {
+            "kind": "extras",
+            "ref": "subjuntivo-practica-elementos"
+        }, 
+    {
             "kind": "estructura",
             "ref": "subjuntivo",
-            "title": "Presente de subjuntivo: cambios radicales",
-            "introducir": [
+            "title": "Presente de subjuntivo: Emoción",
+            "introducir": ["clausulas_emocion"
                        ],
-            "repasar": ["conjugaciones"],
+            "repasar": ["clausulas_influencia"],
                 "recursos_gramatica":  [
                 "subjuntivo",
                 "mandatos",
                 "pronombresrelativos"
                ]
-        },
-        {
-            "kind": "estructura",
-            "ref": "pronombresrelativos",
-            "title": "que, lo que, quien, quienes",
-            "repasar": [
-                "que_lo_que_quien"
-            ]
         }
+  
                 ]
 },
 
