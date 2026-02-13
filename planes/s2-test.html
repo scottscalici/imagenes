@@ -587,42 +587,32 @@ if (item.type === 'example') {
                 </section>`;
         }
     });
+   // ============================================================
+    //  OLD LOOP (Runs Media: Musica, Cultura, Lectura, Conv)
+    // ============================================================
     (todayPlan?.blocks || []).forEach(blockRef => {
         
-        // Note: We removed the "estructura" check from here because we handled it above.
+        // We only check for the "mediaTypes" defined earlier.
+        // We skip "extras" and "estructura" because they are handled by the new logic above.
         
-        // 1. EXTRAS (Changed from "else if" to "if" because it's now the first item)
-        if (blockRef.kind === "extras") {
-            const exItem = data.extras.items.find(i => i.id === blockRef.ref);
-            if (exItem) {
-                const exColor = overrides.extras || accent;
-                let inner = exItem.img ? `<img src="${exItem.img}" class="w-full max-h-40 object-contain mb-4 rounded-lg bg-slate-50 p-4 border border-slate-100">` : "";
-                if (exItem.sentences) inner += `<ul class="space-y-2 mb-4">${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 pl-4 italic" style="border-color: ${exColor}">"${s}"</li>`).join('')}</ul>`;
-                if (exItem.links) inner += `<div class="flex flex-wrap gap-2">${exItem.links.map(l => `<a href="${l.url || '#'}" target="_blank" class="flex-1 text-center py-2 btn-theme rounded-lg font-bold text-xs uppercase tracking-tight" style="background-color:${exColor}">${l.label} ↗</a>`).join('')}</div>`;
-                contentBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 border border-slate-100" style="border-color: ${exColor}"><h2 class="font-bold text-sm uppercase tracking-widest mb-4 flex items-center gap-2" style="color: ${exColor}"><span>✨</span> ${exItem.title}</h2><div>${inner}</div></section>`;
-            }
-        }
-
-        // 2. OTHER MEDIA
-        else {
-            const dataKey = mediaTypes[blockRef.kind];
-            if (dataKey) {
-                const item = data[dataKey]?.items?.[blockRef.ref];
-                if (item) {
-                    const mColor = overrides[blockRef.kind] || accent;
-                    contentBlock.innerHTML += `
-                        <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                            <div class="flex flex-col md:flex-row">
-                                <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                                    <img src="${item.imagen}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="p-4 flex flex-col justify-between flex-grow">
-                                    <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
-                                    <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
-                                </div>
+        const dataKey = mediaTypes[blockRef.kind];
+        
+        if (dataKey) {
+            const item = data[dataKey]?.items?.[blockRef.ref];
+            if (item) {
+                const mColor = overrides[blockRef.kind] || accent;
+                contentBlock.innerHTML += `
+                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
+                                <img src="${item.imagen}" class="w-full h-full object-cover">
                             </div>
-                        </section>`;
-                }
+                            <div class="p-4 flex flex-col justify-between flex-grow">
+                                <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
+                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
+                            </div>
+                        </div>
+                    </section>`;
             }
         }
     });
@@ -797,37 +787,37 @@ async function renderByDate() {
 // --- INITIALIZATION ---
 async function loadData() {
     try {
-        // We need to fetch EVERYTHING in one go
-const [
-    plan, temas, cal, curios, evals, tareas,
-    vocab, apuntes, extras,
-    musica, lectura, cultura, conv,
-    videos, gramaticaDiaria, anuncios
-] = await Promise.all([
-    fetch(CONFIG.PLAN).then(r => r.json()),
-    fetch(CONFIG.TEMAS).then(r => r.json()),
-    fetch(CONFIG.CALENDARIO).then(r => r.json()),
-    fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
-    fetch(CONFIG.EVALS).then(r => r.json()),
-    fetch(CONFIG.TAREAS).then(r => r.json()),
-    fetch(CONFIG.VOCAB_BANK).then(r => r.json()),
-    fetch(CONFIG.APUNTES_BANK).then(r => r.json()),
-    fetch(CONFIG.EXTRAS).then(r => r.json()),
-    fetch(CONFIG.MUSICA).then(r => r.json()),
-    fetch(CONFIG.LECTURA).then(r => r.json()),
-    fetch(CONFIG.CULTURA).then(r => r.json()),
-    fetch(CONFIG.CONV).then(r => r.json()),
-    fetch(CONFIG.VIDEOS).then(r => r.json()),
-    fetch(CONFIG.GRAMATICA_DIARIA).then(r => r.json())
-]);
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, // Renamed from 'extras' to avoid confusion
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios // Added Anuncios
+        ] = await Promise.all([
+            fetch(CONFIG.PLAN).then(r => r.json()),
+            fetch(CONFIG.TEMAS).then(r => r.json()),
+            fetch(CONFIG.CALENDARIO).then(r => r.json()),
+            fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
+            fetch(CONFIG.EVALS).then(r => r.json()),
+            fetch(CONFIG.TAREAS).then(r => r.json()),
+            fetch(CONFIG.VOCAB_BANK).then(r => r.json()),
+            fetch(CONFIG.APUNTES_BANK).then(r => r.json()),
+            fetch(CONFIG.EXTRAS).then(r => r.json()), 
+            fetch(CONFIG.MUSICA).then(r => r.json()),
+            fetch(CONFIG.LECTURA).then(r => r.json()),
+            fetch(CONFIG.CULTURA).then(r => r.json()),
+            fetch(CONFIG.CONV).then(r => r.json()),
+            fetch(CONFIG.VIDEOS).then(r => r.json()),
+            fetch(CONFIG.GRAMATICA_DIARIA).then(r => r.json()),
+            fetch(CONFIG.ANUNCIOS).then(r => r.json()) // <--- ADDED THIS FETCH!
+        ]);
         
-        // Return everything so runRender can use it
+        // Return everything with correct names
        return {
-    plan, temas, cal, curios, evals, tareas,
-    vocab, apuntes, extras,
-    musica, lectura, cultura, conv,
-    videos, gramaticaDiaria
-};
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, // We pass it back as 'extrasDiarios'
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios
+        };
 
     } catch (e) { 
         console.error("Load Error", e); 
