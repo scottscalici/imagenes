@@ -51,7 +51,7 @@
             <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">Español 2</span>
         </div>
       </header>
-   <div id="anunciosBlock"></div>     
+   <div id="anunciosBlock"></div>      
         <div id="heroSlot" class="hidden mb-6">
             <div id="heroCard" class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row border-t-8">
                 <div class="md:w-1/3 h-48 bg-slate-100">
@@ -85,7 +85,6 @@
                 <div id="curiosityBlock"></div>
                 <div id="estructuraBlock"></div>
                 <div id="extrasBlock"></div>
-                <div id="curiosityBlock"></div>
                 <div id="videoBlock"></div>
             </div>
 
@@ -121,7 +120,7 @@
     
     <div id="dynamicCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 </div>
-           
+            
         
         <div class="max-w-4xl mx-auto mb-8">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
@@ -209,6 +208,13 @@ async function applyThemeStyles(data, currentDia) {
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
                 if (h) h.style.color = color;
+                // Apply Textures
+                if ((s.textures || {})[card.key]) {
+                    el.style.backgroundImage = `url('${s.textures[card.key]}')`;
+                    el.classList.add('card-texture');
+                } else {
+                    el.style.backgroundImage = 'none';
+                }
             }
         });
 
@@ -314,11 +320,52 @@ async function runRender(data, DIA) {
         curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
     } else { curBlock.innerHTML = ""; }
 
-    // 5. VIDEOS
+    // 5. VIDEOS (Restored Smart Logic)
     const videoContainer = document.getElementById('videoBlock');
     if (videoContainer) {
-        const dayVideos = data.videos.daily_tags.filter(v => v.dia == DIA && v.tags.includes(CONFIG.COURSE));
-        videoContainer.innerHTML = dayVideos.map(v => `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${overrides.video || accent}"><h3 class="font-bold text-xs uppercase" style="color: ${overrides.video || accent}">🎥 VIDEO</h3><h2 class="text-2xl font-extrabold mb-2">${v.title}</h2><iframe width="100%" height="315" src="${v.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></article>`).join('');
+        const vidColor = overrides.video || accent; 
+        const vidFont = fonts.video || 'inherit';
+
+        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
+        const dayVideos = (data.videos?.daily_tags || []).filter(v => 
+            v.dia == DIA && 
+            (v.tags || []).includes(CONFIG.COURSE)
+        );
+        
+        if (dayVideos.length > 0) {
+            videoContainer.innerHTML = dayVideos.map(videoData => {
+                if (videoData.page_url) {
+                    // Clickable Card Version
+                    return `
+                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
+                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
+                            <a href="${videoData.page_url}" target="_blank" class="block group">
+                                <img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md">
+                                <h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2>
+                            </a>
+                            <p class="text-slate-700 italic text-sm">${videoData.description || ""}</p>
+                        </article>`;
+                } else {
+                    // Embedded Player Version
+                    const width = videoData.is_short ? "315" : "100%";
+                    const height = videoData.is_short ? "560" : "315";
+                    // Flex center only for shorts to make them look nice
+                    const containerClass = videoData.is_short ? 'flex justify-center' : '';
+                    
+                    return `
+                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
+                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
+                            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2>
+                            <div class="${containerClass}">
+                                <iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe>
+                            </div>
+                            <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
+                        </article>`;
+                }
+            }).join('');
+        } else {
+            videoContainer.innerHTML = "";
+        }
     }
 
     // 6. ESTRUCTURA (New linear system)
@@ -339,10 +386,8 @@ async function runRender(data, DIA) {
         if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-    // 7. EXTRAS & MEDIA (Vocab Model)
+    // 7. EXTRAS (Linear Extras)
     const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
-    
-    // Process Linear Extras
     const todaysExtras = data.extrasDiarios?.[CONFIG.COURSE]?.[DIA] || [];
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
@@ -354,14 +399,14 @@ async function runRender(data, DIA) {
         }
     });
 
-// ============================================================
-    //  NEW: MUSICA (Spotify Style)
-    // ============================================================
+    // --- 7b. MEDIA BLOCKS ---
+    
+    // NEW: MUSICA (Spotify Style)
     Object.values(data.musica?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             const mColor = overrides.musica || accent;
+             const mColor = overrides.musica || "#1DB954"; 
              
-             contentBlock.innerHTML += `
+             extrasBlock.innerHTML += `
                 <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group">
                     <div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900">
                         <img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity">
@@ -391,53 +436,31 @@ async function runRender(data, DIA) {
         }
     });
 
-    // ============================================================
-    //  NEW: CULTURA (Standard Card)
-    // ============================================================
+    // CULTURA (Standard Card)
     Object.values(data.cultura?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const culColor = overrides.cultura || accent;
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${culColor}">
-                    <div class="flex flex-col md:flex-row">
-                        <div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative">
-                            <img src="${item.imagen}" class="w-full h-full object-cover">
-                            <span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">
-                                ${item.tag || "Cultura"}
-                            </span>
-                        </div>
-                        <div class="p-4 flex flex-col justify-between flex-grow">
-                            <div>
-                                <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3>
-                                <h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3>
-                            </div>
-                            <a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${culColor}">
-                                Abrir Recurso <span class="group-hover:translate-x-1 transition-transform">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${culColor}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative"><img src="${item.imagen}" class="w-full h-full object-cover"><span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">${item.tag || "Cultura"}</span></div><div class="p-4 flex flex-col justify-between flex-grow"><div><h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3><h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3></div><a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${culColor}">Abrir Recurso →</a></div></div></section>`;
         }
     });
 
-    // ============================================================
-    //  NEW: CONVERSACION (Chat Bubble Style)
-    // ============================================================
+    // NEW: CONVERSACION (Chat Style - Bigger Image)
     Object.values(data.conv?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const cColor = overrides.conv || accent;
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex items-start gap-4" style="border-color: ${cColor}">
-                    <div class="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-slate-50 border-2 items-center justify-center overflow-hidden" style="border-color: ${cColor}40">
-                         ${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<span class="text-2xl">🗣️</span>`}
+             
+             extrasBlock.innerHTML += `
+                <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex flex-col md:flex-row items-start gap-6" style="border-color: ${cColor}">
+                    <div class="w-full md:w-32 h-32 flex-shrink-0 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shadow-sm">
+                         ${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<div class="flex items-center justify-center h-full text-4xl">🗣️</div>`}
                     </div>
-                    <div class="flex-grow">
-                        <div class="flex items-center gap-2 mb-1">
+                    <div class="flex-grow w-full">
+                        <div class="flex items-center gap-2 mb-2">
                             <h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3>
-                            <span class="bg-slate-100 text-[9px] font-bold px-1.5 py-0.5 rounded text-slate-500">Oral</span>
+                            <span class="bg-slate-100 text-[9px] font-bold px-2 py-0.5 rounded text-slate-500 uppercase">Oral</span>
                         </div>
-                        <h3 class="text-xl font-black text-slate-900 leading-tight mb-3">${item.titulo}</h3>
-                        <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-white transition-transform hover:-translate-y-0.5 shadow-sm" style="background-color: ${cColor}">
+                        <h3 class="text-2xl font-black text-slate-900 leading-tight mb-4">${item.titulo}</h3>
+                        <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" style="background-color: ${cColor}">
                             <span>💬</span> Abrir Preguntas
                         </a>
                     </div>
@@ -445,34 +468,11 @@ async function runRender(data, DIA) {
         }
     });
 
-    // ============================================================
-    //  NEW: LECTURA (Book Cover Style)
-    // ============================================================
+    // LECTURA (Book Style)
     Object.values(data.lectura?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const lColor = overrides.lectura || accent;
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col border border-slate-100">
-                    <div class="h-3 w-full" style="background-color: ${lColor}"></div>
-                    <div class="p-6">
-                        <div class="flex flex-col md:flex-row gap-6">
-                            <div class="w-full md:w-28 h-40 flex-shrink-0 shadow-lg rounded overflow-hidden rotate-2 hover:rotate-0 transition-transform bg-slate-50 border border-slate-200">
-                                <img src="${item.imagen}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-grow flex flex-col justify-center">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border" style="color: ${lColor}; border-color: ${lColor}40">Lectura</span>
-                                    ${item.tag ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.tag}</span>` : ''}
-                                </div>
-                                <h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.titulo}</h3>
-                                <p class="text-slate-500 text-sm line-clamp-2 italic mb-4">${item.subtitulo || "Pasaje literario para la clase de hoy."}</p>
-                                <a href="${item.url}" target="_blank" class="w-fit px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest text-white shadow-md hover:shadow-lg transition-all" style="background-color: ${lColor}">
-                                    Abrir Lectura 📖
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col border border-slate-100"><div class="h-3 w-full" style="background-color: ${lColor}"></div><div class="p-6"><div class="flex flex-col md:flex-row gap-6"><div class="w-full md:w-28 h-40 flex-shrink-0 shadow-lg rounded overflow-hidden rotate-2 bg-slate-50 border border-slate-200"><img src="${item.imagen}" class="w-full h-full object-cover"></div><div class="flex-grow flex flex-col justify-center"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border" style="color: ${lColor}; border-color: ${lColor}40">Lectura</span>${item.tag ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.tag}</span>` : ''}</div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.titulo}</h3><p class="text-slate-500 text-sm line-clamp-2 italic mb-4">${item.subtitulo || "Pasaje literario."}</p><a href="${item.url}" target="_blank" class="w-fit px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest text-white shadow-md" style="background-color: ${lColor}">Abrir Lectura 📖</a></div></div></div></section>`;
         }
     });
 
@@ -493,11 +493,11 @@ async function runRender(data, DIA) {
         for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
         const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
         
-        const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><img src="${vTree}" class="h-32 object-cover border-b"><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
+        const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
         
         dynamicGrid.innerHTML = `<div>${vocabCard}</div>
-        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><img src="${theme?.mascots?.misd || ''}" class="h-32 object-cover border-b"><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>
-        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><img src="${theme?.mascots?.sloth || ''}" class="h-32 object-cover border-b"><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
+        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>
+        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.sloth || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
         
         const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
         document.getElementById('tutorMascot').src = tutorImg;
@@ -523,27 +523,42 @@ async function renderByDate() {
 }
 
 async function loadData() {
+    // Helper to safely fetch JSON. If it fails (404), it returns an empty object {} instead of crashing.
+    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => {
+        console.warn(`Failed to load ${url}`, e);
+        return {};
+    });
+
     try {
-        const [plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios] = await Promise.all([
-            fetch(CONFIG.PLAN).then(r => r.json()),
-            fetch(CONFIG.TEMAS).then(r => r.json()),
-            fetch(CONFIG.CALENDARIO).then(r => r.json()),
-            fetch(CONFIG.CURIOSIDADES).then(r => r.json()),
-            fetch(CONFIG.EVALS).then(r => r.json()),
-            fetch(CONFIG.TAREAS).then(r => r.json()),
-            fetch(CONFIG.VOCAB_BANK).then(r => r.json()),
-            fetch(CONFIG.APUNTES_BANK).then(r => r.json()),
-            fetch(CONFIG.EXTRAS).then(r => r.json()), 
-            fetch(CONFIG.MUSICA).then(r => r.json()),
-            fetch(CONFIG.LECTURA).then(r => r.json()),
-            fetch(CONFIG.CULTURA).then(r => r.json()),
-            fetch(CONFIG.CONV).then(r => r.json()),
-            fetch(CONFIG.VIDEOS).then(r => r.json()),
-            fetch(CONFIG.GRAMATICA_DIARIA).then(r => r.json()),
-            fetch(CONFIG.ANUNCIOS).then(r => r.json())
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios 
+        ] = await Promise.all([
+            safeFetch(CONFIG.PLAN),
+            safeFetch(CONFIG.TEMAS),
+            safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.CURIOSIDADES),
+            safeFetch(CONFIG.EVALS),
+            safeFetch(CONFIG.TAREAS),
+            safeFetch(CONFIG.VOCAB_BANK),
+            safeFetch(CONFIG.APUNTES_BANK),
+            safeFetch(CONFIG.EXTRAS), 
+            safeFetch(CONFIG.MUSICA),
+            safeFetch(CONFIG.LECTURA),
+            safeFetch(CONFIG.CULTURA),
+            safeFetch(CONFIG.CONV),
+            safeFetch(CONFIG.VIDEOS),
+            safeFetch(CONFIG.GRAMATICA_DIARIA),
+            safeFetch(CONFIG.ANUNCIOS)
         ]);
+        
        return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios };
-    } catch (e) { console.error("Load Error", e); }
+
+    } catch (e) { 
+        console.error("Critical Load Error", e); 
+    }
 }
 
 async function init() {
