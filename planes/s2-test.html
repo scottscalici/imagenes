@@ -470,18 +470,56 @@ const liveDia = pastEntries && pastEntries.length > 0
         }
     }); // <--- Esta llave debe cerrar el bucle después de todas las condiciones
     
-    // Dashboards
+  // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
     const dynamicGrid = document.getElementById('dynamicCardGrid');
-    grammarGrid.innerHTML = ""; if (dynamicGrid) dynamicGrid.innerHTML = "";
+    
+    // Clear
+    grammarGrid.innerHTML = ""; 
+    if (dynamicGrid) dynamicGrid.innerHTML = "";
 
-    (todayPlan?.blocks?.find(b => b.kind === "estructura")?.recursos_gramatica || []).forEach(key => {
-        const parent = data.apuntes[key]; 
-        if (!parent?.links) return;
-        const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
-        grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
+    // --- NEW DASHBOARD LOGIC (COURSE-SPECIFIC RANGES) ---
+    Object.values(data.apuntes || {}).forEach(topic => {
+        // 1. Get the huge list of ranges
+        const allRanges = topic.dashboard_ranges || {};
+        
+        // 2. Select ONLY the ranges for the current course (CONFIG.COURSE is "s2")
+        // If "s2" doesn't exist in the JSON, it defaults to an empty list []
+        const courseRanges = allRanges[CONFIG.COURSE] || [];
+        
+        // 3. Check if TODAY matches any range for THIS course
+        const isVisible = courseRanges.some(range => {
+            const start = range[0];
+            const end = range[1];
+            return DIA >= start && DIA <= end;
+        });
+
+        if (isVisible) {
+            // Build the links HTML (Same as before)
+            let linksHtml = "";
+            if (topic.links) {
+                linksHtml = Object.values(topic.links).map(l => 
+                    `<a href="${l.url}" target="_blank" class="block hover:translate-x-1 transition-transform text-[13px] font-bold uppercase py-1 border-b border-slate-100 last:border-0 text-slate-600 hover:text-indigo-600">
+                        ${l.title} ↗
+                     </a>`
+                ).join('');
+            }
+
+            // Render the Card
+            grammarGrid.innerHTML += `
+                <div class="bg-white rounded-xl border-l-[6px] p-6 shadow-md border border-slate-100 flex flex-col h-full animate-fade-in" style="border-color: ${accent}">
+                    <div class="flex items-center gap-2 mb-3 pb-3 border-b border-slate-50">
+                        <span class="text-xl">⚙️</span>
+                        <h3 class="font-black text-lg leading-tight text-slate-800">${topic.title}</h3>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        ${linksHtml}
+                    </div>
+                </div>`;
+        }
     });
 
+    
 // --- NEW MODULAR VOCAB LOGIC ---
     
     // 1. Find the chapter that matches today's DIA
