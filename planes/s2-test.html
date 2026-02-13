@@ -354,20 +354,126 @@ async function runRender(data, DIA) {
         }
     });
 
-    // Process Media (Music, Culture, Conv, Reading)
-    const mediaSets = [
-        { data: data.musica, color: overrides.musica || accent, label: "Música", type: 'musica' },
-        { data: data.cultura, color: overrides.cultura || accent, label: "Cultura", type: 'cultura' },
-        { data: data.conv, color: overrides.conv || accent, label: "Conversación", type: 'conv' },
-        { data: data.lectura, color: overrides.lectura || accent, label: "Lectura", type: 'lectura' }
-    ];
+// ============================================================
+    //  NEW: MUSICA (Spotify Style)
+    // ============================================================
+    Object.values(data.musica?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const mColor = overrides.musica || accent;
+             
+             contentBlock.innerHTML += `
+                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group">
+                    <div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900">
+                        <img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
+                                <span class="text-white text-sm ml-0.5">▶</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 flex-grow w-full flex flex-col justify-between h-full">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span>
+                                <h3 class="text-lg font-black text-slate-900 leading-tight">${item.subtitulo}</h3>
+                                <p class="text-xs font-bold text-slate-400">${item.titulo}</p>
+                            </div>
+                            ${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}
+                        </div>
+                        <div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden">
+                             <div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div>
+                        </div>
+                        <a href="${item.url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">
+                            Escuchar en Sitio Web ↗
+                        </a>
+                    </div>
+                </section>`;
+        }
+    });
 
-    mediaSets.forEach(set => {
-        Object.values(set.data?.items || {}).forEach(item => {
-            if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-                extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${set.color}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 bg-slate-100 overflow-hidden"><img src="${item.imagen}" class="w-full h-full object-cover"></div><div class="p-4 flex flex-col justify-between flex-grow"><div><span class="text-[10px] font-black uppercase text-slate-400">${set.label}</span><h3 class="text-xl font-black text-slate-900">${item.titulo}</h3></div><a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold" style="color: ${set.color}">Abrir Recurso →</a></div></div></section>`;
-            }
-        });
+    // ============================================================
+    //  NEW: CULTURA (Standard Card)
+    // ============================================================
+    Object.values(data.cultura?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const culColor = overrides.cultura || accent;
+             contentBlock.innerHTML += `
+                <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${culColor}">
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative">
+                            <img src="${item.imagen}" class="w-full h-full object-cover">
+                            <span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">
+                                ${item.tag || "Cultura"}
+                            </span>
+                        </div>
+                        <div class="p-4 flex flex-col justify-between flex-grow">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3>
+                                <h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3>
+                            </div>
+                            <a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${culColor}">
+                                Abrir Recurso <span class="group-hover:translate-x-1 transition-transform">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>`;
+        }
+    });
+
+    // ============================================================
+    //  NEW: CONVERSACION (Chat Bubble Style)
+    // ============================================================
+    Object.values(data.conv?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const cColor = overrides.conv || accent;
+             contentBlock.innerHTML += `
+                <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex items-start gap-4" style="border-color: ${cColor}">
+                    <div class="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-slate-50 border-2 items-center justify-center overflow-hidden" style="border-color: ${cColor}40">
+                         ${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<span class="text-2xl">🗣️</span>`}
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3>
+                            <span class="bg-slate-100 text-[9px] font-bold px-1.5 py-0.5 rounded text-slate-500">Oral</span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 leading-tight mb-3">${item.titulo}</h3>
+                        <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-white transition-transform hover:-translate-y-0.5 shadow-sm" style="background-color: ${cColor}">
+                            <span>💬</span> Abrir Preguntas
+                        </a>
+                    </div>
+                </section>`;
+        }
+    });
+
+    // ============================================================
+    //  NEW: LECTURA (Book Cover Style)
+    // ============================================================
+    Object.values(data.lectura?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const lColor = overrides.lectura || accent;
+             contentBlock.innerHTML += `
+                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col border border-slate-100">
+                    <div class="h-3 w-full" style="background-color: ${lColor}"></div>
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full md:w-28 h-40 flex-shrink-0 shadow-lg rounded overflow-hidden rotate-2 hover:rotate-0 transition-transform bg-slate-50 border border-slate-200">
+                                <img src="${item.imagen}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow flex flex-col justify-center">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border" style="color: ${lColor}; border-color: ${lColor}40">Lectura</span>
+                                    ${item.tag ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.tag}</span>` : ''}
+                                </div>
+                                <h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.titulo}</h3>
+                                <p class="text-slate-500 text-sm line-clamp-2 italic mb-4">${item.subtitulo || "Pasaje literario para la clase de hoy."}</p>
+                                <a href="${item.url}" target="_blank" class="w-fit px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest text-white shadow-md hover:shadow-lg transition-all" style="background-color: ${lColor}">
+                                    Abrir Lectura 📖
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>`;
+        }
     });
 
     // 8. DASHBOARD (Grammar/Resource)
