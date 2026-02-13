@@ -405,7 +405,6 @@ const liveDia = pastEntries && pastEntries.length > 0
     estBlock.innerHTML = ""; 
     contentBlock.innerHTML = "";
 
-    // --- 2. MAPEO DE TIPOS DE MEDIOS ---
     const mediaTypes = { 
         musica: 'musica', 
         cultura: 'cultura', 
@@ -413,15 +412,9 @@ const liveDia = pastEntries && pastEntries.length > 0
         conversacion: 'conv' 
     };
 
-    // --- 3. BUCLE PRINCIPAL DE BLOQUES (TODO DEBE IR AQUÍ DENTRO) ---
-  // --- LÓGICA DE BLOQUES DE CONTENIDO ---
-    (todayPlan?.blocks || []).forEach(blockRef => {
-        
-// --- 1. ESTRUCTURA (Linear Daily Schedule) ---
-    const estBlock = document.getElementById('estructuraBlock');
-    estBlock.innerHTML = ""; 
-
-    // 1. Get the schedule for the current course (s2 or s4)
+    // ============================================================
+    //  NEW: GRAMMAR LESSON (Runs independently of the old Plan)
+    // ============================================================
     const dailyPlan = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
 
     if (dailyPlan) {
@@ -430,16 +423,14 @@ const liveDia = pastEntries && pastEntries.length > 0
 
         // Helper to find data and build buttons
         const buildBtn = (identifier, label, isIntro) => {
-            // Identifier format is "topic:linkID" (e.g., "preterito:car_gar_zar")
             const [topicKey, linkKey] = identifier.split(':');
             
             // Look up the actual data in apuntes.json
             const topic = data.apuntes?.[topicKey];
             const linkData = topic?.links?.[linkKey];
 
-            if (!linkData) return ""; // Skip if typo or missing
+            if (!linkData) return ""; 
 
-            // Style: Intro (Dark) vs Repaso (Light)
             const badgeStyle = isIntro 
                 ? `bg-slate-800 text-white border-slate-800` 
                 : `bg-white text-slate-500 border-slate-200`;
@@ -457,15 +448,9 @@ const liveDia = pastEntries && pastEntries.length > 0
             </a>`;
         };
 
-        // 2. Generate Buttons
-        if (dailyPlan.intro) {
-            dailyPlan.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
-        }
-        if (dailyPlan.repaso) {
-            dailyPlan.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
-        }
+        if (dailyPlan.intro) dailyPlan.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
+        if (dailyPlan.repaso) dailyPlan.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
 
-        // 3. Render the Block
         if (linksHtml) {
             estBlock.innerHTML = `
                 <section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6 animate-fade-in" style="border-color: ${estColor}">
@@ -475,7 +460,7 @@ const liveDia = pastEntries && pastEntries.length > 0
                         </div>
                         <div>
                             <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none" style="font-family: ${fonts.estructura || 'inherit'}">
-                                Lección del Día
+                                Estructura
                             </h2>
                         </div>
                     </div>
@@ -485,9 +470,16 @@ const liveDia = pastEntries && pastEntries.length > 0
                 </section>`;
         }
     }
+
+    // ============================================================
+    //  OLD LOOP (Runs Extras, Videos, etc.)
+    // ============================================================
+    (todayPlan?.blocks || []).forEach(blockRef => {
         
-        // 2. EXTRAS
-        else if (blockRef.kind === "extras") {
+        // Note: We removed the "estructura" check from here because we handled it above.
+        
+        // 1. EXTRAS (Changed from "else if" to "if" because it's now the first item)
+        if (blockRef.kind === "extras") {
             const exItem = data.extras.items.find(i => i.id === blockRef.ref);
             if (exItem) {
                 const exColor = overrides.extras || accent;
@@ -498,11 +490,9 @@ const liveDia = pastEntries && pastEntries.length > 0
             }
         }
 
-        // 3. MEDIOS (CONV, MUSICA, CULTURA, LECTURA)
+        // 2. OTHER MEDIA
         else {
-            const mediaMap = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conv' };
-            const dataKey = mediaMap[blockRef.kind];
-            
+            const dataKey = mediaTypes[blockRef.kind];
             if (dataKey) {
                 const item = data[dataKey]?.items?.[blockRef.ref];
                 if (item) {
@@ -522,7 +512,7 @@ const liveDia = pastEntries && pastEntries.length > 0
                 }
             }
         }
-    }); // <--- Esta llave debe cerrar el bucle después de todas las condiciones
+    });
     
   // Dashboards
     const grammarGrid = document.getElementById('grammarResources');
