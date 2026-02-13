@@ -485,7 +485,7 @@ const liveDia = pastEntries && pastEntries.length > 0
 // --- NEW MODULAR VOCAB LOGIC ---
     
     // 1. Find the chapter that matches today's DIA
-    const vocabData = data.vocab.descubre2.chapters; // Change to descubre3 for your other site
+    const vocabData = data.vocab.descubre2.chapters; 
     let ch = null;
 
     // Scan the vocab JSON to see if DIA matches any "dias" array
@@ -496,24 +496,29 @@ const liveDia = pastEntries && pastEntries.length > 0
         }
     }
 
-    // 2. Set Colors based on Theme (temas.json)
-    // If no theme override exists, default to Indigo (accent)
+    // 2. Set Colors based on Theme
     const vColor = overrides.vocabulario || accent; 
-    // We create a lighter version for backgrounds (approximate)
-    const vBg = overrides.vocabulario ? `${vColor}10` : '#fdf4ff'; // Adds transparency if hex
+    const vBg = overrides.vocabulario ? `${vColor}10` : '#fdf4ff'; 
 
-    // 3. Define Images
+    // 3. Define Images (AND RESTORE TUTOR)
     const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
     const misdLogo = theme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
     const slothImg = theme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
     
-    // 4. Render the Grid
+    // --- THIS IS THE PART THAT WAS MISSING ---
+    const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
+    const tutorEl = document.getElementById('tutorMascot');
+    if (tutorEl) tutorEl.src = tutorImg;
+    // ----------------------------------------
+    
+    // 4. Render the Grid (UPDATED IMAGES)
     if (dynamicGrid) {
         const vocabCard = ch ? `
             <div class="bg-white rounded-xl border-l-[6px] shadow-md border border-slate-100 flex flex-col h-full" style="border-color: ${vColor}">
-                <div class="h-32 p-4 flex items-center justify-center border-b border-slate-100" style="background-color: ${vBg}">
-                    <img src="${vTree}" class="max-h-full object-contain">
+                <div class="h-32 overflow-hidden border-b border-slate-100 relative">
+                    <img src="${vTree}" class="w-full h-full object-cover">
                 </div>
+                
                 <div class="p-5 flex flex-col flex-grow justify-between">
                     <div>
                         <h3 class="font-black text-[10px] uppercase tracking-widest mb-1" style="color: ${vColor}">Vocabulario</h3>
@@ -534,8 +539,8 @@ const liveDia = pastEntries && pastEntries.length > 0
             <div>${vocabCard}</div>
             
             <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full">
-                <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
-                    <img src="${misdLogo}" class="max-w-[150px] object-contain">
+                <div class="h-32 overflow-hidden border-b border-slate-100">
+                    <img src="${misdLogo}" class="w-full h-full object-cover">
                 </div>
                 <div class="p-5 flex flex-col flex-grow justify-between">
                     <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
@@ -553,6 +558,7 @@ const liveDia = pastEntries && pastEntries.length > 0
                 </div>
             </div>`;
     }
+    
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
