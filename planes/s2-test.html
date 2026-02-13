@@ -408,7 +408,6 @@ const liveDia = pastEntries && pastEntries.length > 0
 
     const mediaTypes = { 
         musica: 'musica', 
-        cultura: 'cultura', 
         lectura: 'lectura', 
         conversacion: 'conv' 
     };
@@ -480,10 +479,7 @@ const liveDia = pastEntries && pastEntries.length > 0
         }
     }
 
-    // ============================================================
-    //  OLD LOOP (Runs Extras, Videos, etc.)
-    // ============================================================
-// ============================================================
+
     //  NEW: ANUNCIOS (Date Based)
     // ============================================================
     // Make sure you add <div id="anunciosBlock"></div> to your HTML!
@@ -587,6 +583,38 @@ if (item.type === 'example') {
                 </section>`;
         }
     });
+    // ============================================================
+    //  NEW: CULTURA (Vocab Model - Auto-appears by Day)
+    // ============================================================
+    Object.values(data.cultura?.items || {}).forEach(item => {
+        // Check if item has 'dias', if today is in it, and if course matches
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const mColor = overrides.cultura || accent;
+             
+             // Render into the main content block (extrasBlock)
+             contentBlock.innerHTML += `
+                <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
+                    <div class="flex flex-col md:flex-row">
+                        <div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative">
+                            <img src="${item.imagen}" class="w-full h-full object-cover">
+                            <span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">
+                                ${item.tag || "Cultura"}
+                            </span>
+                        </div>
+                        <div class="p-4 flex flex-col justify-between flex-grow">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3>
+                                <h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3>
+                            </div>
+                            <a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${mColor}">
+                                Abrir Recurso <span class="group-hover:translate-x-1 transition-transform">→</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>`;
+        }
+    });
+    
    // ============================================================
     //  OLD LOOP (Runs Media: Musica, Cultura, Lectura, Conv)
     // ============================================================
