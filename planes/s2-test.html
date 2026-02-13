@@ -159,6 +159,7 @@ const CONFIG = {
     CULTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json",
+    GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
@@ -416,21 +417,74 @@ const liveDia = pastEntries && pastEntries.length > 0
   // --- LÓGICA DE BLOQUES DE CONTENIDO ---
     (todayPlan?.blocks || []).forEach(blockRef => {
         
-        // 1. ESTRUCTURA
-        if (blockRef.kind === "estructura") {
-            const topic = data.apuntes?.[blockRef.ref];
-            if (topic) {
-                const estColor = overrides.estructura || accent;
-                let linksHtml = "";
-                const buildBtn = (id, label) => {
-                    const l = topic.links?.[id];
-                    return l ? `<a href="${l.url}" target="_blank" class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-indigo-400 transition-all mb-2 group"><div class="flex flex-col"><span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase bg-white border mb-1">${label}</span><span class="text-slate-800 font-bold">${l.title}</span></div><span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span></a>` : "";
-                };
-                if (blockRef.introducir) blockRef.introducir.forEach(id => linksHtml += buildBtn(id, "Introducir"));
-                if (blockRef.repasar) blockRef.repasar.forEach(id => linksHtml += buildBtn(id, "Repasar"));
-                estBlock.innerHTML += `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-4"><div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">${blockRef.title || topic.title}</h2></div><div class="space-y-1">${linksHtml}</div></section>`;
-            }
+// --- 1. ESTRUCTURA (Linear Daily Schedule) ---
+    const estBlock = document.getElementById('estructuraBlock');
+    estBlock.innerHTML = ""; 
+
+    // 1. Get the schedule for the current course (s2 or s4)
+    const dailyPlan = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
+
+    if (dailyPlan) {
+        const estColor = overrides.estructura || accent;
+        let linksHtml = "";
+
+        // Helper to find data and build buttons
+        const buildBtn = (identifier, label, isIntro) => {
+            // Identifier format is "topic:linkID" (e.g., "preterito:car_gar_zar")
+            const [topicKey, linkKey] = identifier.split(':');
+            
+            // Look up the actual data in apuntes.json
+            const topic = data.apuntes?.[topicKey];
+            const linkData = topic?.links?.[linkKey];
+
+            if (!linkData) return ""; // Skip if typo or missing
+
+            // Style: Intro (Dark) vs Repaso (Light)
+            const badgeStyle = isIntro 
+                ? `bg-slate-800 text-white border-slate-800` 
+                : `bg-white text-slate-500 border-slate-200`;
+
+            return `
+            <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all mb-2 group bg-white">
+                <div class="flex items-center gap-3">
+                    <span class="text-[9px] font-black px-2 py-1 rounded uppercase border ${badgeStyle}">${label}</span>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">${topic.title}</span>
+                        <span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600 transition-colors leading-tight">${linkData.title}</span>
+                    </div>
+                </div>
+                <span class="text-slate-300 group-hover:translate-x-1 transition-transform">➔</span>
+            </a>`;
+        };
+
+        // 2. Generate Buttons
+        if (dailyPlan.intro) {
+            dailyPlan.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
         }
+        if (dailyPlan.repaso) {
+            dailyPlan.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
+        }
+
+        // 3. Render the Block
+        if (linksHtml) {
+            estBlock.innerHTML = `
+                <section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6 animate-fade-in" style="border-color: ${estColor}">
+                    <div class="flex items-center gap-3 mb-5 border-b border-slate-50 pb-4">
+                        <div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl shadow-sm shadow-indigo-200" style="background-color: ${estColor}">
+                            ⚙️
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none" style="font-family: ${fonts.estructura || 'inherit'}">
+                                Lección del Día
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        ${linksHtml}
+                    </div>
+                </section>`;
+        }
+    }
         
         // 2. EXTRAS
         else if (blockRef.kind === "extras") {
@@ -645,7 +699,7 @@ const [
     plan, temas, cal, curios, evals, tareas,
     vocab, apuntes, extras,
     musica, lectura, cultura, conv,
-    videos
+    videos, gramaticaDiaria
 ] = await Promise.all([
     fetch(CONFIG.PLAN).then(r => r.json()),
     fetch(CONFIG.TEMAS).then(r => r.json()),
@@ -660,7 +714,8 @@ const [
     fetch(CONFIG.LECTURA).then(r => r.json()),
     fetch(CONFIG.CULTURA).then(r => r.json()),
     fetch(CONFIG.CONV).then(r => r.json()),
-    fetch(CONFIG.VIDEOS).then(r => r.json())
+    fetch(CONFIG.VIDEOS).then(r => r.json()),
+    fetch(CONFIG.GRAMATICA_DIARIA).then(r => r.json())
 ]);
         
         // Return everything so runRender can use it
@@ -668,7 +723,7 @@ const [
     plan, temas, cal, curios, evals, tareas,
     vocab, apuntes, extras,
     musica, lectura, cultura, conv,
-    videos
+    videos, gramaticaDiaria
 };
 
     } catch (e) { 
