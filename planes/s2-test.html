@@ -169,47 +169,31 @@ async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        
         const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
-        // Selection Logic
         let theme = themeData.themes.find(t => t.id === 'snowday' && dayEntry?.note === "Snow day") ||
                     themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) ||
                     themeData.themes.find(t => t.id === 'classic');
 
         if (!theme) return null;
-
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
-
         root.style.setProperty('--accent', accent);
         root.style.setProperty('--font-heading', s.fontHeading || 'inherit');
 
-        // Header
         const header = document.getElementById('mainHeader');
         if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
         
-        document.getElementById('dayTitle').style.fontFamily = s.fontHeading || 'inherit';
-        document.getElementById('headerDate').style.fontFamily = s.fontHeading || 'inherit';
-
-        // Hero Card
         const heroSlot = document.getElementById('heroSlot');
         if (theme.hero?.active) {
             heroSlot.classList.remove('hidden');
             document.getElementById('heroImg').src = theme.hero.img;
             document.getElementById('heroMsg').textContent = theme.hero.msg;
             document.getElementById('heroCard').style.borderTopColor = accent;
-        } else {
-            heroSlot.classList.add('hidden');
-        }
-
-        // Apply Card Overrides
-        const overrides = s.cardOverrides || {};
-        const textures = s.textures || {};
-        const fonts = s.fonts || {};
+        } else { heroSlot.classList.add('hidden'); }
 
         const cards = [
             { id: 'evalSection', key: 'evaluacion' },
@@ -221,30 +205,17 @@ async function applyThemeStyles(data, currentDia) {
         cards.forEach(card => {
             const el = document.getElementById(card.id);
             if (el) {
-                const color = overrides[card.key] || accent;
+                const color = (s.cardOverrides || {})[card.key] || accent;
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
-                if (h) {
-                    h.style.color = color;
-                    if (fonts[card.key]) h.style.fontFamily = fonts[card.key];
-                }
-                if (textures[card.key]) {
-                    el.style.backgroundImage = `url('${textures[card.key]}')`;
-                    el.classList.add('card-texture');
-                } else {
-                    el.style.backgroundImage = 'none';
-                }
+                if (h) h.style.color = color;
             }
         });
 
         if (theme.effectConfig) startEffect(theme.effectConfig);
         else stopEffect();
-
         return theme; 
-    } catch (e) { 
-        console.error("Theme Error:", e); 
-        return null;
-    }
+    } catch (e) { console.error("Theme Error:", e); return null; }
 }
 
 // --- PARTICLE ENGINE ---
@@ -277,622 +248,177 @@ function stopEffect() {
     if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// --- CORE RENDERING ---
 function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
 }
 
+// ============================================================
+//  CORE RENDERING ENGINE
+// ============================================================
 async function runRender(data, DIA) {
-    // 1. Check for Prof View and the "Live" Day
     const params = new URLSearchParams(window.location.search);
     const isProfView = params.get('view') === 'prof';
-    
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-    // Find the most recent day that is less than or equal to today
-const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
-const liveDia = pastEntries && pastEntries.length > 0 
-    ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) 
-    : 1;    
-    // 2. The Quick Restriction
+    const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
+    const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
+
     if (DIA > liveDia && !isProfView) {
-        // Show a quick alert (you can style this as a toast later)
-        alert(`🚫 ¡Todavía no! El Día ${DIA} no está disponible. Volviendo al Día ${liveDia}.`);
-        
-        // Reset the input box visually
+        alert(`🚫 El Día ${DIA} no está disponible todavía.`);
         document.getElementById('diaInput').value = liveDia;
-        
-        // Re-run the render for the live day instead of the future day
         return runRender(data, liveDia);
     }
 
-    // 3. Define the Theme (Crucial: This must happen before using 'overrides' or 'fonts')
     const theme = await applyThemeStyles(data, DIA);
     const overrides = theme?.styles?.cardOverrides || {};
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    // 4. Content Rendering
-    const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
     const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
-    
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-    // Calentamiento
+    // 1. ANUNCIOS (Date-Based)
+    const anunciosBlock = document.getElementById('anunciosBlock');
+    if (anunciosBlock) {
+        anunciosBlock.innerHTML = "";
+        (data.anuncios || []).forEach(note => {
+            if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
+                let bg = note.type === 'warning' ? 'bg-red-50 border-red-500 text-red-900' : 
+                         note.type === 'trip' ? 'bg-emerald-50 border-emerald-500 text-emerald-900' : 'bg-blue-50 border-blue-500 text-blue-900';
+                anunciosBlock.innerHTML += `<div class="${bg} border-l-4 p-4 rounded shadow-sm mb-6 flex items-start gap-3"><span>📢</span><span class="font-bold">${note.text}</span></div>`;
+            }
+        });
+    }
+
+    // 2. CALENTAMIENTO
     const calBtn = document.getElementById('calBtn');
-    const calColor = overrides.calentamiento || accent;
     if (calBtn) {
         calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/${DIA}`;
-        calBtn.style.backgroundColor = calColor;
+        calBtn.style.backgroundColor = overrides.calentamiento || accent;
     }
-    
-    
-    // Evaluations
+
+    // 3. EVALUATIONS
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
-    document.getElementById('nextEvals').innerHTML = `
-        <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
-        <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
-    `;
+    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
 
-    // Curiosidad
+    // 4. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
     const cur = data.curios.find(c => c.id === `cur-${DIA}`);
     if (cur) {
         const curColor = overrides.curiosidad || accent;
-        curBlock.innerHTML = `
-            <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4" style="border-color: ${curColor}">
-                <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${curColor}; font-family: ${fonts.curiosidad || 'inherit'}">Curiosidad ${DIA}</h3>
-                <h2 class="text-2xl font-extrabold text-slate-900 leading-tight">${cur.title}</h2>
-                ${cur.img ? `<div class="w-full aspect-video bg-slate-50 rounded-lg overflow-hidden flex items-center justify-center"><img src="${cur.img}" class="max-w-full max-h-full object-contain"></div>` : ''}
-                <p class="text-slate-700 italic text-sm">${cur.student_note || ""}</p>
-            </article>`;
+        curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
     } else { curBlock.innerHTML = ""; }
 
-// --- VIDEO BLOCK LOGIC (Multiple Videos & Course Filtering) ---
-    const vidColor = overrides.video || accent; 
-    const vidFont = fonts.video || 'inherit';
+    // 5. VIDEOS
     const videoContainer = document.getElementById('videoBlock');
-
     if (videoContainer) {
-        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
-        const dayVideos = data.videos.daily_tags.filter(v => 
-            v.dia == DIA && 
-            v.tags.includes(CONFIG.COURSE)
-        );
-        
-        if (dayVideos.length > 0) {
-            videoContainer.innerHTML = dayVideos.map(videoData => {
-                    if (videoData.page_url) {
-                    // Clickable Card Version
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <a href="${videoData.page_url}" target="_blank" class="block group">
-                                <img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md">
-                                <h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2>
-                            </a>
-                            <p class="text-slate-700 italic text-sm">${videoData.description || ""}</p>
-                        </article>`;
-                } else {
-                    // Embedded Player Version
-                    const width = videoData.is_short ? "315" : "100%";
-                    const height = videoData.is_short ? "560" : "315";
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2>
-                            <div class="${videoData.is_short ? 'flex justify-center' : ''}">
-                                <iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe>
-                            </div>
-                            <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
-                        </article>`;
-                }
-            }).join(''); // Join the array of strings into one big block of HTML
-        } else {
-            videoContainer.innerHTML = ""; 
-        }
+        const dayVideos = data.videos.daily_tags.filter(v => v.dia == DIA && v.tags.includes(CONFIG.COURSE));
+        videoContainer.innerHTML = dayVideos.map(v => `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${overrides.video || accent}"><h3 class="font-bold text-xs uppercase" style="color: ${overrides.video || accent}">🎥 VIDEO</h3><h2 class="text-2xl font-extrabold mb-2">${v.title}</h2><iframe width="100%" height="315" src="${v.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></article>`).join('');
     }
-    
 
-// --- 1. LIMPIAR CONTENEDORES ---
-    const estBlock = document.getElementById('estructuraBlock');
-    const contentBlock = document.getElementById('extrasBlock');
-    estBlock.innerHTML = ""; 
-    contentBlock.innerHTML = "";
-
-    const mediaTypes = { 
-        conversacion: 'conv' 
-    };
-
-    // ============================================================
-    //  NEW: GRAMMAR LESSON (Runs independently of the old Plan)
-    // ============================================================
-    const dailyPlan = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
-
-    if (dailyPlan) {
+    // 6. ESTRUCTURA (New linear system)
+    const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
+    const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
+    if (dailyGrammar) {
         const estColor = overrides.estructura || accent;
         let linksHtml = "";
-
-       // Helper to find data and build buttons
-        const buildBtn = (identifier, label, isIntro) => {
-            // 1. Check for custom label override (Format: "topic:link|Custom Label")
-            // If no pipe exists, customLabel will be undefined
-            const [fullId, customLabel] = identifier.split('|');
-            
-            // 2. Parse the Topic and Link ID
-            const [topicKey, linkKey] = fullId.split(':');
-            
-            // Look up the actual data in apuntes.json
-            const topic = data.apuntes?.[topicKey];
-            const linkData = topic?.links?.[linkKey];
-
-            if (!linkData) return ""; 
-
-            // 3. Determine Final Title (Override vs Default)
-            const finalTitle = customLabel || linkData.title;
-
-            const badgeStyle = isIntro 
-                ? `bg-slate-800 text-white border-slate-800` 
-                : `bg-white text-slate-500 border-slate-200`;
-
-            return `
-            <a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all mb-2 group bg-white">
-                <div class="flex items-center gap-3">
-                    <span class="text-[9px] font-black px-2 py-1 rounded uppercase border ${badgeStyle}">${label}</span>
-                    <div class="flex flex-col">
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">${topic.title}</span>
-                        <span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600 transition-colors leading-tight">${finalTitle}</span>
-                    </div>
-                </div>
-                <span class="text-slate-300 group-hover:translate-x-1 transition-transform">➔</span>
-            </a>`;
+        const buildBtn = (id, label, isIntro) => {
+            const [fullId, customLabel] = id.split('|'); const [topicKey, linkKey] = fullId.split(':');
+            const topic = data.apuntes?.[topicKey]; const linkData = topic?.links?.[linkKey];
+            if (!linkData) return "";
+            const badgeStyle = isIntro ? `bg-slate-800 text-white` : `bg-white text-slate-500 border`;
+            return `<a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border mb-2 group bg-white hover:shadow-md transition-all"><div class="flex items-center gap-3"><span class="text-[9px] font-black px-2 py-1 rounded uppercase ${badgeStyle}">${label}</span><div class="flex flex-col"><span class="text-xs font-bold text-slate-400 uppercase">${topic.title}</span><span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600">${customLabel || linkData.title}</span></div></div><span>➔</span></a>`;
         };
-        
-        if (dailyPlan.intro) dailyPlan.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
-        if (dailyPlan.repaso) dailyPlan.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
-
-        if (linksHtml) {
-            estBlock.innerHTML = `
-                <section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6 animate-fade-in" style="border-color: ${estColor}">
-                    <div class="flex items-center gap-3 mb-5 border-b border-slate-50 pb-4">
-                        <div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl shadow-sm shadow-indigo-200" style="background-color: ${estColor}">
-                            ⚙️
-                        </div>
-                        <div>
-                            <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none" style="font-family: ${fonts.estructura || 'inherit'}">
-                                Estructura
-                            </h2>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        ${linksHtml}
-                    </div>
-                </section>`;
-        }
+        if (dailyGrammar.intro) dailyGrammar.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
+        if (dailyGrammar.repaso) dailyGrammar.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
+        if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-
-    //  NEW: ANUNCIOS (Date Based)
-    // ============================================================
-    // Make sure you add <div id="anunciosBlock"></div> to your HTML!
-    const anunciosBlock = document.getElementById('anunciosBlock');
-    if (anunciosBlock) {
-        anunciosBlock.innerHTML = "";
-        const todayStr = new Date().toISOString().split('T')[0]; 
-        
-        (data.anuncios || []).forEach(note => {
-            // Check Date Range & Course
-            if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
-                let bg = note.type === 'warning' ? 'bg-red-50 border-red-500 text-red-900' : 
-                         note.type === 'trip' ? 'bg-emerald-50 border-emerald-500 text-emerald-900' :
-                         'bg-blue-50 border-blue-500 text-blue-900';
-                
-                anunciosBlock.innerHTML += `
-                    <div class="${bg} border-l-4 p-4 rounded shadow-sm mb-6 flex items-start gap-3 animate-fade-in">
-                        <span class="text-xl mt-0.5">📢</span>
-                        <span class="font-bold text-sm md:text-base">${note.text}</span>
-                    </div>`;
-            }
-        });
-    }
-
-    // ============================================================
-    //  NEW: DAILY EXTRAS (Linear Schedule)
-    // ============================================================
-    const extrasBlock = document.getElementById('extrasBlock');
-    extrasBlock.innerHTML = ""; 
-
-    // Look up today's list of extras for this course
+    // 7. EXTRAS & MEDIA (Vocab Model)
+    const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
+    
+    // Process Linear Extras
     const todaysExtras = data.extrasDiarios?.[CONFIG.COURSE]?.[DIA] || [];
-
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
-
-        // --- TYPE: EXAMPLE (Sentences) ---
-if (item.type === 'example') {
-            // 1. Check if there is an image
-            const imgHTML = item.img 
-                ? `<div class="w-full h-40 overflow-hidden rounded-t-xl border-b border-slate-100 mb-4">
-                     <img src="${item.img}" class="w-full h-full object-cover">
-                   </div>`
-                : ""; // If no image, empty string
-
-            // 2. Build Sentences
-            const sentences = item.content.map(s => 
-                `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">
-                    "${s.replace(/\*\*(.*?)\*\*/g, `<span class="font-black text-indigo-600" style="color:${exColor}">$1</span>`)}"
-                </li>`
-            ).join('');
-
-            // 3. Render
-            // Note: We moved "p-6" from the section tag to a wrapper div so the image can go full-width at the top
-            extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl border border-slate-100 shadow-sm mb-6 flex flex-col">
-                    ${imgHTML}
-                    <div class="p-6 pt-2">
-                        <h3 class="font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2 mt-4" style="color: ${exColor}">
-                            <span>💬</span> ${item.title || "Ejemplos"}
-                        </h3>
-                        <ul class="space-y-2 italic font-serif">
-                            ${sentences}
-                        </ul>
-                    </div>
-                </section>`;
-        }
-
-        // --- TYPE: LINK (With Optional Image) ---
-        else if (item.type === 'link') {
-            // Check if user provided an image for the link
-            const imgHTML = item.img 
-                ? `<div class="w-24 h-24 flex-shrink-0 bg-slate-100 rounded-lg overflow-hidden"><img src="${item.img}" class="w-full h-full object-cover"></div>` 
-                : `<div class="w-12 h-12 rounded-full bg-slate-50 flex-shrink-0 flex items-center justify-center text-xl">🔗</div>`;
-
-            extrasBlock.innerHTML += `
-                <a href="${item.url}" target="_blank" class="flex items-center gap-4 bg-white rounded-xl p-4 shadow-sm border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all mb-6 group">
-                    ${imgHTML}
-                    <div class="flex-grow">
-                        <h3 class="font-bold text-slate-800 text-lg group-hover:text-indigo-600 leading-tight mb-1">${item.title}</h3>
-                        <span class="text-[10px] text-slate-400 font-black uppercase tracking-widest border border-slate-200 px-2 py-0.5 rounded">${item.btn_text || "Abrir"} ↗</span>
-                    </div>
-                </a>`;
-        }
-
-        // --- TYPE: PLACEHOLDER (VHL / Assignments) ---
-        else if (item.type === 'placeholder') {
-             // Default VHL image if none provided
-             const phImg = item.img || "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-image-available.svg/1024px-No-image-available.svg.png";
-             
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex flex-col md:flex-row" style="border-color: ${exColor}">
-                     <div class="md:w-32 bg-slate-50 flex items-center justify-center p-2 border-r border-slate-100">
-                        <img src="${phImg}" class="max-h-20 object-contain mix-blend-multiply">
-                     </div>
-                     <div class="p-4 flex flex-col justify-center">
-                        <span class="text-[9px] font-bold uppercase text-slate-400 mb-1">En Clase</span>
-                        <h3 class="font-black text-lg text-slate-800 leading-none mb-1">${item.title}</h3>
-                        <p class="text-slate-600 text-sm italic">${item.subtitle || ""}</p>
-                     </div>
-                </section>`;
-        }
-    });
-    // ============================================================
-    //  NEW: CULTURA (Vocab Model - Auto-appears by Day)
-    // ============================================================
-    Object.values(data.cultura?.items || {}).forEach(item => {
-        // Check if item has 'dias', if today is in it, and if course matches
-        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             const mColor = overrides.cultura || accent;
-             
-             // Render into the main content block (extrasBlock)
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                    <div class="flex flex-col md:flex-row">
-                        <div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative">
-                            <img src="${item.imagen}" class="w-full h-full object-cover">
-                            <span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">
-                                ${item.tag || "Cultura"}
-                            </span>
-                        </div>
-                        <div class="p-4 flex flex-col justify-between flex-grow">
-                            <div>
-                                <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3>
-                                <h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3>
-                            </div>
-                            <a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${mColor}">
-                                Abrir Recurso <span class="group-hover:translate-x-1 transition-transform">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </section>`;
+        if (item.type === 'example') {
+            const sentences = item.content.map(s => `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border p-6 mb-6 flex flex-col">${item.img ? `<img src="${item.img}" class="rounded mb-4">` : ''}<h3 class="font-black text-xs uppercase mb-4" style="color: ${exColor}">💬 ${item.title || "Ejemplos"}</h3><ul class="italic">${sentences}</ul></section>`;
+        } else if (item.type === 'placeholder') {
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex" style="border-color: ${exColor}"><div class="w-32 bg-slate-50 flex items-center justify-center p-2"><img src="${item.img || ''}" class="max-h-20 mix-blend-multiply"></div><div class="p-4 flex flex-col justify-center"><h3 class="font-black text-lg text-slate-800">${item.title}</h3><p class="text-slate-600 text-sm italic">${item.subtitle || ""}</p></div></section>`;
         }
     });
 
+    // Process Media (Music, Culture, Conv, Reading)
+    const mediaSets = [
+        { data: data.musica, color: overrides.musica || accent, label: "Música", type: 'musica' },
+        { data: data.cultura, color: overrides.cultura || accent, label: "Cultura", type: 'cultura' },
+        { data: data.conv, color: overrides.conv || accent, label: "Conversación", type: 'conv' },
+        { data: data.lectura, color: overrides.lectura || accent, label: "Lectura", type: 'lectura' }
+    ];
 
-    // ============================================================
-    //  NEW: MUSICA (Spotify Style)
-    // ============================================================
-    Object.values(data.musica?.items || {}).forEach(item => {
-        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             const mColor = overrides.musica || accent;
-             
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group">
-                    
-                    <div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900">
-                        <img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
-                                <span class="text-white text-sm ml-0.5">▶</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex-grow w-full flex flex-col justify-between h-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span>
-                                <h3 class="text-lg font-black text-slate-900 leading-tight">${item.subtitulo}</h3> <p class="text-xs font-bold text-slate-400">${item.titulo}</p> </div>
-                            ${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}
-                        </div>
-                        
-                        <div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden">
-                             <div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div>
-                        </div>
-
-                        <a href="${item.url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">
-                            Escuchar en Sitio Web ↗
-                        </a>
-                    </div>
-                </section>`;
-        }
-    });
-
-    // ============================================================
-    //  NEW: CONVERSACION (Chat Style)
-    // ============================================================
-    Object.values(data.conv?.items || {}).forEach(item => {
-        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             const cColor = overrides.conv || accent;
-             
-             contentBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex items-start gap-4" style="border-color: ${cColor}">
-                    
-                    <div class="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-slate-50 border-2 items-center justify-center overflow-hidden" style="border-color: ${cColor}40">
-                         ${item.imagen 
-                           ? `<img src="${item.imagen}" class="w-full h-full object-cover">`
-                           : `<span class="text-2xl">🗣️</span>`
-                         }
-                    </div>
-
-                    <div class="flex-grow">
-                        <div class="flex items-center gap-2 mb-1">
-                            <h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3>
-                            <span class="bg-slate-100 text-[9px] font-bold px-1.5 py-0.5 rounded text-slate-500">Presentar</span>
-                        </div>
-                        
-                        <h3 class="text-xl font-black text-slate-900 leading-tight mb-3">${item.titulo}</h3>
-                        
-                        <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-white transition-transform hover:-translate-y-0.5 shadow-sm" style="background-color: ${cColor}">
-                            <span>💬</span> Abrir la página
-                        </a>
-                    </div>
-                </section>`;
-        }
-    });
-
-    
-   // ============================================================
-    //  OLD LOOP (Runs Media: Musica, Cultura, Lectura, Conv)
-    // ============================================================
-    (todayPlan?.blocks || []).forEach(blockRef => {
-        
-        // We only check for the "mediaTypes" defined earlier.
-        // We skip "extras" and "estructura" because they are handled by the new logic above.
-        
-        const dataKey = mediaTypes[blockRef.kind];
-        
-        if (dataKey) {
-            const item = data[dataKey]?.items?.[blockRef.ref];
-            if (item) {
-                const mColor = overrides[blockRef.kind] || accent;
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                                <img src="${item.imagen}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="p-4 flex flex-col justify-between flex-grow">
-                                <h3 class="text-xl font-black text-slate-900">${item.titulo}</h3>
-                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
-                            </div>
-                        </div>
-                    </section>`;
+    mediaSets.forEach(set => {
+        Object.values(set.data?.items || {}).forEach(item => {
+            if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+                extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${set.color}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 bg-slate-100 overflow-hidden"><img src="${item.imagen}" class="w-full h-full object-cover"></div><div class="p-4 flex flex-col justify-between flex-grow"><div><span class="text-[10px] font-black uppercase text-slate-400">${set.label}</span><h3 class="text-xl font-black text-slate-900">${item.titulo}</h3></div><a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold" style="color: ${set.color}">Abrir Recurso →</a></div></div></section>`;
             }
-        }
-    });
-    
-  // Dashboards
-    const grammarGrid = document.getElementById('grammarResources');
-    const dynamicGrid = document.getElementById('dynamicCardGrid');
-    
-    // Clear
-    grammarGrid.innerHTML = ""; 
-    if (dynamicGrid) dynamicGrid.innerHTML = "";
-
-    // --- NEW DASHBOARD LOGIC (COURSE-SPECIFIC RANGES) ---
-    Object.values(data.apuntes || {}).forEach(topic => {
-        // 1. Get the huge list of ranges
-        const allRanges = topic.dashboard_ranges || {};
-        
-        // 2. Select ONLY the ranges for the current course (CONFIG.COURSE is "s2")
-        // If "s2" doesn't exist in the JSON, it defaults to an empty list []
-        const courseRanges = allRanges[CONFIG.COURSE] || [];
-        
-        // 3. Check if TODAY matches any range for THIS course
-        const isVisible = courseRanges.some(range => {
-            const start = range[0];
-            const end = range[1];
-            return DIA >= start && DIA <= end;
         });
+    });
 
-        if (isVisible) {
-            // Build the links HTML (Same as before)
-            let linksHtml = "";
-            if (topic.links) {
-                linksHtml = Object.values(topic.links).map(l => 
-                    `<a href="${l.url}" target="_blank" class="block hover:translate-x-1 transition-transform text-[13px] font-bold uppercase py-1 border-b border-slate-100 last:border-0 text-slate-600 hover:text-indigo-600">
-                        ${l.title} ↗
-                     </a>`
-                ).join('');
-            }
-
-            // Render the Card
-            grammarGrid.innerHTML += `
-                <div class="bg-white rounded-xl border-l-[6px] p-6 shadow-md border border-slate-100 flex flex-col h-full animate-fade-in" style="border-color: ${accent}">
-                    <div class="flex items-center gap-2 mb-3 pb-3 border-b border-slate-50">
-                        <span class="text-xl">⚙️</span>
-                        <h3 class="font-black text-lg leading-tight text-slate-800">${topic.title}</h3>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        ${linksHtml}
-                    </div>
-                </div>`;
+    // 8. DASHBOARD (Grammar/Resource)
+    const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
+    Object.values(data.apuntes || {}).forEach(topic => {
+        const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
+        if (ranges.some(r => DIA >= r[0] && DIA <= r[1])) {
+            const links = Object.values(topic.links || {}).map(l => `<a href="${l.url}" target="_blank" class="block text-[13px] font-bold uppercase py-1 border-b text-slate-600 hover:text-indigo-600">${l.title} ↗</a>`).join('');
+            grammarGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] p-6 shadow-md border" style="border-color: ${accent}"><h3 class="font-black text-lg mb-3 pb-3 border-b">⚙️ ${topic.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
         }
     });
 
-    
-// --- NEW MODULAR VOCAB LOGIC ---
-    
-    // 1. Find the chapter that matches today's DIA
-    const vocabData = data.vocab.descubre2.chapters; 
-    let ch = null;
-
-    // Scan the vocab JSON to see if DIA matches any "dias" array
-    for (const key in vocabData) {
-        if (vocabData[key].dias && vocabData[key].dias.includes(parseInt(DIA))) {
-            ch = vocabData[key];
-            break; // Stop looking once we find the match
-        }
-    }
-
-    // 2. Set Colors based on Theme
-    const vColor = overrides.vocabulario || accent; 
-    const vBg = overrides.vocabulario ? `${vColor}10` : '#fdf4ff'; 
-
-    // 3. Define Images (AND RESTORE TUTOR)
-    const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
-    const misdLogo = theme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
-    const slothImg = theme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
-    
-    // --- THIS IS THE PART THAT WAS MISSING ---
-    const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
-    const tutorEl = document.getElementById('tutorMascot');
-    if (tutorEl) tutorEl.src = tutorImg;
-    // ----------------------------------------
-    
-    // 4. Render the Grid (UPDATED IMAGES)
+    // 9. DYNAMIC GRID (Vocab/MISD/Costa Rica)
+    const dynamicGrid = document.getElementById('dynamicCardGrid');
     if (dynamicGrid) {
-        const vocabCard = ch ? `
-            <div class="bg-white rounded-xl border-l-[6px] shadow-md border border-slate-100 flex flex-col h-full" style="border-color: ${vColor}">
-                <div class="h-32 overflow-hidden border-b border-slate-100 relative">
-                    <img src="${vTree}" class="w-full h-full object-cover">
-                </div>
-                
-                <div class="p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                        <h3 class="font-black text-[10px] uppercase tracking-widest mb-1" style="color: ${vColor}">Vocabulario</h3>
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border border-slate-200 uppercase hover:bg-slate-50 transition-colors" style="color: ${vColor}">Lista</a>
-                        <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border border-slate-200 uppercase hover:bg-slate-50 transition-colors" style="color: ${vColor}">Cards</a>
-                    </div>
-                </div>
-            </div>` 
-            : 
-            `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border flex flex-col items-center justify-center h-full">
-                <span>No hay vocabulario hoy</span>
-             </div>`;
-
-        dynamicGrid.innerHTML = `
-            <div>${vocabCard}</div>
-            
-            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full">
-                <div class="h-32 overflow-hidden border-b border-slate-100">
-                    <img src="${misdLogo}" class="w-full h-full object-cover">
-                </div>
-                <div class="p-5 flex flex-col flex-grow justify-between">
-                    <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
-                    <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm">Abrir Portal</a>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full">
-                <div class="h-32 overflow-hidden border-b border-slate-100">
-                    <img src="${slothImg}" class="w-full h-full object-cover">
-                </div>
-                <div class="p-5 flex flex-col flex-grow justify-between">
-                    <h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3>
-                    <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm" style="background-color:${accent}">Ver Detalles</a>
-                </div>
-            </div>`;
+        const vocabData = data.vocab.descubre2.chapters; let ch = null;
+        for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
+        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+        
+        const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><img src="${vTree}" class="h-32 object-cover border-b"><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
+        
+        dynamicGrid.innerHTML = `<div>${vocabCard}</div>
+        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><img src="${theme?.mascots?.misd || ''}" class="h-32 object-cover border-b"><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>
+        <div class="bg-white rounded-xl shadow-md flex flex-col h-full"><img src="${theme?.mascots?.sloth || ''}" class="h-32 object-cover border-b"><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
+        
+        const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
+        document.getElementById('tutorMascot').src = tutorImg;
     }
-    
-    // Tareas
+
+    // 10. TAREAS
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
-        const status = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
-        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${status}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence: Día ${t.day_due}</div></div>`;
+        const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
     });
 }
+
 async function renderByDate() {
-    const selectedDate = document.getElementById('datePicker').value;
-    if (!selectedDate) return;
-
+    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
     const data = await loadData();
-    
-    // Sort the calendar to ensure we are looking through it in order
-    const sortedCal = data.cal?.map?.sort((a, b) => a.fecha.localeCompare(b.fecha)) || [];
-
-    // Find the NEXT available class date (equal to or after the selected date)
-    const entry = sortedCal.find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
-
+    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
     if (entry) {
-        const newDia = parseInt(entry.dia);
-        
-        // Update the number input box visually
-        document.getElementById('diaInput').value = newDia;
-        
-        // Update the URL
-        try {
-            const url = new URL(window.location);
-            url.searchParams.set('dia', newDia);
-            window.history.pushState({}, '', url);
-        } catch (e) { console.warn("URL update blocked"); }
-
-        // Trigger the page render
+        const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
+        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
         await runRender(data, newDia);
-    } else {
-        alert("No hay más clases programadas después de esta fecha.");
-    }
+    } else { alert("No hay clases programadas."); }
 }
 
-    
-// --- INITIALIZATION ---
 async function loadData() {
     try {
-        const [
-            plan, temas, cal, curios, evals, tareas,
-            vocab, apuntes, extrasDiarios, // Renamed from 'extras' to avoid confusion
-            musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios // Added Anuncios
-        ] = await Promise.all([
+        const [plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios] = await Promise.all([
             fetch(CONFIG.PLAN).then(r => r.json()),
             fetch(CONFIG.TEMAS).then(r => r.json()),
             fetch(CONFIG.CALENDARIO).then(r => r.json()),
@@ -908,57 +434,27 @@ async function loadData() {
             fetch(CONFIG.CONV).then(r => r.json()),
             fetch(CONFIG.VIDEOS).then(r => r.json()),
             fetch(CONFIG.GRAMATICA_DIARIA).then(r => r.json()),
-            fetch(CONFIG.ANUNCIOS).then(r => r.json()) // <--- ADDED THIS FETCH!
+            fetch(CONFIG.ANUNCIOS).then(r => r.json())
         ]);
-        
-        // Return everything with correct names
-       return {
-            plan, temas, cal, curios, evals, tareas,
-            vocab, apuntes, extrasDiarios, // We pass it back as 'extrasDiarios'
-            musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios
-        };
-
-    } catch (e) { 
-        console.error("Load Error", e); 
-    }
+       return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios };
+    } catch (e) { console.error("Load Error", e); }
 }
-    
-async function init() {
-    const data = await loadData(); 
-    if (!data) return;
 
-    // 1. Determine the "Live" day based on the calendar
-    const now = new Date();
-    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+async function init() {
+    const data = await loadData(); if (!data) return;
+    const now = new Date(); const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
     const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
     let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
-
-    // 2. Check the URL for a specific day request
     const params = new URLSearchParams(window.location.search);
     let requestedDia = parseInt(params.get('dia')) || liveDia;
-    
-    // 3. Sync the input box and run the render
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
 }
 
 async function renderManual() {
-    const newDia = document.getElementById('diaInput').value;
-    if (!newDia) return;
-
-    // Update the URL so refreshing the page stays on this day
-    try {
-        const url = new URL(window.location);
-        url.searchParams.set('dia', newDia);
-        window.history.pushState({}, '', url);
-    } catch (e) {
-        console.warn("URL update blocked by sandbox/Sites, proceeding with render.");
-    }
-
-    // Fetch data and re-render for the new day
-    const data = await loadData();
-    await runRender(data, parseInt(newDia));
+    const newDia = document.getElementById('diaInput').value; if (!newDia) return;
+    try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+    const data = await loadData(); await runRender(data, parseInt(newDia));
 }
 
 init();
