@@ -421,15 +421,23 @@ const liveDia = pastEntries && pastEntries.length > 0
         const estColor = overrides.estructura || accent;
         let linksHtml = "";
 
-        // Helper to find data and build buttons
+       // Helper to find data and build buttons
         const buildBtn = (identifier, label, isIntro) => {
-            const [topicKey, linkKey] = identifier.split(':');
+            // 1. Check for custom label override (Format: "topic:link|Custom Label")
+            // If no pipe exists, customLabel will be undefined
+            const [fullId, customLabel] = identifier.split('|');
+            
+            // 2. Parse the Topic and Link ID
+            const [topicKey, linkKey] = fullId.split(':');
             
             // Look up the actual data in apuntes.json
             const topic = data.apuntes?.[topicKey];
             const linkData = topic?.links?.[linkKey];
 
             if (!linkData) return ""; 
+
+            // 3. Determine Final Title (Override vs Default)
+            const finalTitle = customLabel || linkData.title;
 
             const badgeStyle = isIntro 
                 ? `bg-slate-800 text-white border-slate-800` 
@@ -441,13 +449,13 @@ const liveDia = pastEntries && pastEntries.length > 0
                     <span class="text-[9px] font-black px-2 py-1 rounded uppercase border ${badgeStyle}">${label}</span>
                     <div class="flex flex-col">
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">${topic.title}</span>
-                        <span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600 transition-colors leading-tight">${linkData.title}</span>
+                        <span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600 transition-colors leading-tight">${finalTitle}</span>
                     </div>
                 </div>
                 <span class="text-slate-300 group-hover:translate-x-1 transition-transform">➔</span>
             </a>`;
         };
-
+        
         if (dailyPlan.intro) dailyPlan.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
         if (dailyPlan.repaso) dailyPlan.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
 
