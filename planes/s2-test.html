@@ -482,26 +482,77 @@ const liveDia = pastEntries && pastEntries.length > 0
         grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">⚙️ ${parent.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
     });
 
-    const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
-    const ch = vRef ? data.vocab.descubre2.chapters[vRef] : null;
+// --- NEW MODULAR VOCAB LOGIC ---
+    
+    // 1. Find the chapter that matches today's DIA
+    const vocabData = data.vocab.descubre2.chapters; // Change to descubre3 for your other site
+    let ch = null;
 
-    // Mascot Logic
+    // Scan the vocab JSON to see if DIA matches any "dias" array
+    for (const key in vocabData) {
+        if (vocabData[key].dias && vocabData[key].dias.includes(parseInt(DIA))) {
+            ch = vocabData[key];
+            break; // Stop looking once we find the match
+        }
+    }
+
+    // 2. Set Colors based on Theme (temas.json)
+    // If no theme override exists, default to Indigo (accent)
+    const vColor = overrides.vocabulario || accent; 
+    // We create a lighter version for backgrounds (approximate)
+    const vBg = overrides.vocabulario ? `${vColor}10` : '#fdf4ff'; // Adds transparency if hex
+
+    // 3. Define Images
     const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
     const misdLogo = theme?.mascots?.misd || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/planes/images/MISD.png";
     const slothImg = theme?.mascots?.sloth || "https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/diasfestivos/sloth_valentin.png";
-    const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
-
-    document.getElementById('tutorMascot').src = tutorImg;
-
+    
+    // 4. Render the Grid
     if (dynamicGrid) {
-        dynamicGrid.innerHTML = `
-            <div>
-                ${ch ? `<div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100"><img src="${vTree}" class="max-h-full object-contain"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3><h3 class="text-amber-600 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border">No hay vocabulario</div>`}
-            </div>
-            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100"><img src="${misdLogo}" class="max-w-[150px] object-contain"></div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3><a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm">Abrir Portal</a></div></div>
-            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full"><div class="h-32 overflow-hidden border-b border-slate-100"><img src="${slothImg}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm" style="background-color:${accent}">Ver Detalles</a></div></div>`;
-    }
+        const vocabCard = ch ? `
+            <div class="bg-white rounded-xl border-l-[6px] shadow-md border border-slate-100 flex flex-col h-full" style="border-color: ${vColor}">
+                <div class="h-32 p-4 flex items-center justify-center border-b border-slate-100" style="background-color: ${vBg}">
+                    <img src="${vTree}" class="max-h-full object-contain">
+                </div>
+                <div class="p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                        <h3 class="font-black text-[10px] uppercase tracking-widest mb-1" style="color: ${vColor}">Vocabulario</h3>
+                        <h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border border-slate-200 uppercase hover:bg-slate-50 transition-colors" style="color: ${vColor}">Lista</a>
+                        <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 rounded-lg text-xs font-bold border border-slate-200 uppercase hover:bg-slate-50 transition-colors" style="color: ${vColor}">Cards</a>
+                    </div>
+                </div>
+            </div>` 
+            : 
+            `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border flex flex-col items-center justify-center h-full">
+                <span>No hay vocabulario hoy</span>
+             </div>`;
 
+        dynamicGrid.innerHTML = `
+            <div>${vocabCard}</div>
+            
+            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full">
+                <div class="h-32 p-4 bg-slate-50 flex items-center justify-center border-b border-slate-100">
+                    <img src="${misdLogo}" class="max-w-[150px] object-contain">
+                </div>
+                <div class="p-5 flex flex-col flex-grow justify-between">
+                    <h3 class="text-slate-900 font-bold text-lg mb-4">Ayuda con la vida (MISD)</h3>
+                    <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white text-center py-2.5 rounded-lg font-bold text-sm">Abrir Portal</a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full">
+                <div class="h-32 overflow-hidden border-b border-slate-100">
+                    <img src="${slothImg}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-5 flex flex-col flex-grow justify-between">
+                    <h3 class="text-slate-900 font-bold text-lg mb-4">Costa Rica 2027</h3>
+                    <a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="w-full btn-theme text-center py-2.5 rounded-lg font-bold text-sm" style="background-color:${accent}">Ver Detalles</a>
+                </div>
+            </div>`;
+    }
     // Tareas
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
