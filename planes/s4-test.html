@@ -3,28 +3,34 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Español IB (S4) - Plan de Clase</title>
+    <title>Español 4 (IB) - Plan de Clase</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Mountains+of+Christmas:wght@700&family=Berkshire+Swash&family=Creepster&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Architects+Daughter&family=Arvo:wght@400;700&family=Bangers&family=Berkshire+Swash&family=Bungee&family=Cabin+Sketch:wght@400;700&family=Chango&family=Cherry+Swash:wght@400;700&family=Cinzel:wght@400;700&family=Courgette&family=Creepster&family=Eater&family=Fredoka+One&family=Fugaz+One&family=Graduate&family=Inter:wght@400;600;800&family=Jolly+Lodger&family=Kalam:wght@300;400;700&family=Lobster&family=Lobster+Two:wght@400;700&family=Luckiest+Guy&family=Lustria&family=MedievalSharp&family=Merienda:wght@400;700&family=Montserrat:wght@400;700&family=Mountains+of+Christmas:wght@400;700&family=Nosifer&family=Pacifico&family=Quicksand:wght@300;400;700&family=Sancreek&family=Schoolbell&family=Titan+One&family=Uncial+Antiqua&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #6366f1; --header-bg: #4f46e5; }
-       #headerDate { 
-    font-family: var(--font-heading, inherit); 
-    text-transform: uppercase; 
-    letter-spacing: 0.1em; /* Add this line */
-    font-weight: 800; 
-}
-
-/* Add this for the Día title specifically */
-#dayTitle {
-    font-family: var(--font-heading, inherit);
-}
+        :root {
+            --accent: #6366f1;
+            --header-bg: #79c9f2;
+        }
+        #headerDate {
+            font-family: var(--font-heading, inherit);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 800;
+        }
         body { font-family: 'Inter', sans-serif; }
+        .card-texture {
+            background-repeat: no-repeat;
+            background-position: bottom right 10px;
+            background-size: 80px;
+            background-blend-mode: multiply;
+        }
         .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
+        .btn-theme {
+            background-color: var(--accent);
+            color: white;
+            transition: all 0.3s;
+        }
         .btn-theme:hover { filter: brightness(90%); }
-        .card-texture { background-repeat: no-repeat; background-position: bottom right 10px; background-size: 80px; background-blend-mode: multiply; }
-        #headerDate { font-family: var(--font-heading, inherit); text-transform: uppercase; font-weight: 800; }
     </style>
 </head>
 
@@ -32,15 +38,28 @@
     <canvas id="snow-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;"></canvas>
     
     <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <header id="mainHeader" class="rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700">
-            <div>
-                <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
-                <p id="headerDate" class="text-lg italic opacity-90 font-medium mt-1"></p>
+      <header id="mainHeader" class="rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700">
+        <div>
+            <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
+            <p id="headerDate" class="text-sm opacity-90"></p>
+        </div>
+        <div class="text-right hidden sm:block">
+            <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">IB Español B II</span>
+        </div>
+      </header>
+      
+      <div id="anunciosBlock"></div>      
+      
+        <div id="heroSlot" class="hidden mb-6">
+            <div id="heroCard" class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row border-t-8">
+                <div class="md:w-1/3 h-48 bg-slate-100">
+                    <img id="heroImg" src="" class="w-full h-full object-cover">
+                </div>
+                <div class="p-8 flex items-center justify-center flex-grow text-center">
+                    <h2 id="heroMsg" class="text-3xl font-black italic text-slate-800"></h2>
+                </div>
             </div>
-            <div class="text-right hidden sm:block">
-                <span class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">IB Español B II</span>
-            </div>
-        </header>
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             <div class="lg:col-span-2 space-y-6">
@@ -49,96 +68,77 @@
                     <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
                     <div class="pt-4 border-t border-slate-100">
                         <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
-                        <ul id="nextEvals" class="space-y-3 text-sm text-slate-600"></ul>
+                        <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
                     </div>
                 </section>
 
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
                         <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica interactiva ↗</a>
+                        <a id="calBtn" href="https://sites.google.com/view/srscalici/espa%C3%B1ol-4/calentamiento" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica Interactiva ↗</a>
                     </div>
-                    <div id="calDetail" class="text-slate-700 text-md italic">Cargando práctica...</div>
+                    <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
                 </section>
 
-                <section id="curiosityCard" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow border-slate-300">
-                    <h2 class="font-bold text-sm uppercase tracking-widest mb-4 text-slate-500">¿Sabías que...?</h2>
-                    <p id="curiosityText" class="text-slate-800 italic text-lg leading-relaxed">Cargando dato curioso...</p>
-                </section>
-
+                <div id="curiosityBlock"></div>
                 <div id="estructuraBlock"></div>
-                <div id="extrasBlock"></div> 
+                <div id="extrasBlock"></div>
                 <div id="videoBlock"></div>
             </div>
 
             <div id="tareasColumn" class="space-y-6">
-                <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-black">
+                <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
                     <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
                 </div>
-<div id="evaluacionesCard" class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] border-slate-200 flex flex-col group">
-        <div class="p-5 text-center">
-            <h3 class="text-slate-900 font-bold text-lg mb-4 italic">Próximas Pruebas</h3>
-            <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="block w-full btn-theme py-2.5 rounded-lg font-bold text-xs hover:opacity-90 transition-opacity uppercase">Ver calendario completo</a>
-        </div>
-    </div>
-                <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col group">
-                    <div class="h-28 overflow-hidden p-2"> 
-                        <img id="tutorMascot" src="" class="w-full h-full object-contain"> 
-                    </div>
-                    <div class="p-4 flex flex-col flex-grow bg-white text-center">
-                        <h3 class="text-slate-900 font-bold text-md mb-2 italic">Señor+ IA Tutor</h3>
-                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors uppercase">Practicar ahora</a>
-                    </div>
+
+                <div id="evalSidebarBlock" class="bg-white rounded-xl p-6 shadow-md border-8">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Próximas Pruebas</h3>
+                    <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
+                    <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs">Ver calendario completo</a>
                 </div>
 
-                <div id="countdownCard" class="bg-white rounded-xl p-6 shadow-md border-l-[6px] border-slate-200">
-                    <h3 class="text-slate-900 font-bold text-sm mb-4 uppercase tracking-widest text-center italic">Cuenta regresiva: Examen Oral</h3>
-                    <div id="countdownDisplay" class="grid grid-cols-3 gap-2 text-center">
-                        <div class="bg-slate-50 p-2 rounded"><span id="cd-days" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Días</span></div>
-                        <div class="bg-slate-50 p-2 rounded"><span id="cd-hours" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Hrs</span></div>
-                        <div class="bg-slate-50 p-2 rounded"><span id="cd-mins" class="block font-black text-xl">--</span><span class="text-[8px] uppercase">Min</span></div>
+                <div id="countdownBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-slate-200 text-center hidden">
+                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Examen Oral IB</h3>
+                    <div class="flex justify-center gap-4 text-slate-600">
+                        <div><span id="cntDays" class="text-3xl font-black block text-slate-900">--</span>Días</div>
+                        <div><span id="cntHrs" class="text-3xl font-black block text-slate-900">--</span>Hrs</div>
+                    </div>
+                    <p id="cntTarget" class="text-[10px] uppercase font-bold text-slate-400 mt-2">--/--/----</p>
+                </div>
+
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col group">
+                    <div class="h-28 overflow-hidden p-2"> 
+                        <img id="tutorMascot" src="https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png" class="w-full h-full object-contain"> 
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow bg-white">
+                        <h3 class="text-slate-900 font-bold text-md mb-2 italic text-center">Señor+ AI Tutor</h3>
+                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4IB" target="_blank" class="bg-slate-700 text-white text-center py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Practicar ahora</a>
                     </div>
                 </div>
             </div> 
         </div> 
 
-        <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
+       <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
             <div id="grammarPlacement" class="col-span-full mb-8">
-                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Recursos Gramaticales</h2>
+                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
                 <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div id="vocabPlacement"></div>
-                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div id="ibLogoContainer" class="h-32 p-4 flex items-center justify-center border-b border-slate-100 transition-all duration-500">
-                        <img id="ibLogo" src="" class="max-w-[100px] object-contain">
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow justify-between text-center">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Recursos sobre el IB</h3>
-                        <a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="w-full btn-theme py-2.5 rounded-lg font-bold text-sm uppercase">Abrir Recursos</a>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl overflow-hidden shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-                    <div class="h-32 overflow-hidden border-b border-slate-100 p-2">
-                        <img id="slothMascot" src="" class="w-full h-full object-contain">
-                    </div>
-                    <div class="p-5 flex flex-col flex-grow justify-between text-center">
-                        <h3 class="text-slate-900 font-bold text-lg mb-4">Portal Estudiantil</h3>
-                        <a href="https://connection.misd.net/index.html" target="_blank" class="w-full bg-slate-800 text-white py-2.5 rounded-lg font-bold text-sm uppercase">Portal MISD</a>
-                    </div>
-                </div>
-            </div>
+            <div id="dynamicCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
-        
+            
         <div class="max-w-4xl mx-auto mb-8">
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
                 <div class="flex items-center gap-3">
-                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día Plan S4</label>
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día Plan</label>
                     <div class="flex items-center">
-                        <input type="number" id="diaInput" class="w-16 bg-slate-100 border-none rounded-l-lg px-3 py-2 font-bold text-center">
-                        <button onclick="renderManual()" class="btn-theme px-4 py-2 rounded-r-lg font-bold text-sm uppercase">Ir</button>
+                        <input type="number" id="diaInput" onchange="renderManual()" class="w-16 bg-slate-100 border-none rounded-l-lg px-3 py-2 font-bold text-slate-700 text-center">
+                        <button onclick="renderManual()" class="bg-slate-800 text-white px-4 py-1 rounded hover:bg-black font-bold uppercase cursor-pointer">Ir al Día</button>
                     </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Ir a Fecha</label>
+                    <input type="date" id="datePicker" onchange="renderByDate()" class="bg-slate-100 border-none rounded-lg px-3 py-2 font-bold text-slate-700 text-sm">
                 </div>
             </div>
         </div>
@@ -148,12 +148,16 @@
 // --- S4 CONFIGURATION ---
 const CONFIG = {
     COURSE: "s4",
-    CICLO_FILTER: "B",
+    CICLO_FILTER: "B", // This is just a default, we now fetch both A & B dates
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
+    TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json",
+    
+    // --- UPDATE YOUR EXAM DATE HERE ---
+    ORAL_EXAM_DATE: "2026-03-15", 
+
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
     CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
-    TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json",
     VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
     APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
     EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras_diarios.json",
@@ -167,7 +171,6 @@ const CONFIG = {
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
-// Global Flag for Teacher Mode
 window.teacherMode = false;
 
 // --- THEME ENGINE ---
@@ -175,7 +178,9 @@ async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+        
+        // Try to find ANY entry (A or B) to set the theme date
+        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
@@ -205,7 +210,8 @@ async function applyThemeStyles(data, currentDia) {
             { id: 'evalSection', key: 'evaluacion' },
             { id: 'calentamientoSection', key: 'calentamiento' },
             { id: 'tareasBox', key: 'tareas' },
-            { id: 'evalSidebarBlock', key: 'pruebas' }
+            { id: 'evalSidebarBlock', key: 'pruebas' },
+            { id: 'countdownBox', key: 'pruebas' }
         ];
 
         cards.forEach(card => {
@@ -233,39 +239,25 @@ async function applyThemeStyles(data, currentDia) {
 // --- PARTICLE ENGINE ---
 let effectInterval;
 function startEffect(config) {
-    const canvas = document.getElementById('snow-canvas');
-    if (!canvas) return;
+    const canvas = document.getElementById('snow-canvas'); if (!canvas) return;
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    
     let particleImg = null;
-    if (config.image) {
-        particleImg = new Image();
-        particleImg.src = config.image;
-    }
-
+    if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
     const particles = Array.from({ length: config.count || 50 }, () => ({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
         size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
         drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
     }));
-
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = config.color || "white";
         particles.forEach(p => {
             ctx.globalAlpha = p.opacity;
-            if (particleImg && particleImg.complete) {
-                ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
-            } else {
-                ctx.font = `${p.size}px serif`;
-                ctx.fillText(config.char || "❄", p.x, p.y);
-            }
+            if (particleImg && particleImg.complete) ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
+            else { ctx.font = `${p.size}px serif`; ctx.fillText(config.char || "❄", p.x, p.y); }
             const speed = (config.speed || 1) + (p.size / 20);
-            if (config.direction === "up") {
-                p.y -= speed; if (p.y < -50) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
-            } else {
-                p.y += speed; if (p.y > canvas.height + 50) { p.y = -50; p.x = Math.random() * canvas.width; }
-            }
+            if (config.direction === "up") { p.y -= speed; if (p.y < -50) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; } }
+            else { p.y += speed; if (p.y > canvas.height + 50) { p.y = -50; p.x = Math.random() * canvas.width; } }
             p.x += p.drift;
         });
     }
@@ -284,9 +276,22 @@ function formatSpanishDate(dateStr) {
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
 }
 
-// ============================================================
-//  CORE RENDERING ENGINE
-// ============================================================
+function updateCountdown() {
+    const target = new Date(CONFIG.ORAL_EXAM_DATE + "T08:00:00");
+    const now = new Date();
+    const diff = target - now;
+    const box = document.getElementById('countdownBox');
+
+    if (diff > 0) {
+        box.classList.remove('hidden');
+        document.getElementById('cntDays').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('cntHrs').textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('cntTarget').textContent = formatSpanishDate(CONFIG.ORAL_EXAM_DATE);
+    } else {
+        box.classList.add('hidden');
+    }
+}
+
 async function runRender(data, DIA) {
     const params = new URLSearchParams(window.location.search);
     const isProfView = params.get('view') === 'prof';
@@ -295,15 +300,11 @@ async function runRender(data, DIA) {
     const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
     const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
 
-    // --- RESTRICTION LOGIC WITH PASSWORD PROMPT ---
+    // RESTRICTION LOGIC
     if (DIA > liveDia && !isProfView && !window.teacherMode) {
-        // Instead of rejecting immediately, ASK for the password
         const password = prompt(`🔒 ¡Alto! El Día ${DIA} es en el futuro.\n\nIngrese la contraseña de profesor para ver este día:`);
-        
         if (password === "hola" || password === "profesor") {
-            window.teacherMode = true; // Unlock for the session
-            alert("✅ Acceso concedido. Bienvenido, Señor.");
-            // Proceed to render...
+            window.teacherMode = true; alert("✅ Acceso concedido.");
         } else {
             alert("⛔ Contraseña incorrecta. Volviendo a hoy.");
             document.getElementById('diaInput').value = liveDia;
@@ -316,57 +317,49 @@ async function runRender(data, DIA) {
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
+    // --- NEW: DUAL DATE HEADER LOGIC ---
+    const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
+    const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
+    
+    let dateStr = "FECHA TBD";
+    if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
+    else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
+    else if (entryB) dateStr = formatSpanishDate(entryB.fecha);
 
-    // 1. ANUNCIOS
+    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+    document.getElementById('headerDate').textContent = dateStr.toUpperCase();
+    // ------------------------------------
+
+    // ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
         anunciosBlock.innerHTML = "";
         const noteColor = overrides.anuncios || accent; 
         (data.anuncios || []).forEach(note => {
             if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
-                let containerStyle = `border-color: ${noteColor};`;
-                let titleStyle = `color: ${noteColor};`;
-                let bgClass = "bg-white";
-                let icon = "📢";
-
-                if (note.type === 'warning') {
-                    containerStyle = `border-color: #ef4444;`; titleStyle = `color: #b91c1c;`; bgClass = "bg-red-50"; icon = "⚠️";
-                } else if (note.type === 'trip') {
-                    containerStyle = `border-color: #10b981;`; titleStyle = `color: #047857;`; bgClass = "bg-emerald-50"; icon = "✈️";
-                }
-
-                anunciosBlock.innerHTML += `
-                    <div class="${bgClass} border-l-[6px] p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start gap-4 transition-transform hover:scale-[1.01]" style="${containerStyle}">
-                        <div class="flex-shrink-0">
-                             ${note.thumbnail ? `<img src="${note.thumbnail}" class="w-24 h-auto object-cover rounded-lg border border-slate-200 shadow-sm">` : `<div class="text-3xl">${icon}</div>`}
-                        </div>
-                        <div class="flex-grow">
-                            <h4 class="font-bold text-[10px] uppercase tracking-widest mb-1 opacity-80" style="${titleStyle}">${note.type === 'warning' ? 'Importante' : 'Anuncio'}</h4>
-                            <p class="text-slate-800 font-bold text-sm leading-snug mb-2">${note.text}</p>
-                            ${note.link ? `<a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}"><span>Ver Detalles</span> ↗</a>` : ''}
-                        </div>
-                    </div>`;
+                let containerStyle = `border-color: ${noteColor};`; let titleStyle = `color: ${noteColor};`; let bgClass = "bg-white"; let icon = "📢";
+                if (note.type === 'warning') { containerStyle = `border-color: #ef4444;`; titleStyle = `color: #b91c1c;`; bgClass = "bg-red-50"; icon = "⚠️"; }
+                else if (note.type === 'trip') { containerStyle = `border-color: #10b981;`; titleStyle = `color: #047857;`; bgClass = "bg-emerald-50"; icon = "✈️"; }
+                anunciosBlock.innerHTML += `<div class="${bgClass} border-l-[6px] p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start gap-4 transition-transform hover:scale-[1.01]" style="${containerStyle}"><div class="flex-shrink-0">${note.thumbnail ? `<img src="${note.thumbnail}" class="w-24 h-auto object-cover rounded-lg border border-slate-200 shadow-sm">` : `<div class="text-3xl">${icon}</div>`}</div><div class="flex-grow"><h4 class="font-bold text-[10px] uppercase tracking-widest mb-1 opacity-80" style="${titleStyle}">${note.type === 'warning' ? 'Importante' : 'Anuncio'}</h4><p class="text-slate-800 font-bold text-sm leading-snug mb-2">${note.text}</p>${note.link ? `<a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}"><span>Ver Detalles</span> ↗</a>` : ''}</div></div>`;
             }
         });
     }
 
-    // 2. CALENTAMIENTO
+    // CALENTAMIENTO
     const calBtn = document.getElementById('calBtn');
     if (calBtn) {
-        calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-4/calentamiento/${DIA}`;
+        calBtn.href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
         calBtn.style.backgroundColor = overrides.calentamiento || accent;
     }
 
-    // 3. EVALUATIONS
+    // EVALUATIONS & COUNTDOWN
     const evalList = data.evals.courses[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
+    updateCountdown();
 
-    // 4. CURIOSIDAD
+    // CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
     const cur = data.curios.find(c => c.id === `cur-${DIA}`);
     if (cur) {
@@ -374,30 +367,24 @@ async function runRender(data, DIA) {
         curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
     } else { curBlock.innerHTML = ""; }
 
-    // 5. VIDEOS
+    // VIDEOS
     const videoContainer = document.getElementById('videoBlock');
     if (videoContainer) {
-        const vidColor = overrides.video || accent; 
-        const vidFont = fonts.video || 'inherit';
+        const vidColor = overrides.video || accent; const vidFont = fonts.video || 'inherit';
         const dayVideos = (data.videos?.daily_tags || []).filter(v => v.dia == DIA && (v.tags || []).includes(CONFIG.COURSE));
         if (dayVideos.length > 0) {
             videoContainer.innerHTML = dayVideos.map(videoData => {
-                if (videoData.page_url) {
-                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><a href="${videoData.page_url}" target="_blank" class="block group"><img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md"><h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2></a><p class="text-slate-700 italic text-sm">${videoData.description || ""}</p></article>`;
-                } else {
-                    const width = videoData.is_short ? "315" : "100%"; const height = videoData.is_short ? "560" : "315";
-                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2><div class="${videoData.is_short ? 'flex justify-center' : ''}"><iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></div><p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p></article>`;
-                }
+                if (videoData.page_url) return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><a href="${videoData.page_url}" target="_blank" class="block group"><img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md"><h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2></a><p class="text-slate-700 italic text-sm">${videoData.description || ""}</p></article>`;
+                else { const width = videoData.is_short ? "315" : "100%"; const height = videoData.is_short ? "560" : "315"; return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2><div class="${videoData.is_short ? 'flex justify-center' : ''}"><iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></div><p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p></article>`; }
             }).join('');
         } else { videoContainer.innerHTML = ""; }
     }
 
-    // 6. ESTRUCTURA
+    // ESTRUCTURA
     const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
     const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
     if (dailyGrammar) {
-        const estColor = overrides.estructura || accent;
-        let linksHtml = "";
+        const estColor = overrides.estructura || accent; let linksHtml = "";
         const buildBtn = (id, label, isIntro) => {
             const [fullId, customLabel] = id.split('|'); const [topicKey, linkKey] = fullId.split(':');
             const topic = data.apuntes?.[topicKey]; const linkData = topic?.links?.[linkKey];
@@ -410,7 +397,7 @@ async function runRender(data, DIA) {
         if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-    // 7. EXTRAS
+    // EXTRAS & MEDIA
     const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
     (data.extrasDiarios?.[CONFIG.COURSE]?.[DIA] || []).forEach(item => {
         const exColor = overrides.extras || accent;
@@ -450,7 +437,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // 8. DASHBOARD
+    // DASHBOARD
     const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
     Object.values(data.apuntes || {}).forEach(topic => {
         const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
@@ -460,7 +447,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // 9. DYNAMIC GRID (S4/IB)
+    // DYNAMIC GRID
     const dynamicGrid = document.getElementById('dynamicCardGrid');
     if (dynamicGrid) {
         const vocabData = data.vocab.descubre2.chapters; let ch = null;
@@ -469,16 +456,16 @@ async function runRender(data, DIA) {
         const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
         const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
         
-        // --- IB RESOURCES CARD (LINK UPDATED) ---
         const ibImg = theme?.mascots?.ib || "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png"; 
         const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${ibImg}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
         
         dynamicGrid.innerHTML = `<div>${vocabCard}</div><div>${misdCard}</div><div>${ibCard}</div>`;
+        
         const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
         document.getElementById('tutorMascot').src = tutorImg;
     }
 
-    // 10. TAREAS
+    // TAREAS (Using tareas4.json)
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
         const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
@@ -489,7 +476,7 @@ async function runRender(data, DIA) {
 async function renderByDate() {
     const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
     const data = await loadData();
-    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
+    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate);
     if (entry) {
         const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
         try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
@@ -528,7 +515,6 @@ async function init() {
     await runRender(data, requestedDia);
 }
 
-// SIMPLIFIED RENDER MANUAL (No more typing 0)
 async function renderManual() {
     const newDia = document.getElementById('diaInput').value; if (!newDia) return;
     try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
