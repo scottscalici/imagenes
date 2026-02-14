@@ -495,19 +495,55 @@ async function runRender(data, DIA) {
         if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-    // 7. EXTRAS (Linear Extras)
-    const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
-    const todaysExtras = data.extrasDiarios?.[CONFIG.COURSE]?.[DIA] || [];
+// 7. EXTRAS (Updated for Flexible Array Days)
+    const extrasBlock = document.getElementById('extrasBlock'); 
+    extrasBlock.innerHTML = "";
+
+    // 1. Determine the key to look for (e.g., "s2_dias" or "s4_dias")
+    const courseKeyExtras = CONFIG.COURSE + "_dias";
+
+    // 2. Filter items: Check if the property exists AND if the current DIA is in that array
+    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => 
+        item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA))
+    );
+
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
-        if (item.type === 'example') {
-            const sentences = item.content.map(s => `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
-            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border p-6 mb-6 flex flex-col">${item.img ? `<img src="${item.img}" class="rounded mb-4">` : ''}<h3 class="font-black text-xs uppercase mb-4" style="color: ${exColor}">💬 ${item.title || "Ejemplos"}</h3><ul class="italic">${sentences}</ul></section>`;
-        } else if (item.type === 'placeholder') {
-             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex" style="border-color: ${exColor}"><div class="w-32 bg-slate-50 flex items-center justify-center p-2"><img src="${item.img || ''}" class="max-h-20 mix-blend-multiply"></div><div class="p-4 flex flex-col justify-center"><h3 class="font-black text-lg text-slate-800">${item.title}</h3><p class="text-slate-600 text-sm italic">${item.subtitle || ""}</p></div></section>`;
+        
+        if (item.kind === 'sentences') {
+            const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">${item.instructions}</p>` : '';
+            const sentences = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+            
+            extrasBlock.innerHTML += `
+                <section class="bg-white rounded-xl border p-6 mb-6 flex flex-col shadow-sm">
+                    ${item.img ? `<img src="${item.img}" class="rounded mb-4 shadow-sm border">` : ''}
+                    <h3 class="font-black text-xs uppercase mb-2" style="color: ${exColor}">💬 ${item.title || "Ejemplos"}</h3>
+                    ${instructions}
+                    <ul class="italic">${sentences}</ul>
+                </section>`;
+
+        } else if (item.kind === 'card' || item.kind === 'placeholder') {
+             extrasBlock.innerHTML += `
+                <section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}">
+                    <div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r">
+                        <img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply">
+                    </div>
+                    <div class="p-6 flex flex-col justify-center">
+                        <h3 class="font-black text-xl text-slate-800">${item.title}</h3>
+                        ${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}
+                    </div>
+                </section>`;
+
+        } else if (item.kind === 'links') {
+            const links = item.links.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
+            extrasBlock.innerHTML += `
+                <section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}">
+                    <h3 class="font-black text-lg mb-3">${item.title}</h3>
+                    <div class="space-y-2">${links}</div>
+                </section>`;
         }
     });
-
+    
     // --- 7b. MEDIA BLOCKS ---
     
     // NEW: MUSICA (Spotify Style)
