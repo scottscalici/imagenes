@@ -99,7 +99,7 @@
                 </div>
 
                 <div id="countdownBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-slate-200 text-center hidden">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Examen Oral IB</h3>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen oral</h3>
                     <div class="flex justify-center gap-4 text-slate-600">
                         <div><span id="cntDays" class="text-3xl font-black block text-slate-900">--</span>Días</div>
                         <div><span id="cntHrs" class="text-3xl font-black block text-slate-900">--</span>Hrs</div>
@@ -426,7 +426,7 @@ async function runRender(data, DIA) {
     Object.values(data.conv?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const cColor = overrides.conv || accent;
-             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex flex-col md:flex-row items-start gap-6" style="border-color: ${cColor}"><div class="w-full md:w-32 h-32 flex-shrink-0 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shadow-sm">${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<div class="flex items-center justify-center h-full text-4xl">🗣️</div>`}</div><div class="flex-grow w-full"><div class="flex items-center gap-2 mb-2"><h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3><span class="bg-slate-100 text-[9px] font-bold px-2 py-0.5 rounded text-slate-500 uppercase">Oral</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-4">${item.titulo}</h3><a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" style="background-color: ${cColor}"><span>💬</span> Abrir Preguntas</a></div></section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex flex-col md:flex-row items-start gap-6" style="border-color: ${cColor}"><div class="w-full md:w-32 h-32 flex-shrink-0 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shadow-sm">${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<div class="flex items-center justify-center h-full text-4xl">🗣️</div>`}</div><div class="flex-grow w-full"><div class="flex items-center gap-2 mb-2"><h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3><span class="bg-slate-100 text-[9px] font-bold px-2 py-0.5 rounded text-slate-500 uppercase">Presentar</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-4">${item.titulo}</h3><a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" style="background-color: ${cColor}"><span>💬</span> Abrir la página</a></div></section>`;
         }
     });
 
