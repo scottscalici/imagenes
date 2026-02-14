@@ -224,36 +224,86 @@ async function applyThemeStyles(data, currentDia) {
     } catch (e) { console.error("Theme Error:", e); return null; }
 }
 
-// --- PARTICLE ENGINE ---
+// --- PARTICLE ENGINE (UPGRADED) ---
 let effectInterval;
+
 function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    
+    // Resize handling
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight;
+    
+    // Image Handling (if provided)
+    let particleImg = null;
+    if (config.image) {
+        particleImg = new Image();
+        particleImg.src = config.image;
+    }
+
+    // Initialize Particles
     const particles = Array.from({ length: config.count || 50 }, () => ({
-        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        size: Math.random() * 15 + 10, drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
+        drift: Math.random() * 2 - 1,
+        opacity: Math.random() * 0.5 + 0.3
     }));
+
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = config.color || "white";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = config.color || "white";
+
         particles.forEach(p => {
-            ctx.font = `${p.size}px serif`; ctx.globalAlpha = p.opacity;
-            ctx.fillText(config.char || "❄", p.x, p.y);
-            p.y += (config.speed || 1) + (p.size / 10);
-            if (p.y > canvas.height) p.y = -20;
+            ctx.globalAlpha = p.opacity;
+
+            // DRAW: Check if using an Image or Text
+            if (particleImg && particleImg.complete) {
+                // Draw Image (Bat, Heart, etc.)
+                ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
+            } else {
+                // Draw Character (Snowflake, Fire emoji, etc.)
+                ctx.font = `${p.size}px serif`;
+                ctx.fillText(config.char || "❄", p.x, p.y);
+            }
+
+            // MOVE: Vertical Speed based on size (parallax effect)
+            const speed = (config.speed || 1) + (p.size / 20);
+
+            // DIRECTION LOGIC
+            if (config.direction === "up") {
+                p.y -= speed; // Move Up
+                // Reset when it goes off top
+                if (p.y < -50) {
+                    p.y = canvas.height + 20;
+                    p.x = Math.random() * canvas.width;
+                }
+            } else {
+                p.y += speed; // Move Down (Default)
+                // Reset when it goes off bottom
+                if (p.y > canvas.height + 50) {
+                    p.y = -50;
+                    p.x = Math.random() * canvas.width;
+                }
+            }
+
+            // Horizontal Drift
             p.x += p.drift;
         });
     }
+
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
+
 function stopEffect() {
     if (effectInterval) clearInterval(effectInterval);
     const canvas = document.getElementById('snow-canvas');
     if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
-
+    
 function formatSpanishDate(dateStr) {
     if (!dateStr) return "";
     const date = new Date(dateStr + "T00:00:00");
