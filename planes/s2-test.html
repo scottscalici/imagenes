@@ -163,6 +163,9 @@ const CONFIG = {
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
+// Global Flag for Teacher Mode
+window.teacherMode = false;
+
 // --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
@@ -321,8 +324,9 @@ async function runRender(data, DIA) {
     const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
     const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
 
-    if (DIA > liveDia && !isProfView) {
-        alert(`🚫 El Día ${DIA} no está disponible todavía.`);
+    // RESTRICTION LOGIC (UPDATED WITH TEACHER MODE)
+    if (DIA > liveDia && !isProfView && !window.teacherMode) {
+        alert("🔒 Este día está bloqueado para los estudiantes.\n\n(Profesor: Ingrese '0' en el cuadro de Día para desbloquear)");
         document.getElementById('diaInput').value = liveDia;
         return runRender(data, liveDia);
     }
@@ -336,13 +340,12 @@ async function runRender(data, DIA) {
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-// 1. ANUNCIOS (Themed + Thumbnail Support)
+    // 1. ANUNCIOS (Themed + Thumbnail Support)
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
         anunciosBlock.innerHTML = "";
         
         // FIX: Use the 'accent' and 'overrides' variables that are already defined in runRender
-        // This ensures it matches the rest of your page perfectly.
         const noteColor = (overrides && overrides.anuncios) ? overrides.anuncios : accent;
 
         const anunciosList = Array.isArray(data.anuncios) ? data.anuncios : [];
@@ -356,7 +359,7 @@ async function runRender(data, DIA) {
                 let bgClass = "bg-white";
                 let icon = "📢";
 
-                // Handle Warning/Trip types (These keep their own specific colors)
+                // Handle Warning/Trip types
                 if (note.type === 'warning') {
                     containerStyle = `border-color: #ef4444;`; // Red
                     titleStyle = `color: #b91c1c;`;
@@ -670,8 +673,18 @@ async function init() {
     await runRender(data, requestedDia);
 }
 
+// --- SIMPLIFIED RENDER MANUAL (Using Magic "0" Code) ---
 async function renderManual() {
-    const newDia = document.getElementById('diaInput').value; if (!newDia) return;
+    const newDia = document.getElementById('diaInput').value;
+    
+    // SECRET CODE CHECK
+    if (newDia == 0) {
+        window.teacherMode = true;
+        alert("🔓 Modo Profesor Activado: Ahora puede ver días futuros.");
+        return;
+    }
+    
+    if (!newDia) return;
     try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
     const data = await loadData(); await runRender(data, parseInt(newDia));
 }
