@@ -414,14 +414,21 @@ async function runRender(data, DIA) {
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
 
-    // 4. CURIOSIDAD
+// 4. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
-    const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+    
+    // Dynamic course key (this will automatically be 's2_dia' because of your CONFIG at the top)
+    const courseKey = CONFIG.COURSE + "_dia";
+
+    // Find the curiosity using the course-specific day property
+    const cur = (data.curios || []).find(c => c[courseKey] == DIA);
+
     if (cur) {
         const curColor = overrides.curiosidad || accent;
         curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
     } else { curBlock.innerHTML = ""; }
 
+    
     // 5. VIDEOS (Restored Smart Logic)
     const videoContainer = document.getElementById('videoBlock');
     if (videoContainer) {
