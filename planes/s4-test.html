@@ -244,7 +244,8 @@ function startEffect(config) {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     let particleImg = null;
     if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
-    const particles = Array.from({ length: config.count || 50 }, () => ({
+const particleCount = (config.count !== undefined) ? config.count : 50;
+const particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
         size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
         drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
