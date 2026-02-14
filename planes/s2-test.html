@@ -247,7 +247,8 @@ function startEffect(config) {
     }
 
     // Initialize Particles
-    const particles = Array.from({ length: config.count || 50 }, () => ({
+const particleCount = (config.count !== undefined) ? config.count : 50;
+const particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
