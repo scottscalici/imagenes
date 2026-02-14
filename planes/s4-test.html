@@ -75,7 +75,7 @@
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
                         <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="https://sites.google.com/view/srscalici/espa%C3%B1ol-4/calentamiento" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica Interactiva ↗</a>
+                        <a id="calBtn" href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica Interactiva ↗</a>
                     </div>
                     <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
                 </section>
@@ -99,7 +99,7 @@
                 </div>
 
                 <div id="countdownBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-slate-200 text-center hidden">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen oral</h3>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen Oral IB</h3>
                     <div class="flex justify-center gap-4 text-slate-600">
                         <div><span id="cntDays" class="text-3xl font-black block text-slate-900">--</span>Días</div>
                         <div><span id="cntHrs" class="text-3xl font-black block text-slate-900">--</span>Hrs</div>
@@ -148,12 +148,12 @@
 // --- S4 CONFIGURATION ---
 const CONFIG = {
     COURSE: "s4",
-    CICLO_FILTER: "B", // This is just a default, we now fetch both A & B dates
+    CICLO_FILTER: "B",
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json",
     
-    // --- UPDATE YOUR EXAM DATE HERE ---
-    ORAL_EXAM_DATE: "2026-03-15", 
+    // --- EXAM DATE (YYYY-MM-DD) ---
+    ORAL_EXAM_DATE: "2026-03-09", 
 
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
@@ -171,24 +171,53 @@ const CONFIG = {
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
+// 1. ENABLE GLOBAL TEACHER FLAG
 window.teacherMode = false;
 
-// --- THEME ENGINE ---
+// --- THEME ENGINE (FORWARD LOOKING) ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
         
-        // Try to find ANY entry (A or B) to set the theme date
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia);
-        const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
+        // 1. Find all dates for this Lesson
+        const entries = data.cal?.map?.filter(c => c.dia == currentDia) || [];
+        
+        // 2. Smart Selection Logic: Prioritize UPCOMING dates
+        const today = new Date();
+        // Reset time to midnight for fair comparison
+        today.setHours(0,0,0,0);
+        
+        let targetEntry = null;
+
+        if (entries.length > 0) {
+            // Sort entries by date
+            const sorted = entries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            // Filter for dates that are Today or Future
+            const upcoming = sorted.filter(e => new Date(e.fecha + "T00:00:00") >= today);
+
+            if (upcoming.length > 0) {
+                // If we have upcoming dates, pick the soonest one (B-Day)
+                targetEntry = upcoming[0];
+            } else {
+                // If ALL dates are in the past, just pick the most recent one (A-Day)
+                targetEntry = sorted[sorted.length - 1];
+            }
+        }
+        
+        // 3. Fallback and Date Formatting
+        const viewedDate = targetEntry ? targetEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
-        let theme = themeData.themes.find(t => t.id === 'snowday' && dayEntry?.note === "Snow day") ||
+        // 4. Select Theme
+        let theme = themeData.themes.find(t => t.id === 'snowday' && targetEntry?.note === "Snow day") ||
                     themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) ||
                     themeData.themes.find(t => t.id === 'classic');
 
         if (!theme) return null;
+        
+        // 5. Apply Styles
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
@@ -235,7 +264,7 @@ async function applyThemeStyles(data, currentDia) {
         return theme; 
     } catch (e) { console.error("Theme Error:", e); return null; }
 }
-
+    
 // --- PARTICLE ENGINE ---
 let effectInterval;
 function startEffect(config) {
@@ -244,8 +273,11 @@ function startEffect(config) {
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     let particleImg = null;
     if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
-const particleCount = (config.count !== undefined) ? config.count : 50;
-const particles = Array.from({ length: particleCount }, () => ({
+    
+    // Fix: count=0 check
+    const particleCount = (config.count !== undefined) ? config.count : 50;
+    
+    const particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
         size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
         drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
@@ -278,7 +310,7 @@ function formatSpanishDate(dateStr) {
 }
 
 function updateCountdown() {
-    const target = new Date(CONFIG.ORAL_EXAM_DATE + "T08:00:00");
+    const target = new Date(CONFIG.ORAL_EXAM_DATE + "T07:30:00");
     const now = new Date();
     const diff = target - now;
     const box = document.getElementById('countdownBox');
@@ -301,16 +333,11 @@ async function runRender(data, DIA) {
     const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
     const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
 
-    // RESTRICTION LOGIC
+    // 2. UPDATED RESTRICTION LOGIC (NO PROMPTS)
     if (DIA > liveDia && !isProfView && !window.teacherMode) {
-        const password = prompt(`🔒 ¡Alto! El Día ${DIA} es en el futuro.\n\nIngrese la contraseña de profesor para ver este día:`);
-        if (password === "hola" || password === "profesor") {
-            window.teacherMode = true; alert("✅ Acceso concedido.");
-        } else {
-            alert("⛔ Contraseña incorrecta. Volviendo a hoy.");
-            document.getElementById('diaInput').value = liveDia;
-            return runRender(data, liveDia);
-        }
+        alert("🔒 Este día está bloqueado para los estudiantes.\n\n(Profesor: Ingrese '0' en el cuadro de Día para desbloquear)");
+        document.getElementById('diaInput').value = liveDia;
+        return runRender(data, liveDia);
     }
 
     const theme = await applyThemeStyles(data, DIA);
@@ -318,10 +345,9 @@ async function runRender(data, DIA) {
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    // --- NEW: DUAL DATE HEADER LOGIC ---
+    // --- DUAL DATE HEADER ---
     const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
     const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
-    
     let dateStr = "FECHA TBD";
     if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
     else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
@@ -329,7 +355,6 @@ async function runRender(data, DIA) {
 
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = dateStr.toUpperCase();
-    // ------------------------------------
 
     // ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
@@ -458,7 +483,7 @@ async function runRender(data, DIA) {
         const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
         
         const ibImg = theme?.mascots?.ib || "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png"; 
-        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${ibImg}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
+        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${ibImg}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
         
         dynamicGrid.innerHTML = `<div>${vocabCard}</div><div>${misdCard}</div><div>${ibCard}</div>`;
         
@@ -516,8 +541,18 @@ async function init() {
     await runRender(data, requestedDia);
 }
 
+// 3. UPDATED MANUAL RENDER (WITH "0" UNLOCK)
 async function renderManual() {
-    const newDia = document.getElementById('diaInput').value; if (!newDia) return;
+    const newDia = document.getElementById('diaInput').value;
+    
+    // SECRET CODE CHECK
+    if (newDia == 0) {
+        window.teacherMode = true;
+        alert("🔓 Modo Profesor Activado: Ahora puede ver días futuros.");
+        return;
+    }
+    
+    if (!newDia) return;
     try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
     const data = await loadData(); await runRender(data, parseInt(newDia));
 }
