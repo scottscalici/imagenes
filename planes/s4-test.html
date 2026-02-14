@@ -145,8 +145,10 @@
     </main>
 
 <script>
+// --- S4 CONFIGURATION ---
 const CONFIG = {
     COURSE: "s4",
+    CICLO_FILTER: "B",
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
     CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
@@ -154,20 +156,26 @@ const CONFIG = {
     TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json",
     VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
     APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
-    EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras.json",
+    EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras_diarios.json",
     MUSICA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
     LECTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
     CULTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
     CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json",
+    ANUNCIOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/anuncios.json",
+    GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
 };
 
+// Global Flag for Teacher Mode
+window.teacherMode = false;
+
+// --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
         const themeData = await themeRes.json();
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia);
+        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
@@ -175,440 +183,358 @@ async function applyThemeStyles(data, currentDia) {
                     themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) ||
                     themeData.themes.find(t => t.id === 'classic');
 
-        if (!theme) return;
+        if (!theme) return null;
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
         root.style.setProperty('--accent', accent);
         root.style.setProperty('--font-heading', s.fontHeading || 'inherit');
 
-        document.getElementById('mainHeader').className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
-        document.getElementById('ibLogoContainer').style.backgroundColor = accent;
+        const header = document.getElementById('mainHeader');
+        if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
         
-        if (theme.mascots) {
-            document.getElementById('slothMascot').src = theme.mascots.misd || theme.mascots.sloth;
-            document.getElementById('tutorMascot').src = theme.mascots.tutor;
-            document.getElementById('ibLogo').src = theme.mascots.ib || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB.png";
-        }
+        const heroSlot = document.getElementById('heroSlot');
+        if (theme.hero?.active) {
+            heroSlot.classList.remove('hidden');
+            document.getElementById('heroImg').src = theme.hero.img;
+            document.getElementById('heroMsg').textContent = theme.hero.msg;
+            document.getElementById('heroCard').style.borderTopColor = accent;
+        } else { heroSlot.classList.add('hidden'); }
 
-        const overrides = s.cardOverrides || {};
-        const textures = s.textures || {};
-        const fonts = s.fonts || {};
-        const cards = [{ id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' }, { id: 'curiosityCard', key: 'curiosidad' }, { id: 'tareasBox', key: 'tareas' }, { id: 'countdownCard', key: 'curiosidad' }];
+        const cards = [
+            { id: 'evalSection', key: 'evaluacion' },
+            { id: 'calentamientoSection', key: 'calentamiento' },
+            { id: 'tareasBox', key: 'tareas' },
+            { id: 'evalSidebarBlock', key: 'pruebas' }
+        ];
 
         cards.forEach(card => {
             const el = document.getElementById(card.id);
             if (el) {
-                const color = overrides[card.key] || accent;
+                const color = (s.cardOverrides || {})[card.key] || accent;
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
-                if (h) { h.style.color = color; if (fonts[card.key]) h.style.fontFamily = fonts[card.key]; }
-                if (textures[card.key]) { el.style.backgroundImage = `url('${textures[card.key]}')`; el.classList.add('card-texture'); }
+                if (h) h.style.color = color;
+                if ((s.textures || {})[card.key]) {
+                    el.style.backgroundImage = `url('${s.textures[card.key]}')`;
+                    el.classList.add('card-texture');
+                } else {
+                    el.style.backgroundImage = 'none';
+                }
             }
         });
 
-        if (theme.effectConfig) startEffect(theme.effectConfig); else stopEffect();
-        return theme;
-    } catch (e) { console.error("Theme Error", e); }
+        if (theme.effectConfig) startEffect(theme.effectConfig);
+        else stopEffect();
+        return theme; 
+    } catch (e) { console.error("Theme Error:", e); return null; }
 }
 
+// --- PARTICLE ENGINE ---
 let effectInterval;
 function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    
+    let particleImg = null;
+    if (config.image) {
+        particleImg = new Image();
+        particleImg.src = config.image;
+    }
+
     const particles = Array.from({ length: config.count || 50 }, () => ({
         x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        size: Math.random() * 15 + 10, drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
+        size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
+        drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
     }));
+
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = config.color || "white";
         particles.forEach(p => {
-            ctx.font = `${p.size}px serif`; ctx.globalAlpha = p.opacity;
-            ctx.fillText(config.char || "❄", p.x, p.y);
-            p.y += (config.speed || 1) + (p.size / 10);
-            if (p.y > canvas.height) p.y = -20;
+            ctx.globalAlpha = p.opacity;
+            if (particleImg && particleImg.complete) {
+                ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
+            } else {
+                ctx.font = `${p.size}px serif`;
+                ctx.fillText(config.char || "❄", p.x, p.y);
+            }
+            const speed = (config.speed || 1) + (p.size / 20);
+            if (config.direction === "up") {
+                p.y -= speed; if (p.y < -50) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
+            } else {
+                p.y += speed; if (p.y > canvas.height + 50) { p.y = -50; p.x = Math.random() * canvas.width; }
+            }
             p.x += p.drift;
         });
     }
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
-function stopEffect() { if (effectInterval) clearInterval(effectInterval); }
-
-function startCountdown() {
-    const targetDate = new Date("March 9, 2026 07:30:00").getTime();
-    setInterval(() => {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
-        if (distance < 0) { document.getElementById("cd-days").innerText = "¡YA!"; return; }
-        document.getElementById("cd-days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
-        document.getElementById("cd-hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        document.getElementById("cd-mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    }, 1000);
+function stopEffect() {
+    if (effectInterval) clearInterval(effectInterval);
+    const canvas = document.getElementById('snow-canvas');
+    if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function formatSpanishDate(dateStr) {
+    if (!dateStr) return "";
+    const date = new Date(dateStr + "T00:00:00");
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+}
+
+// ============================================================
+//  CORE RENDERING ENGINE
+// ============================================================
 async function runRender(data, DIA) {
-    const activeTheme = await applyThemeStyles(data, DIA);
-    const overrides = activeTheme?.styles?.cardOverrides || {};
-    const fonts = activeTheme?.styles?.fonts || {};
-    const accent = activeTheme?.styles?.accent || "#6366f1";
-    const vTree = activeTheme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
-    const todayPlan = (data.plan.days || []).find(p => p.dia == DIA);
-    
-    // 1. Header Date
-    const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
-    const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
-    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
-    const formatD = (f) => f ? new Date(f + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : "";
-    document.getElementById('headerDate').textContent = [formatD(entryA?.fecha), formatD(entryB?.fecha)].filter(Boolean).join(' / ');
+    const params = new URLSearchParams(window.location.search);
+    const isProfView = params.get('view') === 'prof';
+    const now = new Date();
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
+    const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
 
-    // 2. Calentamiento
-    document.getElementById('calBtn').href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
-    document.getElementById('calDetail').textContent = `Práctica interactiva para empezar la clase.`;
-
-    // 3. Evaluación
-    const evalList = data.evals.courses[CONFIG.COURSE] || [];
-    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
-    document.getElementById('currentEval').textContent = findEval(DIA);
-    document.getElementById('nextEvals').innerHTML = `
-        <li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li>
-        <li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>
-    `;
-const evalCard = document.getElementById('evaluacionesCard');
-if (evalCard) {
-    const evalColor = overrides.evaluaciones || accent; 
-    const evalFont = fonts.evaluaciones || 'inherit';
-    
-    evalCard.style.borderLeftColor = evalColor;
-    const evalHeader = evalCard.querySelector('h3');
-    if (evalHeader) {
-        evalHeader.style.color = evalColor;
-        evalHeader.style.fontFamily = evalFont;
-    }
-    
-    const evalBtn = evalCard.querySelector('a');
-    if (evalBtn) {
-        evalBtn.style.backgroundColor = evalColor;
-    }
-}
-    // 4. CURIOSIDAD (SISTEMA PROTEGIDO)
-    const curBlock = document.getElementById('curiosityCard');
-    try {
-        let item = null;
-        const curiosArray = Array.isArray(data.curios) ? data.curios : (data.curios?.items || []);
+    // --- RESTRICTION LOGIC WITH PASSWORD PROMPT ---
+    if (DIA > liveDia && !isProfView && !window.teacherMode) {
+        // Instead of rejecting immediately, ASK for the password
+        const password = prompt(`🔒 ¡Alto! El Día ${DIA} es en el futuro.\n\nIngrese la contraseña de profesor para ver este día:`);
         
-        // Buscar por ID específico (ej: cur-44) o por el ID que pida el plan
-        const explicitRef = todayPlan?.blocks?.find(b => b.kind === "curiosidad")?.ref;
-        item = curiosArray.find(i => i.id === explicitRef) || curiosArray.find(i => i.id === `cur-${DIA}`);
-
-        if (item) {
-        curBlock.style.display = "block";
-        curBlock.innerHTML = `
-            <h2 class="font-bold text-sm uppercase tracking-widest mb-2 text-slate-500">Curiosidad #${DIA}</h2>
-            <h3 class="text-2xl font-black text-slate-900 mb-4 leading-tight">${item.title}</h3>
-            <div class="space-y-4">
-                ${item.img ? `<img src="${item.img}" class="w-full max-h-80 object-contain rounded-lg bg-slate-50 border p-2 shadow-sm">` : ""}
-            </div>
-        `;
-    } else {
-            curBlock.style.display = "none"; // Ocultar si no hay dato para ese día
-        }
-    } catch (err) {
-        console.error("Error en Curiosidad:", err);
-        curBlock.style.display = "none";
-    }
-
-// --- VIDEO BLOCK LOGIC (Multiple Videos & Course Filtering) ---
-    const vidColor = overrides.video || accent; 
-    const vidFont = fonts.video || 'inherit';
-    const videoContainer = document.getElementById('videoBlock');
-
-    if (videoContainer) {
-        // Use .filter to get all matches for the day that also match the COURSE tag
-        const dayVideos = data.videos.daily_tags.filter(v => 
-            v.dia == DIA && 
-            v.tags.includes(CONFIG.COURSE)
-        );
-        
-        if (dayVideos.length > 0) {
-            videoContainer.innerHTML = dayVideos.map(videoData => {
-                if (videoData.page_url) {
-                    // Clickable Card Version
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <a href="${videoData.page_url}" target="_blank" class="block group">
-                                <img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md">
-                                <h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2>
-                            </a>
-                            <p class="text-slate-700 italic text-sm">${videoData.description || ""}</p>
-                        </article>`;
-                } else {
-                    // Embedded Player Version
-                    const width = videoData.is_short ? "315" : "100%";
-                    const height = videoData.is_short ? "560" : "315";
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2>
-                            <div class="${videoData.is_short ? 'flex justify-center' : ''}">
-                                <iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe>
-                            </div>
-                            <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
-                        </article>`;
-                }
-            }).join(''); // Merges all video cards into one string
+        if (password === "hola" || password === "profesor") {
+            window.teacherMode = true; // Unlock for the session
+            alert("✅ Acceso concedido. Bienvenido, Señor.");
+            // Proceed to render...
         } else {
-            videoContainer.innerHTML = ""; 
+            alert("⛔ Contraseña incorrecta. Volviendo a hoy.");
+            document.getElementById('diaInput').value = liveDia;
+            return runRender(data, liveDia);
         }
     }
-    
-// 5. BLOQUES DINÁMICOS (Estructura, Extras, Música, etc.)
-    const estBlock = document.getElementById('estructuraBlock');
-    const contentBlock = document.getElementById('extrasBlock');
-    
-    // Limpiar contenedores antes de renderizar
-    estBlock.innerHTML = ""; 
-    contentBlock.innerHTML = "";
 
-    // Un solo bucle para procesar todos los bloques del plan del día
-    (todayPlan?.blocks || []).forEach(blockRef => {
-        
-        // --- LÓGICA DE ESTRUCTURA ---
-        if (blockRef.kind === "estructura") {
-            const topic = data.apuntes?.[blockRef.ref];
-            if (!topic) return;
+    const theme = await applyThemeStyles(data, DIA);
+    const overrides = theme?.styles?.cardOverrides || {};
+    const fonts = theme?.styles?.fonts || {};
+    const accent = theme?.styles?.accent || "#6366f1";
 
-            const estColor = overrides.estructura || accent;
-            let cardLinksHtml = "";
+    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+    document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-            const buildBigButton = (id, label) => {
-                const link = topic.links?.[id];
-                if (!link) return "";
-                
-                const labelStyle = label === "Introducir" 
-                    ? "bg-emerald-100 text-emerald-700 border-emerald-200" 
-                    : "bg-blue-100 text-blue-700 border-blue-200";
+    // 1. ANUNCIOS
+    const anunciosBlock = document.getElementById('anunciosBlock');
+    if (anunciosBlock) {
+        anunciosBlock.innerHTML = "";
+        const noteColor = overrides.anuncios || accent; 
+        (data.anuncios || []).forEach(note => {
+            if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
+                let containerStyle = `border-color: ${noteColor};`;
+                let titleStyle = `color: ${noteColor};`;
+                let bgClass = "bg-white";
+                let icon = "📢";
 
-                return `
-                    <a href="${link.url}" target="_blank" class="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all mb-2 group">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-black px-2 py-0.5 rounded-full w-fit uppercase border ${labelStyle} mb-1">${label}</span>
-                            <span class="text-slate-800 font-bold text-sm md:text-base">${link.title}</span>
+                if (note.type === 'warning') {
+                    containerStyle = `border-color: #ef4444;`; titleStyle = `color: #b91c1c;`; bgClass = "bg-red-50"; icon = "⚠️";
+                } else if (note.type === 'trip') {
+                    containerStyle = `border-color: #10b981;`; titleStyle = `color: #047857;`; bgClass = "bg-emerald-50"; icon = "✈️";
+                }
+
+                anunciosBlock.innerHTML += `
+                    <div class="${bgClass} border-l-[6px] p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start gap-4 transition-transform hover:scale-[1.01]" style="${containerStyle}">
+                        <div class="flex-shrink-0">
+                             ${note.thumbnail ? `<img src="${note.thumbnail}" class="w-24 h-auto object-cover rounded-lg border border-slate-200 shadow-sm">` : `<div class="text-3xl">${icon}</div>`}
                         </div>
-                        <span class="text-indigo-500 group-hover:translate-x-1 transition-transform">↗</span>
-                    </a>`;
-            };
-
-            if (blockRef.introducir) blockRef.introducir.forEach(id => cardLinksHtml += buildBigButton(id, "Introducir"));
-            if (blockRef.repasar) blockRef.repasar.forEach(id => cardLinksHtml += buildBigButton(id, "Repasar"));
-
-            estBlock.innerHTML += `
-                <section class="bg-white rounded-2xl border border-slate-200 border-l-[6px] p-6 card-shadow mb-6" style="border-left-color: ${estColor}">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="text-white p-2 rounded-lg text-xl shadow-sm" style="background-color: ${estColor}">⚙️</div>
-                        <h2 class="text-2xl font-black text-slate-900 tracking-tight" style="font-family: ${fonts.estructura || 'inherit'}">
-                            ${blockRef.title || topic.title}
-                        </h2>
-                    </div>
-                    <div class="space-y-1">${cardLinksHtml}</div>
-                </section>`;
-        }
-
-        // --- LÓGICA DE EXTRAS ---
-        if (blockRef.kind === "extras") {
-  const exItem = data.extras.items.find(i => i.id === blockRef.ref && (i.course === "s4" || i.course === "all"));
-  if (exItem) {
-    let inner = "";
-
-    // 1. Render Image if it exists
-    if (exItem.img) {
-      inner += `<img src="${exItem.img}" class="w-full max-h-64 object-contain mb-4 rounded-lg bg-slate-50 p-2 border border-indigo-100">`;
-    }
-
-    // 2. Render Instructions
-    if (exItem.instructions) {
-      inner += `<p class="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">${exItem.instructions}</p>`;
-    }
-
-    // 3. Render Sentences
-    if (exItem.sentences && Array.isArray(exItem.sentences)) {
-      inner += `<ul class="space-y-2 mb-4">
-        ${exItem.sentences.map(s => `<li class="text-lg text-slate-700 border-l-4 border-indigo-200 pl-4 italic">"${s}"</li>`).join('')}
-      </ul>`;
-    }
-
-    // 4. Render Links (Handling the "sentences" vs "url" key issue)
-    if (exItem.links && exItem.links.length > 0) {
-      inner += `<div class="flex flex-wrap gap-3">
-        ${exItem.links.map(l => `<a href="${l.url || l.sentences || '#'}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors">${l.label} ↗</a>`).join('')}
-      </div>`;
-    }
-    
-    contentBlock.innerHTML += `
-      <section class="bg-indigo-50/50 rounded-xl border-l-[6px] border-indigo-500 p-6 card-shadow mb-6">
-        <h2 class="text-indigo-700 font-bold text-xl mb-4 flex items-center gap-2"><span>✨</span> ${exItem.title}</h2>
-        <div class="bg-white rounded-xl p-6 border border-indigo-100 shadow-sm">${inner}</div>
-      </section>`;
-  }
-}
-        
-        // --- LÓGICA DE MEDIOS (Musica, Cultura, Lectura, Conv) ---
-        const mediaTypes = { musica: 'musica', cultura: 'cultura', lectura: 'lectura', conv: 'conversacion' };
-        if (mediaTypes[blockRef.kind]) {
-            const item = data[blockRef.kind]?.items?.[blockRef.ref];
-            if (item) {
-                const mColor = overrides[mediaTypes[blockRef.kind]] || accent;
-                contentBlock.innerHTML += `
-                    <section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${mColor}">
-                        <div class="flex flex-col md:flex-row">
-                            <div class="md:w-40 h-32 overflow-hidden bg-slate-100">
-                                <img src="${item.imagen}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="p-4 flex flex-col justify-between flex-grow">
-                                <h3 class="text-xl font-black text-slate-900" style="font-family: ${fonts[mediaTypes[blockRef.kind]] || 'inherit'}">${item.titulo}</h3>
-                                <a href="${item.url}" target="_blank" class="mt-2 text-xs font-bold" style="color: ${mColor}">Abrir Actividad →</a>
-                            </div>
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-[10px] uppercase tracking-widest mb-1 opacity-80" style="${titleStyle}">${note.type === 'warning' ? 'Importante' : 'Anuncio'}</h4>
+                            <p class="text-slate-800 font-bold text-sm leading-snug mb-2">${note.text}</p>
+                            ${note.link ? `<a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}"><span>Ver Detalles</span> ↗</a>` : ''}
                         </div>
-                    </section>`;
+                    </div>`;
             }
-        }
-    });
-    // 6. Grammar & Vocab
-    const grammarGrid = document.getElementById('grammarResources');
-    const vocabContainer = document.getElementById('vocabPlacement');
-    grammarGrid.innerHTML = ""; vocabContainer.innerHTML = "";
-    
-    const estPlan = todayPlan?.blocks?.find(b => b.kind === "estructura");
-    if (estPlan?.recursos_gramatica) {
-        estPlan.recursos_gramatica.forEach(key => {
-            const parent = data.apuntes[key]; if (!parent?.links) return;
-            const links = Object.values(parent.links).map(l => `<a href="${l.url}" target="_blank" class="block hover:underline text-[13px] font-bold uppercase py-1" style="color: ${accent}">${l.title} ↗</a>`).join('');
-            grammarGrid.innerHTML += `<div class="bg-white rounded-xl border border-l-[6px] p-6 shadow-sm flex flex-col h-full" style="border-color: ${accent}"><h3 class="font-black text-lg mb-4" style="color: ${accent}">${parent.title}</h3><div>${links}</div></div>`;
         });
     }
 
-    const vRef = todayPlan?.blocks?.find(b => b.kind === "vocabulario")?.ref;
-    const ch = vRef ? data.vocab.descubre3.chapters[vRef] : null;
- if (ch || vTree) {
-        vocabContainer.innerHTML = `
-          <div class="bg-white rounded-xl border-l-[6px] border-amber-500 shadow-md border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
-            
-            <div class="h-32 p-4 bg-amber-50/50 flex items-center justify-center border-b border-amber-100">
-              <img src="${vTree}" class="max-h-full object-contain">
-            </div>
-            
-            <div class="p-5 flex flex-col flex-grow justify-between">
-              <div>
-                <h3 class="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Vocabulario</h3>
-                <h3 class="text-amber-600 font-bold text-lg mb-4 leading-tight">${ch ? ch.label : 'Repaso de Vocabulario'}</h3>
-              </div>
-              
-              <div class="flex gap-2">
-                ${ch ? `
-                    <a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Lista</a>
-                    <a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Cards</a>
-                ` : `
-                    <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/vocabulario" target="_blank" class="flex-1 text-center py-2.5 bg-amber-50 text-amber-700 rounded-lg text-xs font-bold border border-amber-100 uppercase hover:bg-amber-100 transition-colors">Ver Todo</a>
-                `}
-              </div>
-            </div>
-          </div>`;
+    // 2. CALENTAMIENTO
+    const calBtn = document.getElementById('calBtn');
+    if (calBtn) {
+        calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-4/calentamiento/${DIA}`;
+        calBtn.style.backgroundColor = overrides.calentamiento || accent;
     }
-    
-    // 7. Tareas
+
+    // 3. EVALUATIONS
+    const evalList = data.evals.courses[CONFIG.COURSE] || [];
+    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+    document.getElementById('currentEval').textContent = findEval(DIA);
+    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
+
+    // 4. CURIOSIDAD
+    const curBlock = document.getElementById('curiosityBlock');
+    const cur = data.curios.find(c => c.id === `cur-${DIA}`);
+    if (cur) {
+        const curColor = overrides.curiosidad || accent;
+        curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
+    } else { curBlock.innerHTML = ""; }
+
+    // 5. VIDEOS
+    const videoContainer = document.getElementById('videoBlock');
+    if (videoContainer) {
+        const vidColor = overrides.video || accent; 
+        const vidFont = fonts.video || 'inherit';
+        const dayVideos = (data.videos?.daily_tags || []).filter(v => v.dia == DIA && (v.tags || []).includes(CONFIG.COURSE));
+        if (dayVideos.length > 0) {
+            videoContainer.innerHTML = dayVideos.map(videoData => {
+                if (videoData.page_url) {
+                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><a href="${videoData.page_url}" target="_blank" class="block group"><img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md"><h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2></a><p class="text-slate-700 italic text-sm">${videoData.description || ""}</p></article>`;
+                } else {
+                    const width = videoData.is_short ? "315" : "100%"; const height = videoData.is_short ? "560" : "315";
+                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2><div class="${videoData.is_short ? 'flex justify-center' : ''}"><iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></div><p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p></article>`;
+                }
+            }).join('');
+        } else { videoContainer.innerHTML = ""; }
+    }
+
+    // 6. ESTRUCTURA
+    const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
+    const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
+    if (dailyGrammar) {
+        const estColor = overrides.estructura || accent;
+        let linksHtml = "";
+        const buildBtn = (id, label, isIntro) => {
+            const [fullId, customLabel] = id.split('|'); const [topicKey, linkKey] = fullId.split(':');
+            const topic = data.apuntes?.[topicKey]; const linkData = topic?.links?.[linkKey];
+            if (!linkData) return "";
+            const badgeStyle = isIntro ? `bg-slate-800 text-white` : `bg-white text-slate-500 border`;
+            return `<a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border mb-2 group bg-white hover:shadow-md transition-all"><div class="flex items-center gap-3"><span class="text-[9px] font-black px-2 py-1 rounded uppercase ${badgeStyle}">${label}</span><div class="flex flex-col"><span class="text-xs font-bold text-slate-400 uppercase">${topic.title}</span><span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600">${customLabel || linkData.title}</span></div></div><span>➔</span></a>`;
+        };
+        if (dailyGrammar.intro) dailyGrammar.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
+        if (dailyGrammar.repaso) dailyGrammar.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
+        if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
+    }
+
+    // 7. EXTRAS
+    const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
+    (data.extrasDiarios?.[CONFIG.COURSE]?.[DIA] || []).forEach(item => {
+        const exColor = overrides.extras || accent;
+        if (item.type === 'example') {
+            const sentences = item.content.map(s => `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border p-6 mb-6 flex flex-col">${item.img ? `<img src="${item.img}" class="rounded mb-4">` : ''}<h3 class="font-black text-xs uppercase mb-4" style="color: ${exColor}">💬 ${item.title || "Ejemplos"}</h3><ul class="italic">${sentences}</ul></section>`;
+        } else if (item.type === 'placeholder') {
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex" style="border-color: ${exColor}"><div class="w-32 bg-slate-50 flex items-center justify-center p-2"><img src="${item.img || ''}" class="max-h-20 mix-blend-multiply"></div><div class="p-4 flex flex-col justify-center"><h3 class="font-black text-lg text-slate-800">${item.title}</h3><p class="text-slate-600 text-sm italic">${item.subtitle || ""}</p></div></section>`;
+        }
+    });
+
+    Object.values(data.musica?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const mColor = overrides.musica || "#1DB954"; 
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group"><div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900"><img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity"><div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform"><span class="text-white text-sm ml-0.5">▶</span></div></div></div><div class="p-4 flex-grow w-full flex flex-col justify-between h-full"><div class="flex justify-between items-start mb-2"><div><span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span><h3 class="text-lg font-black text-slate-900 leading-tight">${item.subtitulo}</h3><p class="text-xs font-bold text-slate-400">${item.titulo}</p></div>${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}</div><div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden"><div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div></div><a href="${item.url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">Escuchar en Sitio Web ↗</a></div></section>`;
+        }
+    });
+
+    Object.values(data.cultura?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const culColor = overrides.cultura || accent;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${culColor}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative"><img src="${item.imagen}" class="w-full h-full object-cover"><span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">${item.tag || "Cultura"}</span></div><div class="p-4 flex flex-col justify-between flex-grow"><div><h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${item.subtitulo || "Lección Cultural"}</h3><h3 class="text-xl font-black text-slate-900 leading-tight">${item.titulo}</h3></div><a href="${item.url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${culColor}">Abrir Recurso →</a></div></div></section>`;
+        }
+    });
+
+    Object.values(data.conv?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const cColor = overrides.conv || accent;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 card-shadow mb-6 flex flex-col md:flex-row items-start gap-6" style="border-color: ${cColor}"><div class="w-full md:w-32 h-32 flex-shrink-0 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shadow-sm">${item.imagen ? `<img src="${item.imagen}" class="w-full h-full object-cover">` : `<div class="flex items-center justify-center h-full text-4xl">🗣️</div>`}</div><div class="flex-grow w-full"><div class="flex items-center gap-2 mb-2"><h3 class="font-bold text-xs uppercase tracking-widest text-slate-400">Conversación</h3><span class="bg-slate-100 text-[9px] font-bold px-2 py-0.5 rounded text-slate-500 uppercase">Oral</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-4">${item.titulo}</h3><a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" style="background-color: ${cColor}"><span>💬</span> Abrir Preguntas</a></div></section>`;
+        }
+    });
+
+    Object.values(data.lectura?.items || {}).forEach(item => {
+        if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
+             const lColor = overrides.lectura || accent;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col border border-slate-100"><div class="h-3 w-full" style="background-color: ${lColor}"></div><div class="p-6"><div class="flex flex-col md:flex-row gap-6"><div class="w-full md:w-28 h-40 flex-shrink-0 shadow-lg rounded overflow-hidden rotate-2 bg-slate-50 border border-slate-200"><img src="${item.imagen}" class="w-full h-full object-cover"></div><div class="flex-grow flex flex-col justify-center"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border" style="color: ${lColor}; border-color: ${lColor}40">Lectura</span>${item.tag ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.tag}</span>` : ''}</div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.titulo}</h3><p class="text-slate-500 text-sm line-clamp-2 italic mb-4">${item.subtitulo || "Pasaje literario."}</p><a href="${item.url}" target="_blank" class="w-fit px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest text-white shadow-md" style="background-color: ${lColor}">Abrir Lectura 📖</a></div></div></div></section>`;
+        }
+    });
+
+    // 8. DASHBOARD
+    const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
+    Object.values(data.apuntes || {}).forEach(topic => {
+        const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
+        if (ranges.some(r => DIA >= r[0] && DIA <= r[1])) {
+            const links = Object.values(topic.links || {}).map(l => `<a href="${l.url}" target="_blank" class="block text-[13px] font-bold uppercase py-1 border-b text-slate-600 hover:text-indigo-600">${l.title} ↗</a>`).join('');
+            grammarGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] p-6 shadow-md border" style="border-color: ${accent}"><h3 class="font-black text-lg mb-3 pb-3 border-b">⚙️ ${topic.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
+        }
+    });
+
+    // 9. DYNAMIC GRID (S4/IB)
+    const dynamicGrid = document.getElementById('dynamicCardGrid');
+    if (dynamicGrid) {
+        const vocabData = data.vocab.descubre2.chapters; let ch = null;
+        for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
+        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+        const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
+        const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
+        
+        // --- IB RESOURCES CARD (LINK UPDATED) ---
+        const ibImg = theme?.mascots?.ib || "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png"; 
+        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${ibImg}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
+        
+        dynamicGrid.innerHTML = `<div>${vocabCard}</div><div>${misdCard}</div><div>${ibCard}</div>`;
+        const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
+        document.getElementById('tutorMascot').src = tutorImg;
+    }
+
+    // 10. TAREAS
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
-    const activeTareas = (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA);
-    activeTareas.forEach(t => {
-        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border border-slate-100 shadow-sm mb-3"><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold uppercase italic">Vence Día: ${t.day_due}</div></div>`;
+    (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
+        const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
     });
 }
+
+async function renderByDate() {
+    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
+    const data = await loadData();
+    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
+    if (entry) {
+        const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
+        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+        await runRender(data, newDia);
+    } else { alert("No hay clases programadas."); }
+}
+
 async function loadData() {
-    const urls = [
-        CONFIG.PLAN, CONFIG.EVALS, CONFIG.CALENDARIO, CONFIG.CURIOSIDADES, 
-        CONFIG.TAREAS, CONFIG.VOCAB_BANK, CONFIG.APUNTES_BANK, CONFIG.EXTRAS, 
-        CONFIG.MUSICA, CONFIG.LECTURA, CONFIG.CULTURA, CONFIG.CONV, CONFIG.VIDEOS
-    ];
+    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
     try {
-      const res = await Promise.all(urls.map(u => fetch(u + "?t=" + Date.now()).then(r => r.json())));
-      return { 
-          plan: res[0], evals: res[1], cal: res[2], curios: res[3], 
-          tareas: res[4], vocab: res[5], apuntes: res[6], extras: res[7], 
-          musica: res[8], lectura: res[9], cultura: res[10], conv: res[11],
-          videos: res[12] // Add this line
-      };
-    } catch (e) { console.error("Load Error", e); }
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios 
+        ] = await Promise.all([
+            safeFetch(CONFIG.PLAN), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
+            safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
+            safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
+            safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
+            safeFetch(CONFIG.ANUNCIOS)
+        ]);
+       return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios };
+    } catch (e) { console.error("Critical Load Error", e); }
 }
 
 async function init() {
-    const data = await loadData(); 
-    if (!data) return;
-
-    // --- NEW THEME LOGIC STARTS HERE ---
-    const now = new Date();
-    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-
-    // 1. Identify the active theme from your calendario.json
-    const themeKey = data.cal?.themes?.find(t => todayStr >= t.start && todayStr <= t.end)?.theme || "default";
-    const activeTheme = data.temas?.[themeKey] || data.temas?.["default"];
-
-    // 2. Apply theme to CSS variables (This fixes the font difference)
-    if (activeTheme) {
-        document.documentElement.style.setProperty('--font-heading', activeTheme.fontFamily || 'inherit');
-        document.documentElement.style.setProperty('--accent', activeTheme.accent || '#6366f1');
-        document.documentElement.style.setProperty('--header-bg', activeTheme.headerColor || '#4f46e5');
-        
-        // Update banner if it exists
-        if (activeTheme.banner) {
-            const header = document.querySelector('header');
-            if (header) {
-                header.style.backgroundImage = `url(${activeTheme.banner})`;
-                header.style.backgroundSize = 'cover';
-                header.style.backgroundPosition = 'center';
-            }
-        }
-    }
-    // --- NEW THEME LOGIC ENDS HERE ---
-
-    // Your existing logic continues below
-    const liveEntry = data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0];
-    let liveDia = liveEntry ? parseInt(liveEntry.dia) : 1;
-    
+    const data = await loadData(); if (!data) return;
+    const now = new Date(); const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
+    let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
     const params = new URLSearchParams(window.location.search);
-    const manualInput = document.getElementById('diaInput').value;
-    const isProfe = params.get('view') === 'prof';
-    
-    let requestedDia = parseInt(params.get('dia')) || parseInt(manualInput) || liveDia;
-    
-    if (!isProfe && requestedDia > liveDia) requestedDia = liveDia;
-    
+    let requestedDia = parseInt(params.get('dia')) || liveDia;
     document.getElementById('diaInput').value = requestedDia;
-    
     await runRender(data, requestedDia);
-    startCountdown();
 }
 
+// SIMPLIFIED RENDER MANUAL (No more typing 0)
 async function renderManual() {
-    const input = document.getElementById('diaInput');
-    const d = input.value;
-    if (!d) return;
-
-    // 1. Update the URL for GitHub/direct access
-    try {
-        const url = new URL(window.location);
-        url.searchParams.set('dia', d);
-        window.history.pushState({}, '', url);
-    } catch (e) {
-        console.warn("URL update blocked by Google Sites sandbox; proceeding with render.");
-    }
-
-    // 2. Re-run init to refresh all content blocks
-    await init();
-    
-    // 3. Scroll to top so the user sees the new day header
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const newDia = document.getElementById('diaInput').value; if (!newDia) return;
+    try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+    const data = await loadData(); await runRender(data, parseInt(newDia));
 }
+
 init();
 </script>
 </body>
