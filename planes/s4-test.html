@@ -444,21 +444,52 @@ async function runRender(data, DIA) {
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
         
-        if (item.kind === 'sentences') {
-            const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-wide">${item.instructions}</p>` : '';
-            const sentences = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-2 pl-4 border-l-4" style="border-color: ${exColor}40">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+       if (item.kind === 'sentences') {
+            const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
             
-            // --- FIX IS HERE: Added 'max-h-48 w-auto mx-auto' to the image ---
+            // Handle sentences array (if it exists)
+            const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+            
+            // Handle links array (This fixes your empty card issue!)
+            // We check l.url OR l.sentences because your JSON used "sentences" as the url key
+            const linksList = (item.links || []).map(l => `
+                <a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}">
+                    <span>📖</span> ${l.label || "Abrir Recurso"} ↗
+                </a>
+            `).join('');
+
             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl border p-6 mb-6 flex flex-col shadow-sm">
-                    ${item.img ? `<img src="${item.img}" class="max-h-48 w-auto mx-auto rounded mb-4 shadow-sm border">` : ''}
-                    <h3 class="font-black text-xs uppercase mb-2" style="color: ${exColor}">💬 ${item.title || "Ejemplos"}</h3>
-                    ${instructions}
-                    <ul class="italic">${sentences}</ul>
+                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">
+                    
+                    ${item.img ? `
+                    <div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div>
+                        <img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10">
+                    </div>` : ''}
+
+                    <div class="p-6 flex flex-col justify-center flex-grow">
+                        <div class="flex items-center gap-2 mb-2">
+                             <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400">
+                                 ${item.title.includes('Nivel superior') ? 'Nivel Superior' : 'Actividad'}
+                             </span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">
+                            ${item.title || "Actividad de Clase"}
+                        </h3>
+                        
+                        ${instructions}
+                        
+                        ${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}
+                        
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            ${linksList}
+                        </div>
+                    </div>
                 </section>`;
 
         } else if (item.kind === 'card' || item.kind === 'placeholder') {
-             // This style puts the image on the left (small square)
+           // This style puts the image on the left (small square)
              extrasBlock.innerHTML += `
                 <section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}">
                     <div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r">
