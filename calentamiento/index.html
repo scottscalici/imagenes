@@ -66,355 +66,124 @@
       </div>
     </div>
   </main>
+<script>
+  /**
+ * Spanish Warming-Up Engine (Calentamiento)
+ * Data Source: GitHub (scottscalici/imagenes)
+ * Host: Google Sites Compatible
+ */
 
-  <script>
-    /*******************************************************
-     * 1. THE SCHEDULE (EL CEREBRO)
-     * This is the ONLY part you edit to add new days.
-     *******************************************************/
-    const SCHEDULE = {
-      "2026-02-14": {
-         title: "Día 46: Presente de Subjuntivo",
-         verbs: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/dailyJSON/presente-de-subjuntivo9.json",
-         vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/rdv/D2-3-7.json",
-         // image: "https://.../fun_fact.jpg"
-      },
-      "2026-02-13": {
-         title: "Día 45: Pretérito Perfecto",
-         verbs: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/dailyJSON/presente-de-subjuntivo8.json", // Update this URL
-         vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/rdv/D2-3-7.json"
-      },
-      "2026-02-12": {
-         title: "Día 44: Futuro Simple",
-         verbs: "https://raw.githubusercontent.com/scottscalici/imagenes/main/verbos/dailyJSON/presente-de-subjuntivo7.json", // Update this URL
-         vocab: "https://raw.githubusercontent.com/scottscalici/imagenes/main/vocabulario/rdv/D2-3-7.json"
-      }
-    };
-    
-    const VIP_VERBS = ["ser", "estar", "ir", "haber", "tener", "hacer", "poder", "decir", "ver", "dar", "saber", "querer", "llegar", "pasar", "deber", "poner", "quedar", "creer", "hablar", "llevar", "dejar", "seguir", "encontrar", "llamar", "venir"];
+// 1. CONFIGURATION: The Home Base for your Data
+const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/";
 
-    /*******************************************************
-     * 2. CORE LOGIC (SEEDED RANDOM & STATE)
-     *******************************************************/
-    let currentSeed = 1;
-    function setupSeed(str) {
-        let h = 2166136261 >>> 0;
-        for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619);
-        currentSeed = h;
+async function initApp() {
+    try {
+        // Get course from URL (e.g., ?course=s2 or ?course=s4)
+        const urlParams = new URLSearchParams(window.location.search);
+        const course = urlParams.get('course') || 's2';
+        
+        // Fetch the specific schedule from GitHub
+        const schedulePath = `${BASE_URL}calentamiento/schedule_${course}.json`;
+        const response = await fetch(schedulePath);
+        
+        if (!response.ok) throw new Error("Could not find schedule file on GitHub.");
+        
+        const schedule = await response.json();
+
+        // Find today's entry (matches the "date" string in your JSON)
+        // For testing, you can change this to a hardcoded date like "2026-02-13"
+        const todayStr = new Date().toISOString().split('T')[0]; 
+        const todayEntry = schedule.find(entry => entry.date === todayStr);
+
+        if (todayEntry) {
+            loadDailyContent(todayEntry);
+        } else {
+            document.getElementById('display').innerHTML = "No hay calentamiento para hoy.";
+        }
+    } catch (error) {
+        console.error("Initialization Error:", error);
     }
-    function seededRandom() {
-        let t = currentSeed += 0x6D2B79F5;
-        t = Math.imul(t ^ t >>> 15, t | 1);
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    }
-    function shuffle(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(seededRandom() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
+}
+
+async function loadDailyContent(scheduleEntry) {
+    let practiceSet = [];
+
+    // --- PART A: LOAD VOCAB (If listed in Schedule) ---
+    if (scheduleEntry.vocabFile) {
+        try {
+            const vocabRes = await fetch(`${BASE_URL}${scheduleEntry.vocabFile}`);
+            const vocabList = await vocabRes.json();
+            
+            // Simple Shuffle and Slice for vocab
+            const shuffledVocab = vocabList.sort(() => 0.5 - Math.random());
+            const dailyVocab = shuffledVocab.slice(0, scheduleEntry.vocabCount || 10);
+            
+            dailyVocab.forEach(v => v.itemType = 'vocab');
+            practiceSet = practiceSet.concat(dailyVocab);
+        } catch (err) {
+            console.warn("Vocab load failed:", scheduleEntry.vocabFile);
         }
     }
 
-    // App State
-    let state = {
-        date: null,
-        modules: [], // { type: 'verb', data: [...] }
-        currentModule: 0,
-        completed: {}
-    };
-
-    /*******************************************************
-     * 3. DATA FETCHING & MIXING
-     *******************************************************/
-    async function fetchDay(dateStr) {
-        setupSeed(dateStr); // Lock randomness to this date
-        
-        const plan = SCHEDULE[dateStr];
-        if (!plan) return null;
-
-        let modules = [];
-        
-        // A. Fetch Verbs
+    // --- PART B: LOAD GRAMMAR (With Identity Logic) ---
+    if (scheduleEntry.bank) {
         try {
-            const res = await fetch(plan.verbs);
-            const data = await res.json();
-            let allItems = Array.isArray(data) ? data : (data.items || []);
+            // 1. Load the Identity Manifest
+            const manifestRes = await fetch(`${BASE_URL}calentamiento/verbs_identity.json`);
+            const manifest = await manifestRes.json();
             
-            // Smart Mix (VIPs + Randoms) if large file
-            if (allItems.length > 20) {
-                const vips = [], others = [];
-                allItems.forEach(i => VIP_VERBS.includes(i.infinitivo) ? vips.push(i) : others.push(i));
-                shuffle(vips); shuffle(others);
-                
-                let selection = [];
-                // Try for 12 VIPs, 8 Others
-                for(let i=0; i<12; i++) if(vips.length) selection.push(vips.pop()); else if(others.length) selection.push(others.pop());
-                for(let i=0; i<8; i++) if(others.length) selection.push(others.pop()); else if(vips.length) selection.push(vips.pop());
-                
-                shuffle(selection);
-                allItems = selection;
-            }
+            // 2. Determine target verbs from categories
+            let targetVerbs = [];
+            const groups = scheduleEntry.identityGroups || [scheduleEntry.identityGroup];
+            const category = manifest[scheduleEntry.identityCategory];
 
-            // Split into 4 chunks of 5
-            for(let i=0; i<4; i++) {
-                const chunk = allItems.slice(i*5, (i+1)*5);
-                if(chunk.length) modules.push({ type: 'verb', id: i+1, items: chunk, label: `Verbos ${i+1}` });
-            }
-        } catch(e) { console.error("Verb Error", e); }
-
-        // B. Fetch Vocab
-        try {
-            const res = await fetch(plan.vocab);
-            const data = await res.json();
-            let raw = Array.isArray(data) ? data : (data.items || data.vocabulario || []);
-            // Clean vocab list
-            let clean = raw.map(e => ({ sp: e.spanish||e.es||e.palabra, en: e.english||e.en||e.traducción })).filter(x=>x.sp&&x.en).slice(0,30);
-            
-            // Split into 3 chunks of 10
-            for(let i=0; i<3; i++) {
-                const chunk = clean.slice(i*10, (i+1)*10);
-                if(chunk.length) modules.push({ type: 'vocab', id: 5+i, items: chunk, label: `Vocab ${i+1}` });
-            }
-        } catch(e) { console.error("Vocab Error", e); }
-
-        // C. Final Screen
-        modules.push({ type: 'final', id: 99, label: 'Fin', img: plan.image });
-
-        return modules;
-    }
-
-    /*******************************************************
-     * 4. UI BUILDERS
-     *******************************************************/
-    const container = document.getElementById('module-container');
-    const navTabs = document.getElementById('nav-tabs');
-
-    function renderTabs() {
-        navTabs.innerHTML = "";
-        state.modules.forEach((mod, idx) => {
-            const btn = document.createElement("button");
-            // Styling logic
-            const isActive = idx === state.currentModule;
-            const isLocked = idx > 0 && !state.completed[idx-1];
-            const isDone = state.completed[idx];
-
-            let classes = "w-full text-left px-4 py-3 rounded-lg text-sm font-bold transition-all flex items-center justify-between ";
-            if (isActive) classes += "bg-indigo-600 text-white shadow-md ring-2 ring-indigo-200 ring-offset-1";
-            else if (isLocked) classes += "bg-transparent text-slate-400 cursor-not-allowed";
-            else classes += "bg-white text-slate-600 hover:bg-slate-100 border border-slate-200";
-
-            btn.className = classes;
-            btn.disabled = isLocked;
-            btn.innerHTML = `<span>${mod.label}</span>`;
-            
-            if (isDone) btn.innerHTML += ` <span class="text-xs">✔</span>`;
-            else if (isLocked) btn.innerHTML += ` <span class="text-xs">🔒</span>`;
-            else if (isActive) btn.innerHTML += ` <span class="text-xs">●</span>`;
-
-            btn.onclick = () => {
-                if(!isLocked) { state.currentModule = idx; renderModule(); renderTabs(); }
-            };
-            navTabs.appendChild(btn);
-        });
-        updateProgress();
-    }
-
-    function renderModule() {
-        const mod = state.modules[state.currentModule];
-        container.innerHTML = "";
-
-        // HEADER
-        const header = document.createElement("div");
-        header.className = "mb-6 border-b border-slate-100 pb-4";
-        header.innerHTML = `<h2 class="text-2xl font-black text-slate-800">${mod.label}</h2>`;
-        
-        // BODY
-        const body = document.createElement("div");
-        
-        if (mod.type === 'verb') {
-            body.className = "space-y-4";
-            mod.items.forEach((item, i) => {
-                const ans = Array.isArray(item.forma) ? item.forma.join("|") : item.forma;
-                const trad = item.traducción || item.traduccion || item.translation || "";
-                body.innerHTML += `
-                <div class="verb-row py-2 border-b border-slate-50" data-answer="${ans}">
-                   <div class="flex flex-wrap items-baseline gap-2 text-lg">
-                      <span class="font-bold text-slate-700">${i+1}. <span class="text-xs bg-slate-100 text-slate-500 px-1 rounded uppercase">${item.tiempo||"Verbo"}</span> ${item.sujeto||""}</span>
-                      <input class="border-b-2 border-slate-300 bg-slate-50 focus:bg-white focus:border-indigo-600 outline-none px-2 w-40 font-bold text-indigo-700 text-center" placeholder="?">
-                      <span class="text-slate-500 text-base">(${item.infinitivo}) <i class="text-slate-400 text-sm not-italic">${trad ? '— '+trad : ''}</i></span>
-                   </div>
-                   <div class="feedback text-xs font-bold mt-1 ml-1 h-4"></div>
-                </div>`;
+            groups.forEach(groupName => {
+                if (category && category[groupName]) {
+                    targetVerbs = targetVerbs.concat(category[groupName]);
+                }
             });
-            // Footer
-            const footer = document.createElement("div");
-            footer.className = "mt-8 flex gap-4";
-            footer.innerHTML = `<button class="btn-check px-6 py-2 bg-indigo-600 text-white rounded-lg font-bold shadow hover:bg-indigo-700 transition">Corregir</button><span class="result text-sm font-bold flex items-center text-slate-600"></span>`;
-            footer.querySelector(".btn-check").onclick = () => checkVerbs(body, footer);
-            body.appendChild(footer);
-        } 
-        
-        else if (mod.type === 'vocab') {
-             body.className = "space-y-3";
-             mod.items.forEach((item, i) => {
-                 body.innerHTML += `
-                 <div class="vocab-row grid grid-cols-[1fr,1.5fr] gap-4 items-center" data-answer="${item.en}">
-                    <div class="text-right text-sm font-semibold text-slate-600">${item.sp}</div>
-                    <div class="flex flex-col"><input class="border rounded px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-200 outline-none"><div class="feedback text-xs h-4"></div></div>
-                 </div>`;
-             });
-             const footer = document.createElement("div");
-             footer.className = "mt-8 flex gap-4";
-             footer.innerHTML = `<button class="btn-check px-6 py-2 bg-indigo-600 text-white rounded-lg font-bold shadow hover:bg-indigo-700 transition">Corregir Vocab</button><span class="result text-sm font-bold flex items-center text-slate-600"></span>`;
-             footer.querySelector(".btn-check").onclick = () => checkVocab(body, footer);
-             body.appendChild(footer);
-        }
 
-        else if (mod.type === 'final') {
-             body.className = "text-center py-10";
-             body.innerHTML = `
-               ${mod.img ? `<img src="${mod.img}" class="mx-auto rounded-xl shadow-lg max-h-64 mb-6 border-4 border-white">` : ''}
-               <div class="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full mb-4 animate-pop">
-                  <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
-               </div>
-               <h2 class="text-3xl font-black text-slate-800">¡Completado!</h2>
-               <p class="text-slate-500 mt-2">Excelente trabajo hoy.</p>
-               <div class="mt-8 bg-indigo-50 p-4 rounded-lg inline-block text-indigo-800 font-bold">
-                  Siguiente paso: Schoology
-               </div>
-             `;
-        }
+            // 3. Load the Bank
+            const bankRes = await fetch(`${BASE_URL}${scheduleEntry.bank}`);
+            const bankData = await bankRes.json();
 
-        container.appendChild(header);
-        container.appendChild(body);
-    }
+            // 4. Filter bank by the verbs in our target list
+            const filteredGrammar = bankData.filter(q => targetVerbs.includes(q.infinitivo));
 
-    /*******************************************************
-     * 5. CHECKING LOGIC
-     *******************************************************/
-    function checkVerbs(container, footer) {
-        let correct = 0, total = 0;
-        const rows = container.querySelectorAll(".verb-row");
-        
-        rows.forEach(row => {
-            total++;
-            const input = row.querySelector("input");
-            const feedback = row.querySelector(".feedback");
-            const val = input.value.trim().toLowerCase();
-            const valid = row.dataset.answer.split("|").map(s=>s.trim().toLowerCase());
+            // 5. Apply Smart Mixer (Simplified for this script)
+            const dailyGrammar = filteredGrammar.sort(() => 0.5 - Math.random())
+                                               .slice(0, scheduleEntry.totalNeeded || 15);
             
-            if (valid.includes(val)) {
-                correct++;
-                input.className = "border-b-2 border-emerald-500 bg-emerald-50 px-2 w-40 font-bold text-emerald-700 text-center outline-none";
-                feedback.textContent = "¡Bien!"; feedback.className = "feedback text-xs font-bold mt-1 ml-1 h-4 text-emerald-600";
-            } else {
-                input.className = "border-b-2 border-red-400 bg-red-50 px-2 w-40 font-bold text-red-600 text-center outline-none";
-                feedback.textContent = row.dataset.answer.replace(/\|/g, " o "); feedback.className = "feedback text-xs font-bold mt-1 ml-1 h-4 text-red-500";
-            }
-        });
-
-        const score = correct/total;
-        footer.querySelector(".result").textContent = `${correct}/${total}`;
-        
-        if (score >= 0.5) {
-            state.completed[state.currentModule] = true;
-            renderTabs();
-            // Add Next Button
-            if (state.currentModule < state.modules.length - 1) {
-                const btn = document.createElement("button");
-                btn.className = "ml-auto px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 animate-pop";
-                btn.textContent = "Siguiente →";
-                btn.onclick = () => { state.currentModule++; renderModule(); renderTabs(); };
-                footer.appendChild(btn);
-            }
+            dailyGrammar.forEach(g => g.itemType = 'grammar');
+            practiceSet = practiceSet.concat(dailyGrammar);
+        } catch (err) {
+            console.error("Grammar load failed:", err);
         }
     }
 
-    // (Simplified Vocab Check)
-    function checkVocab(container, footer) {
-        // ... similar logic, just checking input vs dataset.answer using Levenshtein if you want ...
-        // For brevity in this full-file dump, doing strict check:
-        let correct = 0, total = 0;
-        const rows = container.querySelectorAll(".vocab-row");
-        rows.forEach(row => {
-            total++;
-            const input = row.querySelector("input");
-            const val = input.value.trim().toLowerCase();
-            const ans = row.dataset.answer.toLowerCase();
-            // Allow small typos logic here normally
-            if (val === ans) { correct++; input.classList.add("bg-emerald-50", "border-emerald-500"); }
-            else { input.classList.add("bg-red-50", "border-red-400"); }
-        });
-        
-        if (correct/total >= 0.5) {
-             state.completed[state.currentModule] = true;
-             renderTabs();
-             if (state.currentModule < state.modules.length - 1) {
-                const btn = document.createElement("button");
-                btn.className = "ml-auto px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold";
-                btn.textContent = "Siguiente →";
-                btn.onclick = () => { state.currentModule++; renderModule(); renderTabs(); };
-                footer.appendChild(btn);
-             }
+    // --- PART C: RENDER ---
+    renderPractice(practiceSet, scheduleEntry.topic);
+}
+
+function renderPractice(items, title) {
+    const container = document.getElementById('display');
+    let html = `<h2>${title}</h2><div class="practice-list">`;
+
+    items.forEach((item, index) => {
+        if (item.itemType === 'vocab') {
+            html += `<div class="card vocab"><strong>Vocab:</strong> ${item.word} - ___________</div>`;
+        } else {
+            // Assumes your grammar banks use 'sujeto' and 'infinitivo'
+            html += `<div class="card grammar">${index + 1}. ${item.sujeto} (${item.infinitivo}) ___________</div>`;
         }
-    }
+    });
 
-    function updateProgress() {
-        const total = state.modules.length;
-        const done = Object.keys(state.completed).length;
-        const pct = Math.round((done / total) * 100);
-        document.getElementById("progress-bar").style.width = pct + "%";
-        document.getElementById("progress-text").textContent = pct + "%";
-    }
+    html += `</div>`;
+    container.innerHTML = html;
+}
 
-    /*******************************************************
-     * 6. INIT & TIME MACHINE
-     *******************************************************/
-    async function loadDay(dateStr) {
-        document.getElementById("module-container").innerHTML = '<div class="p-10 text-center text-slate-400">Cargando...</div>';
-        
-        const modules = await fetchDay(dateStr);
-        
-        if (!modules) {
-            document.getElementById("module-container").innerHTML = '<div class="p-10 text-center text-red-400 font-bold">No hay actividad asignada para esta fecha.</div>';
-            return;
-        }
-
-        // Reset State
-        state = { date: dateStr, modules: modules, currentModule: 0, completed: {} };
-        
-        // Update Title
-        const label = SCHEDULE[dateStr].title;
-        document.getElementById("activity-date").textContent = dateStr;
-        
-        renderTabs();
-        renderModule();
-    }
-
-    function init() {
-        const today = new Date().toISOString().split('T')[0];
-        const selector = document.getElementById("time-machine");
-        selector.innerHTML = "";
-
-        // Sort dates (newest first)
-        const dates = Object.keys(SCHEDULE).sort().reverse();
-        
-        dates.forEach(d => {
-            const opt = document.createElement("option");
-            opt.value = d;
-            opt.textContent = `${d} — ${SCHEDULE[d].title}`;
-            if (d === today) opt.selected = true;
-            selector.appendChild(opt);
-        });
-
-        selector.addEventListener("change", (e) => loadDay(e.target.value));
-
-        // Load initial
-        loadDay(selector.value);
-    }
-
-    init();
-
-  </script>
+// Kick off the app
+initApp();
+</script>
 </body>
 </html>
