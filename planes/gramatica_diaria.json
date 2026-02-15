@@ -190,15 +190,19 @@
     },
     "48": {
       "intro": ["subjuntivo:clausulas_duda"],
-      "repaso": []
+      "repaso": ["subjuntivo:clausulas_influencia", "subjuntivo:clausulas_emocion"]
     },
     "49": {
       "intro": ["subjuntivo:frases_impersonales"],
-      "repaso": ["subjuntivo:clausulas_duda"]
+      "repaso": ["subjuntivo:clausulas_duda", "subjuntivo:clausulas_influencia", "subjuntivo:clausulas_emocion"]
     },
     "50": {
       "intro": ["subjuntivo:weirdo"],
-      "repaso": ["subjuntivo:clausulas_duda", "subjuntivo:clausulas_emocion", "subjuntivo:clausulas_influencia"]
+      "repaso": ["subjuntivo:frases_impersonales", "subjuntivo:clausulas_duda", "subjuntivo:clausulas_influencia", "subjuntivo:clausulas_emocion"]
+    },
+    "51": {
+      "intro": [],
+      "repaso": ["subjuntivo:weirdo"]
     }
   },
 
@@ -210,6 +214,56 @@
     "48": {
         "intro": [],
         "repaso": ["siclauses:siclaus", "perfectos:pluscuamsub", "perfectos:condperf"]
+    },
+    "49": {
+      "intro": [],
+      "repaso": [
+        "siclauses:siclaus",
+        "siclauses:impdesubj",
+        "siclauses:cond",
+        "perfectos:pluscuamsub",
+        "perfectos:condperf"
+      ]
+    },
+    "50": {
+      "intro": [],
+      "repaso": [
+        "siclauses:siclaus",
+        "siclauses:impdesubj",
+        "siclauses:cond",
+        "perfectos:pluscuamsub",
+        "perfectos:condperf"
+      ]
+    },
+    "51": {
+      "intro": [],
+      "repaso": [
+        "siclauses:siclaus",
+        "siclauses:impdesubj",
+        "siclauses:cond",
+        "perfectos:pluscuamsub",
+        "perfectos:condperf"
+      ]
+    },
+    "52": {
+      "intro": [],
+      "repaso": [
+        "siclauses:siclaus",
+        "siclauses:impdesubj",
+        "siclauses:cond",
+        "perfectos:pluscuamsub",
+        "perfectos:condperf"
+      ]
+    },
+    "53": {
+      "intro": [],
+      "repaso": [
+        "siclauses:siclaus",
+        "siclauses:impdesubj",
+        "siclauses:cond",
+        "perfectos:pluscuamsub",
+        "perfectos:condperf"
+      ]
     }
   }
 }
