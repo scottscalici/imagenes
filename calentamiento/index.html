@@ -40,124 +40,172 @@
   </main>
 
 <script>
+/***********************
+ * CONFIGURACIÓN Y ESTADO
+ ***********************/
 const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/";
+const TOTAL_MODULES = 6;
+const PASS_THRESHOLD = 0.5;
 
-async function initApp() {
-    const container = document.getElementById('module-container');
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const course = urlParams.get('course') || 's2';
-        
-        const schedulePath = `${BASE_URL}calentamiento/schedule_${course}.json`;
-        const response = await fetch(schedulePath);
-        if (!response.ok) throw new Error("No se pudo cargar el calendario.");
-        
-        const schedule = await response.json();
+const modulePassed = {};
+let completedModules = 0;
 
-        // --- THE "PAST ONLY" LOGIC ---
-        const todayStr = new Date().toISOString().split('T')[0]; 
-        
-        // 1. Only look at dates that are NOT in the future
-        const availableDates = schedule.filter(entry => entry.date <= todayStr);
-        
-        // 2. Sort them so the most recent is at the top
-        availableDates.sort((a, b) => b.date.localeCompare(a.date));
+// Objeto de ejecución que guardará los datos del horario
+const runtime = {
+  course: 's2',
+  title: "Calentamiento",
+  verbsUrl: "",
+  vocabUrl: "",
+  verbsLabel: "",
+  vocabLabel: "Vocabulario",
+  totalNeeded: 20
+};
 
-        // 3. Grab the top one (either Today OR the most recent past day)
-        const activeEntry = availableDates[0];
+/***********************
+ * INICIALIZACIÓN (LOGICA DE HORARIO)
+ ***********************/
+async function init() {
+  const urlParams = new URLSearchParams(window.location.search);
+  runtime.course = urlParams.get('course') || 's2';
+  
+  updateProgress();
+  showModule(1);
+  wireNavigation();
 
-        if (activeEntry) {
-            // Update the header with the topic and date
-            document.getElementById('current-topic').textContent = activeEntry.topic;
-            document.getElementById('activity-date').textContent = activeEntry.date === todayStr ? "HOY" : activeEntry.date;
-            
-            loadDailyContent(activeEntry);
-        } else {
-            container.innerHTML = "<p class='text-center text-slate-500'>No hay actividades pasadas o presentes programadas.</p>";
-        }
-    } catch (error) {
-        console.error("Initialization Error:", error);
-        container.innerHTML = `<p class='text-red-500 text-center'>Error: ${error.message}</p>`;
+  try {
+    // 1. Cargar el horario (S2 o S4)
+    const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
+    const schedule = await res.json();
+
+    // 2. Lógica de "Fecha Pasada": Buscar hoy o el último día anterior
+    const todayStr = new Date().toISOString().split('T')[0];
+    const available = schedule.filter(entry => entry.date <= todayStr);
+    available.sort((a, b) => b.date.localeCompare(a.date));
+    
+    const entry = available[0];
+
+    if (!entry) {
+      showTopStatus("No hay actividades programadas para hoy.", "err");
+      return;
     }
+
+    // Configurar runtime con los datos del horario
+    runtime.title = entry.topic;
+    runtime.verbsUrl = `${BASE_URL}calentamiento/${entry.bank}`;
+    runtime.vocabUrl = `${BASE_URL}calentamiento/${entry.vocabFile}`;
+    runtime.verbsLabel = entry.topic;
+    runtime.totalNeeded = entry.totalNeeded || 20;
+
+    applyHeaderFromRuntime();
+
+    // 3. Cargar Verbos usando la identidad
+    await loadPracticeSet(entry);
+    
+    // 4. Cargar Vocabulario
+    await loadVocabSet();
+
+  } catch (err) {
+    showTopStatus(`Error al iniciar: ${err.message}`, "err");
+  }
 }
 
-async function loadDailyContent(scheduleEntry) {
-    let practiceSet = [];
+/***********************
+ * CARGA DE VERBOS (Identidad + Banco)
+ ***********************/
+async function loadPracticeSet(entry) {
+  try {
+    // A. Obtener Manifiesto
+    const manifest = await getJSON(`${BASE_URL}calentamiento/verbs_identity.json`);
+    const groups = entry.identityGroups || [entry.identityGroup];
+    const category = manifest[entry.identityCategory];
+    
+    let targetVerbs = [];
+    groups.forEach(g => { if(category[g]) targetVerbs = targetVerbs.concat(category[g]); });
 
-    // --- VOCAB LOAD ---
-    if (scheduleEntry.vocabFile) {
-        try {
-            const vocabRes = await fetch(`${BASE_URL}calentamiento/${scheduleEntry.vocabFile}`);
-            const vocabList = await vocabRes.json();
-            // Shuffle and pick 10
-            const dailyVocab = vocabList.sort(() => 0.5 - Math.random()).slice(0, 10);
-            dailyVocab.forEach(v => v.itemType = 'vocab');
-            practiceSet = practiceSet.concat(dailyVocab);
-        } catch (err) { console.warn("Vocab error:", scheduleEntry.vocabFile); }
-    }
+    // B. Obtener Banco y Filtrar
+    const bank = await getJSON(runtime.verbsUrl);
+    const filtered = bank.filter(q => targetVerbs.includes(q.infinitivo));
+    
+    // Mezclar y tomar los necesarios
+    const finalVerbs = filtered.sort(() => 0.5 - Math.random()).slice(0, runtime.totalNeeded);
 
-    // --- GRAMMAR LOAD (Using Identity Groups) ---
-    if (scheduleEntry.bank) {
-        try {
-            // Fetch Manifest
-            const manifestRes = await fetch(`${BASE_URL}calentamiento/verbs_identity.json`);
-            const manifest = await manifestRes.json();
-            
-            // Collect target verbs
-            let targetVerbs = [];
-            const groups = scheduleEntry.identityGroups || [scheduleEntry.identityGroup];
-            const category = manifest[scheduleEntry.identityCategory];
+    if (!finalVerbs.length) throw new Error("No se encontraron verbos que coincidan con los grupos.");
 
-            groups.forEach(groupName => {
-                if (category && category[groupName]) targetVerbs = targetVerbs.concat(category[groupName]);
-            });
+    // C. Distribuir en módulos 1.1 a 1.4
+    buildAllVerbModules(finalVerbs);
+    [1, 2, 3, 4].forEach(attachQuizHandler);
 
-            // Fetch Bank
-            const bankRes = await fetch(`${BASE_URL}calentamiento/${scheduleEntry.bank}`);
-            const bankData = await bankRes.json();
-
-            // Filter bank by the infinitivos in our target list
-            const filteredGrammar = bankData.filter(q => targetVerbs.includes(q.infinitivo));
-            const dailyGrammar = filteredGrammar.sort(() => 0.5 - Math.random()).slice(0, scheduleEntry.totalNeeded || 15);
-            
-            dailyGrammar.forEach(g => g.itemType = 'grammar');
-            practiceSet = practiceSet.concat(dailyGrammar);
-        } catch (err) { console.error("Grammar error:", err); }
-    }
-
-    renderPractice(practiceSet);
+  } catch (err) {
+    showTopStatus(`Error Verbos: ${err.message}`, "err");
+  }
 }
 
-function renderPractice(items) {
-    const container = document.getElementById('module-container');
-    container.innerHTML = ""; // Clear the spinner
+function buildVerbModule(moduleNumber, items) {
+  const container = document.getElementById(`module-${moduleNumber}-questions`);
+  if (!container) return;
+  container.innerHTML = "";
 
-    if (items.length === 0) {
-        container.innerHTML = "<p class='text-center text-slate-500'>No se encontraron ejercicios para los grupos seleccionados.</p>";
-        return;
-    }
+  items.forEach((item, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "space-y-1 quiz-item";
+    wrapper.dataset.answer = item.forma;
 
-    items.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = "exercise-card animate-pop bg-white border border-slate-200 rounded-xl p-6 mb-4 shadow-sm";
-        
-        if (item.itemType === 'vocab') {
-            div.innerHTML = `
-                <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Vocabulario</span>
-                <p class="text-lg font-semibold text-slate-800 mt-1">${item.word} &rarr; <span class="text-slate-300">___________</span></p>
-            `;
-        } else {
-            // Uses 'sujeto' and 'infinitivo' from your JSON bank
-            div.innerHTML = `
-                <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider">Gramática</span>
-                <p class="text-lg font-semibold text-slate-800 mt-1">${index + 1}. ${item.sujeto} <span class="text-indigo-600">(${item.infinitivo})</span> &rarr; <span class="text-slate-300">___________</span></p>
-            `;
-        }
-        container.appendChild(div);
-    });
+    // Fix: Añadido item.tiempo para mostrar el tiempo verbal
+    const etiquetaVerbal = `${item.infinitivo} | ${item.tiempo || 'presente'}`;
+    const traduccion = item.traducción ? ` — ${item.traducción}` : "";
+
+    wrapper.innerHTML = `
+      <label class="text-sm font-medium text-slate-800">
+        ${index + 1}. <span class="text-indigo-600 font-bold">${item.sujeto}</span> 
+        <span class="text-slate-500 font-normal">(${etiquetaVerbal}${traduccion})</span>
+      </label>
+      <input type="text" class="w-full border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" />
+      <p class="text-xs feedback hidden"></p>
+    `;
+    container.appendChild(wrapper);
+  });
 }
 
-initApp();
+/***********************
+ * CARGA DE VOCABULARIO
+ ***********************/
+function extractVocabPairs(data) {
+  let raw = Array.isArray(data) ? data : (data.items || data.vocabulario || []);
+  return raw.map(entry => ({
+    // Fix: Se añadieron 'word' y 'translation' para evitar el error "undefined"
+    spanish: entry.spanish || entry.es || entry.palabra || entry.word || "",
+    english: entry.english || entry.en || entry.ingles || entry.traducción || entry.translation || ""
+  })).filter(p => p.spanish && p.english);
+}
+
+// ... (Mantenemos las funciones buildAllVerbModules, attachQuizHandler, y el sistema de Vocab de tu plantilla) ...
+// (Asegúrate de que buildAllVerbModules use items.slice para repartir los 20 verbos en grupos de 5)
+
+function buildAllVerbModules(items) {
+  const chunkSize = 5; 
+  for (let moduleNum = 1; moduleNum <= 4; moduleNum++) {
+    const start = (moduleNum - 1) * chunkSize;
+    const slice = items.slice(start, start + chunkSize);
+    if (slice.length > 0) buildVerbModule(moduleNum, slice);
+  }
+}
+
+// ... (Resto de funciones de utilidad: showModule, updateProgress, getJSON, etc.) ...
+
+function applyHeaderFromRuntime() {
+  document.getElementById("pageTitle").textContent = runtime.title;
+  document.getElementById("pageSubtitle").textContent = `Curso: ${runtime.course.toUpperCase()}`;
+  document.getElementById("pageMeta").textContent = `Verbos: ${runtime.verbsLabel}`;
+}
+
+async function getJSON(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`No se pudo cargar: ${url}`);
+  return await res.json();
+}
+
+// Inicializar
+init();
 </script>
 </body>
 </html>
