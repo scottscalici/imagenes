@@ -1,72 +1,89 @@
 {
-
   "present_indicative": {
-
-    "regulars_ar": ["hablar", "caminar", "tomar", "nadar", "llevar", "dejar", "llamar", "mirar", "esperar", "buscar", "entrar", "trabajar"],
-
-    "regulars_er": ["comer", "beber", "correr", "leer", "aprender", "vender"],
-
-    "regulars_ir": ["vivir", "escribir", "abrir", "recibir", "decidir"],
-
-    "stem_ie": ["pensar", "querer", "empezar", "entender", "perder", "sentir", "cerrar", "mentir", "preferir"],
-
-    "stem_ue": ["poder", "dormir", "contar", "encontrar", "volver", "morir", "almorzar", "costar", "recordar"],
-
-    "stem_i": ["pedir", "repetir", "servir", "vestir"],
-
-    "go_verbs": ["tener", "hacer", "poner", "salir", "venir", "decir", "traer", "oír"],
-
-    "irregulars": ["ser", "estar", "ir", "dar", "saber", "ver", "caber"]
-
-  },
-
-
-
-  "present_subjunctive": {
-
-    "regulars": [
-
-      "hablar", "caminar", "tomar", "nadar", "llevar", 
-
-      "comer", "beber", "correr", "leer", "aprender",
-
-      "vivir", "escribir", "abrir", "recibir"
-
+    "regulars_ar": [
+      "abandonar", "abordar", "acabar", "aceptar", "acercar", "aclarar", "aconsejar", "adivinar", "adornar", "agarrar", "agradar", "alcanzar", "aliviar", "alquilar", "amasar", "andar", "anunciar", "apagar", "aplicar", "aportar", "apoyar", "apreciar", "arreglar", "arriesgar", "arrojar", "asegurar", "asesinar", "asociar", "asustar", "atacar", "atrapar", "ayudar", "bailar", "bajar", "bordear", "buscar", "calar", "calmar", "cambiar", "caminar", "capturar", "castigar", "celebrar", "charlar", "citar", "cocinar", "colocar", "comprar", "conservar", "considerar", "consultar", "contemplar", "contestar", "conversar", "crear", "cruzar", "curar", "dedicar", "dejar", "denunciar", "derrotar", "desarrollar", "descansar", "durar", "emplear", "enseñar", "entrar", "entregar", "escapar", "escuchar", "esperar", "estimar", "estimular", "estudiar", "evaluar", "evitar", "evocar", "explicar", "expresar", "expulsar", "extrañar", "faltar", "fijar", "formar", "frenar", "fumar", "fundar", "ganar", "garantizar", "gastar", "hablar", "hallar", "imaginar", "instalar", "intentar", "inventar", "invitar", "justificar", "lanzar", "lastimar", "levantar", "limpiar", "llamar", "llegar", "llevar", "lograr", "luchar", "mandar", "maravillar", "marcar", "mejorar", "mencionar", "mezclar", "mirar", "nadar", "navegar", "necesitar", "negociar", "notar", "observar", "ocultar", "odiar", "olvidar", "optar", "organizar", "pagar", "parar", "participar", "pasar", "pegar", "pelear", "perfeccionar", "pescar", "plantear", "practicar", "preparar", "presentar", "prestar", "procurar", "protestar", "quedar", "quitar", "regresar", "reparar", "resultar", "retar", "retirar", "revelar", "rodear", "rogar", "sacar", "salvar", "soportar", "suscitar", "terminar", "tocar", "tomar", "trabajar", "transformar", "trasladar", "tratar", "ubicar", "usar", "viajar", "visitar"
     ],
-
-    "stem_changers": [
-
-      "pensar", "querer", "entender", "sentir", 
-
-      "poder", "dormir", "contar", "volver", "pedir"
-
+    "regulars_er": [
+      "aprender", "barrer", "beber", "comer", "cometer", "comprender", "correr", "creer", "deber", "depender", "extender", "leer", "meter", "poseer", "prometer", "proveer", "recorrer", "responder", "romper", "someter", "sorprender", "suceder", "temer", "vender"
     ],
-
+    "regulars_ir": [
+      "abrir", "admitir", "adquirir", "asistir", "asumir", "añadir", "batir", "coincidir", "compartir", "consistir", "consumir", "cubrir", "cumplir", "decidir", "describir", "descubrir", "discutir", "dividir", "escribir", "existir", "impedir", "imprimir", "inscribir", "insistir", "ocurrir", "omitir", "partir", "permitir", "presumir", "prevenir", "recibir", "resistir", "subir", "sufrir", "unir", "vivir"
+    ],
+    "stem_ie": [
+      "advertir", "atender", "cerrar", "comenzar", "convertir", "defender", "despertar", "empezar", "encender", "entender", "herir", "hervir", "inquirir", "invertir", "manifestar", "mentir", "negar", "pensar", "perder", "preferir", "querer", "recomendar", "sentar", "sentir", "sugerir", "temblar", "tropezar"
+    ],
+    "stem_ue": [
+      "almorzar", "colgar", "comprobar", "contar", "costar", "demostrar", "devolver", "doler", "dormir", "encontrar", "jugar", "llover", "morder", "morir", "mostrar", "mover", "poder", "probar", "recordar", "resolver", "soler", "sonar", "soñar", "volar", "volver"
+    ],
+    "stem_i": [
+      "ceñir", "competir", "despedir", "gemir", "gruñir", "medir", "pedir", "repetir", "reír", "reñir", "servir", "sonreír", "vestir"
+    ],
     "go_verbs": [
-
-      "tener", "hacer", "poner", "salir", "venir", "decir", "traer", "oír"
-
-
+      "caer", "componer", "decir", "hacer", "imponer", "intervenir", "mantener", "oír", "poner", "retener", "retraer", "salir", "satisfacer", "sostener", "suponer", "tener", "traer", "valer", "venir"
     ],
-
-    "car_gar_zar": [
-
-      "buscar", "tocar", "practicar", 
-
-      "pagar", "llegar", "jugar", 
-
-      "almorzar", "empezar", "cruzar"
-
+    "irregulars": [
+      "caber", "dar", "estar", "haber", "ir", "oler", "saber", "ser", "ver"
     ],
-
-    "dishes_irregulars": [
-
-      "dar", "ir", "ser", "haber", "estar", "saber" 
-
-
+    "ger_gir": [
+      "coger", "corregir", "dirigir", "elegir", "escoger", "exigir", "infligir", "proteger", "recoger", "surgir"
+    ],
+    "cer_cir": [
+      "agradecer", "anochecer", "aparecer", "conducir", "conocer", "convencer", "deducir", "introducir", "lucir", "merecer", "nacer", "obedecer", "ofrecer", "parecer", "permanecer", "pertenecer", "producir", "reconocer", "reducir", "torcer", "traducir", "vencer"
+    ],
+    "guir": [
+      "conseguir", "distinguir", "extinguir", "perseguir", "proseguir", "seguir"
+    ],
+    "uir": [
+      "atribuir", "concluir", "construir", "contribuir", "destruir", "disminuir", "distribuir", "excluir", "fluir", "huir", "incluir", "influir", "instituir", "intuir", "sustituir"
+    ],
+    "accent_group": [
+      "adecuar", "ampliar", "confiar", "continuar", "enviar", "financiar", "freír", "graduar", "reunir", "variar"
+    ],
+    "reflexives": [
+      "acordarse", "acostarse", "apuntarse", "bañarse", "casarse", "cepillarse", "despertarse", "divertirse", "dormirse", "irse", "lavarse", "levantarse", "llamarse", "morirse", "moverse", "ponerse", "preocuparse", "sentarse", "sentirse", "vestirse"
     ]
-
+  },
+  "present_subjunctive": {
+    "regulars_ar": [
+      "abandonar", "abordar", "acabar", "aceptar", "aclarar", "aconsejar", "adivinar", "adornar", "agarrar", "agradar", "aliviar", "alquilar", "amasar", "andar", "anunciar", "aportar", "apoyar", "apreciar", "arreglar", "arriesgar", "arrojar", "asegurar", "asesinar", "asociar", "asustar", "atrapar", "ayudar", "bailar", "bajar", "bordear", "calar", "calmar", "cambiar", "caminar", "capturar", "celebrar", "charlar", "citar", "cocinar", "comprar", "conservar", "considerar", "consultar", "contemplar", "contestar", "conversar", "crear", "curar", "dejar", "denunciar", "derrotar", "desarrollar", "descansar", "durar", "emplear", "enseñar", "entrar", "escapar", "escuchar", "esperar", "estimar", "estimular", "estudiar", "evaluar", "evitar", "evocar", "expresar", "expulsar", "extrañar", "faltar", "fijar", "formar", "frenar", "fumar", "fundar", "ganar", "garantizar", "gastar", "hablar", "hallar", "imaginar", "instalar", "intentar", "inventar", "invitar", "lastimar", "levantar", "limpiar", "llamar", "llenar", "llevar", "lograr", "luchar", "mandar", "maravillar", "mejorar", "mencionar", "mezclar", "mirar", "nadar", "necesitar", "negociar", "notar", "observar", "ocultar", "odiar", "olvidar", "optar", "parar", "participar", "pasar", "pelear", "perfeccionar", "plantear", "preparar", "presentar", "prestar", "procurar", "protestar", "quedar", "quitar", "regresar", "reparar", "resultar", "retar", "retirar", "revelar", "rodear", "salvar", "soportar", "suscitar", "terminar", "tomar", "trabajar", "transformar", "trasladar", "tratar", "usar", "viajar", "visitar"
+    ],
+    "regulars_er": [
+      "aprender", "barrer", "beber", "comer", "cometer", "comprender", "correr", "creer", "deber", "depender", "leer", "meter", "poseer", "prometer", "proveer", "recorrer", "responder", "romper", "someter", "sorprender", "suceder", "temer", "vender"
+    ],
+    "regulars_ir": [
+      "abrir", "admitir", "asistir", "asumir", "añadir", "batir", "coincidir", "compartir", "consistir", "consumir", "cubrir", "cumplir", "decidir", "describir", "descubrir", "discutir", "dividir", "escribir", "existir", "imprimir", "inscribir", "insistir", "ocurrir", "omitir", "partir", "permitir", "presumir", "recibir", "resistir", "subir", "sufrir", "unir", "vivir"
+    ],
+    "car_gar_zar": [
+      "acercar", "ahogar", "apagar", "aplicar", "atacar", "buscar", "chocar", "colocar", "comunicar", "criticar", "cruzar", "dedicar", "educar", "entregar", "equivocar", "explicar", "fabricar", "gozar", "indicar", "investigar", "juzgar", "lanzar", "llegar", "marcar", "mascar", "navegar", "obligar", "organizar", "pagar", "pescar", "practicar", "publicar", "realizar", "rezar", "sacar", "secar", "significar", "tocar", "ubicar"
+    ],
+    "stem_changers_ar_er": [
+      "acordarse", "acostarse", "cerrar", "contar", "costar", "demostrar", "despertar", "devolver", "doler", "empezar", "encontrar", "entender", "llover", "manifestar", "morder", "mostrar", "mover", "pensar", "perder", "poder", "probar", "querer", "recordar", "recomendar", "resolver", "sentar", "soler", "sonar", "soñar", "temblar", "volar", "volver"
+    ],
+    "spell_and_stem_changers": ["almorzar", "comenzar", "empezar", "jugar", "negar", "tropezar"
+    ],
+    "stem_changers_ir": [
+      "advertir", "ceñir", "competir", "convertir", "despedir", "divertirse", "dormir", "gemir", "gruñir", "herir", "hervir", "inquirir", "invertir", "medir", "mentir", "morir", "pedir", "preferir", "reír", "reñir", "repetir", "sentir", "servir", "sonreír", "sugerir", "vestir"
+    ],
+    "go_verbs": [
+      "caer", "componer", "decir", "hacer", "imponer", "intervenir", "mantener", "oír", "poner", "retener", "retraer", "salir", "satisfacer", "sostener", "suponer", "tener", "traer", "valer", "venir"
+    ],
+    "z_verbs_cer_cir": [
+      "agradecer", "anochecer", "aparecer", "conducir", "conocer", "convencer", "deducir", "introducir", "lucir", "merecer", "nacer", "obedecer", "ofrecer", "parecer", "permanecer", "pertenecer", "producir", "reconocer", "reducir", "traducir"
+    ],
+    "j_verbs_ger_gir": [
+      "coger", "corregir", "dirigir", "elegir", "escoger", "exigir", "infligir", "proteger", "recoger", "surgir"
+    ],
+    "y_verbs_uir": [
+      "atribuir", "concluir", "construir", "contribuir", "destruir", "disminuir", "distribuir", "excluir", "fluir", "huir", "incluir", "influir", "instituir", "intuir", "sustituir"
+    ],
+    "dishes_irregulars": [
+      "dar", "ir", "ser", "haber", "estar", "saber"
+    ],
+    "misc_irregulars": [
+       "ver", "caber", "oler" 
+    ],
+    "reflexives": [
+       "acordarse", "acostarse", "apuntarse", "bañarse", "casarse", "cepillarse", "despertarse", "divertirse", "dormirse", "irse", "lavarse", "levantarse", "llamarse", "morirse", "moverse", "ponerse", "preocuparse", "sentarse", "sentirse", "vestirse"
+    ]
   }
-
 }
-
