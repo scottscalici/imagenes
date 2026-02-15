@@ -1,49 +1,37 @@
 {
-  "present_tense": {
-    "regular_ar": [
-      "hablar", "caminar", "tomar", "nadar", "llevar", "dejar", 
-      "llamar", "mirar", "esperar", "buscar", "entrar", "trabajar"
+  "present_indicative": {
+    "regulars_ar": ["hablar", "caminar", "tomar", "nadar", "llevar", "dejar", "llamar", "mirar", "esperar", "buscar", "entrar", "trabajar"],
+    "regulars_er": ["comer", "beber", "correr", "leer", "aprender", "vender"],
+    "regulars_ir": ["vivir", "escribir", "abrir", "recibir", "decidir"],
+    "stem_ie": ["pensar", "querer", "empezar", "entender", "perder", "sentir", "cerrar", "mentir", "preferir"],
+    "stem_ue": ["poder", "dormir", "contar", "encontrar", "volver", "morir", "almorzar", "costar", "recordar"],
+    "stem_i": ["pedir", "repetir", "servir", "vestir"],
+    "go_verbs": ["tener", "hacer", "poner", "salir", "venir", "decir", "traer", "oír"],
+    "irregulars": ["ser", "estar", "ir", "dar", "saber", "ver", "caber"]
+  },
+
+  "present_subjunctive": {
+    "regulars": [
+      "hablar", "caminar", "tomar", "nadar", "llevar", 
+      "comer", "beber", "correr", "leer", "aprender",
+      "vivir", "escribir", "abrir", "recibir"
     ],
-    "regular_er": [
-      "comer", "beber", "correr", "leer", "aprender", "vender"
-    ],
-    "regular_ir": [
-      "vivir", "escribir", "abrir", "recibir", "decidir"
+    "stem_changers": [
+      "pensar", "querer", "entender", "sentir", 
+      "poder", "dormir", "contar", "volver", "pedir"
     ],
     "go_verbs": [
       "tener", "hacer", "poner", "salir", "venir", "decir", "traer", "oír"
-    ],
-    "stem_change_e_ie": [
-      "pensar", "querer", "empezar", "entender", "perder", "sentir"
-    ],
-    "stem_change_o_ue": [
-      "poder", "dormir", "contar", "encontrar", "volver", "morir"
-    ],
-    "total_irregulars": [
-      "ser", "estar", "ir"
-    ]
-  },
-  
-  "preterite": {
-    "regular_ar": [
-      "hablar", "caminar", "tomar", "nadar", "llevar", "dejar" 
-      // You can just copy the list from present tense!
+      // These are crucial because the "g" carries over to the subjunctive (tenga, haga)
     ],
     "car_gar_zar": [
-      "buscar", "pagar", "empezar", "tocar", "jugar", "almorzar"
+      "buscar", "tocar", "practicar", 
+      "pagar", "llegar", "jugar", 
+      "almorzar", "empezar", "cruzar"
     ],
-    "u_stem_irregulars": [
-      "tener", "estar", "andar", "poder", "poner", "saber"
-    ],
-    "j_stem_irregulars": [
-      "decir", "traer", "conducir", "traducir"
-    ],
-    "i_stem_irregulars": [
-      "hacer", "querer", "venir"
-    ],
-    "sole_verbs": [
-      "dormir", "pedir", "sentir" 
-      // (The sandal verbs - only change in 3rd person)
+    "dishes_irregulars": [
+      "dar", "ir", "ser", "haber", "estar", "saber" 
+      // The classic "DISHES" acronym for subjunctive irregulars
     ]
   }
 }
