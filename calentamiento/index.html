@@ -10,6 +10,8 @@
     body { font-family: 'Inter', sans-serif; }
     @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
     .animate-pop { animation: popIn 0.4s ease-out forwards; }
+    /* Added styles for the exercise cards */
+    .exercise-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-20">
@@ -17,172 +19,144 @@
   <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
     <div class="max-w-5xl mx-auto px-4 py-3">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        
         <div class="flex-grow">
           <div class="flex items-center gap-2 mb-1">
             <h1 class="text-xl font-black text-slate-800 tracking-tight">CALENTAMIENTO</h1>
             <span id="activity-date" class="px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-700 uppercase tracking-wide">HOY</span>
           </div>
-          
-          <select id="time-machine" class="w-full md:w-96 text-sm border-slate-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50 text-slate-600 font-medium p-2">
-            <option>Cargando calendario...</option>
-          </select>
-        </div>
-
-        <div class="w-full md:w-48">
-          <div class="flex justify-between text-[10px] uppercase font-bold text-slate-400 mb-1">
-            <span>Progreso</span>
-            <span id="progress-text">0%</span>
-          </div>
-          <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-            <div id="progress-bar" class="h-full bg-emerald-500 w-0 transition-all duration-500"></div>
-          </div>
+          <h2 id="current-topic" class="text-slate-500 text-sm font-medium">Cargando...</h2>
         </div>
       </div>
     </div>
   </header>
 
   <main class="max-w-4xl mx-auto px-4 py-8">
-    
-    <div id="status-msg" class="hidden mb-6 p-4 rounded-xl border text-sm"></div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden min-h-[500px]">
-      
-      <div class="md:grid md:grid-cols-[200px,1fr] h-full">
-        
-        <aside class="bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-2 md:p-4 flex md:flex-col gap-2 overflow-x-auto">
-          <nav id="nav-tabs" class="flex md:flex-col gap-2 min-w-max"></nav>
-        </aside>
-
-        <section class="p-6 md:p-8">
-          <div id="module-container">
-            <div class="flex flex-col items-center justify-center h-64 text-slate-400">
-              <svg class="animate-spin h-8 w-8 text-indigo-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-              <p>Cargando ejercicio...</p>
-            </div>
-          </div>
-        </section>
-
+    <div id="module-container" class="space-y-4">
+      <div class="flex flex-col items-center justify-center h-64 text-slate-400">
+        <svg class="animate-spin h-8 w-8 text-indigo-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        <p>Cargando ejercicio...</p>
       </div>
     </div>
   </main>
-<script>
-  /**
- * Spanish Warming-Up Engine (Calentamiento)
- * Data Source: GitHub (scottscalici/imagenes)
- * Host: Google Sites Compatible
- */
 
-// 1. CONFIGURATION: The Home Base for your Data
+<script>
 const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/";
 
 async function initApp() {
+    const container = document.getElementById('module-container');
     try {
-        // Get course from URL (e.g., ?course=s2 or ?course=s4)
         const urlParams = new URLSearchParams(window.location.search);
         const course = urlParams.get('course') || 's2';
         
-        // Fetch the specific schedule from GitHub
         const schedulePath = `${BASE_URL}calentamiento/schedule_${course}.json`;
         const response = await fetch(schedulePath);
-        
-        if (!response.ok) throw new Error("Could not find schedule file on GitHub.");
+        if (!response.ok) throw new Error("No se pudo cargar el calendario.");
         
         const schedule = await response.json();
 
-        // Find today's entry (matches the "date" string in your JSON)
-        // For testing, you can change this to a hardcoded date like "2026-02-13"
+        // --- THE "PAST ONLY" LOGIC ---
         const todayStr = new Date().toISOString().split('T')[0]; 
-        const todayEntry = schedule.find(entry => entry.date === todayStr);
+        
+        // 1. Only look at dates that are NOT in the future
+        const availableDates = schedule.filter(entry => entry.date <= todayStr);
+        
+        // 2. Sort them so the most recent is at the top
+        availableDates.sort((a, b) => b.date.localeCompare(a.date));
 
-        if (todayEntry) {
-            loadDailyContent(todayEntry);
+        // 3. Grab the top one (either Today OR the most recent past day)
+        const activeEntry = availableDates[0];
+
+        if (activeEntry) {
+            // Update the header with the topic and date
+            document.getElementById('current-topic').textContent = activeEntry.topic;
+            document.getElementById('activity-date').textContent = activeEntry.date === todayStr ? "HOY" : activeEntry.date;
+            
+            loadDailyContent(activeEntry);
         } else {
-            document.getElementById('display').innerHTML = "No hay calentamiento para hoy.";
+            container.innerHTML = "<p class='text-center text-slate-500'>No hay actividades pasadas o presentes programadas.</p>";
         }
     } catch (error) {
         console.error("Initialization Error:", error);
+        container.innerHTML = `<p class='text-red-500 text-center'>Error: ${error.message}</p>`;
     }
 }
 
 async function loadDailyContent(scheduleEntry) {
     let practiceSet = [];
 
-    // --- PART A: LOAD VOCAB (If listed in Schedule) ---
+    // --- VOCAB LOAD ---
     if (scheduleEntry.vocabFile) {
         try {
-            const vocabRes = await fetch(`${BASE_URL}${scheduleEntry.vocabFile}`);
+            const vocabRes = await fetch(`${BASE_URL}calentamiento/${scheduleEntry.vocabFile}`);
             const vocabList = await vocabRes.json();
-            
-            // Simple Shuffle and Slice for vocab
-            const shuffledVocab = vocabList.sort(() => 0.5 - Math.random());
-            const dailyVocab = shuffledVocab.slice(0, scheduleEntry.vocabCount || 10);
-            
+            // Shuffle and pick 10
+            const dailyVocab = vocabList.sort(() => 0.5 - Math.random()).slice(0, 10);
             dailyVocab.forEach(v => v.itemType = 'vocab');
             practiceSet = practiceSet.concat(dailyVocab);
-        } catch (err) {
-            console.warn("Vocab load failed:", scheduleEntry.vocabFile);
-        }
+        } catch (err) { console.warn("Vocab error:", scheduleEntry.vocabFile); }
     }
 
-    // --- PART B: LOAD GRAMMAR (With Identity Logic) ---
+    // --- GRAMMAR LOAD (Using Identity Groups) ---
     if (scheduleEntry.bank) {
         try {
-            // 1. Load the Identity Manifest
+            // Fetch Manifest
             const manifestRes = await fetch(`${BASE_URL}calentamiento/verbs_identity.json`);
             const manifest = await manifestRes.json();
             
-            // 2. Determine target verbs from categories
+            // Collect target verbs
             let targetVerbs = [];
             const groups = scheduleEntry.identityGroups || [scheduleEntry.identityGroup];
             const category = manifest[scheduleEntry.identityCategory];
 
             groups.forEach(groupName => {
-                if (category && category[groupName]) {
-                    targetVerbs = targetVerbs.concat(category[groupName]);
-                }
+                if (category && category[groupName]) targetVerbs = targetVerbs.concat(category[groupName]);
             });
 
-            // 3. Load the Bank
-            const bankRes = await fetch(`${BASE_URL}${scheduleEntry.bank}`);
+            // Fetch Bank
+            const bankRes = await fetch(`${BASE_URL}calentamiento/${scheduleEntry.bank}`);
             const bankData = await bankRes.json();
 
-            // 4. Filter bank by the verbs in our target list
+            // Filter bank by the infinitivos in our target list
             const filteredGrammar = bankData.filter(q => targetVerbs.includes(q.infinitivo));
-
-            // 5. Apply Smart Mixer (Simplified for this script)
-            const dailyGrammar = filteredGrammar.sort(() => 0.5 - Math.random())
-                                               .slice(0, scheduleEntry.totalNeeded || 15);
+            const dailyGrammar = filteredGrammar.sort(() => 0.5 - Math.random()).slice(0, scheduleEntry.totalNeeded || 15);
             
             dailyGrammar.forEach(g => g.itemType = 'grammar');
             practiceSet = practiceSet.concat(dailyGrammar);
-        } catch (err) {
-            console.error("Grammar load failed:", err);
-        }
+        } catch (err) { console.error("Grammar error:", err); }
     }
 
-    // --- PART C: RENDER ---
-    renderPractice(practiceSet, scheduleEntry.topic);
+    renderPractice(practiceSet);
 }
 
-function renderPractice(items, title) {
-    const container = document.getElementById('display');
-    let html = `<h2>${title}</h2><div class="practice-list">`;
+function renderPractice(items) {
+    const container = document.getElementById('module-container');
+    container.innerHTML = ""; // Clear the spinner
+
+    if (items.length === 0) {
+        container.innerHTML = "<p class='text-center text-slate-500'>No se encontraron ejercicios para los grupos seleccionados.</p>";
+        return;
+    }
 
     items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = "exercise-card animate-pop bg-white border border-slate-200 rounded-xl p-6 mb-4 shadow-sm";
+        
         if (item.itemType === 'vocab') {
-            html += `<div class="card vocab"><strong>Vocab:</strong> ${item.word} - ___________</div>`;
+            div.innerHTML = `
+                <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Vocabulario</span>
+                <p class="text-lg font-semibold text-slate-800 mt-1">${item.word} &rarr; <span class="text-slate-300">___________</span></p>
+            `;
         } else {
-            // Assumes your grammar banks use 'sujeto' and 'infinitivo'
-            html += `<div class="card grammar">${index + 1}. ${item.sujeto} (${item.infinitivo}) ___________</div>`;
+            // Uses 'sujeto' and 'infinitivo' from your JSON bank
+            div.innerHTML = `
+                <span class="text-xs font-bold text-indigo-500 uppercase tracking-wider">Gramática</span>
+                <p class="text-lg font-semibold text-slate-800 mt-1">${index + 1}. ${item.sujeto} <span class="text-indigo-600">(${item.infinitivo})</span> &rarr; <span class="text-slate-300">___________</span></p>
+            `;
         }
+        container.appendChild(div);
     });
-
-    html += `</div>`;
-    container.innerHTML = html;
 }
 
-// Kick off the app
 initApp();
 </script>
 </body>
