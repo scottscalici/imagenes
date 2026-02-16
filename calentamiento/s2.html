@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calentamiento Maestro</title>
+  <title>Calentamiento Maestro (S2)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -61,14 +61,15 @@
     </div>
   </main>
 
- <script>
+  <script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const TEACHER_CODE = "profe123";
     
     const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
 
-      const TENSE_MAP = {
+    // --- EXPANDED MAP FOR S2 ---
+    const TENSE_MAP = {
       // Indicative Simple
       "presente": "Presente",
       "preterito": "Pretérito",
@@ -101,6 +102,7 @@
     };
 
     const runtime = {
+      // DEFAULT: S2
       course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
@@ -109,23 +111,21 @@
       proficiency: 0.5,
       isPerfectRun: true, 
       verbTimeFinal: null,
-      blocks: null 
+      blocks: null,
+      // NEW: Teacher Unlock Logic
+      teacherMode: false,
+      fullSchedule: [],
+      serverDateDia: null
     };
 
     function seededShuffle(array, customSeed = null) {
       let m = array.length, t, i;
-      
-      // LOGIC UPDATE: 
-      // 1. If customSeed is passed (from Mixed Mode), use it ONLY if not in practice mode.
-      // 2. If no customSeed, default to activeDia (Sticky) UNLESS in practice mode (Random).
       let seedNum;
-      
       if (runtime.isPracticeMode) {
-          seedNum = Math.floor(Math.random() * 1000000); // Always random on Retry
+          seedNum = Math.floor(Math.random() * 1000000); 
       } else {
-          seedNum = customSeed !== null ? customSeed : parseInt(runtime.activeDia); // Sticky otherwise
+          seedNum = customSeed !== null ? customSeed : parseInt(runtime.activeDia); 
       }
-
       while (m) {
         i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
         t = array[m]; array[m] = array[i]; array[i] = t;
@@ -154,6 +154,9 @@
         const calData = await fetchData(CAL_URL);
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
+        
+        // STORE FULL SCHEDULE FOR TEACHER MODE
+        runtime.fullSchedule = schedRes;
 
         const now = new Date();
         const localDateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`; 
@@ -178,6 +181,9 @@
         } else {
             runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
         }
+        
+        // STORE CALCULATED TODAY
+        runtime.serverDateDia = currentSchoolDay;
 
         const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
         const latestClassEntry = pastEntries[0];
@@ -197,12 +203,10 @@
         try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } 
         catch (e) { console.warn("Manifest load failed:", e); }
 
-        // --- BLOCK LOGIC ---
         let masterVerbList = [];
 
         if (runtime.blocks && Array.isArray(runtime.blocks)) {
             subtitle.textContent = "Construyendo bloques...";
-            
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
@@ -228,18 +232,13 @@
                     });
                 });
 
-                // SEED FIX: Use a stable seed for history, but allow random for practice mode
-                // We pass a custom seed that changes based on the block position (to avoid duplicate verbs across blocks)
-                // But seededShuffle will ignore this if runtime.isPracticeMode is true.
                 const stableSeed = runtime.activeDia + masterVerbList.length;
-                
                 const selected = seededShuffle([...filtered], stableSeed).slice(0, block.count);
                 masterVerbList = masterVerbList.concat(selected);
             }
             runtime.verbs = masterVerbList;
 
         } else {
-            // --- STANDARD LOGIC ---
             subtitle.textContent = "Cargando lección...";
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
 
@@ -273,7 +272,6 @@
             let pool = applyConstraints(bank, targetList);
             if (pool.length === 0) pool = bank; 
 
-            // Standard logic will use activeDia as seed (Sticky) unless Practice Mode is ON
             runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
         }
 
@@ -282,10 +280,9 @@
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
         })).filter(v => v.es);
         
-        // Vocab is also sticky now by default
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(pastEntries.length > 0 ? pastEntries : schedRes);
+        renderSidebar(); // Initial render (Student Mode)
         startSessionTimer();
         showModule(1);
         updateProgress();
@@ -297,7 +294,6 @@
       }
     }
 
-    // New Function to Trigger Random Mode
     window.startRandomPractice = () => {
         runtime.isPracticeMode = true; 
         init(runtime.activeDia); 
@@ -317,10 +313,12 @@
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
 
-    function renderSidebar(entries) {
+    // --- UPDATED SIDEBAR LOGIC (S2 Specific) ---
+    function renderSidebar() {
       const nav = document.getElementById('nav-tabs');
       const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Listo"];
       nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-[10px] font-black uppercase tracking-tighter">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
+      
       let sel = document.getElementById('tm-select');
       if (!sel) {
         sel = document.createElement('select'); sel.id = "tm-select";
@@ -331,7 +329,19 @@
         };
         document.getElementById('time-machine-container').appendChild(sel);
       }
-      sel.innerHTML = entries.map(e => `<option value="${e.dia}" ${e.dia == runtime.activeDia ? 'selected' : ''}>Día ${e.dia}: ${e.topic}</option>`).join('');
+
+      // TEACHER LOGIC:
+      // If teacherMode is ON: Show ALL items from fullSchedule
+      // If teacherMode is OFF: Filter items where dia <= serverDateDia
+      let entriesToShow = runtime.fullSchedule;
+      if (!runtime.teacherMode && runtime.serverDateDia) {
+          entriesToShow = runtime.fullSchedule.filter(e => e.dia <= runtime.serverDateDia);
+      }
+      
+      // Sort Descending (Newest First)
+      entriesToShow.sort((a, b) => b.dia - a.dia);
+
+      sel.innerHTML = entriesToShow.map(e => `<option value="${e.dia}" ${e.dia == runtime.activeDia ? 'selected' : ''}>Día ${e.dia}: ${e.topic}</option>`).join('');
     }
 
     function showModule(n) {
@@ -365,7 +375,6 @@
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
         
-        // Dynamic Header Logic
         let moduleTitle = TENSE_MAP[runtime.tense] || runtime.tense;
         if (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) {
             moduleTitle = runtime.blocks[n-1].label;
@@ -400,7 +409,14 @@
 
     function checkVerbs(n) {
       const inputs = document.querySelectorAll('.quiz-item input');
-      if (n === 1 && (inputs[0].value === TEACHER_CODE || inputs[0].value === "profe")) { runtime.completed = 8; showModule(8); return; }
+      // --- TEACHER UNLOCK LOGIC ---
+      if (n === 1 && (inputs[0].value === TEACHER_CODE || inputs[0].value === "profe")) { 
+          runtime.completed = 8; 
+          runtime.teacherMode = true; // Unlock future days
+          renderSidebar(); // Refresh sidebar with all days
+          showModule(8); 
+          return; 
+      }
       
       let correct = 0;
       document.querySelectorAll('.quiz-item').forEach(item => {
