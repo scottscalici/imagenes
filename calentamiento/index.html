@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calentamiento – Sistema Maestro</title>
+  <title>Calentamiento – Sistema de Espiral</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -24,11 +24,11 @@
       
       <div id="stats-container" class="hidden flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
         <div class="text-center">
-          <p class="text-[9px] font-black text-slate-400 uppercase leading-none mb-1">Tiempo</p>
+          <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Tiempo</p>
           <p id="live-timer" class="text-lg font-black text-sky-600 leading-none">00:00</p>
         </div>
         <div class="text-center border-l border-slate-200 pl-4">
-          <p class="text-[9px] font-black text-slate-400 uppercase leading-none mb-1">Mejor</p>
+          <p class="text-[9px] font-black text-slate-400 uppercase mb-1">Récord</p>
           <p id="best-time" class="text-lg font-black text-emerald-500 leading-none">--:--</p>
         </div>
       </div>
@@ -37,7 +37,7 @@
         <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div id="progress-fill" class="h-full bg-emerald-500 transition-all duration-300 w-0"></div>
         </div>
-        <p id="progress-label" class="text-[10px] text-slate-600 mt-1 font-bold uppercase tracking-widest">0%</p>
+        <p id="progress-label" class="text-[10px] text-slate-600 mt-1 font-bold uppercase tracking-widest font-mono">0%</p>
       </div>
     </div>
   </header>
@@ -50,7 +50,7 @@
         </button>
         <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
           <div id="time-machine-container">
-            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">Clases Anteriores</label>
+            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">Historial</label>
           </div>
           <nav id="nav-tabs" class="space-y-1"></nav>
         </div>
@@ -67,157 +67,140 @@
     const TEACHER_CODE = "profe123";
     const TENSE_MAP = {
       "present_indicative": "Presente",
-      "present_subjunctive": "Presente de Subjuntivo"
+      "present_subjunctive": "Subjuntivo",
+      "preterite_indicative": "Pretérito",
+      "imperfect_indicative": "Imperfecto"
     };
     
     const runtime = {
       course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0, totalModules: 8,
-      activeDate: "", isToday: false,
+      activeDate: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
       tense: "", title: ""
     };
 
- // --- STICKY SEEDING LOGIC ---
-function seededShuffle(array) {
-  let m = array.length, t, i;
-  let seedNum;
+    // --- LÓGICA DE SEMILLA ---
+    function seededShuffle(array, customSeed = null) {
+      let m = array.length, t, i;
+      let seedNum = customSeed || (runtime.isLatestClass && !runtime.isPracticeMode ? 
+                    runtime.activeDate.split('-').reduce((a, b) => a + parseInt(b), 0) : 
+                    Math.floor(Math.random() * 1000000));
+      while (m) {
+        i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
+        t = array[m]; array[m] = array[i]; array[i] = t;
+      }
+      return array;
+    }
 
-  // Use the date of the lesson as the seed ONLY if it's the most recent lesson
-  // AND the user hasn't explicitly clicked "Práctica Extra"
-  if (runtime.isLatestClass && !runtime.isPracticeMode) {
-      // This converts "2026-02-13" into a consistent number for the shuffle
-      seedNum = runtime.activeDate.split('-').reduce((a, b) => a + parseInt(b), 0);
-  } else {
-      // If it's an old lesson (like Feb 11) or Practice Mode, use true randomness
-      seedNum = Math.floor(Math.random() * 1000000);
-  }
+    // --- INICIO Y LÓGICA DE ESPIRAL ---
+    async function init(targetDate = null) {
+      try {
+        const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
+        const schedule = await res.json();
+        
+        const todayStr = new Date().toISOString().split('T')[0];
+        const pastEntries = schedule.filter(e => e.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date));
+        
+        const latestClassEntry = pastEntries[0];
+        const entry = targetDate ? schedule.find(e => e.date === targetDate) : latestClassEntry;
+        if (!entry) return;
 
-  while (m) {
-    i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
-    t = array[m]; array[m] = array[i]; array[i] = t;
-  }
-  return array;
-}
+        runtime.activeDate = entry.date;
+        runtime.isLatestClass = (entry.date === latestClassEntry.date);
+        runtime.tense = TENSE_MAP[entry.identityCategory] || "Verbos";
+        runtime.title = entry.topic;
 
-async function init(targetDate = null) {
-  try {
-    const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
-    const schedule = await res.json();
+        const [manifest, bank] = await Promise.all([
+          fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
+          fetch(`${BASE_URL}calentamiento/${entry.bank}`).then(r => r.json())
+        ]);
 
-    // 1. Get current calendar date
-    const todayStr = new Date().toISOString().split('T')[0];
+        // --- CONSTRUCCIÓN DE LA ESPIRAL ---
+        const currentGroups = entry.identityGroups || [entry.identityGroup];
+        const pastGroups = schedule
+          .filter(e => e.date < runtime.activeDate)
+          .flatMap(e => e.identityGroups || [e.identityGroup]);
 
-    // 2. Filter out Feb 24, Feb 26, etc. (Anything in the future)
-    const pastEntries = schedule.filter(e => e.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date));
-    
-    // 3. Identify the "Official Class" (The top of the filtered list)
-    // On Feb 15, this will correctly identify Feb 13
-    const latestClassEntry = pastEntries[0]; 
-    
-    // 4. Decide which entry to load
-    const entry = targetDate ? schedule.find(e => e.date === targetDate) : latestClassEntry;
-    if (!entry) return;
+        // Helper para resolver nombres de verbos desde el manifiesto
+        const getVerbsFromGroups = (groups) => {
+          let list = [];
+          groups.forEach(g => { if (manifest[entry.identityCategory][g]) list = list.concat(manifest[entry.identityCategory][g]); });
+          return list;
+        };
 
-    // 5. Set the Flags
-    runtime.activeDate = entry.date;
-    // CRITICAL: isLatestClass is ONLY true if we are viewing the most recent past lesson
-    runtime.isLatestClass = (entry.date === latestClassEntry.date); 
-    
-    runtime.tense = TENSE_MAP[entry.identityCategory] || "Verbos";
-    runtime.title = entry.topic;
+        const vipTargetList = getVerbsFromGroups(currentGroups);
+        const reviewTargetList = getVerbsFromGroups(pastGroups);
 
-    // 6. Fetch Banks
-    const [manifest, bank] = await Promise.all([
-      fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
-      fetch(`${BASE_URL}calentamiento/${entry.bank}`).then(r => r.json())
-    ]);
+        const totalNeeded = entry.totalNeeded || 20;
+        const vipCount = Math.floor(totalNeeded * (entry.vipRatio || 1.0));
+        const reviewCount = totalNeeded - vipCount;
 
-    // 7. Filter & Seeded Shuffle
-    let targets = [];
-    const groups = entry.identityGroups || [entry.identityGroup];
-    groups.forEach(g => { if (manifest[entry.identityCategory][g]) targets = targets.concat(manifest[entry.identityCategory][g]); });
+        // Filtrar Banco
+        let vipPool = bank.filter(v => vipTargetList.includes(v.infinitivo));
+        let selectedVips = seededShuffle([...vipPool]).slice(0, vipCount);
 
-    let filteredVerbs = bank.filter(q => targets.includes(q.infinitivo));
-    // SeededShuffle now knows whether to be 'Sticky' or 'Random'
-    runtime.verbs = seededShuffle([...filteredVerbs]).slice(0, 20);
+        let reviewPool = bank.filter(v => reviewTargetList.includes(v.infinitivo) && !vipTargetList.includes(v.infinitivo));
+        let selectedReview = seededShuffle([...reviewPool], 999).slice(0, reviewCount);
 
-    const vData = await fetch(`${BASE_URL}calentamiento/${entry.vocabFile}`).then(r => r.json());
-    const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
-      es: v.spanish || v.es || v.palabra,
-      en: v.english || v.en || v.traducción
-    })).filter(v => v.es);
+        runtime.verbs = [...selectedVips, ...selectedReview];
+        // Rellenar si falta algo para llegar a 20
+        if (runtime.verbs.length < totalNeeded) {
+           let extra = bank.filter(v => vipTargetList.includes(v.infinitivo) && !runtime.verbs.includes(v));
+           runtime.verbs = [...runtime.verbs, ...seededShuffle(extra)].slice(0, totalNeeded);
+        }
 
-    runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
+        // --- VOCABULARIO ---
+        const vData = await fetch(`${BASE_URL}calentamiento/${entry.vocabFile}`).then(r => r.json());
+        const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
+          es: v.spanish || v.es || v.palabra,
+          en: v.english || v.en || v.traducción
+        })).filter(v => v.es);
+        runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-    // 8. UI Rendering
-    renderSidebar(pastEntries);
-    showModule(1);
-    updateProgress();
-    updateHeaderDisplay(); 
-  } catch (err) { 
-    console.error(err); 
-    document.getElementById('pageSubtitle').textContent = "Error de conexión.";
-  }
-}
+        renderSidebar(pastEntries);
+        showModule(1);
+        updateProgress();
+        updateHeaderDisplay(); 
 
+      } catch (err) { 
+        console.error(err); 
+        document.getElementById('pageSubtitle').textContent = "Error de conexión.";
+      }
+    }
+
+    // --- UI & TABS ---
     function updateHeaderDisplay() {
         const sub = document.getElementById('pageSubtitle');
-        sub.innerHTML = `<span class="text-slate-400">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-bold">${runtime.activeDate}</span>`;
+        sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-tighter">${runtime.activeDate}</span>`;
         document.getElementById('pageTitle').textContent = runtime.title;
     }
 
     function renderSidebar(entries) {
       const nav = document.getElementById('nav-tabs');
-      const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Finalizado"];
-      nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-xs font-bold uppercase tracking-tighter">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
+      const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "¡Listo!"];
+      nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-[10px] font-black uppercase tracking-tighter">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
       
       let sel = document.getElementById('tm-select');
       if (!sel) {
         sel = document.createElement('select'); sel.id = "tm-select";
         sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer";
-        sel.onchange = (e) => init(e.target.value);
+        sel.onchange = (e) => { runtime.isPracticeMode = false; init(e.target.value); };
         document.getElementById('time-machine-container').appendChild(sel);
       }
       sel.innerHTML = entries.map(e => `<option value="${e.date}" ${e.date === runtime.activeDate ? 'selected' : ''}>${e.date} - ${e.topic}</option>`).join('');
-    }
-
-    function updateProgress() {
-      const pct = Math.round((runtime.completed / 8) * 100);
-      document.getElementById('progress-fill').style.width = pct + "%";
-      document.getElementById('progress-label').textContent = pct + "%";
-      document.querySelectorAll('.module-tab').forEach((btn, i) => {
-        const m = i + 1;
-        if (m <= runtime.completed + 1) {
-          btn.disabled = false;
-          btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`;
-          document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●";
-        }
-      });
-if (runtime.completed >= 7 && !document.getElementById('btn-practice-toggle')) {
-      const nav = document.getElementById('nav-tabs');
-      const btn = document.createElement('button');
-      btn.id = "btn-practice-toggle";
-      btn.className = "w-full mt-4 py-2 bg-emerald-50 text-emerald-700 font-bold text-[10px] uppercase border border-emerald-200 rounded-lg animate-pop";
-      btn.textContent = "🎲 Modo Aleatorio (Práctica)";
-      btn.onclick = () => {
-          runtime.isPracticeMode = true;
-          init(runtime.activeDate);
-      };
-      nav.appendChild(btn);
-  }
     }
 
     function showModule(n) {
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
       if (n === 8) {
-        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 tracking-tighter uppercase">¡EXCELENTE!</h2><p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Calentamiento completado con éxito.</p></div>`;
+        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 tracking-tighter uppercase">¡EXCELENTE!</h2><p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Práctica diaria terminada.</p></div>`;
       } else if (n > 4) {
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
         content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase tracking-tight">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
-          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
-          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100"></div>`;
+          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-400"></div>`).join('') + 
+          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${runtime.tense}</h2><span class="text-[10px] font-black text-sky-400 uppercase tracking-widest">Módulo ${n}</span></div><div class="space-y-3 mb-6">` + 
@@ -228,6 +211,7 @@ if (runtime.completed >= 7 && !document.getElementById('btn-practice-toggle')) {
       updateProgress();
     }
 
+    // --- LÓGICA DE CORRECCIÓN ---
     function isGenerousMatch(user, correct) {
       const norm = (s) => s.toLowerCase().trim().replace(/\(.*\)/g, "").replace(/^(to|the|a|an)\s+/, "").trim();
       const u = norm(user);
@@ -293,6 +277,7 @@ if (runtime.completed >= 7 && !document.getElementById('btn-practice-toggle')) {
       });
     }
 
+    // --- CRONÓMETRO ---
     function startTimer() {
       clearInterval(runtime.timerInterval);
       runtime.startTime = Date.now();
@@ -318,26 +303,75 @@ if (runtime.completed >= 7 && !document.getElementById('btn-practice-toggle')) {
       document.getElementById('best-time').textContent = saved ? formatTime(parseInt(saved)) : "--:--";
     }
 
-    document.getElementById('btn-projector').onclick = () => {
+    // --- PROYECTOR ---
+  document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div');
       overlay.id = "projector-overlay";
       overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
+      
+      // Construir Verbos
+      let verbHtml = runtime.verbs.map(v => `
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center">
+            <p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p>
+            <p class="text-sm font-bold mb-1">${v.infinitivo}</p>
+            <p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p>
+            <button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-400 uppercase tracking-widest">Revelar</button>
+        </div>`).join('');
+
+      // Construir Vocabulario en 3 Columnas Verticales
+      let vocabCols = ["", "", ""];
+      runtime.vocab.forEach((v, i) => {
+          const colIndex = Math.floor(i / 10); // 0-9 va a col 0, 10-19 a col 1, etc.
+          vocabCols[colIndex] += `
+            <div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2">
+                <span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span>
+                <button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest">Revelar</button>
+            </div>`;
+      });
+
       overlay.innerHTML = `
         <div class="max-w-6xl mx-auto">
           <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
             <div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${runtime.tense}</p></div>
             <div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase tracking-widest">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white">&times;</button></div>
           </div>
+          
           <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">
-            ${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-400 uppercase tracking-widest">Revelar</button></div>`).join('')}
+            ${verbHtml}
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            ${runtime.vocab.map((v, i) => `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest">Revelar</button></div>`).join('')}
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20">
+            <div class="flex flex-col">${vocabCols[0]}</div>
+            <div class="flex flex-col">${vocabCols[1]}</div>
+            <div class="flex flex-col">${vocabCols[2]}</div>
           </div>
         </div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
+
+    function updateProgress() {
+      const pct = Math.round((runtime.completed / 8) * 100);
+      document.getElementById('progress-fill').style.width = pct + "%";
+      document.getElementById('progress-label').textContent = pct + "%";
+      document.querySelectorAll('.module-tab').forEach((btn, i) => {
+        const m = i + 1;
+        if (m <= runtime.completed + 1) {
+          btn.disabled = false;
+          btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200' : 'text-slate-500 hover:bg-slate-50'}`;
+          document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●";
+        }
+      });
+      // Botón de práctica aleatoria tras completar
+      if (runtime.completed >= 7 && !document.getElementById('btn-extra')) {
+          const btn = document.createElement('button');
+          btn.id = "btn-extra";
+          btn.className = "w-full mt-4 py-2 bg-emerald-50 text-emerald-700 font-bold text-[9px] uppercase border border-emerald-200 rounded-lg animate-pop";
+          btn.textContent = "🎲 Práctica Aleatoria";
+          btn.onclick = () => { runtime.isPracticeMode = true; init(runtime.activeDate); };
+          document.getElementById('nav-tabs').appendChild(btn);
+      }
+    }
 
     init();
   </script>
