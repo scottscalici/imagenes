@@ -68,15 +68,36 @@
     
     const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
 
-    const TENSE_MAP = {
+      const TENSE_MAP = {
+      // Indicative Simple
       "presente": "Presente",
-      "presente_de_subjuntivo": "Subjuntivo",
       "preterito": "Pretérito",
       "imperfecto": "Imperfecto",
-      "mandatos_informales": "Mandatos familiares",
-      "mandatos_formales_plurales": "Mandatos",
-      "mandatos_nosotros": "Mandatos de nosotros",
-      "mandatos_vosotros": "Mandatos de vosotros"
+      "futuro": "Futuro",
+      "condicional": "Condicional",
+      
+      // Subjunctive
+      "presente_de_subjuntivo": "Subjuntivo (Presente)",
+      "imperfecto_de_subjuntivo": "Subjuntivo (Imperfecto)",
+      
+      // Perfect Tenses (Compuestos)
+      "presente_perfecto": "Presente Perfecto (He ...)",
+      "pluscuamperfecto": "Pluscuamperfecto (Había ...)",
+      "futuro_perfecto": "Futuro Perfecto (Habré ...)",
+      "condicional_perfecto": "Condicional Perfecto (Habría ...)",
+      "presente_perfecto_subjuntivo": "Perfecto de Subjuntivo (Haya ...)",
+      "pluscuamperfecto_subjuntivo": "Pluscuamperfecto Subj. (Hubiera ...)",
+
+      // Commands (Mandatos)
+      "mandatos_informales": "Mandatos Informales (Tú)",
+      "mandatos_formales_plurales": "Mandatos Formales (Ud. / Uds.)",
+      "mandatos_nosotros": "Mandatos de Nosotros",
+      "mandatos_vosotros": "Mandatos de Vosotros",
+
+      // Non-Finite / Other
+      "participio": "Participio Pasado",
+      "gerundio": "Gerundio / Participio presente",
+      "presente_progresivo": "Presente progresivo"
     };
 
     const runtime = {
