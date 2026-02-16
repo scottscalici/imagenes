@@ -17,18 +17,24 @@
     {
       "label": "Tú negativo",
       "bank": "bancos/banco_mandatos_informales.json",
+      "identityCategory": "mandatos_informales",
+      "identityGroups": ["yo_go_negativos", "regulares_er", "regulares_ir"],
       "constraints": { "persona_base": "negativo", "tipo_verbo": "simple"  },
       "count": 5
     },
     {
       "label": "Mandatos formales (Usted)",
       "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "identityCategory": "mandatos_formales_plurales",
+      "identityGroups": ["yo_go", "regulares_er", "regulares_ir"],
       "constraints": { "persona_base": "él/ella/Ud.",  "tipo_verbo": "simple"  },
       "count": 5
     },
     {
       "label": "Mandatos plurales (Ustedes)",
       "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "identityCategory": "mandatos_formales_plurales",
+      "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir"],
       "constraints": { "persona_base": "ellos/ellas/Uds.",  "tipo_verbo": "simple"  },
       "count": 5
     }
