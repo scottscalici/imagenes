@@ -149,6 +149,7 @@
 const CONFIG = {
     COURSE: "s4",
     CICLO_FILTER: "B",
+    // JSON Paths
     PLAN: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json",
     TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json",
     
@@ -174,34 +175,56 @@ const CONFIG = {
 // 1. ENABLE GLOBAL TEACHER FLAG
 window.teacherMode = false;
 
+// --- DATA LOADER (Safe Version) ---
+async function loadData() {
+    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
+    try {
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios 
+        ] = await Promise.all([
+            safeFetch(CONFIG.PLAN), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
+            safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
+            safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
+            safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
+            safeFetch(CONFIG.ANUNCIOS)
+        ]);
+        
+        // Normalize Calendar Structure (Handle array vs object wrapper)
+        return { 
+            plan, temas, 
+            cal: cal.filter ? cal : (cal.map || []), 
+            curios, evals, tareas, vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios 
+        };
+    } catch (e) { console.error("Critical Load Error", e); }
+}
+
 // --- THEME ENGINE (FORWARD LOOKING) ---
 async function applyThemeStyles(data, currentDia) {
     try {
-        const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
-        const themeData = await themeRes.json();
+        const themeData = data.temas;
+        if (!themeData) return null;
         
-        // 1. Find all dates for this Lesson
-        const entries = data.cal?.map?.filter(c => c.dia == currentDia) || [];
+        // 1. Find all dates for this Lesson (using normalized data.cal)
+        const entries = data.cal.filter(c => c.dia == currentDia) || [];
         
         // 2. Smart Selection Logic: Prioritize UPCOMING dates
         const today = new Date();
-        // Reset time to midnight for fair comparison
         today.setHours(0,0,0,0);
         
         let targetEntry = null;
 
         if (entries.length > 0) {
-            // Sort entries by date
             const sorted = entries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-            
-            // Filter for dates that are Today or Future
             const upcoming = sorted.filter(e => new Date(e.fecha + "T00:00:00") >= today);
 
             if (upcoming.length > 0) {
-                // If we have upcoming dates, pick the soonest one (B-Day)
                 targetEntry = upcoming[0];
             } else {
-                // If ALL dates are in the past, just pick the most recent one (A-Day)
                 targetEntry = sorted[sorted.length - 1];
             }
         }
@@ -274,7 +297,6 @@ function startEffect(config) {
     let particleImg = null;
     if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
     
-    // Fix: count=0 check
     const particleCount = (config.count !== undefined) ? config.count : 50;
     
     const particles = Array.from({ length: particleCount }, () => ({
@@ -325,15 +347,26 @@ function updateCountdown() {
     }
 }
 
+// ============================================================
+//  CORE RENDERING ENGINE
+// ============================================================
 async function runRender(data, DIA) {
     const params = new URLSearchParams(window.location.search);
     const isProfView = params.get('view') === 'prof';
+    
+    // --- SMART DATE LOGIC (Safe for Nulls) ---
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
-    const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
+    
+    // Filter out entries with NO date or NO dia (null/undefined)
+    const pastEntries = data.cal.filter(c => c.fecha && c.fecha <= todayStr && c.dia != null);
+    
+    // Fallback: If no past entries, default to Day 1
+    const liveDia = pastEntries.length > 0 
+        ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) 
+        : 1;    
 
-    // 2. UPDATED RESTRICTION LOGIC (NO PROMPTS)
+    // RESTRICTION LOGIC
     if (DIA > liveDia && !isProfView && !window.teacherMode) {
         alert("🔒 Este día está bloqueado para los estudiantes.\n\n(Profesor: Ingrese '0' en el cuadro de Día para desbloquear)");
         document.getElementById('diaInput').value = liveDia;
@@ -345,9 +378,9 @@ async function runRender(data, DIA) {
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    // --- DUAL DATE HEADER ---
-    const entryA = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "A");
-    const entryB = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === "B");
+    // --- DUAL DATE HEADER (Safe Find) ---
+    const entryA = data.cal.find(c => c.dia == DIA && c.ciclo === "A");
+    const entryB = data.cal.find(c => c.dia == DIA && c.ciclo === "B");
     let dateStr = "FECHA TBD";
     if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
     else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
@@ -356,7 +389,7 @@ async function runRender(data, DIA) {
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = dateStr.toUpperCase();
 
-    // ANUNCIOS
+    // 1. ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
         anunciosBlock.innerHTML = "";
@@ -371,27 +404,23 @@ async function runRender(data, DIA) {
         });
     }
 
-    // CALENTAMIENTO
+    // 2. CALENTAMIENTO (Updated Link)
     const calBtn = document.getElementById('calBtn');
     if (calBtn) {
-        calBtn.href = `https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento/${DIA}`;
+        calBtn.href = "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento";
         calBtn.style.backgroundColor = overrides.calentamiento || accent;
     }
 
-    // EVALUATIONS & COUNTDOWN
-    const evalList = data.evals.courses[CONFIG.COURSE] || [];
+    // 3. EVALUATIONS & COUNTDOWN
+    const evalList = data.evals.courses?.[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
     updateCountdown();
 
-// CURIOSIDAD
+    // 4. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
-    
-    // 1. Determine which key to look for (e.g. "s4_dia") based on CONFIG
     const courseKey = CONFIG.COURSE + "_dia"; 
-
-    // 2. Find the curiosity in the data
     const cur = (data.curios || []).find(c => c[courseKey] == DIA);
 
     if (cur) {
@@ -401,7 +430,7 @@ async function runRender(data, DIA) {
         curBlock.innerHTML = ""; 
     }
 
-    // VIDEOS
+    // 5. VIDEOS
     const videoContainer = document.getElementById('videoBlock');
     if (videoContainer) {
         const vidColor = overrides.video || accent; const vidFont = fonts.video || 'inherit';
@@ -414,7 +443,7 @@ async function runRender(data, DIA) {
         } else { videoContainer.innerHTML = ""; }
     }
 
-    // ESTRUCTURA
+    // 6. ESTRUCTURA
     const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
     const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
     if (dailyGrammar) {
@@ -431,96 +460,29 @@ async function runRender(data, DIA) {
         if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-// 7. EXTRAS (Final Polish: Custom Tags + Image Layout)
+    // 7. EXTRAS
     const extrasBlock = document.getElementById('extrasBlock'); 
     extrasBlock.innerHTML = "";
-
     const courseKeyExtras = CONFIG.COURSE + "_dias";
-
-    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => 
-        item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA))
-    );
+    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
 
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
-        
-        // --- SMART PILL LOGIC ---
-        // 1. Check if JSON has a specific "tag"
-        // 2. If not, check if title says "Nivel superior"
-        // 3. If neither, default to "Actividad"
-        let pillText = "Actividad";
-        if (item.tag) {
-            pillText = item.tag;
-        } else if (item.title && item.title.includes('Nivel superior')) {
-            pillText = "Nivel Superior";
-        }
-        // ------------------------
+        let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
 
         if (item.kind === 'sentences') {
             const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
-            
             const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
-            
-            // Handle links/buttons
-            const linksList = (item.links || []).map(l => `
-                <a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}">
-                    <span>📖</span> ${l.label || "Abrir Recurso"} ↗
-                </a>
-            `).join('');
+            const linksList = (item.links || []).map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
 
-            extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">
-                    
-                    ${item.img ? `
-                    <div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div>
-                        <img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10">
-                    </div>` : ''}
-
-                    <div class="p-6 flex flex-col justify-center flex-grow">
-                        <div class="flex items-center gap-2 mb-2">
-                             <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">
-                                 ${pillText}
-                             </span>
-                        </div>
-                        
-                        <h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">
-                            ${item.title || "Actividad de Clase"}
-                        </h3>
-                        
-                        ${instructions}
-                        
-                        ${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}
-                        
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            ${linksList}
-                        </div>
-                    </div>
-                </section>`;
-
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
         } else if (item.kind === 'card' || item.kind === 'placeholder') {
-             // ... existing code for simple cards ...
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}">
-                    <div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r">
-                        <img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply">
-                    </div>
-                    <div class="p-6 flex flex-col justify-center">
-                        <h3 class="font-black text-xl text-slate-800">${item.title}</h3>
-                        ${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}
-                    </div>
-                </section>`;
-
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
         } else if (item.kind === 'links') {
-            // ... existing code for link lists ...
             const links = item.links.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
-            extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}">
-                    <h3 class="font-black text-lg mb-3">${item.title}</h3>
-                    <div class="space-y-2">${links}</div>
-                </section>`;
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
         }
-    });
+    });    
 
     
     Object.values(data.musica?.items || {}).forEach(item => {
@@ -537,56 +499,9 @@ async function runRender(data, DIA) {
         }
     });
 
-// CONVERSACION (Chat Style v3: Big Avatar + App Header)
     Object.values(data.conv?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-2xl card-shadow mb-6 border border-slate-200 overflow-hidden relative group">
-                    
-                    <div class="h-6 w-full bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-1.5">
-                        <div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-green-400/80"></div>
-                    </div>
-                    
-                    <div class="p-5 flex flex-col md:flex-row items-start gap-5">
-                        
-                        <div class="relative flex-shrink-0 mt-1">
-                            <div class="w-20 h-20 rounded-full p-1 border border-slate-200 bg-white shadow-sm">
-                                ${item.imagen 
-                                    ? `<img src="${item.imagen}" class="w-full h-full rounded-full object-cover">` 
-                                    : `<div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-3xl">🗣️</div>`
-                                }
-                            </div>
-                            <div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div>
-                        </div>
-
-                        <div class="flex-grow w-full max-w-2xl">
-                            <div class="flex items-center justify-between mb-1 pl-1">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nuevo mensaje</span>
-                                <span class="text-[10px] font-bold text-slate-300">Ahora</span>
-                            </div>
-                            
-                            <div class="relative bg-blue-500 text-white rounded-2xl rounded-tl-none p-5 shadow-sm mb-2">
-                                <h3 class="text-xl font-bold leading-tight mb-4 text-white">${item.titulo}</h3>
-                                
-                                <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all backdrop-blur-md shadow-inner">
-                                    <span>💬</span> Responder / Hablar
-                                </a>
-                            </div>
-
-                            <div class="flex items-center gap-1 pl-2 h-6 opacity-60">
-                                <span class="text-xs font-medium text-slate-400 italic">escribiendo</span>
-                                <div class="flex space-x-1 pt-1">
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-2xl card-shadow mb-6 border border-slate-200 overflow-hidden relative group"><div class="h-6 w-full bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-green-400/80"></div></div><div class="p-5 flex flex-col md:flex-row items-start gap-5"><div class="relative flex-shrink-0 mt-1"><div class="w-20 h-20 rounded-full p-1 border border-slate-200 bg-white shadow-sm">${item.imagen ? `<img src="${item.imagen}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-3xl">🗣️</div>`}</div><div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div></div><div class="flex-grow w-full max-w-2xl"><div class="flex items-center justify-between mb-1 pl-1"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nuevo mensaje</span><span class="text-[10px] font-bold text-slate-300">Ahora</span></div><div class="relative bg-blue-500 text-white rounded-2xl rounded-tl-none p-5 shadow-sm mb-2"><h3 class="text-xl font-bold leading-tight mb-4 text-white">${item.titulo}</h3><a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all backdrop-blur-md shadow-inner"><span>💬</span> Responder / Hablar</a></div><div class="flex items-center gap-1 pl-2 h-6 opacity-60"><span class="text-xs font-medium text-slate-400 italic">escribiendo</span><div class="flex space-x-1 pt-1"><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div></div></div></div></div></section>`;
         }
     });    
 
@@ -597,7 +512,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // DASHBOARD
+    // 8. DASHBOARD
     const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
     Object.values(data.apuntes || {}).forEach(topic => {
         const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
@@ -607,13 +522,16 @@ async function runRender(data, DIA) {
         }
     });
 
-    // DYNAMIC GRID
+    // 9. DYNAMIC GRID (S4 Specific: Descubre 3 + IB)
     const dynamicGrid = document.getElementById('dynamicCardGrid');
     if (dynamicGrid) {
-        const vocabData = data.vocab.descubre3.chapters; let ch = null;
+        const vocabData = data.vocab?.descubre3?.chapters || {}; 
+        let ch = null;
         for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
+        
         const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
         const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
+        
         const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
         
         const ibImg = theme?.mascots?.ib || "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png"; 
@@ -625,57 +543,35 @@ async function runRender(data, DIA) {
         document.getElementById('tutorMascot').src = tutorImg;
     }
 
-    // TAREAS (Using tareas4.json)
+    // 10. TAREAS
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
-    (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
+    (data.tareas?.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
         const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
     });
 }
 
-async function renderByDate() {
-    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
-    const data = await loadData();
-    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate);
-    if (entry) {
-        const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
-        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
-        await runRender(data, newDia);
-    } else { alert("No hay clases programadas."); }
-}
-
-async function loadData() {
-    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
-    try {
-        const [
-            plan, temas, cal, curios, evals, tareas,
-            vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios 
-        ] = await Promise.all([
-            safeFetch(CONFIG.PLAN), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
-            safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
-            safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
-            safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
-            safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS)
-        ]);
-       return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios };
-    } catch (e) { console.error("Critical Load Error", e); }
-}
-
+// --- INIT (With Teacher Mode & Safety) ---
 async function init() {
     const data = await loadData(); if (!data) return;
-    const now = new Date(); const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-    let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
+    
+    // Find current live day (ignoring null dias)
+    const now = new Date(); 
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const liveEntry = data.cal.find(c => c.fecha === todayStr && c.dia != null);
+    
+    // Fallback if today is a snow day or weekend
+    let liveDia = liveEntry ? parseInt(liveEntry.dia) : 
+        (data.cal.filter(c => c.fecha <= todayStr && c.dia != null).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
+    
     const params = new URLSearchParams(window.location.search);
     let requestedDia = parseInt(params.get('dia')) || liveDia;
+    
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
 }
 
-// 3. UPDATED MANUAL RENDER (WITH "0" UNLOCK)
+// --- SIMPLIFIED RENDER MANUAL (Using Magic "0" Code) ---
 async function renderManual() {
     const newDia = document.getElementById('diaInput').value;
     
@@ -689,6 +585,19 @@ async function renderManual() {
     if (!newDia) return;
     try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
     const data = await loadData(); await runRender(data, parseInt(newDia));
+}
+
+async function renderByDate() {
+    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
+    const data = await loadData();
+    const entry = data.cal.sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.dia != null);
+    
+    if (entry) {
+        const newDia = parseInt(entry.dia); 
+        document.getElementById('diaInput').value = newDia;
+        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+        await runRender(data, newDia);
+    } else { alert("No hay clases programadas."); }
 }
 
 init();
