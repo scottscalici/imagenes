@@ -64,6 +64,13 @@
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const TEACHER_CODE = "profe123";
     
+    // --- CYCLE CONFIGURATION ---
+    const COURSE_CYCLES = {
+        's2': ['B'],       // S2 only meets on B days
+        's4': ['A', 'B']   // S4 meets on both
+        // Add other courses here if needed, defaults to both
+    };
+
     const TENSE_MAP = {
       "presente": "Presente",
       "presente_de_subjuntivo": "Subjuntivo",
@@ -89,7 +96,7 @@
     const runtime = {
       course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0,
-      activeDia: null, isLatestClass: false, isPracticeMode: false,
+      activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
       tense: "", title: "", constraints: null
     };
@@ -115,69 +122,68 @@
     async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
       try {
-        subtitle.textContent = "Obteniendo día escolar...";
+        subtitle.textContent = "Analizando calendario...";
         const calData = await fetchData(CAL_URL);
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
 
-        subtitle.textContent = "Obteniendo lecciones...";
+        subtitle.textContent = "Cargando curso...";
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
 
-        // --- STEP 1: Determine the "Current" School Day Number ---
-        
-        // Use local machine date to avoid timezone issues
+        // --- SMART DATE LOGIC ---
+        // 1. Get today's local date
         const now = new Date();
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, '0');
         const d = String(now.getDate()).padStart(2, '0');
         const localDateStr = `${y}-${m}-${d}`; 
 
-        // Filter for all calendar entries that are Today or Earlier
-        // Sort them so the most recent one is last
+        // 2. Filter for past days & Sort descending (Newest first)
         const pastDays = calRes
             .filter(day => day.fecha <= localDateStr)
-            .sort((a, b) => a.fecha.localeCompare(b.fecha));
+            .sort((a, b) => b.fecha.localeCompare(a.fecha));
 
-        if (pastDays.length === 0) throw new Error("No hay días escolares pasados en el calendario.");
+        // 3. Determine Allowed Cycles for this course
+        const allowedCycles = COURSE_CYCLES[runtime.course] || ['A', 'B'];
+
+        // 4. FIND THE ACTIVE DAY (Rewind Loop)
+        let currentSchoolDay = null;
+        let activeDayObj = null;
+
+        for (const day of pastDays) {
+            // Check 1: Is school in session? (dia is not null)
+            if (day.dia !== null && day.dia !== undefined) {
+                // Check 2: Is it the right cycle for this course?
+                if (!day.ciclo || allowedCycles.includes(day.ciclo)) {
+                    currentSchoolDay = day.dia;
+                    activeDayObj = day;
+                    break; // Found the most recent valid class!
+                }
+            }
+        }
+
+        if (!currentSchoolDay) {
+            // Fallback: If logic fails, just grab the latest entry from the schedule
+            console.warn("Fallback trigger: No valid calendar day found.");
+            schedRes.sort((a, b) => a.dia - b.dia);
+            currentSchoolDay = schedRes[schedRes.length - 1].dia;
+        }
+
+        runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
+
+        // --- LOAD LESSON ---
+        const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
+        const latestClassEntry = pastEntries[0];
+        const entry = targetDia ? schedRes.find(e => e.dia == targetDia) : latestClassEntry;
         
-        // The last item in this list is effectively "Today" in school terms
-        const currentSchoolDayObj = pastDays[pastDays.length - 1];
-        const currentSchoolDay = currentSchoolDayObj.dia;
+        if (!entry) throw new Error(`No hay lección asignada para el Día ${targetDia || currentSchoolDay}`);
 
-        // --- STEP 2: Match that Number to the Schedule ---
-
-        // Find the lesson for this specific day number (e.g., 47)
-        let entry = schedRes.find(e => e.dia === currentSchoolDay);
-
-        // If explicitly requested via dropdown, use that instead
-        if (targetDia) {
-            entry = schedRes.find(e => e.dia == targetDia);
-        }
-
-        // --- SAFEGUARD: If Day 47 exists in Calendar but NOT in Schedule ---
-        // (Maybe you haven't written the plan for Day 47 yet?)
-        // Fallback to the most recent existing lesson *before* Day 47
-        if (!entry) {
-            console.warn(`Dia ${currentSchoolDay} exists in calendar but not in schedule. Falling back.`);
-            const availableLessons = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a,b) => b.dia - a.dia);
-            entry = availableLessons[0];
-        }
-
-        if (!entry) throw new Error(`No se encontró ninguna lección válida (<= Día ${currentSchoolDay})`);
-
-        // Populate Sidebar History (Only show lessons that have actually happened)
-        const historyEntries = schedRes
-            .filter(e => e.dia <= currentSchoolDay)
-            .sort((a, b) => b.dia - a.dia);
-
-        // --- STEP 3: Load Data ---
         runtime.activeDia = entry.dia;
-        // Check if this entry corresponds to the absolute latest available in the calendar
-        runtime.isLatestClass = (entry.dia === currentSchoolDay);
+        runtime.isLatestClass = (latestClassEntry && entry.dia === latestClassEntry.dia);
         runtime.tense = entry.identityCategory;
         runtime.title = entry.topic;
         runtime.constraints = entry.constraints || null;
 
-        subtitle.textContent = "Cargando recursos...";
+        subtitle.textContent = "Cargando bancos...";
         const [manifest, bank] = await Promise.all([
           fetchData(`${BASE_URL}verbs_identity.json`),
           fetchData(`${BASE_URL}${entry.bank}`)
@@ -188,13 +194,6 @@
           groups.forEach(g => { if (manifest[runtime.tense] && manifest[runtime.tense][g]) list = list.concat(manifest[runtime.tense][g]); });
           return list;
         };
-
-        // Review Spiral: Look at ALL lessons prior to the active one
-        const pastG = schedRes
-            .filter(e => e.dia < runtime.activeDia)
-            .flatMap(e => e.identityGroups || [e.identityGroup]);
-        
-        const currentG = entry.identityGroups || [entry.identityGroup];
 
         const applyConstraints = (rawBank, targetList) => {
           return rawBank.filter(v => {
@@ -212,26 +211,32 @@
         const totalNeeded = entry.totalNeeded || 20;
         const vRatio = entry.vipRatio !== undefined ? entry.vipRatio : 1.0;
         const vCount = Math.floor(totalNeeded * vRatio);
+        
+        // Spiral logic
+        const currentG = entry.identityGroups || [entry.identityGroup];
+        const pastG = schedRes.filter(e => e.dia < runtime.activeDia).flatMap(e => e.identityGroups || [e.identityGroup]);
 
         let vPool = applyConstraints(bank, getTargets(currentG));
         let rPool = applyConstraints(bank, getTargets(pastG)).filter(v => !getTargets(currentG).includes(v.infinitivo));
 
         runtime.verbs = [...seededShuffle([...vPool]).slice(0, vCount), ...seededShuffle([...rPool]).slice(0, totalNeeded - vCount)];
 
+        subtitle.textContent = "Cargando vocabulario...";
         const vData = await fetchData(`${BASE_URL}${entry.vocabFile}`);
         const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
         })).filter(v => v.es);
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(historyEntries);
+        renderSidebar(pastEntries.length > 0 ? pastEntries : schedRes);
         showModule(1);
         updateProgress();
         updateHeaderDisplay();
+        
       } catch (err) { 
         console.error(err);
         subtitle.innerHTML = `<span class="text-red-500 font-black">ERROR: ${err.message}</span>`;
-        document.getElementById('module-content').innerHTML = `<div class="p-10 text-center text-slate-400">Error: ${err.message}<br>Ver consola (F12)</div>`;
+        document.getElementById('module-content').innerHTML = `<div class="p-10 text-center text-slate-400">Error: ${err.message}<br>Ver consola.</div>`;
       }
     }
 
@@ -239,15 +244,21 @@
       const sub = document.getElementById('pageSubtitle');
       const pageTitle = document.getElementById('pageTitle');
       let displayTense = TENSE_MAP[runtime.tense] || runtime.tense;
+      
       if (runtime.constraints) {
         if (runtime.constraints.persona_base === "él/ella/Ud.") displayTense = "Mandatos Formales (Ud.)";
         else if (runtime.constraints.persona_base === "ellos/ellas/Uds.") displayTense = "Mandatos Plurales (Uds.)";
         else if (runtime.constraints.persona_base === "tú") displayTense = "Mandatos Familiares (Tú)";
       }
-      sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
+
+      // Add Cycle info to header if available
+      const cycleBadge = runtime.currentCiclo ? `<span class="mx-2 text-amber-500 font-bold">Ciclo ${runtime.currentCiclo}</span>` : "";
+
+      sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span>${cycleBadge}<span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
 
+    // --- (Remaining functions: renderSidebar, showModule, checkVerbs... same as before) ---
     function renderSidebar(entries) {
       const nav = document.getElementById('nav-tabs');
       const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Listo"];
@@ -343,7 +354,7 @@
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase">${document.getElementById('pageTitle').textContent.split(':').pop()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
