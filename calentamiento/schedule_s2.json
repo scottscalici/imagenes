@@ -1,5 +1,103 @@
 [
+ [
   {
+    "dia": 40,
+    "topic": "Subjuntivo (Regulares)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-2-4.json",
+    "identityGroups": ["regular"]
+  },
+  {
+    "dia": 41,
+    "topic": "Subjuntivo (Irregulares)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-2-5.json",
+    "identityGroups": ["regular", "irregular"]
+  },
+  {
+    "dia": 42,
+    "topic": "Subjuntivo (Ortográficos)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-1.json",
+    "identityGroups": ["regular", "irregular", "cambio_ortografico"]
+  },
+  {
+    "dia": 43,
+    "topic": "Subjuntivo (Repaso)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-2.json",
+    "identityGroups": ["regular", "irregular", "cambio_ortografico"]
+  },
+  {
+    "dia": 44,
+    "topic": "Subjuntivo (Raíz)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-3.json",
+    "identityGroups": ["regular", "irregular", "cambio_ortografico", "cambio_de_raiz"]
+  },
+  {
+    "dia": 45,
+    "topic": "Subjuntivo (Práctica)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-4.json"
+  },
+  {
+    "dia": 46,
+    "topic": "Subjuntivo (Práctica)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-5.json"
+  },
+  {
+    "dia": 47,
+    "topic": "Subjuntivo (Práctica)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-6.json"
+  },
+  {
+    "dia": 48,
+    "topic": "Subjuntivo (Frecuentes)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-7.json",
+    "blocks": [
+      {
+        "count": 10,
+        "label": "Presente de Subjuntivo",
+        "bank": "banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo",
+        "identityGroups": ["frecuente"]
+      },
+      {
+        "count": 10,
+        "label": "Presente de Subjuntivo",
+        "bank": "banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo"
+      }
+    ]
+  },
+  {
+    "dia": 49,
+    "topic": "Subjuntivo (Práctica)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-8.json"
+  },
+  {
+    "dia": 50,
+    "topic": "Subjuntivo (Práctica)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "banco_subjuntivo_presente.json",
+    "vocabFile": "D2-3-9.json"
+  },
+ {
   "dia": 44,
   "date": "2026-02-05",
   "topic": "Mandatos: El Gran Repaso (Mix)",
@@ -129,4 +227,5 @@
     "totalNeeded": 15,
     "vipRatio": 0.5
   }
+]
 ]
