@@ -141,7 +141,7 @@
         </div>
     </main>
 
-<script>
+    <script>
 const CONFIG = {
     COURSE: "s2",
     CICLO_FILTER: "B",
@@ -166,12 +166,47 @@ const CONFIG = {
 // Global Flag for Teacher Mode
 window.teacherMode = false;
 
+// --- DATA LOADER ---
+async function loadData() {
+    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => {
+        console.warn(`Failed to load ${url}`, e);
+        return {};
+    });
+
+    try {
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios 
+        ] = await Promise.all([
+            safeFetch(CONFIG.PLAN), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
+            safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
+            safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
+            safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
+            safeFetch(CONFIG.ANUNCIOS)
+        ]);
+        
+        return { 
+            plan, temas, cal: cal.filter ? cal : (cal.map || []), 
+            curios, evals, tareas, vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios 
+        };
+
+    } catch (e) { 
+        console.error("Critical Load Error", e); 
+        return null;
+    }
+}
+
 // --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
-        const themeRes = await fetch(CONFIG.TEMAS + "?t=" + Date.now());
-        const themeData = await themeRes.json();
-        const dayEntry = data.cal?.map?.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
+        const themeData = data.temas; 
+        if (!themeData) return null;
+
+        const dayEntry = data.cal.find(c => c.dia == currentDia && c.ciclo === CONFIG.CICLO_FILTER);
         const viewedDate = dayEntry ? dayEntry.fecha : new Date().toISOString().split('T')[0];
         const compareMD = viewedDate.split('-').slice(1).join('-');
 
@@ -180,6 +215,7 @@ async function applyThemeStyles(data, currentDia) {
                     themeData.themes.find(t => t.id === 'classic');
 
         if (!theme) return null;
+        
         const root = document.documentElement;
         const s = theme.styles;
         const accent = s.accent || "#6366f1";
@@ -211,7 +247,6 @@ async function applyThemeStyles(data, currentDia) {
                 el.style.borderColor = color;
                 const h = el.querySelector('h2, h3');
                 if (h) h.style.color = color;
-                // Apply Textures
                 if ((s.textures || {})[card.key]) {
                     el.style.backgroundImage = `url('${s.textures[card.key]}')`;
                     el.classList.add('card-texture');
@@ -227,81 +262,45 @@ async function applyThemeStyles(data, currentDia) {
     } catch (e) { console.error("Theme Error:", e); return null; }
 }
 
-// --- PARTICLE ENGINE (UPGRADED) ---
+// --- PARTICLE ENGINE ---
 let effectInterval;
-
 function startEffect(config) {
     const canvas = document.getElementById('snow-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
-    // Resize handling
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
     
-    // Image Handling (if provided)
     let particleImg = null;
-    if (config.image) {
-        particleImg = new Image();
-        particleImg.src = config.image;
-    }
+    if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
 
-    // Initialize Particles
-const particleCount = (config.count !== undefined) ? config.count : 50;
-const particles = Array.from({ length: particleCount }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+    const particleCount = (config.count !== undefined) ? config.count : 50;
+    const particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
         size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
-        drift: Math.random() * 2 - 1,
-        opacity: Math.random() * 0.5 + 0.3
+        drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
     }));
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = config.color || "white";
-
         particles.forEach(p => {
             ctx.globalAlpha = p.opacity;
-
-            // DRAW: Check if using an Image or Text
-            if (particleImg && particleImg.complete) {
-                // Draw Image (Bat, Heart, etc.)
-                ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
-            } else {
-                // Draw Character (Snowflake, Fire emoji, etc.)
-                ctx.font = `${p.size}px serif`;
-                ctx.fillText(config.char || "❄", p.x, p.y);
-            }
-
-            // MOVE: Vertical Speed based on size (parallax effect)
+            if (particleImg && particleImg.complete) ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
+            else { ctx.font = `${p.size}px serif`; ctx.fillText(config.char || "❄", p.x, p.y); }
+            
             const speed = (config.speed || 1) + (p.size / 20);
-
-            // DIRECTION LOGIC
             if (config.direction === "up") {
-                p.y -= speed; // Move Up
-                // Reset when it goes off top
-                if (p.y < -50) {
-                    p.y = canvas.height + 20;
-                    p.x = Math.random() * canvas.width;
-                }
+                p.y -= speed; if (p.y < -50) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; }
             } else {
-                p.y += speed; // Move Down (Default)
-                // Reset when it goes off bottom
-                if (p.y > canvas.height + 50) {
-                    p.y = -50;
-                    p.x = Math.random() * canvas.width;
-                }
+                p.y += speed; if (p.y > canvas.height + 50) { p.y = -50; p.x = Math.random() * canvas.width; }
             }
-
-            // Horizontal Drift
             p.x += p.drift;
         });
     }
-
     if (effectInterval) clearInterval(effectInterval);
     effectInterval = setInterval(draw, 30);
 }
-
 function stopEffect() {
     if (effectInterval) clearInterval(effectInterval);
     const canvas = document.getElementById('snow-canvas');
@@ -320,12 +319,16 @@ function formatSpanishDate(dateStr) {
 async function runRender(data, DIA) {
     const params = new URLSearchParams(window.location.search);
     const isProfView = params.get('view') === 'prof';
+    
     const now = new Date();
     const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const pastEntries = data.cal?.map?.filter(c => c.fecha <= todayStr);
-    const liveDia = pastEntries && pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
+    const pastEntries = data.cal.filter(c => c.fecha && c.fecha <= todayStr && c.dia != null);
+    
+    const liveDia = pastEntries.length > 0 
+        ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) 
+        : 1;    
 
-    // RESTRICTION LOGIC (UPDATED WITH TEACHER MODE)
+    // RESTRICTION LOGIC
     if (DIA > liveDia && !isProfView && !window.teacherMode) {
         alert("🔒 Este día está bloqueado para los estudiantes.\n\n(Profesor: Ingrese '0' en el cuadro de Día para desbloquear)");
         document.getElementById('diaInput').value = liveDia;
@@ -337,139 +340,96 @@ async function runRender(data, DIA) {
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    const calendarEntry = data.cal?.map?.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+    const calendarEntry = data.cal.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+    
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = calendarEntry ? formatSpanishDate(calendarEntry.fecha) : "Fecha TBD";
 
-    // 1. ANUNCIOS (Themed + Thumbnail Support)
+    // 1. ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
         anunciosBlock.innerHTML = "";
-        
-        // FIX: Use the 'accent' and 'overrides' variables that are already defined in runRender
         const noteColor = (overrides && overrides.anuncios) ? overrides.anuncios : accent;
-
         const anunciosList = Array.isArray(data.anuncios) ? data.anuncios : [];
 
         anunciosList.forEach(note => {
             if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
-                
-                // Styles
                 let containerStyle = `border-color: ${noteColor};`;
                 let titleStyle = `color: ${noteColor};`;
                 let bgClass = "bg-white";
                 let icon = "📢";
 
-                // Handle Warning/Trip types
                 if (note.type === 'warning') {
-                    containerStyle = `border-color: #ef4444;`; // Red
+                    containerStyle = `border-color: #ef4444;`;
                     titleStyle = `color: #b91c1c;`;
                     bgClass = "bg-red-50";
                     icon = "⚠️";
                 } else if (note.type === 'trip') {
-                    containerStyle = `border-color: #10b981;`; // Emerald
+                    containerStyle = `border-color: #10b981;`;
                     titleStyle = `color: #047857;`;
                     bgClass = "bg-emerald-50";
                     icon = "✈️";
                 }
 
-                // Render
                 anunciosBlock.innerHTML += `
                     <div class="${bgClass} border-l-[6px] p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start gap-4 transition-transform hover:scale-[1.01]" style="${containerStyle}">
-                        
                         <div class="flex-shrink-0">
                              ${note.thumbnail 
                                 ? `<img src="${note.thumbnail}" class="w-32 h-32 object-cover rounded-lg border border-slate-200 shadow-sm">` 
                                 : `<div class="text-3xl">${icon}</div>`
                              }
                         </div>
-
                         <div class="flex-grow">
                             <h4 class="font-bold text-[10px] uppercase tracking-widest mb-1 opacity-80" style="${titleStyle}">
                                 ${note.type === 'warning' ? 'Importante' : 'Anuncio'}
                             </h4>
                             <p class="text-slate-800 font-bold text-sm leading-snug mb-2">${note.text}</p>
-                            
-                            ${note.link ? `
-                                <a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}">
-                                    <span>Ver Flyer / Detalles</span> ↗
-                                </a>
-                            ` : ''}
+                            ${note.link ? `<a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}"><span>Ver Flyer / Detalles</span> ↗</a>` : ''}
                         </div>
                     </div>`;
             }
         });
     }
     
-    // 2. CALENTAMIENTO
+    // 2. CALENTAMIENTO (Updated Link)
     const calBtn = document.getElementById('calBtn');
     if (calBtn) {
-        calBtn.href = `https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento/${DIA}`;
+        calBtn.href = "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento";
         calBtn.style.backgroundColor = overrides.calentamiento || accent;
     }
 
     // 3. EVALUATIONS
-    const evalList = data.evals.courses[CONFIG.COURSE] || [];
+    const evalList = data.evals.courses?.[CONFIG.COURSE] || [];
     const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
 
-// 4. CURIOSIDAD
+    // 4. CURIOSIDAD
     const curBlock = document.getElementById('curiosityBlock');
-    
-    // Dynamic course key (this will automatically be 's2_dia' because of your CONFIG at the top)
     const courseKey = CONFIG.COURSE + "_dia";
-
-    // Find the curiosity using the course-specific day property
     const cur = (data.curios || []).find(c => c[courseKey] == DIA);
 
     if (cur) {
         const curColor = overrides.curiosidad || accent;
         curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
     } else { curBlock.innerHTML = ""; }
-
     
-    // 5. VIDEOS (Restored Smart Logic)
+    // 5. VIDEOS
     const videoContainer = document.getElementById('videoBlock');
     if (videoContainer) {
         const vidColor = overrides.video || accent; 
         const vidFont = fonts.video || 'inherit';
-
-        // FILTER: Must match the Day AND the tags array must contain your COURSE (s2)
-        const dayVideos = (data.videos?.daily_tags || []).filter(v => 
-            v.dia == DIA && 
-            (v.tags || []).includes(CONFIG.COURSE)
-        );
+        const dayVideos = (data.videos?.daily_tags || []).filter(v => v.dia == DIA && (v.tags || []).includes(CONFIG.COURSE));
         
         if (dayVideos.length > 0) {
             videoContainer.innerHTML = dayVideos.map(videoData => {
                 if (videoData.page_url) {
-                    // Clickable Card Version
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <a href="${videoData.page_url}" target="_blank" class="block group">
-                                <img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md">
-                                <h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2>
-                            </a>
-                            <p class="text-slate-700 italic text-sm">${videoData.description || ""}</p>
-                        </article>`;
+                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><a href="${videoData.page_url}" target="_blank" class="block group"><img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md"><h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2></a><p class="text-slate-700 italic text-sm">${videoData.description || ""}</p></article>`;
                 } else {
-                    // Embedded Player Version
                     const width = videoData.is_short ? "315" : "100%";
                     const height = videoData.is_short ? "560" : "315";
-                    // Flex center only for shorts to make them look nice
                     const containerClass = videoData.is_short ? 'flex justify-center' : '';
-                    
-                    return `
-                        <article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}">
-                            <h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3>
-                            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2>
-                            <div class="${containerClass}">
-                                <iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe>
-                            </div>
-                            <p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p>
-                        </article>`;
+                    return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2><div class="${containerClass}"><iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></div><p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p></article>`;
                 }
             }).join('');
         } else {
@@ -477,7 +437,7 @@ async function runRender(data, DIA) {
         }
     }
 
-    // 6. ESTRUCTURA (New linear system)
+    // 6. ESTRUCTURA
     const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
     const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
     if (dailyGrammar) {
@@ -495,134 +455,37 @@ async function runRender(data, DIA) {
         if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
     }
 
-// 7. EXTRAS (Final Polish: Custom Tags + Image Layout)
+    // 7. EXTRAS
     const extrasBlock = document.getElementById('extrasBlock'); 
     extrasBlock.innerHTML = "";
-
     const courseKeyExtras = CONFIG.COURSE + "_dias";
-
-    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => 
-        item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA))
-    );
+    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
 
     todaysExtras.forEach(item => {
         const exColor = overrides.extras || accent;
-        
-        // --- SMART PILL LOGIC ---
-        // 1. Check if JSON has a specific "tag"
-        // 2. If not, check if title says "Nivel superior"
-        // 3. If neither, default to "Actividad"
-        let pillText = "Actividad";
-        if (item.tag) {
-            pillText = item.tag;
-        } else if (item.title && item.title.includes('Nivel superior')) {
-            pillText = "Nivel Superior";
-        }
-        // ------------------------
+        let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
 
         if (item.kind === 'sentences') {
             const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
-            
             const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
-            
-            // Handle links/buttons
-            const linksList = (item.links || []).map(l => `
-                <a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}">
-                    <span>📖</span> ${l.label || "Abrir Recurso"} ↗
-                </a>
-            `).join('');
+            const linksList = (item.links || []).map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
 
-            extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">
-                    
-                    ${item.img ? `
-                    <div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden">
-                        <div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div>
-                        <img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10">
-                    </div>` : ''}
-
-                    <div class="p-6 flex flex-col justify-center flex-grow">
-                        <div class="flex items-center gap-2 mb-2">
-                             <span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">
-                                 ${pillText}
-                             </span>
-                        </div>
-                        
-                        <h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">
-                            ${item.title || "Actividad de Clase"}
-                        </h3>
-                        
-                        ${instructions}
-                        
-                        ${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}
-                        
-                        <div class="flex flex-wrap gap-2 mt-auto">
-                            ${linksList}
-                        </div>
-                    </div>
-                </section>`;
-
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
         } else if (item.kind === 'card' || item.kind === 'placeholder') {
-             // ... existing code for simple cards ...
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}">
-                    <div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r">
-                        <img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply">
-                    </div>
-                    <div class="p-6 flex flex-col justify-center">
-                        <h3 class="font-black text-xl text-slate-800">${item.title}</h3>
-                        ${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}
-                    </div>
-                </section>`;
-
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
         } else if (item.kind === 'links') {
-            // ... existing code for link lists ...
             const links = item.links.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
-            extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}">
-                    <h3 class="font-black text-lg mb-3">${item.title}</h3>
-                    <div class="space-y-2">${links}</div>
-                </section>`;
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
         }
     });    
-    // --- 7b. MEDIA BLOCKS ---
-    
-    // NEW: MUSICA (Spotify Style)
+
     Object.values(data.musica?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const mColor = overrides.musica || "#1DB954"; 
-             
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group">
-                    <div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900">
-                        <img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform">
-                                <span class="text-white text-sm ml-0.5">▶</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 flex-grow w-full flex flex-col justify-between h-full">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span>
-                                <h3 class="text-lg font-black text-slate-900 leading-tight">${item.subtitulo}</h3>
-                                <p class="text-xs font-bold text-slate-400">${item.titulo}</p>
-                            </div>
-                            ${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}
-                        </div>
-                        <div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden">
-                             <div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div>
-                        </div>
-                        <a href="${item.url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">
-                            Escuchar en Sitio Web ↗
-                        </a>
-                    </div>
-                </section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group"><div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900"><img src="${item.imagen}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity"><div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform"><span class="text-white text-sm ml-0.5">▶</span></div></div></div><div class="p-4 flex-grow w-full flex flex-col justify-between h-full"><div class="flex justify-between items-start mb-2"><div><span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span><h3 class="text-lg font-black text-slate-900 leading-tight">${item.subtitulo}</h3><p class="text-xs font-bold text-slate-400">${item.titulo}</p></div>${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}</div><div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden"><div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div></div><a href="${item.url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">Escuchar en Sitio Web ↗</a></div></section>`;
         }
     });
 
-    // CULTURA (Standard Card)
     Object.values(data.cultura?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const culColor = overrides.cultura || accent;
@@ -630,61 +493,12 @@ async function runRender(data, DIA) {
         }
     });
 
-// CONVERSACION (Chat Style v3: Big Avatar + App Header)
     Object.values(data.conv?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
-             
-             extrasBlock.innerHTML += `
-                <section class="bg-white rounded-2xl card-shadow mb-6 border border-slate-200 overflow-hidden relative group">
-                    
-                    <div class="h-6 w-full bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-1.5">
-                        <div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-green-400/80"></div>
-                    </div>
-                    
-                    <div class="p-5 flex flex-col md:flex-row items-start gap-5">
-                        
-                        <div class="relative flex-shrink-0 mt-1">
-                            <div class="w-20 h-20 rounded-full p-1 border border-slate-200 bg-white shadow-sm">
-                                ${item.imagen 
-                                    ? `<img src="${item.imagen}" class="w-full h-full rounded-full object-cover">` 
-                                    : `<div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-3xl">🗣️</div>`
-                                }
-                            </div>
-                            <div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div>
-                        </div>
-
-                        <div class="flex-grow w-full max-w-2xl">
-                            <div class="flex items-center justify-between mb-1 pl-1">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nuevo mensaje</span>
-                                <span class="text-[10px] font-bold text-slate-300">Ahora</span>
-                            </div>
-                            
-                            <div class="relative bg-blue-500 text-white rounded-2xl rounded-tl-none p-5 shadow-sm mb-2">
-                                <h3 class="text-xl font-bold leading-tight mb-4 text-white">${item.titulo}</h3>
-                                
-                                <a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all backdrop-blur-md shadow-inner">
-                                    <span>💬</span> Responder / Hablar
-                                </a>
-                            </div>
-
-                            <div class="flex items-center gap-1 pl-2 h-6 opacity-60">
-                                <span class="text-xs font-medium text-slate-400 italic">escribiendo</span>
-                                <div class="flex space-x-1 pt-1">
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-                                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>`;
+             extrasBlock.innerHTML += `<section class="bg-white rounded-2xl card-shadow mb-6 border border-slate-200 overflow-hidden relative group"><div class="h-6 w-full bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-green-400/80"></div></div><div class="p-5 flex flex-col md:flex-row items-start gap-5"><div class="relative flex-shrink-0 mt-1"><div class="w-20 h-20 rounded-full p-1 border border-slate-200 bg-white shadow-sm">${item.imagen ? `<img src="${item.imagen}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-3xl">🗣️</div>`}</div><div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div></div><div class="flex-grow w-full max-w-2xl"><div class="flex items-center justify-between mb-1 pl-1"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nuevo mensaje</span><span class="text-[10px] font-bold text-slate-300">Ahora</span></div><div class="relative bg-blue-500 text-white rounded-2xl rounded-tl-none p-5 shadow-sm mb-2"><h3 class="text-xl font-bold leading-tight mb-4 text-white">${item.titulo}</h3><a href="${item.url}" target="_blank" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all backdrop-blur-md shadow-inner"><span>💬</span> Responder / Hablar</a></div><div class="flex items-center gap-1 pl-2 h-6 opacity-60"><span class="text-xs font-medium text-slate-400 italic">escribiendo</span><div class="flex space-x-1 pt-1"><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div></div></div></div></div></section>`;
         }
     });    
 
-    
-    // LECTURA (Book Style)
     Object.values(data.lectura?.items || {}).forEach(item => {
         if (item.dias?.includes(DIA) && item.courses?.includes(CONFIG.COURSE)) {
              const lColor = overrides.lectura || accent;
@@ -692,7 +506,7 @@ async function runRender(data, DIA) {
         }
     });
 
-    // 8. DASHBOARD (Grammar/Resource)
+    // 8. DASHBOARD
     const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
     Object.values(data.apuntes || {}).forEach(topic => {
         const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
@@ -702,13 +516,15 @@ async function runRender(data, DIA) {
         }
     });
 
-    // 9. DYNAMIC GRID (Vocab/MISD/Costa Rica)
+    // 9. DYNAMIC GRID
     const dynamicGrid = document.getElementById('dynamicCardGrid');
     if (dynamicGrid) {
-        const vocabData = data.vocab.descubre2.chapters; let ch = null;
-        for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
-        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+        // Safe check for vocab structure
+        const vocabChapters = data.vocab?.descubre2?.chapters || {}; 
+        let ch = null;
+        for (const k in vocabChapters) { if (vocabChapters[k].dias?.includes(parseInt(DIA))) { ch = vocabChapters[k]; break; } }
         
+        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
         const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
         
         dynamicGrid.innerHTML = `<div>${vocabCard}</div>
@@ -721,69 +537,28 @@ async function runRender(data, DIA) {
 
     // 10. TAREAS
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
-    (data.tareas.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
+    (data.tareas?.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
         const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
     });
 }
 
-async function renderByDate() {
-    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
-    const data = await loadData();
-    const entry = (data.cal?.map || []).sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER);
-    if (entry) {
-        const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
-        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
-        await runRender(data, newDia);
-    } else { alert("No hay clases programadas."); }
-}
-
-async function loadData() {
-    // Helper to safely fetch JSON. If it fails (404), it returns an empty object {} instead of crashing.
-    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => {
-        console.warn(`Failed to load ${url}`, e);
-        return {};
-    });
-
-    try {
-        const [
-            plan, temas, cal, curios, evals, tareas,
-            vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios 
-        ] = await Promise.all([
-            safeFetch(CONFIG.PLAN),
-            safeFetch(CONFIG.TEMAS),
-            safeFetch(CONFIG.CALENDARIO),
-            safeFetch(CONFIG.CURIOSIDADES),
-            safeFetch(CONFIG.EVALS),
-            safeFetch(CONFIG.TAREAS),
-            safeFetch(CONFIG.VOCAB_BANK),
-            safeFetch(CONFIG.APUNTES_BANK),
-            safeFetch(CONFIG.EXTRAS), 
-            safeFetch(CONFIG.MUSICA),
-            safeFetch(CONFIG.LECTURA),
-            safeFetch(CONFIG.CULTURA),
-            safeFetch(CONFIG.CONV),
-            safeFetch(CONFIG.VIDEOS),
-            safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS)
-        ]);
-        
-       return { plan, temas, cal, curios, evals, tareas, vocab, apuntes, extrasDiarios, musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios };
-
-    } catch (e) { 
-        console.error("Critical Load Error", e); 
-    }
-}
-
+// --- INIT (With Teacher Mode & Safety) ---
 async function init() {
     const data = await loadData(); if (!data) return;
-    const now = new Date(); const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-    const liveEntry = data.cal?.map?.find(c => c.fecha === todayStr);
-    let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal?.map?.filter(c => c.fecha <= todayStr).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
+    
+    // Find current live day (ignoring null dias)
+    const now = new Date(); 
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const liveEntry = data.cal.find(c => c.fecha === todayStr && c.dia != null);
+    
+    // Fallback if today is a snow day or weekend
+    let liveDia = liveEntry ? parseInt(liveEntry.dia) : 
+        (data.cal.filter(c => c.fecha <= todayStr && c.dia != null).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
+    
     const params = new URLSearchParams(window.location.search);
     let requestedDia = parseInt(params.get('dia')) || liveDia;
+    
     document.getElementById('diaInput').value = requestedDia;
     await runRender(data, requestedDia);
 }
@@ -802,6 +577,19 @@ async function renderManual() {
     if (!newDia) return;
     try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
     const data = await loadData(); await runRender(data, parseInt(newDia));
+}
+
+async function renderByDate() {
+    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
+    const data = await loadData();
+    const entry = data.cal.sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.ciclo === CONFIG.CICLO_FILTER && c.dia != null);
+    
+    if (entry) {
+        const newDia = parseInt(entry.dia); 
+        document.getElementById('diaInput').value = newDia;
+        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+        await runRender(data, newDia);
+    } else { alert("No hay clases programadas."); }
 }
 
 init();
