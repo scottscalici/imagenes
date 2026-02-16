@@ -9,6 +9,8 @@
     {
       "label": "Tú afirmativo",
       "bank": "bancos/banco_mandatos_informales.json",
+      "identityCategory": "mandatos_informales",
+      "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir"],
       "constraints": { "persona_base": "afirmativo", "tipo_verbo": "simple" },
       "count": 5
     },
