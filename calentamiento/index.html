@@ -19,7 +19,7 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <div>
         <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CALENTAMIENTO</h1>
-        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando...</div>
+        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Conectando...</div>
       </div>
       <div id="stats-container" class="hidden flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
         <div class="text-center">
@@ -51,10 +51,11 @@
           <nav id="nav-tabs" class="space-y-1"></nav>
         </div>
       </aside>
-      <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px]">
+      <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px] relative">
         <div id="module-content">
             <p id="loading-msg" class="text-slate-400 text-sm italic">Cargando...</p>
         </div>
+        <div id="status-bar" class="absolute bottom-2 left-6 right-6 text-[10px] text-slate-300 font-mono text-center"></div>
       </section>
     </div>
   </main>
@@ -64,29 +65,14 @@
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const TEACHER_CODE = "profe123";
     
-    // --- CYCLE CONFIGURATION ---
-    const COURSE_CYCLES = {
-        's2': ['B'],       // S2 only meets on B days
-        's4': ['A', 'B']   // S4 meets on both
-        // Add other courses here if needed, defaults to both
-    };
+    // Config: Which courses meet on which cycle days?
+    const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
 
     const TENSE_MAP = {
       "presente": "Presente",
       "presente_de_subjuntivo": "Subjuntivo",
       "preterito": "Pretérito",
       "imperfecto": "Imperfecto",
-      "imperfecto_de_subjuntivo": "Imperfecto de subjuntivo",
-      "presente_progresivo": "Presente progresivo",
-      "futuro": "Futuro",
-      "condicional": "Condicional",
-      "participio_pasado": "Participio pasado",
-      "preterito_perfecto": "Pretérito perfecto",
-      "preterito_perfecto_de_subjuntivo": "Pretérito perfecto de subjuntivo",
-      "pluscuamperfecto_de_subjuntivo": "Pluscuamperfecto de subjuntivo",
-      "pluscuamperfecto": "Pluscuamperfecto",
-      "futuro_perfecto": "Futuro perfecto",
-      "condicional_perfecto": "Condicional perfecto",
       "mandatos_informales": "Mandatos familiares",
       "mandatos_formales_plurales": "Mandatos",
       "mandatos_nosotros": "Mandatos de nosotros",
@@ -121,61 +107,44 @@
 
     async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
+      const statusBar = document.getElementById('status-bar');
       try {
-        subtitle.textContent = "Analizando calendario...";
+        subtitle.textContent = "Sincronizando...";
         const calData = await fetchData(CAL_URL);
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
 
-        subtitle.textContent = "Cargando curso...";
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
 
-        // --- SMART DATE LOGIC ---
-        // 1. Get today's local date
+        // Smart Day Logic
         const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        const localDateStr = `${y}-${m}-${d}`; 
-
-        // 2. Filter for past days & Sort descending (Newest first)
-        const pastDays = calRes
-            .filter(day => day.fecha <= localDateStr)
-            .sort((a, b) => b.fecha.localeCompare(a.fecha));
-
-        // 3. Determine Allowed Cycles for this course
+        const localDateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`; 
+        
+        const pastDays = calRes.filter(d => d.fecha <= localDateStr).sort((a, b) => b.fecha.localeCompare(a.fecha));
         const allowedCycles = COURSE_CYCLES[runtime.course] || ['A', 'B'];
-
-        // 4. FIND THE ACTIVE DAY (Rewind Loop)
         let currentSchoolDay = null;
         let activeDayObj = null;
 
         for (const day of pastDays) {
-            // Check 1: Is school in session? (dia is not null)
-            if (day.dia !== null && day.dia !== undefined) {
-                // Check 2: Is it the right cycle for this course?
-                if (!day.ciclo || allowedCycles.includes(day.ciclo)) {
-                    currentSchoolDay = day.dia;
-                    activeDayObj = day;
-                    break; // Found the most recent valid class!
-                }
+            if (day.dia !== null && day.dia !== undefined && (!day.ciclo || allowedCycles.includes(day.ciclo))) {
+                currentSchoolDay = day.dia;
+                activeDayObj = day;
+                break;
             }
         }
 
         if (!currentSchoolDay) {
-            // Fallback: If logic fails, just grab the latest entry from the schedule
-            console.warn("Fallback trigger: No valid calendar day found.");
             schedRes.sort((a, b) => a.dia - b.dia);
             currentSchoolDay = schedRes[schedRes.length - 1].dia;
+            statusBar.textContent = "Modo Fallback activado (Calendario no disp.)";
+        } else {
+            runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
         }
 
-        runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
-
-        // --- LOAD LESSON ---
         const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
         const latestClassEntry = pastEntries[0];
         const entry = targetDia ? schedRes.find(e => e.dia == targetDia) : latestClassEntry;
         
-        if (!entry) throw new Error(`No hay lección asignada para el Día ${targetDia || currentSchoolDay}`);
+        if (!entry) throw new Error(`Sin plan para Día ${targetDia || currentSchoolDay}`);
 
         runtime.activeDia = entry.dia;
         runtime.isLatestClass = (latestClassEntry && entry.dia === latestClassEntry.dia);
@@ -189,15 +158,27 @@
           fetchData(`${BASE_URL}${entry.bank}`)
         ]);
 
-        const getTargets = (groups) => {
-          let list = [];
-          groups.forEach(g => { if (manifest[runtime.tense] && manifest[runtime.tense][g]) list = list.concat(manifest[runtime.tense][g]); });
-          return list;
-        };
+        // --- SAFETY VALVE LOGIC ---
+        // Try to get targets normally
+        let targetList = [];
+        const groups = entry.identityGroups || [entry.identityGroup];
+        
+        if (manifest[runtime.tense]) {
+            groups.forEach(g => { 
+                if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); 
+            });
+        }
 
-        const applyConstraints = (rawBank, targetList) => {
+        // If target list is empty (Mismatch error), load EVERYTHING to prevent blank screen
+        if (targetList.length === 0) {
+            console.warn("Identity Mismatch: No verbs found for groups. Loading full bank.");
+            statusBar.textContent = `Aviso: Categoría '${runtime.tense}' no encontrada en identity. Cargando todo.`;
+            targetList = bank.map(v => v.infinitivo); // Safety valve: allow all infinitives
+        }
+
+        const applyConstraints = (rawBank, allowedInfinitives) => {
           return rawBank.filter(v => {
-            if (!targetList.includes(v.infinitivo)) return false;
+            if (!allowedInfinitives.includes(v.infinitivo)) return false;
             if (!runtime.constraints) return true;
             const vTypes = v.tipo_verbo || [];
             if (runtime.constraints.tipo_verbo === "simple" && vTypes.includes("objetos")) return false;
@@ -209,19 +190,22 @@
         };
 
         const totalNeeded = entry.totalNeeded || 20;
-        const vRatio = entry.vipRatio !== undefined ? entry.vipRatio : 1.0;
-        const vCount = Math.floor(totalNeeded * vRatio);
+        const vCount = Math.floor(totalNeeded * (entry.vipRatio || 1.0));
         
-        // Spiral logic
-        const currentG = entry.identityGroups || [entry.identityGroup];
-        const pastG = schedRes.filter(e => e.dia < runtime.activeDia).flatMap(e => e.identityGroups || [e.identityGroup]);
+        // Apply filters
+        let pool = applyConstraints(bank, targetList);
+        
+        // Second Safety Valve: If constraints are too strict and pool is empty
+        if (pool.length === 0) {
+             console.warn("Constraints too strict. Showing all verbs.");
+             statusBar.textContent += " | Constraints removidos (0 matches)";
+             pool = bank; // Nuclear option: Show raw bank
+        }
 
-        let vPool = applyConstraints(bank, getTargets(currentG));
-        let rPool = applyConstraints(bank, getTargets(pastG)).filter(v => !getTargets(currentG).includes(v.infinitivo));
+        // Shuffle and Slice
+        runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
 
-        runtime.verbs = [...seededShuffle([...vPool]).slice(0, vCount), ...seededShuffle([...rPool]).slice(0, totalNeeded - vCount)];
-
-        subtitle.textContent = "Cargando vocabulario...";
+        subtitle.textContent = "Cargando vocab...";
         const vData = await fetchData(`${BASE_URL}${entry.vocabFile}`);
         const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
@@ -236,7 +220,6 @@
       } catch (err) { 
         console.error(err);
         subtitle.innerHTML = `<span class="text-red-500 font-black">ERROR: ${err.message}</span>`;
-        document.getElementById('module-content').innerHTML = `<div class="p-10 text-center text-slate-400">Error: ${err.message}<br>Ver consola.</div>`;
       }
     }
 
@@ -244,21 +227,16 @@
       const sub = document.getElementById('pageSubtitle');
       const pageTitle = document.getElementById('pageTitle');
       let displayTense = TENSE_MAP[runtime.tense] || runtime.tense;
-      
       if (runtime.constraints) {
         if (runtime.constraints.persona_base === "él/ella/Ud.") displayTense = "Mandatos Formales (Ud.)";
         else if (runtime.constraints.persona_base === "ellos/ellas/Uds.") displayTense = "Mandatos Plurales (Uds.)";
         else if (runtime.constraints.persona_base === "tú") displayTense = "Mandatos Familiares (Tú)";
       }
-
-      // Add Cycle info to header if available
       const cycleBadge = runtime.currentCiclo ? `<span class="mx-2 text-amber-500 font-bold">Ciclo ${runtime.currentCiclo}</span>` : "";
-
       sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span>${cycleBadge}<span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
 
-    // --- (Remaining functions: renderSidebar, showModule, checkVerbs... same as before) ---
     function renderSidebar(entries) {
       const nav = document.getElementById('nav-tabs');
       const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Listo"];
@@ -354,7 +332,7 @@
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase">${document.getElementById('pageTitle').textContent.split(':').pop()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
