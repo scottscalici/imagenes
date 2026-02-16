@@ -1,4 +1,17 @@
 [
+  {"dia": 45,
+  "date": "2026-02-09",
+  "topic": "Mandatos Formales (Usted)",
+  "bank": "bancos/banco_mandatos_formales_plurales.json",
+  "vocabFile": "vocab/D2-2-1.json",
+  "identityCategory": "mandatos_formales_plurales",
+  "identityGroups": ["regulares", "irregulares"],
+  "constraints": {
+    "persona_base": "él/ella/Ud.",
+    "formal": true 
+  },
+  "proficiency": 0.9
+  },
   {
     "dia": 46,
     "date": "2026-02-11",
