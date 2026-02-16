@@ -7,21 +7,25 @@
   "proficiency": 0.8,
   "blocks": [
     {
+      "label": "Tú afirmativo",
       "bank": "bancos/banco_mandatos_informales.json",
       "constraints": { "persona_base": "afirmativo", "tipo_verbo": "simple" },
       "count": 5
     },
     {
+      "label": "Tú negativo",
       "bank": "bancos/banco_mandatos_informales.json",
       "constraints": { "persona_base": "negativo", "tipo_verbo": "simple"  },
       "count": 5
     },
     {
+      "label": "Mandatos formales (Usted)",
       "bank": "bancos/banco_mandatos_formales_plurales.json",
       "constraints": { "persona_base": "él/ella/Ud.",  "tipo_verbo": "simple"  },
       "count": 5
     },
     {
+      "label": "Mandatos plurales (Ustedes)",
       "bank": "bancos/banco_mandatos_formales_plurales.json",
       "constraints": { "persona_base": "ellos/ellas/Uds.",  "tipo_verbo": "simple"  },
       "count": 5
