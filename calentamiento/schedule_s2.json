@@ -1,11 +1,40 @@
 [
+  {
+  "dia": 44,
+  "date": "2026-02-05",
+  "topic": "Mandatos: El Gran Repaso (Mix)",
+  "vocabFile": "vocab/D2-2-3.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "bank": "bancos/banco_mandatos_informales.json",
+      "constraints": { "persona_base": "afirmativo", "tipo_verbo": "simple" },
+      "count": 5
+    },
+    {
+      "bank": "bancos/banco_mandatos_informales.json",
+      "constraints": { "persona_base": "negativo", "tipo_verbo": "simple"  },
+      "count": 5
+    },
+    {
+      "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "constraints": { "persona_base": "él/ella/Ud.",  "tipo_verbo": "simple"  },
+      "count": 5
+    },
+    {
+      "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "constraints": { "persona_base": "ellos/ellas/Uds.",  "tipo_verbo": "simple"  },
+      "count": 5
+    }
+  ]
+},
   {"dia": 45,
   "date": "2026-02-09",
-  "topic": "Mandatos Formales (Usted)",
-  "bank": "bancos/banco_mandatos_formales_plurales.json",
+  "topic": "Mandatos informales (Tú)",
+  "bank": "bancos/banco_mandatos_informales.json",
   "vocabFile": "vocab/D2-2-1.json",
-  "identityCategory": "mandatos_formales_plurales",
-  "identityGroups": ["regulares", "irregulares"],
+  "identityCategory": "mandatos_informales",
+  "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir", "vin_diesel"],
   "constraints": {
     "persona_base": "él/ella/Ud.",
     "formal": true 
@@ -15,18 +44,30 @@
   {
     "dia": 46,
     "date": "2026-02-11",
-    "topic": "Presente: Repaso de Regulares (-AR, -ER, -IR)",
-    "bank": "bancos/banco_presente.json",
-    "vocabFile": "vocab/D2-2-1.json",
-    "identityCategory": "presente",
-    "identityGroups": ["regulars_ar", "regulars_er", "regulars_ir"],
+    "topic": "Mandatos informales (Tú)",
+    "bank": "bancos/banco_mandatos_informales.json",
+    "vocabFile": "vocab/D2-2-3.json",
+    "identityCategory": "mandatos_informales",
+    "identityGroups": ["yo_go_negativos", "sides_negativos", "car_gar_zar"],
     "totalNeeded": 20,
     "vipRatio": 0.3,
     "proficiency": 0.6
   },
+  {
+    "dia": 47,
+    "date": "2026-02-13",
+    "topic": "Mandatos informales (Tú)",
+    "bank": "bancos/banco_mandatos_informales.json",
+    "vocabFile": "vocab/D2-2-3.json",
+    "identityCategory": "mandatos_informales",
+    "identityGroups": ["yo_go_negativos", "sides_negativos", "car_gar_zar"],
+    "totalNeeded": 20,
+    "vipRatio": 0.5,
+    "proficiency": 0.6
+  },
  {
-  "dia": 47,
-   "date": "2026-02-13",
+  "dia": 48,
+   "date": "2026-02-23",
     "topic": "Presente: Repaso de Regulares (-AR, -ER, -IR)",
     "bank": "bancos/banco_presente.json",
     "vocabFile": "vocab/D2-2-1.json",
