@@ -112,7 +112,7 @@
       const subtitle = document.getElementById('pageSubtitle');
       const statusBar = document.getElementById('status-bar');
       
-      // *** TIMER HARD RESET ***
+      // Timer Hard Reset
       clearInterval(runtime.timerInterval);
       runtime.startTime = null;
       runtime.verbTimeFinal = null;
@@ -169,12 +169,37 @@
           fetchData(`${BASE_URL}${entry.bank}`)
         ]);
 
+        // --- CATEGORY ISOLATION LOGIC (RESTORED) ---
+        // 1. Get Current Groups
+        const currentG = entry.identityGroups || [entry.identityGroup];
+        
+        // 2. Get Past Groups (Spiral Review)
+        // CRITICAL FIX: Only include past lessons if they match the CURRENT tense/category
+        const pastG = schedRes
+            .filter(e => 
+                e.dia < runtime.activeDia && 
+                e.identityCategory === runtime.tense // Only spiral review same-category verbs
+            )
+            .flatMap(e => e.identityGroups || [e.identityGroup]);
+
+        // 3. Build Target List
         let targetList = [];
-        const groups = entry.identityGroups || [entry.identityGroup];
         if (manifest[runtime.tense]) {
-            groups.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
+            // Add Current Verbs
+            currentG.forEach(g => { 
+                if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); 
+            });
+            // Add Spiral Verbs
+            pastG.forEach(g => { 
+                if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); 
+            });
         }
-        if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
+        
+        // Safety Valve: If list is empty, allow all
+        if (targetList.length === 0) {
+            console.warn("Target list empty. Loading full bank.");
+            targetList = bank.map(v => v.infinitivo);
+        }
 
         const applyConstraints = (rawBank, allowedInfinitives) => {
           return rawBank.filter(v => {
@@ -191,6 +216,8 @@
 
         const totalNeeded = entry.totalNeeded || 20;
         const vCount = Math.floor(totalNeeded * (entry.vipRatio || 1.0));
+        
+        // Apply Constraints
         let pool = applyConstraints(bank, targetList);
         if (pool.length === 0) pool = bank; 
 
@@ -204,7 +231,7 @@
 
         renderSidebar(pastEntries.length > 0 ? pastEntries : schedRes);
         
-        startSessionTimer(); // START TIMER HERE
+        startSessionTimer();
         
         showModule(1);
         updateProgress();
@@ -259,14 +286,12 @@
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
       
-      // Stop verb timer if leaving verb section
       if (n === 5 && !runtime.verbTimeFinal) {
           stopVerbTimer();
       }
 
       if (n === 8) {
         // --- FINISHED SCREEN ---
-        // Display verb time (frozen) or current time if it failed
         const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
         const msg = runtime.isPerfectRun ? 
             `<span class="text-emerald-500 font-bold block mt-2 text-sm">✨ ¡Nuevo Récord! (100% Precisión)</span>` : 
@@ -299,24 +324,21 @@
 
     function showNextButton(n) {
         const container = document.getElementById('next-btn-container');
-        container.innerHTML = ""; // Clear previous
+        container.innerHTML = ""; 
 
-        // 1. Standard Next Button
         const btn = document.createElement('button');
         btn.className = "btn-next px-6 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-700 shadow-lg";
         btn.textContent = "Siguiente ➡";
         btn.onclick = () => showModule(n + 1);
         container.appendChild(btn);
 
-        // 2. Optional "Skip Vocab" Button
-        // Show ONLY if: We are on the last verb page (n=4) AND (It's a past lesson OR It's Practice Mode)
+        // Optional Skip Vocab Button
         const isSkipAllowed = (n === 4) && (!runtime.isLatestClass || runtime.isPracticeMode);
-        
         if (isSkipAllowed) {
             const skipBtn = document.createElement('button');
             skipBtn.className = "btn-next px-6 py-3 bg-slate-200 text-slate-500 font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-300 shadow-sm ml-2";
             skipBtn.textContent = "Saltar Vocab 🏁";
-            skipBtn.onclick = () => showModule(8); // Jump to Finish
+            skipBtn.onclick = () => showModule(8);
             container.appendChild(skipBtn);
         }
     }
@@ -405,7 +427,6 @@
     }
 
     function startSessionTimer() {
-        // Double check to ensure we don't have multiple intervals
         clearInterval(runtime.timerInterval); 
         runtime.startTime = Date.now();
         document.getElementById('stats-container').classList.remove('hidden');
@@ -432,6 +453,11 @@
         updateBestDisplay();
     }
 
+    window.startRandomPractice = () => {
+        runtime.isPracticeMode = true; 
+        init(runtime.activeDia); 
+    };
+
     function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
     
     function updateBestDisplay() { 
@@ -448,7 +474,7 @@
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase tracking-widest">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase tracking-widest">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
