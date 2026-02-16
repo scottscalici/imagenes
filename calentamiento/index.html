@@ -78,20 +78,19 @@
       tense: "", title: ""
     };
 
-   // --- CORRECTED SEEDING LOGIC ---
+ // --- STICKY SEEDING LOGIC ---
 function seededShuffle(array) {
   let m = array.length, t, i;
-  
-  // LOGIC: 
-  // 1. If it's today's official lesson AND not in practice mode -> Seeded (Sync)
-  // 2. If it's a past date OR practice mode -> Random (Solo)
   let seedNum;
-  if (runtime.isToday && !runtime.isPracticeMode) {
-      // Use the date as a fixed seed
+
+  // Use the date of the lesson as the seed ONLY if it's the most recent lesson
+  // AND the user hasn't explicitly clicked "Práctica Extra"
+  if (runtime.isLatestClass && !runtime.isPracticeMode) {
+      // This converts "2026-02-13" into a consistent number for the shuffle
       seedNum = runtime.activeDate.split('-').reduce((a, b) => a + parseInt(b), 0);
   } else {
-      // Use a random seed for solo practice
-      seedNum = Math.random() * 10000;
+      // If it's an old lesson (like Feb 11) or Practice Mode, use true randomness
+      seedNum = Math.floor(Math.random() * 1000000);
   }
 
   while (m) {
@@ -105,29 +104,42 @@ async function init(targetDate = null) {
   try {
     const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
     const schedule = await res.json();
-    
+
+    // 1. Get current calendar date
     const todayStr = new Date().toISOString().split('T')[0];
+
+    // 2. Filter out Feb 24, Feb 26, etc. (Anything in the future)
     const pastEntries = schedule.filter(e => e.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date));
     
-    const entry = targetDate ? schedule.find(e => e.date === targetDate) : pastEntries[0];
+    // 3. Identify the "Official Class" (The top of the filtered list)
+    // On Feb 15, this will correctly identify Feb 13
+    const latestClassEntry = pastEntries[0]; 
+    
+    // 4. Decide which entry to load
+    const entry = targetDate ? schedule.find(e => e.date === targetDate) : latestClassEntry;
     if (!entry) return;
 
+    // 5. Set the Flags
     runtime.activeDate = entry.date;
-    runtime.isToday = (entry.date === todayStr);
+    // CRITICAL: isLatestClass is ONLY true if we are viewing the most recent past lesson
+    runtime.isLatestClass = (entry.date === latestClassEntry.date); 
+    
     runtime.tense = TENSE_MAP[entry.identityCategory] || "Verbos";
     runtime.title = entry.topic;
 
+    // 6. Fetch Banks
     const [manifest, bank] = await Promise.all([
       fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
       fetch(`${BASE_URL}calentamiento/${entry.bank}`).then(r => r.json())
     ]);
 
+    // 7. Filter & Seeded Shuffle
     let targets = [];
     const groups = entry.identityGroups || [entry.identityGroup];
     groups.forEach(g => { if (manifest[entry.identityCategory][g]) targets = targets.concat(manifest[entry.identityCategory][g]); });
 
-    // Use our corrected shuffle logic
     let filteredVerbs = bank.filter(q => targets.includes(q.infinitivo));
+    // SeededShuffle now knows whether to be 'Sticky' or 'Random'
     runtime.verbs = seededShuffle([...filteredVerbs]).slice(0, 20);
 
     const vData = await fetch(`${BASE_URL}calentamiento/${entry.vocabFile}`).then(r => r.json());
@@ -138,13 +150,16 @@ async function init(targetDate = null) {
 
     runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
+    // 8. UI Rendering
     renderSidebar(pastEntries);
     showModule(1);
     updateProgress();
-    updateHeaderDisplay(); // Removes "Cargando" and shows real data
-  } catch (err) { console.error(err); }
+    updateHeaderDisplay(); 
+  } catch (err) { 
+    console.error(err); 
+    document.getElementById('pageSubtitle').textContent = "Error de conexión.";
+  }
 }
-
 
     function updateHeaderDisplay() {
         const sub = document.getElementById('pageSubtitle');
