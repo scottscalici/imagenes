@@ -19,7 +19,7 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <div>
         <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CALENTAMIENTO</h1>
-        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cargando día escolar...</div>
+        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando...</div>
       </div>
       <div id="stats-container" class="hidden flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
         <div class="text-center">
@@ -46,23 +46,27 @@
         <button id="btn-projector" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl shadow-md transition-all uppercase text-xs tracking-widest">📺 Vista de Proyector</button>
         <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
           <div id="time-machine-container">
-            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">Clases Anteriores</label>
+            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">HISTORIAL</label>
           </div>
           <nav id="nav-tabs" class="space-y-1"></nav>
         </div>
       </aside>
       <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px]">
-        <div id="module-content"></div>
+        <div id="module-content">
+            <p id="loading-msg" class="text-slate-400 text-sm italic">Cargando...</p>
+        </div>
       </section>
     </div>
   </main>
+
   <script>
-    const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/";
+    const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
+    const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const TEACHER_CODE = "profe123";
     
     const TENSE_MAP = {
       "presente": "Presente",
-      "presente_de_subjuntivo": "Presente de subjuntivo",
+      "presente_de_subjuntivo": "Subjuntivo",
       "preterito": "Pretérito",
       "imperfecto": "Imperfecto",
       "imperfecto_de_subjuntivo": "Imperfecto de subjuntivo",
@@ -76,12 +80,11 @@
       "pluscuamperfecto": "Pluscuamperfecto",
       "futuro_perfecto": "Futuro perfecto",
       "condicional_perfecto": "Condicional perfecto",
-      "mandatos_informales": "Mandatos informales",
+      "mandatos_informales": "Mandatos familiares",
       "mandatos_formales_plurales": "Mandatos",
       "mandatos_nosotros": "Mandatos de nosotros",
       "mandatos_vosotros": "Mandatos de vosotros"
     };
-
 
     const runtime = {
       course: new URLSearchParams(window.location.search).get('course') || 's2',
@@ -103,42 +106,95 @@
       return array;
     }
 
+    async function fetchData(url) {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`404: ${url.split('/').pop()}`);
+        return r.json();
+    }
+
     async function init(targetDia = null) {
+      const subtitle = document.getElementById('pageSubtitle');
       try {
-        const [calRes, schedRes] = await Promise.all([
-          fetch(CALENDARIO_URL).then(r => r.json()),
-          fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`).then(r => r.json())
-        ]);
+        subtitle.textContent = "Obteniendo día escolar...";
+        const calData = await fetchData(CAL_URL);
+        const calRes = Array.isArray(calData) ? calData : (calData.map || []);
 
-        const todayStr = new Date().toISOString().split('T')[0];
-        const currentDayObj = calRes.find(d => d.date === todayStr) || calRes.filter(d => d.date <= todayStr).pop();
-        const currentSchoolDay = currentDayObj.dia;
+        subtitle.textContent = "Obteniendo lecciones...";
+        const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
 
-        const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
-        const latestClassEntry = pastEntries[0];
+        // --- STEP 1: Determine the "Current" School Day Number ---
         
-        const entry = targetDia ? schedRes.find(e => e.dia == targetDia) : latestClassEntry;
-        if (!entry) return;
+        // Use local machine date to avoid timezone issues
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const localDateStr = `${y}-${m}-${d}`; 
 
+        // Filter for all calendar entries that are Today or Earlier
+        // Sort them so the most recent one is last
+        const pastDays = calRes
+            .filter(day => day.fecha <= localDateStr)
+            .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+        if (pastDays.length === 0) throw new Error("No hay días escolares pasados en el calendario.");
+        
+        // The last item in this list is effectively "Today" in school terms
+        const currentSchoolDayObj = pastDays[pastDays.length - 1];
+        const currentSchoolDay = currentSchoolDayObj.dia;
+
+        // --- STEP 2: Match that Number to the Schedule ---
+
+        // Find the lesson for this specific day number (e.g., 47)
+        let entry = schedRes.find(e => e.dia === currentSchoolDay);
+
+        // If explicitly requested via dropdown, use that instead
+        if (targetDia) {
+            entry = schedRes.find(e => e.dia == targetDia);
+        }
+
+        // --- SAFEGUARD: If Day 47 exists in Calendar but NOT in Schedule ---
+        // (Maybe you haven't written the plan for Day 47 yet?)
+        // Fallback to the most recent existing lesson *before* Day 47
+        if (!entry) {
+            console.warn(`Dia ${currentSchoolDay} exists in calendar but not in schedule. Falling back.`);
+            const availableLessons = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a,b) => b.dia - a.dia);
+            entry = availableLessons[0];
+        }
+
+        if (!entry) throw new Error(`No se encontró ninguna lección válida (<= Día ${currentSchoolDay})`);
+
+        // Populate Sidebar History (Only show lessons that have actually happened)
+        const historyEntries = schedRes
+            .filter(e => e.dia <= currentSchoolDay)
+            .sort((a, b) => b.dia - a.dia);
+
+        // --- STEP 3: Load Data ---
         runtime.activeDia = entry.dia;
-        runtime.isLatestClass = (entry.dia === latestClassEntry.dia);
+        // Check if this entry corresponds to the absolute latest available in the calendar
+        runtime.isLatestClass = (entry.dia === currentSchoolDay);
         runtime.tense = entry.identityCategory;
         runtime.title = entry.topic;
         runtime.constraints = entry.constraints || null;
 
+        subtitle.textContent = "Cargando recursos...";
         const [manifest, bank] = await Promise.all([
-          fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
-          fetch(`${BASE_URL}${entry.bank}`).then(r => r.json())
+          fetchData(`${BASE_URL}verbs_identity.json`),
+          fetchData(`${BASE_URL}${entry.bank}`)
         ]);
 
-        const currentGroups = entry.identityGroups || [entry.identityGroup];
-        const pastGroups = schedRes.filter(e => e.dia < runtime.activeDia).flatMap(e => e.identityGroups || [e.identityGroup]);
-        
         const getTargets = (groups) => {
           let list = [];
           groups.forEach(g => { if (manifest[runtime.tense] && manifest[runtime.tense][g]) list = list.concat(manifest[runtime.tense][g]); });
           return list;
         };
+
+        // Review Spiral: Look at ALL lessons prior to the active one
+        const pastG = schedRes
+            .filter(e => e.dia < runtime.activeDia)
+            .flatMap(e => e.identityGroups || [e.identityGroup]);
+        
+        const currentG = entry.identityGroups || [entry.identityGroup];
 
         const applyConstraints = (rawBank, targetList) => {
           return rawBank.filter(v => {
@@ -154,23 +210,29 @@
         };
 
         const totalNeeded = entry.totalNeeded || 20;
-        const vipCount = Math.floor(totalNeeded * (entry.vipRatio || 1.0));
-        let vipPool = applyConstraints(bank, getTargets(currentGroups));
-        let reviewPool = applyConstraints(bank, getTargets(pastGroups)).filter(v => !getTargets(currentGroups).includes(v.infinitivo));
+        const vRatio = entry.vipRatio !== undefined ? entry.vipRatio : 1.0;
+        const vCount = Math.floor(totalNeeded * vRatio);
 
-        runtime.verbs = [...seededShuffle([...vipPool]).slice(0, vipCount), ...seededShuffle([...reviewPool]).slice(0, totalNeeded - vipCount)];
+        let vPool = applyConstraints(bank, getTargets(currentG));
+        let rPool = applyConstraints(bank, getTargets(pastG)).filter(v => !getTargets(currentG).includes(v.infinitivo));
 
-        const vData = await fetch(`${BASE_URL}${entry.vocabFile}`).then(r => r.json());
+        runtime.verbs = [...seededShuffle([...vPool]).slice(0, vCount), ...seededShuffle([...rPool]).slice(0, totalNeeded - vCount)];
+
+        const vData = await fetchData(`${BASE_URL}${entry.vocabFile}`);
         const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
         })).filter(v => v.es);
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(pastEntries);
+        renderSidebar(historyEntries);
         showModule(1);
         updateProgress();
         updateHeaderDisplay();
-      } catch (err) { console.error(err); }
+      } catch (err) { 
+        console.error(err);
+        subtitle.innerHTML = `<span class="text-red-500 font-black">ERROR: ${err.message}</span>`;
+        document.getElementById('module-content').innerHTML = `<div class="p-10 text-center text-slate-400">Error: ${err.message}<br>Ver consola (F12)</div>`;
+      }
     }
 
     function updateHeaderDisplay() {
@@ -182,7 +244,7 @@
         else if (runtime.constraints.persona_base === "ellos/ellas/Uds.") displayTense = "Mandatos Plurales (Uds.)";
         else if (runtime.constraints.persona_base === "tú") displayTense = "Mandatos Familiares (Tú)";
       }
-      sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black">DÍA ${runtime.activeDia}</span>`;
+      sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
 
@@ -193,7 +255,7 @@
       let sel = document.getElementById('tm-select');
       if (!sel) {
         sel = document.createElement('select'); sel.id = "tm-select";
-        sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer";
+        sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer uppercase";
         sel.onchange = (e) => { runtime.isPracticeMode = false; init(e.target.value); };
         document.getElementById('time-machine-container').appendChild(sel);
       }
@@ -204,17 +266,17 @@
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
       if (n === 8) {
-        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 uppercase tracking-tighter tracking-widest">¡Listo!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Calentamiento completado.</p></div>`;
+        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Listo!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Práctica terminada.</p></div>`;
       } else if (n > 4) {
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
         content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
-          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
+          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${TENSE_MAP[runtime.tense] || runtime.tense}</h2></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + 
-          `</div><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button>`;
+          `</div><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button>`;
       }
       startTimer(); updateProgress();
     }
@@ -255,17 +317,17 @@
       area.innerHTML = `<div class="grid grid-cols-2 gap-3"><div id="match-es" class="space-y-2"></div><div id="match-en" class="space-y-2"></div></div>`;
       let selectedEs = null, solved = 0;
       pairs.forEach(p => {
-        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold"; b.textContent = p.es;
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold transition-all hover:bg-sky-50"; b.textContent = p.es;
         b.onclick = () => { document.querySelectorAll('#match-es button').forEach(x=>x.classList.remove('match-selected')); b.classList.add('match-selected'); selectedEs = p; };
         document.getElementById('match-es').appendChild(b);
       });
       shuffledEn.forEach(p => {
-        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs"; b.textContent = p.en;
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs transition-all hover:bg-sky-50"; b.textContent = p.en;
         b.onclick = () => {
           if (selectedEs && selectedEs.en === p.en) {
             b.classList.add('opacity-0', 'pointer-events-none');
             document.querySelectorAll('#match-es button').forEach(x => { if(x.textContent === selectedEs.es) x.classList.add('opacity-0', 'pointer-events-none'); });
-            solved++; selectedEs = null; if (solved === pairs.length) area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs">¡Listo! Dale a Corregir.</p>`;
+            solved++; selectedEs = null; if (solved === pairs.length) area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs">¡Correcto! Haz clic en Corregir de nuevo.</p>`;
           }
         };
         document.getElementById('match-en').appendChild(b);
