@@ -1,1 +1,132 @@
-
+[
+  {
+  "dia": 44,
+  "date": "2026-02-05",
+  "topic": "Mandatos: El Gran Repaso (Mix)",
+  "vocabFile": "vocab/D2-2-3.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Tú afirmativo",
+      "bank": "bancos/banco_mandatos_informales.json",
+      "identityCategory": "mandatos_informales",
+      "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir"],
+      "constraints": { "persona_base": "afirmativo", "tipo_verbo": "simple" },
+      "count": 5
+    },
+    {
+      "label": "Tú negativo",
+      "bank": "bancos/banco_mandatos_informales.json",
+      "identityCategory": "mandatos_informales",
+      "identityGroups": ["yo_go_negativos", "regulares_er", "regulares_ir"],
+      "constraints": { "persona_base": "negativo", "tipo_verbo": "simple"  },
+      "count": 5
+    },
+    {
+      "label": "Mandatos formales (Usted)",
+      "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "identityCategory": "mandatos_formales_plurales",
+      "identityGroups": ["yo_go", "regulares_er", "regulares_ir"],
+      "constraints": { "persona_base": "él/ella/Ud.",  "tipo_verbo": "simple"  },
+      "count": 5
+    },
+    {
+      "label": "Mandatos plurales (Ustedes)",
+      "bank": "bancos/banco_mandatos_formales_plurales.json",
+      "identityCategory": "mandatos_formales_plurales",
+      "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir"],
+      "constraints": { "persona_base": "ellos/ellas/Uds.",  "tipo_verbo": "simple"  },
+      "count": 5
+    }
+  ]
+},
+  {"dia": 45,
+  "date": "2026-02-09",
+  "topic": "Mandatos informales (Tú)",
+  "bank": "bancos/banco_mandatos_informales.json",
+  "vocabFile": "vocab/D2-2-1.json",
+  "identityCategory": "mandatos_informales",
+  "identityGroups": ["regulares_ar", "regulares_er", "regulares_ir", "vin_diesel"],
+  "constraints": {
+    "persona_base": "él/ella/Ud.",
+    "formal": true 
+  },
+  "proficiency": 0.9
+  },
+  {
+    "dia": 46,
+    "date": "2026-02-11",
+    "topic": "Mandatos informales (Tú)",
+    "bank": "bancos/banco_mandatos_informales.json",
+    "vocabFile": "vocab/D2-2-3.json",
+    "identityCategory": "mandatos_informales",
+    "identityGroups": ["yo_go_negativos", "sides_negativos", "car_gar_zar"],
+    "totalNeeded": 20,
+    "vipRatio": 0.3,
+    "proficiency": 0.6
+  },
+  {
+    "dia": 47,
+    "date": "2026-02-13",
+    "topic": "Mandatos informales (Tú)",
+    "bank": "bancos/banco_mandatos_informales.json",
+    "vocabFile": "vocab/D2-2-3.json",
+    "identityCategory": "mandatos_informales",
+    "identityGroups": ["yo_go_negativos", "sides_negativos", "car_gar_zar"],
+    "totalNeeded": 20,
+    "vipRatio": 0.5,
+    "proficiency": 0.6
+  },
+ {
+  "dia": 48,
+   "date": "2026-02-23",
+    "topic": "Presente: Repaso de Regulares (-AR, -ER, -IR)",
+    "bank": "bancos/banco_presente.json",
+    "vocabFile": "vocab/D2-2-1.json",
+    "identityCategory": "presente",
+    "identityGroups": ["regulars_ar", "regulars_er", "regulars_ir"],
+    "totalNeeded": 20,
+    "vipRatio": 0.3,
+    "proficiency": 1.0
+  },
+  {
+    "dia": 48,
+    "date": "2026-02-24",
+    "topic": "Presente: Los Verbos 'Bota' (Stem Changers)",
+    "bank": "bancos/banco_presente.json",
+    "identityCategory": "presente",
+    "identityGroups": ["stem_ie", "stem_ue", "stem_i"],
+    "totalNeeded": 20,
+    "vipRatio": 0.6
+  },
+  {
+    "dia": 49,
+    "date": "2026-02-26",
+    "topic": "Presente: Cambios de Ortografía (Yo-Go, Cer/Cir, Ger/Gir)",
+    "bank": "bancos/banco_presente.json",
+    "identityCategory": "presente",
+    "identityGroups": ["go_verbs", "cer_cir", "ger_gir", "guir"],
+    "totalNeeded": 20,
+    "vipRatio": 0.5
+  },
+  {
+    "dia": 50,
+    "date": "2026-03-02",
+    "topic": "Presente: Los Irregulares Totales (Ser, Estar, Ir...)",
+    "bank": "bancos/banco_presente.json",
+    "identityCategory": "presente",
+    "identityGroups": ["irregulars", "uir"],
+    "totalNeeded": 15,
+    "vipRatio": 0.9 
+  },
+  {
+    "dia": 51,
+    "date": "2026-03-04",
+    "topic": "Presente: Rutina Diaria (Reflexivos)",
+    "bank": "bancos/banco_presente.json",
+    "identityCategory": "presente",
+    "identityGroup": "reflexives",
+    "totalNeeded": 15,
+    "vipRatio": 0.5
+  }
+]
