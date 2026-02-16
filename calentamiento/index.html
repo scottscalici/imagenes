@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calentamiento – Sistema Final</title>
+  <title>Calentamiento – Sistema Maestro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
@@ -19,7 +19,7 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <div>
         <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter">CALENTAMIENTO</h1>
-        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase">Cargando...</div>
+        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Cargando...</div>
       </div>
       
       <div id="stats-container" class="hidden flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
@@ -27,17 +27,17 @@
           <p class="text-[9px] font-black text-slate-400 uppercase leading-none mb-1">Tiempo</p>
           <p id="live-timer" class="text-lg font-black text-sky-600 leading-none">00:00</p>
         </div>
-        <div class="text-center">
+        <div class="text-center border-l border-slate-200 pl-4">
           <p class="text-[9px] font-black text-slate-400 uppercase leading-none mb-1">Mejor</p>
           <p id="best-time" class="text-lg font-black text-emerald-500 leading-none">--:--</p>
         </div>
       </div>
 
-      <div class="w-40 sm:w-64">
+      <div class="w-40 sm:w-64 text-right">
         <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div id="progress-fill" class="h-full bg-emerald-500 transition-all duration-300 w-0"></div>
         </div>
-        <p id="progress-label" class="text-[10px] text-slate-600 mt-1 text-right font-bold uppercase">0%</p>
+        <p id="progress-label" class="text-[10px] text-slate-600 mt-1 font-bold uppercase tracking-widest">0%</p>
       </div>
     </div>
   </header>
@@ -45,18 +45,18 @@
   <main class="max-w-6xl mx-auto px-4 py-6">
     <div class="grid md:grid-cols-[230px,1fr] gap-6">
       <aside class="space-y-4">
-        <button id="btn-projector" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl shadow-md transition-all uppercase text-xs">
+        <button id="btn-projector" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl shadow-md transition-all uppercase text-xs tracking-widest">
           📺 Vista de Proyector
         </button>
         <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
           <div id="time-machine-container">
-            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block">Clases Anteriores</label>
+            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">Clases Anteriores</label>
           </div>
           <nav id="nav-tabs" class="space-y-1"></nav>
         </div>
       </aside>
 
-      <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[500px]">
+      <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px]">
         <div id="module-content"></div>
       </section>
     </div>
@@ -65,6 +65,10 @@
   <script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/";
     const TEACHER_CODE = "profe123";
+    const TENSE_MAP = {
+      "present_indicative": "Presente",
+      "present_subjunctive": "Presente de Subjuntivo"
+    };
     
     const runtime = {
       course: new URLSearchParams(window.location.search).get('course') || 's2',
@@ -74,133 +78,141 @@
       tense: "", title: ""
     };
 
-    // --- REPAIRED SHUFFLE LOGIC ---
-    function seededShuffle(array) {
-      let m = array.length, t, i;
-      // If it's today's date, use the date as a fixed seed for class sync
-      // If it's a past date, use Math.random() so every refresh is different
-      let seedNum = runtime.isToday ? 
-                    runtime.activeDate.split('-').reduce((a, b) => a + parseInt(b), 0) : 
-                    Math.random() * 10000;
+   // --- CORRECTED SEEDING LOGIC ---
+function seededShuffle(array) {
+  let m = array.length, t, i;
+  
+  // LOGIC: 
+  // 1. If it's today's official lesson AND not in practice mode -> Seeded (Sync)
+  // 2. If it's a past date OR practice mode -> Random (Solo)
+  let seedNum;
+  if (runtime.isToday && !runtime.isPracticeMode) {
+      // Use the date as a fixed seed
+      seedNum = runtime.activeDate.split('-').reduce((a, b) => a + parseInt(b), 0);
+  } else {
+      // Use a random seed for solo practice
+      seedNum = Math.random() * 10000;
+  }
 
-      while (m) {
-        i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
-        t = array[m]; array[m] = array[i]; array[i] = t;
+  while (m) {
+    i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
+    t = array[m]; array[m] = array[i]; array[i] = t;
+  }
+  return array;
+}
+
+async function init(targetDate = null) {
+  try {
+    const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
+    const schedule = await res.json();
+    
+    const todayStr = new Date().toISOString().split('T')[0];
+    const pastEntries = schedule.filter(e => e.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date));
+    
+    const entry = targetDate ? schedule.find(e => e.date === targetDate) : pastEntries[0];
+    if (!entry) return;
+
+    runtime.activeDate = entry.date;
+    runtime.isToday = (entry.date === todayStr);
+    runtime.tense = TENSE_MAP[entry.identityCategory] || "Verbos";
+    runtime.title = entry.topic;
+
+    const [manifest, bank] = await Promise.all([
+      fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
+      fetch(`${BASE_URL}calentamiento/${entry.bank}`).then(r => r.json())
+    ]);
+
+    let targets = [];
+    const groups = entry.identityGroups || [entry.identityGroup];
+    groups.forEach(g => { if (manifest[entry.identityCategory][g]) targets = targets.concat(manifest[entry.identityCategory][g]); });
+
+    // Use our corrected shuffle logic
+    let filteredVerbs = bank.filter(q => targets.includes(q.infinitivo));
+    runtime.verbs = seededShuffle([...filteredVerbs]).slice(0, 20);
+
+    const vData = await fetch(`${BASE_URL}calentamiento/${entry.vocabFile}`).then(r => r.json());
+    const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
+      es: v.spanish || v.es || v.palabra,
+      en: v.english || v.en || v.traducción
+    })).filter(v => v.es);
+
+    runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
+
+    renderSidebar(pastEntries);
+    showModule(1);
+    updateProgress();
+    updateHeaderDisplay(); // Removes "Cargando" and shows real data
+  } catch (err) { console.error(err); }
+}
+
+
+    function updateHeaderDisplay() {
+        const sub = document.getElementById('pageSubtitle');
+        sub.innerHTML = `<span class="text-slate-400">${runtime.course.toUpperCase()}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-bold">${runtime.activeDate}</span>`;
+        document.getElementById('pageTitle').textContent = runtime.title;
+    }
+
+    function renderSidebar(entries) {
+      const nav = document.getElementById('nav-tabs');
+      const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Finalizado"];
+      nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-xs font-bold uppercase tracking-tighter">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
+      
+      let sel = document.getElementById('tm-select');
+      if (!sel) {
+        sel = document.createElement('select'); sel.id = "tm-select";
+        sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer";
+        sel.onchange = (e) => init(e.target.value);
+        document.getElementById('time-machine-container').appendChild(sel);
       }
-      return array;
+      sel.innerHTML = entries.map(e => `<option value="${e.date}" ${e.date === runtime.activeDate ? 'selected' : ''}>${e.date} - ${e.topic}</option>`).join('');
     }
 
-    async function init(targetDate = null) {
-      try {
-        const res = await fetch(`${BASE_URL}calentamiento/schedule_${runtime.course}.json`);
-        const schedule = await res.json();
-        
-        const todayStr = new Date().toISOString().split('T')[0];
-        const pastEntries = schedule.filter(e => e.date <= todayStr).sort((a, b) => b.date.localeCompare(a.date));
-        
-        const entry = targetDate ? schedule.find(e => e.date === targetDate) : pastEntries[0];
-        if (!entry) return;
-
-        runtime.activeDate = entry.date;
-        runtime.isToday = (entry.date === todayStr); // Check if this is the "official" current lesson
-        runtime.tense = entry.identityCategory;
-        runtime.title = entry.topic;
-
-        const [manifest, bank] = await Promise.all([
-          fetch(`${BASE_URL}calentamiento/verbs_identity.json`).then(r => r.json()),
-          fetch(`${BASE_URL}calentamiento/${entry.bank}`).then(r => r.json())
-        ]);
-
-        let targets = [];
-        const groups = entry.identityGroups || [entry.identityGroup];
-        groups.forEach(g => { if (manifest[entry.identityCategory][g]) targets = targets.concat(manifest[entry.identityCategory][g]); });
-
-        let filteredVerbs = bank.filter(q => targets.includes(q.infinitivo));
-        runtime.verbs = seededShuffle([...filteredVerbs]).slice(0, 20);
-
-        const vData = await fetch(`${BASE_URL}calentamiento/${entry.vocabFile}`).then(r => r.json());
-        const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
-          es: v.spanish || v.es || v.palabra,
-          en: v.english || v.en || v.traducción
-        })).filter(v => v.es);
-
-        runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
-
-        renderSidebar(pastEntries);
-        showModule(1);
-        updateProgress();
-      } catch (err) { console.error("Init Error:", err); }
+    function updateProgress() {
+      const pct = Math.round((runtime.completed / 8) * 100);
+      document.getElementById('progress-fill').style.width = pct + "%";
+      document.getElementById('progress-label').textContent = pct + "%";
+      document.querySelectorAll('.module-tab').forEach((btn, i) => {
+        const m = i + 1;
+        if (m <= runtime.completed + 1) {
+          btn.disabled = false;
+          btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`;
+          document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●";
+        }
+      });
+if (runtime.completed >= 7 && !document.getElementById('btn-practice-toggle')) {
+      const nav = document.getElementById('nav-tabs');
+      const btn = document.createElement('button');
+      btn.id = "btn-practice-toggle";
+      btn.className = "w-full mt-4 py-2 bg-emerald-50 text-emerald-700 font-bold text-[10px] uppercase border border-emerald-200 rounded-lg animate-pop";
+      btn.textContent = "🎲 Modo Aleatorio (Práctica)";
+      btn.onclick = () => {
+          runtime.isPracticeMode = true;
+          init(runtime.activeDate);
+      };
+      nav.appendChild(btn);
+  }
     }
 
-    // --- REPAIRED PROJECTOR LOGIC ---
-    document.getElementById('btn-projector').onclick = () => {
-      const overlay = document.createElement('div');
-      overlay.id = "projector-overlay";
-      overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
-      
-      let html = `
-        <div class="max-w-6xl mx-auto">
-          <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
-            <div>
-              <h2 class="text-3xl font-black text-amber-400 uppercase">${runtime.title}</h2>
-              <p class="text-sky-400 font-bold text-xs uppercase">${runtime.tense.replace('_',' ')}</p>
-            </div>
-            <div class="flex gap-4">
-               <button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-xs uppercase">Revelar Todo</button>
-               <button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500">&times;</button>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">
-      `;
-
-      runtime.verbs.forEach((v, i) => {
-        html += `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center">
-          <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p>
-          <p class="text-sm font-bold mb-3">${v.infinitivo}</p>
-          <button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[10px] font-bold text-slate-400 uppercase">Revelar</button>
-        </div>`;
-      });
-
-      html += `</div><div class="grid grid-cols-1 md:grid-cols-3 gap-4">`;
-      
-      runtime.vocab.forEach((v, i) => {
-        html += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700">
-          <span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span>
-          <button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-500 uppercase">Revelar</button>
-        </div>`;
-      });
-
-      html += `</div></div>`;
-      overlay.innerHTML = html;
-      document.body.appendChild(overlay);
-    };
-
-    window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
-
-    // --- MODULE DISPLAY & LOGIC ---
     function showModule(n) {
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
-      const isVocab = n > 4 && n < 8;
-      
       if (n === 8) {
-        content.innerHTML = `<div class="text-center py-20 animate-pop"><h2 class="text-4xl font-black text-slate-800 mb-2 uppercase">¡Felicidades!</h2><p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Has terminado el calentamiento de hoy.</p></div>`;
-      } else if (isVocab) {
+        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 tracking-tighter uppercase">¡EXCELENTE!</h2><p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Calentamiento completado con éxito.</p></div>`;
+      } else if (n > 4) {
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
-        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
-          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${i+1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
-          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100"></div>`;
+        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase tracking-tight">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
+          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
+          `</div><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        content.innerHTML = `<div class="mb-6"><span class="text-[10px] font-black text-sky-400 uppercase tracking-widest">Enfoque:</span><h2 class="text-xl font-black text-slate-800 uppercase">${runtime.tense.replace('_',' ')}</h2></div><div class="space-y-3 mb-6">` + 
-          slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><p class="text-xs font-black text-slate-600 mb-2">${i+1}. ${v.sujeto} (${v.infinitivo})</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
-          `</div><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase">Corregir</button>`;
+        content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${runtime.tense}</h2><span class="text-[10px] font-black text-sky-400 uppercase tracking-widest">Módulo ${n}</span></div><div class="space-y-3 mb-6">` + 
+          slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + 
+          `</div><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest">Corregir</button>`;
       }
       startTimer();
       updateProgress();
     }
 
-    // --- OTHER UTILS (Timer, Vocab Check, etc) ---
     function isGenerousMatch(user, correct) {
       const norm = (s) => s.toLowerCase().trim().replace(/\(.*\)/g, "").replace(/^(to|the|a|an)\s+/, "").trim();
       const u = norm(user);
@@ -214,22 +226,21 @@
     }
 
     function checkVerbs(n) {
-      const items = document.querySelectorAll('.quiz-item');
-      if (n === 1 && items[0].querySelector('input').value === TEACHER_CODE) { runtime.completed = 8; showModule(8); return; }
-      let correctCount = 0;
-      items.forEach(item => {
+      const inputs = document.querySelectorAll('.quiz-item input');
+      if (n === 1 && inputs[0].value === TEACHER_CODE) { runtime.completed = 8; showModule(8); return; }
+      let correct = 0;
+      document.querySelectorAll('.quiz-item').forEach(item => {
         const input = item.querySelector('input');
         if (input.value.trim().toLowerCase() === item.dataset.ans.toLowerCase()) {
-          correctCount++; input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50";
+          correct++; input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50";
         } else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; }
       });
-      if (correctCount === items.length) { stopTimer(); runtime.completed = Math.max(runtime.completed, n); updateProgress(); }
+      if (correct === inputs.length) { stopTimer(); runtime.completed = Math.max(runtime.completed, n); updateProgress(); }
     }
 
     function checkVocab(n) {
-      const items = document.querySelectorAll('.quiz-item');
       let missed = [];
-      items.forEach(item => {
+      document.querySelectorAll('.quiz-item').forEach(item => {
         const input = item.querySelector('input');
         if (isGenerousMatch(input.value, item.dataset.ans)) { input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50"; }
         else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; missed.push({es: item.dataset.es, en: item.dataset.ans}); }
@@ -260,7 +271,7 @@
             b.classList.add('opacity-0', 'pointer-events-none');
             document.querySelectorAll('#match-es button').forEach(x => { if(x.textContent === selectedEs.es) x.classList.add('opacity-0', 'pointer-events-none'); });
             solved++; selectedEs = null;
-            if (solved === pairs.length) area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2">¡Listo! Haz clic en Corregir de nuevo.</p>`;
+            if (solved === pairs.length) area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs">¡Listo! Haz clic en Corregir de nuevo.</p>`;
           }
         };
         document.getElementById('match-en').appendChild(b);
@@ -277,7 +288,6 @@
         document.getElementById('live-timer').textContent = formatTime(elapsed);
       }, 1000);
     }
-
     function stopTimer() {
       clearInterval(runtime.timerInterval);
       const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000);
@@ -286,7 +296,6 @@
       if (!saved || elapsed < parseInt(saved)) localStorage.setItem(key, elapsed);
       updateBestDisplay();
     }
-
     function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
     function updateBestDisplay() {
       const key = `best_${runtime.course}_${runtime.activeDate}_m${runtime.currentModule}`;
@@ -294,35 +303,26 @@
       document.getElementById('best-time').textContent = saved ? formatTime(parseInt(saved)) : "--:--";
     }
 
-    function renderSidebar(entries) {
-      const nav = document.getElementById('nav-tabs');
-      const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Finalizado"];
-      nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-xs font-bold">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
-      
-      let tmContainer = document.getElementById('time-machine-container');
-      let sel = document.getElementById('tm-select');
-      if (!sel) {
-        sel = document.createElement('select'); sel.id = "tm-select";
-        sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer";
-        sel.onchange = (e) => init(e.target.value);
-        tmContainer.appendChild(sel);
-      }
-      sel.innerHTML = entries.map(e => `<option value="${e.date}" ${e.date === runtime.activeDate ? 'selected' : ''}>${e.date} - ${e.topic}</option>`).join('');
-    }
-
-    function updateProgress() {
-      const pct = Math.round((runtime.completed / 8) * 100);
-      document.getElementById('progress-fill').style.width = pct + "%";
-      document.getElementById('progress-label').textContent = pct + "%";
-      document.querySelectorAll('.module-tab').forEach((btn, i) => {
-        const m = i + 1;
-        if (m <= runtime.completed + 1) {
-          btn.disabled = false;
-          btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200' : 'text-slate-500 hover:bg-slate-50'}`;
-          document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●";
-        }
-      });
-    }
+    document.getElementById('btn-projector').onclick = () => {
+      const overlay = document.createElement('div');
+      overlay.id = "projector-overlay";
+      overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
+      overlay.innerHTML = `
+        <div class="max-w-6xl mx-auto">
+          <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4">
+            <div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${runtime.tense}</p></div>
+            <div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase tracking-widest">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white">&times;</button></div>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">
+            ${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-400 uppercase tracking-widest">Revelar</button></div>`).join('')}
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${runtime.vocab.map((v, i) => `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest">Revelar</button></div>`).join('')}
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+    };
+    window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
 
     init();
   </script>
