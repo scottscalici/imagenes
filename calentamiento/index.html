@@ -61,7 +61,7 @@
     </div>
   </main>
 
-  <script>
+ <script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const TEACHER_CODE = "profe123";
@@ -87,14 +87,24 @@
       tense: "", title: "", constraints: null,
       proficiency: 0.5,
       isPerfectRun: true, 
-      verbTimeFinal: null
+      verbTimeFinal: null,
+      blocks: null 
     };
 
     function seededShuffle(array, customSeed = null) {
       let m = array.length, t, i;
-      let seedNum = customSeed || (runtime.isLatestClass && !runtime.isPracticeMode ? 
-                    parseInt(runtime.activeDia) : 
-                    Math.floor(Math.random() * 1000000));
+      
+      // LOGIC UPDATE: 
+      // 1. If customSeed is passed (from Mixed Mode), use it ONLY if not in practice mode.
+      // 2. If no customSeed, default to activeDia (Sticky) UNLESS in practice mode (Random).
+      let seedNum;
+      
+      if (runtime.isPracticeMode) {
+          seedNum = Math.floor(Math.random() * 1000000); // Always random on Retry
+      } else {
+          seedNum = customSeed !== null ? customSeed : parseInt(runtime.activeDia); // Sticky otherwise
+      }
+
       while (m) {
         i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
         t = array[m]; array[m] = array[i]; array[i] = t;
@@ -110,9 +120,7 @@
 
     async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
-      const statusBar = document.getElementById('status-bar');
       
-      // Timer Hard Reset
       clearInterval(runtime.timerInterval);
       runtime.startTime = null;
       runtime.verbTimeFinal = null;
@@ -145,7 +153,7 @@
         if (!currentSchoolDay) {
             schedRes.sort((a, b) => a.dia - b.dia);
             currentSchoolDay = schedRes[schedRes.length - 1].dia;
-            statusBar.textContent = "Modo Fallback";
+            subtitle.textContent = "Modo Fallback";
         } else {
             runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
         }
@@ -158,81 +166,106 @@
 
         runtime.activeDia = entry.dia;
         runtime.isLatestClass = (latestClassEntry && entry.dia === latestClassEntry.dia);
-        runtime.tense = entry.identityCategory;
+        runtime.tense = entry.identityCategory || "mix";
         runtime.title = entry.topic;
         runtime.constraints = entry.constraints || null;
         runtime.proficiency = entry.proficiency !== undefined ? entry.proficiency : 0.5;
+        runtime.blocks = entry.blocks || null;
 
-        subtitle.textContent = "Cargando bancos...";
-        const [manifest, bank] = await Promise.all([
-          fetchData(`${BASE_URL}verbs_identity.json`),
-          fetchData(`${BASE_URL}${entry.bank}`)
-        ]);
+        let manifest = {};
+        try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } 
+        catch (e) { console.warn("Manifest load failed:", e); }
 
-        // --- CATEGORY ISOLATION LOGIC (RESTORED) ---
-        // 1. Get Current Groups
-        const currentG = entry.identityGroups || [entry.identityGroup];
-        
-        // 2. Get Past Groups (Spiral Review)
-        // CRITICAL FIX: Only include past lessons if they match the CURRENT tense/category
-        const pastG = schedRes
-            .filter(e => 
-                e.dia < runtime.activeDia && 
-                e.identityCategory === runtime.tense // Only spiral review same-category verbs
-            )
-            .flatMap(e => e.identityGroups || [e.identityGroup]);
+        // --- BLOCK LOGIC ---
+        let masterVerbList = [];
 
-        // 3. Build Target List
-        let targetList = [];
-        if (manifest[runtime.tense]) {
-            // Add Current Verbs
-            currentG.forEach(g => { 
-                if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); 
-            });
-            // Add Spiral Verbs
-            pastG.forEach(g => { 
-                if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); 
-            });
+        if (runtime.blocks && Array.isArray(runtime.blocks)) {
+            subtitle.textContent = "Construyendo bloques...";
+            
+            for (const block of runtime.blocks) {
+                const bank = await fetchData(`${BASE_URL}${block.bank}`);
+                let blockPool = bank;
+                
+                if (block.identityCategory && block.identityGroups) {
+                    let targetList = [];
+                    const cat = manifest[block.identityCategory];
+                    if (cat) {
+                        block.identityGroups.forEach(g => {
+                            if (cat[g]) targetList = targetList.concat(cat[g]);
+                        });
+                    }
+                    blockPool = bank.filter(v => targetList.includes(v.infinitivo));
+                }
+
+                const filtered = blockPool.filter(v => {
+                    const reqs = block.constraints;
+                    if (!reqs) return true;
+                    const vTypes = v.tipo_verbo || [];
+                    return Object.keys(reqs).every(key => {
+                        if (key === "tipo_verbo") return vTypes.includes(reqs[key]);
+                        return v[key] === reqs[key];
+                    });
+                });
+
+                // SEED FIX: Use a stable seed for history, but allow random for practice mode
+                // We pass a custom seed that changes based on the block position (to avoid duplicate verbs across blocks)
+                // But seededShuffle will ignore this if runtime.isPracticeMode is true.
+                const stableSeed = runtime.activeDia + masterVerbList.length;
+                
+                const selected = seededShuffle([...filtered], stableSeed).slice(0, block.count);
+                masterVerbList = masterVerbList.concat(selected);
+            }
+            runtime.verbs = masterVerbList;
+
+        } else {
+            // --- STANDARD LOGIC ---
+            subtitle.textContent = "Cargando lección...";
+            const bank = await fetchData(`${BASE_URL}${entry.bank}`);
+
+            const currentG = entry.identityGroups || [entry.identityGroup];
+            const pastG = schedRes
+                .filter(e => e.dia < runtime.activeDia && e.identityCategory === runtime.tense)
+                .flatMap(e => e.identityGroups || [e.identityGroup]);
+
+            let targetList = [];
+            if (manifest[runtime.tense]) {
+                currentG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
+                pastG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
+            }
+            
+            if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
+
+            const applyConstraints = (rawBank, allowedInfinitives) => {
+              return rawBank.filter(v => {
+                if (!allowedInfinitives.includes(v.infinitivo)) return false;
+                if (!runtime.constraints) return true;
+                const vTypes = v.tipo_verbo || [];
+                if (runtime.constraints.tipo_verbo === "simple" && vTypes.includes("objetos")) return false;
+                return Object.keys(runtime.constraints).every(key => {
+                  if (key === "tipo_verbo") return vTypes.includes(runtime.constraints[key]);
+                  return v[key] === runtime.constraints[key];
+                });
+              });
+            };
+
+            const totalNeeded = entry.totalNeeded || 20;
+            let pool = applyConstraints(bank, targetList);
+            if (pool.length === 0) pool = bank; 
+
+            // Standard logic will use activeDia as seed (Sticky) unless Practice Mode is ON
+            runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
         }
-        
-        // Safety Valve: If list is empty, allow all
-        if (targetList.length === 0) {
-            console.warn("Target list empty. Loading full bank.");
-            targetList = bank.map(v => v.infinitivo);
-        }
-
-        const applyConstraints = (rawBank, allowedInfinitives) => {
-          return rawBank.filter(v => {
-            if (!allowedInfinitives.includes(v.infinitivo)) return false;
-            if (!runtime.constraints) return true;
-            const vTypes = v.tipo_verbo || [];
-            if (runtime.constraints.tipo_verbo === "simple" && vTypes.includes("objetos")) return false;
-            return Object.keys(runtime.constraints).every(key => {
-              if (key === "tipo_verbo") return vTypes.includes(runtime.constraints[key]);
-              return v[key] === runtime.constraints[key];
-            });
-          });
-        };
-
-        const totalNeeded = entry.totalNeeded || 20;
-        const vCount = Math.floor(totalNeeded * (entry.vipRatio || 1.0));
-        
-        // Apply Constraints
-        let pool = applyConstraints(bank, targetList);
-        if (pool.length === 0) pool = bank; 
-
-        runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
 
         const vData = await fetchData(`${BASE_URL}${entry.vocabFile}`);
         const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
         })).filter(v => v.es);
+        
+        // Vocab is also sticky now by default
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
         renderSidebar(pastEntries.length > 0 ? pastEntries : schedRes);
-        
         startSessionTimer();
-        
         showModule(1);
         updateProgress();
         updateHeaderDisplay();
@@ -253,11 +286,9 @@
       const sub = document.getElementById('pageSubtitle');
       const pageTitle = document.getElementById('pageTitle');
       let displayTense = TENSE_MAP[runtime.tense] || runtime.tense;
-      if (runtime.constraints) {
-        if (runtime.constraints.persona_base === "él/ella/Ud.") displayTense = "Mandatos Formales (Ud.)";
-        else if (runtime.constraints.persona_base === "ellos/ellas/Uds.") displayTense = "Mandatos Plurales (Uds.)";
-        else if (runtime.constraints.persona_base === "tú") displayTense = "Mandatos Familiares (Tú)";
-      }
+      
+      if (runtime.tense === "mix") displayTense = "Práctica Mixta";
+
       const cycleBadge = runtime.currentCiclo ? `<span class="mx-2 text-amber-500 font-bold">Ciclo ${runtime.currentCiclo}</span>` : "";
       const modeBadge = runtime.isPracticeMode ? `<span class="mx-2 text-purple-500 font-bold uppercase tracking-widest">Modo Práctica</span>` : "";
       
@@ -291,7 +322,6 @@
       }
 
       if (n === 8) {
-        // --- FINISHED SCREEN ---
         const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
         const msg = runtime.isPerfectRun ? 
             `<span class="text-emerald-500 font-bold block mt-2 text-sm">✨ ¡Nuevo Récord! (100% Precisión)</span>` : 
@@ -307,15 +337,20 @@
                 </button>
             </div>`;
       } else if (n > 4) {
-        // --- VOCAB ---
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
         content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
           `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
-        // --- VERBS ---
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${TENSE_MAP[runtime.tense] || runtime.tense}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
+        
+        // Dynamic Header Logic
+        let moduleTitle = TENSE_MAP[runtime.tense] || runtime.tense;
+        if (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) {
+            moduleTitle = runtime.blocks[n-1].label;
+        }
+
+        content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + 
           `</div><div class="flex gap-2"><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div>`;
       }
@@ -332,7 +367,6 @@
         btn.onclick = () => showModule(n + 1);
         container.appendChild(btn);
 
-        // Optional Skip Vocab Button
         const isSkipAllowed = (n === 4) && (!runtime.isLatestClass || runtime.isPracticeMode);
         if (isSkipAllowed) {
             const skipBtn = document.createElement('button');
@@ -356,12 +390,10 @@
       });
 
       const score = correct / inputs.length;
-      
       if (score < 1.0) {
           runtime.isPerfectRun = false;
           document.getElementById('live-timer').className = "text-lg font-black text-slate-400 leading-none";
       }
-
       if (score >= runtime.proficiency) {
           runtime.completed = Math.max(runtime.completed, n);
           showNextButton(n);
@@ -453,11 +485,6 @@
         updateBestDisplay();
     }
 
-    window.startRandomPractice = () => {
-        runtime.isPracticeMode = true; 
-        init(runtime.activeDia); 
-    };
-
     function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
     
     function updateBestDisplay() { 
@@ -470,11 +497,10 @@
     
     function updateProgress() { const pct = Math.round((runtime.completed / 8) * 100); document.getElementById('progress-fill').style.width = pct + "%"; document.getElementById('progress-label').textContent = pct + "%"; document.querySelectorAll('.module-tab').forEach((btn, i) => { const m = i + 1; if (m <= runtime.completed + 1) { btn.disabled = false; btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`; document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●"; } }); }
 
-    // Projector Logic
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase tracking-widest">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
