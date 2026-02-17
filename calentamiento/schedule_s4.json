@@ -79,54 +79,55 @@
   },
  {
   "dia": 48,
-   "date": "2026-02-23",
-    "topic": "Presente: Repaso de Regulares (-AR, -ER, -IR)",
-    "bank": "bancos/banco_presente.json",
-    "vocabFile": "vocab/D2-2-1.json",
-    "identityCategory": "presente",
-    "identityGroups": ["regulars_ar", "regulars_er", "regulars_ir"],
-    "totalNeeded": 20,
-    "vipRatio": 0.3,
-    "proficiency": 1.0
-  },
-  {
-    "dia": 48,
-    "date": "2026-02-24",
-    "topic": "Presente: Los Verbos 'Bota' (Stem Changers)",
-    "bank": "bancos/banco_presente.json",
-    "identityCategory": "presente",
-    "identityGroups": ["stem_ie", "stem_ue", "stem_i"],
-    "totalNeeded": 20,
-    "vipRatio": 0.6
-  },
-  {
-    "dia": 49,
-    "date": "2026-02-26",
-    "topic": "Presente: Cambios de Ortografía (Yo-Go, Cer/Cir, Ger/Gir)",
-    "bank": "bancos/banco_presente.json",
-    "identityCategory": "presente",
-    "identityGroups": ["go_verbs", "cer_cir", "ger_gir", "guir"],
-    "totalNeeded": 20,
-    "vipRatio": 0.5
-  },
-  {
+  "date": "2026-02-13",
+  "topic": "Cláusulas con si (tercer condicional)",
+  "vocabFile": "vocab/D3-7-5.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Pluscuamperfecto de subjuntivo",
+      "bank": "bancos/banco_pluscuamperfecto_de_subjuntivo.json",
+      "identityCategory": "pluscuamperfecto_de_subjuntivo",
+      "count": 10
+    },
+     {
+      "label": "Condicional perfecto",
+      "bank": "bancos/banco_condicional_perfecto.json",
+      "identityCategory": "condicional_perfecto",
+      "count": 10
+    }
+      ]
+ },
+  
+ {
+  "dia": 49,
+  "date": "2026-02-24",
+  "topic": "Cláusulas con si (tercer condicional)",
+  "vocabFile": "vocab/D3-8-1.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Pluscuamperfecto de subjuntivo",
+      "bank": "bancos/banco_pluscuamperfecto_de_subjuntivo.json",
+      "identityCategory": "pluscuamperfecto_de_subjuntivo",
+      "count": 10
+    },
+     {
+      "label": "Condicional perfecto",
+      "bank": "bancos/banco_condicional_perfecto.json",
+      "identityCategory": "condicional_perfecto",
+      "count": 10
+    }
+      ]
+ },
+ {
     "dia": 50,
-    "date": "2026-03-02",
-    "topic": "Presente: Los Irregulares Totales (Ser, Estar, Ir...)",
-    "bank": "bancos/banco_presente.json",
-    "identityCategory": "presente",
-    "identityGroups": ["irregulars", "uir"],
-    "totalNeeded": 15,
-    "vipRatio": 0.9 
-  },
-  {
-    "dia": 51,
-    "date": "2026-03-04",
-    "topic": "Presente: Rutina Diaria (Reflexivos)",
-    "bank": "bancos/banco_presente.json",
-    "identityCategory": "presente",
-    "identityGroup": "reflexives",
-    "totalNeeded": 15,
-    "vipRatio": 0.5
+    "date": "2026-02-26",
+    "topic": "Subjuntivo (Regulares)",
+    "identityCategory": "presente_de_subjuntivo",
+    "bank": "bancos/banco_subjuntivo_presente.json",
+    "vocabFile": "vocab/D3-8-2.json",
+    "identityGroups": ["regulars_ar", "regulars_er", "regulars_ir"]
   }
+     
 ]
