@@ -64,6 +64,7 @@
   <script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
+    const CUR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json";
     const TEACHER_CODE = "profe123";
     
     const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
@@ -139,7 +140,7 @@
         return r.json();
     }
 
-    async function init(targetDia = null) {
+  async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
       
       clearInterval(runtime.timerInterval);
@@ -155,7 +156,6 @@
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
         
-        // STORE FULL SCHEDULE FOR TEACHER MODE
         runtime.fullSchedule = schedRes;
 
         const now = new Date();
@@ -182,7 +182,6 @@
             runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
         }
         
-        // STORE CALCULATED TODAY
         runtime.serverDateDia = currentSchoolDay;
 
         const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
@@ -199,6 +198,30 @@
         runtime.proficiency = entry.proficiency !== undefined ? entry.proficiency : 0.5;
         runtime.blocks = entry.blocks || null;
 
+        // --- FIXED: CURIOSIDAD FETCH (Matches "cur-XX") ---
+        let dailyImage = null;
+        try {
+            const curData = await fetchData(CUR_URL);
+            
+            // Construct the ID we are looking for (e.g., "cur-40")
+            const targetId = `cur-${runtime.activeDia}`;
+            
+            if (Array.isArray(curData)) {
+                // Find matching ID
+                const match = curData.find(c => c.id === targetId);
+                if (match) dailyImage = match.img || match.imagen || match.url; 
+            } else {
+                dailyImage = curData[runtime.activeDia];
+            }
+            
+            if (!dailyImage) console.log(`No image found for ID: ${targetId}`);
+
+        } catch (e) {
+            console.warn("No se pudo cargar la curiosidad:", e);
+        }
+        runtime.curiosidadImg = dailyImage;
+        // --------------------------------------------------
+
         let manifest = {};
         try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } 
         catch (e) { console.warn("Manifest load failed:", e); }
@@ -206,11 +229,10 @@
         let masterVerbList = [];
 
         if (runtime.blocks && Array.isArray(runtime.blocks)) {
-            subtitle.textContent = "Construyendo bloques...";
+             subtitle.textContent = "Construyendo bloques...";
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
-                
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
@@ -221,7 +243,6 @@
                     }
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
-
                 const filtered = blockPool.filter(v => {
                     const reqs = block.constraints;
                     if (!reqs) return true;
@@ -231,7 +252,6 @@
                         return v[key] === reqs[key];
                     });
                 });
-
                 const stableSeed = runtime.activeDia + masterVerbList.length;
                 const selected = seededShuffle([...filtered], stableSeed).slice(0, block.count);
                 masterVerbList = masterVerbList.concat(selected);
@@ -243,17 +263,31 @@
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
 
             const currentG = entry.identityGroups || [entry.identityGroup];
-            const pastG = schedRes
-                .filter(e => e.dia < runtime.activeDia && e.identityCategory === runtime.tense)
-                .flatMap(e => e.identityGroups || [e.identityGroup]);
+
+            // NOTE: "pastG" logic removed to prevent irregulars leaking into regular lessons.
 
             let targetList = [];
             if (manifest[runtime.tense]) {
-                currentG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
-                pastG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
+                currentG.forEach(g => { 
+                    // --- MACRO FIX: Translate "regular" to specific lists ---
+                    if (g === "regular") {
+                        // Automatically grab all 3 regular lists if JSON just says "regular"
+                        if(manifest[runtime.tense]["regulars_ar"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ar"]);
+                        if(manifest[runtime.tense]["regulars_er"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_er"]);
+                        if(manifest[runtime.tense]["regulars_ir"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ir"]);
+                    }
+                    // --------------------------------------------------------
+                    else if (manifest[runtime.tense][g]) {
+                        targetList = targetList.concat(manifest[runtime.tense][g]);
+                    }
+                });
             }
             
-            if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
+            // Failsafe: If JSON has a typo and we found 0 verbs, warn and use full bank
+            if (targetList.length === 0) {
+                console.warn("Warning: No verbs matched filters. Defaulting to full bank.");
+                targetList = bank.map(v => v.infinitivo);
+            }
 
             const applyConstraints = (rawBank, allowedInfinitives) => {
               return rawBank.filter(v => {
@@ -282,7 +316,7 @@
         
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(); // Initial render (Student Mode)
+        renderSidebar(); 
         startSessionTimer();
         showModule(1);
         updateProgress();
@@ -294,6 +328,7 @@
       }
     }
 
+    
     window.startRandomPractice = () => {
         runtime.isPracticeMode = true; 
         init(runtime.activeDia); 
@@ -351,23 +386,15 @@
       if (n === 5 && !runtime.verbTimeFinal) {
           stopVerbTimer();
       }
-
-      if (n === 8) {
-        const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
-        const msg = runtime.isPerfectRun ? 
-            `<span class="text-emerald-500 font-bold block mt-2 text-sm">✨ ¡Nuevo Récord! (100% Precisión)</span>` : 
-            `<span class="text-slate-400 font-bold block mt-2 text-xs">Sin récord (Hubo errores)</span>`;
-
-        content.innerHTML = `
-            <div class="text-center py-24 animate-pop">
-                <h2 class="text-5xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Excelente!</h2>
-                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Tiempo de Verbos: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>
-                ${msg}
-                <button onclick="startRandomPractice()" class="mt-8 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg hover:shadow-xl transition-all uppercase tracking-widest text-xs transform hover:-translate-y-1">
-                    🔄 Practicar otra vez
-                </button>
-            </div>`;
-      } else if (n > 4) {
+if (n === 8) {
+        // Ensure timer is stopped if they skipped directly here
+        if (!runtime.verbTimeFinal) stopVerbTimer();
+        
+        // Call the new modular function we created outside
+        renderFinalScreen(content); 
+      }
+      
+      else if (n > 4) {
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
         content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
@@ -386,7 +413,53 @@
       }
       updateProgress();
     }
+function renderFinalScreen(contentElement) {
+    const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
+    
+    // 1. Header & Stats
+    let html = `
+        <div class="text-center py-8 animate-pop">
+            <h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2>
+            <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">
+                Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span>
+            </p>
+    `;
 
+    // 2. The Curiosidad Card (Only if image exists)
+    if (runtime.curiosidadImg) {
+        html += `
+            <div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 transform rotate-1 hover:rotate-0 transition-transform duration-500 mb-8">
+                <div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative">
+                    <img src="${runtime.curiosidadImg}" 
+                         alt="Curiosidad del día" 
+                         class="w-full h-full object-cover" 
+                         onerror="this.style.display='none'">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                        <p class="text-white font-bold text-sm uppercase tracking-widest">Curiosidad del Día ${runtime.activeDia}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 3. Actions & Instructions (Updated: No Link)
+    html += `
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
+                 <div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-center cursor-default">
+                    <span>📱 Abre Schoology para completar la Curiosidad</span>
+                </div>
+                
+                <button onclick="startRandomPractice()" 
+                    class="w-64 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg hover:shadow-xl transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                    <span>🔄 Práctica Extra</span>
+                </button>
+            </div>
+        </div>
+    `;
+
+    contentElement.innerHTML = html;
+}
+    
     function showNextButton(n) {
         const container = document.getElementById('next-btn-container');
         container.innerHTML = ""; 
