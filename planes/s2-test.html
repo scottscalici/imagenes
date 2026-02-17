@@ -100,6 +100,8 @@
                     <a href="https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs">Ver calendario completo</a>
                 </div>
 
+                <div id="integratedHighlightBlock" class="mt-4"></div>
+                
                 <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col group">
                     <div class="h-28 overflow-hidden p-2"> 
                         <img id="tutorMascot" src="" class="w-full h-full object-contain"> 
@@ -160,13 +162,11 @@ const CONFIG = {
     TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json",
     ANUNCIOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/anuncios.json",
     GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
-    VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json"
+    VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json",
+    // Added the new JSON link
+    DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json"
 };
 
-// Global Flag for Teacher Mode
-window.teacherMode = false;
-
-// --- DATA LOADER ---
 async function loadData() {
     const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => {
         console.warn(`Failed to load ${url}`, e);
@@ -178,29 +178,30 @@ async function loadData() {
             plan, temas, cal, curios, evals, tareas,
             vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios 
+            videos, gramaticaDiaria, anuncios,
+            destacado // Added this variable
         ] = await Promise.all([
             safeFetch(CONFIG.PLAN), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
             safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
             safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
             safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
             safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS)
+            safeFetch(CONFIG.ANUNCIOS),
+            safeFetch(CONFIG.DESTACADO) // Added this fetch
         ]);
         
         return { 
             plan, temas, cal: cal.filter ? cal : (cal.map || []), 
             curios, evals, tareas, vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios,
+            destacado // Added this to the returned object
         };
-
     } catch (e) { 
         console.error("Critical Load Error", e); 
         return null;
     }
 }
-
-// --- THEME ENGINE ---
+        // --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
         const themeData = data.temas; 
@@ -537,12 +538,58 @@ async function runRender(data, DIA) {
 
     // 10. TAREAS
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
+    // ... [Existing Section 10: TAREAS] ...
     (data.tareas?.tareas || []).filter(t => t.day_assigned <= DIA && t.day_due >= DIA).forEach(t => {
         const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
         tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
     });
-}
 
+    // --- PASTE THE INTEGRATED HIGHLIGHT LOGIC HERE (INSIDE RUNRENDER) ---
+    const highlightBlock = document.getElementById('integratedHighlightBlock');
+    if (highlightBlock) {
+        const highlight = (data.destacado || []).find(h => h.dia == DIA && h.course.includes(CONFIG.COURSE));
+
+        if (highlight) {
+            let pillColor = overrides.destacado || "#64748b";            
+            const loc = (highlight.location || "").toUpperCase();
+            
+            if (loc.includes("PUERTO RICO") || loc.includes("CUBA") || loc.includes("DOMINICANA")) pillColor = "#007bff";
+            else if (loc.includes("MÉXICO") || loc.includes("PANAMÁ") || loc.includes("COSTA RICA")) pillColor = "#28a745";
+            else if (loc.includes("ARGENTINA") || loc.includes("BOLIVIA") || loc.includes("CHILE") || loc.includes("COLOMBIA") || loc.includes("PERÚ")) pillColor = "#dc3545";
+            else if (loc.includes("ESPAÑA")) pillColor = "#ffc107";
+
+            const textColor = (loc.includes("ESPAÑA")) ? "text-slate-900" : "text-white";
+
+            highlightBlock.innerHTML = `
+                <article class="bg-white rounded-xl shadow-md border-8 overflow-hidden" style="border-color: ${pillColor}22">
+                    ${highlight.image_url ? `<img src="${highlight.image_url}" class="w-full h-44 object-cover">` : ''}
+                    <div class="p-5">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded ${textColor} mb-3 inline-block" style="background-color: ${pillColor}">
+                            ${highlight.location}
+                        </span>
+                        <h3 class="font-black text-xs uppercase mb-2 text-slate-400">${highlight.header}</h3>
+                        <div class="space-y-2 mb-6">
+                            <p class="text-slate-800 font-bold text-sm leading-tight">${highlight.content.spanish}</p>
+                            <p class="text-slate-500 italic text-xs">${highlight.content.english}</p>
+                        </div>
+                        <div class="border-t-2 border-dashed border-slate-100 my-6 relative">
+                            <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-3 text-[10px] font-black text-slate-300 uppercase tracking-widest">Palabra del Día</span>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-2xl font-black text-slate-900 lowercase">${highlight.word_of_the_day.word}</h4>
+                            <p class="text-slate-400 text-[10px] font-black uppercase mb-3">${highlight.word_of_the_day.translation}</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <p class="text-sm text-slate-700 font-medium italic">"${highlight.word_of_the_day.sample_sentence}"</p>
+                                <p class="text-[10px] text-slate-400 mt-1">${highlight.word_of_the_day.sentence_translation}</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>`;
+        } else {
+            highlightBlock.innerHTML = "";
+        }
+    }
+} // This brace closes runRender        
 // --- INIT (With Teacher Mode & Safety) ---
 async function init() {
     const data = await loadData(); if (!data) return;
