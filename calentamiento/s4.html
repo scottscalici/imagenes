@@ -64,11 +64,12 @@
   <script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
+    const CUR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json";
     const TEACHER_CODE = "profe123";
     
     const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
 
-    // --- FULL S4 / IB TENSE MAP ---
+    // --- EXPANDED MAP ---
     const TENSE_MAP = {
       // Indicative Simple
       "presente": "Presente",
@@ -102,6 +103,7 @@
     };
 
     const runtime = {
+      // DEFAULT: S4
       course: new URLSearchParams(window.location.search).get('course') || 's4',
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
@@ -154,7 +156,6 @@
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
         
-        // STORE FULL SCHEDULE FOR TEACHER MODE
         runtime.fullSchedule = schedRes;
 
         const now = new Date();
@@ -174,7 +175,6 @@
         }
 
         if (!currentSchoolDay) {
-            // Fallback to last known day if summer/break
             schedRes.sort((a, b) => a.dia - b.dia);
             currentSchoolDay = schedRes[schedRes.length - 1].dia;
             subtitle.textContent = "Modo Fallback";
@@ -182,7 +182,6 @@
             runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
         }
         
-        // STORE CALCULATED TODAY
         runtime.serverDateDia = currentSchoolDay;
 
         const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
@@ -199,6 +198,30 @@
         runtime.proficiency = entry.proficiency !== undefined ? entry.proficiency : 0.5;
         runtime.blocks = entry.blocks || null;
 
+        // --- FIXED: CURIOSIDAD FETCH (Matches "cur-XX") ---
+        let dailyImage = null;
+        try {
+            const curData = await fetchData(CUR_URL);
+            
+            // Construct the ID we are looking for (e.g., "cur-40")
+            const targetId = `cur-${runtime.activeDia}`;
+            
+            if (Array.isArray(curData)) {
+                // Find matching ID
+                const match = curData.find(c => c.id === targetId);
+                if (match) dailyImage = match.img || match.imagen || match.url; 
+            } else {
+                dailyImage = curData[runtime.activeDia];
+            }
+            
+            if (!dailyImage) console.log(`No image found for ID: ${targetId}`);
+
+        } catch (e) {
+            console.warn("No se pudo cargar la curiosidad:", e);
+        }
+        runtime.curiosidadImg = dailyImage;
+        // --------------------------------------------------
+
         let manifest = {};
         try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } 
         catch (e) { console.warn("Manifest load failed:", e); }
@@ -206,11 +229,10 @@
         let masterVerbList = [];
 
         if (runtime.blocks && Array.isArray(runtime.blocks)) {
-            subtitle.textContent = "Construyendo bloques...";
+             subtitle.textContent = "Construyendo bloques...";
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
-                
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
@@ -221,7 +243,6 @@
                     }
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
-
                 const filtered = blockPool.filter(v => {
                     const reqs = block.constraints;
                     if (!reqs) return true;
@@ -231,7 +252,6 @@
                         return v[key] === reqs[key];
                     });
                 });
-
                 const stableSeed = runtime.activeDia + masterVerbList.length;
                 const selected = seededShuffle([...filtered], stableSeed).slice(0, block.count);
                 masterVerbList = masterVerbList.concat(selected);
@@ -243,17 +263,31 @@
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
 
             const currentG = entry.identityGroups || [entry.identityGroup];
-            const pastG = schedRes
-                .filter(e => e.dia < runtime.activeDia && e.identityCategory === runtime.tense)
-                .flatMap(e => e.identityGroups || [e.identityGroup]);
+
+            // NOTE: "pastG" logic removed to prevent irregulars leaking into regular lessons.
 
             let targetList = [];
             if (manifest[runtime.tense]) {
-                currentG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
-                pastG.forEach(g => { if (manifest[runtime.tense][g]) targetList = targetList.concat(manifest[runtime.tense][g]); });
+                currentG.forEach(g => { 
+                    // --- MACRO FIX: Translate "regular" to specific lists ---
+                    if (g === "regular") {
+                        // Automatically grab all 3 regular lists if JSON just says "regular"
+                        if(manifest[runtime.tense]["regulars_ar"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ar"]);
+                        if(manifest[runtime.tense]["regulars_er"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_er"]);
+                        if(manifest[runtime.tense]["regulars_ir"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ir"]);
+                    }
+                    // --------------------------------------------------------
+                    else if (manifest[runtime.tense][g]) {
+                        targetList = targetList.concat(manifest[runtime.tense][g]);
+                    }
+                });
             }
             
-            if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
+            // Failsafe: If JSON has a typo and we found 0 verbs, warn and use full bank
+            if (targetList.length === 0) {
+                console.warn("Warning: No verbs matched filters. Defaulting to full bank.");
+                targetList = bank.map(v => v.infinitivo);
+            }
 
             const applyConstraints = (rawBank, allowedInfinitives) => {
               return rawBank.filter(v => {
@@ -282,7 +316,7 @@
         
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(); // Initial render (will filter by default)
+        renderSidebar(); 
         startSessionTimer();
         showModule(1);
         updateProgress();
@@ -294,6 +328,7 @@
       }
     }
 
+    
     window.startRandomPractice = () => {
         runtime.isPracticeMode = true; 
         init(runtime.activeDia); 
@@ -303,14 +338,17 @@
       const sub = document.getElementById('pageSubtitle');
       const pageTitle = document.getElementById('pageTitle');
       let displayTense = TENSE_MAP[runtime.tense] || runtime.tense;
+      
       if (runtime.tense === "mix") displayTense = "Práctica Mixta";
+
       const cycleBadge = runtime.currentCiclo ? `<span class="mx-2 text-amber-500 font-bold">Ciclo ${runtime.currentCiclo}</span>` : "";
       const modeBadge = runtime.isPracticeMode ? `<span class="mx-2 text-purple-500 font-bold uppercase tracking-widest">Modo Práctica</span>` : "";
+      
       sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span>${cycleBadge}${modeBadge}<span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
 
-    // --- UPDATED SIDEBAR (TEACHER MODE AWARE) ---
+    // --- SIDEBAR LOGIC (Standard Structure) ---
     function renderSidebar() {
       const nav = document.getElementById('nav-tabs');
       const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Listo"];
@@ -335,7 +373,7 @@
           entriesToShow = runtime.fullSchedule.filter(e => e.dia <= runtime.serverDateDia);
       }
       
-      // Sort Descending (Newest First) for easy access
+      // Sort Descending (Newest First)
       entriesToShow.sort((a, b) => b.dia - a.dia);
 
       sel.innerHTML = entriesToShow.map(e => `<option value="${e.dia}" ${e.dia == runtime.activeDia ? 'selected' : ''}>Día ${e.dia}: ${e.topic}</option>`).join('');
@@ -344,29 +382,102 @@
     function showModule(n) {
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
-      if (n === 5 && !runtime.verbTimeFinal) stopVerbTimer();
-
+      
+      if (n === 5 && !runtime.verbTimeFinal) {
+          stopVerbTimer();
+      }
       if (n === 8) {
-        const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
-        const msg = runtime.isPerfectRun ? `<span class="text-emerald-500 font-bold block mt-2 text-sm">✨ ¡Nuevo Récord! (100% Precisión)</span>` : `<span class="text-slate-400 font-bold block mt-2 text-xs">Sin récord (Hubo errores)</span>`;
-        content.innerHTML = `<div class="text-center py-24 animate-pop"><h2 class="text-5xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Excelente!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Tiempo de Verbos: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>${msg}<button onclick="startRandomPractice()" class="mt-8 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg hover:shadow-xl transition-all uppercase tracking-widest text-xs transform hover:-translate-y-1">🔄 Practicar otra vez</button></div>`;
-      } else if (n > 4) {
+        // Ensure timer is stopped if they skipped directly here
+        if (!runtime.verbTimeFinal) stopVerbTimer();
+        
+        // Call the new modular function we created outside
+        renderFinalScreen(content); 
+      }
+      
+      else if (n > 4) {
         const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
-        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
+        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
+          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
+          `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
+        
         let moduleTitle = TENSE_MAP[runtime.tense] || runtime.tense;
-        if (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) moduleTitle = runtime.blocks[n-1].label;
-        content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + `</div><div class="flex gap-2"><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div>`;
+        if (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) {
+            moduleTitle = runtime.blocks[n-1].label;
+        }
+
+        content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
+          slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + 
+          `</div><div class="flex gap-2"><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div>`;
       }
       updateProgress();
     }
 
+    function renderFinalScreen(contentElement) {
+        const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
+        
+        // 1. Header & Stats
+        let html = `
+            <div class="text-center py-8 animate-pop">
+                <h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2>
+                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">
+                    Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span>
+                </p>
+        `;
+
+        // 2. The Curiosidad Card (Only if image exists)
+        if (runtime.curiosidadImg) {
+            html += `
+                <div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 transform rotate-1 hover:rotate-0 transition-transform duration-500 mb-8">
+                    <div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative">
+                        <img src="${runtime.curiosidadImg}" 
+                             alt="Curiosidad del día" 
+                             class="w-full h-full object-cover" 
+                             onerror="this.style.display='none'">
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <p class="text-white font-bold text-sm uppercase tracking-widest">Curiosidad del Día ${runtime.activeDia}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 3. Actions & Instructions (Updated: No Link)
+        html += `
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
+                     <div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-center cursor-default">
+                        <span>📱 Abre Schoology para completar la Curiosidad</span>
+                    </div>
+                    
+                    <button onclick="startRandomPractice()" 
+                        class="w-64 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg hover:shadow-xl transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+                        <span>🔄 Práctica Extra</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        contentElement.innerHTML = html;
+    }
+    
     function showNextButton(n) {
-        const container = document.getElementById('next-btn-container'); container.innerHTML = ""; 
-        const btn = document.createElement('button'); btn.className = "btn-next px-6 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-700 shadow-lg"; btn.textContent = "Siguiente ➡"; btn.onclick = () => showModule(n + 1); container.appendChild(btn);
-        if ((n === 4) && (!runtime.isLatestClass || runtime.isPracticeMode)) {
-            const skipBtn = document.createElement('button'); skipBtn.className = "btn-next px-6 py-3 bg-slate-200 text-slate-500 font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-300 shadow-sm ml-2"; skipBtn.textContent = "Saltar Vocab 🏁"; skipBtn.onclick = () => showModule(8); container.appendChild(skipBtn);
+        const container = document.getElementById('next-btn-container');
+        container.innerHTML = ""; 
+
+        const btn = document.createElement('button');
+        btn.className = "btn-next px-6 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-700 shadow-lg";
+        btn.textContent = "Siguiente ➡";
+        btn.onclick = () => showModule(n + 1);
+        container.appendChild(btn);
+
+        const isSkipAllowed = (n === 4) && (!runtime.isLatestClass || runtime.isPracticeMode);
+        if (isSkipAllowed) {
+            const skipBtn = document.createElement('button');
+            skipBtn.className = "btn-next px-6 py-3 bg-slate-200 text-slate-500 font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-300 shadow-sm ml-2";
+            skipBtn.textContent = "Saltar Vocab 🏁";
+            skipBtn.onclick = () => showModule(8);
+            container.appendChild(skipBtn);
         }
     }
 
@@ -384,12 +495,21 @@
       let correct = 0;
       document.querySelectorAll('.quiz-item').forEach(item => {
         const input = item.querySelector('input');
-        if (input.value.trim().toLowerCase() === item.dataset.ans.toLowerCase()) { correct++; input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50"; } 
-        else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; }
+        if (input.value.trim().toLowerCase() === item.dataset.ans.toLowerCase()) {
+          correct++; input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50";
+        } else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; }
       });
+
       const score = correct / inputs.length;
-      if (score < 1.0) { runtime.isPerfectRun = false; document.getElementById('live-timer').className = "text-lg font-black text-slate-400 leading-none"; }
-      if (score >= runtime.proficiency) { runtime.completed = Math.max(runtime.completed, n); showNextButton(n); updateProgress(); }
+      if (score < 1.0) {
+          runtime.isPerfectRun = false;
+          document.getElementById('live-timer').className = "text-lg font-black text-slate-400 leading-none";
+      }
+      if (score >= runtime.proficiency) {
+          runtime.completed = Math.max(runtime.completed, n);
+          showNextButton(n);
+          updateProgress();
+      }
     }
 
     function checkVocab(n) {
@@ -399,8 +519,14 @@
         if (isGenerousMatch(input.value, item.dataset.ans)) { input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50"; }
         else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; missed.push({es: item.dataset.es, en: item.dataset.ans}); }
       });
-      if (missed.length > 0) startMatching(n, missed);
-      else { runtime.completed = Math.max(runtime.completed, n); showNextButton(n); updateProgress(); }
+      
+      if (missed.length > 0) {
+          startMatching(n, missed);
+      } else {
+          runtime.completed = Math.max(runtime.completed, n);
+          showNextButton(n);
+          updateProgress();
+      }
     }
 
     function isGenerousMatch(u, c) {
@@ -409,29 +535,77 @@
     }
 
     function startMatching(m, pairs) {
-      const area = document.getElementById('match-area'); area.classList.remove('hidden');
+      const area = document.getElementById('match-area');
+      area.classList.remove('hidden');
       const shuffledEn = [...pairs].sort(() => 0.5 - Math.random());
       area.innerHTML = `<div class="grid grid-cols-2 gap-3"><div id="match-es" class="space-y-2"></div><div id="match-en" class="space-y-2"></div></div>`;
       let selectedEs = null, solved = 0;
-      const checkDone = () => { if (solved === pairs.length) { area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs animate-pop">¡Listo!</p>`; runtime.completed = Math.max(runtime.completed, m); showNextButton(m); updateProgress(); } };
-      pairs.forEach(p => { const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold transition-all hover:bg-sky-50"; b.textContent = p.es; b.onclick = () => { document.querySelectorAll('#match-es button').forEach(x=>x.classList.remove('match-selected')); b.classList.add('match-selected'); selectedEs = p; }; document.getElementById('match-es').appendChild(b); });
-      shuffledEn.forEach(p => { const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs transition-all hover:bg-sky-50"; b.textContent = p.en; b.onclick = () => { if (selectedEs && selectedEs.en === p.en) { b.classList.add('opacity-0', 'pointer-events-none'); document.querySelectorAll('#match-es button').forEach(x => { if(x.textContent === selectedEs.es) x.classList.add('opacity-0', 'pointer-events-none'); }); solved++; selectedEs = null; checkDone(); } }; document.getElementById('match-en').appendChild(b); });
+      
+      const checkDone = () => {
+          if (solved === pairs.length) {
+              area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs animate-pop">¡Listo!</p>`;
+              runtime.completed = Math.max(runtime.completed, m);
+              showNextButton(m);
+              updateProgress();
+          }
+      };
+
+      pairs.forEach(p => {
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold transition-all hover:bg-sky-50"; b.textContent = p.es;
+        b.onclick = () => { document.querySelectorAll('#match-es button').forEach(x=>x.classList.remove('match-selected')); b.classList.add('match-selected'); selectedEs = p; };
+        document.getElementById('match-es').appendChild(b);
+      });
+      
+      shuffledEn.forEach(p => {
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs transition-all hover:bg-sky-50"; b.textContent = p.en;
+        b.onclick = () => {
+          if (selectedEs && selectedEs.en === p.en) {
+            b.classList.add('opacity-0', 'pointer-events-none');
+            document.querySelectorAll('#match-es button').forEach(x => { if(x.textContent === selectedEs.es) x.classList.add('opacity-0', 'pointer-events-none'); });
+            solved++; selectedEs = null; checkDone();
+          }
+        };
+        document.getElementById('match-en').appendChild(b);
+      });
     }
 
     function startSessionTimer() {
-        clearInterval(runtime.timerInterval); runtime.startTime = Date.now();
-        document.getElementById('stats-container').classList.remove('hidden'); updateBestDisplay();
-        runtime.timerInterval = setInterval(() => { const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000); document.getElementById('live-timer').textContent = formatTime(elapsed); }, 1000);
+        clearInterval(runtime.timerInterval); 
+        runtime.startTime = Date.now();
+        document.getElementById('stats-container').classList.remove('hidden');
+        updateBestDisplay();
+        
+        runtime.timerInterval = setInterval(() => { 
+            const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000); 
+            document.getElementById('live-timer').textContent = formatTime(elapsed); 
+        }, 1000);
     }
 
     function stopVerbTimer() {
-        clearInterval(runtime.timerInterval); const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000); runtime.verbTimeFinal = elapsed; 
-        if (runtime.isPerfectRun) { const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`; const saved = localStorage.getItem(key); if (!saved || elapsed < parseInt(saved)) { localStorage.setItem(key, elapsed); } }
+        clearInterval(runtime.timerInterval);
+        const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000);
+        runtime.verbTimeFinal = elapsed; 
+        
+        if (runtime.isPerfectRun) {
+            const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`;
+            const saved = localStorage.getItem(key);
+            if (!saved || elapsed < parseInt(saved)) {
+                localStorage.setItem(key, elapsed);
+            }
+        }
         updateBestDisplay();
     }
 
     function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
-    function updateBestDisplay() { if(runtime.activeDia) { const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`; const saved = localStorage.getItem(key); document.getElementById('best-time').textContent = saved ? formatTime(parseInt(saved)) : "--:--"; } }
+    
+    function updateBestDisplay() { 
+        if(runtime.activeDia) {
+            const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`;
+            const saved = localStorage.getItem(key); 
+            document.getElementById('best-time').textContent = saved ? formatTime(parseInt(saved)) : "--:--"; 
+        }
+    }
+    
     function updateProgress() { const pct = Math.round((runtime.completed / 8) * 100); document.getElementById('progress-fill').style.width = pct + "%"; document.getElementById('progress-label').textContent = pct + "%"; document.querySelectorAll('.module-tab').forEach((btn, i) => { const m = i + 1; if (m <= runtime.completed + 1) { btn.disabled = false; btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`; document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●"; } }); }
 
     document.getElementById('btn-projector').onclick = () => {
