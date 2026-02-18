@@ -1,5 +1,797 @@
 [
   {
+    "dia": 1,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/cervantes.jpg",
+    "content": {
+      "spanish": "Miguel de Cervantes escribió 'Don Quijote de la Mancha', considerada la primera novela moderna.",
+      "english": "Miguel de Cervantes wrote 'Don Quixote', considered the first modern novel."
+    },
+    "word_of_the_day": {
+      "word": "El caballero",
+      "translation": "The knight",
+      "sample_sentence": "El caballero luchó contra los molinos de viento.",
+      "sentence_translation": "The knight fought against the windmills."
+    }
+  },
+  {
+    "dia": 2,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/dia_muertos.jpg",
+    "content": {
+      "spanish": "El Día de los Muertos no es un día triste; es una celebración para recordar a los seres queridos con ofrendas.",
+      "english": "Day of the Dead is not a sad day; it is a celebration to remember loved ones with altars."
+    },
+    "word_of_the_day": {
+      "word": "La ofrenda",
+      "translation": "The offering/altar",
+      "sample_sentence": "Pusimos fotos y comida en la ofrenda.",
+      "sentence_translation": "We put photos and food on the offering."
+    }
+  },
+  {
+    "dia": 3,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "CHILE",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/isla_pascua.jpg",
+    "content": {
+      "spanish": "La Isla de Pascua es famosa por sus estatuas gigantes de piedra llamadas Moáis.",
+      "english": "Easter Island is famous for its giant stone statues called Moai."
+    },
+    "word_of_the_day": {
+      "word": "La estatua",
+      "translation": "The statue",
+      "sample_sentence": "Nadie sabe exactamente cómo movieron las estatuas.",
+      "sentence_translation": "Nobody knows exactly how they moved the statues."
+    }
+  },
+  {
+    "dia": 4,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "ARGENTINA / URUGUAY",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/mate.jpg",
+    "content": {
+      "spanish": "El mate es una infusión similar al té que se comparte socialmente en un recipiente especial con una bombilla.",
+      "english": "Mate is a tea-like infusion shared socially in a special cup with a metal straw."
+    },
+    "word_of_the_day": {
+      "word": "Compartir",
+      "translation": "To share",
+      "sample_sentence": "Es costumbre compartir el mate con amigos.",
+      "sentence_translation": "It is a custom to share mate with friends."
+    }
+  },
+  {
+    "dia": 5,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "CUBA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/celia_cruz.jpg",
+    "content": {
+      "spanish": "Celia Cruz, la 'Reina de la Salsa', era famosa por su increíble voz y su grito de '¡Azúcar!'.",
+      "english": "Celia Cruz, the 'Queen of Salsa', was famous for her incredible voice and her shout of '¡Azúcar!'."
+    },
+    "word_of_the_day": {
+      "word": "La voz",
+      "translation": "The voice",
+      "sample_sentence": "Ella tenía una voz muy potente.",
+      "sentence_translation": "She had a very powerful voice."
+    }
+  },
+  {
+    "dia": 6,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "VENEZUELA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/salto_angel.jpg",
+    "content": {
+      "spanish": "El Salto Ángel es la cascada más alta del mundo e inspiró la película 'Up'.",
+      "english": "Angel Falls is the highest waterfall in the world and inspired the movie 'Up'."
+    },
+    "word_of_the_day": {
+      "word": "La cascada",
+      "translation": "The waterfall",
+      "sample_sentence": "El agua de la cascada cae desde muy alto.",
+      "sentence_translation": "The waterfall's water falls from very high up."
+    }
+  },
+  {
+    "dia": 7,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/siesta.jpg",
+    "content": {
+      "spanish": "La siesta es una tradición de descansar después del almuerzo, aunque hoy en día menos gente la practica a diario.",
+      "english": "The siesta is a tradition of resting after lunch, although nowadays fewer people practice it daily."
+    },
+    "word_of_the_day": {
+      "word": "Descansar",
+      "translation": "To rest",
+      "sample_sentence": "Necesito descansar un poco después de comer.",
+      "sentence_translation": "I need to rest a little after eating."
+    }
+  },
+  {
+    "dia": 8,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "EE. UU.",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/ellen_ochoa.jpg",
+    "content": {
+      "spanish": "Ellen Ochoa fue la primera mujer hispana en el espacio y directora del Centro Espacial Johnson.",
+      "english": "Ellen Ochoa was the first Hispanic woman in space and director of the Johnson Space Center."
+    },
+    "word_of_the_day": {
+      "word": "El espacio",
+      "translation": "Space",
+      "sample_sentence": "Los astronautas viajan al espacio.",
+      "sentence_translation": "Astronauts travel to space."
+    }
+  },
+  {
+    "dia": 9,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/alhambra.jpg",
+    "content": {
+      "spanish": "La Alhambra en Granada es un impresionante palacio árabe conocido por su arte y jardines.",
+      "english": "The Alhambra in Granada is an impressive Moorish palace known for its art and gardens."
+    },
+    "word_of_the_day": {
+      "word": "El palacio",
+      "translation": "The palace",
+      "sample_sentence": "El rey vivía en el palacio.",
+      "sentence_translation": "The king lived in the palace."
+    }
+  },
+  {
+    "dia": 10,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "PERÚ",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/nazca.jpg",
+    "content": {
+      "spanish": "Las Líneas de Nazca son geoglifos gigantes en el desierto que solo se pueden ver bien desde el aire.",
+      "english": "The Nazca Lines are giant geoglyphs in the desert that can only be seen well from the air."
+    },
+    "word_of_the_day": {
+      "word": "Volar",
+      "translation": "To fly",
+      "sample_sentence": "Tienes que volar para ver las líneas.",
+      "sentence_translation": "You have to fly to see the lines."
+    }
+  },
+  {
+    "dia": 11,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "COLOMBIA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/botero.jpg",
+    "content": {
+      "spanish": "Fernando Botero es un artista famoso por pintar y esculpir personas con volúmenes exagerados.",
+      "english": "Fernando Botero is an artist famous for painting and sculpting people with exaggerated volume."
+    },
+    "word_of_the_day": {
+      "word": "La escultura",
+      "translation": "The sculpture",
+      "sample_sentence": "Hay una escultura de Botero en el parque.",
+      "sentence_translation": "There is a Botero sculpture in the park."
+    }
+  },
+  {
+    "dia": 12,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "EL SALVADOR",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/pupusas.jpg",
+    "content": {
+      "spanish": "Las pupusas son el plato nacional de El Salvador; son tortillas rellenas de queso, frijoles y carne.",
+      "english": "Pupusas are the national dish of El Salvador; they are tortillas stuffed with cheese, beans, and meat."
+    },
+    "word_of_the_day": {
+      "word": "Relleno/a",
+      "translation": "Stuffed / Filled",
+      "sample_sentence": "Me gusta la pupusa rellena de queso.",
+      "sentence_translation": "I like the pupusa stuffed with cheese."
+    }
+  },
+  {
+    "dia": 13,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "GUATEMALA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/tikal.jpg",
+    "content": {
+      "spanish": "Tikal es una de las ciudades más grandes de la antigua civilización maya, escondida en la selva.",
+      "english": "Tikal is one of the largest cities of the ancient Maya civilization, hidden in the jungle."
+    },
+    "word_of_the_day": {
+      "word": "La selva",
+      "translation": "The jungle",
+      "sample_sentence": "Los animales viven en la selva.",
+      "sentence_translation": "The animals live in the jungle."
+    }
+  },
+  {
+    "dia": 14,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "ARGENTINA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/gardel_tango.jpg",
+    "content": {
+      "spanish": "El Tango nació en Buenos Aires. Carlos Gardel fue el cantante más famoso de este género apasionado.",
+      "english": "Tango was born in Buenos Aires. Carlos Gardel was the most famous singer of this passionate genre."
+    },
+    "word_of_the_day": {
+      "word": "El baile",
+      "translation": "The dance",
+      "sample_sentence": "El tango es un baile difícil pero hermoso.",
+      "sentence_translation": "Tango is a difficult but beautiful dance."
+    }
+  },
+  {
+    "dia": 15,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "PUERTO RICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/coqui.jpg",
+    "content": {
+      "spanish": "El coquí es una rana pequeña nativa de Puerto Rico que canta su nombre 'co-quí' por la noche.",
+      "english": "The coquí is a small frog native to Puerto Rico that sings its name 'co-quí' at night."
+    },
+    "word_of_the_day": {
+      "word": "La rana",
+      "translation": "The frog",
+      "sample_sentence": "Escuchamos la rana cantar.",
+      "sentence_translation": "We listened to the frog sing."
+    }
+  },
+  {
+    "dia": 16,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/dali.jpg",
+    "content": {
+      "spanish": "Salvador Dalí fue un pintor surrealista famoso por sus relojes derretidos y su bigote excéntrico.",
+      "english": "Salvador Dalí was a surrealist painter famous for his melting clocks and eccentric mustache."
+    },
+    "word_of_the_day": {
+      "word": "El sueño",
+      "translation": "The dream",
+      "sample_sentence": "Sus pinturas parecen un sueño extraño.",
+      "sentence_translation": "His paintings look like a strange dream."
+    }
+  },
+  {
+    "dia": 17,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "ECUADOR",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/galapagos.jpg",
+    "content": {
+      "spanish": "Las Islas Galápagos son famosas por sus animales únicos, como las tortugas gigantes.",
+      "english": "The Galapagos Islands are famous for their unique animals, like the giant tortoises."
+    },
+    "word_of_the_day": {
+      "word": "La tortuga",
+      "translation": "The turtle / tortoise",
+      "sample_sentence": "La tortuga camina muy despacio.",
+      "sentence_translation": "The turtle walks very slowly."
+    }
+  },
+  {
+    "dia": 18,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/mariachi.jpg",
+    "content": {
+      "spanish": "El Mariachi es la música tradicional de México, reconocida por sus trajes de charro y sombreros grandes.",
+      "english": "Mariachi is the traditional music of Mexico, recognized for its charro suits and big hats."
+    },
+    "word_of_the_day": {
+      "word": "La canción",
+      "translation": "The song",
+      "sample_sentence": "Ellos tocaron una canción romántica.",
+      "sentence_translation": "They played a romantic song."
+    }
+  },
+  {
+    "dia": 19,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "EE. UU. / MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/selena.jpg",
+    "content": {
+      "spanish": "Selena Quintanilla, la 'Reina del Tex-Mex', rompió barreras en la música en inglés y español.",
+      "english": "Selena Quintanilla, the 'Queen of Tex-Mex', broke barriers in music in English and Spanish."
+    },
+    "word_of_the_day": {
+      "word": "La estrella",
+      "translation": "The star",
+      "sample_sentence": "Ella siempre será una estrella.",
+      "sentence_translation": "She will always be a star."
+    }
+  },
+  {
+    "dia": 20,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "PANAMÁ",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/canal_panama.jpg",
+    "content": {
+      "spanish": "El Canal de Panamá es una maravilla de la ingeniería que conecta el Océano Atlántico con el Pacífico.",
+      "english": "The Panama Canal is an engineering marvel connecting the Atlantic Ocean with the Pacific."
+    },
+    "word_of_the_day": {
+      "word": "El barco",
+      "translation": "The ship / boat",
+      "sample_sentence": "Un barco enorme cruzó el canal.",
+      "sentence_translation": "A huge ship crossed the canal."
+    }
+  },
+  {
+    "dia": 21,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/tomatina.jpg",
+    "content": {
+      "spanish": "La Tomatina es un festival en Buñol donde la gente se lanza miles de tomates por diversión.",
+      "english": "La Tomatina is a festival in Buñol where people throw thousands of tomatoes at each other for fun."
+    },
+    "word_of_the_day": {
+      "word": "Lanzar",
+      "translation": "To throw",
+      "sample_sentence": "No debes lanzar comida.",
+      "sentence_translation": "You should not throw food."
+    }
+  },
+  {
+    "dia": 22,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "CHILE",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/neruda.jpg",
+    "content": {
+      "spanish": "Pablo Neruda fue un poeta chileno que ganó el Premio Nobel. Escribió muchas odas a cosas simples.",
+      "english": "Pablo Neruda was a Chilean poet who won the Nobel Prize. He wrote many odes to simple things."
+    },
+    "word_of_the_day": {
+      "word": "El poema",
+      "translation": "The poem",
+      "sample_sentence": "Escribí un poema para mi clase.",
+      "sentence_translation": "I wrote a poem for my class."
+    }
+  },
+  {
+    "dia": 23,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "ARGENTINA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/perito_moreno.jpg",
+    "content": {
+      "spanish": "El Glaciar Perito Moreno es uno de los pocos glaciares en el mundo que sigue creciendo en lugar de derretirse.",
+      "english": "The Perito Moreno Glacier is one of the few glaciers in the world that is still growing instead of melting."
+    },
+    "word_of_the_day": {
+      "word": "El hielo",
+      "translation": "The ice",
+      "sample_sentence": "El hielo es de color azul.",
+      "sentence_translation": "The ice is blue in color."
+    }
+  },
+  {
+    "dia": 24,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "COSTA RICA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/biodiversidad_cr.jpg",
+    "content": {
+      "spanish": "Aunque es un país pequeño, Costa Rica tiene el 5% de toda la biodiversidad del planeta.",
+      "english": "Although it is a small country, Costa Rica has 5% of all the planet's biodiversity."
+    },
+    "word_of_the_day": {
+      "word": "Proteger",
+      "translation": "To protect",
+      "sample_sentence": "Es importante proteger el medio ambiente.",
+      "sentence_translation": "It is important to protect the environment."
+    }
+  },
+  {
+    "dia": 25,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "EE. UU.",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/sotomayor.jpg",
+    "content": {
+      "spanish": "Sonia Sotomayor fue la primera jueza hispana en la Corte Suprema de los Estados Unidos.",
+      "english": "Sonia Sotomayor was the first Hispanic justice on the Supreme Court of the United States."
+    },
+    "word_of_the_day": {
+      "word": "La ley",
+      "translation": "The law",
+      "sample_sentence": "Todos deben respetar la ley.",
+      "sentence_translation": "Everyone must respect the law."
+    }
+  },
+  {
+    "dia": 26,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/chichen_itza.jpg",
+    "content": {
+      "spanish": "Chichén Itzá tiene una pirámide famosa llamada El Castillo, que funciona como un calendario gigante.",
+      "english": "Chichén Itzá has a famous pyramid called El Castillo, which works like a giant calendar."
+    },
+    "word_of_the_day": {
+      "word": "El calendario",
+      "translation": "The calendar",
+      "sample_sentence": "El calendario maya es muy preciso.",
+      "sentence_translation": "The Maya calendar is very precise."
+    }
+  },
+  {
+    "dia": 27,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "VENEZUELA / COLOMBIA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/arepa.jpg",
+    "content": {
+      "spanish": "La arepa es un pan de maíz redondo que se come todos los días en Venezuela y Colombia.",
+      "english": "The arepa is a round corn bread eaten every day in Venezuela and Colombia."
+    },
+    "word_of_the_day": {
+      "word": "El maíz",
+      "translation": "The corn",
+      "sample_sentence": "El maíz es la base de la comida latina.",
+      "sentence_translation": "Corn is the base of Latin food."
+    }
+  },
+  {
+    "dia": 28,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "GUATEMALA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/rigoberta.jpg",
+    "content": {
+      "spanish": "Rigoberta Menchú ganó el Premio Nobel de la Paz por luchar por los derechos de los pueblos indígenas.",
+      "english": "Rigoberta Menchú won the Nobel Peace Prize for fighting for the rights of indigenous peoples."
+    },
+    "word_of_the_day": {
+      "word": "Los derechos",
+      "translation": "Rights",
+      "sample_sentence": "Todos tenemos los mismos derechos.",
+      "sentence_translation": "We all have the same rights."
+    }
+  },
+  {
+    "dia": 29,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/camino_santiago.jpg",
+    "content": {
+      "spanish": "El Camino de Santiago es una famosa peregrinación a pie hasta la catedral de Santiago de Compostela.",
+      "english": "The Camino de Santiago is a famous pilgrimage on foot to the cathedral of Santiago de Compostela."
+    },
+    "word_of_the_day": {
+      "word": "Caminar",
+      "translation": "To walk",
+      "sample_sentence": "Me gusta caminar por las montañas.",
+      "sentence_translation": "I like to walk in the mountains."
+    }
+  },
+  {
+    "dia": 30,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "PARAGUAY",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/bandera_paraguay.jpg",
+    "content": {
+      "spanish": "La bandera de Paraguay es la única bandera nacional en el mundo que tiene imágenes diferentes en cada lado.",
+      "english": "The Paraguayan flag is the only national flag in the world that has different images on each side."
+    },
+    "word_of_the_day": {
+      "word": "El lado",
+      "translation": "The side",
+      "sample_sentence": "Mira el otro lado de la moneda.",
+      "sentence_translation": "Look at the other side of the coin."
+    }
+  },
+  {
+    "dia": 31,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/nadal.jpg",
+    "content": {
+      "spanish": "Rafael Nadal es considerado el 'Rey de la Tierra Batida' y uno de los mejores tenistas de la historia.",
+      "english": "Rafael Nadal is considered the 'King of Clay' and one of the best tennis players in history."
+    },
+    "word_of_the_day": {
+      "word": "El rey",
+      "translation": "The king",
+      "sample_sentence": "Él es el rey de este deporte.",
+      "sentence_translation": "He is the king of this sport."
+    }
+  },
+  {
+    "dia": 32,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/axolote.jpg",
+    "content": {
+      "spanish": "El axolote es una salamandra mexicana que puede regenerar partes de su cuerpo, ¡incluso su corazón!",
+      "english": "The axolotl is a Mexican salamander that can regenerate parts of its body, even its heart!"
+    },
+    "word_of_the_day": {
+      "word": "El corazón",
+      "translation": "The heart",
+      "sample_sentence": "Mi corazón late muy rápido.",
+      "sentence_translation": "My heart beats very fast."
+    }
+  },
+  {
+    "dia": 33,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "HONDURAS",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/copan.jpg",
+    "content": {
+      "spanish": "Las Ruinas de Copán son famosas por sus escaleras jeroglíficas que cuentan la historia de sus reyes.",
+      "english": "The Copan Ruins are famous for their hieroglyphic staircases that tell the history of their kings."
+    },
+    "word_of_the_day": {
+      "word": "La escalera",
+      "translation": "The staircase/ladder",
+      "sample_sentence": "Subimos por la escalera antigua.",
+      "sentence_translation": "We went up the ancient staircase."
+    }
+  },
+  {
+    "dia": 34,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "EE. UU.",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/cesar_chavez.jpg",
+    "content": {
+      "spanish": "César Chávez fue un activista que luchó por mejores condiciones para los trabajadores agrícolas con su lema 'Sí se puede'.",
+      "english": "César Chávez was an activist who fought for better conditions for farm workers with his motto 'Yes we can'."
+    },
+    "word_of_the_day": {
+      "word": "El lema",
+      "translation": "The motto/slogan",
+      "sample_sentence": "Nuestro lema es trabajar juntos.",
+      "sentence_translation": "Our motto is to work together."
+    }
+  },
+  {
+    "dia": 35,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "PERÚ",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/ceviche.jpg",
+    "content": {
+      "spanish": "El ceviche se cocina sin calor; usa el ácido del limón para 'cocinar' el pescado crudo.",
+      "english": "Ceviche is cooked without heat; it uses the acid from the lemon to 'cook' the raw fish."
+    },
+    "word_of_the_day": {
+      "word": "Cocinar",
+      "translation": "To cook",
+      "sample_sentence": "Me encanta cocinar para mi familia.",
+      "sentence_translation": "I love to cook for my family."
+    }
+  },
+  {
+    "dia": 36,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "BOLIVIA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/la_paz_ciudad.jpg",
+    "content": {
+      "spanish": "La Paz es la capital administrativa más alta del mundo y tiene un sistema de teleférico como transporte público.",
+      "english": "La Paz is the highest administrative capital in the world and has a cable car system as public transport."
+    },
+    "word_of_the_day": {
+      "word": "La nube",
+      "translation": "The cloud",
+      "sample_sentence": "La ciudad está casi en las nubes.",
+      "sentence_translation": "The city is almost in the clouds."
+    }
+  },
+  {
+    "dia": 37,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/lucha_libre.jpg",
+    "content": {
+      "spanish": "En la Lucha Libre, las máscaras son sagradas. Perder la máscara en una pelea es el mayor deshonor.",
+      "english": "In Lucha Libre, masks are sacred. Losing the mask in a fight is the greatest dishonor."
+    },
+    "word_of_the_day": {
+      "word": "La máscara",
+      "translation": "The mask",
+      "sample_sentence": "El luchador nunca se quita la máscara.",
+      "sentence_translation": "The wrestler never takes off his mask."
+    }
+  },
+  {
+    "dia": 38,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "CUBA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/jose_marti.jpg",
+    "content": {
+      "spanish": "José Martí fue un poeta y héroe nacional que luchó por la independencia de Cuba. Escribió 'Versos Sencillos'.",
+      "english": "José Martí was a poet and national hero who fought for Cuba's independence. He wrote 'Simple Verses'."
+    },
+    "word_of_the_day": {
+      "word": "La libertad",
+      "translation": "Freedom",
+      "sample_sentence": "La libertad es lo más importante.",
+      "sentence_translation": "Freedom is the most important thing."
+    }
+  },
+  {
+    "dia": 39,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "ESPAÑA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/flamenco.jpg",
+    "content": {
+      "spanish": "El flamenco no es solo un baile; incluye cante (canto), toque (guitarra) y palmas.",
+      "english": "Flamenco is not just a dance; it includes cante (singing), toque (guitar playing), and handclaps."
+    },
+    "word_of_the_day": {
+      "word": "El sentimiento",
+      "translation": "The feeling",
+      "sample_sentence": "El cantante expresa mucho sentimiento.",
+      "sentence_translation": "The singer expresses a lot of feeling."
+    }
+  },
+  {
+    "dia": 40,
+    "course": ["s2", "s4"],
+    "type": "destino",
+    "header": "DESTINO DEL DÍA",
+    "location": "COLOMBIA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/eje_cafetero.jpg",
+    "content": {
+      "spanish": "El Eje Cafetero es una región hermosa donde se cultiva algunos de los mejores cafés del mundo.",
+      "english": "The Coffee Axis is a beautiful region where some of the best coffee in the world is grown."
+    },
+    "word_of_the_day": {
+      "word": "El café",
+      "translation": "Coffee",
+      "sample_sentence": "Me gusta beber café por la mañana.",
+      "sentence_translation": "I like to drink coffee in the morning."
+    }
+  },
+  {
+    "dia": 41,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "MÉXICO",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/mariposa_monarca.jpg",
+    "content": {
+      "spanish": "Millones de mariposas monarca viajan desde Canadá hasta los bosques de México cada invierno.",
+      "english": "Millions of monarch butterflies travel from Canada to the forests of Mexico every winter."
+    },
+    "word_of_the_day": {
+      "word": "El viaje",
+      "translation": "The trip / journey",
+      "sample_sentence": "El viaje es largo y peligroso.",
+      "sentence_translation": "The journey is long and dangerous."
+    }
+  },
+  {
+    "dia": 42,
+    "course": ["s2", "s4"],
+    "type": "persona",
+    "header": "PERSONA DESTACADA",
+    "location": "ARGENTINA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/mafalda.jpg",
+    "content": {
+      "spanish": "Mafalda es un personaje de cómic muy famoso; es una niña que se preocupa por la paz mundial y odia la sopa.",
+      "english": "Mafalda is a very famous comic character; she is a girl who worries about world peace and hates soup."
+    },
+    "word_of_the_day": {
+      "word": "La sopa",
+      "translation": "The soup",
+      "sample_sentence": "No me gusta comer sopa.",
+      "sentence_translation": "I don't like to eat soup."
+    }
+  },
+  {
+    "dia": 43,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "REPÚBLICA DOMINICANA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/beisbol_rd.jpg",
+    "content": {
+      "spanish": "El béisbol es el deporte rey aquí. Este país produce más jugadores de Grandes Ligas que cualquier otro fuera de EE. UU.",
+      "english": "Baseball is king here. This country produces more Major League players than any other outside the U.S."
+    },
+    "word_of_the_day": {
+      "word": "El equipo",
+      "translation": "The team",
+      "sample_sentence": "Mi equipo favorito ganó el partido.",
+      "sentence_translation": "My favorite team won the match."
+    }
+  },
+  {
+    "dia": 44,
+    "course": ["s2", "s4"],
+    "type": "trivia",
+    "header": "¿SABÍAS QUE...?",
+    "location": "COLOMBIA",
+    "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/curiosidad/el_dorado.jpg",
+    "content": {
+      "spanish": "La leyenda de El Dorado, una ciudad hecha de oro, se originó en los rituales indígenas de la laguna de Guatavita.",
+      "english": "The legend of El Dorado, a city made of gold, originated in the indigenous rituals of Lake Guatavita."
+    },
+    "word_of_the_day": {
+      "word": "El oro",
+      "translation": "Gold",
+      "sample_sentence": "El anillo es de oro puro.",
+      "sentence_translation": "The ring is pure gold."
+    }
+  },
+  {
     "dia": 45,
     "course": ["s2", "s4"],
     "type": "trivia",
