@@ -102,12 +102,16 @@
       return array;
     }
 
-    async function fetchData(url) {
-        const r = await fetch(url);
+async function fetchData(url) {
+        // This adds a random number (timestamp) to the URL (e.g. file.json?t=12345)
+        // It tricks the browser into thinking it's a brand new file every time.
+        const cacheBuster = "?t=" + Date.now();
+        const r = await fetch(url + cacheBuster);
+        
         if (!r.ok) throw new Error(`404: ${url.split('/').pop()}`);
         return r.json();
     }
-
+  
     async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
       clearInterval(runtime.timerInterval);
