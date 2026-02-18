@@ -1,6 +1,36 @@
 [
-{
-    "dia": 40,
+ {
+  "dia": 40,
+  "date": "2026-01-21",
+  "topic": "Presente de subjuntivo",
+  "vocabFile": "vocab/D2-2-4.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Presente de subjuntivo",
+      "bank": "bancos/banco_subjuntivo_presente.json",
+      "identityCategory": "presente_de_subjuntivo",
+      "identityGroups": ["nivel_1"],
+      "count": 5
+    },
+    {
+      "label": "Presente de subjuntivo",
+      "bank": "bancos/banco_subjuntivo_presente.json",
+      "identityCategory": "presente_de_subjuntivo",
+      "identityGroups": ["nivel_2"],
+      "count": 10
+    },
+    {
+      "label": "Presente de subjuntivo",
+      "bank": "bancos/banco_subjuntivo_presente.json",
+      "identityCategory": "presente_de_subjuntivo",
+      "identityGroups": ["nivel_3"],
+      "count": 5
+    }
+  ]
+},
+    {
+    "dia": 60,
     "topic": "Subjuntivo (Regulares)",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
