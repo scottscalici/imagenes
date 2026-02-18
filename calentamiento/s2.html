@@ -61,7 +61,7 @@
     </div>
   </main>
 
-  <script>
+<script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const CUR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json";
@@ -69,64 +69,32 @@
     
     const COURSE_CYCLES = { 's2': ['B'], 's4': ['A', 'B'] };
 
-    // --- EXPANDED MAP FOR S2 ---
     const TENSE_MAP = {
-      // Indicative Simple
-      "presente": "Presente",
-      "preterito": "Pretérito",
-      "imperfecto": "Imperfecto",
-      "futuro": "Futuro",
-      "condicional": "Condicional",
-      
-      // Subjunctive
-      "presente_de_subjuntivo": "Subjuntivo (Presente)",
-      "imperfecto_de_subjuntivo": "Subjuntivo (Imperfecto)",
-      
-      // Perfect Tenses (Compuestos)
-      "presente_perfecto": "Presente Perfecto (He ...)",
-      "pluscuamperfecto": "Pluscuamperfecto (Había ...)",
-      "futuro_perfecto": "Futuro Perfecto (Habré ...)",
-      "condicional_perfecto": "Condicional Perfecto (Habría ...)",
-      "presente_perfecto_subjuntivo": "Perfecto de Subjuntivo (Haya ...)",
-      "pluscuamperfecto_subjuntivo": "Pluscuamperfecto Subj. (Hubiera ...)",
-
-      // Commands (Mandatos)
-      "mandatos_informales": "Mandatos Informales (Tú)",
-      "mandatos_formales_plurales": "Mandatos Formales (Ud. / Uds.)",
-      "mandatos_nosotros": "Mandatos de Nosotros",
-      "mandatos_vosotros": "Mandatos de Vosotros",
-
-      // Non-Finite / Other
-      "participio": "Participio Pasado",
-      "gerundio": "Gerundio / Participio presente",
-      "presente_progresivo": "Presente progresivo"
+      "presente": "Presente", "preterito": "Pretérito", "imperfecto": "Imperfecto",
+      "futuro": "Futuro", "condicional": "Condicional", "presente_de_subjuntivo": "Subjuntivo (Presente)",
+      "imperfecto_de_subjuntivo": "Subjuntivo (Imperfecto)", "presente_perfecto": "Presente Perfecto (He ...)",
+      "pluscuamperfecto": "Pluscuamperfecto (Había ...)", "futuro_perfecto": "Futuro Perfecto (Habré ...)",
+      "condicional_perfecto": "Condicional Perfecto (Habría ...)", "presente_perfecto_subjuntivo": "Perfecto de Subjuntivo (Haya ...)",
+      "pluscuamperfecto_subjuntivo": "Pluscuamperfecto Subj. (Hubiera ...)", "mandatos_informales": "Mandatos Informales (Tú)",
+      "mandatos_formales_plurales": "Mandatos Formales (Ud. / Uds.)", "mandatos_nosotros": "Mandatos de Nosotros",
+      "mandatos_vosotros": "Mandatos de Vosotros", "participio": "Participio Pasado",
+      "gerundio": "Gerundio / Participio presente", "presente_progresivo": "Presente progresivo"
     };
 
     const runtime = {
-      // DEFAULT: S2
       course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
       tense: "", title: "", constraints: null,
-      proficiency: 0.5,
-      isPerfectRun: true, 
-      verbTimeFinal: null,
-      blocks: null,
-      // NEW: Teacher Unlock Logic
-      teacherMode: false,
-      fullSchedule: [],
-      serverDateDia: null
+      proficiency: 0.5, isPerfectRun: true, 
+      verbTimeFinal: null, blocks: null,
+      teacherMode: false, fullSchedule: [], serverDateDia: null
     };
 
     function seededShuffle(array, customSeed = null) {
-      let m = array.length, t, i;
-      let seedNum;
-      if (runtime.isPracticeMode) {
-          seedNum = Math.floor(Math.random() * 1000000); 
-      } else {
-          seedNum = customSeed !== null ? customSeed : parseInt(runtime.activeDia); 
-      }
+      let m = array.length, t, i, seedNum;
+      seedNum = runtime.isPracticeMode ? Math.floor(Math.random() * 1000000) : (customSeed !== null ? customSeed : parseInt(runtime.activeDia));
       while (m) {
         i = Math.floor(Math.abs(Math.sin(seedNum++) * m--));
         t = array[m]; array[m] = array[i]; array[i] = t;
@@ -140,50 +108,37 @@
         return r.json();
     }
 
-  async function init(targetDia = null) {
+    async function init(targetDia = null) {
       const subtitle = document.getElementById('pageSubtitle');
-      
       clearInterval(runtime.timerInterval);
-      runtime.startTime = null;
-      runtime.verbTimeFinal = null;
-      runtime.isPerfectRun = true;
+      runtime.startTime = null; runtime.verbTimeFinal = null; runtime.isPerfectRun = true;
       document.getElementById('live-timer').textContent = "00:00";
-      document.getElementById('live-timer').className = "text-lg font-black text-sky-600 leading-none";
-
+      
       try {
         subtitle.textContent = "Sincronizando...";
         const calData = await fetchData(CAL_URL);
         const calRes = Array.isArray(calData) ? calData : (calData.map || []);
         const schedRes = await fetchData(`${BASE_URL}schedule_${runtime.course}.json`);
-        
         runtime.fullSchedule = schedRes;
 
         const now = new Date();
         const localDateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`; 
-        
         const pastDays = calRes.filter(d => d.fecha <= localDateStr).sort((a, b) => b.fecha.localeCompare(a.fecha));
         const allowedCycles = COURSE_CYCLES[runtime.course] || ['A', 'B'];
-        let currentSchoolDay = null;
-        let activeDayObj = null;
+        let currentSchoolDay = null, activeDayObj = null;
 
         for (const day of pastDays) {
             if (day.dia !== null && day.dia !== undefined && (!day.ciclo || allowedCycles.includes(day.ciclo))) {
-                currentSchoolDay = day.dia;
-                activeDayObj = day;
-                break;
+                currentSchoolDay = day.dia; activeDayObj = day; break;
             }
         }
 
         if (!currentSchoolDay) {
             schedRes.sort((a, b) => a.dia - b.dia);
             currentSchoolDay = schedRes[schedRes.length - 1].dia;
-            subtitle.textContent = "Modo Fallback";
-        } else {
-            runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : "";
-        }
+        } else { runtime.currentCiclo = activeDayObj ? activeDayObj.ciclo : ""; }
         
         runtime.serverDateDia = currentSchoolDay;
-
         const pastEntries = schedRes.filter(e => e.dia <= currentSchoolDay).sort((a, b) => b.dia - a.dia);
         const latestClassEntry = pastEntries[0];
         const entry = targetDia ? schedRes.find(e => e.dia == targetDia) : latestClassEntry;
@@ -198,49 +153,29 @@
         runtime.proficiency = entry.proficiency !== undefined ? entry.proficiency : 0.5;
         runtime.blocks = entry.blocks || null;
 
-        // --- FIXED: CURIOSIDAD FETCH (Matches "cur-XX") ---
         let dailyImage = null;
         try {
             const curData = await fetchData(CUR_URL);
-            
-            // Construct the ID we are looking for (e.g., "cur-40")
             const targetId = `cur-${runtime.activeDia}`;
-            
             if (Array.isArray(curData)) {
-                // Find matching ID
                 const match = curData.find(c => c.id === targetId);
                 if (match) dailyImage = match.img || match.imagen || match.url; 
-            } else {
-                dailyImage = curData[runtime.activeDia];
-            }
-            
-            if (!dailyImage) console.log(`No image found for ID: ${targetId}`);
-
-        } catch (e) {
-            console.warn("No se pudo cargar la curiosidad:", e);
-        }
+            } else { dailyImage = curData[runtime.activeDia]; }
+        } catch (e) { console.warn("No curiosity img found"); }
         runtime.curiosidadImg = dailyImage;
-        // --------------------------------------------------
 
         let manifest = {};
-        try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } 
-        catch (e) { console.warn("Manifest load failed:", e); }
+        try { manifest = await fetchData(`${BASE_URL}verbs_identity.json`); } catch (e) {}
 
         let masterVerbList = [];
-
         if (runtime.blocks && Array.isArray(runtime.blocks)) {
-             subtitle.textContent = "Construyendo bloques...";
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
-                    if (cat) {
-                        block.identityGroups.forEach(g => {
-                            if (cat[g]) targetList = targetList.concat(cat[g]);
-                        });
-                    }
+                    if (cat) { block.identityGroups.forEach(g => { if (cat[g]) targetList = targetList.concat(cat[g]); }); }
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
                 const filtered = blockPool.filter(v => {
@@ -252,60 +187,24 @@
                         return v[key] === reqs[key];
                     });
                 });
-                const stableSeed = runtime.activeDia + masterVerbList.length;
-                const selected = seededShuffle([...filtered], stableSeed).slice(0, block.count);
+                const selected = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, block.count);
                 masterVerbList = masterVerbList.concat(selected);
             }
             runtime.verbs = masterVerbList;
-
         } else {
-            subtitle.textContent = "Cargando lección...";
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
-
             const currentG = entry.identityGroups || [entry.identityGroup];
-
-            // NOTE: "pastG" logic removed to prevent irregulars leaking into regular lessons.
-
             let targetList = [];
             if (manifest[runtime.tense]) {
                 currentG.forEach(g => { 
-                    // --- MACRO FIX: Translate "regular" to specific lists ---
                     if (g === "regular") {
-                        // Automatically grab all 3 regular lists if JSON just says "regular"
-                        if(manifest[runtime.tense]["regulars_ar"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ar"]);
-                        if(manifest[runtime.tense]["regulars_er"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_er"]);
-                        if(manifest[runtime.tense]["regulars_ir"]) targetList = targetList.concat(manifest[runtime.tense]["regulars_ir"]);
-                    }
-                    // --------------------------------------------------------
-                    else if (manifest[runtime.tense][g]) {
-                        targetList = targetList.concat(manifest[runtime.tense][g]);
-                    }
+                        ["regulars_ar", "regulars_er", "regulars_ir"].forEach(r => { if(manifest[runtime.tense][r]) targetList = targetList.concat(manifest[runtime.tense][r]); });
+                    } else if (manifest[runtime.tense][g]) { targetList = targetList.concat(manifest[runtime.tense][g]); }
                 });
             }
-            
-            // Failsafe: If JSON has a typo and we found 0 verbs, warn and use full bank
-            if (targetList.length === 0) {
-                console.warn("Warning: No verbs matched filters. Defaulting to full bank.");
-                targetList = bank.map(v => v.infinitivo);
-            }
-
-            const applyConstraints = (rawBank, allowedInfinitives) => {
-              return rawBank.filter(v => {
-                if (!allowedInfinitives.includes(v.infinitivo)) return false;
-                if (!runtime.constraints) return true;
-                const vTypes = v.tipo_verbo || [];
-                if (runtime.constraints.tipo_verbo === "simple" && vTypes.includes("objetos")) return false;
-                return Object.keys(runtime.constraints).every(key => {
-                  if (key === "tipo_verbo") return vTypes.includes(runtime.constraints[key]);
-                  return v[key] === runtime.constraints[key];
-                });
-              });
-            };
-
+            if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
             const totalNeeded = entry.totalNeeded || 20;
-            let pool = applyConstraints(bank, targetList);
-            if (pool.length === 0) pool = bank; 
-
+            let pool = bank.filter(v => targetList.includes(v.infinitivo));
             runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
         }
 
@@ -313,22 +212,16 @@
         const rawVocab = (Array.isArray(vData) ? vData : (vData.items || vData.vocabulario || vData)).map(v => ({
           es: v.spanish || v.es || v.palabra, en: v.english || v.en || v.traducción
         })).filter(v => v.es);
-        
         runtime.vocab = seededShuffle([...rawVocab]).slice(0, 30);
 
-        renderSidebar(); 
-        startSessionTimer();
-        showModule(1);
-        updateProgress();
-        updateHeaderDisplay();
+        renderSidebar(); startSessionTimer(); showModule(1); updateHeaderDisplay();
         
       } catch (err) { 
-        console.error(err);
         subtitle.innerHTML = `<span class="text-red-500 font-black">ERROR: ${err.message}</span>`;
       }
     }
 
-    
+    // --- RESTORED FUNCTIONS ---
     window.startRandomPractice = () => {
         runtime.isPracticeMode = true; 
         init(runtime.activeDia); 
@@ -347,168 +240,107 @@
       sub.innerHTML = `<span class="text-slate-400 font-bold">${runtime.course.toUpperCase()}</span>${cycleBadge}${modeBadge}<span class="mx-2 text-slate-200">|</span> <span class="text-sky-600 font-black tracking-widest">DÍA ${runtime.activeDia}</span>`;
       pageTitle.textContent = `${runtime.title}: ${displayTense}`;
     }
+    // --------------------------
 
-    // --- UPDATED SIDEBAR LOGIC (S2 Specific) ---
     function renderSidebar() {
       const nav = document.getElementById('nav-tabs');
-      const labels = ["1.1 Verbos", "1.2 Verbos", "1.3 Verbos", "1.4 Verbos", "2.1 Vocab", "2.2 Vocab", "2.3 Vocab", "Listo"];
+      const verbPages = Math.ceil(runtime.verbs.length / 5);
+      const vocabPages = Math.ceil(runtime.vocab.length / 10);
+      let labels = [];
+      for(let i = 1; i <= verbPages; i++) labels.push(`${1}.${i} Verbos`);
+      for(let i = 1; i <= vocabPages; i++) labels.push(`${2}.${i} Vocab`);
+      labels.push("Listo");
+
       nav.innerHTML = labels.map((l, i) => `<button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" data-m="${i+1}" disabled><span class="text-[10px] font-black uppercase tracking-tighter">${l}</span><span id="badge-${i+1}">🔒</span></button>`).join('');
       
       let sel = document.getElementById('tm-select');
       if (!sel) {
         sel = document.createElement('select'); sel.id = "tm-select";
         sel.className = "w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer uppercase";
-        sel.onchange = (e) => { 
-            runtime.isPracticeMode = false;
-            init(e.target.value); 
-        };
+        sel.onchange = (e) => { runtime.isPracticeMode = false; init(e.target.value); };
         document.getElementById('time-machine-container').appendChild(sel);
       }
-
-      // TEACHER LOGIC:
-      // If teacherMode is ON: Show ALL items from fullSchedule
-      // If teacherMode is OFF: Filter items where dia <= serverDateDia
-      let entriesToShow = runtime.fullSchedule;
-      if (!runtime.teacherMode && runtime.serverDateDia) {
-          entriesToShow = runtime.fullSchedule.filter(e => e.dia <= runtime.serverDateDia);
-      }
-      
-      // Sort Descending (Newest First)
+      let entriesToShow = runtime.teacherMode ? runtime.fullSchedule : runtime.fullSchedule.filter(e => e.dia <= runtime.serverDateDia);
       entriesToShow.sort((a, b) => b.dia - a.dia);
-
       sel.innerHTML = entriesToShow.map(e => `<option value="${e.dia}" ${e.dia == runtime.activeDia ? 'selected' : ''}>Día ${e.dia}: ${e.topic}</option>`).join('');
     }
 
     function showModule(n) {
       runtime.currentModule = n;
       const content = document.getElementById('module-content');
-      
-      if (n === 5 && !runtime.verbTimeFinal) {
-          stopVerbTimer();
-      }
-if (n === 8) {
-        // Ensure timer is stopped if they skipped directly here
+      const verbPages = Math.ceil(runtime.verbs.length / 5);
+      const vocabPages = Math.ceil(runtime.vocab.length / 10);
+      const totalModules = verbPages + vocabPages + 1;
+
+      if (n === (verbPages + 1) && !runtime.verbTimeFinal) { stopVerbTimer(); }
+
+      if (n === totalModules) {
         if (!runtime.verbTimeFinal) stopVerbTimer();
-        
-        // Call the new modular function we created outside
-        renderFinalScreen(content); 
-      }
-      
-      else if (n > 4) {
-        const slice = runtime.vocab.slice((n - 5) * 10, (n - 4) * 10);
-        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${n-4}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
-          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(n-5)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
+        renderFinalScreen(content);
+      } else if (n > verbPages) {
+        const vocabIndex = n - verbPages;
+        const slice = runtime.vocab.slice((vocabIndex - 1) * 10, vocabIndex * 10);
+        content.innerHTML = `<h2 class="text-xl font-black text-slate-800 mb-4 uppercase">Vocabulario ${vocabIndex}</h2><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">` + 
+          slice.map((v, i) => `<div class="quiz-item p-3 bg-white border border-slate-200 rounded-xl" data-ans="${v.en}" data-es="${v.es}"><p class="text-[10px] font-black text-slate-400 uppercase mb-1">${(vocabIndex-1)*10 + i + 1}. ${v.es}</p><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none"></div>`).join('') + 
           `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        
-        let moduleTitle = TENSE_MAP[runtime.tense] || runtime.tense;
-        if (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) {
-            moduleTitle = runtime.blocks[n-1].label;
-        }
-
+        let moduleTitle = (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) ? runtime.blocks[n-1].label : (TENSE_MAP[runtime.tense] || runtime.tense);
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${v.forma}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`).join('') + 
           `</div><div class="flex gap-2"><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div>`;
       }
       updateProgress();
     }
-function renderFinalScreen(contentElement) {
-    const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
-    
-    // 1. Header & Stats
-    let html = `
-        <div class="text-center py-8 animate-pop">
-            <h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2>
-            <p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">
-                Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span>
-            </p>
-    `;
 
-    // 2. The Curiosidad Card (Only if image exists)
-    if (runtime.curiosidadImg) {
-        html += `
-            <div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 transform rotate-1 hover:rotate-0 transition-transform duration-500 mb-8">
-                <div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative">
-                    <img src="${runtime.curiosidadImg}" 
-                         alt="Curiosidad del día" 
-                         class="w-full h-full object-cover" 
-                         onerror="this.style.display='none'">
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <p class="text-white font-bold text-sm uppercase tracking-widest">Curiosidad del Día ${runtime.activeDia}</p>
-                    </div>
-                </div>
-            </div>
-        `;
+    function renderFinalScreen(contentElement) {
+        const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
+        let html = `<div class="text-center py-8 animate-pop"><h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>`;
+        if (runtime.curiosidadImg) {
+            html += `<div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 mb-8"><div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative"><img src="${runtime.curiosidadImg}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4"><p class="text-white font-bold text-sm uppercase tracking-widest">Día ${runtime.activeDia}</p></div></div></div>`;
+        }
+        html += `<div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6"><div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 text-[10px] uppercase tracking-widest text-center">📱 Abre Schoology para completar la Curiosidad</div><button onclick="startRandomPractice()" class="w-64 px-8 py-4 bg-amber-500 text-white font-black rounded-2xl shadow-lg uppercase tracking-widest text-xs">🔄 Práctica Extra</button></div></div>`;
+        contentElement.innerHTML = html;
     }
 
-    // 3. Actions & Instructions (Updated: No Link)
-    html += `
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
-                 <div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-center cursor-default">
-                    <span>📱 Abre Schoology para completar la Curiosidad</span>
-                </div>
-                
-                <button onclick="startRandomPractice()" 
-                    class="w-64 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg hover:shadow-xl transition-all uppercase tracking-widest text-xs flex items-center justify-center gap-2">
-                    <span>🔄 Práctica Extra</span>
-                </button>
-            </div>
-        </div>
-    `;
-
-    contentElement.innerHTML = html;
-}
-    
     function showNextButton(n) {
         const container = document.getElementById('next-btn-container');
         container.innerHTML = ""; 
-
+        const verbPages = Math.ceil(runtime.verbs.length / 5);
+        const totalModules = verbPages + Math.ceil(runtime.vocab.length / 10) + 1;
         const btn = document.createElement('button');
         btn.className = "btn-next px-6 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-700 shadow-lg";
         btn.textContent = "Siguiente ➡";
         btn.onclick = () => showModule(n + 1);
         container.appendChild(btn);
-
-        const isSkipAllowed = (n === 4) && (!runtime.isLatestClass || runtime.isPracticeMode);
-        if (isSkipAllowed) {
+        if (n === verbPages && (!runtime.isLatestClass || runtime.isPracticeMode)) {
             const skipBtn = document.createElement('button');
-            skipBtn.className = "btn-next px-6 py-3 bg-slate-200 text-slate-500 font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-slate-300 shadow-sm ml-2";
+            skipBtn.className = "btn-next px-6 py-3 bg-slate-200 text-slate-500 font-black rounded-xl text-xs uppercase tracking-widest ml-2";
             skipBtn.textContent = "Saltar Vocab 🏁";
-            skipBtn.onclick = () => showModule(8);
+            skipBtn.onclick = () => showModule(totalModules);
             container.appendChild(skipBtn);
         }
     }
 
     function checkVerbs(n) {
       const inputs = document.querySelectorAll('.quiz-item input');
-      // --- TEACHER UNLOCK LOGIC ---
+      const verbPages = Math.ceil(runtime.verbs.length / 5);
+      const vocabPages = Math.ceil(runtime.vocab.length / 10);
+      const totalModules = verbPages + vocabPages + 1;
+
       if (n === 1 && (inputs[0].value === TEACHER_CODE || inputs[0].value === "profe")) { 
-          runtime.completed = 8; 
-          runtime.teacherMode = true; // Unlock future days
-          renderSidebar(); // Refresh sidebar with all days
-          showModule(8); 
-          return; 
+          runtime.completed = totalModules; runtime.teacherMode = true; renderSidebar(); showModule(totalModules); return; 
       }
-      
       let correct = 0;
       document.querySelectorAll('.quiz-item').forEach(item => {
         const input = item.querySelector('input');
-        if (input.value.trim().toLowerCase() === item.dataset.ans.toLowerCase()) {
+        const allowed = item.dataset.ans.toLowerCase().split(/[\/|;]/).map(a => a.trim());
+        if (allowed.includes(input.value.trim().toLowerCase())) {
           correct++; input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50";
         } else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; }
       });
-
-      const score = correct / inputs.length;
-      if (score < 1.0) {
-          runtime.isPerfectRun = false;
-          document.getElementById('live-timer').className = "text-lg font-black text-slate-400 leading-none";
-      }
-      if (score >= runtime.proficiency) {
-          runtime.completed = Math.max(runtime.completed, n);
-          showNextButton(n);
-          updateProgress();
-      }
+      if (correct / inputs.length < 1.0) { runtime.isPerfectRun = false; document.getElementById('live-timer').className = "text-lg font-black text-slate-400 leading-none"; }
+      if (correct / inputs.length >= runtime.proficiency) { runtime.completed = Math.max(runtime.completed, n); showNextButton(n); updateProgress(); }
     }
 
     function checkVocab(n) {
@@ -518,14 +350,8 @@ function renderFinalScreen(contentElement) {
         if (isGenerousMatch(input.value, item.dataset.ans)) { input.className = "w-full p-2 border-2 border-emerald-500 rounded-lg bg-emerald-50"; }
         else { input.className = "w-full p-2 border-2 border-red-400 rounded-lg bg-red-50"; missed.push({es: item.dataset.es, en: item.dataset.ans}); }
       });
-      
-      if (missed.length > 0) {
-          startMatching(n, missed);
-      } else {
-          runtime.completed = Math.max(runtime.completed, n);
-          showNextButton(n);
-          updateProgress();
-      }
+      if (missed.length > 0) { startMatching(n, missed); } 
+      else { runtime.completed = Math.max(runtime.completed, n); showNextButton(n); updateProgress(); }
     }
 
     function isGenerousMatch(u, c) {
@@ -539,29 +365,18 @@ function renderFinalScreen(contentElement) {
       const shuffledEn = [...pairs].sort(() => 0.5 - Math.random());
       area.innerHTML = `<div class="grid grid-cols-2 gap-3"><div id="match-es" class="space-y-2"></div><div id="match-en" class="space-y-2"></div></div>`;
       let selectedEs = null, solved = 0;
-      
-      const checkDone = () => {
-          if (solved === pairs.length) {
-              area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs animate-pop">¡Listo!</p>`;
-              runtime.completed = Math.max(runtime.completed, m);
-              showNextButton(m);
-              updateProgress();
-          }
-      };
-
       pairs.forEach(p => {
-        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold transition-all hover:bg-sky-50"; b.textContent = p.es;
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border rounded-lg text-xs font-bold"; b.textContent = p.es;
         b.onclick = () => { document.querySelectorAll('#match-es button').forEach(x=>x.classList.remove('match-selected')); b.classList.add('match-selected'); selectedEs = p; };
         document.getElementById('match-es').appendChild(b);
       });
-      
       shuffledEn.forEach(p => {
-        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs transition-all hover:bg-sky-50"; b.textContent = p.en;
+        const b = document.createElement('button'); b.className = "w-full p-2 bg-white border border-dashed rounded-lg text-xs"; b.textContent = p.en;
         b.onclick = () => {
           if (selectedEs && selectedEs.en === p.en) {
             b.classList.add('opacity-0', 'pointer-events-none');
             document.querySelectorAll('#match-es button').forEach(x => { if(x.textContent === selectedEs.es) x.classList.add('opacity-0', 'pointer-events-none'); });
-            solved++; selectedEs = null; checkDone();
+            solved++; selectedEs = null; if (solved === pairs.length) { area.innerHTML = `<p class="text-emerald-600 font-bold text-center py-2 text-xs">¡Listo!</p>`; runtime.completed = Math.max(runtime.completed, m); showNextButton(m); updateProgress(); }
           }
         };
         document.getElementById('match-en').appendChild(b);
@@ -569,48 +384,54 @@ function renderFinalScreen(contentElement) {
     }
 
     function startSessionTimer() {
-        clearInterval(runtime.timerInterval); 
-        runtime.startTime = Date.now();
+        clearInterval(runtime.timerInterval); runtime.startTime = Date.now();
         document.getElementById('stats-container').classList.remove('hidden');
         updateBestDisplay();
-        
         runtime.timerInterval = setInterval(() => { 
-            const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000); 
-            document.getElementById('live-timer').textContent = formatTime(elapsed); 
+            document.getElementById('live-timer').textContent = formatTime(Math.floor((Date.now() - runtime.startTime) / 1000)); 
         }, 1000);
     }
 
     function stopVerbTimer() {
         clearInterval(runtime.timerInterval);
         const elapsed = Math.floor((Date.now() - runtime.startTime) / 1000);
-        runtime.verbTimeFinal = elapsed; 
-        
+        runtime.verbTimeFinal = elapsed;
         if (runtime.isPerfectRun) {
             const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`;
             const saved = localStorage.getItem(key);
-            if (!saved || elapsed < parseInt(saved)) {
-                localStorage.setItem(key, elapsed);
-            }
+            if (!saved || elapsed < parseInt(saved)) localStorage.setItem(key, elapsed);
         }
         updateBestDisplay();
     }
 
     function formatTime(s) { return `${Math.floor(s/60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`; }
-    
     function updateBestDisplay() { 
         if(runtime.activeDia) {
-            const key = `best_${runtime.course}_d${runtime.activeDia}_verbs`;
-            const saved = localStorage.getItem(key); 
+            const saved = localStorage.getItem(`best_${runtime.course}_d${runtime.activeDia}_verbs`); 
             document.getElementById('best-time').textContent = saved ? formatTime(parseInt(saved)) : "--:--"; 
         }
     }
     
-    function updateProgress() { const pct = Math.round((runtime.completed / 8) * 100); document.getElementById('progress-fill').style.width = pct + "%"; document.getElementById('progress-label').textContent = pct + "%"; document.querySelectorAll('.module-tab').forEach((btn, i) => { const m = i + 1; if (m <= runtime.completed + 1) { btn.disabled = false; btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200 shadow-sm' : 'text-slate-500 hover:bg-slate-50'}`; document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●"; } }); }
+    function updateProgress() { 
+        const verbPages = Math.ceil(runtime.verbs.length / 5);
+        const vocabPages = Math.ceil(runtime.vocab.length / 10);
+        const totalModules = verbPages + vocabPages + 1;
+        const pct = Math.round((runtime.completed / (totalModules - 1)) * 100); 
+        document.getElementById('progress-fill').style.width = pct + "%"; 
+        document.getElementById('progress-label').textContent = pct + "%"; 
+        document.querySelectorAll('.module-tab').forEach((btn, i) => { 
+            const m = i + 1; 
+            if (m <= runtime.completed + 1) { 
+                btn.disabled = false; btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border border-sky-200' : 'text-slate-500'}`; 
+                document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●"; 
+            } 
+        }); 
+    }
 
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
-      let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs animate-pop'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase tracking-widest">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase tracking-tighter leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm animate-pop'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
+      let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`; });
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${v.forma}'; this.className='text-emerald-400 font-black text-sm'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
     window.revealAllProj = () => { document.querySelectorAll('.proj-ans').forEach(b => b.click()); };
