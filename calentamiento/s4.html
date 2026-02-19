@@ -289,16 +289,18 @@
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
         let moduleTitle = (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) ? runtime.blocks[n-1].label : (TENSE_MAP[runtime.tense] || runtime.tense);
         
+// --- ARRAY HANDLING UPDATE HERE ---
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => {
+              // Handle Array (JSON) vs String (Old JSON)
               const ansData = Array.isArray(v.forma) ? v.forma.join('/') : v.forma;
-              return `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${ansData}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`;
+              return `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${ansData}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.mostrar || v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`;
           }).join('') + 
           `</div><div class="flex gap-2"><button onclick="checkVerbs(${n})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div>`;
       }
       updateProgress();
     }
-
+    
     function renderFinalScreen(contentElement) {
         const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
         let html = `<div class="text-center py-8 animate-pop"><h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>`;
@@ -439,7 +441,7 @@
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`; });
       overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => {
           const projAns = Array.isArray(v.forma) ? v.forma.join(' / ') : v.forma;
-          return `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${projAns}'; this.className='text-emerald-400 font-black text-sm'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`;
+          return `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.mostrar || v.infinitivo})</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${projAns}'; this.className='text-emerald-400 font-black text-sm'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`;
       }).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
