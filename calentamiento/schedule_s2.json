@@ -387,35 +387,35 @@
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Formales Reflexivos (Ud.+)",
+        "label": "Formales Reflexivos (+) Ud.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos", "persona_base": "afirmativo"},
+        "constraints": { "sujeto": "usted", "tipo_verbo": ["objetos", "afirmativo"] },
         "count": 5
       },
       {
-        "label": "Formales Reflexivos (Ud.-)",
+        "label": "Formales Reflexivos (-) Ud.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos", "persona_base": "negativo"},
+        "constraints": { "sujeto": "usted", "tipo_verbo": ["objetos", "negativo"] },
         "count": 5
       },
       {
-        "label": "Formales Reflexivos (Uds.+)",
+        "label": "Plurales Reflexivos (+) Uds.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos", "persona_base": "afirmativo"},
+        "constraints": { "sujeto": "ustedes", "tipo_verbo": ["objetos", "afirmativo"] },
         "count": 5
       },
-            {
-        "label": "Plurales Reflexivos (Uds.-)",
+      {
+        "label": "Plurales Reflexivos (-) Uds.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "constraints": { "sujeto": "ustedes", "tipo_verbo": ["objetos", "negativo"] },
         "count": 5
       }
     ]
