@@ -325,8 +325,16 @@
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted" },
-        "count": 20
+        "constraints": { "sujeto": "usted", "persona_base": "afirmativo"  },
+        "count": 10
+      },
+       {
+        "label": "Mandatos Formales (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "usted", "persona_base": "negativo"  },
+        "count": 10
       }
     ]
   },
@@ -342,16 +350,32 @@
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted" },
-        "count": 10
+        "constraints": { "sujeto": "usted", "persona_base": "afirmativo" },
+        "count": 5
+      },
+       {
+        "label": "Mandatos Formales (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "usted", "persona_base": "negativo" },
+        "count": 5
       },
       {
         "label": "Mandatos Plurales (Uds.)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "ustedes" },
-        "count": 10
+        "constraints": { "sujeto": "ustedes", "persona_base": "afirmativo" },
+        "count": 5
+      }
+      {
+        "label": "Mandatos Plurales (Uds.)",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "ustedes", "persona_base": "negativo" },
+        "count": 5
       }
     ]
   },
@@ -367,16 +391,32 @@
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos" },
-        "count": 10
+        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos", "persona_base": "afirmativo"},
+        "count": 5
       },
       {
+        "label": "Formales Reflexivos (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos", "persona_base": "negativo"},
+        "count": 5
+      },
+      {
+        "label": "Formales Reflexivos (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos", "persona_base": "afirmativo"},
+        "count": 5
+      },
+            {
         "label": "Plurales Reflexivos (Uds.)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos" },
-        "count": 10
+        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "count": 5
       }
     ]
   },
