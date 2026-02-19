@@ -183,15 +183,27 @@ async function fetchData(url) {
                     if (cat) { block.identityGroups.forEach(g => { if (cat[g]) targetList = targetList.concat(cat[g]); }); }
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
-                const filtered = blockPool.filter(v => {
-                    const reqs = block.constraints;
-                    if (!reqs) return true;
-                    const vTypes = v.tipo_verbo || [];
-                    return Object.keys(reqs).every(key => {
-                        if (key === "tipo_verbo") return vTypes.includes(reqs[key]);
-                        return v[key] === reqs[key];
-                    });
-                });
+              // NUEVO CÓDIGO CON EXCLUSIÓN POR DEFECTO
+const filtered = blockPool.filter(v => {
+    const reqs = block.constraints;
+    const vTypes = v.tipo_verbo || [];
+
+    // REGLA CLAVE: Si el verbo tiene "objetos", ocúltalo a menos que lo pidamos explícitamente
+    if (vTypes.includes("objetos")) {
+        if (!reqs || reqs.tipo_verbo !== "objetos") {
+            return false; // Lo bloquea
+        }
+    }
+
+    // Si no hay más restricciones, deja pasar los verbos normales
+    if (!reqs) return true;
+    
+    // Si hay restricciones, verifica que se cumplan
+    return Object.keys(reqs).every(key => {
+        if (key === "tipo_verbo") return vTypes.includes(reqs[key]);
+        return v[key] === reqs[key];
+    });
+});
                 const selected = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, block.count);
                 masterVerbList = masterVerbList.concat(selected);
             }
