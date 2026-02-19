@@ -11,6 +11,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_3"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -18,6 +19,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 12
       }
     ]
@@ -34,6 +36,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 20
       }
     ]
@@ -50,7 +53,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 20
       }
     ]
@@ -58,31 +61,33 @@
   {
     "dia": 29,
     "date": "2025-11-21",
-    "topic": "Mandatos Informales (+ / -)",
+    "topic": "Mandatos Informales (-)",
     "vocabFile": "vocab/D2-2-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Tú (+)",
-        "bank": "bancos/banco_mandatos_informales.json",
-        "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "count": 8
-      },
-      {
-        "label": "Tú (+) con Objetos",
-        "bank": "bancos/banco_mandatos_informales.json",
-        "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
-        "count": 2
-      },
-      {
-        "label": "Tú (-)",
+        "label": "Tú (-) Regulares",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "constraints": { "persona_base": "negativo" },
         "count": 10
+      },
+      {
+        "label": "Tú (-) DISHES",
+        "bank": "bancos/banco_mandatos_informales.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_3"],
+        "constraints": { "persona_base": "negativo" },
+        "count": 5
+      },
+      {
+        "label": "Tú (-) Raíz",
+        "bank": "bancos/banco_mandatos_informales.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "negativo" },
+        "count": 5
       }
     ]
   },
@@ -98,6 +103,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -105,7 +111,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 2
       },
       {
@@ -113,6 +119,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_4"],
+        "constraints": { "persona_base": "negativo" },
         "count": 5
       },
       {
@@ -120,6 +127,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_5", "nivel_6", "nivel_7"],
+        "constraints": { "persona_base": "negativo" },
         "count": 5
       }
     ]
@@ -136,6 +144,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -143,7 +152,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 2
       },
       {
@@ -151,6 +160,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "constraints": { "persona_base": "negativo" },
         "count": 8
       },
       {
@@ -158,7 +168,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
         "count": 2
       }
     ]
@@ -175,6 +185,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -182,7 +193,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 2
       },
       {
@@ -190,6 +201,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "constraints": { "persona_base": "negativo" },
         "count": 8
       },
       {
@@ -197,7 +209,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
         "count": 2
       }
     ]
@@ -214,6 +226,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -221,7 +234,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 2
       },
       {
@@ -229,6 +242,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "constraints": { "persona_base": "negativo" },
         "count": 8
       },
       {
@@ -236,7 +250,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
         "count": 2
       }
     ]
@@ -253,6 +267,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "constraints": { "persona_base": "afirmativo" },
         "count": 8
       },
       {
@@ -260,7 +275,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
         "count": 2
       },
       {
@@ -268,6 +283,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "constraints": { "persona_base": "negativo" },
         "count": 8
       },
       {
@@ -275,7 +291,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
         "count": 2
       }
     ]
@@ -292,6 +308,7 @@
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
         "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "negativo" },
         "count": 20
       }
     ]
@@ -300,7 +317,7 @@
     "dia": 37,
     "date": "2026-01-07",
     "topic": "Mandatos Formales (Ud.)",
-    "vocabFile": "vocab/D2-2-10.json",
+    "vocabFile": "vocab/D2-3-1.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -317,7 +334,7 @@
     "dia": 38,
     "date": "2026-01-09",
     "topic": "Mandatos Formales y Plurales",
-    "vocabFile": "vocab/D2-2-11.json",
+    "vocabFile": "vocab/D2-3-2.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -342,7 +359,7 @@
     "dia": 39,
     "date": "2026-01-13",
     "topic": "Mandatos Formales y Plurales (Reflexivos)",
-    "vocabFile": "vocab/D2-2-12.json",
+    "vocabFile": "vocab/D2-3-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -367,7 +384,7 @@
     "dia": 40,
     "date": "2026-01-21",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-1.json",
+    "vocabFile": "vocab/D2-2-5.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -397,7 +414,7 @@
     "dia": 41,
     "date": "2026-01-27",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-2.json",
+    "vocabFile": "vocab/D2-2-6.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -413,7 +430,7 @@
     "dia": 42,
     "date": "2026-01-29",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-3.json",
+    "vocabFile": "vocab/D2-3-1.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -436,7 +453,7 @@
     "dia": 43,
     "date": "2026-02-02",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-4.json",
+    "vocabFile": "vocab/D2-3-2.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -459,7 +476,7 @@
     "dia": 44,
     "date": "2026-02-04",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-5.json",
+    "vocabFile": "vocab/D2-3-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -475,7 +492,7 @@
     "dia": 45,
     "date": "2026-02-06",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-6.json",
+    "vocabFile": "vocab/D2-3-4.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -491,7 +508,7 @@
     "dia": 46,
     "date": "2026-02-10",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-7.json",
+    "vocabFile": "vocab/D2-3-5.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -507,7 +524,7 @@
     "dia": 47,
     "date": "2026-02-12",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-8.json",
+    "vocabFile": "vocab/D2-3-6.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -523,7 +540,7 @@
     "dia": 48,
     "date": "2026-02-23",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-9.json",
+    "vocabFile": "vocab/D2-3-7.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -539,7 +556,7 @@
     "dia": 49,
     "date": "2026-02-25",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-10.json",
+    "vocabFile": "vocab/D2-3-8.json",
     "proficiency": 0.8,
     "blocks": [
       {
@@ -555,7 +572,7 @@
     "dia": 50,
     "date": "2026-02-27",
     "topic": "Presente de subjuntivo",
-    "vocabFile": "vocab/D2-3-11.json",
+    "vocabFile": "vocab/D2-3-9.json",
     "proficiency": 0.8,
     "blocks": [
       {
