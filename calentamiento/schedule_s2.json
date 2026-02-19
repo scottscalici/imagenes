@@ -355,7 +355,7 @@
       }
     ]
   },
-  {
+{
     "dia": 39,
     "date": "2026-01-13",
     "topic": "Mandatos Formales y Plurales (Reflexivos)",
@@ -367,7 +367,7 @@
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted" },
+        "constraints": { "sujeto": "usted", "tipo_verbo": "objetos" },
         "count": 10
       },
       {
@@ -375,7 +375,7 @@
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
         "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes" },
+        "constraints": { "sujeto": "ustedes", "tipo_verbo": "objetos" },
         "count": 10
       }
     ]
