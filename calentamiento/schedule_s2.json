@@ -1,4 +1,278 @@
 [
+  {
+    "dia": 27,
+    "date": "2025-11-17",
+    "topic": "Mandatos Informales (+)",
+    "vocabFile": "vocab/D2-2-1.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Irregulares",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_3"],
+        "count": 8
+      },
+      {
+        "label": "Tú (+) Regulares",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 12
+      }
+    ]
+  },
+  {
+    "dia": 28,
+    "date": "2025-11-19",
+    "topic": "Mandatos Informales (+)",
+    "vocabFile": "vocab/D2-2-2.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Práctica",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
+        "count": 20
+      }
+    ]
+  },
+  {
+    "dia": 29,
+    "date": "2025-11-21",
+    "topic": "Mandatos Informales (-)",
+    "vocabFile": "vocab/D2-2-3.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (-) Regulares",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) DISHES",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_3"],
+        "count": 5
+      },
+      {
+        "label": "Tú (-) Raíz",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_5", "nivel_6"],
+        "count": 5
+      }
+    ]
+  },
+  {
+    "dia": 30,
+    "date": "2025-12-01",
+    "topic": "Mandatos Informales (Repaso)",
+    "vocabFile": "vocab/D2-2-4.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Repaso",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) Repaso",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_5", "nivel_6"],
+        "count": 10
+      }
+    ]
+  },
+  {
+    "dia": 31,
+    "date": "2025-12-03",
+    "topic": "Mandatos Informales (Reflexivos / Mixtos)",
+    "vocabFile": "vocab/D2-2-5.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Reflexivos",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_4"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) Ortográficos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_4"],
+        "count": 5
+      },
+      {
+        "label": "Tú (-) Todos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "count": 5
+      }
+    ]
+  },
+  {
+    "dia": 32,
+    "date": "2025-12-05",
+    "topic": "Mandatos Informales (Práctica)",
+    "vocabFile": "vocab/D2-2-6.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Todos",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) Todos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "count": 10
+      }
+    ]
+  },
+  {
+    "dia": 33,
+    "date": "2025-12-09",
+    "topic": "Mandatos Informales (Práctica)",
+    "vocabFile": "vocab/D2-2-7.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Todos",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) Todos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "count": 10
+      }
+    ]
+  },
+  {
+    "dia": 34,
+    "date": "2025-12-12",
+    "topic": "Mandatos Informales (Práctica)",
+    "vocabFile": "vocab/D2-2-8.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (+) Todos",
+        "bank": "bancos/banco_mandatos_informales_afirmativos.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+        "count": 10
+      },
+      {
+        "label": "Tú (-) Todos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "count": 10
+      }
+    ]
+  },
+  {
+    "dia": 36,
+    "date": "2026-01-05",
+    "topic": "Mandatos Informales Negativos",
+    "vocabFile": "vocab/D2-2-9.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Tú (-) Sin Reflexivos",
+        "bank": "bancos/banco_mandatos_informales_negativos.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "count": 20
+      }
+    ]
+  },
+  {
+    "dia": 37,
+    "date": "2026-01-07",
+    "topic": "Mandatos Formales (Ud.)",
+    "vocabFile": "vocab/D2-3-1.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Mandatos Formales (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_y_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "Ud." },
+        "count": 20
+      }
+    ]
+  },
+  {
+    "dia": 38,
+    "date": "2026-01-09",
+    "topic": "Mandatos Formales y Plurales",
+    "vocabFile": "vocab/D2-3-2.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Mandatos Formales (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_y_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "Ud." },
+        "count": 10
+      },
+      {
+        "label": "Mandatos Plurales (Uds.)",
+        "bank": "bancos/banco_mandatos_formales_y_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "sujeto": "Uds." },
+        "count": 10
+      }
+    ]
+  },
+  {
+    "dia": 39,
+    "date": "2026-01-13",
+    "topic": "Mandatos Formales y Plurales (Reflexivos)",
+    "vocabFile": "vocab/D2-3-3.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Formales Reflexivos (Ud.)",
+        "bank": "bancos/banco_mandatos_formales_y_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "sujeto": "Ud." },
+        "count": 10
+      },
+      {
+        "label": "Plurales Reflexivos (Uds.)",
+        "bank": "bancos/banco_mandatos_formales_y_plurales.json",
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "sujeto": "Uds." },
+        "count": 10
+      }
+    ]
+  },
  {
   "dia": 40,
   "date": "2026-01-21",
