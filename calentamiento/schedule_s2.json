@@ -640,91 +640,295 @@
       }
     ]
   },
-  {
+{
     "dia": 52,
     "date": "2026-03-05",
-    "topic": "Presente de subjuntivo",
+    "topic": "Mandatos (Nosotros)",
     "vocabFile": "vocab/D2-4-2.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Presente de subjuntivo",
-        "bank": "bancos/banco_subjuntivo_presente.json",
-        "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "count": 20
+        "label": "Nosotros (+)",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "afirmativo" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros (-)",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "negativo" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros (+) Reflexivos",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros (-) Reflexivos",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "persona_base": "negativo", "tipo_verbo": "objetos" },
+        "count": 5
       }
     ]
   },
   {
     "dia": 53,
     "date": "2026-03-09",
-    "topic": "Presente de subjuntivo",
+    "topic": "Mandatos (Nosotros y Vosotros)",
     "vocabFile": "vocab/D2-4-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Presente de subjuntivo",
-        "bank": "bancos/banco_subjuntivo_presente.json",
-        "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "count": 20
+        "label": "Nosotros (+)",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "afirmativo" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros Reflexivos",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_1"],
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+) Reflexivos",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_2"],
+        "constraints": { "tipo_verbo": "objetos" },
+        "count": 3
+      },
+      {
+        "label": "Vosotros (-)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "count": 2
       }
     ]
   },
   {
     "dia": 54,
-    "topic": "Subjuntivo (Regulares)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
+    "topic": "Mandatos (Nosotros y Vosotros)",
     "vocabFile": "vocab/D2-4-4.json",
-    "identityGroups": ["regulars_ar", "regulars_er", "regulars_ir"]
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Nosotros (+)",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "afirmativo" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros Reflexivos",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_1"],
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+) Reflexivos",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_2"],
+        "constraints": { "tipo_verbo": "objetos" },
+        "count": 3
+      },
+      {
+        "label": "Vosotros (-)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "count": 2
+      }
+    ]
   },
   {
     "dia": 55,
-    "topic": "Subjuntivo (Irregulares)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
+    "topic": "Mandatos (Nosotros y Vosotros)",
     "vocabFile": "vocab/D2-4-5.json",
-    "identityGroups": ["regular", "irregular"]
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Nosotros (+)",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "constraints": { "persona_base": "afirmativo" },
+        "count": 5
+      },
+      {
+        "label": "Nosotros Reflexivos",
+        "bank": "bancos/banco_mandatos_nosotros.json",
+        "identityCategory": "mandatos_nosotros",
+        "identityGroups": ["nivel_7"],
+        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_1"],
+        "count": 5
+      },
+      {
+        "label": "Vosotros (+) Reflexivos",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_afirmativos",
+        "identityGroups": ["nivel_2"],
+        "constraints": { "tipo_verbo": "objetos" },
+        "count": 3
+      },
+      {
+        "label": "Vosotros (-)",
+        "bank": "bancos/banco_mandatos_vosotros.json",
+        "identityCategory": "mandatos_vosotros_negativos",
+        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "count": 2
+      }
+    ]
   },
   {
     "dia": 56,
-    "topic": "Subjuntivo (Ortográficos)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
+    "topic": "Participios Pasados",
     "vocabFile": "vocab/D2-4-6.json",
-    "identityGroups": ["regular", "irregular", "cambio_ortografico"]
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participios (Irregulares)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_2"],
+        "count": 5
+      },
+      {
+        "label": "Participios (Mixtos)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 15
+      }
+    ]
   },
   {
     "dia": 57,
-    "topic": "Subjuntivo (Repaso)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
+    "topic": "Participios Pasados",
     "vocabFile": "vocab/D2-4-7.json",
-    "identityGroups": ["regular", "irregular", "cambio_ortografico"]
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participios (Irregulares)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_2"],
+        "count": 5
+      },
+      {
+        "label": "Participios (Mixtos)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 15
+      }
+    ]
   },
   {
     "dia": 58,
-    "topic": "Subjuntivo (Raíz)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
+    "topic": "Participios Pasados",
     "vocabFile": "vocab/D2-5-1.json",
-    "identityGroups": ["regular", "irregular", "cambio_ortografico", "cambio_de_raiz"]
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participios (Irregulares)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_2"],
+        "count": 5
+      },
+      {
+        "label": "Participios (Mixtos)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 15
+      }
+    ]
   },
   {
     "dia": 59,
-    "topic": "Subjuntivo (Práctica)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
-    "vocabFile": "vocab/D2-5-2.json"
+    "topic": "Participios Pasados",
+    "vocabFile": "vocab/D2-5-2.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participios (Irregulares)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_2"],
+        "count": 5
+      },
+      {
+        "label": "Participios (Mixtos)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 15
+      }
+    ]
   },
   {
     "dia": 60,
-    "topic": "Subjuntivo (Práctica)",
-    "identityCategory": "presente_de_subjuntivo",
-    "bank": "bancos/banco_subjuntivo_presente.json",
-    "vocabFile": "vocab/D2-5-3.json"
+    "topic": "Participios Pasados",
+    "vocabFile": "vocab/D2-5-3.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participios (Irregulares)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_2"],
+        "count": 5
+      },
+      {
+        "label": "Participios (Mixtos)",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": ["nivel_1", "nivel_2"],
+        "count": 15
+      }
+    ]
   },
   {
     "dia": 61,
