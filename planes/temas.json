@@ -119,8 +119,8 @@
     {
       "id": "carnaval",
       "name": "Carnaval",
-      "start": "02-24",
-      "end": "02-25",
+      "start": "02-15",
+      "end": "02-23",
       "styles": {
         "header": "bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400",
         "fontHeading": "Bungee",
@@ -156,7 +156,7 @@
         }
       },
       "hero": {
-        "active": true,
+        "active": false,
         "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/carnaval_hero.png",
         "msg": "¡A bailar! Es tiempo de Carnaval"
       },
@@ -355,9 +355,68 @@
       }
     },
     {
+      "id": "san-patricio",
+      "name": "San Patricio",
+      "start": "03-16",
+      "end": "03-17",
+      "styles": {
+        "header": "bg-gradient-to-r from-green-600 to-emerald-500",
+        "fontHeading": "Irish Grover",
+        "accent": "#22c55e",
+        "cardOverrides": {
+          "evaluacion": "#22c55e",
+          "calentamiento": "#4ade80",
+          "curiosidad": "#facc15",
+          "musica": "#4ade80",
+          "conversacion": "#22c55e",
+          "cultura": "#4ade80",
+          "lectura": "#22c55e",
+          "tareas": "#4ade80",
+          "destacado": "#14532d",
+          "pruebas": "#22c55e",
+          "estructura": "#4ade80",
+          "extras": "#064e3b"
+        },
+        "fonts": {
+          "estructura": "Berkshire Swash",
+          "evaluacion": "Berkshire Swash",
+          "calentamiento": "Berkshire Swash",
+          "curiosidad": "Berkshire Swash",
+          "musica": "Berkshire Swash",
+          "conversacion": "Berkshire Swash",
+          "tareas": "Berkshire Swash",
+          "pruebas": "Berkshire Swash"
+        },
+        "textures": {
+          "evaluacion": "",
+          "musica": "https://img.icons8.com/ios-filled/100/22c55e/musical-notes.png",
+          "curiosidad": "https://img.icons8.com/ios-filled/100/facc15/clover.png"
+        }
+      },
+      "hero": {
+        "active": false,
+        "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/patricio_hero.png",
+        "msg": "¡Feliz Día de San Patricio!"
+      },
+      "mascots": {
+        "sloth": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/sloth_patricio.png",
+        "tutor": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor_patricio.png",
+        "ib": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/IB_patricio.png",
+        "misd": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/misd_patricio.png",
+        "vocabTree": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab_patricio.png"
+      },
+      "effectConfig": {
+        "char": "☘️",
+        "color": "#22c55e",
+        "direction": "down",
+        "speed": 1,
+        "count": 40
+      }
+    },
+    {
       "id": "fallas",
       "name": "Las Fallas",
-      "start": "03-15",
+      "start": "03-18",
       "end": "03-19",
       "styles": {
         "header": "bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500",
@@ -534,8 +593,8 @@
     {
       "id": "feria_abril",
       "name": "Feria de Abril",
-      "start": "04-20",
-      "end": "04-27",
+      "start": "",
+      "end": "",
       "styles": {
         "header": "bg-gradient-to-r from-red-600 via-white to-red-600",
         "fontHeading": "Lobster",
@@ -888,8 +947,8 @@
     {
       "id": "raza",
       "name": "Día de la Raza",
-      "start": "10-05",
-      "end": "10-20",
+      "start": "09-15",
+      "end": "09-30",
       "styles": {
         "header": "bg-gradient-to-r from-orange-800 via-amber-700 to-yellow-600",
         "fontHeading": "Chango",
@@ -947,7 +1006,7 @@
     {
       "id": "hispanic_heritage",
       "name": "Herencia Hispana",
-      "start": "09-15",
+      "start": "10-01",
       "end": "10-15",
       "styles": {
         "header": "bg-gradient-to-r from-pink-500 via-orange-500 to-teal-500",
