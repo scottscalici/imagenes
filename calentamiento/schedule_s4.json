@@ -1,4 +1,20 @@
 [
+   {
+  "dia": 39,
+  "date": "2026-01-13",
+  "topic": "Imperfecto de subjuntivo",
+  "vocabFile": "vocab/D3-6-5.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Imperfecto de subjuntivo",
+      "bank": "bancos/banco_subjuntivo_pasado.json",
+      "identityCategory": "imperfecto_de_subjuntivo",
+      "identityGroups": ["nivel_1"],
+      "count": 20
+        }
+  ]
+  },
   {
   "dia": 40,
   "date": "2026-01-20",
@@ -69,44 +85,11 @@
   {
   "dia": 44,
   "date": "2026-02-03",
-  "topic": "Imperfecto de subjuntivo",
+  "topic": "Pretérito perfecto y pretérito perfecto de subjuntivo",
   "vocabFile": "vocab/D3-7-2.json",
   "proficiency": 0.8,
   "blocks": [
     {
-      "label": "Imperfecto de subjuntivo",
-      "bank": "bancos/banco_subjuntivo_pasado.json",
-      "identityCategory": "imperfecto_de_subjuntivo",
-      "identityGroups": ["nivel_1"],
-      "count": 20
-        }
-  ]
-  },
-   {
-  "dia": 45,
-  "date": "2026-02-05",
-  "topic": "Imperfecto de subjuntivo",
-  "vocabFile": "vocab/D3-7-3.json",
-  "proficiency": 0.8,
-  "blocks": [
-    {
-      "label": "Imperfecto de subjuntivo",
-      "bank": "bancos/banco_subjuntivo_pasado.json",
-      "identityCategory": "imperfecto_de_subjuntivo",
-      "identityGroups": ["nivel_1"],
-      "count": 20
-        }
-  ]
-  },
-   
-     {
-  "dia": 46,
-  "date": "2026-02-06",
-  "topic": "Perfectos",
-  "vocabFile": "vocab/D3-7-4.json",
-  "proficiency": 0.8,
-  "blocks": [
-      {
       "label": "Pretérito perfecto",
       "bank": "bancos/banco_preterito_perfecto.json",
       "identityCategory": "preterito_perfecto",
@@ -122,6 +105,53 @@
         }
   ]
   },
+   {
+  "dia": 45,
+  "date": "2026-02-05",
+  "topic": "Plusucamperfecto",
+  "vocabFile": "vocab/D3-7-3.json",
+  "proficiency": 0.8,
+  "blocks": [
+   {
+      "label": "Pluscuamperfecto",
+      "bank": "bancos/banco_pluscuamperfecto.json",
+      "identityCategory": "pluscuamperfecto",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        },
+        {
+      "label": "Pluscuamperfecto de subjuntivo",
+      "bank": "bancos/banco_pluscuamperfecto_de_subjuntivo.json",
+      "identityCategory": "pluscuamperfecto_de_subjuntivo",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        }
+  ]
+  },
+   
+     {
+  "dia": 46,
+  "date": "2026-02-09",
+  "topic": "Futuro perfecto y condicional perfecto",
+  "vocabFile": "vocab/D3-7-4.json",
+  "proficiency": 0.8,
+  "blocks": [
+       {
+      "label": "Futuro perfecto",
+      "bank": "bancos/banco_futuro_perfecto.json",
+      "identityCategory": "futuro_perfecto",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        },
+        {
+      "label": "Condicional perfecto",
+      "bank": "bancos/banco_condicional_perfecto.json",
+      "identityCategory": "condicional_perfecto",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        }
+  ]
+     },
    {
   "dia": 47,
   "date": "2026-02-11",
