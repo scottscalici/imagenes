@@ -98,20 +98,28 @@
         }
   ]
   },
-   {
+   
+     {
   "dia": 46,
-  "date": "2026-02-09",
-  "topic": "Imperfecto de subjuntivo",
+  "date": "2026-02-06",
+  "topic": "Perfectos",
   "vocabFile": "vocab/D3-7-4.json",
   "proficiency": 0.8,
   "blocks": [
-    {
-      "label": "Imperfecto de subjuntivo",
-      "bank": "bancos/banco_subjuntivo_pasado.json",
-      "identityCategory": "imperfecto_de_subjuntivo",
-      "identityGroups": ["nivel_1"],
-      "count": 20
-        }
+      {
+      "label": "Pretérito perfecto",
+      "bank": "bancos/banco_preterito_perfecto.json",
+      "identityCategory": "preterito_perfecto",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        },
+        {
+      "label": "Pretérito perfecto de subjuntivo",
+      "bank": "bancos/banco_preterito_perfecto_de_subjuntivo.json",
+      "identityCategory": "preterito_perfecto_de_subjuntivo",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
+      "count": 10
+        },
   ]
   },
    {
