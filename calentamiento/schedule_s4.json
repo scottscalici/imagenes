@@ -2,16 +2,17 @@
    {
   "dia": 39,
   "date": "2026-01-13",
-  "topic": "Imperfecto de subjuntivo",
-  "vocabFile": "vocab/D3-6-5.json",
+  "topic": "Pretérito",
+  "vocabFile": "vocab/D3-6-4.json",
   "proficiency": 0.8,
   "blocks": [
     {
-      "label": "Imperfecto de subjuntivo",
-      "bank": "bancos/banco_subjuntivo_pasado.json",
-      "identityCategory": "imperfecto_de_subjuntivo",
-      "identityGroups": ["nivel_1"],
-      "count": 20
+      "label": "Pretérito: 3a persona, plural",
+      "bank": "bancos/banco_preterito.json",
+      "identityCategory": "preterito",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", nivel_7"],
+      "constraints": {"persona_base": "ellos/ellas/Uds."},
+       "count": 20
         }
   ]
   },
