@@ -208,7 +208,8 @@
                     });
                 });
               const selected = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, block.count);
-                masterVerbList = masterVerbList.concat(selected);
+selected.forEach(v => v._blockLabel = block.label);
+        masterVerbList = masterVerbList.concat(selected);
             }
             runtime.verbs = masterVerbList;
         } else {
@@ -303,8 +304,8 @@
           `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        let moduleTitle = (runtime.blocks && runtime.blocks[n-1] && runtime.blocks[n-1].label) ? runtime.blocks[n-1].label : (TENSE_MAP[runtime.tense] || runtime.tense);
-        
+        // O título da página será o título anexado ao primeiro verbo daquela fatia
+        let moduleTitle = slice[0]._blockLabel || (TENSE_MAP[runtime.tense] || runtime.tense);
 // --- ARRAY HANDLING UPDATE HERE ---
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => {
