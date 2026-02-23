@@ -1,9 +1,55 @@
 [
+ {
+  "dia": 36,
+  "date": "2026-01-05",
+  "topic": "Futuro y condicional",
+  "vocabFile": "vocab/D3-6-1.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Futuro",
+      "bank": "bancos/banco_futuro.json",
+      "identityCategory": "futuro",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5"],
+       "count": 10
+        },
+     {
+      "label": "Condicional",
+      "bank": "bancos/banco_condicional.json",
+      "identityCategory": "condicional",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5"],
+       "count": 10
+        }
+  ]
+  },
    {
-  "dia": 39,
-  "date": "2026-01-13",
+  "dia": 37,
+  "date": "2026-01-07",
+  "topic": "Futuro y condicional",
+  "vocabFile": "vocab/D3-6-2.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Futuro",
+      "bank": "bancos/banco_futuro.json",
+      "identityCategory": "futuro",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5"],
+       "count": 10
+        },
+     {
+      "label": "Condicional",
+      "bank": "bancos/banco_condicional.json",
+      "identityCategory": "condicional",
+      "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5"],
+       "count": 10
+        }
+  ]
+  },
+   {
+  "dia": 38,
+  "date": "2026-01-09",
   "topic": "Pretérito",
-  "vocabFile": "vocab/D3-6-4.json",
+  "vocabFile": "vocab/D3-6-3.json",
   "proficiency": 0.8,
   "blocks": [
     {
@@ -32,7 +78,23 @@
         }
   ]
   },
-  {
+   {
+  "dia": 39,
+  "date": "2026-01-13",
+  "topic": "Imperfecto de subjuntivo",
+  "vocabFile": "vocab/D3-6-4.json",
+  "proficiency": 0.8,
+  "blocks": [
+    {
+      "label": "Imperfecto de subjuntivo",
+      "bank": "bancos/banco_subjuntivo_pasado.json",
+      "identityCategory": "imperfecto_de_subjuntivo",
+      "identityGroups": ["nivel_1"],
+      "count": 20
+        }
+  ]
+  },
+   {
   "dia": 40,
   "date": "2026-01-20",
   "topic": "Imperfecto de subjuntivo",
