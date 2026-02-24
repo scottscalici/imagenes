@@ -1,1 +1,130 @@
+<div id="app-container" style="font-family: sans-serif; text-align: center; max-width: 600px; margin: auto; padding: 10px;">
+    
+    <div style="margin-bottom: 15px;">
+        <span style="font-size: 1.2em; font-weight: bold;">Time left: <span id="time-display">00:00</span></span>
+    </div>
 
+    <div style="height: 400px; display: flex; align-items: center; justify-content: center; background: #f9f9f9; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <img id="display-img" src="" alt="Loading images..." style="max-height: 100%; max-width: 100%; border-radius: 8px; display: none;">
+        <p id="loading-text">Fetching images from GitHub...</p>
+    </div>
+
+    <div>
+        <label for="timer-input">Seconds per image: </label>
+        <input type="number" id="timer-input" value="180" style="width: 60px; padding: 5px; margin-right: 10px;">
+        <button id="start-btn" onclick="startRonda()" disabled style="padding: 8px 15px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; margin-right: 5px;">Start / Reset</button>
+        <button id="pause-btn" onclick="togglePause()" disabled style="padding: 8px 15px; cursor: pointer; background: #ffc107; color: black; border: none; border-radius: 4px; margin-right: 5px;">Pause</button>
+        <button id="next-btn" onclick="manualNextImage()" disabled style="padding: 8px 15px; cursor: pointer; background: #6c757d; color: white; border: none; border-radius: 4px;">Next Image</button>
+    </div>
+
+</div>
+
+<script>
+    const baseUrl = "https://raw.githubusercontent.com/scottscalici/imagenes/main/randomimage/rondarelampago/";
+    const jsonUrl = baseUrl + "images.json"; 
+    
+    let images = [];
+    let masterInterval;
+    let secondsRemaining = 0;
+    let isPaused = false;
+    let timerInputVal = 180;
+
+    // Fetch the JSON list from GitHub
+    async function loadImages() {
+        try {
+            const response = await fetch(jsonUrl + "?t=" + new Date().getTime()); 
+            images = await response.json();
+            
+            document.getElementById('loading-text').style.display = 'none';
+            document.getElementById('display-img').style.display = 'block';
+            document.getElementById('display-img').src = "https://placehold.co/600x400?text=Ready+to+Speak!"; 
+            
+            // Enable buttons
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('next-btn').disabled = false;
+        } catch(error) {
+            document.getElementById('loading-text').innerText = "Error loading images. Check GitHub URL.";
+            console.error("Fetch error:", error);
+        }
+    }
+
+    function formatTime(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function tick() {
+        if (secondsRemaining > 0) {
+            secondsRemaining--;
+            document.getElementById('time-display').innerText = formatTime(secondsRemaining);
+        } else {
+            loadNextRandomImage();
+        }
+    }
+
+    function loadNextRandomImage() {
+        // Pick a random image from the array
+        const randomIndex = Math.floor(Math.random() * images.length);
+        const imgFileName = images[randomIndex];
+        
+        // Update the image source
+        document.getElementById('display-img').src = baseUrl + imgFileName;
+
+        // Reset the countdown clock
+        secondsRemaining = timerInputVal;
+        document.getElementById('time-display').innerText = formatTime(secondsRemaining);
+    }
+
+    function manualNextImage() {
+        // If they manually skip, load the next image and reset the current timer
+        loadNextRandomImage();
+        
+        // If it was paused, keep it paused but show the new image's full time
+        if (!isPaused && !masterInterval) {
+             // Edge case: hitting next before ever clicking start
+             startRonda();
+        }
+    }
+
+    function startRonda() {
+        clearInterval(masterInterval);
+        isPaused = false;
+        
+        // Reset pause button styling
+        const pauseBtn = document.getElementById('pause-btn');
+        pauseBtn.innerText = "Pause";
+        pauseBtn.style.background = "#ffc107";
+        pauseBtn.style.color = "black";
+        pauseBtn.disabled = false;
+        
+        timerInputVal = parseInt(document.getElementById('timer-input').value);
+        
+        loadNextRandomImage(); // Load first image and set initial time
+        
+        // Start the master tick
+        masterInterval = setInterval(tick, 1000);
+    }
+
+    function togglePause() {
+        const btn = document.getElementById('pause-btn');
+        if (isPaused) {
+            // Resume
+            isPaused = false;
+            btn.innerText = "Pause";
+            btn.style.background = "#ffc107"; 
+            btn.style.color = "black";
+            masterInterval = setInterval(tick, 1000); // Restart the clock
+        } else {
+            // Pause
+            isPaused = true;
+            btn.innerText = "Resume";
+            btn.style.background = "#28a745"; // Turn green to indicate action to resume
+            btn.style.color = "white";
+            clearInterval(masterInterval); // Stop the clock
+        }
+    }
+
+    // Initialize
+    loadImages();
+</script>
