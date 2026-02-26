@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<style>
+#master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }
+#master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }
+.answer-text { display: none; }
+.answer-text.visible { display: block; }
+.correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }
+.wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }
+.active-tab { background-color: #d97706 !important; color: white !important; } /* amber-600 */
+</style>
+</head>
+<body class="bg-slate-50 p-4 pb-20 font-sans">
+<div class="max-w-6xl mx-auto space-y-4">
+<header class="bg-amber-600 rounded-3xl p-8 text-white shadow-lg mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<h1 class="text-3xl font-black">Lectura - El carnaval de Santiago</h1>
+<button id="master-reveal-btn" onclick="document.querySelectorAll('.answer-text').forEach(a=>a.classList.toggle('visible'))" class="bg-white text-amber-600 px-6 py-3 rounded-2xl font-black text-sm shadow-md">👀 Mostrar/Ocultar respuestas</button>
+</header>
+
+<div class="bg-white p-4 rounded-2xl shadow-sm border-l-8 border-amber-500 flex flex-wrap justify-between items-center gap-4">
+<div class="flex items-center gap-4 text-[11px] font-black text-slate-400 uppercase">TIEMPO: <span id="timer" class="text-amber-600 font-mono text-lg">--:--</span></div>
+<div class="flex bg-slate-100 p-1 rounded-xl h-10"><button id="v-par" onclick="setView('IB')" class="active-tab px-4 rounded-lg text-[10px] font-bold transition-all">VISTA: PARALELA</button><button id="v-ver" onclick="setView('STACK')" class="px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400">VISTA: VERTICAL</button></div>
+<button onclick="document.querySelectorAll('.check-btn').forEach(b=>b.click())" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[11px] font-black hover:bg-slate-700 transition-all">COMPROBAR TODO</button>
+</div>
+
+<div id="main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<div id="text-col" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-xl leading-relaxed text-slate-700">
+<p class="mb-6 font-bold text-2xl text-slate-800">El carnaval de Santiago</p>
+
+<p class="mb-6"><strong>1</strong> El carnaval de Santiago, considerado uno de los más importantes de la República Dominicana, concentra cada domingo de febrero gran cantidad de personas en el monumento a los Héroes de la Restauración de esa ciudad. Anteriormente, el carnaval de Santiago se celebraba antes del Miércoles de Ceniza¹ pero en la actualidad se celebra los domingos de febrero. Aunque el terremoto que sacudió la ciudad en 1842 y las posteriores invasiones de Haití impiden precisar la fecha del inicio de estas fiestas, este pueblo conserva orgullosamente sus tradiciones carnavalescas.</p>
+
+<div class="my-6 text-center text-sm text-slate-500 italic">
+<br>
+Trajes tradicionales del carnaval
+</div>
+
+<p class="mb-6"><strong>2</strong> Los Diablos Cojuelos, que en Santiago se llaman Los Lechones debido a que sus caretas se asemejan a un cerdo, son personajes característicos de este carnaval y surgieron como guardianes del orden en los viejos carnavales de Santiago. Iban delante de las bandas de música para abrirles camino y evitar las bromas de los muchachos. Su vestimenta consta de un mameluco² de colores vivos, a veces de dos, tres y hasta cuatro colores, adornado con cascabeles³, cintas y espejitos circulares, y un capuchón que cubre la parte posterior de la cabeza. Algunos llevan rabo que puede colgar libremente por detrás o puede enrollarse en el cuerpo. Estos rabos, generalmente son de un color que contrasta con el resto del traje. También pueden llevar una capa hasta la mitad de la pierna.</p>
+
+<p class="mb-6"><strong>3</strong> En los inicios, este carnaval se dividió en función a las clases sociales existentes en Santiago, con manifestaciones en clubes privados por parte de los sectores pudientes y en las calles de los barrios populares, particularmente en La Joya, un barrio en la parte baja de la ciudad, más cercano al río, Los Pepines, un barrio en la parte alta, y, posteriormente, Pueblo Nuevo. Los trajes que llevan los miembros de estos dos sectores son idénticos excepto las caretas. Los de Los Pepines tienen dos cachos o cuernos lisos y los de La Joya tienen pequeños cachitos.</p>
+
+<p class="mb-6"><strong>4</strong> Tradicionalmente, el martes previo al Miércoles de Ceniza, se escenificaba una batalla simulada entre las dos facciones opuestas frente a la puerta del cementerio. Mientras recorrían la ciudad, algunos Lechones llevaban fuetes⁴ con los que amenazaban a los que pasaban y a otros Lechones. Lo más común, sin embargo, es que lleven vejigas de vaca infladas con los que se golpean unos a otros y a curiosos.</p>
+
+<p class="text-sm italic text-slate-500 mt-8">
+¹ Miércoles de Ceniza: inicio de un periodo de penitencia cuya fecha cambia cada año<br>
+² mameluco: prenda de vestir de una sola una pieza<br>
+³ cascabeles: bolas de metal con una pieza metálica en su interior que, cuando se mueven, suenan<br>
+⁴ fuetes: látigos
+</p>
+</div>
+
+<div id="q-col">
+
+<div id="card-1" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P1</span><button data-idx="1" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 mb-2">1. Elige las CINCO frases verdaderas:</div><div class="space-y-1">
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="A"> A. El carnaval de Santiago es el más turístico del país.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="B"> B. El punto de encuentro es el monumento de los Héroes de la Restauración.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="C"> C. Antes el carnaval de Santiago se festejaba en fechas diferentes.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="D"> D. Se sabe con certeza el origen de este carnaval.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="E"> E. Se han mantenido las costumbres relacionadas con esa fiesta.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="F"> F. Los Diablos Cojuelos y los Lechones son los mismos personajes.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="G"> G. Los Lechones hacían bromas a los muchachos.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="H"> H. Los Lechones tienen un traje colorido y parte de la cabeza tapada.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="I"> I. La vestimenta siempre incluye un rabo del mismo color que el traje.</label>
+<label class="flex items-center gap-2 p-2 border rounded text-xs cursor-pointer"><input type="checkbox" name="q1" value="J"> J. La capa cubre desde los hombros hasta los pies.</label>
+</div><div id="key-1" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div class="bg-amber-50 rounded-xl border border-amber-100 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-amber-800 text-sm mb-2">Encuentra la palabra o expresión en el párrafo 3 que signifique lo siguiente:</h3>
+</div>
+
+<div id="card-2" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P2</span><button data-idx="2" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-2').classList.toggle('visible')">2. exclusivos <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-2" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-2" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-3" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P3</span><button data-idx="3" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-3').classList.toggle('visible')">3. ricos <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-3" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-3" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-4" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P4</span><button data-idx="4" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-4').classList.toggle('visible')">4. menos favorecidos <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-4" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-4" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-5" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P5</span><button data-idx="5" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-5').classList.toggle('visible')">5. iguales <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-5" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-5" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-6" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P6</span><button data-idx="6" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-6').classList.toggle('visible')">6. de poco tamaño <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-6" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-6" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div id="card-7" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P7</span><button data-idx="7" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">7. ¿Qué palabra nos indica que la pelea frente al cementerio no es real?</div><input id="ans-7" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-7" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-8" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P8</span><button data-idx="8" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">8. ¿Qué se emplea normalmente para molestar a otros participantes?</div><input id="ans-8" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-8" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div id="card-9" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P9</span><button data-idx="9" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">9. El propósito del texto es…</div><div class="space-y-1 mt-2">
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q9" value="A"> A. informar.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q9" value="B"> B. motivar.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q9" value="C"> C. entretener.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q9" value="D"> D. criticar.</label>
+</div><div id="key-9" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+</div>
+</div>
+</div>
+
+<script>
+const CONFIG = {
+  "1": { "type": "mc", "correct": ["B", "C", "E", "F", "H"] },
+  "2": { "type": "short", "correct": ["privados"] },
+  "3": { "type": "short", "correct": ["pudientes"] },
+  "4": { "type": "short", "correct": ["populares"] },
+  "5": { "type": "short", "correct": ["idénticos"] },
+  "6": { "type": "short", "correct": ["pequeños"] },
+  "7": { "type": "short", "correct": ["simulada"] },
+  "8": { "type": "short", "correct": ["vejigas de vaca", "vejigas de vaca infladas", "vejigas"] },
+  "9": { "type": "radio", "correct": "A" }
+};
+
+const key = "l_nov20_hl_carnaval", mins = 15;
+
+function setView(v) {
+    const grid = document.getElementById('main-grid'), qCol = document.getElementById('q-col');
+    const bPar = document.getElementById('v-par'), bVer = document.getElementById('v-ver');
+    if(v === 'IB') { grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"; qCol.className = ""; bPar.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bVer.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+    else { grid.className = "grid grid-cols-1 gap-8 items-start"; qCol.className = "max-w-3xl mx-auto w-full"; bVer.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bPar.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+}
+
+function mark(i, ok) { const c = document.getElementById('card-'+i); c.classList.remove('correct-card', 'wrong-card'); c.classList.add(ok ? 'correct-card' : 'wrong-card'); }
+
+document.querySelectorAll('.check-btn').forEach(btn => {
+    btn.onclick = () => {
+        const i = btn.dataset.idx, conf = CONFIG[i]; let ok = false;
+        
+        if(conf.type === 'short') { 
+            const val = document.getElementById('ans-'+i).value.trim().toLowerCase();
+            const targets = Array.isArray(conf.correct) ? conf.correct : [conf.correct];
+            ok = targets.some(t => val.includes(t.toLowerCase()));
+        } else if(conf.type === 'mc') {
+            const s = [...document.querySelectorAll('input[name="q'+i+'"]:checked')].map(e=>e.value).sort();
+            ok = JSON.stringify(s) === JSON.stringify([...conf.correct].sort());
+        } else if(conf.type === 'radio') { 
+            ok = document.querySelector('input[name="q'+i+'"]:checked')?.value === conf.correct; 
+        }
+        mark(i, ok);
+    };
+});
+
+function initKeys() { 
+    Object.keys(CONFIG).forEach(i => { 
+        const c = CONFIG[i]; 
+        const b = document.getElementById('key-'+i); 
+        b.innerText = "Correcto: " + (Array.isArray(c.correct) ? c.correct.join(' / ') : c.correct); 
+    }); 
+}
+initKeys();
+
+let end = localStorage.getItem(key) || (Date.now() + mins * 60000);
+localStorage.setItem(key, end);
+function tick() {
+    const left = end - Date.now();
+    if (left <= 0) { document.getElementById('timer').innerText = "DISPONIBLE"; document.getElementById('master-reveal-btn').classList.add('active'); }
+    else { const m = Math.floor(left/60000), s = Math.floor((left%60000)/1000); document.getElementById('timer').innerText = m + ":" + (s<10?'0':'') + s; }
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>
