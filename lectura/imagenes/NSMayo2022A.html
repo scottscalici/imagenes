@@ -1,1 +1,173 @@
-lectura/imagenes/Mayo2022textoA.png
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<style>
+#master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }
+#master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }
+.answer-text { display: none; }
+.answer-text.visible { display: block; }
+.correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }
+.wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }
+.active-tab { background-color: #d97706 !important; color: white !important; } /* amber-600 */
+</style>
+</head>
+<body class="bg-slate-50 p-4 pb-20 font-sans">
+<div class="max-w-6xl mx-auto space-y-4">
+<header class="bg-amber-600 rounded-3xl p-8 text-white shadow-lg mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<h1 class="text-3xl font-black">Lectura - Facundo y Luna (HL Mayo 2022)</h1>
+<button id="master-reveal-btn" onclick="document.querySelectorAll('.answer-text').forEach(a=>a.classList.toggle('visible'))" class="bg-white text-amber-600 px-6 py-3 rounded-2xl font-black text-sm shadow-md">👀 Mostrar/Ocultar respuestas</button>
+</header>
+
+<div class="bg-white p-4 rounded-2xl shadow-sm border-l-8 border-amber-500 flex flex-wrap justify-between items-center gap-4">
+<div class="flex items-center gap-4 text-[11px] font-black text-slate-400 uppercase">TIEMPO: <span id="timer" class="text-amber-600 font-mono text-lg">--:--</span></div>
+<div class="flex bg-slate-100 p-1 rounded-xl h-10"><button id="v-par" onclick="setView('IB')" class="active-tab px-4 rounded-lg text-[10px] font-bold transition-all">VISTA: PARALELA</button><button id="v-ver" onclick="setView('STACK')" class="px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400">VISTA: VERTICAL</button></div>
+<button onclick="document.querySelectorAll('.check-btn').forEach(b=>b.click())" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[11px] font-black hover:bg-slate-700 transition-all">COMPROBAR TODO</button>
+</div>
+<div id="main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<div id="text-col" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-xl leading-relaxed text-slate-700">
+<p class="mb-6 font-bold text-2xl text-slate-800">Facundo recorre el continente en bicicleta junto a su perra Luna desde hace más de 3 años</p>
+
+<div class="my-6 text-center text-sm text-slate-500 italic">
+    <img src="https://raw.githubusercontent.com/scottscalici/imagenes/main/lectura/imagenes/Mayo2022textoA.png" alt="Facundo Nahuel Biosca y su perra Luna" class="mx-auto rounded-xl shadow-sm mb-2 max-w-full h-auto">
+    Facundo Nahuel Biosca y su perra Luna
+</div>
+
+<p class="mb-6"><strong>1</strong> En abril de 2016, Facundo Nahuel Biosca estaba en Itajaí, al sur de Brasil. Había vivido ahí durante cinco años, trabajando como guardavidas en la playa, y hacía cinco meses había sumado una compañera a su vida: Luna, una perra que tenía problemas de socialización.</p>
+<p class="mb-6"><strong>2</strong> En ese entonces, Facundo, que creció en el barrio de Floresta, en Buenos Aires, decidió volver a su país para reencontrarse con su familia y sus amigos. Pero se presentó un gran inconveniente: la única aerolínea que permitía viajar a Buenos Aires con animales ofrecía pasajes prohibitivos para su bolsillo. Exploró otras alternativas, como trasladarse en un auto compartido, pero ninguna de ellas se terminó de adaptar a sus necesidades. Así que la bicicleta parecía ser la única solución.</p>
+
+<p class="mb-6"><strong>3</strong> “Le hice un servicio a la bicicleta y el 13 de abril salimos. Para ese entonces, ninguno de los dos tenía experiencia viajando en bicicleta, pero yo ya sabía que la única manera de hacer un camino es recorriéndolo”. Los 1.850 kilómetros que tuvieron que hacer sobre dos ruedas pronto se transformarían en una lección de vida.</p>
+
+
+<p class="mb-6"><strong>4</strong> “Con el viaje aprendí que hay mucha gente buena. Nunca nos faltó nada, nos invitaron a casas, a comer, a dormir, a compartir vidas. Aprendí también que lo que verdaderamente buscamos las personas es más fácil de encontrar de lo que parece. Y con Luna, aprendí lo que es el amor incondicional”, sostiene Facundo.</p>
+
+<p class="mb-6"><strong>5</strong> Lo que empezó como un problema de logística, años más tarde se convirtió en una filosofía de vida. La travesía se extendió durante cuatro meses, a los que les siguieron apenas tres meses de estadía en Buenos Aires y, después, decidieron seguir viajando. Facundo comparte los detalles de sus expediciones en las redes sociales (bajo el nombre “Facu y Luna a pedal”), coopera con distintas entidades proteccionistas de animales y fomenta el respeto por la naturaleza. El bolsillo no es un problema: da talleres de yoga y también vende un libro de su autoría, Sincronía fina. “A la hora de compartir experiencias y aprendizajes, no hago elogio del viaje, sino de buscar la forma de vivir en armonía, de sentirnos bien con la vida que elegimos”, explica.</p>
+
+<p class="mb-6"><strong>6</strong> Hasta ahora, han visitado parte de Brasil, Uruguay y Argentina. Luna transformó su temperamento: hoy disfruta al acercarse a gente que la quiere y la respeta.</p>
+
+<p class="mb-6"><strong>7</strong> ¿Más adelante? Facundo no mira mucho más allá. Se concentra en el presente y en el futuro muy cercano. El después, dice, queda lejos.</p>
+</div>
+
+<div id="q-col">
+<div class="bg-amber-50 rounded-xl border border-amber-100 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-amber-800 text-sm mb-2">Contesta a las siguientes preguntas:</h3>
+</div>
+
+<div id="card-1" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P1</span><button data-idx="1" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">1. ¿Por cuánto tiempo residió Facundo en Itajaí?</div><input id="ans-1" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-1" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-2" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P2</span><button data-idx="2" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">2. ¿Qué tipo de dificultades atravesaba Luna cuando conoció a Facundo?</div><input id="ans-2" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-2" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-3" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P3</span><button data-idx="3" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">3. ¿Por qué razón Facundo quiso regresar a su ciudad natal?</div><input id="ans-3" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-3" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-4" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P4</span><button data-idx="4" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">4. ¿Qué expresión significa que algunas cosas están fuera del presupuesto de alguien?</div><input id="ans-4" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-4" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-5" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P5</span><button data-idx="5" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">5. ¿En qué se convirtió el viaje a Argentina?</div><input id="ans-5" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-5" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div class="bg-blue-50 rounded-xl border border-blue-100 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-blue-800 text-sm mb-2">Encuentra la palabra o expresión en los párrafos 4–5 que signifique lo siguiente:</h3>
+</div>
+
+<div id="card-6" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P6</span><button data-idx="6" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-6').classList.toggle('visible')">6. en realidad <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-6" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-6" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-7" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P7</span><button data-idx="7" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-7').classList.toggle('visible')">7. que no requiere nada a cambio <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-7" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-7" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-8" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P8</span><button data-idx="8" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-8').classList.toggle('visible')">8. estilo o forma de vivir <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-8" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-8" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-9" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P9</span><button data-idx="9" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-9').classList.toggle('visible')">9. organismos, asociaciones <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-9" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-9" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-10" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P10</span><button data-idx="10" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800 cursor-pointer select-none" onclick="document.getElementById('key-10').classList.toggle('visible')">10. promueve, impulsa <span class="text-[10px] text-amber-600 font-normal ml-2 hover:underline">(clic para revelar)</span></div><input id="ans-10" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-10" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div id="card-11" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P11</span><button data-idx="11" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">11. Facundo habla de sus viajes en…</div><div class="space-y-1 mt-2">
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q11" value="A"> A. clases de yoga.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q11" value="B"> B. talleres de escritura.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q11" value="C"> C. charlas en organizaciones.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q11" value="D"> D. sitios de Internet.</label>
+</div><div id="key-11" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-12" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P12</span><button data-idx="12" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">12. Luna…</div><div class="space-y-1 mt-2">
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q12" value="A"> A. sigue siendo igual que antes.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q12" value="B"> B. ha cambiado su forma de ser.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q12" value="C"> C. es de carácter agresivo.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q12" value="D"> D. ahora es más temperamental.</label>
+</div><div id="key-12" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-13" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P13</span><button data-idx="13" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">13. Para Facundo su plan en la vida es…</div><div class="space-y-1 mt-2">
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q13" value="A"> A. recorrer el mundo.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q13" value="B"> B. hacerse famoso.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q13" value="C"> C. vivir el día a día.</label>
+<label class="flex items-center gap-2 p-2 bg-white border rounded text-xs cursor-pointer"><input type="radio" name="q13" value="D"> D. asegurar su futuro.</label>
+</div><div id="key-13" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+</div>
+</div>
+</div>
+
+<script>
+const CONFIG = {
+  "1": { "type": "short", "correct": ["cinco años", "durante cinco años", "5 años"] },
+  "2": { "type": "short", "correct": ["problemas de socialización", "tenía problemas de socialización", "de socialización"] },
+  "3": { "type": "short", "correct": ["para reencontrarse con su familia y sus amigos", "reencontrarse con su familia y sus amigos", "ver a su familia y amigos"] },
+  "4": { "type": "short", "correct": ["prohibitivos para su bolsillo", "pasajes prohibitivos para su bolsillo"] },
+  "5": { "type": "short", "correct": ["una lección de vida", "en una lección de vida", "lección de vida"] },
+  "6": { "type": "short", "correct": ["verdaderamente"] },
+  "7": { "type": "short", "correct": ["incondicional", "amor incondicional"] },
+  "8": { "type": "short", "correct": ["filosofía de vida", "una filosofía de vida"] },
+  "9": { "type": "short", "correct": ["entidades"] },
+  "10": { "type": "short", "correct": ["fomenta"] },
+  "11": { "type": "radio", "correct": "D" },
+  "12": { "type": "radio", "correct": "B" },
+  "13": { "type": "radio", "correct": "C" }
+};
+
+const key = "l_may22_hl_facundo", mins = 15;
+
+function setView(v) {
+    const grid = document.getElementById('main-grid'), qCol = document.getElementById('q-col');
+    const bPar = document.getElementById('v-par'), bVer = document.getElementById('v-ver');
+    if(v === 'IB') { grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"; qCol.className = ""; bPar.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bVer.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+    else { grid.className = "grid grid-cols-1 gap-8 items-start"; qCol.className = "max-w-3xl mx-auto w-full"; bVer.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bPar.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+}
+
+function mark(i, ok) { const c = document.getElementById('card-'+i); c.classList.remove('correct-card', 'wrong-card'); c.classList.add(ok ? 'correct-card' : 'wrong-card'); }
+
+document.querySelectorAll('.check-btn').forEach(btn => {
+    btn.onclick = () => {
+        const i = btn.dataset.idx, conf = CONFIG[i]; let ok = false;
+        
+        if(conf.type === 'short') { 
+            const val = document.getElementById('ans-'+i).value.trim().toLowerCase();
+            const targets = Array.isArray(conf.correct) ? conf.correct : [conf.correct];
+            ok = targets.some(t => val.includes(t.toLowerCase()));
+        } else if(conf.type === 'radio') { 
+            ok = document.querySelector('input[name="q'+i+'"]:checked')?.value === conf.correct; 
+        }
+        mark(i, ok);
+    };
+});
+
+function initKeys() { 
+    Object.keys(CONFIG).forEach(i => { 
+        const c = CONFIG[i]; 
+        const b = document.getElementById('key-'+i); 
+        b.innerText = "Correcto: " + (Array.isArray(c.correct) ? c.correct.join(' / ') : c.correct); 
+    }); 
+}
+initKeys();
+
+let end = localStorage.getItem(key) || (Date.now() + mins * 60000);
+localStorage.setItem(key, end);
+function tick() {
+    const left = end - Date.now();
+    if (left <= 0) { document.getElementById('timer').innerText = "DISPONIBLE"; document.getElementById('master-reveal-btn').classList.add('active'); }
+    else { const m = Math.floor(left/60000), s = Math.floor((left%60000)/1000); document.getElementById('timer').innerText = m + ":" + (s<10?'0':'') + s; }
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>
