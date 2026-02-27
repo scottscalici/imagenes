@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<style>
+#master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }
+#master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }
+.answer-text { display: none; }
+.answer-text.visible { display: block; }
+.correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }
+.wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }
+.active-tab { background-color: #d97706 !important; color: white !important; } /* amber-600 */
+</style>
+</head>
+<body class="bg-slate-50 p-4 pb-20 font-sans">
+<div class="max-w-6xl mx-auto space-y-4">
+<header class="bg-amber-600 rounded-3xl p-8 text-white shadow-lg mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<h1 class="text-3xl font-black">Lectura - Donde los árboles cantan (HL Mayo 2022)</h1>
+<button id="master-reveal-btn" onclick="document.querySelectorAll('.answer-text').forEach(a=>a.classList.toggle('visible'))" class="bg-white text-amber-600 px-6 py-3 rounded-2xl font-black text-sm shadow-md">👀 Mostrar/Ocultar respuestas</button>
+</header>
+
+<div class="bg-white p-4 rounded-2xl shadow-sm border-l-8 border-amber-500 flex flex-wrap justify-between items-center gap-4">
+<div class="flex items-center gap-4 text-[11px] font-black text-slate-400 uppercase">TIEMPO: <span id="timer" class="text-amber-600 font-mono text-lg">--:--</span></div>
+<div class="flex bg-slate-100 p-1 rounded-xl h-10"><button id="v-par" onclick="setView('IB')" class="active-tab px-4 rounded-lg text-[10px] font-bold transition-all">VISTA: PARALELA</button><button id="v-ver" onclick="setView('STACK')" class="px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400">VISTA: VERTICAL</button></div>
+<button onclick="document.querySelectorAll('.check-btn').forEach(b=>b.click())" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[11px] font-black hover:bg-slate-700 transition-all">COMPROBAR TODO</button>
+</div>
+
+<div id="main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<div id="text-col" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-xl leading-relaxed text-slate-700">
+<p class="mb-6 font-bold text-2xl text-slate-800">Donde los árboles cantan</p>
+
+<p class="mb-6"><strong>1</strong> Cerró los ojos, inspiró profundamente, contó hasta tres y asumió que tendría que aceptar lo imposible. Que Uri no era una persona. Que era un árbol. Y todas las piezas encajaron de golpe.</p>
+
+<p class="mb-6"><strong>2</strong> «Pero ¿cómo es posible?», se preguntaba Viana, encogida sobre sí misma en un rincón de su mazmorra. «¿Cómo podría un árbol transformarse en un ser humano… aunque se tratara de un árbol que canta?».</p>
+
+<p class="mb-6"><strong>3</strong> Sin embargo, era la única explicación que tenía algún sentido. Los árboles cantores se habían visto atacados por los bárbaros, sin posibilidad de huir ni de defenderse. Por esa razón habían enviado a uno de los suyos a buscar ayuda, un árbol joven que se había transformado en ser humano, adoptando la forma de sus enemigos para encontrar la manera de luchar contra <u>ellos</u>. Un humano un tanto extraño: con la piel del tono de la corteza de los árboles, y el pelo del color de sus ramas en primavera… y en otoño, comprendió de pronto Viana, excitada, al recordar el cambio en el pelo de Uri: se había oscurecido al final del verano, como sucedía con las hojas de los árboles. ¿Se le caería también? Viana apartó de su mente la imagen de Uri calvo; tenía cosas más importantes en que pensar.</p>
+
+<p class="mb-6"><strong>4</strong> Entendió también por qué, cuando había hallado al extraño muchacho en el bosque, <u>este</u> no sabía hablar, ni comer, ni tampoco caminar: después de todo, no lo había hecho nunca. Había logrado arrastrarse hasta el río, experimentando por primera vez sensaciones como el hambre, la sed o el cansancio. Había metido sus pies en el agua, de la misma manera que habría buscado el preciado líquido con sus raíces, sin saber que debía beber por la boca, ya que jamás antes había tenido <u>una</u>. Y probablemente habría muerto de sed en mitad del río si Viana no lo hubiese encontrado <u>allí</u>.</p>
+
+<p class="mb-6"><strong>5</strong> De modo que todas las cosas que había ido aprendiendo… realmente <u>las</u> aprendía, como un bebé recién nacido. No las recordaba. No tenía nada que recordar, puesto que no había olvidado su pasado, ni su misión. Sencillamente necesitaba descubrir cómo comportarse en un mundo de humanos antes de ser capaz de ayudar a los suyos.</p>
+
+<p class="mb-6"><strong>6</strong> Por ese motivo, también, había sido siempre Uri: porque como árbol, y dado que su especie carecía de lenguaje articulado, nunca había tenido más nombre que el que Viana le había regalado.</p>
+
+<p class="mb-6"><strong>7</strong> La muchacha se estremeció entre las sombras de su prisión. Uri había experimentado muchas cosas como humano… había aprendido muy deprisa… y también había conocido el amor.</p>
+
+<p class="mb-6"><strong>8</strong> Ignoraba si los árboles tenían sentimientos a la manera de los humanos. Al menos en lo que tocaba a los árboles cantores, sí poseían cierta inteligencia. ¿Podrían amar sin corazón? «Mi gente no siente esto», había dicho Uri. «No siente así». Pero ahora era humano… y se había enamorado de una humana.</p>
+
+<p class="mb-6"><strong>9</strong> ¿Cuánto había de árbol en Uri, y cuánto de hombre? Ya hablaba y reía como un humano. Y, posiblemente, amaba como tal.</p>
+
+<p class="mb-6"><strong>10</strong> Pero no tenía sangre, sino savia.</p>
+</div>
+
+<div id="q-col">
+<div class="bg-amber-50 rounded-xl border border-amber-100 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-amber-800 text-sm mb-2">Contesta a las siguientes preguntas:</h3>
+</div>
+
+<div id="card-24" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P24</span><button data-idx="24" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">24. ¿Qué hecho increíble tuvo que reconocer Viana?</div><input id="ans-24" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-24" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-25" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P25</span><button data-idx="25" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">25. ¿Qué expresión se usa para decir que de repente las cosas tenían sentido?</div><input id="ans-25" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-25" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-26" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P26</span><button data-idx="26" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">26. ¿Con qué se compara el color de la piel de Uri?</div><input id="ans-26" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-26" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-27" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P27</span><button data-idx="27" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">27. ¿Qué expresión usa el narrador para indicar que Viana dejó de pensar en algo?</div><input id="ans-27" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-27" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div class="bg-red-50 rounded-xl border border-red-100 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-red-800 text-sm mb-2">¿A quién o a qué se refieren las palabras subrayadas? (Contesta usando las palabras tal como aparecen en el texto)</h3>
+</div>
+
+<div id="card-28" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P28</span><button data-idx="28" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">28. ...la manera de luchar contra <u>ellos</u>. (Párrafo 3)</div><input id="ans-28" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-28" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-29" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P29</span><button data-idx="29" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">29. ...<u>este</u> no sabía... (Párrafo 4)</div><input id="ans-29" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-29" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-30" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P30</span><button data-idx="30" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">30. ...jamás antes había tenido <u>una</u>. (Párrafo 4)</div><input id="ans-30" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-30" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-31" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P31</span><button data-idx="31" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">31. ...hubiese encontrado <u>allí</u>. (Párrafo 4)</div><input id="ans-31" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-31" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div id="card-32" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P32</span><button data-idx="32" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">32. ...realmente <u>las</u> aprendía... (Párrafo 5)</div><input id="ans-32" class="w-full border rounded p-2 text-sm mt-2" placeholder="Escribe aquí..."><div id="key-32" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800"></div></div>
+
+<div class="w-full h-px bg-slate-200 my-6"></div>
+
+<div class="bg-slate-100 rounded-xl border border-slate-200 p-4 shadow-sm mb-6">
+    <h3 class="font-bold text-slate-800 text-sm mb-2">Las siguientes frases son verdaderas o falsas. Indica la opción correcta y justifícala usando palabras del texto:</h3>
+</div>
+
+<div id="card-33" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P33</span><button data-idx="33" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">33. Uri se acordaba de su vida anterior.</div>
+<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q33" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q33" value="Falso"> F</label></div><textarea id="just-33" class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica con palabras del texto..."></textarea><div id="key-33" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-34" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P34</span><button data-idx="34" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">34. Uri debía aprender a actuar como una persona, para luego poder proteger a los árboles cantores.</div>
+<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q34" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q34" value="Falso"> F</label></div><textarea id="just-34" class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica con palabras del texto..."></textarea><div id="key-34" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-35" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P35</span><button data-idx="35" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">35. Los árboles cantores tenían la capacidad de comunicarse con palabras.</div>
+<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q35" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q35" value="Falso"> F</label></div><textarea id="just-35" class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica con palabras del texto..."></textarea><div id="key-35" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-36" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P36</span><button data-idx="36" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">36. Viana estaba segura de que los árboles podían sentir como lo hacen las personas.</div>
+<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q36" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q36" value="Falso"> F</label></div><textarea id="just-36" class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica con palabras del texto..."></textarea><div id="key-36" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+<div id="card-37" class="bg-white rounded-xl border p-4 shadow-sm mb-4"><div class="flex justify-between mb-2"><span class="text-[9px] font-black text-slate-300 uppercase">P37</span><button data-idx="37" class="check-btn text-[9px] bg-amber-600 text-white px-3 py-1 rounded-full font-bold">COMPROBAR</button></div><div class="text-sm font-bold text-slate-800">37. A Uri le corría tanto sangre como savia por las venas.</div>
+<div class="flex gap-2 mt-2"><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q37" value="Verdadero"> V</label><label class="flex-1 text-center border p-2 rounded bg-white cursor-pointer"><input type="radio" name="q37" value="Falso"> F</label></div><textarea id="just-37" class="w-full border rounded p-2 text-[10px] mt-2" placeholder="Justifica con palabras del texto..."></textarea><div id="key-37" class="answer-text p-2 bg-emerald-50 rounded mt-3 text-[10px] font-mono text-emerald-800 border border-emerald-100"></div></div>
+
+</div>
+</div>
+</div>
+
+<script>
+const CONFIG = {
+  "24": { "type": "short", "correct": ["que uri no era una persona", "que era un árbol", "que uri era un árbol", "aceptar lo imposible"] },
+  "25": { "type": "short", "correct": ["las piezas encajaron de golpe", "todas las piezas encajaron de golpe", "encajaron de golpe"] },
+  "26": { "type": "short", "correct": ["corteza de los árboles", "tono de la corteza de los árboles", "la corteza de los árboles"] },
+  "27": { "type": "short", "correct": ["apartó de su mente", "tenía cosas más importantes en que pensar", "cosas más importantes en que pensar"] },
+  "28": { "type": "short", "correct": ["sus enemigos", "los enemigos", "enemigos", "seres humanos", "humanos", "los bárbaros", "bárbaros"] },
+  "29": { "type": "short", "correct": ["extraño muchacho", "el extraño muchacho", "uri"] },
+  "30": { "type": "short", "correct": ["la boca", "boca"] },
+  "31": { "type": "short", "correct": ["el río", "río", "en mitad del río", "mitad del río"] },
+  "32": { "type": "short", "correct": ["las cosas", "todas las cosas", "cosas", "cosas que había ido aprendiendo", "todas las cosas que había ido aprendiendo"] },
+  "33": { "type": "vf", "correct": "Verdadero", "just": "no había olvidado su pasado" },
+  "34": { "type": "vf", "correct": "Verdadero", "just": "comportarse en un mundo de humanos antes de ser capaz de ayudar a los suyos" },
+  "35": { "type": "vf", "correct": "Falso", "just": "su especie carecía de lenguaje articulado" },
+  "36": { "type": "vf", "correct": "Falso", "just": "ignoraba si los árboles tenían sentimientos a la manera de los humanos" },
+  "37": { "type": "vf", "correct": "Falso", "just": "no tenía sangre, sino savia" }
+};
+
+const key = "l_may22_hl_arboles", mins = 15;
+
+function setView(v) {
+    const grid = document.getElementById('main-grid'), qCol = document.getElementById('q-col');
+    const bPar = document.getElementById('v-par'), bVer = document.getElementById('v-ver');
+    if(v === 'IB') { grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"; qCol.className = ""; bPar.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bVer.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+    else { grid.className = "grid grid-cols-1 gap-8 items-start"; qCol.className = "max-w-3xl mx-auto w-full"; bVer.className = "active-tab px-4 rounded-lg text-[10px] font-bold transition-all"; bPar.className = "px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400"; }
+}
+
+function mark(i, ok) { const c = document.getElementById('card-'+i); c.classList.remove('correct-card', 'wrong-card'); c.classList.add(ok ? 'correct-card' : 'wrong-card'); }
+
+document.querySelectorAll('.check-btn').forEach(btn => {
+    btn.onclick = () => {
+        const i = btn.dataset.idx, conf = CONFIG[i]; let ok = false;
+        
+        if(conf.type === 'short') { 
+            const val = document.getElementById('ans-'+i).value.trim().toLowerCase();
+            const targets = Array.isArray(conf.correct) ? conf.correct : [conf.correct];
+            ok = targets.some(t => val.includes(t.toLowerCase()));
+        } else if(conf.type === 'vf') { 
+            ok = document.querySelector('input[name="q'+i+'"]:checked')?.value === conf.correct; 
+        }
+        mark(i, ok);
+    };
+});
+
+function initKeys() { 
+    Object.keys(CONFIG).forEach(i => { 
+        const c = CONFIG[i]; 
+        const b = document.getElementById('key-'+i); 
+        if(c.type === 'vf') {
+            b.innerText = "Correcto: " + c.correct + " | Justificación: " + c.just;
+        } else {
+            b.innerText = "Correcto: " + (Array.isArray(c.correct) ? c.correct.join(' / ') : c.correct); 
+        }
+    }); 
+}
+initKeys();
+
+let end = localStorage.getItem(key) || (Date.now() + mins * 60000);
+localStorage.setItem(key, end);
+function tick() {
+    const left = end - Date.now();
+    if (left <= 0) { document.getElementById('timer').innerText = "DISPONIBLE"; document.getElementById('master-reveal-btn').classList.add('active'); }
+    else { const m = Math.floor(left/60000), s = Math.floor((left%60000)/1000); document.getElementById('timer').innerText = m + ":" + (s<10?'0':'') + s; }
+}
+setInterval(tick, 1000); tick();
+</script>
+</body>
+</html>
