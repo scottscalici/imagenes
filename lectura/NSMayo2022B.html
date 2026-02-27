@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<style>
+#master-reveal-btn { filter: blur(4px); opacity: 0.6; pointer-events: none; transition: all 0.4s; }
+#master-reveal-btn.active { filter: none; opacity: 1; pointer-events: auto; cursor: pointer; }
+.answer-text { display: none; }
+.answer-text.visible { display: block; }
+.correct-card { border: 3px solid #10b981 !important; background-color: #ecfdf5 !important; }
+.wrong-card { border: 3px solid #ef4444 !important; background-color: #fef2f2 !important; }
+.active-tab { background-color: #d97706 !important; color: white !important; } /* amber-600 */
+</style>
+</head>
+<body class="bg-slate-50 p-4 pb-20 font-sans">
+<div class="max-w-6xl mx-auto space-y-4">
+<header class="bg-amber-600 rounded-3xl p-8 text-white shadow-lg mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+<h1 class="text-3xl font-black">Lectura - Entrevista Damián Seijas (HL Nov 2022)</h1>
+<button id="master-reveal-btn" onclick="document.querySelectorAll('.answer-text').forEach(a=>a.classList.toggle('visible'))" class="bg-white text-amber-600 px-6 py-3 rounded-2xl font-black text-sm shadow-md">👀 Mostrar/Ocultar respuestas</button>
+</header>
+
+<div class="bg-white p-4 rounded-2xl shadow-sm border-l-8 border-amber-500 flex flex-wrap justify-between items-center gap-4">
+<div class="flex items-center gap-4 text-[11px] font-black text-slate-400 uppercase">TIEMPO: <span id="timer" class="text-amber-600 font-mono text-lg">--:--</span></div>
+<div class="flex bg-slate-100 p-1 rounded-xl h-10"><button id="v-par" onclick="setView('IB')" class="active-tab px-4 rounded-lg text-[10px] font-bold transition-all">VISTA: PARALELA</button><button id="v-ver" onclick="setView('STACK')" class="px-4 rounded-lg text-[10px] font-bold transition-all text-slate-400">VISTA: VERTICAL</button></div>
+<button onclick="document.querySelectorAll('.check-btn').forEach(b=>b.click())" class="bg-slate-800 text-white px-5 py-2 rounded-xl text-[11px] font-black hover:bg-slate-700 transition-all">COMPROBAR TODO</button>
+</div>
+
+<div id="main-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<div id="text-col" class="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 text-xl leading-relaxed text-slate-700">
+<p class="mb-6 font-bold text-2xl text-slate-800">Entrevista a Damián Seijas, uno de los mejores baristas de España</p>
+
+<p class="mb-6"><strong>1</strong> Un día te das cuenta de que el sitio favorito que acaban de abrir en tu pueblo, y al que vas casi a diario durante tus vacaciones, está dirigido por uno de los mejores baristas de España, Damián Seijas.</p>
+
+<div class="my-6 text-center text-sm text-slate-500 italic">
+[Image of a barista pouring latte art into a cup of coffee]<br>
+Damián Seijas preparándose para elaborar un buen café.
+</div>
+
+<p class="mb-6"><strong>2</strong> En verano, charlando con Damián, comentamos la posibilidad de que nos hiciese una demostración en vivo para poder hacerle fotos, y nos brindó hace unos días la oportunidad de conocerle un poco mejor con esta entrevista:</p>
+
+<p class="mb-6"><strong>3</strong> <strong>¿Cómo llegó tu interés hacia esta rama de la restauración? Me resulta extraño que en una zona rural en la que no se ve este tipo de técnicas te hayas inclinado por ella.</strong><br>
+Mientras estaba estudiando en la Escuela de Hostelería de Vilamarín, en 2007, Augusto Morales vino a dar una charla a mi escuela y, cuando nos mostró un vídeo de un barista, me quedé prendado totalmente, ya que en Galicia no se conocía esta técnica. A partir de ese momento mi profesora María Rey y yo, gracias a las facilidades que nos dio la escuela, empezamos a adentrarnos en este mundo hasta el día de hoy.</p>
+
+<p class="mb-6"><strong>4</strong> <strong>[ – 20 – ]</strong><br>
+Hace tiempo que he tenido que dejar de lado mis pasatiempos para dedicarme de pleno a mi trabajo y aun así, gracias a Dios, no me llegan las horas del día para tener todo controlado…</p>
+
+<p class="mb-6"><strong>5</strong> <strong>Hace algo más de un año que regentas Picota, Espazo* Gastronómico en Monforte de Lemos, ¿cómo valoras la experiencia de este primer año?</strong><br>
+Tengo y trabajo con la misma ilusión que desde el primer día, aunque sí que me da pena que no sea una buena época económica para la gente y eso se nota.</p>
+
+<p class="mb-6"><strong>6</strong> <strong>Tanto la gente de Chantada, tu pueblo, como la de Monforte, ¿es consciente de que se toma un café de uno de los mejores baristas de España?</strong><br>
+Hay gente que lo sabe y viene a disfrutar del buen café que hacemos, pero la mayoría no tiene
