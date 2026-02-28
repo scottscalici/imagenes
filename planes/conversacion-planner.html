@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profe Planner: Conversaciones</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass-sidebar { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .card-active { border: 2px solid #3b82f6; ring: 2px; ring-color: #93c5fd; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- MOCK DATA (Replace these with your actual JSON fetch logic) ---
+        const initialConversaciones = [
+            { id: "c1", topic: "Las Vacaciones", image: "https://via.placeholder.com/150", timings: "15m", bullets: ["Past Tense", "Travel Vocab"], links: "http://link1.com" },
+            { id: "c2", topic: "La Comida", image: "https://via.placeholder.com/150", timings: "20m", bullets: ["Commands", "Restaurant Phrases"], links: "http://link2.com" }
+        ];
+
+        const initialCalendario = [
+            { dia: 1, convId: "c1", section: "s4" },
+            { dia: 2, convId: "c2", section: "s4" },
+            { dia: 1, convId: "c2", section: "s2" }
+        ];
+
+        function App() {
+            const [section, setSection] = useState('s4');
+            const [conversaciones, setConversaciones] = useState(initialConversaciones);
+            const [selectedItem, setSelectedItem] = useState(null);
+
+            // Filter and Join Data
+            const schedule = initialCalendario
+                .filter(item => item.section === section)
+                .map(item => {
+                    const conv = conversaciones.find(c => c.id === item.convId);
+                    return { ...item, ...conv };
+                })
+                .sort((a, b) => a.dia - b.dia);
+
+            const handleUpdate = (field, value) => {
+                const updated = conversaciones.map(c => 
+                    c.id === selectedItem.id ? { ...c, [field]: value } : c
+                );
+                setConversaciones(updated);
+                setSelectedItem({ ...selectedItem, [field]: value });
+            };
+
+            const downloadJSON = () => {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(conversaciones, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `conversacion_${section}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            };
+
+            return (
+                <div class="flex h-screen overflow-hidden">
+                    {/* Main Content Area */}
+                    <div class="flex-1 flex flex-col">
+                        <header class="p-6 bg-white shadow-sm flex justify-between items-center">
+                            <h1 class="text-2xl font-bold text-gray-800">Planner: {section.toUpperCase()}</h1>
+                            <div class="space-x-2">
+                                <button onClick={() => setSection('s2')} class={`px-4 py-2 rounded ${section === 's2' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>S2</button>
+                                <button onClick={() => setSection('s4')} class={`px-4 py-2 rounded ${section === 's4' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>S4</button>
+                            </div>
+                        </header>
+
+                        <main class="p-8 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {schedule.map(item => (
+                                <div 
+                                    key={`${item.dia}-${item.id}`}
+                                    onClick={() => setSelectedItem(item)}
+                                    class={`bg-white rounded-xl shadow p-4 cursor-pointer transition-all hover:shadow-lg ${selectedItem?.id === item.id ? 'ring-2 ring-blue-500 shadow-xl' : ''}`}
+                                >
+                                    <div class="flex justify-between mb-2">
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-0.5 rounded">Día {item.dia}</span>
+                                        <span class="text-gray-400 text-xs">{item.timings}</span>
+                                    </div>
+                                    <img src={item.image} class="w-full h-32 object-cover rounded-md mb-3" />
+                                    <h3 class="font-bold text-lg">{item.topic}</h3>
+                                    <p class="text-sm text-gray-500 truncate">{item.bullets.join(', ')}</p>
+                                </div>
+                            ))}
+                        </main>
+                    </div>
+
+                    {/* Editor Sidebar */}
+                    <aside class="w-96 glass-sidebar shadow-2xl p-6 overflow-y-auto border-l border-gray-200">
+                        {selectedItem ? (
+                            <div class="space-y-6">
+                                <h2 class="text-xl font-bold border-b pb-2">Edit {selectedItem.topic}</h2>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Timings</label>
+                                    <input 
+                                        type="text" 
+                                        value={selectedItem.timings} 
+                                        onChange={(e) => handleUpdate('timings', e.target.value)}
+                                        class="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Bullet Points (comma separated)</label>
+                                    <textarea 
+                                        rows="4"
+                                        value={selectedItem.bullets.join(', ')} 
+                                        onChange={(e) => handleUpdate('bullets', e.target.value.split(',').map(s => s.trim()))}
+                                        class="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    ></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Grammar Links</label>
+                                    <input 
+                                        type="text" 
+                                        value={selectedItem.links} 
+                                        onChange={(e) => handleUpdate('links', e.target.value)}
+                                        class="mt-1 block w-full rounded-md border-gray-300 border p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    />
+                                </div>
+
+                                <button 
+                                    onClick={downloadJSON}
+                                    class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 shadow-md flex items-center justify-center gap-2"
+                                >
+                                    <span>💾 Update JSON File</span>
+                                </button>
+                                <p class="text-xs text-gray-400 italic text-center">Save this to your project folder to overwrite the old JSON.</p>
+                            </div>
+                        ) : (
+                            <div class="h-full flex items-center justify-center text-gray-400">
+                                <p>Select a card to begin editing</p>
+                            </div>
+                        )}
+                    </aside>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
