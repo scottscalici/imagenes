@@ -927,6 +927,28 @@
       "tag": "Presentar",
       "courses": ["s2"],
       "dias": [52]
+    },
+    "debate-redes-sociales": {
+      "titulo": "Debate: El impacto de las redes sociales",
+      "subtitulo": "Organización Social",
+      "imagen": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/redes_sociales_debate.png",
+      "url": "https://sites.google.com/view/srscalici/conversaci%C3%B3n/organizacion-social/debate-redes-sociales",
+      "tag": "Debate",
+      "activity_type": "debate",
+      "courses": ["s4"],
+      "dias": [68],
+      "prep_seconds": 600,
+      "presentation_segments": "60,60,60", 
+      "notas": { "type": "block", "bullets": 0, "pregunta": false },
+      "preguntas": {
+        "1": ["¿Qué redes sociales usas más?", "¿Cuántas horas pasas en tu teléfono?", "¿Quiénes son los influencers más populares?"],
+        "2": ["¿Cómo afectan las redes a la salud mental?", "¿Crees que la gente muestra su vida real en internet?", "¿Qué ventajas tienen las redes para los estudiantes?"],
+        "3": [
+          "Si fueras el presidente de una red social, ¿qué regla estricta implementarías?",
+          "¿Qué harías si alguien creara un perfil falso con tu nombre y tus fotos?",
+          "Si tuvieras que convencer a tus abuelos de usar una red social, ¿qué les dirías?"
+        ]
+      }
     }
   }
 }
