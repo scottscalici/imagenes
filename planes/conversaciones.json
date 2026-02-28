@@ -568,7 +568,7 @@
         ]
       }
     },
-   "imagen-corporal-identidad": {
+"imagen-corporal-identidad": {
   "titulo": "Identidades: La imagen corporal y el bienestar",
   "subtitulo": "Identidades",
   "imagen": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/fotos/imagen-corporal-identidad.png",
@@ -576,31 +576,18 @@
   "tag": "Presentar",
   "activity_type": "ia",
   "courses": ["s4"],
-  "dias": [50],
+  "dias": [60],
   "prep_seconds": 600,
   "presentation_segments": "180",
+  "notas": {
+    "type": "bullets", 
+    "bullets": 10,
+    "pregunta": true
+  },
   "preguntas": {
-    "1": [
-      "¿Qué está haciendo la chica de la imagen?",
-      "¿Cómo es el reflejo en el espejo en comparación con la chica real?",
-      "¿De qué color es la ropa que lleva puesta?",
-      "¿Qué expresión tiene la chica al mirarse?",
-      "¿Hay algún otro objeto en la habitación además del espejo?"
-    ],
-    "2": [
-      "¿Por qué crees que el reflejo de la chica es diferente a su realidad?",
-      "¿Qué papel juegan las redes sociales en cómo nos vemos a nosotros mismos?",
-      "¿Cómo crees que se siente la chica en este momento?",
-      "¿Crees que es común que las personas no se vean como realmente son?",
-      "¿Qué importancia tiene la autoestima para nuestra salud mental?"
-    ],
-    "3": [
-      "Si fueras el mejor amigo de esta chica y la vieras así de triste, ¿qué palabras le dirías para animarla?",
-      "¿Qué harías si mañana todos los espejos del mundo mostraran nuestra personalidad en lugar de nuestra cara?",
-      "Si pudieras cambiar una regla de la sociedad sobre lo que se considera 'bello', ¿cuál sería?",
-      "¿Cómo te sentirías si tuvieras que vivir un mes entero sin mirar tu reflejo en ninguna parte?",
-      "Si tuvieras que elegir un superpoder para ayudar a la gente a quererse más, ¿cómo funcionaría?"
-    ]
+    "1": ["¿Qué está haciendo la chica de la imagen?", "¿Cómo es el reflejo..."],
+    "2": ["¿Por qué crees que el reflejo...", "¿Qué papel juegan las redes..."],
+    "3": ["Si fueras el mejor amigo...", "¿Qué harías si mañana..."]
   }
 },
     "ciencia-clase-educacion": {
