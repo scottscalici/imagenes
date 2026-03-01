@@ -83,7 +83,7 @@
     };
 
     const runtime = {
-      course: new URLSearchParams(window.location.search).get('course') || 's2', // CAMBIA A 's4' EN TU ARCHIVO S4
+      course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
@@ -93,8 +93,16 @@
       teacherMode: false, fullSchedule: [], serverDateDia: null
     };
 
-    // Función mágica que quita acentos y espacios para que todo coincida perfectamente
-    const normStr = (s) => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    const normStr = (s) => {
+        if (!s) return "";
+        return s.toString().trim().toLowerCase()
+            .replace(/[áàâä]/g, 'a')
+            .replace(/[éèêë]/g, 'e')
+            .replace(/[íìîï]/g, 'i')
+            .replace(/[óòôö]/g, 'o')
+            .replace(/[úùûü]/g, 'u')
+            .replace(/[ñ]/g, 'n');
+    };
 
     function seededShuffle(array, customSeed = null) {
       let m = array.length, t, i, seedNum;
@@ -209,10 +217,9 @@
 
                 let selectedForBlock = [];
 
-                // --- BÚSQUEDA A PRUEBA DE BALAS PARA VERBOS ESPECÍFICOS ---
                 if (block.specificVerbs && Array.isArray(block.specificVerbs)) {
                     block.specificVerbs.forEach(spec => {
-                        let parts = spec.split(':');
+                        let parts = spec.split(/[:,\-]/);
                         let inf = normStr(parts[0]);
                         let subj = parts.length > 1 ? normStr(parts[1]) : null;
 
@@ -231,10 +238,8 @@
                             return true;
                         };
 
-                        // 1. Intentar encontrarlo en los filtrados (para respetar nivel_1, etc.)
                         let match = filtered.find(isMatch);
                         
-                        // 2. Si no estaba ahí (quizá era nivel 2), lo busca en el banco entero respetando las reglas de afirmativo/negativo
                         if (!match) {
                             match = bank.find(v => {
                                 if (!isMatch(v)) return false;
@@ -250,17 +255,14 @@
                             });
                         }
 
-                        // 3. Forzar búsqueda absoluta si aún no aparece
                         if (!match) match = bank.find(isMatch);
 
-                        // Evitar duplicados exactos
                         if (match && !selectedForBlock.some(m => m.infinitivo === match.infinitivo && m.sujeto === match.sujeto)) {
                             selectedForBlock.push(match);
                         }
                     });
                 }
 
-                // Quitar los seleccionados de la piscina para no repetirlos
                 filtered = filtered.filter(v => !selectedForBlock.some(m => m.infinitivo === v.infinitivo && m.sujeto === v.sujeto));
 
                 let needed = block.count - selectedForBlock.length;
@@ -271,6 +273,9 @@
                     selectedForBlock = selectedForBlock.slice(0, block.count);
                 }
                 
+                // MEZCLAR EL BLOQUE COMPLETO PARA ESCONDER LOS VIPS ENTRE LOS DEMÁS
+                selectedForBlock = seededShuffle(selectedForBlock, runtime.activeDia + masterVerbList.length + 999);
+
                 selectedForBlock.forEach(v => { if(v) v._blockLabel = block.label; });
                 masterVerbList = masterVerbList.concat(selectedForBlock);
             }
@@ -507,7 +512,7 @@
         const verbPages = Math.ceil(runtime.verbs.length / 5);
         const vocabPages = Math.ceil(runtime.vocab.length / 10);
         const totalModules = verbPages + vocabPages + 1;
-        const denominator = totalModules > 1 ? (totalModules - 1) : 1; // Previene el NaN de la muerte
+        const denominator = totalModules > 1 ? (totalModules - 1) : 1; 
         const pct = Math.round((runtime.completed / denominator) * 100); 
         document.getElementById('progress-fill').style.width = pct + "%"; 
         document.getElementById('progress-label').textContent = pct + "%"; 
