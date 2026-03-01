@@ -62,6 +62,27 @@
         <option value="bancos/banco_participios_pasados.json">
     </datalist>
 
+    <datalist id="category-ids">
+        <option value="presente">
+        <option value="preterito">
+        <option value="imperfecto">
+        <option value="presente_de_subjuntivo">
+        <option value="mandatos_informales">
+        <option value="mandatos_informales_afirmativos">
+        <option value="mandatos_informales_negativos">
+        <option value="mandatos_formales_plurales">
+        <option value="participios_pasados">
+    </datalist>
+
+    <datalist id="common-filtros">
+        <option value="persona_base:afirmativo">
+        <option value="persona_base:negativo">
+        <option value="tipo_verbo:simple">
+        <option value="tipo_verbo:objetos">
+        <option value="persona_base:afirmativo, tipo_verbo:simple">
+        <option value="persona_base:negativo, tipo_verbo:simple">
+    </datalist>
+
     <h1>⚙️ Planificador de Calentamientos (Schedules)</h1>
     
     <div class="top-bar">
@@ -127,22 +148,18 @@
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
             let missingDays = [];
 
-            // Ordenar los días cronológicamente para que no se desordene la pantalla
             targetSchedule.sort((a, b) => a.dia - b.dia);
 
             for (let day = 1; day <= 80; day++) {
                 
                 let dayData = targetSchedule.find(d => d.dia === day);
                 
-                // Si el día no existe en el JSON, lo agregamos a la lista de "días disponibles para crear" y lo saltamos
                 if (!dayData) {
                     missingDays.push(day);
                     continue;
                 }
 
                 let totalVerbs = (dayData.blocks || []).reduce((sum, b) => sum + (parseInt(b.count) || 0), 0);
-                
-                // Semáforo Inteligente
                 let countClass = totalVerbs === 20 ? 'count-perfect' : (totalVerbs > 20 ? 'count-extra' : 'count-warning');
                 let countText = totalVerbs === 0 ? 'Sin verbos' : `${totalVerbs} Verbos`;
 
@@ -153,6 +170,7 @@
                 (dayData.blocks || []).forEach((b, bIndex) => {
                     let groupsStr = Array.isArray(b.identityGroups) ? b.identityGroups.join(', ') : '';
                     let constStr = formatConstraints(b.constraints);
+                    let specStr = Array.isArray(b.specificVerbs) ? b.specificVerbs.join(', ') : ''; 
 
                     blocksHtml += `
                         <div class="block-item">
@@ -170,7 +188,7 @@
                             
                             <div class="block-row">
                                 <label>Categoría ID:</label>
-                                <input type="text" value="${b.identityCategory || ''}" placeholder="ej. mandatos_informales" onchange="updateBlock(${day}, ${bIndex}, 'identityCategory', this.value)">
+                                <input type="text" list="category-ids" value="${b.identityCategory || ''}" placeholder="ej. mandatos_informales" onchange="updateBlock(${day}, ${bIndex}, 'identityCategory', this.value)">
                             </div>
                             
                             <div class="block-row">
@@ -180,7 +198,12 @@
                             
                             <div class="block-row">
                                 <label>Filtros (Opt):</label>
-                                <input type="text" value="${constStr}" placeholder="ej. persona_base:afirmativo, tipo_verbo:simple" onchange="updateBlock(${day}, ${bIndex}, 'constraints', this.value)">
+                                <input type="text" list="common-filtros" value="${constStr}" placeholder="ej. persona_base:afirmativo" onchange="updateBlock(${day}, ${bIndex}, 'constraints', this.value)">
+                            </div>
+                            
+                            <div class="block-row">
+                                <label style="color:#8e44ad;">Específicos:</label>
+                                <input type="text" value="${specStr}" placeholder="ej. ser:yo, estar:tú, ir" title="Fuerza verbos exactos. El resto se llena aleatoriamente." style="border-color:#d2b4de; background:#f5eef8;" onchange="updateBlock(${day}, ${bIndex}, 'specificVerbs', this.value)">
                             </div>
                         </div>
                     `;
@@ -203,7 +226,10 @@
                             </div>
                             <div class="row-group">
                                 <label>Vocab JSON:</label>
-                                <input type="text" value="${dayData.vocabFile || ''}" placeholder="vocab/D2-X-X.json" onchange="updateDay(${day}, 'vocabFile', this.value)">
+                                <input type="text" value="${dayData.vocabFile || ''}" 
+                                       placeholder="Haz clic para autocompletar..." 
+                                       onfocus="if(this.value==='') { this.value = (currentCourse === 's2' ? 'vocab/D2-' : 'vocab/D3-'); }"
+                                       onchange="updateDay(${day}, 'vocabFile', this.value)">
                             </div>
 
                             <div class="section-title" style="margin-top:10px;">Bloques de Verbos</div>
@@ -217,7 +243,6 @@
                 `;
             }
 
-            // HTML para la Tarjeta de Creación de Nuevos Días
             let optionsHtml = '<option value="">-- Seleccionar Día Vacío --</option>';
             missingDays.forEach(d => {
                 let fechas = db.cal[d] ? db.cal[d].join(' | ') : 'Sin fecha asignada';
@@ -240,8 +265,6 @@
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // --- FUNCIONES DE CREACIÓN / ELIMINACIÓN DE DÍAS ---
-
         function addNewDayCard() {
             let select = document.getElementById('new-day-select');
             let dayNum = parseInt(select.value);
@@ -263,8 +286,6 @@
                 renderGrid();
             }
         }
-
-        // --- FUNCIONES DE ACTUALIZACIÓN ---
 
         function ensureDayExists(dayNum) {
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
@@ -316,6 +337,13 @@
                 block.count = parseInt(value) || 0;
             } else if (field === 'identityGroups') {
                 block.identityGroups = value.split(',').map(s => s.trim()).filter(s => s !== '');
+            } else if (field === 'specificVerbs') {
+                let arr = value.split(',').map(s => s.trim()).filter(s => s !== '');
+                if (arr.length > 0) {
+                    block.specificVerbs = arr;
+                } else {
+                    delete block.specificVerbs;
+                }
             } else if (field === 'constraints') {
                 let obj = {};
                 let pairs = value.split(',').map(s => s.trim()).filter(s => s !== '');
@@ -336,7 +364,6 @@
             renderGrid();
         }
 
-        // --- EXPORTACIÓN ---
         function exportSchedule() {
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
             let filename = currentCourse === 's2' ? 'schedule_s2.json' : 'schedule_s4.json';
