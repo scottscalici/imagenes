@@ -1,5 +1,28 @@
 [
   {
+    "dia": 1,
+    "topic": "Presente",
+    "vocabFile": "vocab/D2-0-1.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Nuevo Bloque",
+        "bank": "bancos/banco_presente.json",
+        "identityCategory": "presente",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 20,
+        "specificVerbs": [
+          "hablar: yo",
+          "beber: tú"
+        ]
+      }
+    ],
+    "date": "2025-08-26"
+  },
+  {
     "dia": 26,
     "date": "2025-11-13",
     "topic": "Mandatos Informales (+)",
@@ -10,16 +33,25 @@
         "label": "Tú (+) Irregulares",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_3"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_3"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) Regulares",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 12
       }
     ]
@@ -35,8 +67,14 @@
         "label": "Tú (+) Práctica",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 20
       }
     ]
@@ -52,8 +90,16 @@
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 20
       }
     ]
@@ -69,24 +115,38 @@
         "label": "Tú (-) Regulares",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 10
       },
       {
         "label": "Tú (-) DISHES",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_3"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_3"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 5
       },
       {
         "label": "Tú (-) Raíz",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 5
       }
     ]
@@ -102,32 +162,60 @@
         "label": "Tú (+)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 2
       },
       {
         "label": "Tú (-) Ortográficos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_4"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 5
       },
       {
         "label": "Tú (-) Otros",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 5
       }
     ]
@@ -143,32 +231,68 @@
         "label": "Tú (+)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 2
       },
       {
         "label": "Tú (-)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (-) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "negativo"
+        },
         "count": 2
       }
     ]
@@ -184,32 +308,68 @@
         "label": "Tú (+)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 2
       },
       {
         "label": "Tú (-)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (-) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "negativo"
+        },
         "count": 2
       }
     ]
@@ -225,32 +385,68 @@
         "label": "Tú (+)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 2
       },
       {
         "label": "Tú (-)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (-) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "negativo"
+        },
         "count": 2
       }
     ]
@@ -266,32 +462,68 @@
         "label": "Tú (+)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (+) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_afirmativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "afirmativo"
+        },
         "count": 2
       },
       {
         "label": "Tú (-)",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 8
       },
       {
         "label": "Tú (-) con Objetos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
-        "constraints": { "tipo_verbo": "objetos", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos",
+          "persona_base": "negativo"
+        },
         "count": 2
       }
     ]
@@ -307,8 +539,17 @@
         "label": "Tú (-) Sin Reflexivos",
         "bank": "bancos/banco_mandatos_informales.json",
         "identityCategory": "mandatos_informales_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 20
       }
     ]
@@ -324,16 +565,36 @@
         "label": "Mandatos Formales (Ud.+)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted", "persona_base": "afirmativo"  },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "persona_base": "afirmativo"
+        },
         "count": 10
       },
-       {
+      {
         "label": "Mandatos Formales (Ud.-)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted", "persona_base": "negativo"  },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "persona_base": "negativo"
+        },
         "count": 10
       }
     ]
@@ -349,37 +610,77 @@
         "label": "Mandatos Formales (Ud.+)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
-       {
+      {
         "label": "Mandatos Formales (Ud.-)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "usted", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "persona_base": "negativo"
+        },
         "count": 5
       },
       {
         "label": "Mandatos Plurales (Uds.+)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "ustedes", "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "ustedes",
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
       {
         "label": "Mandatos Plurales (Uds.-)",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "sujeto": "ustedes", "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "sujeto": "ustedes",
+          "persona_base": "negativo"
+        },
         "count": 5
       }
     ]
   },
-{
+  {
     "dia": 39,
     "date": "2026-01-13",
     "topic": "Mandatos Formales y Plurales (Reflexivos)",
@@ -390,39 +691,71 @@
         "label": "Formales Reflexivos (+) Ud.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted", "tipo_verbo": ["objetos", "afirmativo"] },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "tipo_verbo": [
+            "objetos",
+            "afirmativo"
+          ]
+        },
         "count": 5
       },
       {
         "label": "Formales Reflexivos (-) Ud.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "usted", "tipo_verbo": ["objetos", "negativo"] },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "sujeto": "usted",
+          "tipo_verbo": [
+            "objetos",
+            "negativo"
+          ]
+        },
         "count": 5
       },
       {
         "label": "Plurales Reflexivos (+) Uds.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes", "tipo_verbo": ["objetos", "afirmativo"] },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "sujeto": "ustedes",
+          "tipo_verbo": [
+            "objetos",
+            "afirmativo"
+          ]
+        },
         "count": 5
       },
       {
         "label": "Plurales Reflexivos (-) Uds.",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
         "identityCategory": "mandatos_formales_y_plurales",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "sujeto": "ustedes", "tipo_verbo": ["objetos", "negativo"] },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "sujeto": "ustedes",
+          "tipo_verbo": [
+            "objetos",
+            "negativo"
+          ]
+        },
         "count": 5
       }
     ]
   },
   {
     "dia": 40,
-    "date": "2026-01-21",
+    "date": "2026-01-20",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-2-5.json",
     "proficiency": 0.8,
@@ -431,28 +764,34 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1"],
+        "identityGroups": [
+          "nivel_1"
+        ],
         "count": 10
       },
       {
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 10
       },
       {
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_3"],
+        "identityGroups": [
+          "nivel_3"
+        ],
         "count": 5
       }
     ]
   },
   {
     "dia": 41,
-    "date": "2026-01-27",
+    "date": "2026-01-22",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-2-6.json",
     "proficiency": 0.8,
@@ -461,14 +800,18 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 42,
-    "date": "2026-01-29",
+    "date": "2026-01-28",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-1.json",
     "proficiency": 0.8,
@@ -477,21 +820,26 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_4"],
+        "identityGroups": [
+          "nivel_4"
+        ],
         "count": 10
       },
       {
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_2", "nivel_3"],
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3"
+        ],
         "count": 10
       }
     ]
   },
   {
     "dia": 43,
-    "date": "2026-02-02",
+    "date": "2026-01-30",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-2.json",
     "proficiency": 0.8,
@@ -500,21 +848,33 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 15
       },
       {
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 5
       }
     ]
   },
   {
     "dia": 44,
-    "date": "2026-02-04",
+    "date": "2026-02-03",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-3.json",
     "proficiency": 0.8,
@@ -523,14 +883,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 45,
-    "date": "2026-02-06",
+    "date": "2026-02-05",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-4.json",
     "proficiency": 0.8,
@@ -539,14 +907,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 46,
-    "date": "2026-02-10",
+    "date": "2026-02-09",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-5.json",
     "proficiency": 0.8,
@@ -555,14 +931,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 47,
-    "date": "2026-02-12",
+    "date": "2026-02-11",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-6.json",
     "proficiency": 0.8,
@@ -571,14 +955,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 48,
-    "date": "2026-02-23",
+    "date": "2026-02-13",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-7.json",
     "proficiency": 0.8,
@@ -587,14 +979,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 49,
-    "date": "2026-02-25",
+    "date": "2026-02-24",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-8.json",
     "proficiency": 0.8,
@@ -603,14 +1003,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 50,
-    "date": "2026-02-27",
+    "date": "2026-02-26",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-3-9.json",
     "proficiency": 0.8,
@@ -619,14 +1027,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
   {
     "dia": 51,
-    "date": "2026-03-03",
+    "date": "2026-03-02",
     "topic": "Presente de subjuntivo",
     "vocabFile": "vocab/D2-4-1.json",
     "proficiency": 0.8,
@@ -635,14 +1051,22 @@
         "label": "Presente de subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6", "nivel_7"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 20
       }
     ]
   },
-{
+  {
     "dia": 52,
-    "date": "2026-03-05",
+    "date": "2026-03-04",
     "topic": "Mandatos (Nosotros)",
     "vocabFile": "vocab/D2-4-2.json",
     "proficiency": 0.8,
@@ -651,39 +1075,67 @@
         "label": "Nosotros (+)",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
       {
         "label": "Nosotros (-)",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "negativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "negativo"
+        },
         "count": 5
       },
       {
         "label": "Nosotros (+) Reflexivos",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo",
+          "tipo_verbo": "objetos"
+        },
         "count": 5
       },
       {
         "label": "Nosotros (-) Reflexivos",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "persona_base": "negativo", "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "negativo",
+          "tipo_verbo": "objetos"
+        },
         "count": 5
       }
     ]
   },
   {
     "dia": 53,
-    "date": "2026-03-09",
+    "date": "2026-03-06",
     "topic": "Mandatos (Nosotros y Vosotros)",
     "vocabFile": "vocab/D2-4-3.json",
     "proficiency": 0.8,
@@ -692,38 +1144,65 @@
         "label": "Nosotros (+)",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
       {
         "label": "Nosotros Reflexivos",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo",
+          "tipo_verbo": "objetos"
+        },
         "count": 5
       },
       {
         "label": "Vosotros (+)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_1"],
+        "identityGroups": [
+          "nivel_1"
+        ],
         "count": 5
       },
       {
         "label": "Vosotros (+) Reflexivos",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_2"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos"
+        },
         "count": 3
       },
       {
         "label": "Vosotros (-)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
         "count": 2
       }
     ]
@@ -738,41 +1217,69 @@
         "label": "Nosotros (+)",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
       {
         "label": "Nosotros Reflexivos",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo",
+          "tipo_verbo": "objetos"
+        },
         "count": 5
       },
       {
         "label": "Vosotros (+)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_1"],
+        "identityGroups": [
+          "nivel_1"
+        ],
         "count": 5
       },
       {
         "label": "Vosotros (+) Reflexivos",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_2"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos"
+        },
         "count": 3
       },
       {
         "label": "Vosotros (-)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
         "count": 2
       }
-    ]
+    ],
+    "date": "2026-03-10"
   },
   {
     "dia": 55,
@@ -784,41 +1291,69 @@
         "label": "Nosotros (+)",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
-        "constraints": { "persona_base": "afirmativo" },
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo"
+        },
         "count": 5
       },
       {
         "label": "Nosotros Reflexivos",
         "bank": "bancos/banco_mandatos_nosotros.json",
         "identityCategory": "mandatos_nosotros",
-        "identityGroups": ["nivel_7"],
-        "constraints": { "persona_base": "afirmativo", "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_7"
+        ],
+        "constraints": {
+          "persona_base": "afirmativo",
+          "tipo_verbo": "objetos"
+        },
         "count": 5
       },
       {
         "label": "Vosotros (+)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_1"],
+        "identityGroups": [
+          "nivel_1"
+        ],
         "count": 5
       },
       {
         "label": "Vosotros (+) Reflexivos",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_afirmativos",
-        "identityGroups": ["nivel_2"],
-        "constraints": { "tipo_verbo": "objetos" },
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "constraints": {
+          "tipo_verbo": "objetos"
+        },
         "count": 3
       },
       {
         "label": "Vosotros (-)",
         "bank": "bancos/banco_mandatos_vosotros.json",
         "identityCategory": "mandatos_vosotros_negativos",
-        "identityGroups": ["nivel_1", "nivel_2", "nivel_3", "nivel_4", "nivel_5", "nivel_6"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6"
+        ],
         "count": 2
       }
-    ]
+    ],
+    "date": "2026-03-12"
   },
   {
     "dia": 56,
@@ -830,17 +1365,23 @@
         "label": "Participios (Irregulares)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       },
       {
         "label": "Participios (Mixtos)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_1", "nivel_2"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
         "count": 15
       }
-    ]
+    ],
+    "date": "2026-03-16"
   },
   {
     "dia": 57,
@@ -852,17 +1393,23 @@
         "label": "Participios (Irregulares)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       },
       {
         "label": "Participios (Mixtos)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_1", "nivel_2"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
         "count": 15
       }
-    ]
+    ],
+    "date": "2026-03-18"
   },
   {
     "dia": 58,
@@ -874,17 +1421,23 @@
         "label": "Participios (Irregulares)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       },
       {
         "label": "Participios (Mixtos)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_1", "nivel_2"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
         "count": 15
       }
-    ]
+    ],
+    "date": "2026-03-20"
   },
   {
     "dia": 59,
@@ -896,17 +1449,23 @@
         "label": "Participios (Irregulares)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       },
       {
         "label": "Participios (Mixtos)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_1", "nivel_2"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
         "count": 15
       }
-    ]
+    ],
+    "date": "2026-03-24"
   },
   {
     "dia": 60,
@@ -918,24 +1477,31 @@
         "label": "Participios (Irregulares)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_2"],
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       },
       {
         "label": "Participios (Mixtos)",
         "bank": "bancos/banco_participios_pasados.json",
         "identityCategory": "participios_pasados",
-        "identityGroups": ["nivel_1", "nivel_2"],
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
         "count": 15
       }
-    ]
+    ],
+    "date": "2026-03-26"
   },
   {
     "dia": 61,
     "topic": "Subjuntivo (Práctica)",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
-    "vocabFile": "vocab/D2-5-4.json"
+    "vocabFile": "vocab/D2-5-4.json",
+    "date": "2026-04-06"
   },
   {
     "dia": 62,
@@ -949,7 +1515,9 @@
         "label": "Presente de Subjuntivo",
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo",
-        "identityGroups": ["frecuente"]
+        "identityGroups": [
+          "frecuente"
+        ]
       },
       {
         "count": 10,
@@ -957,20 +1525,23 @@
         "bank": "bancos/banco_subjuntivo_presente.json",
         "identityCategory": "presente_de_subjuntivo"
       }
-    ]
+    ],
+    "date": "2026-04-08"
   },
   {
     "dia": 63,
     "topic": "Subjuntivo (Práctica)",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
-    "vocabFile": "vocab/D2-5-6.json"
+    "vocabFile": "vocab/D2-5-6.json",
+    "date": "2026-04-10"
   },
   {
     "dia": 64,
     "topic": "Subjuntivo (Práctica)",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
-    "vocabFile": "vocab/D2-6-1.json"
+    "vocabFile": "vocab/D2-6-1.json",
+    "date": "2026-04-14"
   }
 ]
