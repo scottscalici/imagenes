@@ -24,11 +24,12 @@
         .btn:hover { filter: brightness(1.1); }
 
         /* Grid Principal */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 15px; }
         
         /* Tarjetas de Día */
         .card { background: white; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; border-top: 5px solid #3498db; }
         .card-header { background: #ecf0f1; padding: 10px 15px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; color: #2c3e50; border-bottom: 1px solid #ddd; }
+        .date-badge { font-size: 0.8rem; background: #e8f8f5; color: #16a085; padding: 3px 8px; border-radius: 12px; font-weight: normal; }
         .card-body { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
         /* Secciones de la Tarjeta */
@@ -83,43 +84,47 @@
     </div>
 
     <div id="main-grid" class="grid">
-        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando bases de datos...</h3>
+        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando bases de datos en vivo...</h3>
     </div>
 
     <script>
-        // Bases de datos maestras
-        let db = {
-            gramatica: null,
-            apuntes: null,
-            tareasS2: null,
-            tareasS4: null
-        };
-        
-        let currentCourse = 's2'; // 's2' o 's4'
-        let currentView = 'dias'; // 'dias' o 'apuntes'
+        let db = { gramatica: null, apuntes: null, tareasS2: null, tareasS4: null };
+        let dayToDatesMap = {}; // Mapa para conectar Calendario
+        let currentCourse = 's2'; 
+        let currentView = 'dias'; 
         let apuntesDropdownHTML = '';
 
-        // Cargar todo simultáneamente
+        // Fetch de 5 bases de datos simultáneamente
         Promise.all([
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json?v=' + Date.now()).then(r => r.json()),
-            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json?v=' + Date.now()).then(r => r.json())
-        ]).then(([gramData, apunData, tarS2Data, tarS4Data]) => {
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json?v=' + Date.now()).then(r => r.json()),
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+        ]).then(([gramData, apunData, tarS2Data, tarS4Data, calData]) => {
             db.gramatica = gramData;
             db.apuntes = apunData;
             db.tareasS2 = tarS2Data;
             db.tareasS4 = tarS4Data;
             
+            // Procesar el calendario
+            if (calData && calData.map && Array.isArray(calData.map)) {
+                calData.map.forEach(entry => {
+                    let dayNum = parseInt(entry.dia);
+                    if (!isNaN(dayNum) && entry.fecha) {
+                        if (!dayToDatesMap[dayNum]) dayToDatesMap[dayNum] = [];
+                        dayToDatesMap[dayNum].push(entry.fecha);
+                    }
+                });
+            }
+            
             buildApuntesDropdown();
             render();
         }).catch(err => {
-            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px;">Error al cargar: ${err.message}</p>`;
+            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error de conexión: Verifica que los JSON no tengan comas extra al final.<br>${err.message}</p>`;
         });
 
-        // --------------------------------------------------------
-        // CONSTRUCTOR DEL DROPDOWN DE APUNTES
-        // --------------------------------------------------------
+        // Constructor del Dropdown (Guarda el título para el truco del "|")
         function buildApuntesDropdown() {
             let html = '<option value="">-- Seleccionar de Apuntes --</option>';
             for (let mainKey in db.apuntes) {
@@ -127,7 +132,8 @@
                 html += `<optgroup label="${cat.title}">`;
                 if (cat.links) {
                     for (let linkKey in cat.links) {
-                        html += `<option value="${mainKey}:${linkKey}">${cat.title} - ${cat.links[linkKey].title}</option>`;
+                        // Guardamos el título en data-title
+                        html += `<option value="${mainKey}:${linkKey}" data-title="${cat.links[linkKey].title}">${cat.title} - ${cat.links[linkKey].title}</option>`;
                     }
                 }
                 html += `</optgroup>`;
@@ -135,9 +141,6 @@
             apuntesDropdownHTML = html;
         }
 
-        // --------------------------------------------------------
-        // NAVEGACIÓN Y RENDERIZADO
-        // --------------------------------------------------------
         function setCourse(course) {
             currentCourse = course;
             document.querySelectorAll('.btn-course').forEach(b => b.classList.remove('active'));
@@ -157,30 +160,32 @@
             else renderApuntes();
         }
 
-        // --------------------------------------------------------
-        // VISTA: DÍAS (Gramática y Tareas)
-        // --------------------------------------------------------
+        // Auto-detectar la raíz de Gramática para S2 y S4
+        function getGrammarRoot() {
+            let root = db.gramatica;
+            if (root.items) root = root.items; // Por si acaso tiene envoltorio "items"
+            return root;
+        }
+
         function renderDias() {
             let gridHtml = '';
             let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
-            let gramObj = currentCourse === 's2' ? db.gramatica : db.gramatica.s4;
+            
+            let rootGrammar = getGrammarRoot();
+            let gramObj = currentCourse === 's2' ? rootGrammar : (rootGrammar.s4 || {});
 
-            // Mostrar del día 1 al 80 (puedes ajustar este límite)
             for (let day = 1; day <= 80; day++) {
                 let dayStr = day.toString();
                 
-                // Si no hay entrada de gramática, la inicializamos vacía temporalmente para la UI
+                // Extraer Gramática
                 let gramDay = gramObj[dayStr] || { intro: [], repaso: [] };
-                let introStr = gramDay.intro ? gramDay.intro.join('\n') : '';
-                let repasoStr = gramDay.repaso ? gramDay.repaso.join('\n') : '';
+                let introStr = (gramDay.intro && Array.isArray(gramDay.intro)) ? gramDay.intro.join('\n') : '';
+                let repasoStr = (gramDay.repaso && Array.isArray(gramDay.repaso)) ? gramDay.repaso.join('\n') : '';
 
-                // Filtrar tareas asignadas este día
+                // Extraer Tareas
                 let tareasDelDia = tareasList.filter(t => t.day_assigned == dayStr);
-
-                // Construir HTML de las tareas
                 let tareasHtml = '';
-                tareasDelDia.forEach((t, index) => {
-                    // Unique ID in array to target updates safely
+                tareasDelDia.forEach(t => {
                     let globalIndex = tareasList.findIndex(x => x.id === t.id);
                     tareasHtml += `
                         <div class="tarea-item">
@@ -198,47 +203,51 @@
                     `;
                 });
 
-                gridHtml += `
-                    <div class="card">
-                        <div class="card-header">
-                            Día ${day}
-                        </div>
-                        <div class="card-body">
-                            
-                            <div>
-                                <div class="section-title">Gramática</div>
-                                <div class="quick-add">
-                                    <select id="sel-${day}">${apuntesDropdownHTML}</select>
-                                    <button class="btn-sm btn-intro" onclick="addGrammar('${day}', 'intro')">➕ Intro</button>
-                                    <button class="btn-sm btn-repaso" onclick="addGrammar('${day}', 'repaso')">➕ Repaso</button>
+                // Extraer Fecha del Calendario
+                let fechas = dayToDatesMap[day] || [];
+                let dateHtml = fechas.length > 0 ? `<span class="date-badge">📅 ${fechas.join(' | ')}</span>` : '';
+
+                // Solo mostrar la tarjeta si tiene contenido (Gramática, Tareas) o si estamos en los primeros 15 días para poder añadir.
+                // Esto ayuda a que no haya 80 tarjetas vacías en la pantalla si solo usas 40 días.
+                if(introStr !== '' || repasoStr !== '' || tareasDelDia.length > 0 || day <= 45) {
+                    gridHtml += `
+                        <div class="card">
+                            <div class="card-header">
+                                <div>Día ${day}</div>
+                                ${dateHtml}
+                            </div>
+                            <div class="card-body">
+                                
+                                <div>
+                                    <div class="section-title">Gramática</div>
+                                    <div class="quick-add">
+                                        <select id="sel-${day}">${apuntesDropdownHTML}</select>
+                                        <button class="btn-sm btn-intro" onclick="addGrammar('${day}', 'intro')">➕ Intro</button>
+                                        <button class="btn-sm btn-repaso" onclick="addGrammar('${day}', 'repaso')">➕ Repaso</button>
+                                    </div>
+                                    <textarea id="intro-${day}" placeholder="Introducir (uno por línea)..." onchange="updateGrammar('${day}')">${introStr}</textarea>
+                                    <textarea id="repaso-${day}" placeholder="Repasar (uno por línea)..." onchange="updateGrammar('${day}')" style="margin-top:5px;">${repasoStr}</textarea>
                                 </div>
-                                <textarea id="intro-${day}" placeholder="Introducir (uno por línea)..." onchange="updateGrammar('${day}')">${introStr}</textarea>
-                                <textarea id="repaso-${day}" placeholder="Repasar (uno por línea)..." onchange="updateGrammar('${day}')" style="margin-top:5px;">${repasoStr}</textarea>
-                            </div>
 
-                            <div>
-                                <div class="section-title">Tareas Asignadas Hoy</div>
-                                ${tareasHtml}
-                                <button class="btn btn-sm btn-add-tarea" onclick="createNewTarea('${day}')">➕ Nueva Tarea</button>
-                            </div>
+                                <div>
+                                    <div class="section-title">Tareas Asignadas Hoy</div>
+                                    ${tareasHtml}
+                                    <button class="btn btn-sm btn-add-tarea" onclick="createNewTarea('${day}')">➕ Nueva Tarea</button>
+                                </div>
 
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             }
 
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // --------------------------------------------------------
-        // VISTA: DASHBOARD DE APUNTES
-        // --------------------------------------------------------
         function renderApuntes() {
             let gridHtml = '';
-            
             for (let mainKey in db.apuntes) {
                 let cat = db.apuntes[mainKey];
-                
                 let s2Range = (cat.dashboard_ranges && cat.dashboard_ranges.s2) ? JSON.stringify(cat.dashboard_ranges.s2) : "[]";
                 let s4Range = (cat.dashboard_ranges && cat.dashboard_ranges.s4) ? JSON.stringify(cat.dashboard_ranges.s4) : "[]";
 
@@ -255,7 +264,6 @@
                                 <span class="range-label">S2:</span>
                                 <input type="text" value='${s2Range}' onchange="updateApunteRange('${mainKey}', 's2', this.value)">
                             </div>
-                            
                             <div class="range-row">
                                 <span class="range-label">S4:</span>
                                 <input type="text" value='${s4Range}' onchange="updateApunteRange('${mainKey}', 's4', this.value)">
@@ -264,55 +272,52 @@
                     </div>
                 `;
             }
-            
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // --------------------------------------------------------
-        // FUNCIONES DE ACTUALIZACIÓN DE DATOS
-        // --------------------------------------------------------
-        
-        // Agregar desde el dropdown a los textareas
+        // Agregar desde Dropdown insertando el ID + | + Título
         function addGrammar(dayStr, type) {
             let selectElem = document.getElementById(`sel-${dayStr}`);
             let val = selectElem.value;
-            if(!val) return; // No selection
+            if(!val) return; 
+
+            // Obtener el título legible guardado en el option
+            let title = selectElem.options[selectElem.selectedIndex].getAttribute('data-title');
+            let insertText = `${val} | ${title}`; // Formato mágico que solicitaste
 
             let textarea = document.getElementById(`${type}-${dayStr}`);
             let currentText = textarea.value.trim();
             
-            // Añadir en nueva línea
-            if(currentText === '') textarea.value = val;
-            else textarea.value = currentText + '\n' + val;
+            if(currentText === '') textarea.value = insertText;
+            else textarea.value = currentText + '\n' + insertText;
 
-            // Guardar en JSON
             updateGrammar(dayStr);
         }
 
-        // Guardar textareas en el objeto JSON de gramática
+        // Guardar Gramática
         function updateGrammar(dayStr) {
             let introArr = document.getElementById(`intro-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
             let repasoArr = document.getElementById(`repaso-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
 
-            let targetObj = currentCourse === 's2' ? db.gramatica : db.gramatica.s4;
+            let rootGrammar = getGrammarRoot();
             
-            // Si el día no existe en el JSON pero escribimos algo, lo creamos
+            // Asegurar que S4 exista si es necesario
+            if (currentCourse === 's4' && !rootGrammar.s4) rootGrammar.s4 = {};
+            let targetObj = currentCourse === 's2' ? rootGrammar : rootGrammar.s4;
+            
             if (!targetObj[dayStr]) targetObj[dayStr] = {};
             
             targetObj[dayStr].intro = introArr;
             targetObj[dayStr].repaso = repasoArr;
             
-            // Si vaciaron ambos, limpiamos para no ensuciar el JSON final
             if (introArr.length === 0 && repasoArr.length === 0) {
                 delete targetObj[dayStr];
             }
         }
 
-        // Crear una nueva tarea en blanco
+        // Tareas
         function createNewTarea(dayStr) {
             let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
-            
-            // Calcular un ID automático (ej: si hay t36-01, crear t36-02)
             let existingForDay = tareasList.filter(t => t.day_assigned == dayStr);
             let nextNum = existingForDay.length + 1;
             let newId = `t${dayStr}-0${nextNum}`;
@@ -325,33 +330,26 @@
                 titulo: "Nueva tarea",
                 notas_opcionales: ""
             });
-
-            renderDias(); // Refrescar pantalla
+            renderDias(); 
         }
 
-        // Actualizar valores de una tarea existente
         function updateTarea(globalIndex, field, value) {
             let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
             if (field === 'day_assigned' || field === 'day_due') value = parseInt(value) || 0;
             tareasList[globalIndex][field] = value;
         }
 
-        // Actualizar rangos de dashboard en Apuntes
         function updateApunteRange(mainKey, course, valueStr) {
             try {
                 let parsedArr = JSON.parse(valueStr);
-                if (!db.apuntes[mainKey].dashboard_ranges) {
-                    db.apuntes[mainKey].dashboard_ranges = {};
-                }
+                if (!db.apuntes[mainKey].dashboard_ranges) db.apuntes[mainKey].dashboard_ranges = {};
                 db.apuntes[mainKey].dashboard_ranges[course] = parsedArr;
             } catch (e) {
-                alert("Formato de rango inválido. Asegúrate de usar corchetes, ej: [[8, 25]]");
+                alert("Formato de rango inválido. Usa corchetes, ej: [[8, 25]]");
             }
         }
 
-        // --------------------------------------------------------
-        // EXPORTACIÓN (Copiado al portapapeles)
-        // --------------------------------------------------------
+        // Exportar al portapapeles
         function exportJSON(target) {
             let dataToCopy = null;
             let filename = '';
