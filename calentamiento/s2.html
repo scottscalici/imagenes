@@ -93,15 +93,14 @@
       teacherMode: false, fullSchedule: [], serverDateDia: null
     };
 
-    // EL DESTRUCTOR DE ACENTOS DEFINITIVO (Universal)
+    // THE ULTIMATE TEXT CLEANER: Destroys accents, spaces, and punctuation to force matches.
     const normStr = (s) => {
         if (s === null || s === undefined) return "";
         return String(s)
-            .normalize("NFD")                 // Separa los acentos de la letra (ej. tú -> t + u + ´)
-            .replace(/[\u0300-\u036f]/g, "")  // Elimina todos los acentos y símbolos flotantes
-            .replace(/\s+/g, ' ')             // Convierte múltiples espacios en uno solo
-            .trim()                           // Quita espacios al principio y al final
-            .toLowerCase();                   // Todo a minúsculas
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, ""); 
     };
 
     function seededShuffle(array, customSeed = null) {
@@ -227,7 +226,7 @@
                             if (!v) return false;
                             let vInf = normStr(v.infinitivo);
                             let vMostrar = normStr(v.mostrar);
-                            if (vInf !== inf && vMostrar !== inf && vInf.replace(/se$/, '') !== inf) return false;
+                            if (vInf !== inf && vMostrar !== inf && vInf.replace(/se$/g, '') !== inf) return false;
                             
                             if (subj) {
                                 let vSubj = normStr(v.sujeto);
@@ -257,13 +256,24 @@
 
                         if (!match) match = bank.find(isMatch);
 
+                        // DIAGNOSTIC TOOL
                         if (!match) {
+                            let debugMsg = "";
+                            let foundInf = bank.filter(v => v && (normStr(v.infinitivo) === inf || normStr(v.mostrar) === inf || normStr(v.infinitivo).replace(/se$/g, '') === inf));
+                            
+                            if (foundInf.length > 0) {
+                                let subjList = foundInf.map(v => v.sujeto || "N/A").join(", ");
+                                debugMsg = "Sí está en el JSON, pero solo con estos sujetos: [" + subjList + "]";
+                            } else {
+                                debugMsg = "El verbo NO EXISTE en el JSON descargado de GitHub.";
+                            }
+
                             match = {
                                 infinitivo: parts[0].trim(),
                                 mostrar: parts[0].trim() + " ⚠️",
                                 sujeto: parts.length > 1 ? parts[1].trim() : "???",
-                                forma: "NO ESTÁ EN EL BANCO",
-                                traducción: "Revisa tu JSON",
+                                forma: debugMsg,
+                                traducción: "Pista de error",
                                 _blockLabel: block.label
                             };
                         }
@@ -274,10 +284,8 @@
                     });
                 }
 
-                // Quitamos los VIPs seleccionados de la bolsa de aleatorios
                 filtered = filtered.filter(v => !selectedForBlock.some(m => m.infinitivo === v.infinitivo && m.sujeto === v.sujeto));
 
-                // Rellenamos el resto del bloque con verbos aleatorios
                 let needed = block.count - selectedForBlock.length;
                 let randomPicks = [];
                 if (needed > 0) {
@@ -286,12 +294,9 @@
                     selectedForBlock = selectedForBlock.slice(0, block.count);
                 }
                 
-                // Mezclamos internamente los VIPs para que no salgan en el mismo orden exacto cada vez
                 selectedForBlock = seededShuffle(selectedForBlock, runtime.activeDia + masterVerbList.length + 1);
-                // Mezclamos internamente los aleatorios
                 randomPicks = seededShuffle(randomPicks, runtime.activeDia + masterVerbList.length + 2);
 
-                // Unimos los dos grupos: Los VIPs siempre quedan al principio de este bloque (en la página 1)
                 let combined = selectedForBlock.concat(randomPicks);
                 combined.forEach(v => { if(v && !v._blockLabel) v._blockLabel = block.label; });
                 
