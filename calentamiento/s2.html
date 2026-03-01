@@ -277,8 +277,36 @@
 
                 let needed = block.count - selectedForBlock.length;
                 let randomPicks = [];
+                
                 if (needed > 0) {
-                    randomPicks = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, needed);
+                    let shuffledPool = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length);
+                    
+                    // --- VOSOTROS LIMITER LOGIC ---
+                    let isVosotrosForced = block.constraints && normStr(block.constraints.sujeto) === "vosotros";
+                    let maxVosotros = isVosotrosForced ? Infinity : Math.ceil(block.count / 20);
+                    let currentVosotrosCount = selectedForBlock.filter(v => normStr(v.sujeto) === "vosotros").length;
+                    
+                    for (let v of shuffledPool) {
+                        if (randomPicks.length >= needed) break;
+                        
+                        if (normStr(v.sujeto) === "vosotros") {
+                            if (currentVosotrosCount < maxVosotros) {
+                                randomPicks.push(v);
+                                currentVosotrosCount++;
+                            }
+                        } else {
+                            randomPicks.push(v);
+                        }
+                    }
+                    
+                    // Safety fallback: if we somehow ran out of non-vosotros verbs, fill the rest
+                    if (randomPicks.length < needed) {
+                        let missing = needed - randomPicks.length;
+                        let unused = shuffledPool.filter(v => !randomPicks.includes(v));
+                        randomPicks = randomPicks.concat(unused.slice(0, missing));
+                    }
+                    // ------------------------------
+                    
                 } else if (needed < 0) {
                     selectedForBlock = selectedForBlock.slice(0, block.count);
                 }
@@ -292,6 +320,7 @@
             }
             runtime.verbs = masterVerbList;
         } else {
+            // LEGACY NON-BLOCK FALLBACK WITH VOSOTROS LIMITER
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
             const currentG = entry.identityGroups || [entry.identityGroup];
             let targetList = [];
@@ -305,7 +334,34 @@
             if (targetList.length === 0) targetList = bank.map(v => normStr(v.infinitivo));
             const totalNeeded = entry.totalNeeded || 20;
             let pool = bank.filter(v => v && (targetList.includes(normStr(v.infinitivo)) || targetList.includes(normStr(v.mostrar))));
-            runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
+            
+            let shuffledPool = seededShuffle([...pool]);
+            let finalVerbs = [];
+            let isVosotrosForced = entry.constraints && normStr(entry.constraints.sujeto) === "vosotros";
+            let maxVosotros = isVosotrosForced ? Infinity : Math.ceil(totalNeeded / 20);
+            let currentVosotrosCount = 0;
+
+            for (let v of shuffledPool) {
+                if (finalVerbs.length >= totalNeeded) break;
+                
+                if (normStr(v.sujeto) === "vosotros") {
+                    if (currentVosotrosCount < maxVosotros) {
+                        finalVerbs.push(v);
+                        currentVosotrosCount++;
+                    }
+                } else {
+                    finalVerbs.push(v);
+                }
+            }
+
+            // Safety fallback
+            if (finalVerbs.length < totalNeeded) {
+                let missing = totalNeeded - finalVerbs.length;
+                let unused = shuffledPool.filter(v => !finalVerbs.includes(v));
+                finalVerbs = finalVerbs.concat(unused.slice(0, missing));
+            }
+
+            runtime.verbs = finalVerbs;
         }
 
         let rawVocab = [];
