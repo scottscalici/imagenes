@@ -83,7 +83,7 @@
     };
 
     const runtime = {
-      course: new URLSearchParams(window.location.search).get('course') || 's2',
+      course: new URLSearchParams(window.location.search).get('course') || 's2', // CAMBIA A 's4' EN TU ARCHIVO S4
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
@@ -92,6 +92,9 @@
       verbTimeFinal: null, blocks: null,
       teacherMode: false, fullSchedule: [], serverDateDia: null
     };
+
+    // Función mágica que quita acentos y espacios para que todo coincida perfectamente
+    const normStr = (s) => (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
     function seededShuffle(array, customSeed = null) {
       let m = array.length, t, i, seedNum;
@@ -182,7 +185,6 @@
                     blockPool = bank.filter(v => v && targetList.includes(v.infinitivo));
                 }
 
-                // Filtrado con protecciones nulas
                 let filtered = blockPool.filter(v => {
                     if (!v) return false;
                     const reqs = block.constraints;
@@ -207,41 +209,59 @@
 
                 let selectedForBlock = [];
 
-                // Carga de Verbos Específicos (VIPs)
+                // --- BÚSQUEDA A PRUEBA DE BALAS PARA VERBOS ESPECÍFICOS ---
                 if (block.specificVerbs && Array.isArray(block.specificVerbs)) {
                     block.specificVerbs.forEach(spec => {
-                        let parts = spec.split(':').map(s => s.trim().toLowerCase());
-                        let inf = parts[0];
-                        let subj = parts[1];
+                        let parts = spec.split(':');
+                        let inf = normStr(parts[0]);
+                        let subj = parts.length > 1 ? normStr(parts[1]) : null;
 
-                        const matchCondition = (v) => {
+                        const isMatch = (v) => {
                             if (!v) return false;
-                            let vInf = (v.infinitivo || "").toLowerCase();
-                            let vMostrar = (v.mostrar || "").toLowerCase();
+                            let vInf = normStr(v.infinitivo);
+                            let vMostrar = normStr(v.mostrar);
                             if (vInf !== inf && vMostrar !== inf && vInf.replace(/se$/, '') !== inf) return false;
                             
                             if (subj) {
-                                let vSubj = (v.sujeto || "").toLowerCase();
-                                let vBase = (v.persona_base || "").toLowerCase();
-                                let vTipo = Array.isArray(v.tipo_verbo) ? v.tipo_verbo.map(t=>(t||"").toLowerCase()) : [];
+                                let vSubj = normStr(v.sujeto);
+                                let vBase = normStr(v.persona_base);
+                                let vTipo = Array.isArray(v.tipo_verbo) ? v.tipo_verbo.map(normStr) : [];
                                 return vSubj === subj || vBase === subj || vSubj.includes(subj) || vBase.includes(subj) || vTipo.includes(subj);
                             }
                             return true;
                         };
 
-                        // Buscar primero en la piscina filtrada (para respetar el contexto del bloque)
-                        let match = filtered.find(matchCondition);
-                        // Si no lo encuentra, buscar en todo el banco (forzar)
-                        if (!match) match = bank.find(matchCondition);
+                        // 1. Intentar encontrarlo en los filtrados (para respetar nivel_1, etc.)
+                        let match = filtered.find(isMatch);
+                        
+                        // 2. Si no estaba ahí (quizá era nivel 2), lo busca en el banco entero respetando las reglas de afirmativo/negativo
+                        if (!match) {
+                            match = bank.find(v => {
+                                if (!isMatch(v)) return false;
+                                const reqs = block.constraints;
+                                if (!reqs) return true;
+                                return Object.keys(reqs).every(key => {
+                                    if (key === "tipo_verbo") {
+                                        const reqTypes = Array.isArray(reqs[key]) ? reqs[key] : [reqs[key]];
+                                        return reqTypes.every(t => (v.tipo_verbo||[]).includes(t));
+                                    }
+                                    return v[key] === reqs[key];
+                                });
+                            });
+                        }
 
-                        if (match && !selectedForBlock.includes(match)) {
+                        // 3. Forzar búsqueda absoluta si aún no aparece
+                        if (!match) match = bank.find(isMatch);
+
+                        // Evitar duplicados exactos
+                        if (match && !selectedForBlock.some(m => m.infinitivo === match.infinitivo && m.sujeto === match.sujeto)) {
                             selectedForBlock.push(match);
                         }
                     });
                 }
 
-                // Remover VIPs de la piscina para no duplicar
-                filtered = filtered.filter(v => !selectedForBlock.includes(v));
+                // Quitar los seleccionados de la piscina para no repetirlos
+                filtered = filtered.filter(v => !selectedForBlock.some(m => m.infinitivo === v.infinitivo && m.sujeto === v.sujeto));
 
                 let needed = block.count - selectedForBlock.length;
                 if (needed > 0) {
@@ -487,7 +507,7 @@
         const verbPages = Math.ceil(runtime.verbs.length / 5);
         const vocabPages = Math.ceil(runtime.vocab.length / 10);
         const totalModules = verbPages + vocabPages + 1;
-        const denominator = totalModules > 1 ? (totalModules - 1) : 1; // Prevención NaN
+        const denominator = totalModules > 1 ? (totalModules - 1) : 1; // Previene el NaN de la muerte
         const pct = Math.round((runtime.completed / denominator) * 100); 
         document.getElementById('progress-fill').style.width = pct + "%"; 
         document.getElementById('progress-label').textContent = pct + "%"; 
@@ -503,9 +523,9 @@
     document.getElementById('btn-projector').onclick = () => {
       const overlay = document.createElement('div'); overlay.id = "projector-overlay"; overlay.className = "fixed inset-0 bg-slate-900 z-[100] overflow-y-auto p-10 text-white animate-pop";
       let vocabCols = ["", "", ""]; runtime.vocab.forEach((v, i) => { const colIndex = Math.floor(i / 10); vocabCols[colIndex] += `<div class="flex items-center justify-between bg-slate-800 p-3 rounded-lg border border-slate-700 mb-2"><span class="text-xs font-bold text-slate-400">${i+1}. ${v.es}</span><button onclick="this.textContent='${v.en}'; this.className='text-emerald-400 font-bold text-xs'" class="proj-ans px-3 py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`; });
-      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map(v => {
+      overlay.innerHTML = `<div class="max-w-6xl mx-auto"><div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-4"><div><h2 class="text-3xl font-black text-amber-400 uppercase leading-none mb-1">${runtime.title}</h2><p class="text-sky-400 font-bold text-xs uppercase tracking-widest">${document.getElementById('pageTitle').textContent.split(':').pop().trim()}</p></div><div class="flex gap-4"><button onclick="revealAllProj()" class="px-6 py-2 bg-emerald-600 text-white font-black rounded-lg text-[10px] uppercase">Revelar Todo</button><button onclick="document.getElementById('projector-overlay').remove()" class="text-5xl text-slate-500 hover:text-white leading-none">&times;</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-12">${runtime.verbs.map((v, i) => {
           const projAns = Array.isArray(v.forma) ? v.forma.join(' / ') : (v.forma || "");
-          return `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-sm font-bold mb-1">${v.mostrar || v.infinitivo}</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${projAns}'; this.className='text-emerald-400 font-black text-sm'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`;
+          return `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase mb-1">${v.sujeto}</p><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${i + 1}. ${v.sujeto} (${v.mostrar || v.infinitivo})</p><p class="text-[9px] italic text-slate-500 mb-3">${v.traducción || ''}</p><button onclick="this.textContent='${projAns}'; this.className='text-emerald-400 font-black text-sm'" class="proj-ans w-full py-1 bg-slate-700 rounded text-[9px] font-bold uppercase">Revelar</button></div>`;
       }).join('')}</div><div class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"><div>${vocabCols[0]}</div><div>${vocabCols[1]}</div><div>${vocabCols[2]}</div></div></div>`;
       document.body.appendChild(overlay);
     };
