@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Súper Editor de Conversaciones</title>
+    <title>Planificador y Editor de Conversaciones</title>
     <style>
         body { font-family: sans-serif; background: #f4f7f6; color: #2c3e50; padding: 20px; }
         h1 { text-align: center; color: #34495e; }
@@ -34,7 +34,7 @@
 </head>
 <body>
 
-    <h1>📅 Planificador y Editor de Conversaciones</h1>
+    <h1>Planificador y Editor de Conversaciones</h1>
     
     <div class="controls">
         <strong style="margin-right: 15px;">Filtro de Clase:</strong>
@@ -42,62 +42,50 @@
         <button class="btn btn-filter" id="btn-s2" onclick="setFilter('s2')">Sophomores (S2)</button>
         <button class="btn btn-filter" id="btn-s4" onclick="setFilter('s4')">Seniors (S4)</button>
         <span style="margin: 0 20px; color: #ccc;">|</span>
-        <button class="btn btn-export" onclick="exportJSON()">💾 Copiar JSON Actualizado</button>
+        <button class="btn btn-export" onclick="exportJSON()">Copiar JSON Actualizado</button>
     </div>
 
-    <div id="planner-grid" class="grid"></div>
+    <div id="planner-grid" class="grid">
+        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando datos desde GitHub...</h3>
+    </div>
 
-<script>
+    <script>
         let masterData = null;
         let dayToDatesMap = {}; 
         let currentFilter = 'all';
 
-        // 1. Show loading state
-        document.getElementById('planner-grid').innerHTML = '<h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando datos desde GitHub...</h3>';
-
-        // 2. Fetch Conversaciones FIRST (This must work)
+        // Fetch Conversaciones FIRST
         fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json?v=' + Date.now())
             .then(response => {
-                if (!response.ok) throw new Error("No se pudo cargar conversaciones.json (HTTP " + response.status + ")");
+                if (!response.ok) throw new Error("No se pudo cargar conversaciones.json");
                 return response.json();
             })
             .then(convData => {
                 masterData = convData;
                 
-                // 3. Try fetching Calendario SECOND (Optional - won't break the page if it fails)
+                // Fetch Calendario SECOND
                 return fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now())
                     .then(res => res.ok ? res.json() : null)
-                    .catch(e => null); // Silent fail for calendar
+                    .catch(e => null); 
             })
             .then(calData => {
-                // 4. Map the calendar data if it exists
-                if (calData) {
-                    let calItems = calData.items ? calData.items : calData;
-                    for (let dateStr in calItems) {
-                        let entry = calItems[dateStr];
-                        let dayNum = null;
-
-                        if (typeof entry === 'number' || typeof entry === 'string') {
-                            dayNum = parseInt(entry);
-                        } else if (typeof entry === 'object' && entry !== null) {
-                            if (entry.dia !== undefined) dayNum = parseInt(entry.dia);
-                            else if (entry.día !== undefined) dayNum = parseInt(entry.día);
-                            else if (entry.Dia !== undefined) dayNum = parseInt(entry.Dia);
-                            else if (entry.Día !== undefined) dayNum = parseInt(entry.Día);
-                        }
-
-                        if (dayNum !== null && !isNaN(dayNum)) {
+                // Parse the specific "map" array from your calendario.json
+                if (calData && calData.map && Array.isArray(calData.map)) {
+                    calData.map.forEach(entry => {
+                        let dayNum = parseInt(entry.dia);
+                        let dateStr = entry.fecha;
+                        
+                        if (!isNaN(dayNum) && dateStr) {
                             if (!dayToDatesMap[dayNum]) dayToDatesMap[dayNum] = [];
                             dayToDatesMap[dayNum].push(dateStr);
                         }
-                    }
+                    });
                 }
                 
-                // 5. Render everything
                 renderGrid();
             })
             .catch(error => {
-                document.getElementById('planner-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error crítico: ${error.message}</p>`;
+                document.getElementById('planner-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error: ${error.message}</p>`;
             });
 
         function setFilter(filterType) {
@@ -109,7 +97,7 @@
 
         function renderGrid() {
             if (!masterData || !masterData.items) {
-                document.getElementById('planner-grid').innerHTML = '<p style="color:red;">Error: El JSON de conversaciones no tiene la estructura esperada ("items").</p>';
+                document.getElementById('planner-grid').innerHTML = '<p style="color:red;">Error: El JSON no tiene la estructura "items".</p>';
                 return;
             }
             
@@ -146,8 +134,8 @@
                     });
                 }
                 let datesHtml = fechasEncontradas.length > 0 
-                    ? `<div class="date-display">📅 ${fechasEncontradas.join(' | ')}</div>` 
-                    : `<div class="date-display" style="color:#e67e22; background:#fef5e7;">📅 Día sin fecha asignada</div>`;
+                    ? `<div class="date-display">Fechas: ${fechasEncontradas.join(' | ')}</div>` 
+                    : `<div class="date-display" style="color:#e67e22; background:#fef5e7;">Sin fecha asignada en calendario</div>`;
 
                 gridHtml += `
                     <div class="card">
