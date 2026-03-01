@@ -8,7 +8,6 @@
         body { font-family: sans-serif; background: #f0f3f4; color: #2c3e50; padding: 20px; margin: 0; }
         h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
         
-        /* Controles Superiores */
         .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; gap: 10px; }
         .filter-group, .export-group { display: flex; gap: 10px; align-items: center; }
         
@@ -23,28 +22,23 @@
         .btn-export-apu { background: #f39c12; color: white; }
         .btn:hover { filter: brightness(1.1); }
 
-        /* Grid Principal */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 15px; }
         
-        /* Tarjetas de Día */
         .card { background: white; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; border-top: 5px solid #3498db; }
         .card-header { background: #ecf0f1; padding: 10px 15px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; color: #2c3e50; border-bottom: 1px solid #ddd; }
-        .date-badge { font-size: 0.8rem; background: #e8f8f5; color: #16a085; padding: 3px 8px; border-radius: 12px; font-weight: normal; }
+        .date-badge { font-size: 0.8rem; background: #e8f8f5; color: #16a085; padding: 4px 8px; border-radius: 12px; font-weight: bold; }
         .card-body { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
-        /* Secciones de la Tarjeta */
         .section-title { font-size: 0.85rem; text-transform: uppercase; font-weight: bold; color: #7f8c8d; margin-bottom: 5px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
         textarea { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 0.85rem; resize: vertical; min-height: 50px; background: #fdfdfd; }
         
-        /* Selector de Apuntes Rápido */
         .quick-add { display: flex; gap: 5px; margin-bottom: 5px; }
-        .quick-add select { flex-grow: 1; padding: 4px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 0.8rem; max-width: 60%; }
+        .quick-add select { flex-grow: 1; padding: 4px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 0.8rem; max-width: 55%; }
         .btn-sm { padding: 4px 8px; font-size: 0.75rem; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; }
         .btn-intro { background: #3498db; }
         .btn-repaso { background: #e74c3c; }
 
-        /* Tareas List */
-        .tarea-item { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px; margin-bottom: 8px; font-size: 0.8rem; position: relative; }
+        .tarea-item { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; padding: 8px; margin-bottom: 8px; font-size: 0.8rem; }
         .tarea-row { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; }
         .tarea-row input { padding: 3px; border: 1px solid #ccc; border-radius: 3px; font-size: 0.8rem; width: 100%; box-sizing: border-box; }
         .tarea-id { font-family: monospace; font-weight: bold; color: #c0392b; width: 60px !important; }
@@ -52,7 +46,6 @@
         .tarea-due { width: 50px !important; }
         .btn-add-tarea { background: #2ecc71; color: white; width: 100%; text-align: center; margin-top: 5px; }
 
-        /* Vista de Apuntes */
         .apunte-card { border-top: 5px solid #f39c12; }
         .range-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .range-row input { width: 150px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; }
@@ -68,9 +61,7 @@
             <strong>Curso:</strong>
             <button class="btn btn-course active" id="btn-s2" onclick="setCourse('s2')">S2 (Sophomores)</button>
             <button class="btn btn-course" id="btn-s4" onclick="setCourse('s4')">S4 (Seniors)</button>
-            
             <span style="margin: 0 10px; color: #ccc;">|</span>
-            
             <strong>Vista:</strong>
             <button class="btn btn-view active" id="btn-view-dias" onclick="setView('dias')">📅 Días</button>
             <button class="btn btn-view" id="btn-view-apuntes" onclick="setView('apuntes')">📚 Dashboard Apuntes</button>
@@ -84,17 +75,16 @@
     </div>
 
     <div id="main-grid" class="grid">
-        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando bases de datos en vivo...</h3>
+        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando bases de datos...</h3>
     </div>
 
     <script>
-        let db = { gramatica: null, apuntes: null, tareasS2: null, tareasS4: null };
-        let dayToDatesMap = {}; // Mapa para conectar Calendario
+        let db = { gramatica: {}, apuntes: {}, tareasS2: {tareas:[]}, tareasS4: {tareas:[]} };
+        let dayToDatesMap = {}; 
         let currentCourse = 's2'; 
         let currentView = 'dias'; 
         let apuntesDropdownHTML = '';
 
-        // Fetch de 5 bases de datos simultáneamente
         Promise.all([
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json?v=' + Date.now()).then(r => r.json()),
@@ -102,12 +92,11 @@
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
         ]).then(([gramData, apunData, tarS2Data, tarS4Data, calData]) => {
-            db.gramatica = gramData;
-            db.apuntes = apunData;
-            db.tareasS2 = tarS2Data;
-            db.tareasS4 = tarS4Data;
+            db.gramatica = gramData || {};
+            db.apuntes = apunData || {};
+            db.tareasS2 = tarS2Data || {tareas:[]};
+            db.tareasS4 = tarS4Data || {tareas:[]};
             
-            // Procesar el calendario
             if (calData && calData.map && Array.isArray(calData.map)) {
                 calData.map.forEach(entry => {
                     let dayNum = parseInt(entry.dia);
@@ -121,10 +110,9 @@
             buildApuntesDropdown();
             render();
         }).catch(err => {
-            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error de conexión: Verifica que los JSON no tengan comas extra al final.<br>${err.message}</p>`;
+            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error de conexión. Revisa que tus archivos JSON estén en GitHub.<br>${err.message}</p>`;
         });
 
-        // Constructor del Dropdown (Guarda el título para el truco del "|")
         function buildApuntesDropdown() {
             let html = '<option value="">-- Seleccionar de Apuntes --</option>';
             for (let mainKey in db.apuntes) {
@@ -132,7 +120,6 @@
                 html += `<optgroup label="${cat.title}">`;
                 if (cat.links) {
                     for (let linkKey in cat.links) {
-                        // Guardamos el título en data-title
                         html += `<option value="${mainKey}:${linkKey}" data-title="${cat.links[linkKey].title}">${cat.title} - ${cat.links[linkKey].title}</option>`;
                     }
                 }
@@ -160,55 +147,79 @@
             else renderApuntes();
         }
 
-        // Auto-detectar la raíz de Gramática para S2 y S4
-        function getGrammarRoot() {
-            let root = db.gramatica;
-            if (root.items) root = root.items; // Por si acaso tiene envoltorio "items"
-            return root;
+        // Buscador robusto para encontrar dónde están los días de Gramática
+        function getGramObj(course) {
+            let data = db.gramatica;
+            if (!data) return {};
+            if (course === 's4') {
+                if (data.s4) return data.s4;
+                if (data.items && data.items.s4) return data.items.s4;
+                return {};
+            } else {
+                if (data["36"] || data["1"] || data["10"]) return data;
+                if (data.items && (data.items["36"] || data.items["1"])) return data.items;
+                if (data.s2) return data.s2;
+                return data; 
+            }
+        }
+
+        // Convierte Arrays o Strings al formato correcto para la caja de texto
+        function parseDataToStr(data) {
+            if (!data) return '';
+            if (Array.isArray(data)) return data.join('\n');
+            return data.toString();
+        }
+
+        // Obtiene la fecha bonita para la UI
+        function getDateBadge(dayNum) {
+            let fechas = dayToDatesMap[dayNum] || [];
+            return fechas.length > 0 ? fechas.join(' | ') : '';
         }
 
         function renderDias() {
             let gridHtml = '';
-            let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
-            
-            let rootGrammar = getGrammarRoot();
-            let gramObj = currentCourse === 's2' ? rootGrammar : (rootGrammar.s4 || {});
+            let tareasList = currentCourse === 's2' ? (db.tareasS2.tareas || []) : (db.tareasS4.tareas || []);
+            let gramObj = getGramObj(currentCourse);
 
             for (let day = 1; day <= 80; day++) {
                 let dayStr = day.toString();
                 
-                // Extraer Gramática
-                let gramDay = gramObj[dayStr] || { intro: [], repaso: [] };
-                let introStr = (gramDay.intro && Array.isArray(gramDay.intro)) ? gramDay.intro.join('\n') : '';
-                let repasoStr = (gramDay.repaso && Array.isArray(gramDay.repaso)) ? gramDay.repaso.join('\n') : '';
+                // Extraer Gramática (Acepta Strings o Arrays gracias a parseDataToStr)
+                let gramDay = gramObj[dayStr] || { intro: '', repaso: '' };
+                let introStr = parseDataToStr(gramDay.intro);
+                let repasoStr = parseDataToStr(gramDay.repaso);
 
                 // Extraer Tareas
                 let tareasDelDia = tareasList.filter(t => t.day_assigned == dayStr);
                 let tareasHtml = '';
                 tareasDelDia.forEach(t => {
                     let globalIndex = tareasList.findIndex(x => x.id === t.id);
+                    let dueDates = getDateBadge(t.day_due);
+                    let dueBadgeHtml = dueDates ? `<span style="font-size:0.75rem; color:#16a085; font-weight:bold; margin-left:5px;">📅 ${dueDates}</span>` : '';
+
                     tareasHtml += `
                         <div class="tarea-item">
                             <div class="tarea-row">
                                 <input type="text" class="tarea-id" value="${t.id}" title="ID" onchange="updateTarea(${globalIndex}, 'id', this.value)">
-                                <input type="text" class="tarea-tipo" value="${t.tipo}" title="Tipo (VHL, Dominio...)" onchange="updateTarea(${globalIndex}, 'tipo', this.value)">
+                                <input type="text" class="tarea-tipo" value="${t.tipo}" title="Tipo" onchange="updateTarea(${globalIndex}, 'tipo', this.value)">
                                 <input type="text" value="${t.titulo}" title="Título" onchange="updateTarea(${globalIndex}, 'titulo', this.value)">
                             </div>
                             <div class="tarea-row">
                                 <span style="font-size:0.75rem; color:#7f8c8d; width:50px;">Para día:</span>
                                 <input type="number" class="tarea-due" value="${t.day_due}" onchange="updateTarea(${globalIndex}, 'day_due', this.value)">
+                                ${dueBadgeHtml}
+                            </div>
+                            <div class="tarea-row">
                                 <input type="text" value="${t.notas_opcionales || ''}" placeholder="Notas opcionales..." onchange="updateTarea(${globalIndex}, 'notas_opcionales', this.value)">
                             </div>
                         </div>
                     `;
                 });
 
-                // Extraer Fecha del Calendario
-                let fechas = dayToDatesMap[day] || [];
-                let dateHtml = fechas.length > 0 ? `<span class="date-badge">📅 ${fechas.join(' | ')}</span>` : '';
+                // Fecha del Calendario para la Cabecera
+                let headerDate = getDateBadge(day);
+                let dateHtml = headerDate ? `<span class="date-badge">📅 ${headerDate}</span>` : '';
 
-                // Solo mostrar la tarjeta si tiene contenido (Gramática, Tareas) o si estamos en los primeros 15 días para poder añadir.
-                // Esto ayuda a que no haya 80 tarjetas vacías en la pantalla si solo usas 40 días.
                 if(introStr !== '' || repasoStr !== '' || tareasDelDia.length > 0 || day <= 45) {
                     gridHtml += `
                         <div class="card">
@@ -217,7 +228,6 @@
                                 ${dateHtml}
                             </div>
                             <div class="card-body">
-                                
                                 <div>
                                     <div class="section-title">Gramática</div>
                                     <div class="quick-add">
@@ -234,13 +244,11 @@
                                     ${tareasHtml}
                                     <button class="btn btn-sm btn-add-tarea" onclick="createNewTarea('${day}')">➕ Nueva Tarea</button>
                                 </div>
-
                             </div>
                         </div>
                     `;
                 }
             }
-
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
@@ -275,15 +283,14 @@
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // Agregar desde Dropdown insertando el ID + | + Título
         function addGrammar(dayStr, type) {
             let selectElem = document.getElementById(`sel-${dayStr}`);
             let val = selectElem.value;
             if(!val) return; 
 
-            // Obtener el título legible guardado en el option
+            // Extraemos el título del dropdown para armar tu estructura con "|"
             let title = selectElem.options[selectElem.selectedIndex].getAttribute('data-title');
-            let insertText = `${val} | ${title}`; // Formato mágico que solicitaste
+            let insertText = `${val} | ${title}`;
 
             let textarea = document.getElementById(`${type}-${dayStr}`);
             let currentText = textarea.value.trim();
@@ -294,16 +301,22 @@
             updateGrammar(dayStr);
         }
 
-        // Guardar Gramática
+        // Guarda SOLO si el usuario ha editado esa tarjeta
         function updateGrammar(dayStr) {
             let introArr = document.getElementById(`intro-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
             let repasoArr = document.getElementById(`repaso-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
 
-            let rootGrammar = getGrammarRoot();
+            let targetObj = getGramObj(currentCourse);
             
-            // Asegurar que S4 exista si es necesario
-            if (currentCourse === 's4' && !rootGrammar.s4) rootGrammar.s4 = {};
-            let targetObj = currentCourse === 's2' ? rootGrammar : rootGrammar.s4;
+            // Inicializar en el objeto maestro si estaba totalmente vacío
+            if (Object.keys(targetObj).length === 0) {
+                if (currentCourse === 's4') {
+                    if(!db.gramatica.s4) db.gramatica.s4 = {};
+                    targetObj = db.gramatica.s4;
+                } else {
+                    targetObj = db.gramatica;
+                }
+            }
             
             if (!targetObj[dayStr]) targetObj[dayStr] = {};
             
@@ -315,7 +328,6 @@
             }
         }
 
-        // Tareas
         function createNewTarea(dayStr) {
             let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
             let existingForDay = tareasList.filter(t => t.day_assigned == dayStr);
@@ -337,6 +349,9 @@
             let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
             if (field === 'day_assigned' || field === 'day_due') value = parseInt(value) || 0;
             tareasList[globalIndex][field] = value;
+            
+            // Si cambian la fecha de entrega, re-renderizar para actualizar el calendario visual
+            if (field === 'day_due') renderDias();
         }
 
         function updateApunteRange(mainKey, course, valueStr) {
@@ -349,7 +364,6 @@
             }
         }
 
-        // Exportar al portapapeles
         function exportJSON(target) {
             let dataToCopy = null;
             let filename = '';
