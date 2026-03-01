@@ -61,7 +61,7 @@
     </div>
   </main>
 
-  <script>
+<script>
     const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/";
     const CAL_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const CUR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json";
@@ -176,14 +176,15 @@
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
+                
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
                     if (cat) { block.identityGroups.forEach(g => { if (cat[g]) targetList = targetList.concat(cat[g]); }); }
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
-// NUEVO CÓDIGO CON SOPORTE PARA MÚLTIPLES TIPOS
-                const filtered = blockPool.filter(v => {
+
+                let filtered = blockPool.filter(v => {
                     const reqs = block.constraints;
                     const vTypes = v.tipo_verbo || [];
 
@@ -200,16 +201,52 @@
                     // Si hay restricciones, verifica que se cumplan
                     return Object.keys(reqs).every(key => {
                         if (key === "tipo_verbo") {
-                            // Ahora permite buscar ["objetos", "afirmativo"], etc.
                             const reqTypes = Array.isArray(reqs[key]) ? reqs[key] : [reqs[key]];
                             return reqTypes.every(t => vTypes.includes(t));
                         }
                         return v[key] === reqs[key];
                     });
                 });
-              const selected = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, block.count);
-selected.forEach(v => v._blockLabel = block.label);
-        masterVerbList = masterVerbList.concat(selected);
+
+                let selectedForBlock = [];
+
+                // --- NUEVO: SOPORTE PARA VERBOS ESPECÍFICOS (VIPs) ---
+                if (block.specificVerbs && Array.isArray(block.specificVerbs)) {
+                    block.specificVerbs.forEach(spec => {
+                        let parts = spec.split(':').map(s => s.trim().toLowerCase());
+                        let inf = parts[0];
+                        let subj = parts[1];
+
+                        let match = bank.find(v => {
+                            let vInf = v.infinitivo.toLowerCase();
+                            if (vInf !== inf) return false;
+                            
+                            if (subj) {
+                                let vSubj = (v.sujeto || "").toLowerCase();
+                                let vBase = (v.persona_base || "").toLowerCase();
+                                return vSubj === subj || vBase === subj || vSubj.includes(subj) || vBase.includes(subj);
+                            }
+                            return true;
+                        });
+
+                        if (match && !selectedForBlock.includes(match)) {
+                            selectedForBlock.push(match);
+                        }
+                    });
+                }
+
+                filtered = filtered.filter(v => !selectedForBlock.includes(v));
+
+                let needed = block.count - selectedForBlock.length;
+                if (needed > 0) {
+                    let randomPicks = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, needed);
+                    selectedForBlock = selectedForBlock.concat(randomPicks);
+                } else if (needed < 0) {
+                    selectedForBlock = selectedForBlock.slice(0, block.count);
+                }
+                
+                selectedForBlock.forEach(v => v._blockLabel = block.label);
+                masterVerbList = masterVerbList.concat(selectedForBlock);
             }
             runtime.verbs = masterVerbList;
         } else {
@@ -304,12 +341,10 @@ selected.forEach(v => v._blockLabel = block.label);
           `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        // O título da página será o título anexado ao primeiro verbo daquela fatia
-        let moduleTitle = slice[0]._blockLabel || (TENSE_MAP[runtime.tense] || runtime.tense);
-// --- ARRAY HANDLING UPDATE HERE ---
+        let moduleTitle = (slice.length > 0 && slice[0]._blockLabel) ? slice[0]._blockLabel : (TENSE_MAP[runtime.tense] || runtime.tense);
+        
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
           slice.map((v, i) => {
-              // Handle Array (JSON) vs String (Old JSON)
               const ansData = Array.isArray(v.forma) ? v.forma.join('/') : v.forma;
               return `<div class="quiz-item p-4 bg-slate-50 border border-slate-200 rounded-xl" data-ans="${ansData}"><div class="flex items-baseline gap-2 mb-1"><p class="text-xs font-black text-slate-600 uppercase tracking-tighter">${(n-1)*5 + i + 1}. ${v.sujeto} (${v.mostrar || v.infinitivo})</p><span class="text-[11px] italic text-slate-400 font-medium">${v.traducción || ''}</span></div><input type="text" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-sky-400"></div>`;
           }).join('') + 
@@ -317,7 +352,7 @@ selected.forEach(v => v._blockLabel = block.label);
       }
       updateProgress();
     }
-    
+  
     function renderFinalScreen(contentElement) {
         const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
         let html = `<div class="text-center py-8 animate-pop"><h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>`;
