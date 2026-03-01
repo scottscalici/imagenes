@@ -47,46 +47,58 @@
 
     <div id="planner-grid" class="grid"></div>
 
-    <script>
+<script>
         let masterData = null;
-        let dayToDatesMap = {}; // Mapa para conectar "día" -> "fecha"
+        let dayToDatesMap = {}; 
         let currentFilter = 'all';
 
-        // Fetch ambas bases de datos al mismo tiempo
-        Promise.all([
-            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json?v=' + Date.now()).then(r => r.json()),
-            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now()).then(r => r.json())
-        ])
-        .then(([convData, calData]) => {
-            masterData = convData;
+        // 1. Show loading state
+        document.getElementById('planner-grid').innerHTML = '<h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando datos desde GitHub...</h3>';
 
-            // Procesar calendario para crear el mapa inverso: Día -> Fecha
-            let calItems = calData.items ? calData.items : calData;
-            for (let dateStr in calItems) {
-                let entry = calItems[dateStr];
-                let dayNum = null;
+        // 2. Fetch Conversaciones FIRST (This must work)
+        fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json?v=' + Date.now())
+            .then(response => {
+                if (!response.ok) throw new Error("No se pudo cargar conversaciones.json (HTTP " + response.status + ")");
+                return response.json();
+            })
+            .then(convData => {
+                masterData = convData;
+                
+                // 3. Try fetching Calendario SECOND (Optional - won't break the page if it fails)
+                return fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now())
+                    .then(res => res.ok ? res.json() : null)
+                    .catch(e => null); // Silent fail for calendar
+            })
+            .then(calData => {
+                // 4. Map the calendar data if it exists
+                if (calData) {
+                    let calItems = calData.items ? calData.items : calData;
+                    for (let dateStr in calItems) {
+                        let entry = calItems[dateStr];
+                        let dayNum = null;
 
-                // Soporte para diferentes estructuras de calendario JSON
-                if (typeof entry === 'number' || typeof entry === 'string') {
-                    dayNum = parseInt(entry);
-                } else if (typeof entry === 'object' && entry !== null) {
-                    if (entry.dia !== undefined) dayNum = parseInt(entry.dia);
-                    else if (entry.día !== undefined) dayNum = parseInt(entry.día);
-                    else if (entry.Dia !== undefined) dayNum = parseInt(entry.Dia);
-                    else if (entry.Día !== undefined) dayNum = parseInt(entry.Día);
+                        if (typeof entry === 'number' || typeof entry === 'string') {
+                            dayNum = parseInt(entry);
+                        } else if (typeof entry === 'object' && entry !== null) {
+                            if (entry.dia !== undefined) dayNum = parseInt(entry.dia);
+                            else if (entry.día !== undefined) dayNum = parseInt(entry.día);
+                            else if (entry.Dia !== undefined) dayNum = parseInt(entry.Dia);
+                            else if (entry.Día !== undefined) dayNum = parseInt(entry.Día);
+                        }
+
+                        if (dayNum !== null && !isNaN(dayNum)) {
+                            if (!dayToDatesMap[dayNum]) dayToDatesMap[dayNum] = [];
+                            dayToDatesMap[dayNum].push(dateStr);
+                        }
+                    }
                 }
-
-                if (dayNum !== null && !isNaN(dayNum)) {
-                    if (!dayToDatesMap[dayNum]) dayToDatesMap[dayNum] = [];
-                    dayToDatesMap[dayNum].push(dateStr);
-                }
-            }
-
-            renderGrid();
-        })
-        .catch(error => {
-            document.getElementById('planner-grid').innerHTML = `<p style="color:red; padding: 20px;">Error loading data: ${error}</p>`;
-        });
+                
+                // 5. Render everything
+                renderGrid();
+            })
+            .catch(error => {
+                document.getElementById('planner-grid').innerHTML = `<p style="color:red; padding: 20px; font-weight:bold;">Error crítico: ${error.message}</p>`;
+            });
 
         function setFilter(filterType) {
             currentFilter = filterType;
@@ -96,7 +108,11 @@
         }
 
         function renderGrid() {
-            if (!masterData) return;
+            if (!masterData || !masterData.items) {
+                document.getElementById('planner-grid').innerHTML = '<p style="color:red;">Error: El JSON de conversaciones no tiene la estructura esperada ("items").</p>';
+                return;
+            }
+            
             let itemsArray = [];
             
             for (let key in masterData.items) {
@@ -121,7 +137,6 @@
                 let instStr = (item.instrucciones && Array.isArray(item.instrucciones)) ? item.instrucciones.join('\n') : '';
                 let modStr = item.modelo || '';
 
-                // Búsqueda de fechas correspondientes
                 let fechasEncontradas = [];
                 if (item.dias && item.dias.length > 0) {
                     item.dias.forEach(d => {
@@ -194,7 +209,7 @@
             if (field === 'dias') {
                 let diasArray = value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
                 masterData.items[id].dias = diasArray;
-                renderGrid(); // Vuelve a renderizar para actualizar el orden y las fechas mostradas
+                renderGrid(); 
             } else if (field === 'prep_seconds') {
                 masterData.items[id].prep_seconds = parseInt(value) || 0;
             } else if (field === 'presentation_segments') {
@@ -214,7 +229,6 @@
         }
 
         function exportJSON() {
-            // Eliminar propiedades temporales usadas para organizar antes de exportar
             let exportData = JSON.parse(JSON.stringify(masterData));
             for (let key in exportData.items) {
                 delete exportData.items[key].id;
