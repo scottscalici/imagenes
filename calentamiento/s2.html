@@ -83,7 +83,7 @@
     };
 
     const runtime = {
-      course: new URLSearchParams(window.location.search).get('course') || 's2',
+      course: new URLSearchParams(window.location.search).get('course') || 's2', // RECUERDA CAMBIAR A s4 EN TU OTRO ARCHIVO
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
@@ -94,8 +94,8 @@
     };
 
     const normStr = (s) => {
-        if (!s) return "";
-        return s.toString().trim().toLowerCase()
+        if (s === null || s === undefined) return "";
+        return String(s).replace(/\s+/g, ' ').trim().toLowerCase()
             .replace(/[áàâä]/g, 'a')
             .replace(/[éèêë]/g, 'e')
             .replace(/[íìîï]/g, 'i')
@@ -257,27 +257,44 @@
 
                         if (!match) match = bank.find(isMatch);
 
+                        if (!match) {
+                            match = {
+                                infinitivo: parts[0].trim(),
+                                mostrar: parts[0].trim() + " ⚠️",
+                                sujeto: parts.length > 1 ? parts[1].trim() : "???",
+                                forma: "NO ESTÁ EN EL BANCO",
+                                traducción: "Revisa tu JSON",
+                                _blockLabel: block.label
+                            };
+                        }
+
                         if (match && !selectedForBlock.some(m => m.infinitivo === match.infinitivo && m.sujeto === match.sujeto)) {
                             selectedForBlock.push(match);
                         }
                     });
                 }
 
+                // Removemos los VIPs de la piscina de aleatorios
                 filtered = filtered.filter(v => !selectedForBlock.some(m => m.infinitivo === v.infinitivo && m.sujeto === v.sujeto));
 
+                // Completamos con verbos aleatorios
                 let needed = block.count - selectedForBlock.length;
+                let randomPicks = [];
                 if (needed > 0) {
-                    let randomPicks = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, needed);
-                    selectedForBlock = selectedForBlock.concat(randomPicks);
+                    randomPicks = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, needed);
                 } else if (needed < 0) {
                     selectedForBlock = selectedForBlock.slice(0, block.count);
                 }
                 
-                // MEZCLAR EL BLOQUE COMPLETO PARA ESCONDER LOS VIPS ENTRE LOS DEMÁS
-                selectedForBlock = seededShuffle(selectedForBlock, runtime.activeDia + masterVerbList.length + 999);
+                // MEZCLAMOS LOS VIPS ENTRE SÍ Y LOS ALEATORIOS ENTRE SÍ
+                selectedForBlock = seededShuffle(selectedForBlock, runtime.activeDia + masterVerbList.length + 1);
+                randomPicks = seededShuffle(randomPicks, runtime.activeDia + masterVerbList.length + 2);
 
-                selectedForBlock.forEach(v => { if(v) v._blockLabel = block.label; });
-                masterVerbList = masterVerbList.concat(selectedForBlock);
+                // UNIMOS LOS BLOQUES (VIPs PRIMERO)
+                let combined = selectedForBlock.concat(randomPicks);
+                combined.forEach(v => { if(v) v._blockLabel = block.label; });
+                
+                masterVerbList = masterVerbList.concat(combined);
             }
             runtime.verbs = masterVerbList;
         } else {
