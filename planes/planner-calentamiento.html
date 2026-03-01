@@ -74,16 +74,18 @@
         <h3 style="text-align:center; width:100%; color:#7f8c8d;">Sincronizando Schedules desde GitHub...</h3>
     </div>
 
-    <script>
+<script>
         let db = { s2: [], s4: [], cal: {} };
         let currentCourse = 's2'; 
 
-        const baseUrl = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/';
+        // Definir las rutas correctas para cada tipo de archivo
+        const baseCalentamiento = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/calentamiento/';
+        const basePlanes = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/';
 
         Promise.all([
-            fetch(baseUrl + 'schedule_s2.json?v=' + Date.now()).then(r => r.ok ? r.json() : []),
-            fetch(baseUrl + 'schedule_s4.json?v=' + Date.now()).then(r => r.ok ? r.json() : []),
-            fetch(baseUrl + 'calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null)
+            fetch(baseCalentamiento + 'schedule_s2.json?v=' + Date.now()).then(r => r.ok ? r.json() : []),
+            fetch(baseCalentamiento + 'schedule_s4.json?v=' + Date.now()).then(r => r.ok ? r.json() : []),
+            fetch(basePlanes + 'calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null)
         ]).then(([s2Data, s4Data, calData]) => {
             
             db.s2 = Array.isArray(s2Data) ? s2Data : [];
@@ -101,7 +103,7 @@
             
             renderGrid();
         }).catch(err => {
-            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px;">Error de conexion: ${err.message}</p>`;
+            document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px;">Error de conexión: ${err.message}</p>`;
         });
 
         function setCourse(course) {
@@ -111,7 +113,6 @@
             renderGrid();
         }
 
-        // Convierte el objeto de constraints a un string fácil de leer (ej: persona_base:afirmativo, tipo:simple)
         function formatConstraints(obj) {
             if (!obj) return '';
             return Object.entries(obj).map(([k, v]) => `${k}:${v}`).join(', ');
@@ -121,10 +122,8 @@
             let gridHtml = '';
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
 
-            // Recorrer Días del 1 al 80
             for (let day = 1; day <= 80; day++) {
                 
-                // Buscar si existe el día, si no, crear un template vacío en memoria
                 let dayData = targetSchedule.find(d => d.dia === day);
                 let isNewDay = false;
                 
@@ -133,7 +132,6 @@
                     isNewDay = true;
                 }
 
-                // Sumar la cantidad total de verbos del día
                 let totalVerbs = (dayData.blocks || []).reduce((sum, b) => sum + (parseInt(b.count) || 0), 0);
                 let countClass = totalVerbs === 20 ? 'count-perfect' : 'count-warning';
                 let countText = totalVerbs === 0 ? 'Sin verbos' : `${totalVerbs} Verbos`;
@@ -141,7 +139,6 @@
                 let fechas = db.cal[day] ? db.cal[day].join(' | ') : '';
                 let dateHtml = fechas ? `<span class="date-badge">📅 ${fechas}</span>` : '';
 
-                // HTML de los Bloques (Verbos)
                 let blocksHtml = '';
                 (dayData.blocks || []).forEach((b, bIndex) => {
                     let groupsStr = Array.isArray(b.identityGroups) ? b.identityGroups.join(', ') : '';
@@ -179,7 +176,6 @@
                     `;
                 });
 
-                // Solo mostrar la tarjeta si tiene algún contenido, o si es de los primeros 45 días
                 if (!isNewDay || day <= 45) {
                     gridHtml += `
                         <div class="card">
@@ -213,8 +209,6 @@
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // --- FUNCIONES DE ACTUALIZACIÓN ---
-
         function ensureDayExists(dayNum) {
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
             let dayObj = targetSchedule.find(d => d.dia === dayNum);
@@ -228,7 +222,7 @@
         function updateDay(dayNum, field, value) {
             let dayObj = ensureDayExists(dayNum);
             dayObj[field] = value;
-            renderGrid(); // Refresca por si cambias algo vital
+            renderGrid();
         }
 
         function addBlock(dayNum) {
@@ -266,7 +260,6 @@
             } else if (field === 'identityGroups') {
                 block.identityGroups = value.split(',').map(s => s.trim()).filter(s => s !== '');
             } else if (field === 'constraints') {
-                // Convierte "persona:afirmativo, tipo:simple" a un objeto JSON real
                 let obj = {};
                 let pairs = value.split(',').map(s => s.trim()).filter(s => s !== '');
                 pairs.forEach(p => {
@@ -283,17 +276,13 @@
                 block[field] = value;
             }
 
-            renderGrid(); // Refresca para actualizar el semáforo de conteo
+            renderGrid();
         }
 
-        // --- EXPORTACIÓN ---
         function exportSchedule() {
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
             let filename = currentCourse === 's2' ? 'schedule_s2.json' : 'schedule_s4.json';
 
-            // Limpieza antes de exportar:
-            // 1. Asignar las fechas reales del calendario al JSON exportado.
-            // 2. Eliminar días que estén completamente vacíos (sin topic, vocab, ni bloques).
             let cleanSchedule = [];
             
             targetSchedule.forEach(dayObj => {
@@ -302,15 +291,13 @@
                 let hasVocab = dayObj.vocabFile && dayObj.vocabFile.trim() !== '';
                 
                 if (hasBlocks || hasTopic || hasVocab) {
-                    // Auto-inyectar la fecha del calendario
                     if (db.cal[dayObj.dia] && db.cal[dayObj.dia].length > 0) {
-                        dayObj.date = db.cal[dayObj.dia][0]; // Toma la primera fecha de ese día
+                        dayObj.date = db.cal[dayObj.dia][0]; 
                     }
                     cleanSchedule.push(dayObj);
                 }
             });
 
-            // Ordenar por día para que el JSON quede perfecto
             cleanSchedule.sort((a, b) => a.dia - b.dia);
 
             let jsonString = JSON.stringify(cleanSchedule, null, 2);
