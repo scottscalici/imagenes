@@ -83,7 +83,7 @@
     };
 
     const runtime = {
-      course: new URLSearchParams(window.location.search).get('course') || 's2', // RECUERDA CAMBIAR A s4 EN TU OTRO ARCHIVO
+      course: new URLSearchParams(window.location.search).get('course') || 's2',
       verbs: [], vocab: [], completed: 0,
       activeDia: null, currentCiclo: "", isLatestClass: false, isPracticeMode: false,
       timerInterval: null, startTime: null, currentModule: 1,
@@ -274,10 +274,10 @@
                     });
                 }
 
-                // Removemos los VIPs de la piscina de aleatorios
+                // Quitamos los VIPs seleccionados de la bolsa de aleatorios
                 filtered = filtered.filter(v => !selectedForBlock.some(m => m.infinitivo === v.infinitivo && m.sujeto === v.sujeto));
 
-                // Completamos con verbos aleatorios
+                // Rellenamos el resto del bloque con verbos aleatorios
                 let needed = block.count - selectedForBlock.length;
                 let randomPicks = [];
                 if (needed > 0) {
@@ -286,13 +286,14 @@
                     selectedForBlock = selectedForBlock.slice(0, block.count);
                 }
                 
-                // MEZCLAMOS LOS VIPS ENTRE SÍ Y LOS ALEATORIOS ENTRE SÍ
+                // Mezclamos internamente los VIPs para que no salgan en el mismo orden exacto cada vez
                 selectedForBlock = seededShuffle(selectedForBlock, runtime.activeDia + masterVerbList.length + 1);
+                // Mezclamos internamente los aleatorios
                 randomPicks = seededShuffle(randomPicks, runtime.activeDia + masterVerbList.length + 2);
 
-                // UNIMOS LOS BLOQUES (VIPs PRIMERO)
+                // Unimos los dos grupos: Los VIPs siempre quedan al principio de este bloque (en la página 1)
                 let combined = selectedForBlock.concat(randomPicks);
-                combined.forEach(v => { if(v) v._blockLabel = block.label; });
+                combined.forEach(v => { if(v && !v._blockLabel) v._blockLabel = block.label; });
                 
                 masterVerbList = masterVerbList.concat(combined);
             }
