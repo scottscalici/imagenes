@@ -174,6 +174,8 @@
             for (const block of runtime.blocks) {
                 const bank = await fetchData(`${BASE_URL}${block.bank}`);
                 let blockPool = bank;
+                
+                // Filtro por Grupos (nivel_1, regulares, etc.)
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
@@ -181,40 +183,75 @@
                     blockPool = bank.filter(v => targetList.includes(v.infinitivo));
                 }
 
-                const filtered = blockPool.filter(v => {
+                // Filtro por Constraints
+                let filtered = blockPool.filter(v => {
                     const reqs = block.constraints;
                     const vTypes = v.tipo_verbo || [];
 
-                    // REGLA CLAVE: Si el verbo tiene "objetos", ocúltalo a menos que lo pidamos explícitamente
                     if (vTypes.includes("objetos")) {
                         if (!reqs || !reqs.tipo_verbo) return false;
                         const reqTypes = Array.isArray(reqs.tipo_verbo) ? reqs.tipo_verbo : [reqs.tipo_verbo];
-                        if (!reqTypes.includes("objetos")) return false; // Lo bloquea
+                        if (!reqTypes.includes("objetos")) return false;
                     }
 
-                    // Si no hay más restricciones, deja pasar los verbos normales
                     if (!reqs) return true;
                     
-                    // Si hay restricciones, verifica que se cumplan
                     return Object.keys(reqs).every(key => {
                         if (key === "tipo_verbo") {
-                            // Ahora permite buscar ["objetos", "afirmativo"], etc.
                             const reqTypes = Array.isArray(reqs[key]) ? reqs[key] : [reqs[key]];
                             return reqTypes.every(t => vTypes.includes(t));
                         }
                         return v[key] === reqs[key];
                     });
                 });
-              
-                const selected = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, block.count);
+
+                let selectedForBlock = [];
+
+                // --- NUEVO: SOPORTE PARA VERBOS ESPECÍFICOS (VIPs) ---
+                if (block.specificVerbs && Array.isArray(block.specificVerbs)) {
+                    block.specificVerbs.forEach(spec => {
+                        let parts = spec.split(':').map(s => s.trim().toLowerCase());
+                        let inf = parts[0];
+                        let subj = parts[1]; // Puede ser undefined si solo pusieron el verbo
+
+                        // Buscamos en el banco completo para garantizar que lo encuentre
+                        let match = bank.find(v => {
+                            let vInf = v.infinitivo.toLowerCase();
+                            if (vInf !== inf) return false;
+                            
+                            if (subj) {
+                                let vSubj = (v.sujeto || "").toLowerCase();
+                                let vBase = (v.persona_base || "").toLowerCase();
+                                return vSubj === subj || vBase === subj || vSubj.includes(subj) || vBase.includes(subj);
+                            }
+                            return true;
+                        });
+
+                        // Si lo encuentra y no está ya en la lista, lo agrega
+                        if (match && !selectedForBlock.includes(match)) {
+                            selectedForBlock.push(match);
+                        }
+                    });
+                }
+
+                // Quitar los VIPs de la piscina aleatoria para que no se dupliquen
+                filtered = filtered.filter(v => !selectedForBlock.includes(v));
+
+                // Calcular cuántos faltan para llegar al count
+                let needed = block.count - selectedForBlock.length;
+                if (needed > 0) {
+                    let randomPicks = seededShuffle([...filtered], runtime.activeDia + masterVerbList.length).slice(0, needed);
+                    selectedForBlock = selectedForBlock.concat(randomPicks);
+                } else if (needed < 0) {
+                    selectedForBlock = selectedForBlock.slice(0, block.count);
+                }
                 
-                // --- FIX 1: ATTACH BLOCK LABEL TO EACH VERB ---
-                selected.forEach(v => v._blockLabel = block.label);
-                
-                masterVerbList = masterVerbList.concat(selected);
+                selectedForBlock.forEach(v => v._blockLabel = block.label);
+                masterVerbList = masterVerbList.concat(selectedForBlock);
             }
             runtime.verbs = masterVerbList;
         } else {
+            // Lógica antigua (para días sin bloques)
             const bank = await fetchData(`${BASE_URL}${entry.bank}`);
             const currentG = entry.identityGroups || [entry.identityGroup];
             let targetList = [];
@@ -306,8 +343,6 @@
           `</div><div class="flex gap-2"><button onclick="checkVocab(${n})" class="px-6 py-3 bg-emerald-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-emerald-700">Corregir</button><div id="next-btn-container" class="flex gap-2"></div></div><div id="match-area" class="hidden mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 animate-pop"></div>`;
       } else {
         const slice = runtime.verbs.slice((n - 1) * 5, n * 5);
-        
-        // --- FIX 2: READ TITLE DIRECTLY FROM THE FIRST VERB IN THE SLICE ---
         let moduleTitle = (slice.length > 0 && slice[0]._blockLabel) ? slice[0]._blockLabel : (TENSE_MAP[runtime.tense] || runtime.tense);
         
         content.innerHTML = `<div class="mb-6 border-b-2 border-sky-100 pb-2 flex justify-between items-end"><h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">${moduleTitle}</h2><span class="text-[9px] font-bold text-slate-300">REQ: ${Math.round(runtime.proficiency*100)}%</span></div><div class="space-y-3 mb-6">` + 
