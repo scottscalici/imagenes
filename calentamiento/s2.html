@@ -93,7 +93,6 @@
       teacherMode: false, fullSchedule: [], serverDateDia: null
     };
 
-    // THE ULTIMATE TEXT CLEANER: Destroys accents, spaces, and punctuation to force matches.
     const normStr = (s) => {
         if (s === null || s === undefined) return "";
         return String(s)
@@ -188,8 +187,12 @@
                 if (block.identityCategory && block.identityGroups) {
                     let targetList = [];
                     const cat = manifest[block.identityCategory];
-                    if (cat) { block.identityGroups.forEach(g => { if (cat[g]) targetList = targetList.concat(cat[g]); }); }
-                    blockPool = bank.filter(v => v && targetList.includes(v.infinitivo));
+                    if (cat) { 
+                        block.identityGroups.forEach(g => { 
+                            if (cat[g]) targetList = targetList.concat(cat[g].map(normStr)); 
+                        }); 
+                    }
+                    blockPool = bank.filter(v => v && (targetList.includes(normStr(v.infinitivo)) || targetList.includes(normStr(v.mostrar))));
                 }
 
                 let filtered = blockPool.filter(v => {
@@ -226,47 +229,28 @@
                             if (!v) return false;
                             let vInf = normStr(v.infinitivo);
                             let vMostrar = normStr(v.mostrar);
-                            if (vInf !== inf && vMostrar !== inf && vInf.replace(/se$/g, '') !== inf) return false;
+                            let vBase = vInf.endsWith('se') ? vInf.slice(0, -2) : vInf;
+                            
+                            if (vInf !== inf && vMostrar !== inf && vBase !== inf) return false;
                             
                             if (subj) {
                                 let vSubj = normStr(v.sujeto);
-                                let vBase = normStr(v.persona_base);
+                                let vBaseSubj = normStr(v.persona_base);
                                 let vTipo = Array.isArray(v.tipo_verbo) ? v.tipo_verbo.map(normStr) : [];
-                                return vSubj === subj || vBase === subj || vSubj.includes(subj) || vBase.includes(subj) || vTipo.includes(subj);
+                                return vSubj === subj || vBaseSubj === subj || vSubj.includes(subj) || vBaseSubj.includes(subj) || vTipo.includes(subj);
                             }
                             return true;
                         };
 
                         let match = filtered.find(isMatch);
-                        
-                        if (!match) {
-                            match = bank.find(v => {
-                                if (!isMatch(v)) return false;
-                                const reqs = block.constraints;
-                                if (!reqs) return true;
-                                return Object.keys(reqs).every(key => {
-                                    if (key === "tipo_verbo") {
-                                        const reqTypes = Array.isArray(reqs[key]) ? reqs[key] : [reqs[key]];
-                                        return reqTypes.every(t => (v.tipo_verbo||[]).includes(t));
-                                    }
-                                    return v[key] === reqs[key];
-                                });
-                            });
-                        }
-
                         if (!match) match = bank.find(isMatch);
 
                         // DIAGNOSTIC TOOL
                         if (!match) {
-                            let debugMsg = "";
                             let foundInf = bank.filter(v => v && (normStr(v.infinitivo) === inf || normStr(v.mostrar) === inf || normStr(v.infinitivo).replace(/se$/g, '') === inf));
-                            
-                            if (foundInf.length > 0) {
-                                let subjList = foundInf.map(v => v.sujeto || "N/A").join(", ");
-                                debugMsg = "Sí está en el JSON, pero solo con estos sujetos: [" + subjList + "]";
-                            } else {
-                                debugMsg = "El verbo NO EXISTE en el JSON descargado de GitHub.";
-                            }
+                            let debugMsg = foundInf.length > 0 
+                                ? "Sí está en el JSON, pero solo con estos sujetos: [" + foundInf.map(v => v.sujeto || "N/A").join(", ") + "]"
+                                : "El verbo NO EXISTE en el JSON descargado de GitHub.";
 
                             match = {
                                 infinitivo: parts[0].trim(),
@@ -310,13 +294,13 @@
             if (manifest[runtime.tense]) {
                 currentG.forEach(g => { 
                     if (g === "regular") {
-                        ["regulars_ar", "regulars_er", "regulars_ir"].forEach(r => { if(manifest[runtime.tense][r]) targetList = targetList.concat(manifest[runtime.tense][r]); });
-                    } else if (manifest[runtime.tense][g]) { targetList = targetList.concat(manifest[runtime.tense][g]); }
+                        ["regulars_ar", "regulars_er", "regulars_ir"].forEach(r => { if(manifest[runtime.tense][r]) targetList = targetList.concat(manifest[runtime.tense][r].map(normStr)); });
+                    } else if (manifest[runtime.tense][g]) { targetList = targetList.concat(manifest[runtime.tense][g].map(normStr)); }
                 });
             }
-            if (targetList.length === 0) targetList = bank.map(v => v.infinitivo);
+            if (targetList.length === 0) targetList = bank.map(v => normStr(v.infinitivo));
             const totalNeeded = entry.totalNeeded || 20;
-            let pool = bank.filter(v => v && targetList.includes(v.infinitivo));
+            let pool = bank.filter(v => v && (targetList.includes(normStr(v.infinitivo)) || targetList.includes(normStr(v.mostrar))));
             runtime.verbs = seededShuffle([...pool]).slice(0, totalNeeded);
         }
 
