@@ -93,15 +93,15 @@
       teacherMode: false, fullSchedule: [], serverDateDia: null
     };
 
+    // EL DESTRUCTOR DE ACENTOS DEFINITIVO (Universal)
     const normStr = (s) => {
         if (s === null || s === undefined) return "";
-        return String(s).replace(/\s+/g, ' ').trim().toLowerCase()
-            .replace(/[áàâä]/g, 'a')
-            .replace(/[éèêë]/g, 'e')
-            .replace(/[íìîï]/g, 'i')
-            .replace(/[óòôö]/g, 'o')
-            .replace(/[úùûü]/g, 'u')
-            .replace(/[ñ]/g, 'n');
+        return String(s)
+            .normalize("NFD")                 // Separa los acentos de la letra (ej. tú -> t + u + ´)
+            .replace(/[\u0300-\u036f]/g, "")  // Elimina todos los acentos y símbolos flotantes
+            .replace(/\s+/g, ' ')             // Convierte múltiples espacios en uno solo
+            .trim()                           // Quita espacios al principio y al final
+            .toLowerCase();                   // Todo a minúsculas
     };
 
     function seededShuffle(array, customSeed = null) {
