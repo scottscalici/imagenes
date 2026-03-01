@@ -27,6 +27,7 @@
         .count-badge { font-size: 0.85rem; padding: 4px 8px; border-radius: 12px; font-weight: bold; color: white; }
         .count-perfect { background: #2ecc71; }
         .count-warning { background: #f39c12; }
+        .count-extra { background: #3498db; }
 
         .row-group { display: flex; gap: 10px; align-items: center; }
         .row-group input[type="text"], .row-group input[type="number"] { padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; width: 100%; box-sizing: border-box; }
@@ -133,7 +134,7 @@
                 }
 
                 let totalVerbs = (dayData.blocks || []).reduce((sum, b) => sum + (parseInt(b.count) || 0), 0);
-                let countClass = totalVerbs === 20 ? 'count-perfect' : 'count-warning';
+                let countClass = totalVerbs === 20 ? 'count-perfect' : (totalVerbs > 20 ? 'count-extra' : 'count-warning');
                 let countText = totalVerbs === 0 ? 'Sin verbos' : `${totalVerbs} Verbos`;
 
                 let fechas = db.cal[day] ? db.cal[day].join(' | ') : '';
