@@ -1,91 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Súper Planificador de Videos y Contexto</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; color: #2c3e50; padding: 20px; margin: 0; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; }
-        
-        .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; gap: 10px; }
-        .filter-group, .export-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        
-        .btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: background 0.2s; }
-        .btn-course { background: #bdc3c7; color: #2c3e50; }
-        .btn-course.active { background: #3498db; color: white; }
-        
-        /* Botones de Exportación Compactos */
-        .btn-exp-vid { background: #e74c3c; color: white; }
-        .btn-exp-mus { background: #2980b9; color: white; }
-        .btn-exp-cul { background: #27ae60; color: white; }
-        .btn-exp-lec { background: #d35400; color: white; }
-        .btn-exp-des { background: #f39c12; color: white; }
-        .btn:hover { filter: brightness(1.1); }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 20px; }
-        
-        .card { background: white; border-radius: 8px; box-shadow: 0 3px 6px rgba(0,0,0,0.08); overflow: hidden; display: flex; flex-direction: column; border-top: 5px solid #e74c3c; }
-        .card-header { background: #ecf0f1; padding: 10px 15px; font-weight: bold; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; color: #2c3e50; border-bottom: 1px solid #ddd; }
-        .date-badge { font-size: 0.8rem; background: #e8f8f5; color: #16a085; padding: 4px 8px; border-radius: 12px; font-weight: bold; }
-        
-        .card-body { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .section-title { font-size: 0.85rem; text-transform: uppercase; font-weight: bold; color: #7f8c8d; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 3px; }
-        
-        /* Estilos del Contexto Interactivo */
-        .context-zone { display: flex; flex-direction: column; gap: 6px; background: #fdfdfd; padding: 10px; border-radius: 6px; border: 1px dashed #bdc3c7; }
-        .ctx-item { display: flex; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 4px; font-size: 0.85rem; }
-        .ctx-content { flex-grow: 1; line-height: 1.3; }
-        .ctx-input { width: 60px; padding: 4px; border: 1px solid rgba(0,0,0,0.2); border-radius: 4px; font-family: monospace; font-size: 0.8rem; text-align: center; background: rgba(255,255,255,0.8); }
-        .ctx-img { width: 45px; height: 45px; border-radius: 4px; object-fit: cover; border: 1px solid rgba(0,0,0,0.1); background: #eee; }
-        
-        .ctx-mus { background: #eaf2f8; border-left: 4px solid #2980b9; }
-        .ctx-cul { background: #e9f7ef; border-left: 4px solid #27ae60; }
-        .ctx-lec { background: #fdf2e9; border-left: 4px solid #d35400; }
-        .ctx-des { background: #fef9e7; border-left: 4px solid #f39c12; }
-        .ctx-cur { background: #f4ecf7; border-left: 4px solid #8e44ad; color: #555; }
-        .ctx-empty { color: #95a5a6; font-size: 0.8rem; font-style: italic; text-align: center; }
-
-        /* Editor de Videos */
-        .video-item { background: #f9ebea; border: 1px solid #fadbd8; border-radius: 6px; padding: 10px; position: relative; display: flex; flex-direction: column; gap: 5px; }
-        .video-row { display: flex; gap: 8px; align-items: center; }
-        .video-row input[type="text"], .video-row input[type="number"] { padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; width: 100%; box-sizing: border-box; }
-        .video-row textarea { padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85rem; width: 100%; resize: vertical; min-height: 40px; font-family: sans-serif; }
-        
-        .vid-id { width: 80px !important; font-family: monospace; font-weight: bold; color: #c0392b; }
-        .vid-dia { width: 60px !important; font-weight: bold; }
-        .vid-tags { width: 120px !important; font-family: monospace; }
-        
-        .checkbox-label { font-size: 0.8rem; font-weight: bold; color: #555; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .btn-add-vid { background: #e74c3c; color: white; width: 100%; text-align: center; margin-top: 5px; border-radius: 4px; padding: 8px; font-weight: bold; cursor: pointer; border: none; }
-        .btn-add-vid:hover { background: #c0392b; }
-    </style>
-</head>
-<body>
-
-    <h1>🎬 Planificador de Videos y Contexto Maestro</h1>
-    
-    <div class="top-bar">
-        <div class="filter-group">
-            <strong>Curso:</strong>
-            <button class="btn btn-course active" id="btn-s2" onclick="setCourse('s2')">S2 (Sophomores)</button>
-            <button class="btn btn-course" id="btn-s4" onclick="setCourse('s4')">S4 (Seniors)</button>
-        </div>
-        <div class="export-group">
-            <span style="color:#7f8c8d; font-size:0.8rem; margin-right:5px;">Exportar:</span>
-            <button class="btn btn-exp-vid" onclick="exportData('videos')">💾 Videos</button>
-            <button class="btn btn-exp-mus" onclick="exportData('musica')">💾 Música</button>
-            <button class="btn btn-exp-cul" onclick="exportData('cultura')">💾 Cultura</button>
-            <button class="btn btn-exp-lec" onclick="exportData('lectura')">💾 Lecturas</button>
-            <button class="btn btn-exp-des" onclick="exportData('destacado')">💾 Destacado</button>
-        </div>
-    </div>
-
-    <div id="main-grid" class="grid">
-        <h3 style="text-align:center; width:100%; color:#7f8c8d;">Sincronizando todas las bases de datos...</h3>
-    </div>
-
-    <script>
+<script>
         let db = { videos: null, musica: null, cultura: null, lectura: null, curiosidades: null, destacado: null, cal: {} };
         let currentCourse = 's2'; 
 
@@ -95,7 +8,7 @@
             fetch(baseUrl + 'videos.json?v=' + Date.now()).then(r => r.json()),
             fetch(baseUrl + 'musica.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null),
             fetch(baseUrl + 'cultura.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null),
-            fetch(baseUrl + 'lecturas.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null),
+            fetch(baseUrl + 'lectura.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null), // CORREGIDO AQUÍ (lectura.json)
             fetch(baseUrl + 'curiosidades.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null),
             fetch(baseUrl + 'destacadodiario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null),
             fetch(baseUrl + 'calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(()=>null)
@@ -130,11 +43,10 @@
             renderGrid();
         }
 
-        // Genera el HTML de la zona de contexto (Ahora con inputs editables)
+        // Genera el HTML de la zona de contexto
         function getContextHtml(dayNum) {
             let html = '';
             
-            // 1. Música (Array Días)
             Object.entries(db.musica.items || {}).forEach(([key, item]) => {
                 if (item.courses && item.courses.includes(currentCourse) && item.dias && item.dias.includes(dayNum)) {
                     html += `
@@ -145,7 +57,6 @@
                 }
             });
 
-            // 2. Cultura (Array Días)
             Object.entries(db.cultura.items || {}).forEach(([key, item]) => {
                 if (item.courses && item.courses.includes(currentCourse) && item.dias && item.dias.includes(dayNum)) {
                     html += `
@@ -156,7 +67,6 @@
                 }
             });
 
-            // 3. Lectura (Array Días)
             Object.entries(db.lectura.items || {}).forEach(([key, item]) => {
                 if (item.courses && item.courses.includes(currentCourse) && item.dias && item.dias.includes(dayNum)) {
                     html += `
@@ -167,7 +77,6 @@
                 }
             });
 
-            // 4. Destacado Diario (Día Único, con Imagen y Snippet)
             db.destacado.forEach((item, index) => {
                 if (item.dia === dayNum && item.course && item.course.includes(currentCourse)) {
                     let imgHtml = item.image_url ? `<img src="${item.image_url}" class="ctx-img">` : '';
@@ -184,7 +93,6 @@
                 }
             });
 
-            // 5. Curiosidades (Solo Lectura)
             db.curiosidades.forEach(item => {
                 if ((currentCourse === 's2' && item.s2_dia === dayNum) || (currentCourse === 's4' && item.s4_dia === dayNum)) {
                     let imgHtml = item.img ? `<img src="${item.img}" class="ctx-img">` : '';
@@ -199,12 +107,10 @@
             return html !== '' ? html : `<div class="ctx-empty">No hay contexto asignado para hoy.</div>`;
         }
 
-        // --- Funciones de Actualización de Contexto ---
-        
         function updateContextArray(dbName, key, valueStr) {
             let numArr = valueStr.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
             db[dbName].items[key].dias = numArr;
-            renderGrid(); // Refresca para mover la tarjeta de día si es necesario
+            renderGrid(); 
         }
 
         function updateContextNumber(dbName, index, valueStr) {
@@ -214,8 +120,6 @@
                 renderGrid(); 
             }
         }
-
-        // --- Renderizador Principal ---
 
         function renderGrid() {
             if(!db.videos || !db.videos.daily_tags) {
@@ -229,7 +133,6 @@
                 let videosDelDia = db.videos.daily_tags.filter(v => parseInt(v.dia) === day && v.tags && v.tags.includes(currentCourse));
                 let contextHtml = getContextHtml(day);
                 
-                // Mostrar si hay contexto, hay videos, o estamos en los primeros 40 días
                 if(contextHtml.includes('ctx-item') || videosDelDia.length > 0 || day <= 40) {
                     
                     let fechas = db.cal[day] ? db.cal[day].join(' | ') : '';
@@ -250,6 +153,9 @@
                                 </div>
                                 <div class="video-row">
                                     <input type="text" value="${v.video_url || ''}" placeholder="URL del Video (YouTube Embed)" onchange="updateVid(${globalIndex}, 'video_url', this.value)">
+                                </div>
+                                <div class="video-row">
+                                    <input type="text" value="${v.thumbnail_url || ''}" placeholder="URL Miniatura (Opcional)" onchange="updateVid(${globalIndex}, 'thumbnail_url', this.value)">
                                 </div>
                                 <div class="video-row">
                                     <input type="text" class="vid-tags" value="${tagsStr}" title="Etiquetas (s2, s4, cultura...)" onchange="updateVid(${globalIndex}, 'tags', this.value)">
@@ -292,8 +198,6 @@
             document.getElementById('main-grid').innerHTML = gridHtml;
         }
 
-        // --- Funciones de Videos ---
-
         function createNewVideo(dayNum) {
             db.videos.daily_tags.push({
                 id: "nuevo-video",
@@ -321,7 +225,6 @@
             }
         }
 
-        // --- Exportación Modular ---
         function exportData(target) {
             let data = null;
             let filename = '';
@@ -329,11 +232,11 @@
             if (target === 'videos') { data = db.videos; filename = 'videos.json'; }
             if (target === 'musica') { data = db.musica; filename = 'musica.json'; }
             if (target === 'cultura') { data = db.cultura; filename = 'cultura.json'; }
-            if (target === 'lectura') { data = db.lectura; filename = 'lecturas.json'; }
+            if (target === 'lectura') { data = db.lectura; filename = 'lectura.json'; } // CORREGIDO AQUÍ TAMBIÉN
             if (target === 'destacado') { data = db.destacado; filename = 'destacadodiario.json'; }
 
-            if (!data) {
-                alert("Error: No se encontró información para exportar.");
+            if (!data || Object.keys(data).length === 0) {
+                alert("Error: No se encontró información para exportar. Verifica que el archivo exista en GitHub.");
                 return;
             }
 
@@ -346,5 +249,3 @@
             });
         }
     </script>
-</body>
-</html>
