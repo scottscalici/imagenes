@@ -551,6 +551,7 @@ if (highlightBlock) {
 
     if (highlight) {
         // 1. PRIORITY LOGIC: Check temas.json first, then fall back to location logic
+// 1. PRIORITY LOGIC: Check temas.json first, then fall back to location logic
         let pillColor = overrides.destacado; 
         
         if (!pillColor) {
@@ -562,12 +563,27 @@ if (highlightBlock) {
             else pillColor = "#64748b"; // Final fallback
         }
 
-        const locText = (highlight.location || "").toUpperCase();
-        const textColor = (locText.includes("ESPAÑA")) ? "text-slate-900" : "text-white";
+        // 2. SMART TEXT CONTRAST LOGIC (Replaced the old locText logic)
+        let textColor = "text-white";
+        if (pillColor.startsWith("#")) {
+            const hex = pillColor.replace("#", "");
+            const r = parseInt(hex.length === 3 ? hex[0]+hex[0] : hex.substring(0, 2), 16);
+            const g = parseInt(hex.length === 3 ? hex[1]+hex[1] : hex.substring(2, 4), 16);
+            const b = parseInt(hex.length === 3 ? hex[2]+hex[2] : hex.substring(4, 6), 16);
+            
+            // Calculate brightness (0 to 1)
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            
+            // If brightness is greater than 50%, use dark text. Otherwise, use white text.
+            textColor = luminance > 0.5 ? "text-slate-900" : "text-white";
+        } else {
+            // Fallback just in case the color isn't a hex code
+            textColor = (pillColor === "yellow" || pillColor === "white") ? "text-slate-900" : "text-white";
+        }
         
-        // 2. OPACITY FIX: Changed from ${pillColor}22 to ${pillColor}66 (approx 40% opacity)
-        const borderOpacityColor = `${pillColor}66`; 
-
+        // 3. OPACITY FIX
+        const borderOpacityColor = `${pillColor}66`;
+        
         highlightBlock.innerHTML = `
             <article class="bg-white rounded-xl shadow-md border-8 overflow-hidden" style="border-color: ${borderOpacityColor}">
                 ${highlight.image_url ? `<img src="${highlight.image_url}" class="w-full h-44 object-cover">` : ''}
