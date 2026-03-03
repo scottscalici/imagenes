@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Spanish Oral Grader</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #2c3e50; }
+        
+        /* Dropdown Setup Section */
+        .setup-section { display: flex; gap: 20px; margin-bottom: 30px; background: #ecf0f1; padding: 20px; border-radius: 8px; }
+        .input-group { display: flex; flex-direction: column; flex: 1; }
+        select { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #bdc3c7; }
+        
+        /* Rubric Grid Styling */
+        .criterion-section { margin-bottom: 40px; }
+        .aspect-row { display: flex; margin-bottom: 10px; gap: 10px; align-items: stretch; }
+        .aspect-label { width: 150px; font-weight: bold; padding: 10px; background: #34495e; color: white; display: flex; align-items: center; border-radius: 5px; }
+        
+        .descriptor-btn { 
+            flex: 1; padding: 15px; background: #fdfdfd; border: 2px solid #e0e0e0; border-radius: 5px; cursor: pointer; text-align: left; font-size: 13px; transition: 0.2s;
+        }
+        .descriptor-btn:hover { border-color: #3498db; }
+        .descriptor-btn.selected { background: #e8f4fd; border-color: #2980b9; box-shadow: 0 0 5px rgba(41, 128, 185, 0.5); }
+        .level-badge { display: block; font-weight: bold; color: #2980b9; margin-bottom: 5px; }
+
+        /* Results Section */
+        .results-section { background: #eef7f2; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 5px solid #27ae60; }
+        .score-display { font-size: 24px; font-weight: bold; margin-bottom: 15px; color: #27ae60; }
+        textarea { width: 100%; height: 150px; padding: 15px; border-radius: 5px; border: 1px solid #bdc3c7; font-family: inherit; font-size: 15px; resize: vertical; margin-bottom: 15px; }
+        
+        button.action-btn { background: #27ae60; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-right: 10px; }
+        button.action-btn:hover { background: #219150; }
+        button.copy-btn { background: #3498db; }
+        button.copy-btn:hover { background: #2980b9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>IB Spanish Oral Assessment Grader</h1>
+    
+    <div class="setup-section">
+        <div class="input-group">
+            <label for="studentDropdown"><strong>Select Student:</strong></label>
+            <select id="studentDropdown">
+                <option value="" disabled selected>Loading students...</option>
+            </select>
+            <small id="studentInfo" style="margin-top:5px; color:#7f8c8d;"></small>
+        </div>
+        <div class="input-group">
+            <label for="stimulusDropdown"><strong>Select Stimulus:</strong></label>
+            <select id="stimulusDropdown" disabled>
+                <option value="" disabled selected>Select a student first</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="rubricContainer">
+        <h3 style="color: #7f8c8d; text-align: center;">Select a student to load the appropriate SL/HL rubric.</h3>
+    </div>
+
+    <div class="results-section">
+        <div class="score-display">Total Score: <span id="totalScore">0</span> / 30</div>
+        <label for="commentOutput"><strong>Generated Spanish Feedback:</strong></label>
+        <textarea id="commentOutput" readonly placeholder="Select rubric levels to generate feedback..."></textarea>
+        <div>
+            <button class="action-btn copy-btn" onclick="copyComment()">Copy Text</button>
+            <button class="action-btn" onclick="saveEvaluation()">Save Evaluation</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global variables to hold our fetched JSON data and current state
+    let rosterData = {};
+    let stimuliData = {};
+    let rubricData = {};
+    let currentStudentLevel = "";
+    let selectedScores = { A: 0, B1: 0, B2: 0, C: 0 };
+    let selectedComments = {};
+
+    // 1. Fetch all JSON files on load
+    Promise.all([
+        fetch('roster.json').then(res => res.json()),
+        fetch('stimuli.json').then(res => res.json()),
+        fetch('rubric.json').then(res => res.json())
+    ]).then(([roster, stimuli, rubric]) => {
+        rosterData = roster.students;
+        stimuliData = stimuli.stimuli;
+        rubricData = rubric.rubric;
+        populateStudents();
+    }).catch(error => console.error("Error loading JSON files:", error));
+
+    // 2. Populate Student Dropdown
+    function populateStudents() {
+        const dropdown = document.getElementById("studentDropdown");
+        dropdown.innerHTML = '<option value="" disabled selected>Select a student...</option>';
+        
+        rosterData.forEach(student => {
+            let option = document.createElement("option");
+            option.value = student.id;
+            // Includes their exam time in the dropdown for easy workflow
+            option.textContent = `${student.time} - ${student.name} (${student.level})`;
+            dropdown.appendChild(option);
+        });
+
+        dropdown.addEventListener("change", handleStudentSelection);
+    }
+
+    // 3. Handle Student Selection (Triggers UI updates)
+    function handleStudentSelection(e) {
+        const studentId = e.target.value;
+        const student = rosterData.find(s => s.id === studentId);
+        currentStudentLevel = student.level; // "SL" or "HL"
+
+        document.getElementById("studentInfo").textContent = `Exam Date: ${student.date} | Level: ${student.level}`;
+        
+        // Reset state
+        selectedScores = { A: 0, B1: 0, B2: 0, C: 0 };
+        selectedComments = {};
+        updateResults();
+
+        // Update UI
+        populateStimuli(currentStudentLevel);
+        renderRubric(currentStudentLevel);
+    }
+
+    // 4. Populate Stimuli (Sorted and Grouped by Theme)
+    function populateStimuli(level) {
+        const dropdown = document.getElementById("stimulusDropdown");
+        dropdown.disabled = false;
+        dropdown.innerHTML = '<option value="" disabled selected>Select a stimulus...</option>';
+
+        // Filter and Sort (using the exact logic we discussed)
+        const filtered = stimuliData.filter(s => s.level === level);
+        filtered.sort((a, b) => {
+            const themeCompare = a.theme.localeCompare(b.theme, 'es');
+            if (themeCompare !== 0) return themeCompare;
+            return a.label.localeCompare(b.label, 'es', { numeric: true });
+        });
+
+        let currentTheme = "";
+        let optgroup = null;
+
+        filtered.forEach(stim => {
+            if (stim.theme !== currentTheme) {
+                currentTheme = stim.theme;
+                optgroup = document.createElement("optgroup");
+                optgroup.label = currentTheme;
+                dropdown.appendChild(optgroup);
+            }
+            let option = document.createElement("option");
+            option.value = stim.id;
+            option.textContent = stim.label;
+            optgroup.appendChild(option);
+        });
+    }
+
+    // 5. Render the Rubric based on SL/HL
+    function renderRubric(level) {
+        const container = document.getElementById("rubricContainer");
+        container.innerHTML = ""; // Clear existing
+
+        // Define which criteria to pull based on level
+        const criteriaToLoad = [
+            { id: "A", key: `criterionA_${level}` },
+            { id: "B1", key: `criterionB1_${level}` },
+            { id: "B2", key: "criterionB2" }, // B2 is identical for both
+            { id: "C", key: "criterionC" }    // C is identical for both
+        ];
+
+        criteriaToLoad.forEach(crit => {
+            const critData = rubricData[crit.key];
+            if (!critData) return;
+
+            const section = document.createElement("div");
+            section.className = "criterion-section";
+            section.innerHTML = `<h2>${critData.title} (Max ${critData.maxMarks})</h2>`;
+
+            // Loop through aspects (Vocab, Grammar, Focus, etc.)
+            for (const [aspectName, levelsArray] of Object.entries(critData.aspects)) {
+                const row = document.createElement("div");
+                row.className = "aspect-row";
+                
+                // Format the label nicely
+                const formattedName = aspectName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                row.innerHTML = `<div class="aspect-label">${formattedName}</div>`;
+
+                // Render buttons for Levels 6 down to 1
+                levelsArray.forEach(levelObj => {
+                    const btn = document.createElement("button");
+                    btn.className = "descriptor-btn";
+                    btn.innerHTML = `<span class="level-badge">Level ${levelObj.level} (${levelObj.marks} pts)</span>${levelObj.englishDescriptor}`;
+                    
+                    // Click Event
+                    btn.onclick = () => {
+                        // Deselect other buttons in this row
+                        row.querySelectorAll('.descriptor-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        
+                        // Save the comment and calculate score
+                        handleSelection(crit.id, aspectName, levelObj);
+                    };
+                    row.appendChild(btn);
+                });
+                section.appendChild(row);
+            }
+            container.appendChild(section);
+        });
+    }
+
+    // 6. Handle Rubric Clicks & Calculations
+    function handleSelection(critId, aspectName, levelObj) {
+        // Save the Spanish comment for this specific aspect
+        if (!selectedComments[critId]) selectedComments[critId] = {};
+        selectedComments[critId][aspectName] = levelObj.spanishComment;
+
+        // Math Logic: For Criterion A, the max is 12. For B1, B2, C the max is 6.
+        // We use the "Level" (1-6) selected to calculate the average.
+        
+        let allLevelsForCriterion = [];
+        const critSection = rubricData[`criterion${critId}_${currentStudentLevel}`] || rubricData[`criterion${critId}`];
+        
+        // Sum up the active selections for this criterion
+        for (const aspect of Object.keys(critSection.aspects)) {
+            if (selectedComments[critId][aspect]) {
+               // We need a way to track the level selected. Since we only stored the comment, let's store an object instead.
+               selectedComments[critId][aspect] = {
+                   comment: levelObj.spanishComment,
+                   level: levelObj.level
+               };
+            }
+        }
+        
+        // Because of the way the click event scopes levelObj, let's just recalculate properly:
+        selectedComments[critId][aspectName] = {
+            comment: levelObj.spanishComment,
+            level: levelObj.level
+        };
+
+        // Calculate Average Level for the Criterion
+        let totalLevels = 0;
+        let count = 0;
+        for (const key in selectedComments[critId]) {
+            totalLevels += selectedComments[critId][key].level;
+            count++;
+        }
+        
+        let averageLevel = totalLevels / count; // Will be between 1 and 6
+
+        // Convert Average Level to IB Marks
+        if (critId === "A") {
+            // Level 6 = 12, Level 5 = 10, Level 4 = 8, Level 3 = 6, Level 2 = 4, Level 1 = 2
+            selectedScores[critId] = Math.round(averageLevel * 2); 
+        } else {
+            // Level 6 = 6, Level 1 = 1
+            selectedScores[critId] = Math.round(averageLevel);
+        }
+
+        updateResults();
+    }
+
+    // 7. Update Score and Concatenate Text
+    function updateResults() {
+        // Update Number
+        const total = selectedScores.A + selectedScores.B1 + selectedScores.B2 + selectedScores.C;
+        document.getElementById("totalScore").textContent = total;
+
+        // Concatenate Spanish Comments into a paragraph
+        let finalParagraph = [];
+        const order = ["A", "B1", "B2", "C"]; // Order them logically
+        
+        order.forEach(crit => {
+            if (selectedComments[crit]) {
+                for (const aspect in selectedComments[crit]) {
+                    finalParagraph.push(selectedComments[crit][aspect].comment);
+                }
+            }
+        });
+
+        document.getElementById("commentOutput").value = finalParagraph.join(" ");
+    }
+
+    // 8. Copy to Clipboard
+    function copyComment() {
+        const text = document.getElementById("commentOutput").value;
+        if (!text) {
+            alert("Please select rubric descriptors first!");
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Copied to clipboard!");
+        });
+    }
+
+    // 9. Save Data (Mocking backend save via LocalStorage for frontend persistence)
+    function saveEvaluation() {
+        const studentId = document.getElementById("studentDropdown").value;
+        const stimulusId = document.getElementById("stimulusDropdown").value;
+        const comment = document.getElementById("commentOutput").value;
+
+        if (!studentId || !stimulusId || !comment) {
+            alert("Please ensure a student, stimulus, and rubric scores are selected.");
+            return;
+        }
+
+        const evaluation = {
+            evaluationId: "eval_" + Date.now(),
+            studentId: studentId,
+            stimulusId: stimulusId,
+            scores: selectedScores,
+            totalScore: selectedScores.A + selectedScores.B1 + selectedScores.B2 + selectedScores.C,
+            generatedComment: comment,
+            timestamp: new Date().toISOString()
+        };
+
+        // Pull existing saves from local storage, push new, and resave
+        let saves = JSON.parse(localStorage.getItem('ib_evaluations')) || [];
+        saves.push(evaluation);
+        localStorage.setItem('ib_evaluations', JSON.stringify(saves));
+
+        alert("Evaluation Saved Successfully!");
+    }
+</script>
+
+</body>
+</html>
