@@ -1,0 +1,762 @@
+{
+  "rubric": {
+    "criterionA_SL": {
+      "title": "Language (SL)",
+      "maxMarks": 12,
+      "aspects": {
+        "vocabulary": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Vocabulary is appropriate, varied, and includes the effective use of idiomatic expressions.",
+            "spanishComment": "El vocabulario es apropiado, variado e incluye un uso eficaz de expresiones idiomáticas que enriquecen el mensaje de manera natural."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Vocabulary is appropriate to the task and varied. Expresses ideas clearly without noticeable searching for words.",
+            "spanishComment": "El vocabulario es variado y adecuado para la tarea, lo que permite expresar ideas con claridad y sin pausas evidentes para la búsqueda de palabras."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Vocabulary is mostly appropriate and shows some variety. Circumlocution is generally successful.",
+            "spanishComment": "El vocabulario es, en su mayor parte, apropiado y muestra cierta variedad. El uso de la circunlocución resulta generalmente exitoso."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Vocabulary is appropriate to the task but lacks variety. Attempts circumlocution but it is clumsy.",
+            "spanishComment": "El vocabulario es apropiado para la tarea pero carece de variedad. Se intenta la circunlocución, aunque a menudo resulta ineficaz o confusa."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Vocabulary is only sometimes appropriate. Relies on a very small, basic pool of everyday words with frequent hesitations.",
+            "spanishComment": "El vocabulario solo es apropiado en ocasiones. Existe una dependencia de un repertorio léxico básico y muy limitado, acompañado de vacilaciones frecuentes."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Vocabulary is extremely limited. Frequently inappropriate for the task, causing significant communication breakdowns.",
+            "spanishComment": "El vocabulario es extremadamente limitado y con frecuencia inapropiado para la tarea, lo que provoca interrupciones significativas en la comunicación."
+          }
+        ],
+        "grammarUsage": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "A wide variety of basic and complex grammatical structures is used very effectively and consistently.",
+            "spanishComment": "Se emplea una amplia variedad de estructuras gramaticales tanto básicas como más complejas de manera muy eficaz y coherente."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "A good variety of both basic and more complex grammatical structures is used effectively.",
+            "spanishComment": "Se utiliza eficazmente una buena variedad de estructuras gramaticales, tanto básicas como complejas."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Uses a variety of basic structures and makes clear, functioning attempts at more complex structures.",
+            "spanishComment": "Se emplea una variedad de estructuras básicas y se observan intentos claros y funcionales de incorporar estructuras más complejas."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Uses basic structures with isolated, often unsuccessful attempts to use more complex structures.",
+            "spanishComment": "Se utilizan principalmente estructuras básicas, con intentos aislados y a menudo infructuosos de emplear construcciones más complejas."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Uses only the most basic grammatical structures with high repetition.",
+            "spanishComment": "Se emplean únicamente las estructuras gramaticales más básicas, caracterizadas por un alto grado de repetición."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Uses almost no recognizable grammatical structures; relies on memorized, isolated words.",
+            "spanishComment": "Prácticamente no se utilizan estructuras gramaticales reconocibles; la expresión depende de palabras aisladas y memorizadas."
+          }
+        ],
+        "grammarAccuracy": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Highly accurate. Only minor errors or 'slips' occur in more complex grammatical structures, and they never interfere with communication.",
+            "spanishComment": "El uso de la lengua es altamente preciso. Solo se producen errores menores o lapsus en las estructuras gramaticales más complejas, los cuales nunca impiden la comunicación."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Mostly accurate. Occasional errors in basic and complex structures do not interfere with communication.",
+            "spanishComment": "El uso de la lengua es, en su mayor parte, correcto. Los errores ocasionales en estructuras básicas y complejas no interfieren en la comunicación."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Generally accurate. Errors occur, but they rarely interfere with communication.",
+            "spanishComment": "El uso de la lengua es generalmente preciso. Aunque se cometen errores, estos rara vez interfieren en la comunicación."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Mostly accurate in basic structures, but errors frequently occur in complex structures. Errors at times interfere with communication.",
+            "spanishComment": "El uso de la lengua es mayoritariamente correcto en estructuras básicas, pero los errores son frecuentes al emplear estructuras complejas, llegando a interferir en la comunicación en ocasiones."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Language contains frequent errors in basic structures. These errors consistently interfere with communication.",
+            "spanishComment": "El discurso contiene errores frecuentes en las estructuras básicas, los cuales interfieren de manera sistemática en la comunicación."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Constant, fundamental errors in basic structures that severely interfere with communication.",
+            "spanishComment": "Existen errores constantes y fundamentales en las estructuras básicas que dificultan gravemente la transmisión del mensaje."
+          }
+        ],
+        "pronunciation": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Easy to understand; intonation and pronunciation actively help to convey meaning and emotion.",
+            "spanishComment": "La pronunciación y la entonación son sumamente claras y fluidas, contribuyendo de manera activa a transmitir el significado y los matices del mensaje."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Pronunciation and intonation are easy to understand and sound mostly natural.",
+            "spanishComment": "La pronunciación y la entonación resultan naturales y son fáciles de entender, facilitando la comunicación."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Pronunciation and intonation are generally clear and easy to understand, despite a noticeable accent.",
+            "spanishComment": "La pronunciación y la entonación son, por lo general, claras y comprensibles, a pesar de una evidente influencia de otras lenguas."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Influenced by other languages, but mispronunciations do not often interfere with the message.",
+            "spanishComment": "Se nota la influencia de otras lenguas, aunque los errores de pronunciación no suelen interferir con el sentido del mensaje."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Strongly influenced by other languages. Mispronunciations regularly interfere with communication.",
+            "spanishComment": "Existe una fuerte influencia de otras lenguas. Los errores recurrentes de pronunciación interfieren habitualmente en la comunicación."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Heavy interference from other languages. Recurrent mispronunciations severely interfere with communication.",
+            "spanishComment": "La fuerte interferencia de otras lenguas y los errores constantes de pronunciación dificultan de manera severa la comprensión del mensaje."
+          }
+        ]
+      }
+    },
+    "criterionA_HL": {
+      "title": "Language (HL)",
+      "maxMarks": 12,
+      "aspects": {
+        "vocabulary": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Vocabulary is nuanced, purposeful, and highly varied. Idiomatic expressions actively enhance the message.",
+            "spanishComment": "El vocabulario es sumamente variado, preciso y lleno de matices. Las expresiones idiomáticas se utilizan con un propósito claro, logrando enriquecer y elevar significativamente el mensaje."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Vocabulary is broad, appropriate, and varied, successfully including idiomatic expressions.",
+            "spanishComment": "El vocabulario es amplio, pertinente y variado, e incluye el uso exitoso de expresiones idiomáticas."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Vocabulary is appropriate and varied. Attempts to use idiomatic expressions to express more complex thoughts.",
+            "spanishComment": "El vocabulario es adecuado y variado. Se observan intentos de emplear expresiones idiomáticas para formular ideas de mayor complejidad."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Vocabulary is generally appropriate and somewhat varied, but lacks nuance or precision.",
+            "spanishComment": "El vocabulario es generalmente apropiado y muestra cierta variedad, pero carece de precisión o de matices específicos."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Vocabulary is only sometimes appropriate. Lacks the depth needed to discuss complex topics.",
+            "spanishComment": "El vocabulario solo es apropiado en ocasiones y carece de la profundidad necesaria para abordar temas complejos con eficacia."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Vocabulary is limited and frequently inappropriate, making it difficult to convey even basic HL-level themes.",
+            "spanishComment": "El vocabulario es muy limitado y con frecuencia inapropiado, lo que dificulta la comunicación de incluso los temas más fundamentales del nivel superior."
+          }
+        ],
+        "grammarUsage": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "A variety of basic and complex grammatical structures is used selectively and purposely in order to enhance communication and express fine shades of meaning.",
+            "spanishComment": "Se emplea una variedad de estructuras gramaticales básicas y complejas de forma selectiva y con un propósito claro, a fin de mejorar la comunicación y expresar matices sutiles."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "A wide variety of basic and complex grammatical structures is used effectively throughout.",
+            "spanishComment": "Se utiliza eficazmente una amplia variedad de estructuras gramaticales, tanto básicas como complejas, a lo largo de la intervención."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Uses a solid variety of basic and more complex grammatical structures fairly effectively.",
+            "spanishComment": "Se emplea una sólida variedad de estructuras gramaticales básicas y más complejas de manera bastante eficaz."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Uses a variety of basic structures and some more complex grammatical structures, but complex use is inconsistent.",
+            "spanishComment": "Se utiliza una variedad de estructuras básicas y algunas construcciones más complejas, aunque el uso de estas últimas resulta incoherente en ocasiones."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Uses basic structures with clumsy, largely ineffective attempts at complex phrasing.",
+            "spanishComment": "Se emplean estructuras básicas junto con intentos torpes y, en gran medida, ineficaces de utilizar sintaxis más compleja."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Relies on basic structures. Fails to generate the complex structures expected at the HL level.",
+            "spanishComment": "Existe una gran dependencia de las estructuras básicas. No se logra generar la sintaxis compleja que se espera en el nivel superior."
+          }
+        ],
+        "grammarAccuracy": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Highly accurate and very effective. Minor errors occur only in the most complex structures and do not interfere with communication.",
+            "spanishComment": "La precisión gramatical es sumamente alta y eficaz. Solo se observan errores mínimos en las estructuras más complejas, sin que estos interfieran en absoluto con la comunicación."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Mostly accurate. Occasional errors in basic and in complex grammatical structures do not interfere with communication.",
+            "spanishComment": "El uso de la lengua es, en su mayor parte, correcto. Los errores ocasionales en estructuras gramaticales básicas y complejas no impiden la comprensión."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Generally accurate. Occasional errors occur, but they rarely interfere with communication.",
+            "spanishComment": "El discurso es generalmente preciso. Aunque se cometen errores esporádicos, estos rara vez interfieren en la comunicación."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Mostly accurate for basic structures, but errors occur frequently in complex structures. Errors at times interfere with communication.",
+            "spanishComment": "El uso de la lengua es mayoritariamente correcto en las estructuras básicas, pero los errores son frecuentes en las complejas, llegando a interferir a veces en la comunicación."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Frequent errors in both basic and complex structures. These errors consistently interfere with communication.",
+            "spanishComment": "Se observan errores frecuentes tanto en las estructuras básicas como en las complejas, los cuales interfieren constantemente en la comunicación."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Constant errors in both basic and complex structures that severely interfere with communication.",
+            "spanishComment": "Los errores constantes, tanto en estructuras básicas como complejas, interfieren de manera grave con la transmisión del mensaje."
+          }
+        ],
+        "pronunciation": [
+          {
+            "level": 6,
+            "marks": "11-12",
+            "englishDescriptor": "Very clear and highly authentic. Pronunciation and intonation are used skillfully to enhance communication and deliver subtle nuances.",
+            "spanishComment": "La pronunciación y la entonación son sumamente claras, auténticas y se emplean con gran habilidad para enriquecer la comunicación y transmitir matices sutiles."
+          },
+          {
+            "level": 5,
+            "marks": "9-10",
+            "englishDescriptor": "Very clear and natural. Intonation patterns appropriately match the target language.",
+            "spanishComment": "La pronunciación resulta muy clara y natural, mostrando patrones de entonación que corresponden adecuadamente a la lengua objeto de estudio."
+          },
+          {
+            "level": 4,
+            "marks": "7-8",
+            "englishDescriptor": "Mostly clear. First-language influence may be present, but it does not interfere with communication.",
+            "spanishComment": "La pronunciación es en su mayor parte clara. Aunque puede percibirse la influencia de la primera lengua, esto no interfiere en la comunicación."
+          },
+          {
+            "level": 3,
+            "marks": "5-6",
+            "englishDescriptor": "Pronunciation and intonation are generally clear and rarely interfere, though intonation may lack authenticity.",
+            "spanishComment": "La pronunciación y la entonación son, por lo general, claras y rara vez interfieren con el mensaje, aunque la entonación puede carecer de cierta autenticidad."
+          },
+          {
+            "level": 2,
+            "marks": "3-4",
+            "englishDescriptor": "Pronunciation and intonation are generally clear but still sometimes interfere with communication.",
+            "spanishComment": "A pesar de que la pronunciación y la entonación son generalmente claras, en ocasiones interfieren con la eficacia de la comunicación."
+          },
+          {
+            "level": 1,
+            "marks": "1-2",
+            "englishDescriptor": "Pronunciation is generally clear but frequent mispronunciations interfere with communication of complex ideas.",
+            "spanishComment": "Aunque la pronunciación general se entiende, los errores frecuentes dificultan la comunicación de las ideas más complejas."
+          }
+        ]
+      }
+    },
+    "criterionB1_SL": {
+      "title": "Message - Visual Stimulus (SL)",
+      "maxMarks": 6,
+      "aspects": {
+        "focus": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly focused and consistently relevant. The stimulus is used continuously as the core reference.",
+            "spanishComment": "La presentación es muy centrada y sistemáticamente pertinente. El estímulo visual se utiliza de forma continua como punto de referencia fundamental."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Consistently relevant. The presentation is effectively anchored to the image.",
+            "spanishComment": "La presentación es sistemáticamente pertinente y se ancla de manera eficaz en el estímulo visual, derivando conexiones lógicas a partir de lo que se observa."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Mostly relevant to the stimulus. Stays on topic for the vast majority of the presentation.",
+            "spanishComment": "La presentación es, en su mayor parte, pertinente respecto al estímulo. Las ideas se mantienen ancladas en la imagen durante la gran mayoría del discurso."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Generally focuses on the stimulus, but frequently strays into tangents or superficial elements.",
+            "spanishComment": "La presentación se centra por lo general en el estímulo, pero con frecuencia se desvía hacia tangentes o aborda únicamente los elementos más superficiales."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Barely touches on the stimulus. Uses the image as a brief jumping-off point before drifting.",
+            "spanishComment": "Se hace un uso muy superficial del estímulo. La imagen se emplea apenas como punto de partida antes de derivar en generalizaciones irrelevantes."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Completely irrelevant. Ignores the visual stimulus entirely and recites off-topic material.",
+            "spanishComment": "La presentación es totalmente irrelevante respecto al estímulo y se limita a recitar material memorizado fuera del tema."
+          }
+        ],
+        "interpretation": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Nuanced, highly developed interpretations that seamlessly combine explicit and implicit details.",
+            "spanishComment": "Se ofrecen interpretaciones muy desarrolladas y llenas de matices que combinan detalles explícitos e implícitos para explicar lo que la imagen representa dentro del tema del IB."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Draws on both explicit and implicit details. Interpretations are developed and logical.",
+            "spanishComment": "Se aprovechan tanto los detalles explícitos como los implícitos para ofrecer interpretaciones desarrolladas, lógicas y bien fundamentadas."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Good description of explicit details. Interpretations are mostly developed.",
+            "spanishComment": "Se describen adecuadamente los detalles explícitos y las interpretaciones están, en su mayor parte, desarrolladas, logrando conectar los elementos de la imagen."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Provides basic descriptions and attempts personal interpretation, but lacks support.",
+            "spanishComment": "Se proporcionan descripciones básicas y se intentan ofrecer interpretaciones personales, aunque estas carecen en gran medida de justificación basada en la imagen."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Superficial description of explicit details. Interpretations are purely literal and undeveloped.",
+            "spanishComment": "La descripción de los detalles es superficial y las interpretaciones son meramente literales y carecen de desarrollo."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Very incomplete, fragmented descriptions. Zero personal interpretation.",
+            "spanishComment": "Las descripciones de la imagen son fragmentadas y muy incompletas, careciendo por completo de cualquier interpretación personal."
+          }
+        ],
+        "culturalLink": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly effective, developed links to the target culture that demonstrate deep understanding.",
+            "spanishComment": "Se establecen vínculos muy eficaces y desarrollados con las culturas hispanohablantes, demostrando una comprensión profunda y precisa del contexto cultural."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Clear and explicit links to the target culture. Explains why the theme is relevant.",
+            "spanishComment": "Se establecen vínculos claros y explícitos con las culturas objeto de estudio, explicando adecuadamente por qué el tema del estímulo es relevante para dichas culturas."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Mostly linked to the target culture. Shows a basic understanding of the connection.",
+            "spanishComment": "La presentación está, en su mayoría, vinculada a la cultura objeto de estudio, mostrando una comprensión básica de cómo el tema se relaciona con el mundo hispanohablante."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Identifies a Hispanic culture, but the link is tenuous or superficial.",
+            "spanishComment": "Se identifica una cultura objeto de estudio, pero el vínculo establecido resulta tenue o sumamente superficial."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Mentions a target culture in passing. Connection is completely unclear or forced.",
+            "spanishComment": "Se menciona una cultura objeto de estudio de pasada, pero la conexión resulta forzada, poco clara o inexacta."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Fails entirely to mention any Hispanic culture, or focuses exclusively on a non-target culture.",
+            "spanishComment": "No se establecen vínculos con las culturas hispanohablantes o la atención se centra exclusivamente en otras culturas ajenas al objeto de estudio."
+          }
+        ]
+      }
+    },
+    "criterionB1_HL": {
+      "title": "Message - Literary Extract (HL)",
+      "maxMarks": 6,
+      "aspects": {
+        "focus": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly convincing and tightly focused. Exceptional, targeted use of the specific passage.",
+            "spanishComment": "La presentación es muy convincente y se mantiene firmemente centrada, haciendo un uso excepcional y específico del fragmento literario proporcionado."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Consistently relevant. Effective use of the specific extract as the focal point.",
+            "spanishComment": "La presentación es sistemáticamente pertinente y hace un uso eficaz del fragmento literario específico como punto central de la intervención."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Mostly relevant to the specific scene and text provided. Largely anchored in the passage.",
+            "spanishComment": "La presentación es, en su mayor parte, pertinente respecto a la escena y el texto proporcionados, manteniéndose anclada en el pasaje."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Adequate focus on the extract, but occasionally drifts to unrelated parts of the story.",
+            "spanishComment": "El enfoque en el fragmento es adecuado, aunque en ocasiones la presentación se desvía para abordar partes no relacionadas de la obra literaria."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Superficial use of the extract. Mostly relies on generalized plot summary.",
+            "spanishComment": "Se hace un uso superficial del fragmento literario, dependiendo principalmente de un resumen general del argumento en lugar de analizar el texto propuesto."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Completely ignores the specific extract. Talks only about the book as a whole.",
+            "spanishComment": "Se ignora por completo el fragmento específico proporcionado y la presentación se limita a comentar la obra literaria en su conjunto a modo de reseña general."
+          }
+        ],
+        "observations": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Deeply nuanced, convincing observations completely supported by precise references to the extract.",
+            "spanishComment": "Las observaciones son muy convincentes y ricas en matices, y están plenamente respaldadas por referencias precisas y textuales al fragmento literario."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Effectively developed observations. Well-supported by well-chosen, specific textual evidence.",
+            "spanishComment": "Las observaciones se desarrollan de manera eficaz y se apoyan sólidamente en pruebas textuales bien seleccionadas."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Developed opinions that are consistently supported with direct references to the extract.",
+            "spanishComment": "Las opiniones están desarrolladas y se respaldan de manera sistemática con referencias directas al fragmento."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Competent observations. Attempts to support opinions with loose or general references.",
+            "spanishComment": "Las observaciones son competentes y se observan intentos de justificar las opiniones mediante referencias generales o imprecisas al texto."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Basic opinions are offered, but remain mostly unsupported by direct references to the text.",
+            "spanishComment": "Se ofrecen opiniones básicas que, en su mayor parte, carecen de respaldo mediante referencias directas al pasaje literario."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Generalized, simplistic observations. Opinions are completely unsupported by textual evidence.",
+            "spanishComment": "Las observaciones son generalizadas y simplistas, y las opiniones expresadas carecen por completo de justificación textual."
+          }
+        ]
+      }
+    },
+    "criterionB2": {
+      "title": "Message - Conversation (SL & HL)",
+      "maxMarks": 6,
+      "aspects": {
+        "relevance": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly precise, consistently relevant responses that directly tackle the exact nuances of the questions.",
+            "spanishComment": "Las respuestas son muy precisas, sistemáticamente pertinentes y abordan directamente los matices exactos de las preguntas formuladas."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Consistently relevant and appropriate responses to almost all questions.",
+            "spanishComment": "Las respuestas son sistemáticamente pertinentes y apropiadas para la práctica totalidad de las preguntas."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Most responses are relevant and directly address the questions asked.",
+            "spanishComment": "La mayoría de las respuestas son pertinentes y abordan directamente las cuestiones planteadas por el interlocutor."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Some responses are appropriate, but struggles to stay relevant with complex questions.",
+            "spanishComment": "Algunas respuestas son apropiadas, si bien existe cierta dificultad para mantener la pertinencia al enfrentarse a preguntas más complejas o abstractas."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Rarely addresses the core of the question. Responses are frequently inappropriate or evasive.",
+            "spanishComment": "Rara vez se aborda el núcleo de la pregunta; las respuestas son frecuentemente inapropiadas, evasivas o carecen de conexión con lo preguntado."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Consistently struggles to address the questions. Answers are completely off-base.",
+            "spanishComment": "Se observan dificultades constantes para abordar las preguntas de manera adecuada, resultando las respuestas totalmente ajenas al tema tratado."
+          }
+        ],
+        "depth": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Deeply considered, fully developed responses showcasing broad scope, impressive depth, and rich interpretations.",
+            "spanishComment": "Las respuestas están profundamente analizadas y totalmente desarrolladas, mostrando una amplitud y profundidad sobresalientes junto con ricas interpretaciones personales."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Responses are broad in scope and depth; consistently developed with appropriate examples/justifications.",
+            "spanishComment": "Las respuestas muestran una notable amplitud y profundidad, y están sistemáticamente desarrolladas con ejemplos o justificaciones adecuadas."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Most responses show some development, offering a decent scope of ideas and basic justifications.",
+            "spanishComment": "La mayoría de las respuestas muestran cierto grado de desarrollo, ofreciendo una amplitud adecuada de ideas y justificaciones básicas."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Attempts to expand on answers, but development remains superficial and lacks detail.",
+            "spanishComment": "Se intenta ampliar las respuestas, pero el desarrollo sigue siendo de naturaleza superficial y carece de detalles concretos."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Responses are highly limited in scope; rarely developed beyond a single, basic sentence.",
+            "spanishComment": "Las respuestas son muy limitadas en cuanto a su alcance y rara vez se desarrollan más allá de una oración básica e introductoria."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "One-word or extremely brief answers. Zero depth or development.",
+            "spanishComment": "Las respuestas carecen por completo de profundidad o desarrollo, limitándose a contestaciones extremadamente breves o monosilábicas."
+          }
+        ],
+        "engagement": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly engaging and thought-provoking responses that naturally draw the listener into the ideas.",
+            "spanishComment": "Las respuestas resultan muy estimulantes y fomentan la reflexión, atrayendo de forma natural al interlocutor hacia las ideas expuestas."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Actively attempts to engage the listener by sharing thoughtful perspectives or opinions.",
+            "spanishComment": "Se observa un intento activo de hacer partícipe al interlocutor mediante la presentación de perspectivas u opiniones reflexivas e interesantes."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Shows some interest in the topic; occasional attempts to make the response interesting.",
+            "spanishComment": "Se muestra cierto interés en el tema tratado, con intentos ocasionales de que la respuesta resulte interesante para el interlocutor."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Willing to answer, but responses remain strictly factual, dry, and unengaging.",
+            "spanishComment": "Existe disposición para contestar, pero las intervenciones se mantienen estrictamente fácticas y carecen de elementos que atraigan o involucren al interlocutor."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Highly reluctant. Answers factually but makes no attempt to engage the listener.",
+            "spanishComment": "Se percibe una gran reticencia. Se responde de manera puramente factual y no existe intento alguno de involucrar al oyente."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Completely passive. Gives the absolute minimum required to end their turn to speak.",
+            "spanishComment": "La actitud comunicativa es totalmente pasiva, ofreciendo únicamente el mínimo absoluto requerido para concluir el turno de intervención."
+          }
+        ]
+      }
+    },
+    "criterionC": {
+      "title": "Interactive Skills - Communication (SL & HL)",
+      "maxMarks": 6,
+      "aspects": {
+        "comprehension": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Immediate, flawless comprehension of all questions, including complex or abstract phrasing.",
+            "spanishComment": "Se demuestra una comprensión inmediata y sin fisuras de la totalidad de las preguntas, incluyendo aquellas con formulaciones complejas o abstractas."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Consistently demonstrates clear comprehension of almost all questions on the first pass.",
+            "spanishComment": "Se demuestra sistemáticamente una comprensión clara de casi todas las preguntas planteadas en la primera intervención."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Mostly demonstrates comprehension; rarely needs a question repeated or rephrased.",
+            "spanishComment": "En su mayor parte se demuestra una buena comprensión auditiva; rara vez resulta necesario repetir o reformular las preguntas."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Understands basic questions but struggles with complex phrasing; needs occasional repetition.",
+            "spanishComment": "Se comprenden las preguntas básicas, pero existe dificultad con expresiones o estructuras más complejas, lo que hace necesaria una repetición ocasional."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Very limited comprehension. Requires frequent repetition or rephrasing of even basic questions.",
+            "spanishComment": "La comprensión es muy limitada, lo que exige la repetición o reformulación frecuente incluso de las preguntas más elementales."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Almost zero comprehension. Every question must be heavily modified, translated, or repeated.",
+            "spanishComment": "La comprensión es casi nula. Las preguntas deben ser modificadas de manera drástica, traducidas o repetidas en múltiples ocasiones."
+          }
+        ],
+        "production": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Effortless, sustained target language production with zero reliance on English.",
+            "spanishComment": "Se mantiene una producción en la lengua objeto de estudio que resulta fluida, continua y sin ninguna dependencia de la lengua materna o de instrucción."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Comfortable and sustained production entirely in Spanish throughout the conversation.",
+            "spanishComment": "Se observa una producción verbal cómoda y sostenida, interactuando íntegramente en la lengua objeto de estudio durante toda la conversación."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Consistently uses Spanish. Attempts to circumlocute rather than reverting to English.",
+            "spanishComment": "Se utiliza de manera sistemática la lengua objeto de estudio, recurriendo eficazmente a la circunlocución en lugar de depender del idioma materno."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Mostly stays in Spanish, but frequently uses English when stuck or lacking a specific word.",
+            "spanishComment": "Se utiliza principalmente la lengua objeto de estudio, aunque se recurre con demasiada frecuencia a la lengua materna ante la falta de vocabulario específico."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Heavy reliance on English to fill gaps. Spanish responses are highly fragmented.",
+            "spanishComment": "Existe una fuerte dependencia de la lengua materna para llenar vacíos léxicos, y las respuestas en la lengua objeto de estudio resultan muy fragmentadas."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Constantly reverts to English. Barely any Spanish is produced during the interaction.",
+            "spanishComment": "Se recurre constantemente al idioma materno, produciéndose un uso sumamente escaso de la lengua objeto de estudio a lo largo de la interacción."
+          }
+        ],
+        "participation": [
+          {
+            "level": 6,
+            "marks": "6",
+            "englishDescriptor": "Highly active participant. Consistently makes independent contributions that expand the conversation naturally.",
+            "spanishComment": "La participación es sumamente activa. Se realizan sistemáticamente aportaciones independientes que impulsan y amplían la conversación de manera fluida y natural."
+          },
+          {
+            "level": 5,
+            "marks": "5",
+            "englishDescriptor": "Sustained participation with some independent contributions (e.g., an unprompted anecdote or thought).",
+            "spanishComment": "La participación se mantiene de forma sostenida a lo largo del ejercicio e incluye aportaciones independientes pertinentes."
+          },
+          {
+            "level": 4,
+            "marks": "4",
+            "englishDescriptor": "Mostly sustained participation. Begins to link thoughts together without waiting for the next prompt.",
+            "spanishComment": "La participación se sostiene en su mayor parte, logrando hilar ideas y conceptos sin depender de manera exclusiva de las indicaciones del interlocutor."
+          },
+          {
+            "level": 3,
+            "marks": "3",
+            "englishDescriptor": "Sustains participation, but is completely dependent on the teacher asking questions to drive it forward.",
+            "spanishComment": "Se logra mantener la participación, pero existe una dependencia total de las preguntas del profesor para conseguir que la conversación avance."
+          },
+          {
+            "level": 2,
+            "marks": "2",
+            "englishDescriptor": "Reluctant participant. Relies entirely on the teacher to pull every word out of them.",
+            "spanishComment": "Se observa una participación reacia, dependiendo por completo de la intervención del profesor para lograr cualquier tipo de producción oral."
+          },
+          {
+            "level": 1,
+            "marks": "1",
+            "englishDescriptor": "Participation is non-existent without intense, continuous prompting. Interaction feels like an interrogation.",
+            "spanishComment": "La participación es inexistente sin un estímulo intenso y continuo por parte del examinador, asimilándose la interacción más a un interrogatorio que a una conversación."
+          }
+        ]
+      }
+    }
+  }
+}
