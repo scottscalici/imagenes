@@ -1798,7 +1798,7 @@
   },
   {
     "dia": 51,
-    "topic": "Repaso",
+    "topic": "Repaso: Presente, Pretérito, Imperfecto",
     "vocabFile": "vocab/D3-8-3.json",
     "proficiency": 0.8,
     "blocks": [
@@ -1851,5 +1851,118 @@
       }
     ],
     "date": "2026-03-02"
+  },
+  {
+    "dia": 52,
+    "topic": "Repaso: Presente, Pretérito, Futuro, Condicional",
+    "vocabFile": "vocab/D3-8-4.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Presente",
+        "bank": "bancos/banco_presente.json",
+        "identityCategory": "presente",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      }
+    ],
+    "date": "2026-03-04"
+  },
+  {
+    "dia": 53,
+    "topic": "Repaso: Presente, Pretérito, Futuro, Condicional",
+    "vocabFile": "vocab/D3-8-5.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Presente",
+        "bank": "bancos/banco_presente.json",
+        "identityCategory": "presente",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_5",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      }
+    ],
+    "date": "2026-03-06"
   }
 ]
