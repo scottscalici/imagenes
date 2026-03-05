@@ -139,13 +139,13 @@
     </div>
 
     <script>
-        // Data variables
+// Data variables
         let masterData = null;
         let roster = null;
         let stimuliMap = null;
 
-        // Note: Replace this URL with the raw GitHub link to your massive compiled JSON 
-        const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/preguntas.json'; 
+        // URLs
+        const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/master_data.json'; 
         const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/IA/rubric/roster.json';
         const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
 
@@ -159,44 +159,45 @@
                 ]);
 
                 const masterJson = await masterRes.json();
-                masterData = masterJson.themes; // We map to the "themes" object inside your JSON
-                roster = await rosterRes.json();
+                masterData = masterJson.themes; 
+                
+                // THE FIX IS HERE: We tell it to look specifically inside the "students" array
+                const rosterJson = await rosterRes.json();
+                roster = rosterJson.students; 
                 
                 const stimuliJson = await stimuliRes.json();
-                stimuliMap = stimuliJson.stimuli; // We map to the "stimuli" array
+                stimuliMap = stimuliJson.stimuli; 
 
                 populateDropdowns();
             } catch (error) {
                 console.error("Error loading JSON data:", error);
-                document.getElementById('imageContent').innerHTML = `<p style="color:red;">Error cargando datos. Revisa la consola o las URLs.</p>`;
+                document.getElementById('imageContent').innerHTML = `<p style="color:red;">Error cargando datos. Revisa la consola o asegúrate de que los archivos estén guardados en GitHub.</p>`;
             }
         }
 
         function populateDropdowns() {
-            // Populate Roster
+            // 1. Populate Roster (Now showing Time, Name, and Level!)
             const studentSelect = document.getElementById('studentSelect');
-            roster.forEach((student, index) => {
-                // Adjust "student.name" based on the actual key in your roster.json
-                const name = student.name || `Estudiante ${index + 1}`; 
-                studentSelect.add(new Option(name, index));
+            roster.forEach((student) => {
+                const displayName = `${student.time} | ${student.name} (${student.level})`; 
+                studentSelect.add(new Option(displayName, student.id));
             });
 
-            // Populate Stimuli
+            // 2. Populate Stimuli (Images only for now)
             const stimulusSelect = document.getElementById('stimulusSelect');
             stimuliMap.forEach(stim => {
-                // Only show images in the dropdown for now (hiding HL extracts)
                 if(stim.type === 'image') {
                     stimulusSelect.add(new Option(stim.label, stim.id));
                 }
             });
 
-            // Populate Themes for Part 3
+            // 3. Populate Themes for Part 3
             const themeSelect = document.getElementById('themeSelect');
             for (const themeKey in masterData) {
                 themeSelect.add(new Option(masterData[themeKey].theme_name, themeKey));
             }
 
-            // Add Event Listeners
+            // Add Event Listeners so the screen updates when you change a dropdown
             stimulusSelect.addEventListener('change', updateImageSide);
             themeSelect.addEventListener('change', updateThemeSide);
         }
@@ -210,14 +211,12 @@
                 return;
             }
 
-            // Find the stimulus in our mapping
             const stimulus = stimuliMap.find(s => s.id === selectedId);
             if (!stimulus || !stimulus.image_id) {
                 container.innerHTML = '<div class="placeholder-text">Imagen no mapeada o sin preguntas específicas.</div>';
                 return;
             }
 
-            // Search the master database for this image_id
             let activeImage = null;
             for (const themeKey in masterData) {
                 const found = masterData[themeKey].images?.find(img => img.image_id === stimulus.image_id);
@@ -260,8 +259,9 @@
 
             const questions = masterData[selectedTheme].general_thematic_questions;
             
-            // Slice the first 8 questions to prevent scrolling
-            const displayQuestions = questions.slice(0, 8);
+            // Randomize the general questions so you don't get the same 8 every time
+            const shuffledQuestions = questions.sort(() => 0.5 - Math.random());
+            const displayQuestions = shuffledQuestions.slice(0, 8);
 
             let html = ``;
             displayQuestions.forEach(q => {
@@ -277,7 +277,6 @@
 
         // Initialize App
         loadData();
-
     </script>
 </body>
 </html>
