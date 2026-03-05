@@ -13,6 +13,407 @@
         { "main_prompt": "¿Qué consejos darías para una mejor dieta?", "simplified_prompt": "¿Es importante comer frutas y verduras?" },
         { "main_prompt": "¿Es el vapeo un problema entre amigos?", "simplified_prompt": "¿Ves a muchos estudiantes fumando/vapeando?" },
         { "main_prompt": "¿Cómo será la salud con tanta tecnología?", "simplified_prompt": "¿La tecnología nos hace más perezosos?" }
+      ],
+      "images": [
+          {
+            "image_id": "id01",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id01.jpg",
+            "description": "Madre e hija preparando vegetales en la cocina",
+            "image_specific_questions": [
+              {
+                "main_prompt": "¿Por qué crees que es importante enseñar a los niños a preparar comida saludable desde pequeños?",
+                "simplified_prompt": "¿Crees que es bueno cocinar con tus padres en casa?"
+              },
+              {
+                "main_prompt": "¿Cómo influyen las costumbres de nuestra familia en los hábitos alimenticios que tenemos en la vida diaria?",
+                "simplified_prompt": "¿Comes el mismo tipo de comida que comen tus padres?"
+              },
+              {
+                "main_prompt": "¿Qué ventajas a largo plazo tiene preparar la comida en casa en lugar de depender de la comida rápida?",
+                "simplified_prompt": "¿Es mejor comer en casa o en un restaurante de comida rápida? ¿Por qué?"
+              }
+            ]
+          },
+          {
+            "image_id": "id02",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id02.jpg",
+            "description": "Empleados de oficina estirando juntos",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a trabajadores haciendo pausas activas en la oficina. ¿Cómo crees que esto ayuda a su salud mental y productividad?",
+                "simplified_prompt": "¿Es bueno hacer una pausa para estirarte cuando estás trabajando o estudiando?"
+              },
+              {
+                "main_prompt": "¿Crees que el estilo de vida moderno y los trabajos de oficina nos obligan a ser demasiado sedentarios?",
+                "simplified_prompt": "¿Pasas muchas horas sentado todos los días?"
+              },
+              {
+                "main_prompt": "Aparte de hacer estiramientos, ¿qué otras cosas pueden hacer las empresas para reducir el estrés de sus empleados?",
+                "simplified_prompt": "¿Qué haces tú para relajarte cuando tienes mucho estrés por la escuela?"
+              }
+            ]
+          },
+          {
+            "image_id": "id03",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id03.jpg",
+            "description": "Familia afroamericana de varias generaciones cocinando",
+            "image_specific_questions": [
+              {
+                "main_prompt": "En la imagen vemos a varias generaciones cocinando juntas. ¿Cómo ayuda esto a mantener vivas las tradiciones familiares y culturales?",
+                "simplified_prompt": "¿Tu familia cocina junta durante los días festivos?"
+              },
+              {
+                "main_prompt": "¿Qué importancia tiene compartir la preparación de los alimentos para el bienestar emocional de una familia?",
+                "simplified_prompt": "¿Te hace feliz cocinar o cenar con toda tu familia?"
+              },
+              {
+                "main_prompt": "Todos, incluyendo los niños, están participando. ¿Crees que las responsabilidades en el hogar deberían compartirse siempre de esta manera?",
+                "simplified_prompt": "¿Tú ayudas a cocinar o a limpiar en tu casa?"
+              }
+            ]
+          },
+          {
+            "image_id": "id04",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id04.jpg",
+            "description": "Pareja descansando y comiendo fruta después de correr",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta pareja está combinando el ejercicio al aire libre con una merienda sana. ¿Qué tan difícil es mantener este equilibrio en la ajetreada vida diaria?",
+                "simplified_prompt": "¿Es difícil comer sano y hacer ejercicio todos los días?"
+              },
+              {
+                "main_prompt": "¿Crees que es más fácil mantener la motivación y una rutina de ejercicios si lo haces acompañado de un amigo o pareja?",
+                "simplified_prompt": "¿Prefieres hacer ejercicio solo o con alguien más?"
+              },
+              {
+                "main_prompt": "¿Qué beneficios aporta a la salud mental hacer ejercicio en espacios públicos al aire libre en lugar de ir a un gimnasio cerrado?",
+                "simplified_prompt": "¿Te gusta más correr en el parque o adentro de un gimnasio?"
+              }
+            ]
+          },
+          {
+            "image_id": "id05",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id05.jpg",
+            "description": "Familia hispana grande cocinando una comida festiva",
+            "image_specific_questions": [
+              {
+                "main_prompt": "A menudo, en las grandes celebraciones familiares, comemos en exceso. ¿Cómo podemos disfrutar de estas fiestas sin descuidar completamente nuestra salud?",
+                "simplified_prompt": "¿Es difícil comer comida sana durante la Navidad o el Día de Acción de Gracias?"
+              },
+              {
+                "main_prompt": "¿Qué nos dice la comida típica que se prepara en celebraciones como esta sobre la identidad y las raíces de una cultura?",
+                "simplified_prompt": "¿Qué comida especial preparan en tu casa para las fiestas?"
+              },
+              {
+                "main_prompt": "La abuela parece estar dirigiendo la cocina. ¿Qué papel fundamental juegan los abuelos en la educación y los valores de los jóvenes?",
+                "simplified_prompt": "¿Aprendes muchas cosas importantes de tus abuelos?"
+              }
+            ]
+          },
+          {
+            "image_id": "id06",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id06.jpg",
+            "description": "Tres generaciones de hombres cocinando vegetales",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Tradicionalmente, la cocina se asociaba con las mujeres, pero aquí vemos a tres generaciones de hombres. ¿Cómo refleja esto los cambios en los roles de género modernos?",
+                "simplified_prompt": "¿Crees que los hombres y las mujeres deben cocinar y limpiar por igual en la casa?"
+              },
+              {
+                "main_prompt": "Están preparando vegetales frescos juntos. ¿Crees que las nuevas generaciones son más conscientes de comer sano que las generaciones anteriores?",
+                "simplified_prompt": "¿Tus padres comen comida más sana que tus abuelos?"
+              },
+              {
+                "main_prompt": "¿De qué manera realizar actividades cotidianas como cocinar juntos puede fortalecer la comunicación entre padres e hijos?",
+                "simplified_prompt": "¿Hablas mucho con tus padres cuando están cocinando o cenando juntos?"
+              }
+            ]
+          },
+          {
+            "image_id": "id07",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id07.png",
+            "description": "Pareja comprando mangos en el supermercado",
+            "image_specific_questions": [
+              {
+                "main_prompt": "A veces, la comida fresca y de calidad es más cara que los productos procesados. ¿Crees que tener una dieta saludable es un privilegio económico?",
+                "simplified_prompt": "¿Crees que cuesta mucho dinero comprar frutas frescas y comida sana?"
+              },
+              {
+                "main_prompt": "Al comprar en grandes supermercados, ¿qué tanta atención crees que la gente le presta a las etiquetas o a saber de dónde viene la comida?",
+                "simplified_prompt": "¿Lees las etiquetas de la comida antes de comprarla en el supermercado?"
+              },
+              {
+                "main_prompt": "¿Qué impacto tiene en el medio ambiente importar frutas exóticas de otros países en lugar de consumir productos locales y de temporada?",
+                "simplified_prompt": "¿Es importante comprar comida que crece cerca de tu ciudad?"
+              }
+            ]
+          },
+          {
+            "image_id": "id08",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id08.jpg",
+            "description": "Dos chicas jóvenes comprando en un mercado al aire libre",
+            "image_specific_questions": [
+              {
+                "main_prompt": "¿Qué ventajas sociales y de salud tiene comprar alimentos en un mercado local al aire libre en comparación con un gran supermercado?",
+                "simplified_prompt": "¿Prefieres comprar tu comida en un supermercado grande o en un mercado en la calle?"
+              },
+              {
+                "main_prompt": "Comprar en mercados locales a menudo apoya a los pequeños agricultores. ¿Cómo se relaciona este tipo de comercio con el bienestar de la comunidad?",
+                "simplified_prompt": "¿Crees que es bueno comprar frutas directamente de las personas que las cultivan?"
+              },
+              {
+                "main_prompt": "Vemos a dos jóvenes seleccionando fruta fresca. ¿Crees que los adolescentes de hoy se preocupan más por su nutrición que en el pasado?",
+                "simplified_prompt": "¿Tus amigos comen mucha fruta o prefieren comida chatarra?"
+              }
+            ]
+          },
+          {
+            "image_id": "id09",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id09.jpg",
+            "description": "Profesionales haciendo yoga en la terraza de un edificio",
+            "image_specific_questions": [
+              {
+                "main_prompt": "¿Por qué crees que muchas empresas modernas están incorporando prácticas de 'mindfulness' y yoga en la jornada laboral?",
+                "simplified_prompt": "¿Crees que hacer yoga en el trabajo o la escuela es una buena idea?"
+              },
+              {
+                "main_prompt": "¿Consideras que tomar tiempo para meditar durante el día realmente mejora la productividad, o puede ser una simple distracción?",
+                "simplified_prompt": "¿Hacer una pausa para respirar profundo te ayuda a estudiar mejor?"
+              },
+              {
+                "main_prompt": "A veces, la presión por mantener un estilo de vida perfectamente saludable se convierte en otra obligación. ¿Te genera estrés la cultura actual del bienestar?",
+                "simplified_prompt": "¿Te estresa sentir que tienes que estar siempre en buena forma física?"
+              }
+            ]
+          },
+          {
+            "image_id": "id10",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id10.jpg",
+            "description": "Clase de yoga en un estudio iluminado",
+            "image_specific_questions": [
+              {
+                "main_prompt": "El yoga busca conectar el cuerpo con la mente. ¿Crees que la sociedad actual se obsesiona con la apariencia física e ignora la salud mental?",
+                "simplified_prompt": "¿Crees que la gente se preocupa más por sus músculos que por su mente?"
+              },
+              {
+                "main_prompt": "¿Qué beneficios psicológicos tiene participar en clases grupales de bienestar en lugar de hacer ejercicio solo en casa?",
+                "simplified_prompt": "¿Es más divertido hacer ejercicio con otras personas en una clase?"
+              },
+              {
+                "main_prompt": "Las clases en estudios especializados pueden ser costosas. ¿Cómo podríamos hacer que estas prácticas para reducir el estrés sean accesibles para todos?",
+                "simplified_prompt": "¿Crees que todo el mundo tiene dinero para pagar una clase de yoga?"
+              }
+            ]
+          },
+        {
+            "image_id": "id11",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id11.jpg",
+            "description": "Estudiantes meditando en el salón de clases",
+            "image_specific_questions": [
+              {
+                "main_prompt": "¿Por qué crees que algunas escuelas están incorporando prácticas de meditación o 'mindfulness' en el horario de clases?",
+                "simplified_prompt": "¿Crees que meditar en la escuela ayuda a los estudiantes a relajarse?"
+              },
+              {
+                "main_prompt": "¿Crees que el sistema educativo se enfoca demasiado en las notas y olvida la salud mental de los jóvenes?",
+                "simplified_prompt": "¿Es importante cuidar la mente igual que el cuerpo durante la escuela?"
+              },
+              {
+                "main_prompt": "Vemos a estos jóvenes muy concentrados. ¿Qué técnicas personales usas tú para manejar el estrés académico o la ansiedad?",
+                "simplified_prompt": "¿Qué haces tú cuando te sientes muy estresado por los exámenes?"
+              }
+            ]
+          },
+          {
+            "image_id": "id12",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id12.jpg",
+            "description": "Clase de spinning / ciclismo guiada por pantalla",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Participar en una clase de ciclismo sincronizada como esta requiere mucha energía. ¿Qué ventajas tiene hacer ejercicio al ritmo de un grupo?",
+                "simplified_prompt": "¿Es más divertido hacer ejercicio con mucha gente al mismo tiempo?"
+              },
+              {
+                "main_prompt": "Parece que están siguiendo a un instructor virtual en una gran pantalla. ¿Cómo ha cambiado la tecnología la forma en que nos ejercitamos?",
+                "simplified_prompt": "¿Te gusta usar videos o pantallas para guiar tu ejercicio?"
+              },
+              {
+                "main_prompt": "Ir a un gimnasio moderno como este puede ser costoso. ¿Consideras que es necesario pagar para poder estar en buena forma física?",
+                "simplified_prompt": "¿Necesitas mucho dinero para hacer ejercicio y estar sano?"
+              }
+            ]
+          },
+          {
+            "image_id": "id13",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id13.jpg",
+            "description": "Niños en bicicletas estáticas de gimnasio",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a niños pequeños usando máquinas de gimnasio. ¿Crees que esta es la mejor manera de fomentar la actividad física en la infancia?",
+                "simplified_prompt": "¿Es normal ver a niños tan pequeños en un gimnasio cerrado?"
+              },
+              {
+                "main_prompt": "¿Qué diferencias notas entre hacer ejercicio en estas máquinas estáticas y jugar deportes al aire libre para el desarrollo de un niño?",
+                "simplified_prompt": "¿Es mejor para los niños jugar afuera en el parque o usar bicicletas estáticas?"
+              },
+              {
+                "main_prompt": "Parece que están mirando una pantalla mientras pedalean. ¿Por qué crees que a veces necesitamos entretenimiento digital para motivarnos a movernos?",
+                "simplified_prompt": "¿Necesitas mirar la televisión para no aburrirte mientras haces ejercicio?"
+              }
+            ]
+          },
+          {
+            "image_id": "id14",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id14.png",
+            "description": "Madre sirviendo cigarrillos a sus hijas pequeñas",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta es una imagen muy impactante y simbólica. ¿Qué mensaje crees que intenta transmitir sobre los malos hábitos en el hogar?",
+                "simplified_prompt": "¿Por qué crees que la mujer está sirviendo cigarrillos en lugar de comida?"
+              },
+              {
+                "main_prompt": "¿De qué manera los hábitos poco saludables de los padres, como fumar o comer mal, condicionan el futuro y la salud de sus hijos?",
+                "simplified_prompt": "¿Los niños aprenden los malos hábitos directamente de sus padres?"
+              },
+              {
+                "main_prompt": "¿Crees que las campañas de salud pública con imágenes provocativas como esta son realmente efectivas para crear conciencia?",
+                "simplified_prompt": "¿Crees que esta foto asusta a la gente para que deje de fumar?"
+              }
+            ]
+          },
+          {
+            "image_id": "id15",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id15.jpg",
+            "description": "Familia completa cortando vegetales en la cocina",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Aquí vemos a los padres involucrando a sus hijos en la preparación de una ensalada. ¿Qué impacto tiene esta educación temprana en su futuro nutricional?",
+                "simplified_prompt": "¿Crees que estos niños comerán más sano cuando sean adultos independientes?"
+              },
+              {
+                "main_prompt": "Cocinar con ingredientes frescos requiere tiempo. ¿Por qué crees que tantas familias modernas optan por la conveniencia de la comida rápida?",
+                "simplified_prompt": "¿Es más fácil comprar comida rápida que cocinar vegetales frescos en casa?"
+              },
+              {
+                "main_prompt": "Además de la nutrición, ¿qué otros beneficios aporta a una familia el acto de cocinar y preparar los alimentos juntos?",
+                "simplified_prompt": "¿Cocinar juntos ayuda a la familia a comunicarse mejor?"
+              }
+            ]
+          },
+          {
+            "image_id": "id16",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id16.jpg",
+            "description": "Mujer eligiendo entre comida rápida y comida saludable",
+            "image_specific_questions": [
+              {
+                "main_prompt": "La mujer tiene que elegir entre opciones muy diferentes. ¿Por qué crees que a menudo nos cuesta tanto elegir la opción sana cuando tenemos tentaciones enfrente?",
+                "simplified_prompt": "¿Por qué nos gusta tanto la comida chatarra si sabemos que es mala para nosotros?"
+              },
+              {
+                "main_prompt": "¿De qué manera crees que la publicidad y la cultura moderna influyen en nuestras decisiones diarias sobre lo que comemos?",
+                "simplified_prompt": "¿Ves muchos anuncios de comida rápida en la televisión o en tu teléfono?"
+              },
+              {
+                "main_prompt": "¿Crees que es posible mantener una dieta equilibrada consumiendo de ambos lados de la mesa, o se deben eliminar por completo los alimentos procesados?",
+                "simplified_prompt": "¿Está bien comer una hamburguesa de vez en cuando si también comes ensaladas?"
+              }
+            ]
+          },
+          {
+            "image_id": "id17",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id17.jpg",
+            "description": "Dos mujeres haciendo flexiones y chocando los cinco",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas dos mujeres se están dando ánimos mutuamente. ¿Cómo influye el apoyo social y la amistad en nuestra motivación para mantenernos activos?",
+                "simplified_prompt": "¿Es más fácil y divertido hacer ejercicio cuando tienes un amigo que te acompaña?"
+              },
+              {
+                "main_prompt": "Están haciendo ejercicio en un espacio público al aire libre. ¿Qué ventajas tiene esto frente a la rutina de ir a un gimnasio cerrado?",
+                "simplified_prompt": "¿Te gusta más hacer ejercicio en el parque o adentro de un edificio?"
+              },
+              {
+                "main_prompt": "Integrar el ejercicio en la rutina diaria puede ser un desafío. ¿Qué estrategias darías para formar un hábito saludable que no se abandone fácilmente?",
+                "simplified_prompt": "¿Qué podemos hacer para no abandonar el ejercicio después de solo una semana?"
+              }
+            ]
+          },
+          {
+            "image_id": "id18",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id18.jpg",
+            "description": "Vista superior de muchos vegetales cortados y coloridos",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta gran variedad de vegetales frescos se ve muy colorida y apetitosa. ¿Crees que la presentación visual de la comida influye en nuestras ganas de comer sano?",
+                "simplified_prompt": "¿Comes más verduras si se ven bonitas y coloridas en tu plato?"
+              },
+              {
+                "main_prompt": "Los nutricionistas recomiendan 'comer el arcoíris'. ¿Por qué es fundamental incluir tanta variedad de ingredientes en nuestra dieta diaria?",
+                "simplified_prompt": "¿Por qué es bueno comer vegetales de muchos colores diferentes?"
+              },
+              {
+                "main_prompt": "Preparar comidas así requiere acceso a buenos productos agrícolas. ¿Crees que todas las comunidades tienen acceso fácil y económico a alimentos frescos?",
+                "simplified_prompt": "¿Es fácil y barato encontrar frutas y verduras frescas en cualquier ciudad?"
+              }
+            ]
+          },
+          {
+            "image_id": "id19",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id19.png",
+            "description": "Jóvenes sentados en el piso del gimnasio conversando",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a un grupo descansando y conversando en el gimnasio. ¿Crees que los centros de ejercicio se han convertido en los nuevos espacios sociales para los jóvenes?",
+                "simplified_prompt": "¿La gente joven va al gimnasio para hacer amigos además de hacer ejercicio?"
+              },
+              {
+                "main_prompt": "A veces, el ambiente del gimnasio puede ser intimidante. ¿Crees que existe demasiada presión social entre los jóvenes para tener un 'cuerpo perfecto'?",
+                "simplified_prompt": "¿Te sientes nervioso si haces ejercicio frente a otras personas con mucha experiencia?"
+              },
+              {
+                "main_prompt": "El descanso es una parte clave del ejercicio. ¿Por qué es importante escuchar a nuestro cuerpo, socializar y no sobreentrenar obsesivamente?",
+                "simplified_prompt": "¿Es malo para el cuerpo hacer demasiado ejercicio sin tomar un descanso?"
+              }
+            ]
+          },
+          {
+            "image_id": "id20",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id20.png",
+            "description": "Clase grupal de levantamiento de pesas (barras)",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Todos están haciendo exactamente el mismo movimiento con pesas guiados por un instructor. ¿Qué beneficios tiene seguir un programa de fuerza estructurado?",
+                "simplified_prompt": "¿Es mejor que un profesor te diga exactamente qué ejercicios hacer?"
+              },
+              {
+                "main_prompt": "Muchas personas se enfocan solo en el ejercicio cardiovascular. ¿Por qué es importante integrar el entrenamiento de fuerza o pesas para nuestra salud general?",
+                "simplified_prompt": "¿Por qué es bueno levantar pesas para tu cuerpo y no solo correr?"
+              },
+              {
+                "main_prompt": "Participar en una clase intensa y constante requiere mucha disciplina. ¿Cómo crees que esa disciplina física se transfiere a otras áreas, como la escuela o el trabajo?",
+                "simplified_prompt": "¿Ser disciplinado en los deportes te ayuda a sacar buenas notas en la escuela?"
+              }
+            ]
+          },
+        {
+            "image_id": "id21",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/id21.png",
+            "description": "Instructora explicando una rutina en la pizarra a un grupo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "La instructora está explicando algo en una pizarra antes de comenzar. ¿Por qué crees que es importante tener metas o un plan claro cuando hacemos actividad física?",
+                "simplified_prompt": "¿Es importante tener un plan antes de empezar a hacer ejercicio?"
+              },
+              {
+                "main_prompt": "Muchas personas contratan entrenadores para mantenerse en forma. ¿Qué ventajas tiene que un profesional guíe y corrija tu rutina de salud?",
+                "simplified_prompt": "¿Es mejor hacer ejercicio solo o con un profesor que te enseñe cómo hacerlo?"
+              },
+              {
+                "main_prompt": "Vemos a hombres y mujeres escuchando juntos en esta clase. ¿Crees que los gimnasios modernos han logrado ser ambientes cómodos e inclusivos para todos?",
+                "simplified_prompt": "¿Crees que los gimnasios son lugares cómodos para todas las personas?"
+              }
+            ]
+          }
       ]
     },
     "organizacion_social": {
@@ -38,6 +439,79 @@
         { "main_prompt": "¿Qué papel tiene la comida al socializar?", "simplified_prompt": "¿Siempre hay comida en tus fiestas familiares?" },
         { "main_prompt": "¿Somos más solitarios ahora que antes?", "simplified_prompt": "¿Tienes muchos amigos cercanos?" },
         { "main_prompt": "¿Cómo mantienen contacto los jóvenes?", "simplified_prompt": "¿Hablas con tus amigos por FaceTime?" }
+      ],
+      "images": [
+        {
+          "image_id": "os01",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os01.png",
+          "description": "Niños programando juntos",
+          "image_specific_questions": [
+            { "main_prompt": "¿Por qué crees que es importante que los niños aprendan programación desde una edad tan temprana?", "simplified_prompt": "¿Crees que es una buena idea que los niños pequeños usen computadoras en la escuela?" },
+            { "main_prompt": "En la imagen vemos a varios estudiantes compartiendo una sola computadora. ¿Qué habilidades sociales crees que desarrollan al trabajar así?", "simplified_prompt": "¿Qué es lo bueno de trabajar en grupo con otros estudiantes?" },
+            { "main_prompt": "La profesora está sentada con ellos, guiándolos. ¿Cómo cambia el papel del maestro cuando se usa tecnología en el aula?", "simplified_prompt": "¿Prefieres un profesor que hable frente a la clase o uno que se siente a ayudarte en tu escritorio?" },
+            { "main_prompt": "Si comparas esta escena con tu propia educación primaria, ¿tuvieron ustedes un acceso similar a la tecnología?", "simplified_prompt": "Cuando eras más joven, ¿usabas computadoras en tus clases?" }
+          ]
+        },
+        {
+          "image_id": "os02",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os02.png",
+          "description": "Adolescentes con laptops en la biblioteca",
+          "image_specific_questions": [
+            { "main_prompt": "Vemos a los estudiantes trabajando juntos en mesas redondas. ¿Qué ventajas tiene esta forma de aprender comparada con sentarse solos en pupitres?", "simplified_prompt": "¿Es mejor trabajar con amigos en una mesa redonda o trabajar solo en silencio?" },
+            { "main_prompt": "Todos tienen su propia computadora portátil. ¿Crees que esto es esencial para la educación secundaria hoy en día?", "simplified_prompt": "¿Necesitas una computadora todos los días para hacer tu tarea?" },
+            { "main_prompt": "Están en una biblioteca en lugar de un salón tradicional. ¿Cómo cambia el ambiente de estudio al estar rodeado de libros y otros recursos?", "simplified_prompt": "¿Prefieres estudiar en la biblioteca o en tu salón de clases? ¿Por qué?" }
+          ]
+        },
+        {
+          "image_id": "os03",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os03.png",
+          "description": "Niños con batas y mini-laptops idénticas",
+          "image_specific_questions": [
+            { "main_prompt": "Parece que todos los niños tienen exactamente la misma computadora pequeña. ¿Crees que programas así ayudan a reducir la desigualdad en la educación?", "simplified_prompt": "¿Crees que es importante que todos los estudiantes tengan la misma computadora?" },
+            { "main_prompt": "Todos llevan batas blancas idénticas. ¿Crees que este tipo de uniforme ayuda a crear igualdad entre los alumnos?", "simplified_prompt": "¿Prefieres llevar uniforme o usar tu propia ropa para ir a la escuela?" },
+            { "main_prompt": "El profesor está sentado y sonriendo mientras los alumnos trabajan en sus pantallas. ¿Cómo describirías su rol en esta clase?", "simplified_prompt": "¿Crees que el profesor está dando una clase estricta o dejando que los niños exploren solos?" }
+          ]
+        },
+        {
+          "image_id": "os04",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os04.png",
+          "description": "Aula al aire libre bajo una lona",
+          "image_specific_questions": [
+            { "main_prompt": "Es evidente que esta escuela carece de un edificio formal y están bajo una lona. ¿Qué desafíos crees que enfrentan estos estudiantes día a día?", "simplified_prompt": "¿Crees que es difícil concentrarse y aprender en este lugar?" },
+            { "main_prompt": "Al estar al aire libre en estas condiciones, ¿cómo crees que el clima extremo afecta su educación?", "simplified_prompt": "¿Qué crees que pasa con esta clase si llueve mucho o hace mucho viento?" },
+            { "main_prompt": "A pesar de las condiciones, los niños y el maestro están presentes y trabajando. ¿Qué nos dice esto sobre el valor que le dan a la educación?", "simplified_prompt": "¿Por qué crees que los niños van a la escuela aunque no tengan un buen edificio?" }
+          ]
+        },
+        {
+          "image_id": "os05",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os05.png",
+          "description": "Aula muy humilde/rural sin tecnología",
+          "image_specific_questions": [
+            { "main_prompt": "En este salón solo vemos pupitres de madera y cuadernos, sin tecnología visible. ¿Crees que se puede recibir una buena educación sin computadoras?", "simplified_prompt": "¿Puedes aprender bien si tu escuela no tiene internet ni tecnología?" },
+            { "main_prompt": "Esta parece ser una escuela rural o de bajos recursos. ¿Crees que las escuelas en el campo tienen los mismos recursos que las escuelas de la ciudad?", "simplified_prompt": "¿Las escuelas en la ciudad tienen más dinero que las escuelas en el campo?" },
+            { "main_prompt": "Comparando estas instalaciones con tu escuela, ¿qué es lo que más aprecias de los recursos que tú tienes disponibles?", "simplified_prompt": "¿Qué tiene tu escuela que esta escuela no tiene?" }
+          ]
+        },
+        {
+          "image_id": "os06",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os06.png",
+          "description": "Aula de secundaria tradicional con pizarra verde",
+          "image_specific_questions": [
+            { "main_prompt": "El profesor está escribiendo en la pizarra y todos están tomando notas en sus cuadernos. ¿Qué ventajas tiene este método tradicional de enseñanza?", "simplified_prompt": "¿A ti te gusta cuando el profesor explica y tú escribes en tu cuaderno?" },
+            { "main_prompt": "Los pupitres están separados y todos miran hacia el frente. ¿Cómo afecta esta disposición a la comunicación entre los alumnos?", "simplified_prompt": "¿Es fácil hablar con tus amigos si los escritorios están separados así?" },
+            { "main_prompt": "Aunque hoy en día hay mucha tecnología, esta clase parece muy tradicional. ¿Crees que las pizarras y los cuadernos desaparecerán en el futuro?", "simplified_prompt": "¿Crees que en el futuro solo usaremos computadoras y no cuadernos de papel?" }
+          ]
+        },
+        {
+          "image_id": "os07",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/os07.png",
+          "description": "Aula digitalizada con pizarra interactiva",
+          "image_specific_questions": [
+            { "main_prompt": "Parece que los estudiantes están usando un programa interactivo o un juego educativo. ¿Crees que aprender jugando es efectivo para niños de esta edad?", "simplified_prompt": "¿Te gusta aprender con juegos en la computadora?" },
+            { "main_prompt": "Vemos pantallas en todos los pupitres y una gran pizarra digital. ¿Te preocupa que los estudiantes pasen demasiado tiempo frente a las pantallas?", "simplified_prompt": "¿Crees que mirar tantas pantallas en la escuela es malo para los ojos o la salud?" },
+            { "main_prompt": "El maestro está usando una pizarra interactiva en lugar de tiza. ¿Cómo crees que esto cambia la dinámica de la clase?", "simplified_prompt": "¿Es más divertida la clase si el profesor usa una pantalla grande en lugar de una pizarra normal?" }
+          ]
+        }
       ]
     },
     "experiencias": {
@@ -63,7 +537,408 @@
         { "main_prompt": "¿Cómo influye el clima en tu diversión?", "simplified_prompt": "¿Haces actividades diferentes en el invierno?" },
         { "main_prompt": "¿Es el deporte demasiado comercial?", "simplified_prompt": "¿Miras deportes profesionales en la tele?" },
         { "main_prompt": "¿Qué actividad te gustaría aprender?", "simplified_prompt": "¿Quieres aprender a tocar un instrumento?" }
-      ]
+      ],
+      "images": [
+          {
+            "image_id": "ex01",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex01.jpg",
+            "description": "Mujeres de diversas edades bailando / clase de Zumba",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos que todas están sonriendo mientras bailan. ¿Qué beneficios psicológicos tiene hacer actividades recreativas grupales como esta?",
+                "simplified_prompt": "¿Por qué es bueno para la mente hacer actividades divertidas con otras personas?"
+              },
+              {
+                "main_prompt": "Esta clase parece tener personas de diferentes edades y condiciones físicas. ¿Crees que es importante que los espacios recreativos sean inclusivos para todos?",
+                "simplified_prompt": "¿Crees que todas las personas deberían sentirse cómodas haciendo ejercicio juntas?"
+              },
+              {
+                "main_prompt": "Muchas personas abandonan sus rutinas de ejercicio por aburrimiento. ¿Cómo ayuda la música y el baile a mantener la motivación diaria?",
+                "simplified_prompt": "¿Es más fácil hacer ejercicio si escuchas música y bailas?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex02",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex02.jpg",
+            "description": "Adultos tomando una clase de cocina juntos",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas personas están tomando una clase de cocina en su tiempo libre. ¿De qué manera aprender a preparar platos nuevos nos ayuda a entender otras culturas?",
+                "simplified_prompt": "¿Qué podemos aprender sobre un país probando su comida típica?"
+              },
+              {
+                "main_prompt": "Vemos que están compartiendo y conversando. ¿Crees que la comida es la mejor excusa para socializar y conocer gente nueva?",
+                "simplified_prompt": "¿Te gusta ir a restaurantes o cocinar con amigos para pasar el tiempo?"
+              },
+              {
+                "main_prompt": "Gastar dinero en una experiencia como esta clase en lugar de comprar objetos materiales es una tendencia creciente. ¿Por qué crees que valoramos más las experiencias hoy en día?",
+                "simplified_prompt": "¿Prefieres gastar tu dinero en un viaje divertido o en comprar ropa nueva?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex03",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex03.jpg",
+            "description": "Dos mujeres tomándose una selfie en una plaza europea",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas turistas se están tomando una foto. ¿Crees que la necesidad moderna de documentar todo en fotos interfiere con disfrutar el momento presente?",
+                "simplified_prompt": "¿Es mejor tomar muchas fotos en un viaje o solo mirar y disfrutar?"
+              },
+              {
+                "main_prompt": "Parecen estar disfrutando mucho de su viaje juntas. ¿Qué ventajas y desventajas tiene viajar con amistades en comparación con viajar completamente solo?",
+                "simplified_prompt": "¿Prefieres viajar con tus amigos o viajar solo? ¿Por qué?"
+              },
+              {
+                "main_prompt": "Al visitar monumentos históricos y plazas públicas en otros países, ¿qué responsabilidades tenemos para ser turistas respetuosos con la cultura local?",
+                "simplified_prompt": "¿Qué cosas no deberíamos hacer cuando visitamos la ciudad de otra persona?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex04",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex04.jpg",
+            "description": "Amigos celebrando un gol viendo el fútbol en un bar",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Están celebrando efusivamente en un bar. ¿Cómo logran los deportes unir a personas que no se conocen dentro de una comunidad?",
+                "simplified_prompt": "¿Por qué la gente se emociona tanto cuando ve deportes con otros aficionados?"
+              },
+              {
+                "main_prompt": "Para muchos, ver deportes el fin de semana es una forma de escape. ¿Qué importancia tiene tener este tipo de distracciones de la rutina laboral o escolar?",
+                "simplified_prompt": "¿Es bueno tener tiempo para ver televisión y relajarse después de trabajar?"
+              },
+              {
+                "main_prompt": "Vemos que están disfrutando como espectadores. ¿Crees que la sociedad moderna pasa más tiempo viendo a otros hacer deporte que practicándolo?",
+                "simplified_prompt": "¿A ti te gusta más jugar deportes o verlos en la televisión?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex05",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex05.jpg",
+            "description": "Niñas y niños jugando al fútbol en un campo abierto",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estos niños están jugando intensamente al fútbol. ¿Qué lecciones invaluables para la vida se aprenden jugando deportes de equipo durante la infancia?",
+                "simplified_prompt": "¿Qué cosas buenas aprenden los niños cuando juegan en un equipo?"
+              },
+              {
+                "main_prompt": "A veces los adultos presionan demasiado a los niños para ganar campeonatos. ¿Crees que la competencia a esta edad debería ser secundaria a la pura diversión?",
+                "simplified_prompt": "¿Es más importante que los niños ganen el partido o que se diviertan?"
+              },
+              {
+                "main_prompt": "En una época dominada por las pantallas y el sedentarismo, ¿cómo podemos motivar a más niños a participar en actividades físicas al aire libre como esta?",
+                "simplified_prompt": "¿Qué podemos hacer para que los niños salgan a jugar en lugar de usar el teléfono?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex06",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex06.jpg",
+            "description": "Hombre joven paseando a su perro en un parque",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Pasear a una mascota es una rutina diaria para muchos. ¿Qué impacto emocional y físico crees que tiene tener un animal de compañía en nuestra vida?",
+                "simplified_prompt": "¿Crees que tener un perro o un gato hace a las personas más felices?"
+              },
+              {
+                "main_prompt": "El hombre está caminando al aire libre. ¿Cómo nos ayuda el contacto regular con la naturaleza o los parques a desconectarnos del estrés urbano?",
+                "simplified_prompt": "¿Te gusta salir a caminar por el parque para relajarte?"
+              },
+              {
+                "main_prompt": "Cuidar de un animal requiere tiempo y compromiso constante. ¿Crees que tener una mascota es una buena forma de enseñar responsabilidad a los jóvenes?",
+                "simplified_prompt": "¿Es difícil cuidar a un perro todos los días?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex07",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex07.jpg",
+            "description": "Equipo de fútbol de mujeres descansando y riendo en la cancha",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas jugadoras están descansando y compartiendo después de jugar. ¿Crees que las amistades forjadas en el deporte son diferentes a las que hacemos en otros lugares?",
+                "simplified_prompt": "¿Es fácil hacer buenos amigos cuando juegas en un equipo deportivo?"
+              },
+              {
+                "main_prompt": "La popularidad de los deportes femeninos ha crecido de manera increíble. ¿Qué barreras o prejuicios crees que todavía enfrentan las mujeres en el mundo deportivo?",
+                "simplified_prompt": "¿Crees que los deportes de mujeres son tan populares como los deportes de hombres?"
+              },
+              {
+                "main_prompt": "Encontrar tiempo para actividades recreativas cuando somos adultos puede ser un reto. ¿Cómo logras tú equilibrar tus responsabilidades con tus pasatiempos?",
+                "simplified_prompt": "¿Tienes suficiente tiempo libre para hacer las cosas que te gustan después de la escuela?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex08",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex08.jpg",
+            "description": "Fanáticos brasileños gritando apasionadamente por su equipo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos una pasión extrema por la selección nacional. ¿De qué manera los eventos deportivos internacionales, como el Mundial, fortalecen la identidad de un país?",
+                "simplified_prompt": "¿Por qué la gente se siente tan orgullosa de su país durante los grandes partidos de fútbol?"
+              },
+              {
+                "main_prompt": "El fanatismo une a la gente, pero a veces causa conflictos graves. ¿Dónde se debe trazar la línea entre la pasión por un equipo y el comportamiento inaceptable?",
+                "simplified_prompt": "¿Crees que los aficionados a los deportes a veces se enojan demasiado y se comportan mal?"
+              },
+              {
+                "main_prompt": "El fútbol es un fenómeno global que cruza fronteras y lenguajes. ¿Por qué crees que este deporte en particular tiene el inmenso poder de conectar a culturas tan diferentes?",
+                "simplified_prompt": "¿Por qué crees que a la gente de casi todos los países del mundo le gusta tanto el fútbol?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex09",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex09.jpg",
+            "description": "Padre sonriendo y enseñando a su hijo a jugar baloncesto",
+            "image_specific_questions": [
+              {
+                "main_prompt": "El padre le está enseñando a su hijo a jugar. ¿Qué papel juegan los pasatiempos compartidos en la construcción de lazos de confianza entre padres e hijos?",
+                "simplified_prompt": "¿Por qué es importante hacer actividades o jugar deportes con tus padres?"
+              },
+              {
+                "main_prompt": "Los padres suelen ser nuestros primeros mentores. ¿Cómo influyen los hábitos recreativos y el nivel de actividad física de los padres en el estilo de vida de sus hijos?",
+                "simplified_prompt": "¿Si tus padres hacen mucho deporte, crees que tú también harás más deporte?"
+              },
+              {
+                "main_prompt": "Jugar casualmente en casa es muy diferente a jugar en una liga organizada. ¿Qué beneficios emocionales tiene el juego libre y sin la presión de ganar?",
+                "simplified_prompt": "¿Es más divertido jugar un partido en casa con tu familia o en una competencia real?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex10",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex10.jpg",
+            "description": "Adultos mayores riendo mientras juegan al dominó",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas personas mayores están disfrutando de un juego tradicional. ¿Cómo crees que cambian nuestras preferencias de ocio a medida que envejecemos?",
+                "simplified_prompt": "¿Crees que a ti te gustará hacer las mismas actividades divertidas cuando seas anciano?"
+              },
+              {
+                "main_prompt": "Mantenerse socialmente activo y participar en juegos de estrategia es clave en la vejez. ¿Por qué es tan importante para la salud evitar el aislamiento en esta etapa?",
+                "simplified_prompt": "¿Por qué es bueno que los abuelos pasen mucho tiempo jugando y hablando con sus amigos?"
+              },
+              {
+                "main_prompt": "Mientras los jóvenes juegan a través de pantallas, ellos juegan físicamente. ¿Crees que los juegos de mesa tradicionales tienen un valor que la tecnología no puede reemplazar?",
+                "simplified_prompt": "¿Crees que los juegos de mesa de madera o cartón son mejores que los videojuegos?"
+              }
+            ]
+          },
+        {
+            "image_id": "ex11",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex11.jpg",
+            "description": "Turista tomando una foto de Machu Picchu con su teléfono",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a una turista tomando fotos de Machu Picchu. ¿Crees que la tecnología nos impide disfrutar plenamente de estos lugares históricos en el momento presente?",
+                "simplified_prompt": "¿Es mejor tomar muchas fotos en un viaje o simplemente mirar y disfrutar?"
+              },
+              {
+                "main_prompt": "Al visitar lugares antiguos y frágiles, ¿qué impacto crees que tiene el turismo masivo en la conservación del medio ambiente y la cultura local?",
+                "simplified_prompt": "¿Crees que tener demasiados turistas es malo para los lugares históricos?"
+              },
+              {
+                "main_prompt": "¿Por qué crees que viajar y descubrir nuevas culturas es una parte tan importante de la experiencia humana?",
+                "simplified_prompt": "¿Por qué crees que a la gente le gusta tanto viajar a otros países?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex12",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex12.jpg",
+            "description": "Joven mochilera mirando un mapa en la estación de tren",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta joven viaja sola como mochilera. ¿Cuáles crees que son los mayores desafíos y recompensas de viajar de manera independiente?",
+                "simplified_prompt": "¿Crees que es difícil o divertido viajar solo sin tus amigos o familia?"
+              },
+              {
+                "main_prompt": "Vemos que está usando un mapa en la estación. ¿Prefieres planear cada detalle de tus viajes o dejar espacio para la espontaneidad y la aventura?",
+                "simplified_prompt": "¿Te gusta tener un plan exacto para tus vacaciones o prefieres hacer cosas por sorpresa?"
+              },
+              {
+                "main_prompt": "Viajar en tren permite ver el paisaje de manera diferente. ¿Cómo cambia nuestra perspectiva de un país cuando viajamos lentamente por tierra en lugar de volar?",
+                "simplified_prompt": "¿Prefieres viajar en tren para ver el paisaje o en avión para llegar más rápido?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex13",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex13.jpg",
+            "description": "Jugadores de fútbol celebrando emocionados un gol",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Los jugadores están celebrando intensamente. ¿Cómo crees que el éxito en los deportes internacionales impacta el orgullo y la identidad de todo un país?",
+                "simplified_prompt": "¿Por qué la gente se siente tan orgullosa de su país cuando su equipo gana un partido importante?"
+              },
+              {
+                "main_prompt": "El deporte profesional requiere años de sacrificio y disciplina. ¿Qué lecciones de vida podemos aprender al observar la dedicación de estos atletas?",
+                "simplified_prompt": "¿Crees que ser un deportista profesional es un trabajo muy difícil?"
+              },
+              {
+                "main_prompt": "Las emociones en los deportes son muy fuertes. ¿Cómo nos ayuda la competencia deportiva a aprender a manejar nuestras emociones en la vida diaria?",
+                "simplified_prompt": "¿Qué aprendes sobre ti mismo cuando ganas o pierdes un juego?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex14",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex14.jpg",
+            "description": "Estadio de fútbol lleno de aficionados durante un partido",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos un estadio lleno de miles de aficionados. ¿Qué tiene el deporte en vivo que crea un sentido de comunidad tan poderoso entre personas desconocidas?",
+                "simplified_prompt": "¿Por qué es tan emocionante ver un partido en un estadio grande con mucha gente?"
+              },
+              {
+                "main_prompt": "El deporte hoy en día es también una industria multimillonaria. ¿Crees que la comercialización extrema ha arruinado la pureza de las competencias deportivas?",
+                "simplified_prompt": "¿Crees que los jugadores de fútbol ganan demasiado dinero hoy en día?"
+              },
+              {
+                "main_prompt": "Ser espectador es una de las actividades recreativas más populares del mundo. ¿Por qué preferimos dedicar nuestro tiempo libre a ver a otros competir en lugar de jugar nosotros mismos?",
+                "simplified_prompt": "¿Es más divertido para ti ver deportes en la televisión o jugarlos tú mismo?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex15",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex15.jpg",
+            "description": "Amigos conversando y comiendo tapas al aire libre",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estas personas están compartiendo tapas y conversando al aire libre. ¿De qué manera la comida actúa como un puente para la interacción social en la cultura hispana?",
+                "simplified_prompt": "¿Por qué es importante sentarse a comer y hablar con los amigos?"
+              },
+              {
+                "main_prompt": "El menú muestra platos tradicionales. ¿Cómo refleja la gastronomía local la historia y las costumbres de una región?",
+                "simplified_prompt": "¿Crees que la comida típica nos enseña mucho sobre un país?"
+              },
+              {
+                "main_prompt": "En el mundo moderno, a menudo comemos rápido o frente a una pantalla. ¿Qué perdemos al no tomarnos el tiempo para disfrutar de una larga sobremesa con los demás?",
+                "simplified_prompt": "¿Es malo comer rápido frente a la televisión en lugar de sentarse en la mesa?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex16",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex16.jpg",
+            "description": "Pareja sentada en las rocas mirando el mar en una playa",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta pareja está relajándose frente al mar en un entorno natural. ¿Por qué es esencial para nuestra salud mental desconectarnos de la rutina y buscar estos momentos de paz?",
+                "simplified_prompt": "¿Por qué es bueno ir a la playa para descansar durante las vacaciones?"
+              },
+              {
+                "main_prompt": "Algunas personas buscan aventuras extremas al viajar, mientras que otras solo quieren descansar. ¿Qué tipo de experiencia turística prefieres tú y por qué?",
+                "simplified_prompt": "¿Prefieres unas vacaciones tranquilas en la playa o unas vacaciones llenas de actividades?"
+              },
+              {
+                "main_prompt": "Viajar a destinos naturales hermosos nos hace apreciar más el planeta. ¿Crees que el turismo responsable puede ayudar a proteger y financiar estas áreas de conservación?",
+                "simplified_prompt": "¿Es importante cuidar la naturaleza cuando visitamos lugares hermosos como esta playa?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex17",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex17.jpg",
+            "description": "Familia riendo y compartiendo alrededor de una piscina en casa",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a una familia de varias generaciones riendo y pasando tiempo en la piscina. ¿Qué importancia tienen estas reuniones informales para fortalecer los lazos familiares?",
+                "simplified_prompt": "¿Es divertido pasar los fines de semana en casa con tus padres y abuelos?"
+              },
+              {
+                "main_prompt": "Disfrutar del ocio en casa puede ser tan enriquecedor como viajar lejos. ¿Cómo logras encontrar el equilibrio entre tus obligaciones diarias y tu tiempo de recreación familiar?",
+                "simplified_prompt": "¿Tienes suficiente tiempo libre para jugar y relajarte con tu familia?"
+              },
+              {
+                "main_prompt": "Las diferentes generaciones a menudo tienen intereses distintos. ¿Cómo crees que el compartir un espacio relajado como este ayuda a superar las brechas generacionales?",
+                "simplified_prompt": "¿Es fácil encontrar actividades divertidas que les gusten tanto a los niños como a los adultos?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex18",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex18.jpg",
+            "description": "Jóvenes compartiendo comida moderna en un restaurante",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a un grupo de jóvenes compartiendo una comida. ¿Crees que salir a comer se ha convertido en la actividad recreativa principal para la juventud actual?",
+                "simplified_prompt": "¿Te gusta salir a comer a restaurantes con tus amigos los fines de semana?"
+              },
+              {
+                "main_prompt": "Los platos parecen modernos y creativos. ¿Cómo influye la globalización en los cambios de nuestros hábitos alimenticios y gustos tradicionales?",
+                "simplified_prompt": "¿Crees que ahora comemos comida de muchos países diferentes en nuestra propia ciudad?"
+              },
+              {
+                "main_prompt": "En muchas reuniones hoy en día, los teléfonos están sobre la mesa. ¿Es posible tener una conexión genuinamente social si todos tienen acceso constante a la tecnología?",
+                "simplified_prompt": "¿Te molesta cuando tus amigos usan el teléfono mientras están comiendo juntos?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex19",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex19.jpg",
+            "description": "Bar de tapas tradicional en España con jamones colgando",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Este bar tradicional está lleno de pintxos y jamones colgando. ¿Qué experiencia cultural única ofrece comer de pie en la barra frente a sentarse en un restaurante formal?",
+                "simplified_prompt": "¿Te gustaría comer comida típica de pie en un lugar como este?"
+              },
+              {
+                "main_prompt": "El camarero está interactuando directamente con los clientes. ¿Qué importancia tiene el ambiente y la hospitalidad local a la hora de experimentar la cultura de otro país?",
+                "simplified_prompt": "¿Crees que es importante que los camareros sean amables cuando visitas un país nuevo?"
+              },
+              {
+                "main_prompt": "Mantener vivos estos negocios tradicionales puede ser difícil frente a las grandes cadenas internacionales. ¿Por qué crees que deberíamos proteger la cultura gastronómica local?",
+                "simplified_prompt": "¿Es importante tener restaurantes tradicionales en lugar de solo franquicias de comida rápida?"
+              }
+            ]
+          },
+          {
+            "image_id": "ex20",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex20.jpg",
+            "description": "Barra moderna llena de pintxos y personas comiendo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "La presentación de la comida a lo largo de esta gran barra es muy visual y llamativa. ¿Crees que la gastronomía es una forma de expresión artística tan válida como la pintura o la música?",
+                "simplified_prompt": "¿Crees que cocinar platos hermosos como estos es un tipo de arte?"
+              },
+              {
+                "main_prompt": "Compartir pequeños bocados o 'pintxos' permite probar muchas cosas diferentes. ¿Cómo fomenta este estilo de comida la curiosidad y la apertura hacia nuevas experiencias?",
+                "simplified_prompt": "¿Te gusta probar comidas nuevas y diferentes cuando viajas?"
+              },
+              {
+                "main_prompt": "Vemos un ambiente animado con mucha gente interactuando. ¿De qué manera los espacios públicos como este bar contribuyen a la vida social de una ciudad?",
+                "simplified_prompt": "¿Es divertido ir a lugares donde hay mucha gente comiendo y hablando al mismo tiempo?"
+              }
+            ]
+          },
+        {
+            "image_id": "ex21",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ex21.jpg",
+            "description": "Espectáculo tradicional de flamenco con la Giralda de Sevilla de fondo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos un espectáculo de flamenco tradicional. ¿Qué importancia tienen los bailes y la música regional para preservar la identidad y la historia de una cultura?",
+                "simplified_prompt": "¿Crees que la música y el baile tradicionales son importantes para un país?"
+              },
+              {
+                "main_prompt": "Al fondo vemos una imagen de una torre famosa en España. Cuando viajas, ¿qué valor tiene asistir a eventos culturales auténticos en lugar de atracciones hechas solo para turistas?",
+                "simplified_prompt": "Cuando visitas otro país, ¿te gusta ver espectáculos de música local?"
+              },
+              {
+                "main_prompt": "El flamenco se conoce por expresar emociones muy intensas. ¿De qué manera el arte nos permite comunicar sentimientos que a veces son difíciles de expresar con palabras?",
+                "simplified_prompt": "¿Por qué crees que a la gente le gusta expresar sus emociones bailando o cantando?"
+              }
+            ]
+          }
+        ]
     },
     "como_compartimos_el_planeta": {
       "theme_name": "Cómo compartimos el planeta",
@@ -78,7 +953,199 @@
         { "main_prompt": "¿Es posible vivir sin producir basura?", "simplified_prompt": "¿Es difícil no producir basura en tu comunidad?" },
         { "main_prompt": "¿Cómo afectará el clima a tus hijos?", "simplified_prompt": "¿Crees que el clima va a ser peor en el futuro?" },
         { "main_prompt": "¿Qué desastre natural te da más miedo?", "simplified_prompt": "¿Te dan miedo las tormentas o tornados?" }
-      ]
+      ],
+      "images": [
+          {
+            "image_id": "ccep01",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep01.jpg",
+            "description": "Persona limpiando basura plástica en una playa rocosa",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Al ver a esta persona limpiando la playa sola, ¿crees que las acciones individuales realmente hacen una diferencia contra la contaminación global?",
+                "simplified_prompt": "¿Crees que recoger basura tú solo ayuda a salvar el planeta?"
+              },
+              {
+                "main_prompt": "¿De quién crees que es la responsabilidad principal de mantener limpios los océanos: de los ciudadanos, de los gobiernos o de las grandes empresas?",
+                "simplified_prompt": "¿Quién tiene la culpa de que haya tanta basura en el mar?"
+              },
+              {
+                "main_prompt": "Si caminaras por esta playa, ¿cómo te haría sentir ver toda esta basura plástica destruyendo un entorno natural?",
+                "simplified_prompt": "¿Te sientes triste o enojado cuando ves basura en la naturaleza?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep02",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep02.jpg",
+            "description": "Adultos y niños con chalecos naranjas reciclando en un parque",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a niños y adultos trabajando juntos como voluntarios. ¿Por qué es importante enseñar a las nuevas generaciones a cuidar su comunidad desde pequeños?",
+                "simplified_prompt": "¿Por qué es bueno que los niños ayuden a limpiar los parques de su ciudad?"
+              },
+              {
+                "main_prompt": "Participar en la limpieza comunitaria requiere donar tu tiempo libre. ¿Has participado alguna vez en un proyecto de voluntariado ambiental similar?",
+                "simplified_prompt": "¿Alguna vez has ayudado a recoger basura con un grupo en tu escuela o ciudad?"
+              },
+              {
+                "main_prompt": "¿Crees que las personas que invierten esfuerzo en limpiar su entorno son menos propensas a ensuciarlo o contaminarlo en el futuro?",
+                "simplified_prompt": "Si tú ayudas a limpiar un parque, ¿crees que vas a tirar basura allí después?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep03",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep03.jpg",
+            "description": "Jóvenes voluntarios sonriendo mientras recogen basura en el campo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estos jóvenes parecen estar disfrutando mientras recogen basura. ¿Cómo puede el activismo ambiental convertirse en una actividad social positiva para la juventud?",
+                "simplified_prompt": "¿Crees que limpiar el medio ambiente puede ser divertido si lo haces con tus amigos?"
+              },
+              {
+                "main_prompt": "Muchas de las recientes protestas climáticas son lideradas por jóvenes. ¿Sientes que tu generación está más preocupada por el futuro del planeta que las anteriores?",
+                "simplified_prompt": "¿Los jóvenes de tu edad se preocupan más por el planeta que los adultos?"
+              },
+              {
+                "main_prompt": "En tu escuela secundaria, ¿existen grupos o clubes dedicados a la protección del medio ambiente en los que los estudiantes puedan participar activamente?",
+                "simplified_prompt": "¿Hay algún club ecológico o de reciclaje en tu escuela?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep04",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep04.jpg",
+            "description": "Personas cuidando un huerto urbano en el techo de un edificio",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos un huerto urbano en el techo de un edificio. ¿Qué beneficios trae cultivar nuestros propios alimentos en medio de una gran ciudad de cemento?",
+                "simplified_prompt": "¿Por qué es una buena idea tener plantas y vegetales en los techos de las ciudades?"
+              },
+              {
+                "main_prompt": "¿Crees que este tipo de iniciativas agrícolas ayudan a crear un sentido de comunidad y colaboración entre los vecinos de un barrio?",
+                "simplified_prompt": "¿Trabajar en un jardín comunitario te ayuda a hacer nuevos amigos en tu vecindario?"
+              },
+              {
+                "main_prompt": "Comparado con comprar verduras que viajan miles de kilómetros, ¿qué impacto ambiental positivo tiene consumir productos cultivados localmente?",
+                "simplified_prompt": "¿Es mejor para el planeta comer comida de tu propio jardín que comprarla en el supermercado?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep05",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep05.jpg",
+            "description": "Familia trabajando en un invernadero cultivando vegetales",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Esta familia está trabajando junta en un invernadero. ¿Cómo cambia nuestra apreciación por la comida cuando sabemos exactamente cuánto trabajo físico cuesta cultivarla?",
+                "simplified_prompt": "¿Valoras más la comida si tú mismo la plantas y la cuidas con tus propias manos?"
+              },
+              {
+                "main_prompt": "La agricultura familiar y sostenible es clave para el futuro. ¿Crees que la sociedad moderna está peligrosamente desconectada de la naturaleza y del origen de sus alimentos?",
+                "simplified_prompt": "¿Crees que la gente hoy en día sabe de dónde viene su comida o cómo crece?"
+              },
+              {
+                "main_prompt": "Si tuvieras el espacio y el tiempo en tu propia casa, ¿te gustaría tener un pequeño huerto para cultivar tus propios vegetales frescos? ¿Por qué?",
+                "simplified_prompt": "¿Te gustaría plantar tomates o lechugas en el jardín de tu casa?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep06",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep06.jpg",
+            "description": "Contenedores de basura en forma de rana en Machu Picchu",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Estos contenedores de reciclaje están en un sitio turístico muy famoso. ¿Qué responsabilidad tienen los turistas de no dejar ningún rastro ecológico cuando viajan?",
+                "simplified_prompt": "Cuando viajas como turista, ¿es muy importante tirar tu basura en el lugar correcto?"
+              },
+              {
+                "main_prompt": "Tienen clasificaciones específicas como 'orgánico' e 'inorgánico'. ¿Es el sistema de reciclaje en tu comunidad lo suficientemente claro y fácil de usar para todos?",
+                "simplified_prompt": "¿Es fácil saber cómo reciclar el plástico y el papel en tu ciudad?"
+              },
+              {
+                "main_prompt": "Diseñar los basureros con formas divertidas podría atraer la atención. ¿Crees que necesitamos ser más creativos para convencer a las personas de que reciclen?",
+                "simplified_prompt": "¿Crees que la gente recicla más si los basureros tienen colores y formas divertidas?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep07",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep07.jpg",
+            "description": "Playa cubierta de basura con un pequeño puesto de ventas al fondo",
+            "image_specific_questions": [
+              {
+                "main_prompt": "La imagen muestra un contraste trágico entre la playa contaminada y el pequeño negocio al fondo. ¿Cómo afecta este nivel de contaminación a la economía local y al turismo?",
+                "simplified_prompt": "¿Crees que los turistas irían a comprar cosas o a nadar a una playa que está tan sucia?"
+              },
+              {
+                "main_prompt": "Mucho de este plástico proviene de productos de un solo uso. ¿Qué medidas drásticas o leyes crees que deberíamos tomar para reducir el consumo mundial de plástico?",
+                "simplified_prompt": "¿Crees que los gobiernos deberían prohibir las botellas y bolsas de plástico para siempre?"
+              },
+              {
+                "main_prompt": "Al ver desastres ecológicos como este, ¿sientes esperanza de que podamos limpiar el planeta, o crees que el daño ambiental ya es irreversible?",
+                "simplified_prompt": "¿Crees que algún día el mundo estará limpio otra vez, o ya es muy tarde para salvarlo?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep08",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep08.jpg",
+            "description": "Contenedor de basura desbordado en un área natural",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Este contenedor desbordado ilustra nuestro severo problema de sobreconsumo. ¿Por qué crees que la sociedad moderna produce tanta basura en su vida cotidiana?",
+                "simplified_prompt": "¿Por qué crees que las personas compran y tiran tantas cosas a la basura todos los días?"
+              },
+              {
+                "main_prompt": "Cuando la infraestructura local de gestión de residuos falla de esta manera, ¿quién debe ser el responsable de solucionarlo inmediatamente?",
+                "simplified_prompt": "Si el basurero está lleno y sucio, ¿qué debe hacer la ciudad al respecto?"
+              },
+              {
+                "main_prompt": "¿Qué hábitos de consumo específicos podrías cambiar en tu propia casa para asegurarte de generar menos desperdicios cada semana?",
+                "simplified_prompt": "¿Qué puedes hacer tú en tu casa para que tu familia produzca menos basura?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep09",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep09.jpg",
+            "description": "Niños pequeños reciclando botellas de plástico en un parque",
+            "image_specific_questions": [
+              {
+                "main_prompt": "Vemos a niños muy pequeños aprendiendo a reciclar botellas. ¿Crees que la educación ambiental debería ser una materia obligatoria en todas las escuelas del mundo?",
+                "simplified_prompt": "¿Deberían los maestros enseñar a los niños a reciclar desde que son muy pequeños?"
+              },
+              {
+                "main_prompt": "A veces los niños terminan educando a sus propios padres sobre temas ecológicos. ¿Ha pasado esto en tu familia con el reciclaje o el ahorro de energía?",
+                "simplified_prompt": "¿Tú le dices a tus padres que tienen que reciclar el plástico o apagar las luces?"
+              },
+              {
+                "main_prompt": "El reciclaje es solo una parte de la solución. ¿Consideras que es más importante reducir la cantidad de cosas que compramos antes que intentar reciclarlo todo?",
+                "simplified_prompt": "¿Es mejor comprar menos cosas en la tienda o comprar mucho y luego tratar de reciclarlo?"
+              }
+            ]
+          },
+          {
+            "image_id": "ccep10",
+            "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ccep10.jpg",
+            "description": "Maestro enseñando a niñas con modelos de energía solar y eólica",
+            "image_specific_questions": [
+              {
+                "main_prompt": "El maestro está mostrando modelos de energía solar y turbinas eólicas. ¿Por qué es crucial que las nuevas generaciones entiendan cómo funcionan las energías renovables?",
+                "simplified_prompt": "¿Por qué es importante que los niños aprendan sobre la energía del sol y el viento en la escuela?"
+              },
+              {
+                "main_prompt": "La transición global para alejarnos de los combustibles fósiles es lenta. ¿Crees que tu país está haciendo lo suficiente para promover este tipo de tecnología verde?",
+                "simplified_prompt": "¿Crees que tu país usa suficientes paneles solares y energía limpia para proteger el aire?"
+              },
+              {
+                "main_prompt": "Si pudieras diseñar la casa del futuro, ¿qué tecnologías ecológicas o fuentes de energía sostenibles incluirías para que no contaminara nada?",
+                "simplified_prompt": "¿Te gustaría vivir en una casa que use energía del sol o del viento para funcionar?"
+              }
+            ]
+          }
+        ]
     },
     "ingenio_humano": {
       "theme_name": "Ingenio humano",
@@ -103,6 +1170,158 @@
         { "main_prompt": "¿Cómo influye la cultura en la danza?", "simplified_prompt": "¿Te gusta bailar música latina?" },
         { "main_prompt": "¿Puede la IA crear arte 'real'?", "simplified_prompt": "¿Puede una computadora ser creativa?" },
         { "main_prompt": "¿Qué importancia tiene la fotografía?", "simplified_prompt": "¿Tiras muchas fotos con tu teléfono?" }
+      ],
+      "images": [
+        {
+          "image_id": "ih01",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih01.jpg",
+          "description": "Videoconferencia corporativa / Sala de prensa",
+          "image_specific_questions": [
+            { "main_prompt": "¿Cómo crees que la tecnología de videoconferencia ha cambiado la forma en que las empresas internacionales operan hoy en día?", "simplified_prompt": "¿Crees que es útil poder hablar por video con trabajadores en otros países?" },
+            { "main_prompt": "¿Qué ventajas y desventajas ves en tener reuniones virtuales en lugar de hablar cara a cara en la misma habitación?", "simplified_prompt": "¿Prefieres hablar con la gente en persona o por videollamada?" },
+            { "main_prompt": "Pensando en el futuro del trabajo, ¿crees que las oficinas tradicionales desaparecerán debido a esta tecnología?", "simplified_prompt": "¿Te gustaría trabajar desde tu casa usando solo la computadora en el futuro?" }
+          ]
+        },
+        {
+          "image_id": "ih02",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih02.jpg",
+          "description": "Reunión de trabajo con empleado remoto",
+          "image_specific_questions": [
+            { "main_prompt": "En la imagen vemos a un equipo trabajando con alguien a distancia. ¿Cómo afecta esto a las relaciones personales entre los compañeros de trabajo?", "simplified_prompt": "¿Es fácil ser buen amigo de alguien si solo lo ves por una pantalla?" },
+            { "main_prompt": "¿Crees que la tecnología hace que los trabajadores sean más productivos o genera más distracciones en el día a día?", "simplified_prompt": "¿La computadora te ayuda a trabajar rápido o te distrae con otras cosas?" },
+            { "main_prompt": "Si tuvieras que trabajar en un equipo así, ¿qué desafíos de comunicación crees que enfrentarías?", "simplified_prompt": "¿Es difícil entender a las personas cuando hablas por internet y la conexión falla?" }
+          ]
+        },
+        {
+          "image_id": "ih03",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih03.jpg",
+          "description": "Profesional médico mostrando un escáner cerebral en una tableta",
+          "image_specific_questions": [
+            { "main_prompt": "Vemos a profesionales médicos analizando un escáner en una tableta. ¿Cómo ha revolucionado la tecnología móvil el cuidado de la salud?", "simplified_prompt": "¿Crees que los iPads y las tabletas ayudan a los médicos a curar a la gente más rápido?" },
+            { "main_prompt": "¿Qué impacto tiene el acceso inmediato a los datos médicos en la capacidad para diagnosticar enfermedades?", "simplified_prompt": "¿Es bueno que un médico pueda ver tu información médica al instante en una pantalla?" },
+            { "main_prompt": "¿Crees que llegará el día en que la inteligencia artificial diagnostique a los pacientes de forma más precisa que un médico humano?", "simplified_prompt": "¿Confiarías en una computadora para decirte qué enfermedad tienes?" }
+          ]
+        },
+        {
+          "image_id": "ih04",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih04.jpg",
+          "description": "Médicos analizando imágenes en 3D en monitores grandes",
+          "image_specific_questions": [
+            { "main_prompt": "Estos médicos están usando imágenes en 3D muy avanzadas. ¿Cuáles crees que son los mayores beneficios de estas innovaciones científicas para la sociedad?", "simplified_prompt": "¿Cómo ayuda esta tecnología a salvar vidas en los hospitales?" },
+            { "main_prompt": "¿Crees que esta tecnología médica tan costosa está disponible para todos los pacientes del mundo por igual?", "simplified_prompt": "¿Crees que los hospitales en zonas pobres tienen este tipo de máquinas avanzadas?" },
+            { "main_prompt": "¿Qué otros avances científicos esperas ver en el campo de la medicina durante tu vida?", "simplified_prompt": "¿Qué invento te gustaría que los médicos crearan en el futuro?" }
+          ]
+        },
+        {
+          "image_id": "ih05",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih05.jpg",
+          "description": "Estudiantes en el laboratorio de ciencias con microscopios",
+          "image_specific_questions": [
+            { "main_prompt": "Estos jóvenes están haciendo experimentos prácticos. ¿Por qué es importante fomentar el interés en la ciencia desde una edad temprana?", "simplified_prompt": "¿Por qué es bueno que los niños aprendan ciencias en la escuela secundaria?" },
+            { "main_prompt": "Comparando la teoría de los libros con la práctica en el laboratorio, ¿qué método crees que es más efectivo para aprender?", "simplified_prompt": "¿Prefieres leer un libro de ciencias o hacer un experimento con tus propias manos?" },
+            { "main_prompt": "¿Qué tipo de experimentos o proyectos científicos has realizado tú, y cómo te han ayudado a entender mejor el mundo?", "simplified_prompt": "¿Te gustan las clases de química o biología en tu escuela? ¿Por qué?" }
+          ]
+        },
+        {
+          "image_id": "ih06",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih06.jpg",
+          "description": "Mujeres usando realidad virtual en un laboratorio",
+          "image_specific_questions": [
+            { "main_prompt": "Las estudiantes están utilizando realidad virtual en un entorno científico. ¿Cómo crees que esta tecnología puede transformar la educación universitaria?", "simplified_prompt": "¿Te gustaría usar lentes de realidad virtual en tus clases de ciencias?" },
+            { "main_prompt": "¿Qué ventajas tiene simular un experimento peligroso o complejo en realidad virtual en lugar de hacerlo en la vida real?", "simplified_prompt": "¿Crees que es más seguro aprender a hacer cosas difíciles con realidad virtual?" },
+            { "main_prompt": "¿Crees que en el futuro la realidad virtual reemplazará por completo las experiencias reales en los laboratorios?", "simplified_prompt": "¿Crees que en el futuro no necesitaremos laboratorios reales en las escuelas?" }
+          ]
+        },
+        {
+          "image_id": "ih07",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih07.jpg",
+          "description": "Clase de medicina a distancia sobre genética",
+          "image_specific_questions": [
+            { "main_prompt": "Vemos una videoconferencia sobre lo que parece ser genética o ADN. ¿Qué importancia tiene el poder compartir conocimientos científicos globalmente?", "simplified_prompt": "¿Por qué es importante que los científicos de diferentes países hablen entre ellos?" },
+            { "main_prompt": "¿Cómo crees que el estudio avanzado del ADN y la genética cambiará nuestras vidas o la medicina en el futuro?", "simplified_prompt": "¿Crees que estudiar los genes ayudará a curar enfermedades graves?" },
+            { "main_prompt": "¿Te parece que aprender temas complejos como este por videoconferencia es igual de efectivo que estar físicamente con el profesor?", "simplified_prompt": "¿Es fácil aprender ciencias difíciles viendo a un profesor en una pantalla de televisión?" }
+          ]
+        },
+        {
+          "image_id": "ih08",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih08.jpg",
+          "description": "Familia en el sofá absorta en sus pantallas",
+          "image_specific_questions": [
+            { "main_prompt": "En esta imagen, cada miembro de la familia está absorto en su propio dispositivo. ¿Crees que la tecnología está dañando la convivencia familiar?", "simplified_prompt": "¿La tecnología hace que las familias hablen menos entre ellas en casa?" },
+            { "main_prompt": "¿Deberían los padres imponer reglas estrictas sobre el uso de pantallas en los espacios comunes de la casa? ¿Por qué sí o por qué no?", "simplified_prompt": "¿Tus padres tienen reglas sobre cuándo puedes usar el teléfono en casa?" },
+            { "main_prompt": "¿Cómo se compara esta escena con lo que sucede en tu propia casa durante el tiempo libre o los fines de semana?", "simplified_prompt": "¿Tu familia hace esto cuando están todos juntos en la sala de estar?" }
+          ]
+        },
+        {
+          "image_id": "ih09",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih09.jpg",
+          "description": "Amigos ignorándose en un café mirando sus teléfonos",
+          "image_specific_questions": [
+            { "main_prompt": "Vemos a un grupo de jóvenes juntos en un café, pero todos están mirando sus teléfonos. ¿Por qué crees que nos cuesta tanto estar presentes en el momento?", "simplified_prompt": "¿Por qué crees que estos amigos prefieren mirar sus teléfonos en lugar de hablar?" },
+            { "main_prompt": "¿Crees que las redes sociales nos hacen sentir más conectados globalmente pero más aislados de las personas que tenemos enfrente?", "simplified_prompt": "¿Es posible sentirse solo aunque tengas muchos seguidores o amigos en internet?" },
+            { "main_prompt": "¿Qué reglas personales deberíamos adoptar para evitar que la tecnología arruine nuestras amistades reales?", "simplified_prompt": "¿Es de mala educación usar el teléfono cuando estás comiendo con tus amigos?" }
+          ]
+        },
+        {
+          "image_id": "ih10",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih10.jpg",
+          "description": "Niños en un museo mirando sus teléfonos frente a una pintura",
+          "image_specific_questions": [
+            { "main_prompt": "Estos jóvenes están sentados frente a una gran obra de arte clásico, pero todos miran sus pantallas. ¿Qué nos dice esto sobre cómo aprecian la cultura las nuevas generaciones?", "simplified_prompt": "¿Por qué crees que los niños no están mirando la gran pintura detrás de ellos?" },
+            { "main_prompt": "¿Crees que están buscando información educativa sobre la obra en sus teléfonos o simplemente están distraídos? ¿Importa la diferencia?", "simplified_prompt": "¿Crees que están jugando en sus teléfonos o están aprendiendo sobre el arte?" },
+            { "main_prompt": "¿Deberían los museos prohibir los teléfonos celulares para obligar a los visitantes a interactuar directamente con el arte?", "simplified_prompt": "¿Es una buena idea que los museos no permitan usar teléfonos adentro?" }
+          ]
+        },
+        {
+          "image_id": "ih11",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih11.jpg",
+          "description": "Mujer conduciendo y enviando mensajes de texto",
+          "image_specific_questions": [
+            { "main_prompt": "¿Cómo ilustra esta imagen los peligros físicos de nuestra dependencia constante de los teléfonos móviles?", "simplified_prompt": "¿Por qué es muy peligroso usar el teléfono mientras manejas?" },
+            { "main_prompt": "¿Crees que las leyes actuales son lo suficientemente estrictas para castigar a las personas que usan el teléfono al volante?", "simplified_prompt": "¿Debería la policía dar multas más grandes por usar el teléfono en el coche?" },
+            { "main_prompt": "¿Crees que los coches autónomos (que se manejan solos) son la solución definitiva a este tipo de errores humanos?", "simplified_prompt": "¿Crees que en el futuro los coches no necesitarán conductores humanos?" }
+          ]
+        },
+        {
+          "image_id": "ih12",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih12.jpg",
+          "description": "Personas observando un gran mural histórico",
+          "image_specific_questions": [
+            { "main_prompt": "Este mural parece contar una historia histórica o política compleja. ¿Cuál crees que es el propósito principal del arte público en una sociedad?", "simplified_prompt": "¿Por qué los artistas pintan murales grandes en los edificios de la ciudad?" },
+            { "main_prompt": "¿De qué manera el arte visual como este mural ayuda a preservar la identidad y la historia de un país?", "simplified_prompt": "¿Qué podemos aprender sobre un país mirando sus pinturas tradicionales?" },
+            { "main_prompt": "En comparación con el arte en museos privados, ¿crees que el arte callejero o los murales tienen un impacto mayor en la gente común?", "simplified_prompt": "¿Prefieres ver arte en la calle o adentro de un museo? ¿Por qué?" }
+          ]
+        },
+        {
+          "image_id": "ih13",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih13.jpg",
+          "description": "Niños en un campo rural usando laptops",
+          "image_specific_questions": [
+            { "main_prompt": "Esta imagen contrasta un entorno muy rural con tecnología moderna. ¿Crees que programas como este están cerrando la brecha digital en el mundo?", "simplified_prompt": "¿Es importante que los niños del campo tengan computadoras igual que los niños de la ciudad?" },
+            { "main_prompt": "¿Cómo crees que el acceso a internet cambia el futuro y las oportunidades profesionales de estos niños?", "simplified_prompt": "¿Qué pueden aprender estos niños en internet que no pueden aprender en su pueblo?" },
+            { "main_prompt": "Al usar computadoras al aire libre en un entorno natural, ¿qué mensaje crees que nos da esta imagen sobre el desarrollo global?", "simplified_prompt": "¿Prefieres estudiar adentro de una escuela o afuera en la naturaleza?" }
+          ]
+        },
+        {
+          "image_id": "ih14",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih14.jpg",
+          "description": "Clase de música con guitarra y percusión",
+          "image_specific_questions": [
+            { "main_prompt": "Vemos a los estudiantes participando activamente en una clase de música. ¿Por qué crees que la educación artística es tan importante como las ciencias o las matemáticas?", "simplified_prompt": "¿Crees que todos los niños deberían aprender a tocar un instrumento en la escuela?" },
+            { "main_prompt": "¿Qué habilidades emocionales o de trabajo en equipo desarrollan los jóvenes al tocar juntos en un grupo musical?", "simplified_prompt": "¿Qué aprendes cuando tocas música junto con tus amigos?" },
+            { "main_prompt": "A menudo, las escuelas eliminan las clases de arte o música por falta de presupuesto. ¿Qué argumento usarías para defender estas clases?", "simplified_prompt": "Si tu escuela quiere cancelar la clase de música, ¿qué le dirías al director?" }
+          ]
+        },
+        {
+          "image_id": "ih15",
+          "image_url": "https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/ih15.png",
+          "description": "Ensayo de una obra de teatro",
+          "image_specific_questions": [
+            { "main_prompt": "Estos jóvenes están ensayando una obra de teatro. ¿De qué manera el arte dramático permite a las personas explorar diferentes identidades y emociones?", "simplified_prompt": "¿Por qué crees que a la gente le gusta actuar o pretender ser otra persona en el escenario?" },
+            { "main_prompt": "Producir una obra requiere mucho trabajo en equipo entre actores y directores. ¿Cómo prepara este tipo de colaboración a los estudiantes para la vida real?", "simplified_prompt": "¿Es difícil trabajar en grupo para hacer una obra de teatro?" },
+            { "main_prompt": "En la era de los efectos especiales y el cine digital, ¿por qué crees que el teatro en vivo sigue siendo una forma de arte tan valiosa?", "simplified_prompt": "¿Prefieres ir al teatro a ver personas reales o ver una película en el cine?" }
+          ]
+        }
       ]
     }
   }
