@@ -1,1 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Oral Exam Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        /* Top Navigation Bar */
+        .controls-container {
+            display: flex;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        select {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        /* Main Layout */
+        .dashboard-grid {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        .column {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-height: 70vh;
+        }
+        h2 {
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 10px;
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        /* Image Display */
+        .image-container {
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-desc {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        /* Question Formatting */
+        .question-block {
+            margin-bottom: 30px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+        }
+        .main-prompt {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .simplified-prompt {
+            font-size: 17px;
+            font-style: italic;
+            color: #e74c3c;
+            display: flex;
+            align-items: center;
+        }
+        .simplified-prompt::before {
+            content: "↳ Pivot: ";
+            font-weight: bold;
+            margin-right: 5px;
+            color: #c0392b;
+        }
+        .placeholder-text {
+            color: #95a5a6;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="controls-container">
+        <select id="studentSelect">
+            <option value="">1. Seleccionar Estudiante</option>
+        </select>
+
+        <select id="stimulusSelect">
+            <option value="">2. Seleccionar Imagen (ManageBac)</option>
+        </select>
+
+        <select id="themeSelect">
+            <option value="">3. Tema de Seguimiento (Parte 3)</option>
+        </select>
+    </div>
+
+    <div class="dashboard-grid">
+        
+        <div class="column" id="part2Column">
+            <h2>Parte 2: Preguntas de la Imagen</h2>
+            <div id="imageContent" class="placeholder-text">
+                Selecciona una imagen arriba para comenzar.
+            </div>
+        </div>
+
+        <div class="column" id="part3Column">
+            <h2>Parte 3: Conversación General</h2>
+            <div id="themeContent" class="placeholder-text">
+                Selecciona un tema de seguimiento arriba.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data variables
+        let masterData = null;
+        let roster = null;
+        let stimuliMap = null;
+
+        // Note: Replace this URL with the raw GitHub link to your massive compiled JSON 
+        const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/master_data.json'; 
+        const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/refs/heads/main/IA/rubric/roster.json';
+        const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
+
+        // Fetch all data on load
+        async function loadData() {
+            try {
+                const [masterRes, rosterRes, stimuliRes] = await Promise.all([
+                    fetch(MASTER_DATA_URL),
+                    fetch(ROSTER_URL),
+                    fetch(STIMULI_URL)
+                ]);
+
+                const masterJson = await masterRes.json();
+                masterData = masterJson.themes; // We map to the "themes" object inside your JSON
+                roster = await rosterRes.json();
+                
+                const stimuliJson = await stimuliRes.json();
+                stimuliMap = stimuliJson.stimuli; // We map to the "stimuli" array
+
+                populateDropdowns();
+            } catch (error) {
+                console.error("Error loading JSON data:", error);
+                document.getElementById('imageContent').innerHTML = `<p style="color:red;">Error cargando datos. Revisa la consola o las URLs.</p>`;
+            }
+        }
+
+        function populateDropdowns() {
+            // Populate Roster
+            const studentSelect = document.getElementById('studentSelect');
+            roster.forEach((student, index) => {
+                // Adjust "student.name" based on the actual key in your roster.json
+                const name = student.name || `Estudiante ${index + 1}`; 
+                studentSelect.add(new Option(name, index));
+            });
+
+            // Populate Stimuli
+            const stimulusSelect = document.getElementById('stimulusSelect');
+            stimuliMap.forEach(stim => {
+                // Only show images in the dropdown for now (hiding HL extracts)
+                if(stim.type === 'image') {
+                    stimulusSelect.add(new Option(stim.label, stim.id));
+                }
+            });
+
+            // Populate Themes for Part 3
+            const themeSelect = document.getElementById('themeSelect');
+            for (const themeKey in masterData) {
+                themeSelect.add(new Option(masterData[themeKey].theme_name, themeKey));
+            }
+
+            // Add Event Listeners
+            stimulusSelect.addEventListener('change', updateImageSide);
+            themeSelect.addEventListener('change', updateThemeSide);
+        }
+
+        function updateImageSide() {
+            const selectedId = document.getElementById('stimulusSelect').value;
+            const container = document.getElementById('imageContent');
+            
+            if (!selectedId) {
+                container.innerHTML = '<div class="placeholder-text">Selecciona una imagen arriba para comenzar.</div>';
+                return;
+            }
+
+            // Find the stimulus in our mapping
+            const stimulus = stimuliMap.find(s => s.id === selectedId);
+            if (!stimulus || !stimulus.image_id) {
+                container.innerHTML = '<div class="placeholder-text">Imagen no mapeada o sin preguntas específicas.</div>';
+                return;
+            }
+
+            // Search the master database for this image_id
+            let activeImage = null;
+            for (const themeKey in masterData) {
+                const found = masterData[themeKey].images?.find(img => img.image_id === stimulus.image_id);
+                if (found) {
+                    activeImage = found;
+                    break;
+                }
+            }
+
+            if (activeImage) {
+                let html = `
+                    <div class="image-container">
+                        <img src="${activeImage.image_url}" alt="Stimulus">
+                    </div>
+                    <div class="image-desc">${activeImage.description}</div>
+                `;
+
+                activeImage.image_specific_questions.forEach(q => {
+                    html += `
+                        <div class="question-block">
+                            <div class="main-prompt">${q.main_prompt}</div>
+                            <div class="simplified-prompt">${q.simplified_prompt}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div class="placeholder-text">Datos de la imagen no encontrados en la base maestra.</div>';
+            }
+        }
+
+        function updateThemeSide() {
+            const selectedTheme = document.getElementById('themeSelect').value;
+            const container = document.getElementById('themeContent');
+
+            if (!selectedTheme) {
+                container.innerHTML = '<div class="placeholder-text">Selecciona un tema de seguimiento arriba.</div>';
+                return;
+            }
+
+            const questions = masterData[selectedTheme].general_thematic_questions;
+            
+            // Slice the first 8 questions to prevent scrolling
+            const displayQuestions = questions.slice(0, 8);
+
+            let html = ``;
+            displayQuestions.forEach(q => {
+                html += `
+                    <div class="question-block" style="border-left-color: #9b59b6;">
+                        <div class="main-prompt">${q.main_prompt}</div>
+                        <div class="simplified-prompt" style="color: #8e44ad;">${q.simplified_prompt}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Initialize App
+        loadData();
+
+    </script>
+</body>
+</html>
