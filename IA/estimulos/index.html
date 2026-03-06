@@ -207,7 +207,7 @@
     </div>
 
     <script>
-        let masterData = null;
+let masterData = null;
         let roster = [];
         let stimuliMap = [];
         let currentStudent = null;
@@ -223,7 +223,7 @@
                     fetch(MASTER_DATA_URL), fetch(ROSTER_URL), fetch(STIMULI_URL)
                 ]);
 
-                masterData = await masterRes.json(); // Assigns ROOT so we see extracts
+                masterData = await masterRes.json(); 
                 roster = (await rosterRes.json()).students; 
                 stimuliMap = (await stimuliRes.json()).stimuli; 
 
@@ -242,42 +242,41 @@
             studentSelect.addEventListener('change', handleStudentSelection);
         }
 
-        // FULLY REWRITTEN DEEP SEARCH
+        // NUCLEAR OPTION DEEP SEARCH
         function findStimulusDetails(managebacId) {
             const stimConfig = stimuliMap.find(s => s.id === managebacId);
             if (!stimConfig) return null;
 
             let result = { type: stimConfig.type, label: stimConfig.label, data: null };
+            const searchId = stimConfig.extract_id || stimConfig.image_id || stimConfig.id;
 
-            function getDeepData(dataObj, targetKey, targetVal) {
-                let foundData = null;
-                function search(node) {
+            function getDeepData(dataObj, targetVal) {
+                let found = { data: null, actualType: null };
+                
+                function search(node, keyName) {
                     if (!node || typeof node !== 'object') return;
                     
-                    // Image Search
-                    if (targetKey === 'image_id' && node.image_id === targetVal) {
-                        foundData = node; return;
+                    if (node.image_id === targetVal) {
+                        found = { data: node, actualType: 'image' }; 
+                        return;
                     }
-                    
-                    // Extract Search (Looks for the literal object key, e.g. "cqc01")
-                    if (targetKey === 'extract_id' && node[targetVal]) {
-                        // Double check it has text so we don't accidentally grab a weird object
-                        if(node[targetVal].text_spanish) {
-                            foundData = node[targetVal]; return;
-                        }
+                    if (keyName === targetVal && node.text_spanish) {
+                        found = { data: node, actualType: 'extract' }; 
+                        return;
                     }
 
-                    Object.values(node).forEach(search);
+                    Object.keys(node).forEach(key => search(node[key], key));
                 }
-                search(dataObj);
-                return foundData;
+                
+                search(dataObj, null);
+                return found;
             }
 
-            if (stimConfig.type === 'image' && stimConfig.image_id) {
-                result.data = getDeepData(masterData, 'image_id', stimConfig.image_id);
-            } 
-            else if (stimConfig.type === 'extract' && stimConfig.extract_id) {
-                result.data = getDeepData(masterData, 'extract_id', stimConfig.extract_id);
+            const searchResult = getDeepData(masterData, searchId);
+            
+            if (searchResult.data) {
+                result.data = searchResult.data;
+                result.type = searchResult.actualType; 
             }
 
             return result;
@@ -309,7 +308,6 @@
 
             currentStudent.options.forEach(opt => {
                 const details = findStimulusDetails(opt.stimulus_id);
-                // Safe check for themeName just in case it's missing
                 const themeName = (masterData.themes && masterData.themes[opt.follow_up_theme]) 
                                     ? masterData.themes[opt.follow_up_theme].theme_name 
                                     : "Tema Desconocido";
@@ -364,11 +362,24 @@
                 });
             } 
             else if (details.type === 'extract') {
+                // THE NEW TOGGLE UI IS INJECTED HERE
                 html += `
                     <div class="extract-box">
-                        <h3 style="color:#d35400; font-size:15px; margin-bottom:2px;">${details.data.title}</h3>
-                        <p style="font-size: 11px; color: #666; margin-top:0; margin-bottom: 5px;">${details.data.author}</p>
-                        <div class="extract-text">${details.data.text_spanish}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                            <div>
+                                <h3 style="color:#d35400; font-size:15px; margin-top:0; margin-bottom:2px;">${details.data.title}</h3>
+                                <p style="font-size: 11px; color: #666; margin-top:0; margin-bottom: 0;">${details.data.author}</p>
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <button onclick="switchLang('es')" id="btn_es" style="background:#e67e22; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px; font-weight:bold;">Español</button>
+                                <button onclick="switchLang('en')" id="btn_en" style="background:#bdc3c7; color:white; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:11px; font-weight:bold;">English</button>
+                            </div>
+                        </div>
+                        
+                        <div class="extract-text" id="visible_extract_text">${details.data.text_spanish}</div>
+                        
+                        <div id="hidden_text_es" style="display:none;">${details.data.text_spanish}</div>
+                        <div id="hidden_text_en" style="display:none;">${details.data.text_english || "Traducción no disponible en la base de datos."}</div>
                     </div>
                 `;
                 details.data.literary_questions.forEach(q => {
@@ -376,6 +387,29 @@
                 });
             }
             container.innerHTML = html;
+        }
+
+        // NEW FUNCTION: Handles the button clicks for translations
+        function switchLang(lang) {
+            const displayDiv = document.getElementById('visible_extract_text');
+            const btnEs = document.getElementById('btn_es');
+            const btnEn = document.getElementById('btn_en');
+            
+            if (!displayDiv) return;
+
+            if (lang === 'es') {
+                displayDiv.innerHTML = document.getElementById('hidden_text_es').innerHTML;
+                displayDiv.style.fontStyle = 'normal';
+                displayDiv.style.color = '#333';
+                btnEs.style.background = '#e67e22'; // Orange (Active)
+                btnEn.style.background = '#bdc3c7'; // Gray (Inactive)
+            } else {
+                displayDiv.innerHTML = document.getElementById('hidden_text_en').innerHTML;
+                displayDiv.style.fontStyle = 'italic';
+                displayDiv.style.color = '#555';
+                btnEn.style.background = '#e67e22'; // Orange (Active)
+                btnEs.style.background = '#bdc3c7'; // Gray (Inactive)
+            }
         }
 
         function renderPart3(themeKey) {
@@ -388,7 +422,6 @@
             const themeData = masterData.themes[themeKey];
             let html = `<h3 style="color: #8e44ad;">${themeData.theme_name}</h3>`;
             
-            // Now pulling 10 questions since the UI is dense enough to fit them!
             const questions = themeData.general_thematic_questions;
             const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
 
