@@ -261,33 +261,44 @@
             studentSelect.addEventListener('change', handleStudentSelection);
         }
 
-        // 3. Robust Search Function to find specific Stimulus data
+// 3. Bulletproof Deep Search Function
         function findStimulusDetails(managebacId) {
             const stimConfig = stimuliMap.find(s => s.id === managebacId);
             if (!stimConfig) return null;
 
             let result = { type: stimConfig.type, label: stimConfig.label, data: null };
 
-            // Find Image
-            if (stimConfig.type === 'image' && stimConfig.image_id) {
-                for (const themeKey in masterData.themes) {
-                    const foundImg = masterData.themes[themeKey].images?.find(img => img.image_id === stimConfig.image_id);
-                    if (foundImg) {
-                        result.data = foundImg;
-                        break;
+            // Deep search helper for both images and extracts
+            function getDeepData(dataObj, targetKey, targetVal) {
+                let foundData = null;
+                function search(node) {
+                    if (!node || typeof node !== 'object') return;
+                    
+                    // If searching for image
+                    if (targetKey === 'image_id' && node.image_id === targetVal) {
+                        foundData = node; return;
                     }
+                    // If searching for extract (checks if the node has the exact key name, e.g., "cqc01")
+                    if (targetKey === 'extract_id' && node[targetVal] && node[targetVal].text_spanish) {
+                        foundData = node[targetVal]; return;
+                    }
+                    
+                    Object.values(node).forEach(search);
                 }
+                search(dataObj);
+                return foundData;
+            }
+
+            if (stimConfig.type === 'image' && stimConfig.image_id) {
+                result.data = getDeepData(masterData, 'image_id', stimConfig.image_id);
             } 
-            // Find Extract (HL)
             else if (stimConfig.type === 'extract' && stimConfig.extract_id) {
-                if (masterData.hl_literature && masterData.hl_literature.extracts) {
-                    result.data = masterData.hl_literature.extracts[stimConfig.extract_id];
-                }
+                result.data = getDeepData(masterData, 'extract_id', stimConfig.extract_id);
             }
 
             return result;
         }
-
+        
         // 4. State: Student Selected -> Enter Prep Mode
         function handleStudentSelection(e) {
             const studentId = e.target.value;
