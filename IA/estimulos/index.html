@@ -9,82 +9,142 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             color: #333;
         }
+        
         /* Top Navigation Bar */
         .controls-container {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            align-items: center;
         }
         select {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 4px;
             cursor: pointer;
         }
-        /* Main Layout */
+        .btn-reset {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none; /* Hidden until Live Mode */
+        }
+
+        /* Layout Grids */
         .dashboard-grid {
             display: flex;
-            gap: 30px;
+            gap: 20px;
             align-items: flex-start;
         }
         .column {
             flex: 1;
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            min-height: 70vh;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-height: 75vh;
         }
         h2 {
             border-bottom: 3px solid #2c3e50;
-            padding-bottom: 10px;
+            padding-bottom: 5px;
             color: #2c3e50;
             margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 22px;
         }
-        /* Image Display */
+
+        /* PREP MODE: Side-by-side cards */
+        #prepModeContainer {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+        .prep-card {
+            flex: 1;
+            background: white;
+            border: 2px dashed #bdc3c7;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .prep-card:hover {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+            transform: translateY(-3px);
+        }
+        .prep-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .theme-badge {
+            display: inline-block;
+            background: #2ecc71;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Image Display (Live Mode) */
         .image-container {
             width: 100%;
-            max-height: 400px;
+            max-height: 350px; /* Kept slightly smaller to save space */
             overflow: hidden;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Prevents awkward cropping */
+            background-color: #eee; 
         }
         .image-desc {
             color: #7f8c8d;
             font-style: italic;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-align: center;
+            font-size: 14px;
         }
-        /* Question Formatting */
+
+        /* Question Formatting (Dense UI Tweaks) */
         .question-block {
-            margin-bottom: 30px;
-            padding: 15px;
+            margin-bottom: 12px; /* Reduced from 30px */
+            padding: 10px 12px;  /* Reduced from 15px */
             background: #f8f9fa;
             border-left: 5px solid #3498db;
             border-radius: 4px;
         }
         .main-prompt {
-            font-size: 20px;
+            font-size: 18px;     /* Reduced from 20px */
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 10px;
+            margin-bottom: 4px;  /* Reduced from 10px */
+            line-height: 1.3;
         }
         .simplified-prompt {
-            font-size: 17px;
+            font-size: 15px;     /* Reduced from 17px */
             font-style: italic;
             color: #e74c3c;
             display: flex;
@@ -102,54 +162,70 @@
             text-align: center;
             margin-top: 50px;
         }
+
+        /* HL Extract Styling */
+        .extract-box {
+            background: #fff3e0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border: 1px solid #ffe0b2; 
+            margin-bottom: 15px;
+        }
+        .extract-text {
+            white-space: pre-wrap; 
+            font-family: 'Georgia', serif; 
+            font-size: 16px; 
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
 
     <div class="controls-container">
         <select id="studentSelect">
-            <option value="">1. Seleccionar Estudiante</option>
+            <option value="">-- Seleccionar Estudiante (Prep Mode) --</option>
         </select>
-
-        <select id="stimulusSelect">
-            <option value="">2. Seleccionar Imagen (ManageBac)</option>
-        </select>
-
-        <select id="themeSelect">
-            <option value="">3. Tema de Seguimiento (Parte 3)</option>
-        </select>
+        <button id="btnReset" class="btn-reset" onclick="resetToPrepMode()">Volver a Prep Mode</button>
     </div>
 
-    <div class="dashboard-grid">
+    <div id="mainDashboard">
         
-        <div class="column" id="part2Column">
-            <h2>Parte 2: Preguntas de la Imagen</h2>
-            <div id="imageContent" class="placeholder-text">
-                Selecciona una imagen arriba para comenzar.
+        <div id="prepModeContainer" style="display: none;">
             </div>
-        </div>
 
-        <div class="column" id="part3Column">
-            <h2>Parte 3: Conversación General</h2>
-            <div id="themeContent" class="placeholder-text">
-                Selecciona un tema de seguimiento arriba.
+        <div class="dashboard-grid" id="liveModeContainer" style="display: none;">
+            
+            <div class="column" id="part2Column">
+                <h2>Parte 2: Presentación y Estímulo</h2>
+                <div id="stimulusContent"></div>
             </div>
+
+            <div class="column" id="part3Column">
+                <h2>Parte 3: Conversación General</h2>
+                <div id="themeContent"></div>
+            </div>
+            
         </div>
 
     </div>
 
     <script>
-// Data variables
+       // Data stores
         let masterData = null;
-        let roster = null;
-        let stimuliMap = null;
+        let roster = [];
+        let stimuliMap = [];
 
-        // URLs
+        // App State
+        let currentStudent = null;
+
+        // URLs 
         const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/preguntas.json'; 
         const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/roster.json';
         const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
 
-        // Fetch all data on load
+        // 1. Load Data
         async function loadData() {
             try {
                 const [masterRes, rosterRes, stimuliRes] = await Promise.all([
@@ -159,112 +235,180 @@
                 ]);
 
                 const masterJson = await masterRes.json();
-                masterData = masterJson.themes; 
+                masterData = masterJson; // Assigning root to access both themes and extracts later
                 
-                // THE FIX IS HERE: We tell it to look specifically inside the "students" array
                 const rosterJson = await rosterRes.json();
                 roster = rosterJson.students; 
                 
                 const stimuliJson = await stimuliRes.json();
                 stimuliMap = stimuliJson.stimuli; 
 
-                populateDropdowns();
+                populateStudentDropdown();
             } catch (error) {
                 console.error("Error loading JSON data:", error);
-                document.getElementById('imageContent').innerHTML = `<p style="color:red;">Error cargando datos. Revisa la consola o asegúrate de que los archivos estén guardados en GitHub.</p>`;
+                document.getElementById('mainDashboard').innerHTML = `<h3 style="color:red; text-align:center;">Error cargando datos. Revisa la consola.</h3>`;
             }
         }
 
-        function populateDropdowns() {
-            // 1. Populate Roster (Now showing Time, Name, and Level!)
+        // 2. Populate Dropdown
+        function populateStudentDropdown() {
             const studentSelect = document.getElementById('studentSelect');
-            roster.forEach((student) => {
+            roster.forEach(student => {
                 const displayName = `${student.time} | ${student.name} (${student.level})`; 
                 studentSelect.add(new Option(displayName, student.id));
             });
 
-            // 2. Populate Stimuli (Images only for now)
-            const stimulusSelect = document.getElementById('stimulusSelect');
-            stimuliMap.forEach(stim => {
-                if(stim.type === 'image') {
-                    stimulusSelect.add(new Option(stim.label, stim.id));
-                }
-            });
-
-            // 3. Populate Themes for Part 3
-            const themeSelect = document.getElementById('themeSelect');
-            for (const themeKey in masterData) {
-                themeSelect.add(new Option(masterData[themeKey].theme_name, themeKey));
-            }
-
-            // Add Event Listeners so the screen updates when you change a dropdown
-            stimulusSelect.addEventListener('change', updateImageSide);
-            themeSelect.addEventListener('change', updateThemeSide);
+            studentSelect.addEventListener('change', handleStudentSelection);
         }
 
-        function updateImageSide() {
-            const selectedId = document.getElementById('stimulusSelect').value;
-            const container = document.getElementById('imageContent');
-            
-            if (!selectedId) {
-                container.innerHTML = '<div class="placeholder-text">Selecciona una imagen arriba para comenzar.</div>';
-                return;
-            }
+        // 3. Robust Search Function to find specific Stimulus data
+        function findStimulusDetails(managebacId) {
+            const stimConfig = stimuliMap.find(s => s.id === managebacId);
+            if (!stimConfig) return null;
 
-            const stimulus = stimuliMap.find(s => s.id === selectedId);
-            if (!stimulus || !stimulus.image_id) {
-                container.innerHTML = '<div class="placeholder-text">Imagen no mapeada o sin preguntas específicas.</div>';
-                return;
-            }
+            let result = { type: stimConfig.type, label: stimConfig.label, data: null };
 
-            let activeImage = null;
-            for (const themeKey in masterData) {
-                const found = masterData[themeKey].images?.find(img => img.image_id === stimulus.image_id);
-                if (found) {
-                    activeImage = found;
-                    break;
+            // Find Image
+            if (stimConfig.type === 'image' && stimConfig.image_id) {
+                for (const themeKey in masterData.themes) {
+                    const foundImg = masterData.themes[themeKey].images?.find(img => img.image_id === stimConfig.image_id);
+                    if (foundImg) {
+                        result.data = foundImg;
+                        break;
+                    }
+                }
+            } 
+            // Find Extract (HL)
+            else if (stimConfig.type === 'extract' && stimConfig.extract_id) {
+                if (masterData.hl_literature && masterData.hl_literature.extracts) {
+                    result.data = masterData.hl_literature.extracts[stimConfig.extract_id];
                 }
             }
 
-            if (activeImage) {
-                let html = `
-                    <div class="image-container">
-                        <img src="${activeImage.image_url}" alt="Stimulus">
-                    </div>
-                    <div class="image-desc">${activeImage.description}</div>
+            return result;
+        }
+
+        // 4. State: Student Selected -> Enter Prep Mode
+        function handleStudentSelection(e) {
+            const studentId = e.target.value;
+            if (!studentId) {
+                document.getElementById('prepModeContainer').style.display = 'none';
+                document.getElementById('liveModeContainer').style.display = 'none';
+                document.getElementById('btnReset').style.display = 'none';
+                return;
+            }
+
+            currentStudent = roster.find(s => s.id === studentId);
+            renderPrepMode();
+        }
+
+        // 5. Render Prep Mode (Side by side choices)
+        function renderPrepMode() {
+            document.getElementById('liveModeContainer').style.display = 'none';
+            document.getElementById('btnReset').style.display = 'none';
+            
+            const prepContainer = document.getElementById('prepModeContainer');
+            prepContainer.style.display = 'flex';
+            prepContainer.innerHTML = ''; // Clear previous
+
+            if (!currentStudent.options || currentStudent.options.length === 0) {
+                prepContainer.innerHTML = '<h3>El estudiante no tiene opciones asignadas en roster.json</h3>';
+                return;
+            }
+
+            currentStudent.options.forEach(opt => {
+                const details = findStimulusDetails(opt.stimulus_id);
+                const themeName = masterData.themes[opt.follow_up_theme]?.theme_name || "Tema Desconocido";
+
+                let visualHtml = '';
+                if (details && details.type === 'image' && details.data) {
+                    visualHtml = `<img src="${details.data.image_url}" alt="Opción">`;
+                } else if (details && details.type === 'extract') {
+                    visualHtml = `<div style="height:250px; background:#fff3e0; padding:10px; border-radius:4px; margin-bottom:10px; display:flex; align-items:center; justify-content:center;"><h3>[TEXTO LITERARIO]</h3></div>`;
+                } else {
+                    visualHtml = `<div style="height:250px; background:#eee; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">Sin Imagen</div>`;
+                }
+
+                // Create clickable card
+                const card = document.createElement('div');
+                card.className = 'prep-card';
+                card.innerHTML = `
+                    ${visualHtml}
+                    <h3>${details ? details.label : opt.stimulus_id}</h3>
+                    <p style="color:#7f8c8d; font-size:14px;">Haz clic para seleccionar esta opción</p>
+                    <div class="theme-badge">Seguimiento: ${themeName}</div>
                 `;
-
-                activeImage.image_specific_questions.forEach(q => {
-                    html += `
-                        <div class="question-block">
-                            <div class="main-prompt">${q.main_prompt}</div>
-                            <div class="simplified-prompt">${q.simplified_prompt}</div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            } else {
-                container.innerHTML = '<div class="placeholder-text">Datos de la imagen no encontrados en la base maestra.</div>';
-            }
+                
+                // Pass the whole option object into Live Mode
+                card.onclick = () => activateLiveMode(opt, details); 
+                prepContainer.appendChild(card);
+            });
         }
 
-        function updateThemeSide() {
-            const selectedTheme = document.getElementById('themeSelect').value;
-            const container = document.getElementById('themeContent');
+        // 6. State: Option Clicked -> Enter Live Mode
+        function activateLiveMode(selectedOption, stimulusDetails) {
+            document.getElementById('prepModeContainer').style.display = 'none';
+            document.getElementById('liveModeContainer').style.display = 'flex';
+            document.getElementById('btnReset').style.display = 'block';
 
-            if (!selectedTheme) {
-                container.innerHTML = '<div class="placeholder-text">Selecciona un tema de seguimiento arriba.</div>';
+            renderPart2(stimulusDetails);
+            renderPart3(selectedOption.follow_up_theme);
+        }
+
+        // 7. Render Part 2 (Specific Questions)
+        function renderPart2(details) {
+            const container = document.getElementById('stimulusContent');
+            if (!details || !details.data) {
+                container.innerHTML = '<p class="placeholder-text">Datos no encontrados para este estímulo.</p>';
                 return;
             }
 
-            const questions = masterData[selectedTheme].general_thematic_questions;
-            
-            // Randomize the general questions so you don't get the same 8 every time
-            const shuffledQuestions = questions.sort(() => 0.5 - Math.random());
-            const displayQuestions = shuffledQuestions.slice(0, 8);
+            let html = '';
 
-            let html = ``;
-            displayQuestions.forEach(q => {
+            if (details.type === 'image') {
+                html += `
+                    <div class="image-container">
+                        <img src="${details.data.image_url}" alt="Stimulus">
+                    </div>
+                    <div class="image-desc">${details.data.description}</div>
+                `;
+                details.data.image_specific_questions.forEach(q => {
+                    html += `<div class="question-block"><div class="main-prompt">${q.main_prompt}</div><div class="simplified-prompt">${q.simplified_prompt}</div></div>`;
+                });
+            } 
+            else if (details.type === 'extract') {
+                html += `
+                    <div class="extract-box">
+                        <h3 style="margin-top:0; color:#d35400;">${details.data.title}</h3>
+                        <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">${details.data.author}</p>
+                        <div class="extract-text">${details.data.text}</div>
+                    </div>
+                `;
+                details.data.literary_questions.forEach(q => {
+                    html += `<div class="question-block" style="border-left-color: #e67e22;"><div class="main-prompt">${q.main_prompt}</div><div class="simplified-prompt" style="color: #d35400;">${q.simplified_prompt}</div></div>`;
+                });
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 8. Render Part 3 (General Questions, auto-loaded)
+        function renderPart3(themeKey) {
+            const container = document.getElementById('themeContent');
+            const themeData = masterData.themes[themeKey];
+
+            if (!themeData) {
+                container.innerHTML = '<p class="placeholder-text">Tema de seguimiento no encontrado.</p>';
+                return;
+            }
+
+            let html = `<h3 style="color: #8e44ad; margin-top:0;">${themeData.theme_name}</h3>`;
+            
+            // Shuffle and slice to 8 questions
+            const questions = themeData.general_thematic_questions;
+            const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 8);
+
+            shuffledQuestions.forEach(q => {
                 html += `
                     <div class="question-block" style="border-left-color: #9b59b6;">
                         <div class="main-prompt">${q.main_prompt}</div>
@@ -272,7 +416,13 @@
                     </div>
                 `;
             });
+
             container.innerHTML = html;
+        }
+
+        // Reset back to Prep Mode for the current student
+        function resetToPrepMode() {
+            renderPrepMode();
         }
 
         // Initialize App
