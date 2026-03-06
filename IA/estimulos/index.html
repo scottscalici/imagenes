@@ -5,150 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IB Oral Exam Dashboard</title>
     <style>
+        /* ULTRA DENSE UI SETTINGS */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             margin: 0;
-            padding: 15px;
+            padding: 10px; /* Reduced from 15px */
             color: #333;
+            overflow: hidden; /* Prevents accidental page scrolling */
         }
         
         /* Top Navigation Bar */
         .controls-container {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             background: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 8px 15px; /* Slashed padding */
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             align-items: center;
         }
         select {
             flex: 1;
-            padding: 10px;
-            font-size: 16px;
+            padding: 6px;
+            font-size: 14px; /* Reduced font */
             border: 1px solid #ccc;
             border-radius: 4px;
             cursor: pointer;
         }
         .btn-reset {
-            padding: 10px 20px;
+            padding: 6px 15px;
             background-color: #e74c3c;
             color: white;
             border: none;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             font-weight: bold;
-            display: none; /* Hidden until Live Mode */
+            display: none; 
         }
 
         /* Layout Grids */
         .dashboard-grid {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: flex-start;
+            height: calc(100vh - 70px); /* Fill remaining screen */
         }
         .column {
             flex: 1;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 10px 15px; /* Slashed padding */
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            min-height: 75vh;
+            height: 100%;
+            overflow-y: auto; /* Columns scroll independently if absolutely necessary */
         }
         h2 {
-            border-bottom: 3px solid #2c3e50;
-            padding-bottom: 5px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 4px;
             color: #2c3e50;
             margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 22px;
+            margin-bottom: 10px;
+            font-size: 18px; /* Reduced header size */
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
 
-        /* PREP MODE: Side-by-side cards */
+        /* PREP MODE CARDS */
         #prepModeContainer {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
+            height: calc(100vh - 70px);
         }
         .prep-card {
             flex: 1;
             background: white;
             border: 2px dashed #bdc3c7;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 6px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-        .prep-card:hover {
-            border-color: #3498db;
-            background-color: #f0f8ff;
-            transform: translateY(-3px);
         }
         .prep-card img {
             width: 100%;
-            height: 250px;
+            height: 200px;
             object-fit: cover;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .theme-badge {
             display: inline-block;
             background: #2ecc71;
             color: white;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         /* Image Display (Live Mode) */
         .image-container {
             width: 100%;
-            max-height: 350px; /* Kept slightly smaller to save space */
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            max-height: 180px; /* Severely restricted height so questions fit */
+            border-radius: 4px;
+            margin-bottom: 5px;
+            text-align: center;
         }
         .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Prevents awkward cropping */
-            background-color: #eee; 
+            max-width: 100%;
+            max-height: 180px;
+            object-fit: contain; /* Shows full image without cropping */
         }
         .image-desc {
             color: #7f8c8d;
             font-style: italic;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
-            font-size: 14px;
+            font-size: 12px;
         }
 
-        /* Question Formatting (Dense UI Tweaks) */
+        /* Question Formatting - ULTRA TIGHT */
         .question-block {
-            margin-bottom: 12px; /* Reduced from 30px */
-            padding: 10px 12px;  /* Reduced from 15px */
+            margin-bottom: 6px; /* Slashed space between questions */
+            padding: 6px 10px;  /* Slashed inner padding */
             background: #f8f9fa;
-            border-left: 5px solid #3498db;
+            border-left: 4px solid #3498db;
             border-radius: 4px;
         }
         .main-prompt {
-            font-size: 18px;     /* Reduced from 20px */
+            font-size: 14px; /* Smaller, dense font */
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 4px;  /* Reduced from 10px */
-            line-height: 1.3;
+            margin-bottom: 2px; /* Tighter line gap */
+            line-height: 1.2;
         }
         .simplified-prompt {
-            font-size: 15px;     /* Reduced from 17px */
+            font-size: 12px; /* Smaller italic font */
             font-style: italic;
             color: #e74c3c;
             display: flex;
             align-items: center;
+            line-height: 1.2;
         }
         .simplified-prompt::before {
             content: "↳ Pivot: ";
@@ -156,28 +160,24 @@
             margin-right: 5px;
             color: #c0392b;
         }
-        .placeholder-text {
-            color: #95a5a6;
-            font-size: 18px;
-            text-align: center;
-            margin-top: 50px;
-        }
 
         /* HL Extract Styling */
         .extract-box {
             background: #fff3e0; 
-            padding: 15px; 
-            border-radius: 8px; 
+            padding: 10px; 
+            border-radius: 4px; 
             border: 1px solid #ffe0b2; 
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .extract-text {
             white-space: pre-wrap; 
             font-family: 'Georgia', serif; 
-            font-size: 16px; 
-            line-height: 1.5;
-            max-height: 300px;
+            font-size: 13px; /* Smaller text for extract */
+            line-height: 1.3;
+            max-height: 180px; /* Forces scrollbar on text so questions don't get pushed off screen */
             overflow-y: auto;
+            border-top: 1px solid #f39c12;
+            padding-top: 5px;
         }
     </style>
 </head>
@@ -191,12 +191,9 @@
     </div>
 
     <div id="mainDashboard">
-        
-        <div id="prepModeContainer" style="display: none;">
-            </div>
+        <div id="prepModeContainer" style="display: none;"></div>
 
         <div class="dashboard-grid" id="liveModeContainer" style="display: none;">
-            
             <div class="column" id="part2Column">
                 <h2>Parte 2: Presentación y Estímulo</h2>
                 <div id="stimulusContent"></div>
@@ -206,83 +203,70 @@
                 <h2>Parte 3: Conversación General</h2>
                 <div id="themeContent"></div>
             </div>
-            
         </div>
-
     </div>
 
     <script>
-       // Data stores
         let masterData = null;
         let roster = [];
         let stimuliMap = [];
-
-        // App State
         let currentStudent = null;
 
-        // URLs 
+        // LIVE URLS
         const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/preguntas.json'; 
         const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/roster.json';
         const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
 
-        // 1. Load Data
         async function loadData() {
             try {
                 const [masterRes, rosterRes, stimuliRes] = await Promise.all([
-                    fetch(MASTER_DATA_URL),
-                    fetch(ROSTER_URL),
-                    fetch(STIMULI_URL)
+                    fetch(MASTER_DATA_URL), fetch(ROSTER_URL), fetch(STIMULI_URL)
                 ]);
 
-                const masterJson = await masterRes.json();
-                masterData = masterJson; // Assigning root to access both themes and extracts later
-                
-                const rosterJson = await rosterRes.json();
-                roster = rosterJson.students; 
-                
-                const stimuliJson = await stimuliRes.json();
-                stimuliMap = stimuliJson.stimuli; 
+                masterData = await masterRes.json(); // Assigns ROOT so we see extracts
+                roster = (await rosterRes.json()).students; 
+                stimuliMap = (await stimuliRes.json()).stimuli; 
 
                 populateStudentDropdown();
             } catch (error) {
-                console.error("Error loading JSON data:", error);
+                console.error("Error loading data:", error);
                 document.getElementById('mainDashboard').innerHTML = `<h3 style="color:red; text-align:center;">Error cargando datos. Revisa la consola.</h3>`;
             }
         }
 
-        // 2. Populate Dropdown
         function populateStudentDropdown() {
             const studentSelect = document.getElementById('studentSelect');
             roster.forEach(student => {
-                const displayName = `${student.time} | ${student.name} (${student.level})`; 
-                studentSelect.add(new Option(displayName, student.id));
+                studentSelect.add(new Option(`${student.time} | ${student.name} (${student.level})`, student.id));
             });
-
             studentSelect.addEventListener('change', handleStudentSelection);
         }
 
-// 3. Bulletproof Deep Search Function
+        // FULLY REWRITTEN DEEP SEARCH
         function findStimulusDetails(managebacId) {
             const stimConfig = stimuliMap.find(s => s.id === managebacId);
             if (!stimConfig) return null;
 
             let result = { type: stimConfig.type, label: stimConfig.label, data: null };
 
-            // Deep search helper for both images and extracts
             function getDeepData(dataObj, targetKey, targetVal) {
                 let foundData = null;
                 function search(node) {
                     if (!node || typeof node !== 'object') return;
                     
-                    // If searching for image
+                    // Image Search
                     if (targetKey === 'image_id' && node.image_id === targetVal) {
                         foundData = node; return;
                     }
-                    // If searching for extract (checks if the node has the exact key name, e.g., "cqc01")
-                    if (targetKey === 'extract_id' && node[targetVal] && node[targetVal].text_spanish) {
-                        foundData = node[targetVal]; return;
-                    }
                     
+                    // Extract Search (Looks for the literal object key, e.g. "cqc01")
+                    if (targetKey === 'extract_id' && node[targetVal]) {
+                        // Double check it has text so we don't accidentally grab a weird object
+                        if(node[targetVal].text_spanish) {
+                            foundData = node[targetVal]; return;
+                        }
+                    }
+
                     Object.values(node).forEach(search);
                 }
                 search(dataObj);
@@ -298,8 +282,7 @@
 
             return result;
         }
-        
-        // 4. State: Student Selected -> Enter Prep Mode
+
         function handleStudentSelection(e) {
             const studentId = e.target.value;
             if (!studentId) {
@@ -308,55 +291,50 @@
                 document.getElementById('btnReset').style.display = 'none';
                 return;
             }
-
             currentStudent = roster.find(s => s.id === studentId);
             renderPrepMode();
         }
 
-        // 5. Render Prep Mode (Side by side choices)
         function renderPrepMode() {
             document.getElementById('liveModeContainer').style.display = 'none';
             document.getElementById('btnReset').style.display = 'none';
-            
             const prepContainer = document.getElementById('prepModeContainer');
             prepContainer.style.display = 'flex';
-            prepContainer.innerHTML = ''; // Clear previous
+            prepContainer.innerHTML = ''; 
 
             if (!currentStudent.options || currentStudent.options.length === 0) {
-                prepContainer.innerHTML = '<h3>El estudiante no tiene opciones asignadas en roster.json</h3>';
+                prepContainer.innerHTML = '<h3>El estudiante no tiene opciones asignadas.</h3>';
                 return;
             }
 
             currentStudent.options.forEach(opt => {
                 const details = findStimulusDetails(opt.stimulus_id);
-                const themeName = masterData.themes[opt.follow_up_theme]?.theme_name || "Tema Desconocido";
+                // Safe check for themeName just in case it's missing
+                const themeName = (masterData.themes && masterData.themes[opt.follow_up_theme]) 
+                                    ? masterData.themes[opt.follow_up_theme].theme_name 
+                                    : "Tema Desconocido";
 
                 let visualHtml = '';
                 if (details && details.type === 'image' && details.data) {
                     visualHtml = `<img src="${details.data.image_url}" alt="Opción">`;
-                } else if (details && details.type === 'extract') {
-                    visualHtml = `<div style="height:250px; background:#fff3e0; padding:10px; border-radius:4px; margin-bottom:10px; display:flex; align-items:center; justify-content:center;"><h3>[TEXTO LITERARIO]</h3></div>`;
+                } else if (details && details.type === 'extract' && details.data) {
+                    visualHtml = `<div style="height:200px; background:#fff3e0; padding:10px; border-radius:4px; margin-bottom:8px; display:flex; align-items:center; justify-content:center; text-align:left; font-size:12px; overflow:hidden;">${details.data.title}<br><br>${details.data.text_spanish.substring(0, 150)}...</div>`;
                 } else {
-                    visualHtml = `<div style="height:250px; background:#eee; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">Sin Imagen</div>`;
+                    visualHtml = `<div style="height:200px; background:#eee; display:flex; align-items:center; justify-content:center; margin-bottom:8px;">Sin datos</div>`;
                 }
 
-                // Create clickable card
                 const card = document.createElement('div');
                 card.className = 'prep-card';
                 card.innerHTML = `
                     ${visualHtml}
-                    <h3>${details ? details.label : opt.stimulus_id}</h3>
-                    <p style="color:#7f8c8d; font-size:14px;">Haz clic para seleccionar esta opción</p>
+                    <h3 style="margin-bottom:0;">${details ? details.label : opt.stimulus_id}</h3>
                     <div class="theme-badge">Seguimiento: ${themeName}</div>
                 `;
-                
-                // Pass the whole option object into Live Mode
                 card.onclick = () => activateLiveMode(opt, details); 
                 prepContainer.appendChild(card);
             });
         }
 
-        // 6. State: Option Clicked -> Enter Live Mode
         function activateLiveMode(selectedOption, stimulusDetails) {
             document.getElementById('prepModeContainer').style.display = 'none';
             document.getElementById('liveModeContainer').style.display = 'flex';
@@ -366,20 +344,18 @@
             renderPart3(selectedOption.follow_up_theme);
         }
 
-        // 7. Render Part 2 (Specific Questions)
         function renderPart2(details) {
             const container = document.getElementById('stimulusContent');
             if (!details || !details.data) {
-                container.innerHTML = '<p class="placeholder-text">Datos no encontrados para este estímulo.</p>';
+                container.innerHTML = '<p>Datos no encontrados para este estímulo.</p>';
                 return;
             }
 
             let html = '';
-
             if (details.type === 'image') {
                 html += `
                     <div class="image-container">
-                        <img src="${details.data.image_url}" alt="Stimulus">
+                        <img src="${details.data.image_url}">
                     </div>
                     <div class="image-desc">${details.data.description}</div>
                 `;
@@ -390,34 +366,31 @@
             else if (details.type === 'extract') {
                 html += `
                     <div class="extract-box">
-                        <h3 style="margin-top:0; color:#d35400;">${details.data.title}</h3>
-                        <p style="font-size: 0.9em; color: #666; margin-bottom: 10px;">${details.data.author}</p>
-                        <div class="extract-text">${details.data.text}</div>
+                        <h3 style="color:#d35400; font-size:15px; margin-bottom:2px;">${details.data.title}</h3>
+                        <p style="font-size: 11px; color: #666; margin-top:0; margin-bottom: 5px;">${details.data.author}</p>
+                        <div class="extract-text">${details.data.text_spanish}</div>
                     </div>
                 `;
                 details.data.literary_questions.forEach(q => {
                     html += `<div class="question-block" style="border-left-color: #e67e22;"><div class="main-prompt">${q.main_prompt}</div><div class="simplified-prompt" style="color: #d35400;">${q.simplified_prompt}</div></div>`;
                 });
             }
-
             container.innerHTML = html;
         }
 
-        // 8. Render Part 3 (General Questions, auto-loaded)
         function renderPart3(themeKey) {
             const container = document.getElementById('themeContent');
-            const themeData = masterData.themes[themeKey];
-
-            if (!themeData) {
-                container.innerHTML = '<p class="placeholder-text">Tema de seguimiento no encontrado.</p>';
+            if (!masterData.themes || !masterData.themes[themeKey]) {
+                container.innerHTML = '<p>Tema de seguimiento no encontrado.</p>';
                 return;
             }
 
-            let html = `<h3 style="color: #8e44ad; margin-top:0;">${themeData.theme_name}</h3>`;
+            const themeData = masterData.themes[themeKey];
+            let html = `<h3 style="color: #8e44ad;">${themeData.theme_name}</h3>`;
             
-            // Shuffle and slice to 8 questions
+            // Now pulling 10 questions since the UI is dense enough to fit them!
             const questions = themeData.general_thematic_questions;
-            const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 8);
+            const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
 
             shuffledQuestions.forEach(q => {
                 html += `
@@ -431,12 +404,8 @@
             container.innerHTML = html;
         }
 
-        // Reset back to Prep Mode for the current student
-        function resetToPrepMode() {
-            renderPrepMode();
-        }
+        function resetToPrepMode() { renderPrepMode(); }
 
-        // Initialize App
         loadData();
     </script>
 </body>
