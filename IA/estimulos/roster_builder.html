@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Roster (IB Oral)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        
+        /* Stats Dashboard */
+        .stats-panel {
+            background: white; padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px;
+            display: flex; gap: 15px; flex-wrap: wrap;
+        }
+        .stat-card {
+            background: #ecf0f1; border-left: 5px solid #2ecc71;
+            padding: 10px 15px; border-radius: 4px; flex: 1; min-width: 150px;
+        }
+        .stat-card h4 { margin: 0 0 5px 0; font-size: 14px; color: #2c3e50; text-transform: uppercase;}
+        .stat-numbers { font-size: 14px; color: #7f8c8d; line-height: 1.4; }
+        .stat-numbers strong { color: #2c3e50; }
+
+        /* Main Layout Grid */
+        .grid { display: flex; gap: 20px; align-items: flex-start; }
+        
+        /* Sidebar (Student List) */
+        .sidebar {
+            width: 300px; background: white; padding: 15px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-height: 70vh; overflow-y: auto;
+        }
+        .student-item {
+            padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;
+            border-radius: 4px; transition: 0.2s;
+        }
+        .student-item:hover { background: #f0f8ff; }
+        .student-item.active { background: #3498db; color: white; font-weight: bold; }
+        .student-status { font-size: 12px; font-style: italic; }
+        
+        /* Editor Area */
+        .editor {
+            flex: 1; background: white; padding: 25px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .options-grid { display: flex; gap: 20px; margin-top: 15px; }
+        .option-box {
+            flex: 1; background: #f9f9f9; padding: 15px;
+            border: 1px solid #ddd; border-radius: 8px;
+        }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; margin-top: 15px;}
+        select { width: 100%; padding: 10px; font-size: 15px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px;}
+        
+        /* Image Preview */
+        .preview-img {
+            width: 100%; height: 200px; object-fit: cover;
+            background: #eaeaea; border-radius: 4px; margin-top: 10px;
+            border: 2px dashed #ccc;
+        }
+
+        /* Generate Button & Output */
+        .generate-area { margin-top: 20px; text-align: right; }
+        button {
+            padding: 12px 25px; background: #27ae60; color: white;
+            border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer;
+        }
+        button:hover { background: #2ecc71; }
+        textarea {
+            width: 100%; height: 200px; margin-top: 15px;
+            font-family: monospace; padding: 10px; border-radius: 4px;
+            border: 1px solid #ccc; resize: vertical; display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📝 IB Oral: Constructor de Roster (Asignación de Temas)</h1>
+
+    <div class="stats-panel" id="statsPanel">
+        </div>
+
+    <div class="grid">
+        <div class="sidebar" id="studentList">
+            Cargando estudiantes...
+        </div>
+
+        <div class="editor" id="editorArea" style="display: none;">
+            <h2 id="editorTitle">Selecciona un estudiante</h2>
+            
+            <div class="options-grid">
+                <div class="option-box">
+                    <h3 style="margin-top:0; color: #e67e22;">Opción de Estímulo 1</h3>
+                    <label>Seleccionar Imagen:</label>
+                    <select id="stimulusSelect1"></select>
+                    <img id="previewImg1" class="preview-img" src="" alt="Preview 1">
+                    
+                    <label>Tema de Seguimiento (Parte 3):</label>
+                    <select id="followUpSelect1"></select>
+                </div>
+
+                <div class="option-box">
+                    <h3 style="margin-top:0; color: #2980b9;">Opción de Estímulo 2</h3>
+                    <label>Seleccionar Imagen:</label>
+                    <select id="stimulusSelect2"></select>
+                    <img id="previewImg2" class="preview-img" src="" alt="Preview 2">
+                    
+                    <label>Tema de Seguimiento (Parte 3):</label>
+                    <select id="followUpSelect2"></select>
+                </div>
+            </div>
+
+            <div class="generate-area">
+                <button onclick="saveCurrentStudent()">💾 Guardar Opciones (Temporal)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="editor" style="margin-top: 20px;">
+        <h2>Exportar JSON Final</h2>
+        <p>Cuando termines de asignar opciones a todos los estudiantes, haz clic aquí para generar el código. Cópialo y pégalo en tu archivo <b>roster.json</b> en GitHub.</p>
+        <button onclick="generateJSON()" style="background: #8e44ad;">📄 Generar roster.json</button>
+        <textarea id="jsonOutput" readonly></textarea>
+    </div>
+
+    <script>
+        // URLs
+        const MASTER_DATA_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/estimulos/preguntas.json'; 
+        const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/roster.json';
+        const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
+
+        // Data Stores
+        let masterData = {};
+        let roster = [];
+        let stimuliMap = [];
+        let currentStudentIndex = null;
+
+        // Theme keys for easy reference
+        const THEMES = [
+            { key: "identidades", label: "Identidades" },
+            { key: "organizacion_social", label: "Organización social" },
+            { key: "experiencias", label: "Experiencias" },
+            { key: "como_compartimos_el_planeta", label: "Cómo compartimos el planeta" },
+            { key: "ingenio_humano", label: "Ingenio humano" }
+        ];
+
+        // 1. Initialize
+        async function init() {
+            try {
+                const [masterRes, rosterRes, stimuliRes] = await Promise.all([
+                    fetch(MASTER_DATA_URL), fetch(ROSTER_URL), fetch(STIMULI_URL)
+                ]);
+
+                masterData = await masterRes.json();
+                const rosterJson = await rosterRes.json();
+                roster = rosterJson.students; 
+                const stimuliJson = await stimuliRes.json();
+                stimuliMap = stimuliJson.stimuli;
+
+                // Ensure all students have an options array
+                roster.forEach(s => { if(!s.options) s.options = []; });
+
+                populateDropdowns();
+                updateSidebar();
+                updateStats();
+            } catch (err) {
+                alert("Error cargando los datos. Revisa la consola.");
+                console.error(err);
+            }
+        }
+
+        // 2. Populate Dropdowns (run once)
+        function populateDropdowns() {
+            const selects = [document.getElementById('stimulusSelect1'), document.getElementById('stimulusSelect2')];
+            const followUps = [document.getElementById('followUpSelect1'), document.getElementById('followUpSelect2')];
+
+            let stimOptions = '<option value="">-- Selecciona una imagen --</option>';
+            stimuliMap.forEach(s => {
+                if(s.type === 'image') stimOptions += `<option value="${s.id}">${s.label}</option>`;
+            });
+
+            let themeOptions = '<option value="">-- Selecciona tema de seguimiento --</option>';
+            THEMES.forEach(t => {
+                themeOptions += `<option value="${t.key}">${t.label}</option>`;
+            });
+
+            selects.forEach(sel => {
+                sel.innerHTML = stimOptions;
+                sel.addEventListener('change', updatePreviews);
+            });
+            followUps.forEach(sel => {
+                sel.innerHTML = themeOptions;
+            });
+        }
+
+        // 3. Update Sidebar List
+        function updateSidebar() {
+            const list = document.getElementById('studentList');
+            list.innerHTML = '';
+            
+            roster.forEach((student, idx) => {
+                const div = document.createElement('div');
+                div.className = `student-item ${idx === currentStudentIndex ? 'active' : ''}`;
+                
+                const hasOptions = student.options && student.options.length === 2;
+                const status = hasOptions ? "✅ (Listo)" : "❌ (Faltan opciones)";
+
+                div.innerHTML = `<strong>${student.name}</strong> (${student.level})<br><span class="student-status">${status}</span>`;
+                div.onclick = () => loadStudent(idx);
+                list.appendChild(div);
+            });
+        }
+
+        // 4. Load Student into Editor
+        function loadStudent(index) {
+            currentStudentIndex = index;
+            const student = roster[index];
+            document.getElementById('editorArea').style.display = 'block';
+            document.getElementById('editorTitle').innerText = `Editando a: ${student.name} (${student.level})`;
+
+            // Load existing options if they have them, otherwise blank
+            const opt1 = student.options[0] || { stimulus_id: "", follow_up_theme: "" };
+            const opt2 = student.options[1] || { stimulus_id: "", follow_up_theme: "" };
+
+            document.getElementById('stimulusSelect1').value = opt1.stimulus_id;
+            document.getElementById('followUpSelect1').value = opt1.follow_up_theme;
+            
+            document.getElementById('stimulusSelect2').value = opt2.stimulus_id;
+            document.getElementById('followUpSelect2').value = opt2.follow_up_theme;
+
+            updateSidebar();
+            updatePreviews();
+        }
+
+        // 5. Update Images so you can "see what you are picking"
+        function updatePreviews() {
+            [1, 2].forEach(num => {
+                const stimId = document.getElementById(`stimulusSelect${num}`).value;
+                const imgEl = document.getElementById(`previewImg${num}`);
+                
+                if (!stimId) {
+                    imgEl.src = "";
+                    imgEl.style.opacity = 0.2;
+                    return;
+                }
+                
+                imgEl.style.opacity = 1;
+                const stimData = stimuliMap.find(s => s.id === stimId);
+                if (stimData && stimData.image_id) {
+                    // Find image URL in masterData
+                    let foundUrl = "";
+                    for(const key in masterData.themes) {
+                        const match = masterData.themes[key].images?.find(img => img.image_id === stimData.image_id);
+                        if(match) { foundUrl = match.image_url; break; }
+                    }
+                    imgEl.src = foundUrl || "";
+                }
+            });
+        }
+
+        // 6. Save current student (Updates memory, doesn't download yet)
+        function saveCurrentStudent() {
+            if (currentStudentIndex === null) return;
+            
+            const opt1 = {
+                stimulus_id: document.getElementById('stimulusSelect1').value,
+                follow_up_theme: document.getElementById('followUpSelect1').value
+            };
+            const opt2 = {
+                stimulus_id: document.getElementById('stimulusSelect2').value,
+                follow_up_theme: document.getElementById('followUpSelect2').value
+            };
+
+            // Basic validation
+            if(!opt1.stimulus_id || !opt1.follow_up_theme || !opt2.stimulus_id || !opt2.follow_up_theme) {
+                alert("Por favor llena todos los 4 campos antes de guardar.");
+                return;
+            }
+
+            roster[currentStudentIndex].options = [opt1, opt2];
+            updateSidebar();
+            updateStats(); // Recalculate tally live!
+        }
+
+        // 7. Calculate and Render Stats
+        function updateStats() {
+            // Initialize counters
+            let counts = {};
+            THEMES.forEach(t => counts[t.key] = { label: t.label, asStimulus: 0, asFollowUp: 0 });
+
+            // Iterate through every saved option in the roster
+            roster.forEach(student => {
+                student.options.forEach(opt => {
+                    if (opt.follow_up_theme && counts[opt.follow_up_theme]) {
+                        counts[opt.follow_up_theme].asFollowUp++;
+                    }
+                    if (opt.stimulus_id) {
+                        const stim = stimuliMap.find(s => s.id === opt.stimulus_id);
+                        // We map the string "Identidades" to the key "identidades" for the tally
+                        if (stim && stim.theme) {
+                            const formattedTheme = stim.theme.toLowerCase().replace(/ /g, '_').replace(/ó/g, 'o').replace(/í/g, 'i');
+                            if(counts[formattedTheme]) {
+                                counts[formattedTheme].asStimulus++;
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Render HTML
+            const panel = document.getElementById('statsPanel');
+            panel.innerHTML = '';
+            THEMES.forEach(t => {
+                const data = counts[t.key];
+                panel.innerHTML += `
+                    <div class="stat-card">
+                        <h4>${data.label}</h4>
+                        <div class="stat-numbers">
+                            Como Imagen: <strong>${data.asStimulus}</strong><br>
+                            Como Preguntas (Pt 3): <strong>${data.asFollowUp}</strong>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 8. Generate Final JSON to copy
+        function generateJSON() {
+            const finalJSON = { students: roster };
+            const output = document.getElementById('jsonOutput');
+            output.value = JSON.stringify(finalJSON, null, 2);
+            output.style.display = 'block';
+            output.select(); // auto select for easy copying
+        }
+
+        init();
+    </script>
+</body>
+</html>
