@@ -40,43 +40,47 @@
 <body>
 
 <div class="container">
-    <h1>IB Spanish Oral Assessment Grader</h1>
+    <h1>📝 IB Spanish Oral Assessment Grader</h1>
     
     <div class="setup-section">
         <div class="input-group">
-            <label for="studentDropdown"><strong>Select Student:</strong></label>
+            <label for="studentDropdown"><strong>Seleccionar Estudiante:</strong></label>
             <select id="studentDropdown">
-                <option value="" disabled selected>Loading students...</option>
+                <option value="" disabled selected>Cargando estudiantes...</option>
             </select>
             <small id="studentInfo" style="margin-top:5px; color:#7f8c8d;"></small>
         </div>
         <div class="input-group">
-            <label for="stimulusDropdown"><strong>Select Stimulus:</strong></label>
+            <label for="stimulusDropdown"><strong>Estímulo Utilizado:</strong></label>
             <select id="stimulusDropdown" disabled>
-                <option value="" disabled selected>Select a student first</option>
+                <option value="" disabled selected>Selecciona un estudiante primero</option>
             </select>
         </div>
     </div>
 
     <div id="rubricContainer">
-        <h3 style="color: #7f8c8d; text-align: center;">Select a student to load the appropriate SL/HL rubric.</h3>
+        <h3 style="color: #7f8c8d; text-align: center;">Selecciona un estudiante para cargar la rúbrica (SL o HL).</h3>
     </div>
 
     <div class="results-section">
-        <div class="score-display">Total Score: <span id="totalScore">0</span> / 30</div>
-        <label for="commentOutput"><strong>Generated Spanish Feedback:</strong></label>
-        <textarea id="commentOutput" readonly placeholder="Select rubric levels to generate feedback..."></textarea>
+        <div class="score-display">Puntuación Total: <span id="totalScore">0</span> / 30</div>
+        <label for="commentOutput"><strong>Comentarios Generados:</strong></label>
+        <textarea id="commentOutput" readonly placeholder="Selecciona descriptores en la rúbrica para generar retroalimentación..."></textarea>
         <div>
-            <button class="action-btn copy-btn" onclick="copyComment()">Copy Text</button>
-            <button class="action-btn" onclick="saveEvaluation()">Save Evaluation</button>
+            <button class="action-btn copy-btn" onclick="copyComment()">Copiar Texto</button>
+            <button class="action-btn" onclick="saveEvaluation()">Guardar Evaluación Local</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Global variables to hold our fetched JSON data and current state
-    let rosterData = {};
-    let stimuliData = {};
+    // Live GitHub URLs
+    const ROSTER_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/roster.json';
+    const STIMULI_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/stimuli.json';
+    const RUBRIC_URL = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/IA/rubric/rubric.json';
+
+    let rosterData = [];
+    let stimuliData = [];
     let rubricData = {};
     let currentStudentLevel = "";
     let selectedScores = { A: 0, B1: 0, B2: 0, C: 0 };
@@ -84,9 +88,9 @@
 
     // 1. Fetch all JSON files on load
     Promise.all([
-        fetch('roster.json').then(res => res.json()),
-        fetch('stimuli.json').then(res => res.json()),
-        fetch('rubric.json').then(res => res.json())
+        fetch(ROSTER_URL).then(res => res.json()),
+        fetch(STIMULI_URL).then(res => res.json()),
+        fetch(RUBRIC_URL).then(res => res.json())
     ]).then(([roster, stimuli, rubric]) => {
         rosterData = roster.students;
         stimuliData = stimuli.stimuli;
@@ -97,79 +101,93 @@
     // 2. Populate Student Dropdown
     function populateStudents() {
         const dropdown = document.getElementById("studentDropdown");
-        dropdown.innerHTML = '<option value="" disabled selected>Select a student...</option>';
+        dropdown.innerHTML = '<option value="" disabled selected>Seleccionar estudiante...</option>';
         
         rosterData.forEach(student => {
             let option = document.createElement("option");
             option.value = student.id;
-            // Includes their exam time in the dropdown for easy workflow
-            option.textContent = `${student.time} - ${student.name} (${student.level})`;
+            option.textContent = `${student.time} | ${student.name} (${student.level})`;
             dropdown.appendChild(option);
         });
 
         dropdown.addEventListener("change", handleStudentSelection);
     }
 
-    // 3. Handle Student Selection (Triggers UI updates)
+    // 3. Handle Student Selection
     function handleStudentSelection(e) {
         const studentId = e.target.value;
         const student = rosterData.find(s => s.id === studentId);
-        currentStudentLevel = student.level; // "SL" or "HL"
+        currentStudentLevel = student.level; 
 
-        document.getElementById("studentInfo").textContent = `Exam Date: ${student.date} | Level: ${student.level}`;
+        document.getElementById("studentInfo").textContent = `Fecha: ${student.date} | Nivel: ${student.level}`;
         
-        // Reset state
         selectedScores = { A: 0, B1: 0, B2: 0, C: 0 };
         selectedComments = {};
         updateResults();
 
-        // Update UI
-        populateStimuli(currentStudentLevel);
+        // Pass the whole student object to sync the stimuli
+        populateStimuli(student);
         renderRubric(currentStudentLevel);
     }
 
-    // 4. Populate Stimuli (Sorted and Grouped by Theme)
-    function populateStimuli(level) {
+    // 4. Populate Stimuli (Synced with Prep Mode Options)
+    function populateStimuli(student) {
         const dropdown = document.getElementById("stimulusDropdown");
         dropdown.disabled = false;
-        dropdown.innerHTML = '<option value="" disabled selected>Select a stimulus...</option>';
+        dropdown.innerHTML = '<option value="" disabled selected>¿Qué estímulo eligió el estudiante?</option>';
 
-        // Filter and Sort (using the exact logic we discussed)
-        const filtered = stimuliData.filter(s => s.level === level);
+        // PART A: Show the pre-assigned options from roster.json at the very top
+        if (student.options && student.options.length > 0) {
+            const assignedGroup = document.createElement("optgroup");
+            assignedGroup.label = "⭐ OPCIONES ASIGNADAS (PREP MODE)";
+            
+            student.options.forEach(opt => {
+                const stim = stimuliData.find(s => s.id === opt.stimulus_id);
+                if (stim) {
+                    let option = document.createElement("option");
+                    option.value = stim.id;
+                    option.textContent = `➡ ${stim.label} (Seguimiento: ${opt.follow_up_theme.replace(/_/g, ' ')})`;
+                    assignedGroup.appendChild(option);
+                }
+            });
+            dropdown.appendChild(assignedGroup);
+        }
+
+        // PART B: Show all other stimuli for their level below, just in case they went off-script
+        const otherGroup = document.createElement("optgroup");
+        otherGroup.label = "Todos los demás (Respaldo)";
+        
+        const filtered = stimuliData.filter(s => s.level === student.level);
         filtered.sort((a, b) => {
             const themeCompare = a.theme.localeCompare(b.theme, 'es');
             if (themeCompare !== 0) return themeCompare;
             return a.label.localeCompare(b.label, 'es', { numeric: true });
         });
 
-        let currentTheme = "";
-        let optgroup = null;
-
         filtered.forEach(stim => {
-            if (stim.theme !== currentTheme) {
-                currentTheme = stim.theme;
-                optgroup = document.createElement("optgroup");
-                optgroup.label = currentTheme;
-                dropdown.appendChild(optgroup);
+            // Don't duplicate if it's already in their assigned options
+            const isAssigned = student.options && student.options.some(opt => opt.stimulus_id === stim.id);
+            if (!isAssigned) {
+                let option = document.createElement("option");
+                option.value = stim.id;
+                option.textContent = `${stim.theme} - ${stim.label}`;
+                otherGroup.appendChild(option);
             }
-            let option = document.createElement("option");
-            option.value = stim.id;
-            option.textContent = stim.label;
-            optgroup.appendChild(option);
         });
+        
+        dropdown.appendChild(otherGroup);
     }
 
-    // 5. Render the Rubric based on SL/HL
+    // 5. Render the Rubric
     function renderRubric(level) {
         const container = document.getElementById("rubricContainer");
-        container.innerHTML = ""; // Clear existing
+        container.innerHTML = ""; 
 
-        // Define which criteria to pull based on level
         const criteriaToLoad = [
             { id: "A", key: `criterionA_${level}` },
             { id: "B1", key: `criterionB1_${level}` },
-            { id: "B2", key: "criterionB2" }, // B2 is identical for both
-            { id: "C", key: "criterionC" }    // C is identical for both
+            { id: "B2", key: "criterionB2" }, 
+            { id: "C", key: "criterionC" }    
         ];
 
         criteriaToLoad.forEach(crit => {
@@ -180,28 +198,21 @@
             section.className = "criterion-section";
             section.innerHTML = `<h2>${critData.title} (Max ${critData.maxMarks})</h2>`;
 
-            // Loop through aspects (Vocab, Grammar, Focus, etc.)
             for (const [aspectName, levelsArray] of Object.entries(critData.aspects)) {
                 const row = document.createElement("div");
                 row.className = "aspect-row";
                 
-                // Format the label nicely
                 const formattedName = aspectName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                 row.innerHTML = `<div class="aspect-label">${formattedName}</div>`;
 
-                // Render buttons for Levels 6 down to 1
                 levelsArray.forEach(levelObj => {
                     const btn = document.createElement("button");
                     btn.className = "descriptor-btn";
-                    btn.innerHTML = `<span class="level-badge">Level ${levelObj.level} (${levelObj.marks} pts)</span>${levelObj.englishDescriptor}`;
+                    btn.innerHTML = `<span class="level-badge">Nivel ${levelObj.level} (${levelObj.marks} pts)</span>${levelObj.englishDescriptor}`;
                     
-                    // Click Event
                     btn.onclick = () => {
-                        // Deselect other buttons in this row
                         row.querySelectorAll('.descriptor-btn').forEach(b => b.classList.remove('selected'));
                         btn.classList.add('selected');
-                        
-                        // Save the comment and calculate score
                         handleSelection(crit.id, aspectName, levelObj);
                     };
                     row.appendChild(btn);
@@ -214,34 +225,13 @@
 
     // 6. Handle Rubric Clicks & Calculations
     function handleSelection(critId, aspectName, levelObj) {
-        // Save the Spanish comment for this specific aspect
         if (!selectedComments[critId]) selectedComments[critId] = {};
-        selectedComments[critId][aspectName] = levelObj.spanishComment;
-
-        // Math Logic: For Criterion A, the max is 12. For B1, B2, C the max is 6.
-        // We use the "Level" (1-6) selected to calculate the average.
         
-        let allLevelsForCriterion = [];
-        const critSection = rubricData[`criterion${critId}_${currentStudentLevel}`] || rubricData[`criterion${critId}`];
-        
-        // Sum up the active selections for this criterion
-        for (const aspect of Object.keys(critSection.aspects)) {
-            if (selectedComments[critId][aspect]) {
-               // We need a way to track the level selected. Since we only stored the comment, let's store an object instead.
-               selectedComments[critId][aspect] = {
-                   comment: levelObj.spanishComment,
-                   level: levelObj.level
-               };
-            }
-        }
-        
-        // Because of the way the click event scopes levelObj, let's just recalculate properly:
         selectedComments[critId][aspectName] = {
             comment: levelObj.spanishComment,
             level: levelObj.level
         };
 
-        // Calculate Average Level for the Criterion
         let totalLevels = 0;
         let count = 0;
         for (const key in selectedComments[critId]) {
@@ -249,14 +239,11 @@
             count++;
         }
         
-        let averageLevel = totalLevels / count; // Will be between 1 and 6
+        let averageLevel = totalLevels / count; 
 
-        // Convert Average Level to IB Marks
         if (critId === "A") {
-            // Level 6 = 12, Level 5 = 10, Level 4 = 8, Level 3 = 6, Level 2 = 4, Level 1 = 2
             selectedScores[critId] = Math.round(averageLevel * 2); 
         } else {
-            // Level 6 = 6, Level 1 = 1
             selectedScores[critId] = Math.round(averageLevel);
         }
 
@@ -265,13 +252,11 @@
 
     // 7. Update Score and Concatenate Text
     function updateResults() {
-        // Update Number
         const total = selectedScores.A + selectedScores.B1 + selectedScores.B2 + selectedScores.C;
         document.getElementById("totalScore").textContent = total;
 
-        // Concatenate Spanish Comments into a paragraph
         let finalParagraph = [];
-        const order = ["A", "B1", "B2", "C"]; // Order them logically
+        const order = ["A", "B1", "B2", "C"]; 
         
         order.forEach(crit => {
             if (selectedComments[crit]) {
@@ -288,22 +273,22 @@
     function copyComment() {
         const text = document.getElementById("commentOutput").value;
         if (!text) {
-            alert("Please select rubric descriptors first!");
+            alert("Por favor selecciona descriptores de la rúbrica primero.");
             return;
         }
         navigator.clipboard.writeText(text).then(() => {
-            alert("Copied to clipboard!");
+            alert("¡Comentario copiado al portapapeles!");
         });
     }
 
-    // 9. Save Data (Mocking backend save via LocalStorage for frontend persistence)
+    // 9. Save Data Locally
     function saveEvaluation() {
         const studentId = document.getElementById("studentDropdown").value;
         const stimulusId = document.getElementById("stimulusDropdown").value;
         const comment = document.getElementById("commentOutput").value;
 
         if (!studentId || !stimulusId || !comment) {
-            alert("Please ensure a student, stimulus, and rubric scores are selected.");
+            alert("Asegúrate de seleccionar estudiante, estímulo y puntuaciones de la rúbrica.");
             return;
         }
 
@@ -317,12 +302,11 @@
             timestamp: new Date().toISOString()
         };
 
-        // Pull existing saves from local storage, push new, and resave
         let saves = JSON.parse(localStorage.getItem('ib_evaluations')) || [];
         saves.push(evaluation);
         localStorage.setItem('ib_evaluations', JSON.stringify(saves));
 
-        alert("Evaluation Saved Successfully!");
+        alert("¡Evaluación guardada exitosamente en el navegador!");
     }
 </script>
 
