@@ -242,7 +242,7 @@ let masterData = null;
             studentSelect.addEventListener('change', handleStudentSelection);
         }
 
-        // NUCLEAR OPTION DEEP SEARCH
+        // DEEP SEARCH FOR IMAGES & EXTRACTS
         function findStimulusDetails(managebacId) {
             const stimConfig = stimuliMap.find(s => s.id === managebacId);
             if (!stimConfig) return null;
@@ -282,6 +282,25 @@ let masterData = null;
             return result;
         }
 
+        // NEW: ROBUST THEME MATCHER (Ignores Case, Accents, and Underscores)
+        function findThemeData(targetKey) {
+            if (!masterData || !masterData.themes) return null;
+            
+            // 1. Try exact match first
+            if (masterData.themes[targetKey]) return masterData.themes[targetKey];
+            
+            // 2. Fuzzy match (clean both the target and the keys)
+            const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s_]+/g, '');
+            const normalizedTarget = normalize(targetKey);
+            
+            for (let key in masterData.themes) {
+                if (normalize(key) === normalizedTarget) {
+                    return masterData.themes[key];
+                }
+            }
+            return null; // Theme strictly not found
+        }
+
         function handleStudentSelection(e) {
             const studentId = e.target.value;
             if (!studentId) {
@@ -308,9 +327,10 @@ let masterData = null;
 
             currentStudent.options.forEach(opt => {
                 const details = findStimulusDetails(opt.stimulus_id);
-                const themeName = (masterData.themes && masterData.themes[opt.follow_up_theme]) 
-                                    ? masterData.themes[opt.follow_up_theme].theme_name 
-                                    : "Tema Desconocido";
+                
+                // Use the new robust theme matcher
+                const themeData = findThemeData(opt.follow_up_theme);
+                const themeName = themeData ? themeData.theme_name : "Tema Desconocido";
 
                 let visualHtml = '';
                 if (details && details.type === 'image' && details.data) {
@@ -357,12 +377,13 @@ let masterData = null;
                     </div>
                     <div class="image-desc">${details.data.description}</div>
                 `;
-                details.data.image_specific_questions.forEach(q => {
+                
+                const questions = details.data.image_specific_questions || [];
+                questions.forEach(q => {
                     html += `<div class="question-block"><div class="main-prompt">${q.main_prompt}</div><div class="simplified-prompt">${q.simplified_prompt}</div></div>`;
                 });
             } 
             else if (details.type === 'extract') {
-                // THE NEW TOGGLE UI IS INJECTED HERE
                 html += `
                     <div class="extract-box">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
@@ -382,14 +403,15 @@ let masterData = null;
                         <div id="hidden_text_en" style="display:none;">${details.data.text_english || "Traducción no disponible en la base de datos."}</div>
                     </div>
                 `;
-                details.data.literary_questions.forEach(q => {
+                
+                const questions = details.data.literary_questions || [];
+                questions.forEach(q => {
                     html += `<div class="question-block" style="border-left-color: #e67e22;"><div class="main-prompt">${q.main_prompt}</div><div class="simplified-prompt" style="color: #d35400;">${q.simplified_prompt}</div></div>`;
                 });
             }
             container.innerHTML = html;
         }
 
-        // NEW FUNCTION: Handles the button clicks for translations
         function switchLang(lang) {
             const displayDiv = document.getElementById('visible_extract_text');
             const btnEs = document.getElementById('btn_es');
@@ -401,38 +423,46 @@ let masterData = null;
                 displayDiv.innerHTML = document.getElementById('hidden_text_es').innerHTML;
                 displayDiv.style.fontStyle = 'normal';
                 displayDiv.style.color = '#333';
-                btnEs.style.background = '#e67e22'; // Orange (Active)
-                btnEn.style.background = '#bdc3c7'; // Gray (Inactive)
+                btnEs.style.background = '#e67e22'; 
+                btnEn.style.background = '#bdc3c7'; 
             } else {
                 displayDiv.innerHTML = document.getElementById('hidden_text_en').innerHTML;
                 displayDiv.style.fontStyle = 'italic';
                 displayDiv.style.color = '#555';
-                btnEn.style.background = '#e67e22'; // Orange (Active)
-                btnEs.style.background = '#bdc3c7'; // Gray (Inactive)
+                btnEn.style.background = '#e67e22'; 
+                btnEs.style.background = '#bdc3c7'; 
             }
         }
 
         function renderPart3(themeKey) {
             const container = document.getElementById('themeContent');
-            if (!masterData.themes || !masterData.themes[themeKey]) {
-                container.innerHTML = '<p>Tema de seguimiento no encontrado.</p>';
+            
+            // Apply the robust match here
+            const themeData = findThemeData(themeKey);
+            
+            if (!themeData) {
+                container.innerHTML = `<p style="color:red; font-weight:bold;">Tema de seguimiento (${themeKey}) no encontrado en preguntas.json.</p>`;
                 return;
             }
 
-            const themeData = masterData.themes[themeKey];
-            let html = `<h3 style="color: #8e44ad;">${themeData.theme_name}</h3>`;
+            let html = `<h3 style="color: #8e44ad;">${themeData.theme_name || "Conversación Temática"}</h3>`;
             
-            const questions = themeData.general_thematic_questions;
-            const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
-
-            shuffledQuestions.forEach(q => {
-                html += `
-                    <div class="question-block" style="border-left-color: #9b59b6;">
-                        <div class="main-prompt">${q.main_prompt}</div>
-                        <div class="simplified-prompt" style="color: #8e44ad;">${q.simplified_prompt}</div>
-                    </div>
-                `;
-            });
+            // Safe fallback just in case the questions array is empty or misspelled in JSON
+            const questions = themeData.general_thematic_questions || [];
+            
+            if (questions.length === 0) {
+                 html += `<p style="color:#7f8c8d; font-style:italic;">No se encontraron preguntas bajo "general_thematic_questions" para este tema.</p>`;
+            } else {
+                const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+                shuffledQuestions.forEach(q => {
+                    html += `
+                        <div class="question-block" style="border-left-color: #9b59b6;">
+                            <div class="main-prompt">${q.main_prompt || "¿Pregunta principal?"}</div>
+                            <div class="simplified-prompt" style="color: #8e44ad;">${q.simplified_prompt || "¿Pregunta simple?"}</div>
+                        </div>
+                    `;
+                });
+            }
 
             container.innerHTML = html;
         }
