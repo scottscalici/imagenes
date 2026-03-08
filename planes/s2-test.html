@@ -862,9 +862,17 @@ function checkSenordleRow() {
         }
     }
 
-    if (guess === senTargetWord) {
+if (guess === senTargetWord) {
         senGameOver = true;
-        setTimeout(() => alert("¡Excelente!"), 400);
+        setTimeout(() => {
+            // Trigger your site's existing particle effect with emojis!
+            if (typeof startEffect === "function") {
+                startEffect({ char: "🎉", maxSize: 40, minSize: 20, count: 60, direction: "down" });
+                // Stop the confetti after 4 seconds
+                setTimeout(() => { if (typeof stopEffect === "function") stopEffect(); }, 4000); 
+            }
+            alert(`¡Pura vida! Lo adivinaste en ${senRow + 1} intentos.`);
+        }, 400);
     } else if (senRow === 5) {
         senGameOver = true;
         setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400);
