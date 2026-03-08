@@ -35,6 +35,73 @@
             transition: all 0.3s;
         }
         .btn-theme:hover { filter: brightness(90%); }
+        /* --- SEÑORDLE MODAL & TICO COLORS --- */
+        #senordleModal {
+            display: none; /* Hidden by default */
+            z-index: 100;
+        }
+        :root {
+            --tico-blue: #002B7F;
+            --tico-red: #CE1126;
+            --correct: #538d4e;
+            --present: #b59f3b;
+            --absent: #3a3a3c;
+            --tile-border: #878a8c;
+        }
+        .senordle-board {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            grid-gap: 5px;
+            margin: 0 auto 20px auto;
+            width: fit-content;
+        }
+        .senordle-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px;
+        }
+        .senordle-tile {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--tile-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background-color: white;
+            color: black;
+        }
+        .senordle-tile.correct { background-color: var(--correct); color: white; border-color: var(--correct); }
+        .senordle-tile.present { background-color: var(--present); color: white; border-color: var(--present); }
+        .senordle-tile.absent { background-color: var(--absent); color: white; border-color: var(--absent); }
+        
+        .senordle-keyboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .senordle-key-row {
+            display: flex;
+            gap: 4px;
+        }
+        button.senordle-key {
+            background-color: var(--tico-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button.senordle-key.large { padding: 12px 8px; font-size: 10px; background-color: var(--tico-red); }
+        button.senordle-key.correct { background-color: var(--correct); }
+        button.senordle-key.present { background-color: var(--present); }
+        button.senordle-key.absent { background-color: var(--absent); }
     </style>
 </head>
 
@@ -89,6 +156,15 @@
             </div>
 
             <div id="tareasColumn" class="space-y-6">
+                <div class="bg-white rounded-xl p-6 shadow-md border-l-[6px]" style="border-color: var(--tico-blue);">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1 flex items-center gap-2" style="color: var(--tico-blue);"><span>🧩</span> Señordle Diario</h3>
+                            <p class="text-xs text-slate-500 font-medium">Rompecabezas de 5 letras.</p>
+                        </div>
+                        <button onclick="openSenordle()" class="font-bold px-4 py-2 rounded-lg uppercase text-xs text-white shadow-md hover:opacity-90 transition-opacity" style="background-color: var(--tico-red);">Jugar</button>
+                    </div>
+                </div>
                 <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
                     <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
@@ -141,6 +217,18 @@
                 </div>
             </div>
         </div>
+        <div id="senordleModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm flex flex-col border-4 border-slate-200">
+            <header class="text-white text-center py-4 font-black text-2xl tracking-widest relative" style="background-color: var(--tico-red); border-bottom: 4px solid var(--tico-blue);">
+                SEÑORDLE
+                <button onclick="closeSenordle()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl">&times;</button>
+            </header>
+            <div class="p-6 bg-slate-50">
+                <div id="senordleBoard" class="senordle-board"></div>
+                <div id="senordleKeyboard" class="senordle-keyboard"></div>
+            </div>
+        </div>
+    </div>
     </main>
 
     <script>
@@ -662,7 +750,147 @@ async function renderByDate() {
         await runRender(data, newDia);
     } else { alert("No hay clases programadas."); }
 }
+// ============================================================
+// SEÑORDLE LOGIC
+// ============================================================
+let senTargetWord = "playa"; 
+let senValidWords = [];
+let senRow = 0;
+let senCol = 0;
+let senGameOver = false;
+const senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
 
+async function initSenordle() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json');
+        const data = await response.ok ? await response.json() : null;
+        
+        if (data) {
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            senTargetWord = data.dailyWords[todayStr] || "libro";
+            senValidWords = data.validDictionary || [];
+        }
+    } catch (e) {
+        console.error("Error loading Señordle dictionary:", e);
+    }
+    buildSenordleUI();
+}
+
+function buildSenordleUI() {
+    const board = document.getElementById("senordleBoard");
+    board.innerHTML = "";
+    senGuesses.forEach((row, rIdx) => {
+        const rowEl = document.createElement("div");
+        rowEl.className = "senordle-row";
+        row.forEach((_, cIdx) => {
+            const tile = document.createElement("div");
+            tile.id = `sen-tile-${rIdx}-${cIdx}`;
+            tile.className = "senordle-tile";
+            rowEl.appendChild(tile);
+        });
+        board.appendChild(rowEl);
+    });
+
+    const kb = document.getElementById("senordleKeyboard");
+    kb.innerHTML = "";
+    const keys = [
+        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ñ"],
+        ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "DEL"]
+    ];
+
+    keys.forEach(row => {
+        const rowEl = document.createElement("div");
+        rowEl.className = "senordle-key-row";
+        row.forEach(key => {
+            const btn = document.createElement("button");
+            btn.textContent = key;
+            btn.id = `sen-key-${key}`;
+            btn.className = `senordle-key ${key.length > 1 ? 'large' : ''}`;
+            btn.onclick = () => handleSenordleKey(key);
+            rowEl.appendChild(btn);
+        });
+        kb.appendChild(rowEl);
+    });
+}
+
+function handleSenordleKey(key) {
+    if (senGameOver) return;
+    if (key === "DEL" || key === "BACKSPACE") {
+        if (senCol > 0) {
+            senCol--;
+            senGuesses[senRow][senCol] = '';
+            document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = '';
+        }
+    } else if (key === "ENTER") {
+        checkSenordleRow();
+    } else if (/^[A-ZÑ]$/.test(key) && senCol < 5 && senRow < 6) {
+        senGuesses[senRow][senCol] = key;
+        document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = key;
+        senCol++;
+    }
+}
+
+function checkSenordleRow() {
+    if (senCol < 5) return;
+    const guess = senGuesses[senRow].join("").toLowerCase();
+    
+    // Gibberish check if dictionary loaded
+    if (senValidWords.length > 0 && !senValidWords.includes(guess)) {
+        alert("La palabra no está en la lista.");
+        return;
+    }
+
+    let targetCopy = senTargetWord;
+    
+    for (let i = 0; i < 5; i++) {
+        const tile = document.getElementById(`sen-tile-${senRow}-${i}`);
+        const letter = guess[i];
+        const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
+        
+        if (letter === senTargetWord[i]) {
+            tile.classList.add("correct");
+            if(keyEl) keyEl.classList.add("correct");
+            targetCopy = targetCopy.replace(letter, "_");
+        } else if (targetCopy.includes(letter)) {
+            tile.classList.add("present");
+            if(keyEl && !keyEl.classList.contains("correct")) keyEl.classList.add("present");
+            targetCopy = targetCopy.replace(letter, "_");
+        } else {
+            tile.classList.add("absent");
+            if(keyEl && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) keyEl.classList.add("absent");
+        }
+    }
+
+    if (guess === senTargetWord) {
+        senGameOver = true;
+        setTimeout(() => alert("¡Excelente!"), 400);
+    } else if (senRow === 5) {
+        senGameOver = true;
+        setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400);
+    } else {
+        senRow++;
+        senCol = 0;
+    }
+}
+
+// Modal controls
+function openSenordle() { 
+    document.getElementById('senordleModal').style.display = 'flex'; 
+    // Listen for physical keyboard when open
+    document.addEventListener("keydown", handlePhysicalKey);
+}
+function closeSenordle() { 
+    document.getElementById('senordleModal').style.display = 'none'; 
+    document.removeEventListener("keydown", handlePhysicalKey);
+}
+function handlePhysicalKey(e) {
+    const key = e.key.toUpperCase();
+    if (key === "BACKSPACE" || key === "ENTER" || /^[A-ZÑ]$/.test(key)) handleSenordleKey(key);
+}
+
+// Init when page loads
+initSenordle();
 init();
 </script>
 </body>
