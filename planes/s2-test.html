@@ -87,22 +87,8 @@
             display: flex;
             gap: 4px;
         }
-        button.senordle-key {
-            background-color: var(--tico-blue);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 12px 10px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        button.senordle-key.large { padding: 12px 8px; font-size: 10px; background-color: var(--tico-red); }
-        button.senordle-key.correct { background-color: var(--correct); }
-        button.senordle-key.present { background-color: var(--present); }
-        button.senordle-key.absent { background-color: var(--absent); }
-    </style>
+button.senordle-key { background-color: var(--accent); color: white; border: none; border-radius: 4px; padding: 12px 10px; font-size: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+button.senordle-key.large { padding: 12px 8px; font-size: 10px; background-color: var(--accent); filter: brightness(80%); }    </style>
 </head>
 
 <body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
@@ -156,15 +142,15 @@
             </div>
 
             <div id="tareasColumn" class="space-y-6">
-                <div class="bg-white rounded-xl p-6 shadow-md border-l-[6px]" style="border-color: var(--tico-blue);">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-lg mb-1 flex items-center gap-2" style="color: var(--tico-blue);"><span>🧩</span> Señordle Diario</h3>
-                            <p class="text-xs text-slate-500 font-medium">Rompecabezas de 5 letras.</p>
-                        </div>
-                        <button onclick="openSenordle()" class="font-bold px-4 py-2 rounded-lg uppercase text-xs text-white shadow-md hover:opacity-90 transition-opacity" style="background-color: var(--tico-red);">Jugar</button>
-                    </div>
-                </div>
+<div id="senordleBox" class="bg-white rounded-xl p-6 shadow-md border-8">
+    <div class="flex justify-between items-center">
+        <div>
+            <h3 class="font-bold text-lg mb-1 flex items-center gap-2"><span>🧩</span> Señordle Diario</h3>
+            <p class="text-xs text-slate-500 font-medium">Rompecabezas de 5 letras.</p>
+        </div>
+        <button onclick="openSenordle()" class="btn-theme font-bold px-4 py-2 rounded-lg uppercase text-xs shadow-md">Jugar</button>
+    </div>
+</div>
                 <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
                     <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
                     <div id="tareasList" class="space-y-4"></div>
@@ -219,10 +205,10 @@
         </div>
         <div id="senordleModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm flex flex-col border-4 border-slate-200">
-            <header class="text-white text-center py-4 font-black text-2xl tracking-widest relative" style="background-color: var(--tico-red); border-bottom: 4px solid var(--tico-blue);">
-                SEÑORDLE
-                <button onclick="closeSenordle()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl">&times;</button>
-            </header>
+           <header class="text-white text-center py-4 font-black text-2xl tracking-widest relative" style="background-color: var(--accent);">
+    SEÑORDLE
+    <button onclick="closeSenordle()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl">&times;</button>
+</header>
             <div class="p-6 bg-slate-50">
                 <div id="senordleBoard" class="senordle-board"></div>
                 <div id="senordleKeyboard" class="senordle-keyboard"></div>
@@ -322,13 +308,14 @@ async function applyThemeStyles(data, currentDia) {
             document.getElementById('heroCard').style.borderTopColor = accent;
         } else { heroSlot.classList.add('hidden'); }
 
-        const cards = [
+const cards = [
             { id: 'evalSection', key: 'evaluacion' },
             { id: 'calentamientoSection', key: 'calentamiento' },
             { id: 'tareasBox', key: 'tareas' },
-            { id: 'evalSidebarBlock', key: 'pruebas' }
+            { id: 'evalSidebarBlock', key: 'pruebas' },
+            { id: 'senordleBox', key: 'senordle' } // <-- Añadido aquí!
         ];
-
+        
         cards.forEach(card => {
             const el = document.getElementById(card.id);
             if (el) {
