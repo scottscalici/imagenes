@@ -762,20 +762,27 @@ const senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
 
 async function initSenordle() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json');
-        const data = await response.ok ? await response.json() : null;
+        // Fetch the daily answers AND your new giant dictionary simultaneously 
+        const [dailyRes, dictRes] = await Promise.all([
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json'),
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/diccionario.json')
+        ]);
         
-        if (data) {
+        const dailyData = await dailyRes.ok ? await dailyRes.json() : null;
+        const dictData = await dictRes.ok ? await dictRes.json() : [];
+        
+        if (dailyData) {
             const todayStr = new Date().toLocaleDateString('en-CA');
-            senTargetWord = data.dailyWords[todayStr] || "libro";
-            senValidWords = data.validDictionary || [];
+            senTargetWord = dailyData.dailyWords[todayStr] || "libro";
+            
+            // Combine the target word with the master dictionary so the answer is always a valid guess
+            senValidWords = [...dictData, senTargetWord];
         }
     } catch (e) {
-        console.error("Error loading Señordle dictionary:", e);
+        console.error("Error loading Señordle dictionaries:", e);
     }
     buildSenordleUI();
 }
-
 function buildSenordleUI() {
     const board = document.getElementById("senordleBoard");
     board.innerHTML = "";
