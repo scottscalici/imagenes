@@ -835,34 +835,60 @@ function checkSenordleRow() {
         return;
     }
 
-    let targetCopy = senTargetWord;
-    
+    // Convert strings to arrays so we can easily "cross out" letters as we use them
+    let targetCopy = senTargetWord.split(''); 
+    const guessArr = guess.split('');
+    const statuses = Array(5).fill('absent'); // Default all tiles to absent/gray
+
+    // PASS 1: Find all CORRECT (green) letters first
+    for (let i = 0; i < 5; i++) {
+        if (guessArr[i] === targetCopy[i]) {
+            statuses[i] = 'correct';
+            targetCopy[i] = null; // Mark this target letter as "used"
+            guessArr[i] = null;   // Mark this guess letter as "processed"
+        }
+    }
+
+    // PASS 2: Find all PRESENT (yellow) letters with whatever is left
+    for (let i = 0; i < 5; i++) {
+        if (guessArr[i] !== null) { // If it wasn't already marked green
+            const targetIndex = targetCopy.indexOf(guessArr[i]);
+            if (targetIndex > -1) {
+                statuses[i] = 'present';
+                targetCopy[targetIndex] = null; // Mark this target letter as "used"
+            }
+        }
+    }
+
+    // PASS 3: Apply the styles to the tiles and the on-screen keyboard
     for (let i = 0; i < 5; i++) {
         const tile = document.getElementById(`sen-tile-${senRow}-${i}`);
         const letter = guess[i];
         const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
-        
-        if (letter === senTargetWord[i]) {
-            tile.classList.add("correct");
-            if(keyEl) keyEl.classList.add("correct");
-            targetCopy = targetCopy.replace(letter, "_");
-        } else if (targetCopy.includes(letter)) {
-            tile.classList.add("present");
-            if(keyEl && !keyEl.classList.contains("correct")) keyEl.classList.add("present");
-            targetCopy = targetCopy.replace(letter, "_");
-        } else {
-            tile.classList.add("absent");
-            if(keyEl && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) keyEl.classList.add("absent");
+
+        // Update the board tile
+        tile.classList.add(statuses[i]);
+
+        // Update the keyboard (making sure we never downgrade a green to a yellow/gray)
+        if (keyEl) {
+            if (statuses[i] === 'correct') {
+                keyEl.classList.remove("present", "absent");
+                keyEl.classList.add("correct");
+            } else if (statuses[i] === 'present' && !keyEl.classList.contains("correct")) {
+                keyEl.classList.remove("absent");
+                keyEl.classList.add("present");
+            } else if (statuses[i] === 'absent' && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) {
+                keyEl.classList.add("absent");
+            }
         }
     }
 
-if (guess === senTargetWord) {
+    // Check win/loss condition
+    if (guess === senTargetWord) {
         senGameOver = true;
         setTimeout(() => {
-            // Trigger your site's existing particle effect with emojis!
             if (typeof startEffect === "function") {
                 startEffect({ char: "🎉", maxSize: 40, minSize: 20, count: 60, direction: "down" });
-                // Stop the confetti after 4 seconds
                 setTimeout(() => { if (typeof stopEffect === "function") stopEffect(); }, 4000); 
             }
             alert(`¡Pura vida! Lo adivinaste en ${senRow + 1} intentos.`);
