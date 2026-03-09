@@ -584,7 +584,7 @@
         }
       },
       "hero": {
-        "active": true,
+        "active": false,
         "img": "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/hero_spring.png",
         "msg": "¡La primavera ha llegado!"
       },
@@ -662,6 +662,89 @@
         "count": 20
       }
     },
+        {
+      "id": "earthy",
+      "name": "Natural",
+      "start": "04-16",
+      "end": "042-19",
+   "styles": {
+        "header": "bg-gradient-to-r from-red-900 via-red-800 to-orange-700",
+        "fontHeading": "Cinzel",
+        "accent": "#F39C12",
+        "cardOverrides": {
+         "evaluacion": "#C0392B",   
+          "calentamiento": "#D35400", 
+          "curiosidad": "#F39C12",    
+          "musica": "#2980B9",        
+          "conversacion": "#27AE60",  
+          "cultura": "#8E44AD",       
+          "lectura": "#16A085",       
+          "tareas": "#2C3E50",        
+          "destacado": "#E67E22",     
+          "pruebas": "#922B21",       
+          "estructura": "#BDC3C7",    
+          "extras": "#7F8C8D",        
+          "video": "#F1C40F",         
+          "senordle": "#34495E"       
+    }
+      }
+        },
+ {
+      "id": "deportes",
+      "name": "Deportes",
+      "start": "04-20",
+      "end": "04-24",
+"styles": {
+        "header": "bg-gradient-to-r from-slate-900 via-blue-900 to-red-700",
+        "fontHeading": "Graduate",
+        "accent": "#E63946",
+        "cardOverrides": {
+      "evaluacion": "#E63946", 
+          "calentamiento": "#A8DADC", 
+          "curiosidad": "#457B9D",    
+          "musica": "#1D3557",     
+          "conversacion": "#2A9D8F",
+          "cultura": "#E9C46A",    
+          "lectura": "#F4A261",   
+          "tareas": "#264653",     
+          "destacado": "#E76F51",  
+          "pruebas": "#D62828",      
+          "estructura": "#6D6875",   
+          "extras": "#8D99AE",        
+          "video": "#FFB703",         
+          "senordle": "#14213D"       
+    }
+      }
+        },
+    {
+      "id": "paraiso",
+      "name": "Paraíso",
+      "start": "04-25",
+      "end": "04-29",
+    "styles": {
+        "header": "bg-gradient-to-r from-teal-700 via-emerald-500 to-cyan-500",
+        "fontHeading": "Pacifico",
+        "accent": "#FF6F59",
+       "cardOverrides": {
+      "evaluacion": "#FF6F59", 
+          "calentamiento": "#43AA8B",
+          "curiosidad": "#17BEBB",  
+          "musica": "#F3CA40",       
+          "conversacion": "#00A896", 
+          "cultura": "#EF3E36",       
+          "lectura": "#254441",   
+          "tareas": "#02C39A",      
+          "destacado": "#F2A541",  
+          "pruebas": "#D00000",    
+          "estructura": "#B2B09B",  
+          "extras": "#2E282A",        
+          "video": "#F0F3BD",         
+          "senordle": "#05668D"     
+        }
+      }
+        },
+    
+
     {
       "id": "cinco_mayo",
       "name": "Cinco de Mayo",
