@@ -553,50 +553,90 @@ const theme = await applyThemeStyles(data, DIA);
         }
     } catch (e) { console.error("Error en Gramática:", e); }
 
-// ============================================================
-// 7. EXTRAS & BLOQUES DIARIOS (Música, Cultura, Lectura, Conversación)
-// ============================================================
+// ============================================================// ============================================================
+    // 7. EXTRAS & BLOQUES DIARIOS (Música, Cultura, Lectura, Conversación)
+    // ============================================================
     try {
-        const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
-        const courseKeyExtras = CONFIG.COURSE + "_dias";
+        const extrasBlock = document.getElementById('extrasBlock'); 
+        extrasBlock.innerHTML = "";
         
-        // ULTIMATE ARRAY FINDER: Finds the array even if it's named differently inside your JSON files
-        const getSafeArray = (obj) => {
-            if (!obj) return [];
-            if (Array.isArray(obj)) return obj;
-            if (obj.items && Array.isArray(obj.items)) return obj.items;
-            const firstArray = Object.values(obj).find(val => Array.isArray(val));
-            return firstArray || [];
+        // 1. SMART EXTRACTOR & FILTER
+        const extractItems = (dataObj) => {
+            if (!dataObj) return [];
+            if (Array.isArray(dataObj)) return dataObj;
+            if (dataObj.items) return Array.isArray(dataObj.items) ? dataObj.items : Object.values(dataObj.items);
+            return Object.values(dataObj).filter(v => typeof v === 'object');
         };
 
-        const allDailyBlocks = [
-            ...getSafeArray(data.extrasDiarios),
-            ...getSafeArray(data.musica),
-            ...getSafeArray(data.lectura),
-            ...getSafeArray(data.cultura),
-            ...getSafeArray(data.conv)
-        ];
+        const isTodayForCourse = (item) => {
+            if (!item) return false;
+            const courseKey = CONFIG.COURSE + "_dias";
+            const matchesA = item[courseKey] && item[courseKey].includes(parseInt(DIA));
+            const matchesB = item.courses && item.courses.includes(CONFIG.COURSE) && item.dias && item.dias.includes(parseInt(DIA));
+            return matchesA || matchesB;
+        };
 
-        const todaysExtras = allDailyBlocks.filter(item => item && item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
-
-        todaysExtras.forEach(item => {
+        // 2. RENDER EXTRAS DIARIOS (The original generic cards)
+        extractItems(data.extrasDiarios).filter(isTodayForCourse).forEach(item => {
             const exColor = overrides.extras || accent;
             let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
-            const safeLinks = Array.isArray(item.links) ? item.links : [];
-            
+
             if (item.kind === 'sentences') {
                 const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
-                const sentencesList = Array.isArray(item.sentences) ? item.sentences.map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('') : '';
-                const linksList = safeLinks.map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
+                const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+                const linksList = (item.links || []).map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
+
                 extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
             } else if (item.kind === 'card' || item.kind === 'placeholder') {
                  extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
             } else if (item.kind === 'links') {
-                const links = safeLinks.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
+                const links = (item.links || []).map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
                 extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
             }
+        });    
+
+        // 3. RENDER MÚSICA (Custom Spotify-style card)
+        extractItems(data.musica).filter(isTodayForCourse).forEach(item => {
+             const mColor = overrides.musica || "#1DB954"; 
+             const img = item.imagen || item.img || "";
+             const title = item.titulo || item.title || "";
+             const sub = item.subtitulo || item.tag || "";
+             const url = item.url || "#";
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row items-center border border-slate-100 relative group"><div class="w-full md:w-32 h-32 relative flex-shrink-0 bg-slate-900"><img src="${img}" class="w-full h-full object-cover opacity-90 group-hover:opacity-60 transition-opacity"><div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/50 group-hover:scale-110 transition-transform"><span class="text-white text-sm ml-0.5">▶</span></div></div></div><div class="p-4 flex-grow w-full flex flex-col justify-between h-full"><div class="flex justify-between items-start mb-2"><div><span class="text-[9px] font-black uppercase tracking-widest" style="color: ${mColor}">Música</span><h3 class="text-lg font-black text-slate-900 leading-tight">${sub}</h3><p class="text-xs font-bold text-slate-400">${title}</p></div>${item.tag ? `<span class="text-[9px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${item.tag}</span>` : ''}</div><div class="w-full bg-slate-100 h-1 rounded-full mb-3 overflow-hidden"><div class="h-full w-1/3 rounded-full" style="background-color: ${mColor}"></div></div><a href="${url}" target="_blank" class="text-xs font-bold uppercase tracking-wider flex items-center gap-1 hover:underline" style="color: ${mColor}">Escuchar en Sitio Web ↗</a></div></section>`;
         });
-    } catch (e) { console.error("Error en Extras/Música/Cultura:", e); }    
+
+        // 4. RENDER CULTURA (Custom Image-left card)
+        extractItems(data.cultura).filter(isTodayForCourse).forEach(item => {
+             const culColor = overrides.cultura || accent;
+             const img = item.imagen || item.img || "";
+             const title = item.titulo || item.title || "";
+             const sub = item.subtitulo || "Lección Cultural";
+             const tag = item.tag || "Cultura";
+             const url = item.url || "#";
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] overflow-hidden card-shadow mb-6" style="border-color: ${culColor}"><div class="flex flex-col md:flex-row"><div class="md:w-40 h-32 overflow-hidden bg-slate-100 relative"><img src="${img}" class="w-full h-full object-cover"><span class="absolute bottom-0 left-0 bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest backdrop-blur-sm">${tag}</span></div><div class="p-4 flex flex-col justify-between flex-grow"><div><h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">${sub}</h3><h3 class="text-xl font-black text-slate-900 leading-tight">${title}</h3></div><a href="${url}" target="_blank" class="mt-3 text-xs font-bold flex items-center gap-1 group w-fit" style="color: ${culColor}">Abrir Recurso →</a></div></div></section>`;
+        });
+
+        // 5. RENDER CONVERSACIÓN (Custom iMessage chat bubble card)
+        extractItems(data.conv).filter(isTodayForCourse).forEach(item => {
+             const img = item.imagen || item.img || "";
+             const title = item.titulo || item.title || "";
+             const url = item.url || "#";
+             extrasBlock.innerHTML += `<section class="bg-white rounded-2xl card-shadow mb-6 border border-slate-200 overflow-hidden relative group"><div class="h-6 w-full bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-400/80"></div><div class="w-2.5 h-2.5 rounded-full bg-green-400/80"></div></div><div class="p-5 flex flex-col md:flex-row items-start gap-5"><div class="relative flex-shrink-0 mt-1"><div class="w-20 h-20 rounded-full p-1 border border-slate-200 bg-white shadow-sm">${img ? `<img src="${img}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-3xl">🗣️</div>`}</div><div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div></div><div class="flex-grow w-full max-w-2xl"><div class="flex items-center justify-between mb-1 pl-1"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nuevo mensaje</span><span class="text-[10px] font-bold text-slate-300">Ahora</span></div><div class="relative bg-blue-500 text-white rounded-2xl rounded-tl-none p-5 shadow-sm mb-2"><h3 class="text-xl font-bold leading-tight mb-4 text-white">${title}</h3><a href="${url}" target="_blank" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 border border-white/30 rounded-xl px-5 py-2.5 text-xs font-bold text-white transition-all backdrop-blur-md shadow-inner"><span>💬</span> Responder / Hablar</a></div><div class="flex items-center gap-1 pl-2 h-6 opacity-60"><span class="text-xs font-medium text-slate-400 italic">escribiendo</span><div class="flex space-x-1 pt-1"><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div><div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div></div></div></div></div></section>`;
+        });    
+
+        // 6. RENDER LECTURA (Custom tilted book cover card)
+        extractItems(data.lectura).filter(isTodayForCourse).forEach(item => {
+             const lColor = overrides.lectura || accent;
+             const img = item.imagen || item.img || "";
+             const title = item.titulo || item.title || "";
+             const sub = item.subtitulo || "Pasaje literario.";
+             const tag = item.tag || "";
+             const url = item.url || "#";
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col border border-slate-100"><div class="h-3 w-full" style="background-color: ${lColor}"></div><div class="p-6"><div class="flex flex-col md:flex-row gap-6"><div class="w-full md:w-28 h-40 flex-shrink-0 shadow-lg rounded overflow-hidden rotate-2 bg-slate-50 border border-slate-200"><img src="${img}" class="w-full h-full object-cover"></div><div class="flex-grow flex flex-col justify-center"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border" style="color: ${lColor}; border-color: ${lColor}40">Lectura</span>${tag ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${tag}</span>` : ''}</div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${title}</h3><p class="text-slate-500 text-sm line-clamp-2 italic mb-4">${sub}</p><a href="${url}" target="_blank" class="w-fit px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest text-white shadow-md" style="background-color: ${lColor}">Abrir Lectura 📖</a></div></div></div></section>`;
+        });
+
+    } catch (e) { console.error("Error en Extras/Música/Cultura:", e); }
+    
     // 8. DASHBOARD
     const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
     Object.values(data.apuntes || {}).forEach(topic => {
