@@ -98,33 +98,77 @@
             </div>
 
             <div id="tareasColumn" class="space-y-6">
-                <div id="atandoCabosBox" class="bg-white rounded-xl p-6 shadow-md border-8">
-                    <div class="flex justify-between items-start mb-4 border-b pb-3">
-                        <div>
-                            <h3 class="font-black text-xl mb-1 flex items-center gap-2"><span>🧶</span> Atando Cabos</h3>
-                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Encuentra 4 grupos de 4 palabras</p>
+<div id="juegosCarouselWrapper" class="mb-2">
+                    <div class="flex justify-between items-end mb-3 px-1">
+                        <h3 class="font-black text-xl flex items-center gap-2 text-slate-800"><span>🕹️</span> Juegos Diarios</h3>
+                        <div class="flex gap-1.5" id="carouselDots">
+                            <button onclick="document.getElementById('gamesCarousel').scrollBy({left: -350, behavior: 'smooth'})" class="w-6 h-2 rounded-full bg-slate-300 hover:bg-indigo-400 transition-colors shadow-inner"></button>
+                            <button onclick="document.getElementById('gamesCarousel').scrollBy({left: 350, behavior: 'smooth'})" class="w-6 h-2 rounded-full bg-slate-300 hover:bg-indigo-400 transition-colors shadow-inner"></button>
                         </div>
                     </div>
                     
-                    <div id="ac-solved-area" class="w-full"></div>
-                    <div id="ac-grid" class="grid grid-cols-4 gap-2 mb-6"></div>
-                    
-                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
-                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Errores: <span id="ac-mistakes" class="text-red-500 font-black text-sm">4</span></p>
-                        <div class="space-x-2">
-                            <button onclick="acDeselectAll()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Borrar</button>
-                            <button onclick="acShuffle()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Mezclar</button>
-                            <button onclick="acSubmit()" class="px-4 py-1.5 rounded btn-theme text-white text-[10px] uppercase tracking-widest font-black shadow-md hover:-translate-y-0.5 transition-transform">Enviar</button>
+                    <div id="gamesCarousel" class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4" style="scrollbar-width: none; -ms-overflow-style: none;">
+                        <style>#gamesCarousel::-webkit-scrollbar { display: none; }</style>
+                        
+                        <div id="senordleSlide" class="snap-center shrink-0 w-full bg-white rounded-xl p-6 shadow-md border-8 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-black text-2xl mb-1 text-slate-800">Señordle</h3>
+                                <p class="text-sm text-slate-500 font-medium mb-6">Rompecabezas de 5 letras. ¿Puedes adivinar la palabra secreta de hoy?</p>
+                            </div>
+                            
+                            <div class="bg-slate-50 rounded-xl p-5 flex justify-center items-center mb-6 border border-slate-100 shadow-inner">
+                                <div class="grid grid-cols-5 gap-1.5">
+                                    <div class="w-8 h-8 bg-slate-300 rounded shadow-sm"></div>
+                                    <div class="w-8 h-8 bg-[#538d4e] rounded shadow-sm flex items-center justify-center text-white font-bold">A</div>
+                                    <div class="w-8 h-8 bg-[#b59f3b] rounded shadow-sm flex items-center justify-center text-white font-bold">E</div>
+                                    <div class="w-8 h-8 bg-slate-300 rounded shadow-sm"></div>
+                                    <div class="w-8 h-8 bg-slate-300 rounded shadow-sm"></div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="openSenordle()" class="w-full btn-theme font-black py-3 rounded-lg uppercase tracking-widest text-sm shadow-md hover:-translate-y-0.5 transition-transform">
+                                Jugar Ahora ↗
+                            </button>
                         </div>
-                    </div>
-                </div>
-                <div id="senordleBox" class="bg-white rounded-xl p-6 shadow-md border-8">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-lg mb-1 flex items-center gap-2"><span>🧩</span> Señordle Diario</h3>
-                            <p class="text-xs text-slate-500 font-medium">Rompecabezas de 5 letras.</p>
+
+                        <div id="atandoCabosBox" class="snap-center shrink-0 w-full bg-white rounded-xl p-6 shadow-md border-8" style="display:none;">
+                            <div class="flex justify-between items-start mb-4 border-b pb-3">
+                                <div>
+                                    <h3 class="font-black text-2xl mb-1 flex items-center gap-2 text-slate-800"><span>🧶</span> Atando Cabos</h3>
+                                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Encuentra 4 grupos de 4 palabras</p>
+                                </div>
+                            </div>
+                            
+                            <div id="ac-solved-area" class="w-full"></div>
+                            <div id="ac-grid" class="grid grid-cols-4 gap-1.5 mb-6"></div>
+                            
+                            <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Errores: <span id="ac-mistakes" class="text-red-500 font-black text-sm ml-1">4</span></p>
+                                <div class="space-x-1 flex">
+                                    <button onclick="acDeselectAll()" class="px-2 py-1.5 rounded border border-slate-300 text-[9px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Borrar</button>
+                                    <button onclick="acShuffle()" class="px-2 py-1.5 rounded border border-slate-300 text-[9px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Mix</button>
+                                    <button onclick="acSubmit()" class="px-3 py-1.5 rounded btn-theme text-white text-[9px] uppercase tracking-widest font-black shadow-md hover:-translate-y-0.5 transition-transform">Enviar</button>
+                                </div>
+                            </div>
                         </div>
-                        <button onclick="openSenordle()" class="btn-theme font-bold px-4 py-2 rounded-lg uppercase text-xs shadow-md">Jugar</button>
+
+                        <div id="archivoSlide" class="snap-center shrink-0 w-full bg-white rounded-xl p-6 shadow-md border-8 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-black text-2xl mb-1 text-slate-800">Archivo</h3>
+                                <p class="text-sm text-slate-500 font-medium mb-6">¿Quieres jugar más o practicar vocabulario? Accede a la colección completa.</p>
+                            </div>
+                            
+                            <div class="bg-slate-50 rounded-xl p-5 flex flex-col justify-center items-center mb-6 border border-slate-100 shadow-inner h-24 relative overflow-hidden">
+                                <div class="text-4xl absolute transform -rotate-12 opacity-30 left-4">🎮</div>
+                                <div class="text-4xl absolute transform rotate-12 opacity-30 right-4">🧩</div>
+                                <div class="text-5xl z-10 drop-shadow-md hover:scale-110 transition-transform cursor-pointer">🗂️</div>
+                            </div>
+                            
+                            <a href="https://sites.google.com/view/srscalici/home/juegos" target="_blank" class="w-full block text-center bg-slate-800 text-white font-black py-3 rounded-lg uppercase tracking-widest text-sm shadow-md hover:bg-slate-700 hover:-translate-y-0.5 transition-all">
+                                Ver Archivo ↗
+                            </a>
+                        </div>
+
                     </div>
                 </div>
                 
