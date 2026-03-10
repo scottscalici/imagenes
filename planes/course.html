@@ -28,6 +28,24 @@
         .senordle-key-row { display: flex; gap: 4px; }
         button.senordle-key { background-color: var(--accent); color: white; border: none; border-radius: 4px; padding: 12px 10px; font-size: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         button.senordle-key.large { padding: 12px 8px; font-size: 10px; background-color: var(--accent); filter: brightness(80%); }        
+
+        /* --- ATANDO CABOS (CONEXIONES) --- */
+        #atandoCabosBox { display: none; } /* Hidden if no puzzle today */
+        .ac-btn { min-height: 64px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 800; font-size: 11px; border-radius: 8px; border: 2px solid #cbd5e1; background: #f8fafc; cursor: pointer; transition: all 0.2s; word-break: break-word; padding: 4px; text-transform: uppercase; color: #334155; }
+        .ac-btn.selected { background: #475569; color: white; border-color: #334155; transform: scale(0.95); }
+        .ac-solved-row { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 8px; animation: popIn 0.3s ease-out; }
+        .ac-solved-title { font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .ac-solved-words { font-weight: 600; font-size: 12px; }
+        
+        /* The 4 Difficulty Colors */
+        .ac-level-1 { background-color: #fde047; color: #854d0e; border: 2px solid #eab308; } /* Amarillo */
+        .ac-level-2 { background-color: #86efac; color: #166534; border: 2px solid #22c55e; } /* Verde */
+        .ac-level-3 { background-color: #93c5fd; color: #1e3a8a; border: 2px solid #3b82f6; } /* Azul */
+        .ac-level-4 { background-color: #d8b4fe; color: #4c1d95; border: 2px solid #a855f7; } /* Morado */
+
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake-err { animation: shake 0.3s ease-in-out; }
     </style>
 </head>
 
@@ -80,6 +98,26 @@
             </div>
 
             <div id="tareasColumn" class="space-y-6">
+                <div id="atandoCabosBox" class="bg-white rounded-xl p-6 shadow-md border-8">
+                    <div class="flex justify-between items-start mb-4 border-b pb-3">
+                        <div>
+                            <h3 class="font-black text-xl mb-1 flex items-center gap-2"><span>🧶</span> Atando Cabos</h3>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Encuentra 4 grupos de 4 palabras</p>
+                        </div>
+                    </div>
+                    
+                    <div id="ac-solved-area" class="w-full"></div>
+                    <div id="ac-grid" class="grid grid-cols-4 gap-2 mb-6"></div>
+                    
+                    <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
+                        <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Errores: <span id="ac-mistakes" class="text-red-500 font-black text-sm">4</span></p>
+                        <div class="space-x-2">
+                            <button onclick="acDeselectAll()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Borrar</button>
+                            <button onclick="acShuffle()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Mezclar</button>
+                            <button onclick="acSubmit()" class="px-4 py-1.5 rounded btn-theme text-white text-[10px] uppercase tracking-widest font-black shadow-md hover:-translate-y-0.5 transition-transform">Enviar</button>
+                        </div>
+                    </div>
+                </div>
                 <div id="senordleBox" class="bg-white rounded-xl p-6 shadow-md border-8">
                     <div class="flex justify-between items-center">
                         <div>
@@ -184,7 +222,8 @@ const CONFIG = {
     ANUNCIOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/anuncios.json",
     GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json",
-    DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json"
+    DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json",
+    ATANDO_CABOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/atandocabos/atandocabos.json"
 };
 
 // ============================================================
@@ -238,21 +277,21 @@ async function loadData() {
             temas, cal, curios, evals, tareas,
             vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios, destacado 
+            videos, gramaticaDiaria, anuncios, destacado, atandoCabos 
         ] = await Promise.all([
             safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
             safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
             safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
             safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
             safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO)
+            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO), safeFetch(CONFIG.ATANDO_CABOS)
         ]);
         
         return { 
             temas, 
             cal: cal.filter ? cal : (cal.map || []), 
             curios, evals, tareas, vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado, atandoCabos 
         };
     } catch (e) { console.error("Critical Load Error", e); }
 }
@@ -443,6 +482,8 @@ const theme = await applyThemeStyles(data, DIA);
     document.getElementById('currentEval').textContent = findEval(DIA);
     document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
     updateCountdown();
+
+    renderAtandoCabos(data, DIA);
 
     // 3. TAREAS (NOW FILTERED BY COURSE)
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
@@ -728,7 +769,134 @@ function openSenordle() { document.getElementById('senordleModal').style.display
 function closeSenordle() { document.getElementById('senordleModal').style.display = 'none'; document.removeEventListener("keydown", handlePhysicalKey); }
 function handlePhysicalKey(e) { const key = e.key.toUpperCase(); if (key === "BACKSPACE" || key === "ENTER" || /^[A-ZÑ]$/.test(key)) handleSenordleKey(key); }
 
-initSenordle(); init();
+
+    
+initSenordle(); 
+
+// ============================================================
+// ATANDO CABOS (CONEXIONES) LOGIC
+// ============================================================
+let acPuzzle = null;
+let acActiveWords = [];
+let acSelected = [];
+let acMistakes = 4;
+let acSolvedCount = 0;
+
+function renderAtandoCabos(data, dia) {
+    const box = document.getElementById('atandoCabosBox');
+    const allPuzzles = data.atandoCabos?.atando_cabos || [];
+    
+    // Find today's puzzle for the current course
+  const todayStr = new Date().toLocaleDateString('en-CA');
+    acPuzzle = allPuzzles.find(p => p.fecha === todayStr && p.course === CONFIG.COURSE);
+    
+    if (!acPuzzle) {
+        box.style.display = 'none'; // Hide if no puzzle today
+        return;
+    }
+
+    box.style.display = 'block';
+    acMistakes = 4;
+    acSolvedCount = 0;
+    acSelected = [];
+    document.getElementById('ac-solved-area').innerHTML = '';
+    document.getElementById('ac-mistakes').textContent = acMistakes;
+
+    // Extract all 16 words and shuffle them
+    acActiveWords = [];
+    acPuzzle.categories.forEach(cat => {
+        cat.items.forEach(word => {
+            acActiveWords.push({ word: word, level: cat.level, category: cat.title });
+        });
+    });
+    acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); // Quick shuffle
+    
+    drawAcGrid();
+}
+
+function drawAcGrid() {
+    const grid = document.getElementById('ac-grid');
+    grid.innerHTML = '';
+    
+    acActiveWords.forEach((item) => {
+        const btn = document.createElement('button');
+        btn.className = `ac-btn ${acSelected.includes(item.word) ? 'selected' : ''}`;
+        btn.textContent = item.word;
+        btn.onclick = () => acToggleWord(item.word);
+        grid.appendChild(btn);
+    });
+}
+
+function acToggleWord(word) {
+    if (acSelected.includes(word)) {
+        acSelected = acSelected.filter(w => w !== word);
+    } else {
+        if (acSelected.length < 4) acSelected.push(word);
+    }
+    drawAcGrid();
+}
+
+function acDeselectAll() {
+    acSelected = [];
+    drawAcGrid();
+}
+
+function acShuffle() {
+    acActiveWords = acActiveWords.sort(() => Math.random() - 0.5);
+    drawAcGrid();
+}
+
+function acSubmit() {
+    if (acSelected.length !== 4) return;
+    
+    // Check if all 4 selected words share the same category
+    const selectedData = acActiveWords.filter(item => acSelected.includes(item.word));
+    const firstCategory = selectedData[0].category;
+    const isMatch = selectedData.every(item => item.category === firstCategory);
+    
+    if (isMatch) {
+        // WINNING A GROUP
+        const level = selectedData[0].level;
+        acSolvedCount++;
+        
+        // Remove from active grid
+        acActiveWords = acActiveWords.filter(item => !acSelected.includes(item.word));
+        acSelected = [];
+        
+        // Create the solved row block
+        const solvedArea = document.getElementById('ac-solved-area');
+        const row = document.createElement('div');
+        row.className = `ac-solved-row ac-level-${level}`;
+        row.innerHTML = `<div class="ac-solved-title">${firstCategory}</div><div class="ac-solved-words">${selectedData.map(d => d.word).join(', ')}</div>`;
+        solvedArea.appendChild(row);
+        
+        drawAcGrid();
+        
+        // If all 4 are solved
+        if (acSolvedCount === 4) {
+            setTimeout(() => {
+                if (typeof startEffect === "function") { startEffect({ char: "🧶", maxSize: 30, minSize: 15, count: 50, direction: "down" }); setTimeout(stopEffect, 4000); }
+                alert("¡Excelente! Has atado todos los cabos.");
+            }, 300);
+        }
+    } else {
+        // MISTAKE
+        acMistakes--;
+        document.getElementById('ac-mistakes').textContent = acMistakes;
+        const grid = document.getElementById('ac-grid');
+        grid.classList.add('shake-err');
+        setTimeout(() => grid.classList.remove('shake-err'), 300);
+        
+        if (acMistakes <= 0) {
+            setTimeout(() => {
+                alert("Te quedaste sin intentos. ¡Mejor suerte mañana!");
+                // Optionally reveal answers here in a future update!
+                acDeselectAll();
+            }, 300);
+        }
+    }
+}
+init();
 </script>
 </body>
 </html>
