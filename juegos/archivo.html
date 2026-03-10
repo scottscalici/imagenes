@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Archivo de Juegos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --accent: #6366f1; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
+        .btn-theme:hover { filter: brightness(90%); }
+        
+        /* Señordle Styles */
+        :root { --correct: #538d4e; --present: #b59f3b; --absent: #3a3a3c; --tile-border: #878a8c; }
+        .senordle-board { display: grid; grid-template-rows: repeat(6, 1fr); grid-gap: 5px; margin: 0 auto 20px auto; width: fit-content; }
+        .senordle-row { display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 5px; }
+        .senordle-tile { width: 50px; height: 50px; border: 2px solid var(--tile-border); display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; text-transform: uppercase; background-color: white; color: black; }
+        .senordle-tile.correct { background-color: var(--correct); color: white; border-color: var(--correct); }
+        .senordle-tile.present { background-color: var(--present); color: white; border-color: var(--present); }
+        .senordle-tile.absent { background-color: var(--absent); color: white; border-color: var(--absent); }
+        .senordle-keyboard { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .senordle-key-row { display: flex; gap: 4px; }
+        button.senordle-key { background-color: #cbd5e1; color: black; border: none; border-radius: 4px; padding: 12px 10px; font-size: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        button.senordle-key.correct { background-color: var(--correct); color: white; }
+        button.senordle-key.present { background-color: var(--present); color: white; }
+        button.senordle-key.absent { background-color: var(--absent); color: white; }
+        button.senordle-key.large { padding: 12px 8px; font-size: 10px; }
+
+        /* Atando Cabos Styles */
+        .ac-btn { min-height: 64px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 800; font-size: 11px; border-radius: 8px; border: 2px solid #cbd5e1; background: #f8fafc; cursor: pointer; transition: all 0.2s; word-break: break-word; padding: 4px; text-transform: uppercase; color: #334155; }
+        .ac-btn.selected { background: #475569; color: white; border-color: #334155; transform: scale(0.95); }
+        .ac-solved-row { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 8px; animation: popIn 0.3s ease-out; }
+        .ac-solved-title { font-weight: 900; text-transform: uppercase; font-size: 14px; letter-spacing: 0.05em; margin-bottom: 2px; }
+        .ac-solved-words { font-weight: 600; font-size: 12px; }
+        .ac-level-1 { background-color: #fde047; color: #854d0e; border: 2px solid #eab308; }
+        .ac-level-2 { background-color: #86efac; color: #166534; border: 2px solid #22c55e; }
+        .ac-level-3 { background-color: #93c5fd; color: #1e3a8a; border: 2px solid #3b82f6; }
+        .ac-level-4 { background-color: #d8b4fe; color: #4c1d95; border: 2px solid #a855f7; }
+        @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .shake-err { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="p-6">
+
+<div class="max-w-4xl mx-auto space-y-8">
+    
+    <header class="bg-white p-6 rounded-2xl shadow-md border-t-8 border-indigo-500 text-center">
+        <h1 class="text-3xl font-black text-slate-800 uppercase tracking-tight mb-2">🎮 Archivo de Juegos</h1>
+        <p class="text-slate-500 text-sm mb-6">Selecciona tu clase y la fecha para jugar juegos pasados.</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <select id="courseSelect" class="bg-slate-100 border-2 border-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg outline-none focus:border-indigo-500">
+                <option value="s2">Español 2</option>
+                <option value="s4">Español 4 (IB)</option>
+            </select>
+            
+            <input type="date" id="dateSelect" class="bg-slate-100 border-2 border-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg outline-none focus:border-indigo-500">
+            
+            <button onclick="loadGames()" class="btn-theme font-black uppercase tracking-widest py-2 px-8 rounded-lg shadow-md hover:-translate-y-0.5 transition-transform">Cargar Juegos</button>
+        </div>
+    </header>
+
+    <div id="statusMsg" class="text-center font-bold text-slate-500 hidden">Buscando juegos...</div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        <section id="senordleContainer" class="bg-white rounded-2xl p-6 shadow-md border-4 border-slate-100 hidden">
+            <h2 class="text-xl font-black text-center mb-6 uppercase tracking-widest text-slate-800">🧩 Señordle</h2>
+            <div id="senordleBoard" class="senordle-board"></div>
+            <div id="senordleKeyboard" class="senordle-keyboard"></div>
+        </section>
+
+        <section id="atandoCabosContainer" class="bg-white rounded-2xl p-6 shadow-md border-4 border-slate-100 hidden">
+            <div class="flex justify-between items-start mb-6 border-b pb-3">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-widest text-slate-800">🧶 Atando Cabos</h2>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Encuentra 4 grupos de 4 palabras</p>
+                </div>
+            </div>
+            
+            <div id="ac-solved-area" class="w-full"></div>
+            <div id="ac-grid" class="grid grid-cols-4 gap-2 mb-6"></div>
+            
+            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Errores: <span id="ac-mistakes" class="text-red-500 font-black text-sm">4</span></p>
+                <div class="space-x-2 flex">
+                    <button onclick="acDeselectAll()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Borrar</button>
+                    <button onclick="acShuffle()" class="px-3 py-1.5 rounded border border-slate-300 text-[10px] uppercase tracking-widest font-black text-slate-500 hover:bg-slate-200 transition-colors">Mezclar</button>
+                    <button onclick="acSubmit()" class="px-4 py-1.5 rounded btn-theme text-white text-[10px] uppercase tracking-widest font-black shadow-md">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+// --- DATABASES ---
+const URL_ATANDO = "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/atandocabos/atandocabos.json";
+const URL_SEN_WORDS = "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json";
+const URL_SEN_DICT = "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/diccionario.json";
+
+let atandoData = [];
+let senordleDailyDict = {};
+let senordleFullDict = [];
+
+// Fetch all data once on load
+async function initArchive() {
+    try {
+        const [resAC, resSenW, resSenD] = await Promise.all([
+            fetch(URL_ATANDO).then(r => r.json()),
+            fetch(URL_SEN_WORDS).then(r => r.json()),
+            fetch(URL_SEN_DICT).then(r => r.json())
+        ]);
+        atandoData = resAC.atando_cabos || [];
+        senordleDailyDict = resSenW;
+        senordleFullDict = resSenD;
+        
+        // Set date picker to today
+        document.getElementById('dateSelect').value = new Date().toLocaleDateString('en-CA');
+    } catch (e) { console.error("Error loading databases", e); }
+}
+
+// --- MASTER LOAD FUNCTION ---
+function loadGames() {
+    const course = document.getElementById('courseSelect').value;
+    const date = document.getElementById('dateSelect').value; // format: YYYY-MM-DD
+    
+    document.getElementById('statusMsg').style.display = 'none';
+    let gamesFound = 0;
+
+    // 1. Load Señordle
+    const senCourseDict = senordleDailyDict[course] || senordleDailyDict.dailyWords || {};
+    const senWord = senCourseDict[date];
+    if (senWord) {
+        startSenordle(senWord);
+        document.getElementById('senordleContainer').style.display = 'block';
+        gamesFound++;
+    } else {
+        document.getElementById('senordleContainer').style.display = 'none';
+    }
+
+    // 2. Load Atando Cabos
+    const acPuzzleRaw = atandoData.find(p => p.fecha === date && p.course === course);
+    if (acPuzzleRaw) {
+        startAtandoCabos(acPuzzleRaw);
+        document.getElementById('atandoCabosContainer').style.display = 'block';
+        gamesFound++;
+    } else {
+        document.getElementById('atandoCabosContainer').style.display = 'none';
+    }
+
+    if (gamesFound === 0) {
+        const msg = document.getElementById('statusMsg');
+        msg.textContent = `No hay juegos archivados para ${course.toUpperCase()} en la fecha ${date}.`;
+        msg.style.display = 'block';
+    }
+}
+
+// ==========================================
+// SEÑORDLE ENGINE
+// ==========================================
+let senTargetWord = ""; let senValidWords = []; let senRow = 0; let senCol = 0; let senGameOver = false;
+let senGuesses = [];
+
+function startSenordle(word) {
+    senTargetWord = word.toLowerCase();
+    senValidWords = [...senordleFullDict, senTargetWord];
+    senRow = 0; senCol = 0; senGameOver = false;
+    senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
+    buildSenordleUI();
+}
+
+function buildSenordleUI() {
+    const board = document.getElementById("senordleBoard"); board.innerHTML = "";
+    senGuesses.forEach((row, rIdx) => {
+        const rowEl = document.createElement("div"); rowEl.className = "senordle-row";
+        row.forEach((_, cIdx) => { const tile = document.createElement("div"); tile.id = `sen-tile-${rIdx}-${cIdx}`; tile.className = "senordle-tile"; rowEl.appendChild(tile); });
+        board.appendChild(rowEl);
+    });
+    const kb = document.getElementById("senordleKeyboard"); kb.innerHTML = "";
+    const keys = [ ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"], ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ñ"], ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "DEL"] ];
+    keys.forEach(row => {
+        const rowEl = document.createElement("div"); rowEl.className = "senordle-key-row";
+        row.forEach(key => {
+            const btn = document.createElement("button"); btn.textContent = key; btn.id = `sen-key-${key}`; btn.className = `senordle-key ${key.length > 1 ? 'large' : ''}`;
+            btn.onclick = () => handleSenordleKey(key); rowEl.appendChild(btn);
+        });
+        kb.appendChild(rowEl);
+    });
+}
+
+function handleSenordleKey(key) {
+    if (senGameOver) return;
+    if (key === "DEL" || key === "BACKSPACE") {
+        if (senCol > 0) { senCol--; senGuesses[senRow][senCol] = ''; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = ''; }
+    } else if (key === "ENTER") { checkSenordleRow(); } 
+    else if (/^[A-ZÑ]$/.test(key) && senCol < 5 && senRow < 6) {
+        senGuesses[senRow][senCol] = key; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = key; senCol++;
+    }
+}
+
+function checkSenordleRow() {
+    if (senCol < 5) return;
+    const guess = senGuesses[senRow].join("").toLowerCase();
+    if (senValidWords.length > 0 && !senValidWords.includes(guess)) { alert("La palabra no está en la lista."); return; }
+
+    let targetCopy = senTargetWord.split(''); const guessArr = guess.split(''); const statuses = Array(5).fill('absent');
+    for (let i = 0; i < 5; i++) { if (guessArr[i] === targetCopy[i]) { statuses[i] = 'correct'; targetCopy[i] = null; guessArr[i] = null; } }
+    for (let i = 0; i < 5; i++) {
+        if (guessArr[i] !== null) {
+            const targetIndex = targetCopy.indexOf(guessArr[i]);
+            if (targetIndex > -1) { statuses[i] = 'present'; targetCopy[targetIndex] = null; }
+        }
+    }
+    for (let i = 0; i < 5; i++) {
+        const tile = document.getElementById(`sen-tile-${senRow}-${i}`); const letter = guess[i]; const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
+        tile.classList.add(statuses[i]);
+        if (keyEl) {
+            if (statuses[i] === 'correct') { keyEl.classList.remove("present", "absent"); keyEl.classList.add("correct"); } 
+            else if (statuses[i] === 'present' && !keyEl.classList.contains("correct")) { keyEl.classList.remove("absent"); keyEl.classList.add("present"); } 
+            else if (statuses[i] === 'absent' && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) { keyEl.classList.add("absent"); }
+        }
+    }
+
+    if (guess === senTargetWord) {
+        senGameOver = true;
+        setTimeout(() => alert(`¡Pura vida! Lo adivinaste en ${senRow + 1} intentos.`), 400);
+    } else if (senRow === 5) { senGameOver = true; setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400); } 
+    else { senRow++; senCol = 0; }
+}
+
+// Physical keyboard support for the archive page
+document.addEventListener("keydown", (e) => {
+    // Only capture if they aren't typing in a date box
+    if(e.target.tagName === 'INPUT') return; 
+    const key = e.key.toUpperCase();
+    if (key === "BACKSPACE" || key === "ENTER" || /^[A-ZÑ]$/.test(key)) handleSenordleKey(key);
+});
+
+
+// ==========================================
+// ATANDO CABOS ENGINE
+// ==========================================
+let acActiveWords = []; let acSelected = []; let acMistakes = 4; let acSolvedCount = 0;
+
+function startAtandoCabos(puzzleData) {
+    acMistakes = 4; acSolvedCount = 0; acSelected = [];
+    document.getElementById('ac-solved-area').innerHTML = '';
+    document.getElementById('ac-mistakes').textContent = acMistakes;
+
+    acActiveWords = [];
+    puzzleData.categories.forEach(cat => {
+        cat.items.forEach(word => { acActiveWords.push({ word: word, level: cat.level, category: cat.title }); });
+    });
+    acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); 
+    drawAcGrid();
+}
+
+function drawAcGrid() {
+    const grid = document.getElementById('ac-grid'); grid.innerHTML = '';
+    acActiveWords.forEach((item) => {
+        const btn = document.createElement('button');
+        btn.className = `ac-btn ${acSelected.includes(item.word) ? 'selected' : ''}`;
+        btn.textContent = item.word;
+        btn.onclick = () => acToggleWord(item.word);
+        grid.appendChild(btn);
+    });
+}
+
+function acToggleWord(word) {
+    if (acSelected.includes(word)) { acSelected = acSelected.filter(w => w !== word); } 
+    else { if (acSelected.length < 4) acSelected.push(word); }
+    drawAcGrid();
+}
+
+function acDeselectAll() { acSelected = []; drawAcGrid(); }
+function acShuffle() { acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); drawAcGrid(); }
+
+function acSubmit() {
+    if (acSelected.length !== 4) return;
+    const selectedData = acActiveWords.filter(item => acSelected.includes(item.word));
+    const firstCategory = selectedData[0].category;
+    const isMatch = selectedData.every(item => item.category === firstCategory);
+    
+    if (isMatch) {
+        const level = selectedData[0].level; acSolvedCount++;
+        acActiveWords = acActiveWords.filter(item => !acSelected.includes(item.word)); acSelected = [];
+        
+        const solvedArea = document.getElementById('ac-solved-area');
+        const row = document.createElement('div');
+        row.className = `ac-solved-row ac-level-${level}`;
+        row.innerHTML = `<div class="ac-solved-title">${firstCategory}</div><div class="ac-solved-words">${selectedData.map(d => d.word).join(', ')}</div>`;
+        solvedArea.appendChild(row);
+        
+        drawAcGrid();
+        if (acSolvedCount === 4) { setTimeout(() => alert("¡Excelente! Has atado todos los cabos."), 300); }
+    } else {
+        acMistakes--; document.getElementById('ac-mistakes').textContent = acMistakes;
+        const grid = document.getElementById('ac-grid');
+        grid.classList.add('shake-err'); setTimeout(() => grid.classList.remove('shake-err'), 300);
+        
+        if (acMistakes <= 0) {
+            setTimeout(() => { alert("Te quedaste sin intentos."); acDeselectAll(); }, 300);
+        }
+    }
+}
+
+// Start fetching data immediately
+initArchive();
+
+</script>
+</body>
+</html>
