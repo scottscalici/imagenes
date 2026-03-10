@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="pageTitle">Español - Plan de Clase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Architects+Daughter&family=Arvo:wght@400;700&family=Bangers&family=Berkshire+Swash&family=Bungee&family=Cabin+Sketch:wght@400;700&family=Chango&family=Cherry+Swash:wght@400;700&family=Cinzel:wght@400;700&family=Courgette&family=Creepster&family=Eater&family=Fredoka+One&family=Fugaz+One&family=Graduate&family=Inter:wght@400;600;800&family=Jolly+Lodger&family=Kalam:wght@300;400;700&family=Lobster&family=Lobster+Two:wght@400;700&family=Luckiest+Guy&family=Lustria&family=MedievalSharp&family=Merienda:wght@400;700&family=Montserrat:wght@400;700&family=Mountains+of+Christmas:wght@400;700&family=Nosifer&family=Pacifico&family=Quicksand:wght@300;400;700&family=Sancreek&family=Schoolbell&family=Titan+One&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #6366f1; --header-bg: #79c9f2; }
+        #headerDate { font-family: var(--font-heading, inherit); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 800; }
+        body { font-family: 'Inter', sans-serif; }
+        .card-texture { background-repeat: no-repeat; background-position: bottom right 10px; background-size: 80px; background-blend-mode: multiply; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .btn-theme { background-color: var(--accent); color: white; transition: all 0.3s; }
+        .btn-theme:hover { filter: brightness(90%); }
+        
+        /* --- SEÑORDLE MODAL & TICO COLORS --- */
+        #senordleModal { display: none; z-index: 100; }
+        :root { --tico-blue: #002B7F; --tico-red: #CE1126; --correct: #538d4e; --present: #b59f3b; --absent: #3a3a3c; --tile-border: #878a8c; }
+        .senordle-board { display: grid; grid-template-rows: repeat(6, 1fr); grid-gap: 5px; margin: 0 auto 20px auto; width: fit-content; }
+        .senordle-row { display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 5px; }
+        .senordle-tile { width: 50px; height: 50px; border: 2px solid var(--tile-border); display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; text-transform: uppercase; background-color: white; color: black; }
+        .senordle-tile.correct { background-color: var(--correct); color: white; border-color: var(--correct); }
+        .senordle-tile.present { background-color: var(--present); color: white; border-color: var(--present); }
+        .senordle-tile.absent { background-color: var(--absent); color: white; border-color: var(--absent); }
+        .senordle-keyboard { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .senordle-key-row { display: flex; gap: 4px; }
+        button.senordle-key { background-color: var(--accent); color: white; border: none; border-radius: 4px; padding: 12px 10px; font-size: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        button.senordle-key.large { padding: 12px 8px; font-size: 10px; background-color: var(--accent); filter: brightness(80%); }        
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 min-h-screen pb-20">
+    <canvas id="snow-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50;"></canvas>
+    
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <header id="mainHeader" class="rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700">
+        <div>
+            <h1 id="dayTitle" class="text-4xl font-extrabold tracking-tight uppercase">Día —</h1>
+            <p id="headerDate" class="text-sm opacity-90"></p>
+        </div>
+        <div class="text-right hidden sm:block">
+            <span id="courseBadge" class="text-xs font-bold uppercase tracking-widest bg-white/20 px-4 py-2 rounded-full border border-white/10">Cargando...</span>
+        </div>
+      </header>
+      
+      <div id="anunciosBlock"></div>      
+      
+        <div id="heroSlot" class="hidden mb-6">
+            <div id="heroCard" class="bg-white rounded-xl overflow-hidden shadow-md flex flex-col md:flex-row border-t-8">
+                <div class="md:w-1/3 h-48 bg-slate-100"><img id="heroImg" src="" class="w-full h-full object-cover"></div>
+                <div class="p-8 flex items-center justify-center flex-grow text-center"><h2 id="heroMsg" class="text-3xl font-black italic text-slate-800"></h2></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            <div class="lg:col-span-2 space-y-6">
+                <section id="evalSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
+                    <h2 class="font-bold text-xl mb-3 flex items-center gap-2"><span>📋</span> Evaluación</h2>
+                    <div id="currentEval" class="text-lg text-slate-800 font-medium italic mb-4"></div>
+                    <div class="pt-4 border-t border-slate-100">
+                        <h3 class="text-slate-900 font-bold text-sm mb-2 uppercase tracking-wide">Próximas pruebas</h3>
+                        <ul id="nextEvals" class="space-y-1 text-sm text-slate-600"></ul>
+                    </div>
+                </section>
+
+                <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
+                    <div class="flex justify-between items-start mb-3">
+                        <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
+                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica Interactiva ↗</a>
+                    </div>
+                    <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
+                </section>
+
+                <div id="curiosityBlock"></div>
+                <div id="estructuraBlock"></div>
+                <div id="extrasBlock"></div>
+                <div id="videoBlock"></div>
+            </div>
+
+            <div id="tareasColumn" class="space-y-6">
+                <div id="senordleBox" class="bg-white rounded-xl p-6 shadow-md border-8">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1 flex items-center gap-2"><span>🧩</span> Señordle Diario</h3>
+                            <p class="text-xs text-slate-500 font-medium">Rompecabezas de 5 letras.</p>
+                        </div>
+                        <button onclick="openSenordle()" class="btn-theme font-bold px-4 py-2 rounded-lg uppercase text-xs shadow-md">Jugar</button>
+                    </div>
+                </div>
+                
+                <div id="tareasBox" class="bg-white rounded-xl p-6 shadow-md border-8">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📝</span> Tareas Pendientes</h3>
+                    <div id="tareasList" class="space-y-4"></div>
+                </div>
+
+                <div id="evalSidebarBlock" class="bg-white rounded-xl p-6 shadow-md border-8">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><span>📅</span> Próximas Pruebas</h3>
+                    <div id="sidebarEvalList" class="space-y-3 mb-4"></div>
+                    <a id="evalLinkBtn" href="#" target="_blank" class="block text-center py-2 btn-theme rounded-lg font-bold text-xs">Ver calendario completo</a>
+                </div>
+
+                <div id="countdownBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-slate-200 text-center hidden">
+                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen Oral IB</h3>
+                    <div class="flex justify-center gap-4 text-slate-600">
+                        <div><span id="cntDays" class="text-3xl font-black block text-slate-900">--</span>Días</div>
+                        <div><span id="cntHrs" class="text-3xl font-black block text-slate-900">--</span>Hrs</div>
+                    </div>
+                    <p id="cntTarget" class="text-[10px] uppercase font-bold text-slate-400 mt-2">--/--/----</p>
+                </div>
+                
+                <div id="integratedHighlightBlock" class="mt-4"></div>
+                
+                <div class="bg-white rounded-xl overflow-hidden shadow-md border-8 border-slate-200 flex flex-col group">
+                    <div class="h-32 overflow-hidden border-b"> <img id="tutorMascot" src="" class="w-full h-full object-cover"> </div>
+                    <div class="p-4 flex flex-col flex-grow bg-white">
+                        <h3 class="text-slate-900 font-bold text-md mb-2 italic text-center">Señor+ AI Tutor</h3>
+                        <a href="https://student.schoolai.com/dot/spaces/join?code=AWSM-S4EM" target="_blank" class="bg-slate-700 text-white text-center py-2 rounded-lg font-bold text-xs hover:bg-slate-800 transition-colors">Practicar ahora</a>
+                    </div>
+                </div>
+            </div> 
+        </div> 
+
+        <div id="resourceDashboard" class="max-w-6xl mx-auto mt-12 pt-8 border-t-2 border-dashed border-slate-200">
+            <div id="grammarPlacement" class="col-span-full mb-8">
+                <h2 class="text-slate-400 font-black text-2xl uppercase tracking-widest mb-6 text-center lg:text-left">Gramática</h2>
+                <div id="grammarResources" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+            <div id="dynamicCardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+            
+        <div class="max-w-4xl mx-auto mb-8">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-wrap items-center justify-center gap-6">
+                <div class="flex items-center gap-3">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Día Plan</label>
+                    <div class="flex items-center">
+                        <input type="number" id="diaInput" onchange="renderManual()" class="w-16 bg-slate-100 border-none rounded-l-lg px-3 py-2 font-bold text-slate-700 text-center">
+                        <button onclick="renderManual()" class="bg-slate-800 text-white px-4 py-1 rounded hover:bg-black font-bold uppercase cursor-pointer">Ir al Día</button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label class="text-[10px] font-black uppercase tracking-wider text-slate-400">Ir a Fecha</label>
+                    <input type="date" id="datePicker" onchange="renderByDate()" class="bg-slate-100 border-none rounded-lg px-3 py-2 font-bold text-slate-700 text-sm">
+                </div>
+            </div>
+        </div>
+
+        <div id="senordleModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-sm flex flex-col border-4 border-slate-200">
+                <header class="text-white text-center py-4 font-black text-2xl tracking-widest relative" style="background-color: var(--accent);">
+                    SEÑORDLE
+                    <button onclick="closeSenordle()" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-2xl">&times;</button>
+                </header>
+                <div class="p-6 bg-slate-50">
+                    <div id="senordleBoard" class="senordle-board"></div>
+                    <div id="senordleKeyboard" class="senordle-keyboard"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script>
+// ============================================================
+// THE ONE SWITCH TO RULE THEM ALL
+// ============================================================
+const CONFIG = {
+    COURSE: "s2", // <-- CHANGE THIS TO "s4" FOR YOUR SENIORS
+    CICLO_FILTER: "B",
+    
+    // Unified Data Files
+    TAREAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json",
+    EVALS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/evaluaciones.json",
+    CALENDARIO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json",
+    CURIOSIDADES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/curiosidades.json",
+    VOCAB_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/vocabulario.json",
+    APUNTES_BANK: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json",
+    EXTRAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/extras_diarios.json",
+    MUSICA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/musica.json",
+    LECTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/lectura.json",
+    CULTURA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/cultura.json",
+    CONV: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/conversaciones.json",
+    TEMAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/temas.json",
+    ANUNCIOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/anuncios.json",
+    GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
+    VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json",
+    DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json"
+};
+
+// ============================================================
+// THE COURSE PROFILES (The Brains)
+// ============================================================
+const COURSE_PROFILES = {
+    s2: {
+        pageTitle: "Español 2 - Plan de Clase",
+        badgeText: "Español 2",
+        links: {
+            calentamiento: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento",
+            evaluaciones: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones"
+        },
+        planJson: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json", // Until merged
+        vocabKey: "descubre2",
+        showCountdown: false,
+        dynamicCards: ["vocab", "misd", "costarica"]
+    },
+    s4: {
+        pageTitle: "Español 4 (IB) - Plan de Clase",
+        badgeText: "IB Español B II",
+        links: {
+            calentamiento: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento",
+            evaluaciones: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
+        },
+        planJson: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json", // Until merged
+        vocabKey: "descubre3",
+        showCountdown: true,
+        oralExamDate: "2026-03-09",
+        dynamicCards: ["vocab", "misd", "ib"]
+    }
+};
+
+const profile = COURSE_PROFILES[CONFIG.COURSE];
+window.teacherMode = false;
+
+// Apply initial UI text based on profile
+document.getElementById('pageTitle').textContent = profile.pageTitle;
+document.getElementById('courseBadge').textContent = profile.badgeText;
+document.getElementById('calBtn').href = profile.links.calentamiento;
+document.getElementById('evalLinkBtn').href = profile.links.evaluaciones;
+
+// --- DATA LOADER ---
+async function loadData() {
+    const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
+    try {
+        const [
+            plan, temas, cal, curios, evals, tareas,
+            vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv,
+            videos, gramaticaDiaria, anuncios, destacado 
+        ] = await Promise.all([
+            safeFetch(profile.planJson), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
+            safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
+            safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
+            safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
+            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO)
+        ]);
+        
+        return { 
+            plan, temas, 
+            cal: cal.filter ? cal : (cal.map || []), 
+            curios, evals, tareas, vocab, apuntes, extrasDiarios, 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado 
+        };
+    } catch (e) { console.error("Critical Load Error", e); }
+}
+
+// --- THEME ENGINE ---
+async function applyThemeStyles(data, currentDia) {
+    try {
+        const themeData = data.temas;
+        if (!themeData) return null;
+        
+        const entries = data.cal.filter(c => c.dia == currentDia) || [];
+        const today = new Date(); today.setHours(0,0,0,0);
+        let targetEntry = null;
+
+        if (entries.length > 0) {
+            const sorted = entries.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            const upcoming = sorted.filter(e => new Date(e.fecha + "T00:00:00") >= today);
+            targetEntry = upcoming.length > 0 ? upcoming[0] : sorted[sorted.length - 1];
+        }
+        
+        const viewedDate = targetEntry ? targetEntry.fecha : new Date().toISOString().split('T')[0];
+        const compareMD = viewedDate.split('-').slice(1).join('-');
+
+        let theme = themeData.themes.find(t => t.id === 'snowday' && targetEntry?.note === "Snow day") ||
+                    themeData.themes.find(t => t.start && compareMD >= t.start && compareMD <= t.end) ||
+                    themeData.themes.find(t => t.id === 'classic');
+
+        if (!theme) return null;
+        
+        const root = document.documentElement;
+        const s = theme.styles;
+        const accent = s.accent || "#6366f1";
+        root.style.setProperty('--accent', accent);
+        root.style.setProperty('--font-heading', s.fontHeading || 'inherit');
+
+        const header = document.getElementById('mainHeader');
+        if (header) header.className = `rounded-xl p-6 text-white flex justify-between items-center shadow-md transition-all duration-700 ${s.header}`;
+        
+        const heroSlot = document.getElementById('heroSlot');
+        if (theme.hero?.active) {
+            heroSlot.classList.remove('hidden');
+            document.getElementById('heroImg').src = theme.hero.img;
+            document.getElementById('heroMsg').textContent = theme.hero.msg;
+            document.getElementById('heroCard').style.borderTopColor = accent;
+        } else { heroSlot.classList.add('hidden'); }
+
+        const cards = [
+            { id: 'evalSection', key: 'evaluacion' }, { id: 'calentamientoSection', key: 'calentamiento' },
+            { id: 'tareasBox', key: 'tareas' }, { id: 'evalSidebarBlock', key: 'pruebas' },
+            { id: 'countdownBox', key: 'pruebas' }, { id: 'senordleBox', key: 'senordle' }
+        ];
+        
+        cards.forEach(card => {
+            const el = document.getElementById(card.id);
+            if (el) {
+                const color = (s.cardOverrides || {})[card.key] || accent;
+                el.style.borderColor = color;
+                const h = el.querySelector('h2, h3');
+                if (h) h.style.color = color;
+                if ((s.textures || {})[card.key]) {
+                    el.style.backgroundImage = `url('${s.textures[card.key]}')`;
+                    el.classList.add('card-texture');
+                } else { el.style.backgroundImage = 'none'; }
+            }
+        });
+
+        if (theme.effectConfig) startEffect(theme.effectConfig); else stopEffect();
+        return theme; 
+    } catch (e) { console.error("Theme Error:", e); return null; }
+}
+    
+// --- PARTICLE ENGINE ---
+let effectInterval;
+function startEffect(config) {
+    const canvas = document.getElementById('snow-canvas'); if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let particleImg = null;
+    if (config.image) { particleImg = new Image(); particleImg.src = config.image; }
+    
+    const particleCount = (config.count !== undefined) ? config.count : 50;
+    const particles = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+        size: Math.random() * (config.maxSize || 25) + (config.minSize || 10), 
+        drift: Math.random() * 2 - 1, opacity: Math.random() * 0.5 + 0.3
+    }));
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = config.color || "white";
+        particles.forEach(p => {
+            ctx.globalAlpha = p.opacity;
+            if (particleImg && particleImg.complete) ctx.drawImage(particleImg, p.x, p.y, p.size, p.size);
+            else { ctx.font = `${p.size}px serif`; ctx.fillText(config.char || "❄", p.x, p.y); }
+            const speed = (config.speed || 1) + (p.size / 20);
+            if (config.direction === "up") { p.y -= speed; if (p.y < -50) { p.y = canvas.height + 20; p.x = Math.random() * canvas.width; } }
+            else { p.y += speed; if (p.y > canvas.height + 50) { p.y = -50; p.x = Math.random() * canvas.width; } }
+            p.x += p.drift;
+        });
+    }
+    if (effectInterval) clearInterval(effectInterval);
+    effectInterval = setInterval(draw, 30);
+}
+function stopEffect() {
+    if (effectInterval) clearInterval(effectInterval);
+    const canvas = document.getElementById('snow-canvas');
+    if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function formatSpanishDate(dateStr) {
+    if (!dateStr) return "";
+    return new Date(dateStr + "T00:00:00").toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+}
+
+function updateCountdown() {
+    const box = document.getElementById('countdownBox');
+    if (!profile.showCountdown) { box.classList.add('hidden'); return; }
+
+    const target = new Date(profile.oralExamDate + "T07:30:00");
+    const diff = target - new Date();
+
+    if (diff > 0) {
+        box.classList.remove('hidden');
+        document.getElementById('cntDays').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('cntHrs').textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('cntTarget').textContent = formatSpanishDate(profile.oralExamDate);
+    } else {
+        box.classList.add('hidden');
+    }
+}
+
+// ============================================================
+//  CORE RENDERING ENGINE
+// ============================================================
+async function runRender(data, DIA) {
+    const params = new URLSearchParams(window.location.search);
+    const isProfView = params.get('view') === 'prof';
+    
+    const now = new Date();
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const pastEntries = data.cal.filter(c => c.fecha && c.fecha <= todayStr && c.dia != null);
+    const liveDia = pastEntries.length > 0 ? parseInt(pastEntries.sort((a, b) => b.fecha.localeCompare(a.fecha))[0].dia) : 1;    
+
+    if (DIA > liveDia && !isProfView && !window.teacherMode) {
+        alert("🔒 Este día está bloqueado para los estudiantes.\n\n(Profesor: Ingrese '0' en el cuadro de Día para desbloquear)");
+        document.getElementById('diaInput').value = liveDia;
+        return runRender(data, liveDia);
+    }
+
+    const theme = await applyThemeStyles(data, DIA);
+    const overrides = theme?.styles?.cardOverrides || {};
+    const fonts = theme?.styles?.fonts || {};
+    const accent = theme?.styles?.accent || "#6366f1";
+
+    const entryA = data.cal.find(c => c.dia == DIA && c.ciclo === "A");
+    const entryB = data.cal.find(c => c.dia == DIA && c.ciclo === "B");
+    let dateStr = "FECHA TBD";
+    if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
+    else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
+    else if (entryB) dateStr = formatSpanishDate(entryB.fecha);
+
+    document.getElementById('dayTitle').textContent = `Día ${DIA}`;
+    document.getElementById('headerDate').textContent = dateStr.toUpperCase();
+    document.getElementById('calBtn').style.backgroundColor = overrides.calentamiento || accent;
+
+    // 1. ANUNCIOS
+    const anunciosBlock = document.getElementById('anunciosBlock');
+    if (anunciosBlock) {
+        anunciosBlock.innerHTML = "";
+        const noteColor = overrides.anuncios || accent; 
+        (data.anuncios || []).forEach(note => {
+            if (todayStr >= note.start_date && todayStr <= note.end_date && note.courses.includes(CONFIG.COURSE)) {
+                let containerStyle = `border-color: ${noteColor};`; let titleStyle = `color: ${noteColor};`; let bgClass = "bg-white"; let icon = "📢";
+                if (note.type === 'warning') { containerStyle = `border-color: #ef4444;`; titleStyle = `color: #b91c1c;`; bgClass = "bg-red-50"; icon = "⚠️"; }
+                else if (note.type === 'trip') { containerStyle = `border-color: #10b981;`; titleStyle = `color: #047857;`; bgClass = "bg-emerald-50"; icon = "✈️"; }
+                anunciosBlock.innerHTML += `<div class="${bgClass} border-l-[6px] p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row items-start gap-4 transition-transform hover:scale-[1.01]" style="${containerStyle}"><div class="flex-shrink-0">${note.thumbnail ? `<img src="${note.thumbnail}" class="w-32 h-32 object-cover rounded-lg border border-slate-200 shadow-sm">` : `<div class="text-3xl">${icon}</div>`}</div><div class="flex-grow"><h4 class="font-bold text-[10px] uppercase tracking-widest mb-1 opacity-80" style="${titleStyle}">${note.type === 'warning' ? 'Importante' : 'Anuncio'}</h4><p class="text-slate-800 font-bold text-sm leading-snug mb-2">${note.text}</p>${note.link ? `<a href="${note.link}" target="_blank" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-wider bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded transition-colors" style="${titleStyle}"><span>Ver Detalles</span> ↗</a>` : ''}</div></div>`;
+            }
+        });
+    }
+
+    // 2. EVALUATIONS & COUNTDOWN
+    const evalList = data.evals.courses?.[CONFIG.COURSE] || [];
+    const findEval = (d) => (evalList.find(e => e.dia == d)?.label || "Sin evaluaciones");
+    document.getElementById('currentEval').textContent = findEval(DIA);
+    document.getElementById('nextEvals').innerHTML = `<li><b>Día ${parseInt(DIA) + 1}:</b> ${findEval(parseInt(DIA) + 1)}</li><li><b>Día ${parseInt(DIA) + 2}:</b> ${findEval(parseInt(DIA) + 2)}</li>`;
+    updateCountdown();
+
+    // 3. TAREAS (NOW FILTERED BY COURSE)
+    const tList = document.getElementById('tareasList'); tList.innerHTML = "";
+    const courseTasks = (data.tareas?.tareas || []).filter(t => 
+        t.day_assigned <= DIA && 
+        t.day_due >= DIA && 
+        (!t.course || t.course === CONFIG.COURSE || (Array.isArray(t.course) && t.course.includes(CONFIG.COURSE)))
+    );
+    courseTasks.forEach(t => {
+        const isDue = (t.day_due == DIA) ? '<span class="text-red-600 font-black animate-pulse text-[10px]">¡HOY!</span>' : "";
+        tList.innerHTML += `<div class="bg-white rounded-lg p-4 border shadow-sm mb-3"><div class="flex justify-between items-center mb-2"><span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase bg-slate-50 text-slate-500">${t.tipo}</span>${isDue}</div><h4 class="font-bold text-slate-800 text-sm mb-2">${t.titulo}</h4><div class="pt-2 border-t text-[10px] text-slate-400 font-bold italic">Vence: Día ${t.day_due}</div></div>`;
+    });
+
+    // 4. CURIOSIDAD
+    const curBlock = document.getElementById('curiosityBlock');
+    const courseKey = CONFIG.COURSE + "_dia"; 
+    const cur = (data.curios || []).find(c => c[courseKey] == DIA);
+    if (cur) {
+        const curColor = overrides.curiosidad || accent;
+        curBlock.innerHTML = `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${curColor}"><h3 class="font-bold text-xs uppercase" style="color: ${curColor}">Curiosidad ${DIA}</h3><h2 class="text-2xl font-extrabold text-slate-900">${cur.title}</h2>${cur.img ? `<img src="${cur.img}" class="rounded-lg max-h-64 object-contain">` : ''}<p class="italic text-sm">${cur.student_note || ""}</p></article>`;
+    } else { curBlock.innerHTML = ""; }
+
+    // 5. VIDEOS
+    const videoContainer = document.getElementById('videoBlock');
+    if (videoContainer) {
+        const vidColor = overrides.video || accent; const vidFont = fonts.video || 'inherit';
+        const dayVideos = (data.videos?.daily_tags || []).filter(v => v.dia == DIA && (v.tags || []).includes(CONFIG.COURSE));
+        if (dayVideos.length > 0) {
+            videoContainer.innerHTML = dayVideos.map(videoData => {
+                if (videoData.page_url) return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><a href="${videoData.page_url}" target="_blank" class="block group"><img src="${videoData.thumbnail_url}" class="w-full aspect-video object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity shadow-md"><h2 class="text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600">${videoData.title} ↗</h2></a><p class="text-slate-700 italic text-sm">${videoData.description || ""}</p></article>`;
+                else { const width = videoData.is_short ? "315" : "100%"; const height = videoData.is_short ? "560" : "315"; return `<article class="bg-white rounded-xl border-l-[6px] p-6 card-shadow space-y-4 mb-6" style="border-color: ${vidColor}"><h3 class="font-bold text-xs uppercase tracking-widest" style="color: ${vidColor}; font-family: ${vidFont}"><span>🎥</span> VIDEO</h3><h2 class="text-2xl font-extrabold text-slate-900 mb-2">${videoData.title}</h2><div class="${videoData.is_short ? 'flex justify-center' : ''}"><iframe width="${width}" height="${height}" src="${videoData.video_url}" frameborder="0" allowfullscreen class="rounded-lg shadow-inner"></iframe></div><p class="text-slate-700 italic text-sm mt-2">${videoData.description || ""}</p></article>`; }
+            }).join('');
+        } else { videoContainer.innerHTML = ""; }
+    }
+
+    // 6. ESTRUCTURA
+    const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
+    const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
+    if (dailyGrammar) {
+        const estColor = overrides.estructura || accent; let linksHtml = "";
+        const buildBtn = (id, label, isIntro) => {
+            const [fullId, customLabel] = id.split('|'); const [topicKey, linkKey] = fullId.split(':');
+            const topic = data.apuntes?.[topicKey]; const linkData = topic?.links?.[linkKey];
+            if (!linkData) return "";
+            const badgeStyle = isIntro ? `bg-slate-800 text-white` : `bg-white text-slate-500 border`;
+            return `<a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border mb-2 group bg-white hover:shadow-md transition-all"><div class="flex items-center gap-3"><span class="text-[9px] font-black px-2 py-1 rounded uppercase ${badgeStyle}">${label}</span><div class="flex flex-col"><span class="text-xs font-bold text-slate-400 uppercase">${topic.title}</span><span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600">${customLabel || linkData.title}</span></div></div><span>➔</span></a>`;
+        };
+        if (dailyGrammar.intro) dailyGrammar.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
+        if (dailyGrammar.repaso) dailyGrammar.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
+        if (linksHtml) estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
+    }
+
+    // 7. EXTRAS
+    const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
+    const courseKeyExtras = CONFIG.COURSE + "_dias";
+    const todaysExtras = (data.extrasDiarios?.items || []).filter(item => item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
+
+    todaysExtras.forEach(item => {
+        const exColor = overrides.extras || accent;
+        let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
+        if (item.kind === 'sentences') {
+            const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
+            const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
+            const linksList = (item.links || []).map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
+        } else if (item.kind === 'card' || item.kind === 'placeholder') {
+             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
+        } else if (item.kind === 'links') {
+            const links = item.links.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
+            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
+        }
+    });    
+
+    // 8. DASHBOARD
+    const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
+    Object.values(data.apuntes || {}).forEach(topic => {
+        const ranges = topic.dashboard_ranges?.[CONFIG.COURSE] || [];
+        if (ranges.some(r => DIA >= r[0] && DIA <= r[1])) {
+            const links = Object.values(topic.links || {}).map(l => `<a href="${l.url}" target="_blank" class="block text-[13px] font-bold uppercase py-1 border-b text-slate-600 hover:text-indigo-600">${l.title} ↗</a>`).join('');
+            grammarGrid.innerHTML += `<div class="bg-white rounded-xl border-l-[6px] p-6 shadow-md border" style="border-color: ${accent}"><h3 class="font-black text-lg mb-3 pb-3 border-b">⚙️ ${topic.title}</h3><div class="flex flex-col gap-1">${links}</div></div>`;
+        }
+    });
+
+    // 9. DYNAMIC GRID (PROFILE BASED)
+    const dynamicGrid = document.getElementById('dynamicCardGrid');
+    if (dynamicGrid) {
+        const vocabData = data.vocab?.[profile.vocabKey]?.chapters || {}; 
+        let ch = null;
+        for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
+        
+        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+        
+        // Define all possible cards
+        const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
+        const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
+        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.ib || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png'}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
+        const crCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.sloth || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
+        
+        // Build the grid based on the profile
+        let cardsHtml = "";
+        profile.dynamicCards.forEach(cardType => {
+            if (cardType === 'vocab') cardsHtml += `<div>${vocabCard}</div>`;
+            if (cardType === 'misd') cardsHtml += `<div>${misdCard}</div>`;
+            if (cardType === 'ib') cardsHtml += `<div>${ibCard}</div>`;
+            if (cardType === 'costarica') cardsHtml += `<div>${crCard}</div>`;
+        });
+        
+        dynamicGrid.innerHTML = cardsHtml;
+        const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
+        document.getElementById('tutorMascot').src = tutorImg;
+    }
+
+    // 10. HIGHLIGHT BLOCK
+    const highlightBlock = document.getElementById('integratedHighlightBlock');
+    if (highlightBlock) {
+        const highlight = (data.destacado || []).find(h => h.dia == DIA && h.course.includes(CONFIG.COURSE));
+        if (highlight) {
+            let pillColor = overrides.destacado; 
+            if (!pillColor) {
+                const loc = (highlight.location || "").toUpperCase();
+                if (loc.includes("PUERTO RICO") || loc.includes("CUBA") || loc.includes("DOMINICANA")) pillColor = "#007bff";
+                else if (loc.includes("MÉXICO") || loc.includes("PANAMÁ") || loc.includes("COSTA RICA")) pillColor = "#28a745";
+                else if (loc.includes("ARGENTINA") || loc.includes("BOLIVIA") || loc.includes("CHILE") || loc.includes("COLOMBIA") || loc.includes("PERÚ")) pillColor = "#dc3545";
+                else if (loc.includes("ESPAÑA")) pillColor = "#ffc107";
+                else pillColor = "#64748b";
+            }
+            let textColor = "text-white";
+            if (pillColor.startsWith("#")) {
+                const hex = pillColor.replace("#", "");
+                const r = parseInt(hex.length === 3 ? hex[0]+hex[0] : hex.substring(0, 2), 16);
+                const g = parseInt(hex.length === 3 ? hex[1]+hex[1] : hex.substring(2, 4), 16);
+                const b = parseInt(hex.length === 3 ? hex[2]+hex[2] : hex.substring(4, 6), 16);
+                const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+                textColor = luminance > 0.5 ? "text-slate-900" : "text-white";
+            } else { textColor = (pillColor === "yellow" || pillColor === "white") ? "text-slate-900" : "text-white"; }
+            
+            const borderOpacityColor = `${pillColor}66`;
+            highlightBlock.innerHTML = `
+                <article class="bg-white rounded-xl shadow-md border-8 overflow-hidden" style="border-color: ${borderOpacityColor}">
+                    ${highlight.image_url ? `<img src="${highlight.image_url}" class="w-full h-44 object-cover">` : ''}
+                    <div class="p-5">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded ${textColor} mb-3 inline-block" style="background-color: ${pillColor}">${highlight.location}</span>
+                        <h3 class="font-black text-xs uppercase mb-2 text-slate-400">${highlight.header}</h3>
+                        <div class="space-y-2 mb-6">
+                            <p class="text-slate-800 font-bold text-sm leading-tight">${highlight.content.spanish}</p>
+                            <p class="text-slate-500 italic text-xs">${highlight.content.english}</p>
+                        </div>
+                        <div class="border-t-2 border-dashed border-slate-100 my-6 relative"><span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-3 text-[10px] font-black text-slate-300 uppercase tracking-widest">Palabra del Día</span></div>
+                        <div class="text-center">
+                            <h4 class="text-2xl font-black text-slate-900 lowercase">${highlight.word_of_the_day.word}</h4>
+                            <p class="text-slate-400 text-[10px] font-black uppercase mb-3">${highlight.word_of_the_day.translation}</p>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <p class="text-sm text-slate-700 font-medium italic">"${highlight.word_of_the_day.sample_sentence}"</p>
+                                <p class="text-[10px] text-slate-400 mt-1">${highlight.word_of_the_day.sentence_translation}</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>`;
+        } else { highlightBlock.innerHTML = ""; }
+    }
+}
+
+// --- INIT & UTILS ---
+async function init() {
+    const data = await loadData(); if (!data) return;
+    const now = new Date(); 
+    const todayStr = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+    const liveEntry = data.cal.find(c => c.fecha === todayStr && c.dia != null);
+    let liveDia = liveEntry ? parseInt(liveEntry.dia) : (data.cal.filter(c => c.fecha <= todayStr && c.dia != null).sort((a,b) => b.fecha.localeCompare(a.fecha))[0]?.dia || 1);
+    
+    const params = new URLSearchParams(window.location.search);
+    let requestedDia = parseInt(params.get('dia')) || liveDia;
+    document.getElementById('diaInput').value = requestedDia;
+    await runRender(data, requestedDia);
+}
+
+async function renderManual() {
+    const newDia = document.getElementById('diaInput').value;
+    if (newDia == 0) { window.teacherMode = true; alert("🔓 Modo Profesor Activado: Ahora puede ver días futuros."); return; }
+    if (!newDia) return;
+    try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+    const data = await loadData(); await runRender(data, parseInt(newDia));
+}
+
+async function renderByDate() {
+    const selectedDate = document.getElementById('datePicker').value; if (!selectedDate) return;
+    const data = await loadData();
+    const entry = data.cal.sort((a,b)=>a.fecha.localeCompare(b.fecha)).find(c => c.fecha >= selectedDate && c.dia != null);
+    if (entry) {
+        const newDia = parseInt(entry.dia); document.getElementById('diaInput').value = newDia;
+        try { const url = new URL(window.location); url.searchParams.set('dia', newDia); window.history.pushState({}, '', url); } catch (e) {}
+        await runRender(data, newDia);
+    } else { alert("No hay clases programadas."); }
+}
+
+// ============================================================
+// SEÑORDLE LOGIC
+// ============================================================
+let senTargetWord = "playa"; let senValidWords = []; let senRow = 0; let senCol = 0; let senGameOver = false;
+const senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
+
+async function initSenordle() {
+    try {
+        const [dailyRes, dictRes] = await Promise.all([
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json'),
+            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/diccionario.json')
+        ]);
+        const dailyData = await dailyRes.ok ? await dailyRes.json() : null;
+        const dictData = await dictRes.ok ? await dictRes.json() : [];
+        if (dailyData) {
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            const courseDict = dailyData[CONFIG.COURSE] || dailyData.dailyWords || {};
+            senTargetWord = courseDict[todayStr] || "libro";
+            senValidWords = [...dictData, senTargetWord];
+        }
+    } catch (e) { console.error("Error loading Señordle dictionaries:", e); }
+    buildSenordleUI();
+}
+
+function buildSenordleUI() {
+    const board = document.getElementById("senordleBoard"); board.innerHTML = "";
+    senGuesses.forEach((row, rIdx) => {
+        const rowEl = document.createElement("div"); rowEl.className = "senordle-row";
+        row.forEach((_, cIdx) => { const tile = document.createElement("div"); tile.id = `sen-tile-${rIdx}-${cIdx}`; tile.className = "senordle-tile"; rowEl.appendChild(tile); });
+        board.appendChild(rowEl);
+    });
+    const kb = document.getElementById("senordleKeyboard"); kb.innerHTML = "";
+    const keys = [ ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"], ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Ñ"], ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "DEL"] ];
+    keys.forEach(row => {
+        const rowEl = document.createElement("div"); rowEl.className = "senordle-key-row";
+        row.forEach(key => {
+            const btn = document.createElement("button"); btn.textContent = key; btn.id = `sen-key-${key}`; btn.className = `senordle-key ${key.length > 1 ? 'large' : ''}`;
+            btn.onclick = () => handleSenordleKey(key); rowEl.appendChild(btn);
+        });
+        kb.appendChild(rowEl);
+    });
+}
+
+function handleSenordleKey(key) {
+    if (senGameOver) return;
+    if (key === "DEL" || key === "BACKSPACE") {
+        if (senCol > 0) { senCol--; senGuesses[senRow][senCol] = ''; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = ''; }
+    } else if (key === "ENTER") { checkSenordleRow(); } 
+    else if (/^[A-ZÑ]$/.test(key) && senCol < 5 && senRow < 6) {
+        senGuesses[senRow][senCol] = key; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = key; senCol++;
+    }
+}
+
+function checkSenordleRow() {
+    if (senCol < 5) return;
+    const guess = senGuesses[senRow].join("").toLowerCase();
+    if (senValidWords.length > 0 && !senValidWords.includes(guess)) { alert("La palabra no está en la lista."); return; }
+
+    let targetCopy = senTargetWord.split(''); const guessArr = guess.split(''); const statuses = Array(5).fill('absent');
+    for (let i = 0; i < 5; i++) { if (guessArr[i] === targetCopy[i]) { statuses[i] = 'correct'; targetCopy[i] = null; guessArr[i] = null; } }
+    for (let i = 0; i < 5; i++) {
+        if (guessArr[i] !== null) {
+            const targetIndex = targetCopy.indexOf(guessArr[i]);
+            if (targetIndex > -1) { statuses[i] = 'present'; targetCopy[targetIndex] = null; }
+        }
+    }
+    for (let i = 0; i < 5; i++) {
+        const tile = document.getElementById(`sen-tile-${senRow}-${i}`); const letter = guess[i]; const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
+        tile.classList.add(statuses[i]);
+        if (keyEl) {
+            if (statuses[i] === 'correct') { keyEl.classList.remove("present", "absent"); keyEl.classList.add("correct"); } 
+            else if (statuses[i] === 'present' && !keyEl.classList.contains("correct")) { keyEl.classList.remove("absent"); keyEl.classList.add("present"); } 
+            else if (statuses[i] === 'absent' && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) { keyEl.classList.add("absent"); }
+        }
+    }
+
+    if (guess === senTargetWord) {
+        senGameOver = true;
+        setTimeout(() => {
+            if (typeof startEffect === "function") { startEffect({ char: "🎉", maxSize: 40, minSize: 20, count: 60, direction: "down" }); setTimeout(() => { if (typeof stopEffect === "function") stopEffect(); }, 4000); }
+            alert(`¡Pura vida! Lo adivinaste en ${senRow + 1} intentos.`);
+        }, 400);
+    } else if (senRow === 5) { senGameOver = true; setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400); } 
+    else { senRow++; senCol = 0; }
+}
+
+function openSenordle() { document.getElementById('senordleModal').style.display = 'flex'; document.addEventListener("keydown", handlePhysicalKey); }
+function closeSenordle() { document.getElementById('senordleModal').style.display = 'none'; document.removeEventListener("keydown", handlePhysicalKey); }
+function handlePhysicalKey(e) { const key = e.key.toUpperCase(); if (key === "BACKSPACE" || key === "ENTER" || /^[A-ZÑ]$/.test(key)) handleSenordleKey(key); }
+
+initSenordle(); init();
+</script>
+</body>
+</html>
