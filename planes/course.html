@@ -519,67 +519,84 @@ const theme = await applyThemeStyles(data, DIA);
         } else { videoContainer.innerHTML = ""; }
     }
 
+// ============================================================
 // 6. ESTRUCTURA (Gramática Diaria)
-    const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
-    const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
-    
-    if (dailyGrammar) {
-        const estColor = overrides.estructura || accent; let linksHtml = "";
+// ============================================================
+    try {
+        const estBlock = document.getElementById('estructuraBlock'); estBlock.innerHTML = "";
+        const dailyGrammar = data.gramaticaDiaria?.[CONFIG.COURSE]?.[DIA];
         
-        const buildBtn = (id, label, isIntro) => {
-            const [fullId, customLabel] = id.split('|'); const [topicKey, linkKey] = fullId.split(':');
-            const topic = data.apuntes?.[topicKey]; const linkData = topic?.links?.[linkKey];
+        if (dailyGrammar) {
+            const estColor = overrides.estructura || accent; let linksHtml = "";
             
-            // NEW: If the link is missing, show a red warning on the screen instead of silently failing
-            if (!linkData) {
-                console.warn(`Gramática error: No se encontró "${topicKey}:${linkKey}" en apuntes.json`);
-                return `<div class="p-3 border-2 border-red-300 bg-red-50 text-red-700 text-xs rounded-xl mb-2 font-bold flex items-center gap-2"><span>⚠️</span> Error de JSON: Falta el enlace para "${topicKey}:${linkKey}" en apuntes.json</div>`;
+            const buildBtn = (id, label, isIntro) => {
+                const safeId = typeof id === 'string' ? id : String(id);
+                const [fullId, customLabel] = safeId.split('|'); 
+                const [topicKey, linkKey] = (fullId || "").split(':');
+                const topic = data.apuntes?.[topicKey]; 
+                const linkData = topic?.links?.[linkKey];
+                
+                if (!linkData) {
+                    return `<div class="p-3 border-2 border-red-300 bg-red-50 text-red-700 text-xs rounded-xl mb-2 font-bold flex items-center gap-2"><span>⚠️</span> Error: Falta el enlace "${topicKey}:${linkKey}" en apuntes.json</div>`;
+                }
+                
+                const badgeStyle = isIntro ? `bg-slate-800 text-white` : `bg-white text-slate-500 border`;
+                return `<a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border mb-2 group bg-white hover:shadow-md transition-all"><div class="flex items-center gap-3"><span class="text-[9px] font-black px-2 py-1 rounded uppercase ${badgeStyle}">${label}</span><div class="flex flex-col"><span class="text-xs font-bold text-slate-400 uppercase">${topic.title}</span><span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600">${customLabel || linkData.title}</span></div></div><span>➔</span></a>`;
+            };
+            
+            if (Array.isArray(dailyGrammar.intro)) dailyGrammar.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
+            if (Array.isArray(dailyGrammar.repaso)) dailyGrammar.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
+            
+            if (linksHtml) {
+                estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
             }
-            
-            const badgeStyle = isIntro ? `bg-slate-800 text-white` : `bg-white text-slate-500 border`;
-            return `<a href="${linkData.url}" target="_blank" class="flex items-center justify-between p-3 rounded-xl border mb-2 group bg-white hover:shadow-md transition-all"><div class="flex items-center gap-3"><span class="text-[9px] font-black px-2 py-1 rounded uppercase ${badgeStyle}">${label}</span><div class="flex flex-col"><span class="text-xs font-bold text-slate-400 uppercase">${topic.title}</span><span class="text-slate-800 font-bold text-sm group-hover:text-indigo-600">${customLabel || linkData.title}</span></div></div><span>➔</span></a>`;
-        };
-        
-        if (dailyGrammar.intro) dailyGrammar.intro.forEach(id => linksHtml += buildBtn(id, "Introducir", true));
-        if (dailyGrammar.repaso) dailyGrammar.repaso.forEach(id => linksHtml += buildBtn(id, "Repasar", false));
-        
-        if (linksHtml) {
-            estBlock.innerHTML = `<section class="bg-white rounded-2xl border-l-[6px] p-6 card-shadow mb-6" style="border-color: ${estColor}"><div class="flex items-center gap-3 mb-5 border-b pb-4"><div class="text-white w-10 h-10 flex items-center justify-center rounded-lg text-xl" style="background-color: ${estColor}">⚙️</div><h2 class="text-2xl font-black text-slate-900">Estructura</h2></div>${linksHtml}</section>`;
         }
-    }
+    } catch (e) { console.error("Error en Gramática:", e); }
+
+// ============================================================
 // 7. EXTRAS & BLOQUES DIARIOS (Música, Cultura, Lectura, Conversación)
-    const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
-    const courseKeyExtras = CONFIG.COURSE + "_dias";
-    
-    // Combine all the separate JSON files into one master list of daily items
-    const allDailyBlocks = [
-        ...(data.extrasDiarios?.items || []),
-        ...(data.musica?.items || []),
-        ...(data.lectura?.items || []),
-        ...(data.cultura?.items || []),
-        ...(data.conv?.items || [])
-    ];
-
-    // Filter them all at once based on the current day
-    const todaysExtras = allDailyBlocks.filter(item => item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
-
-    todaysExtras.forEach(item => {
-        const exColor = overrides.extras || accent;
-        let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
+// ============================================================
+    try {
+        const extrasBlock = document.getElementById('extrasBlock'); extrasBlock.innerHTML = "";
+        const courseKeyExtras = CONFIG.COURSE + "_dias";
         
-        if (item.kind === 'sentences') {
-            const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
-            const sentencesList = (item.sentences || []).map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('');
-            const linksList = (item.links || []).map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
-            extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
-        } else if (item.kind === 'card' || item.kind === 'placeholder') {
-             extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
-        } else if (item.kind === 'links') {
-            const links = item.links.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
-            extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
-        }
-    });
-    
+        // ULTIMATE ARRAY FINDER: Finds the array even if it's named differently inside your JSON files
+        const getSafeArray = (obj) => {
+            if (!obj) return [];
+            if (Array.isArray(obj)) return obj;
+            if (obj.items && Array.isArray(obj.items)) return obj.items;
+            const firstArray = Object.values(obj).find(val => Array.isArray(val));
+            return firstArray || [];
+        };
+
+        const allDailyBlocks = [
+            ...getSafeArray(data.extrasDiarios),
+            ...getSafeArray(data.musica),
+            ...getSafeArray(data.lectura),
+            ...getSafeArray(data.cultura),
+            ...getSafeArray(data.conv)
+        ];
+
+        const todaysExtras = allDailyBlocks.filter(item => item && item[courseKeyExtras] && item[courseKeyExtras].includes(parseInt(DIA)));
+
+        todaysExtras.forEach(item => {
+            const exColor = overrides.extras || accent;
+            let pillText = item.tag || (item.title && item.title.includes('Nivel superior') ? "Nivel Superior" : "Actividad");
+            const safeLinks = Array.isArray(item.links) ? item.links : [];
+            
+            if (item.kind === 'sentences') {
+                const instructions = item.instructions ? `<p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wide">${item.instructions}</p>` : '';
+                const sentencesList = Array.isArray(item.sentences) ? item.sentences.map(s => `<li class="text-lg text-slate-700 mb-1">"${s.replace(/\*\*(.*?)\*\*/g, `<b>$1</b>`)}"</li>`).join('') : '';
+                const linksList = safeLinks.map(l => `<a href="${l.url || l.sentences}" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-xs text-white transition-all hover:-translate-y-0.5 shadow-md mt-2 group-hover:shadow-lg" style="background-color: ${exColor}"><span>📖</span> ${l.label || "Abrir Recurso"} ↗</a>`).join('');
+                extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden card-shadow mb-6 flex flex-col md:flex-row border border-slate-100 group" style="border-left: 6px solid ${exColor}">${item.img ? `<div class="w-full md:w-48 bg-slate-50 flex items-center justify-center p-6 border-r border-slate-100 relative overflow-hidden"><div class="absolute inset-0 opacity-5" style="background-color: ${exColor}"></div><img src="${item.img}" class="w-auto h-40 md:h-48 rounded shadow-lg transform group-hover:scale-105 transition-transform duration-300 relative z-10"></div>` : ''}<div class="p-6 flex flex-col justify-center flex-grow"><div class="flex items-center gap-2 mb-2"><span class="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border text-slate-400 border-slate-200 bg-slate-50">${pillText}</span></div><h3 class="text-2xl font-black text-slate-900 leading-tight mb-2">${item.title || "Actividad de Clase"}</h3>${instructions}${sentencesList ? `<ul class="italic text-slate-600 mb-4 space-y-2 border-l-4 pl-4 border-slate-200">${sentencesList}</ul>` : ''}<div class="flex flex-wrap gap-2 mt-auto">${linksList}</div></div></section>`;
+            } else if (item.kind === 'card' || item.kind === 'placeholder') {
+                 extrasBlock.innerHTML += `<section class="bg-white rounded-xl overflow-hidden shadow-md border-l-[6px] mb-6 flex items-center" style="border-color: ${exColor}"><div class="w-32 h-32 bg-slate-50 flex items-center justify-center p-2 border-r"><img src="${item.img || ''}" class="w-full h-full object-contain mix-blend-multiply"></div><div class="p-6 flex flex-col justify-center"><h3 class="font-black text-xl text-slate-800">${item.title}</h3>${item.instructions ? `<p class="text-slate-500 text-sm italic mt-1">${item.instructions}</p>` : ""}</div></section>`;
+            } else if (item.kind === 'links') {
+                const links = safeLinks.map(l => `<a href="${l.url}" target="_blank" class="block bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded text-sm font-bold text-slate-700 transition-colors">🔗 ${l.label}</a>`).join('');
+                extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
+            }
+        });
+    } catch (e) { console.error("Error en Extras/Música/Cultura:", e); }    
     // 8. DASHBOARD
     const grammarGrid = document.getElementById('grammarResources'); grammarGrid.innerHTML = "";
     Object.values(data.apuntes || {}).forEach(topic => {
@@ -597,13 +614,15 @@ const theme = await applyThemeStyles(data, DIA);
         let ch = null;
         for (const k in vocabData) { if (vocabData[k].dias?.includes(parseInt(DIA))) { ch = vocabData[k]; break; } }
         
-        const vTree = theme?.mascots?.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
+        // NEW: Check for mascots inside the raw data.temas object as well as the active theme
+        const mascots = theme?.mascots || data.temas?.mascots || {};
+        const vTree = mascots.vocabTree || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/arboldevocab.png";
         
         // Define all possible cards
         const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
-        const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
-        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.ib || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png'}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
-        const crCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${theme?.mascots?.sloth || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
+        const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
+        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.ib || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png'}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
+        const crCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.sloth || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
         
         // Build the grid based on the profile
         let cardsHtml = "";
@@ -615,10 +634,9 @@ const theme = await applyThemeStyles(data, DIA);
         });
         
         dynamicGrid.innerHTML = cardsHtml;
-        const tutorImg = theme?.mascots?.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
+        const tutorImg = mascots.tutor || "https://raw.githubusercontent.com/scottscalici/imagenes/main/diasfestivos/senor.png";
         document.getElementById('tutorMascot').src = tutorImg;
     }
-
     // 10. HIGHLIGHT BLOCK
     const highlightBlock = document.getElementById('integratedHighlightBlock');
     if (highlightBlock) {
