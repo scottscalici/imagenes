@@ -190,6 +190,9 @@ const CONFIG = {
 // ============================================================
 // THE COURSE PROFILES (The Brains)
 // ============================================================
+// ============================================================
+// THE COURSE PROFILES (The Brains)
+// ============================================================
 const COURSE_PROFILES = {
     s2: {
         pageTitle: "Español 2 - Plan de Clase",
@@ -198,9 +201,9 @@ const COURSE_PROFILES = {
             calentamiento: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/calentamiento",
             evaluaciones: "https://sites.google.com/view/srscalici/espa%C3%B1ol-2/evaluaciones"
         },
-        planJson: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s2.json", // Until merged
         vocabKey: "descubre2",
         showCountdown: false,
+        dualDate: false, // <-- TELLS S2 TO ONLY USE THE CICLO_FILTER DAY
         dynamicCards: ["vocab", "misd", "costarica"]
     },
     s4: {
@@ -210,14 +213,13 @@ const COURSE_PROFILES = {
             calentamiento: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento",
             evaluaciones: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
         },
-        planJson: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/plan_s4.json", // Until merged
         vocabKey: "descubre3",
         showCountdown: true,
+        dualDate: true, // <-- TELLS S4 TO SHOW BOTH A & B DAYS
         oralExamDate: "2026-03-09",
         dynamicCards: ["vocab", "misd", "ib"]
     }
 };
-
 const profile = COURSE_PROFILES[CONFIG.COURSE];
 window.teacherMode = false;
 
@@ -228,16 +230,17 @@ document.getElementById('calBtn').href = profile.links.calentamiento;
 document.getElementById('evalLinkBtn').href = profile.links.evaluaciones;
 
 // --- DATA LOADER ---
+// --- DATA LOADER ---
 async function loadData() {
     const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
     try {
         const [
-            plan, temas, cal, curios, evals, tareas,
+            temas, cal, curios, evals, tareas,
             vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv,
             videos, gramaticaDiaria, anuncios, destacado 
         ] = await Promise.all([
-            safeFetch(profile.planJson), safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
+            safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
             safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
             safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
             safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
@@ -246,14 +249,13 @@ async function loadData() {
         ]);
         
         return { 
-            plan, temas, 
+            temas, 
             cal: cal.filter ? cal : (cal.map || []), 
             curios, evals, tareas, vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado 
         };
     } catch (e) { console.error("Critical Load Error", e); }
 }
-
 // --- THEME ENGINE ---
 async function applyThemeStyles(data, currentDia) {
     try {
@@ -397,22 +399,29 @@ async function runRender(data, DIA) {
         return runRender(data, liveDia);
     }
 
-    const theme = await applyThemeStyles(data, DIA);
+const theme = await applyThemeStyles(data, DIA);
     const overrides = theme?.styles?.cardOverrides || {};
     const fonts = theme?.styles?.fonts || {};
     const accent = theme?.styles?.accent || "#6366f1";
 
-    const entryA = data.cal.find(c => c.dia == DIA && c.ciclo === "A");
-    const entryB = data.cal.find(c => c.dia == DIA && c.ciclo === "B");
+    // --- SMART HEADER DATE LOGIC ---
     let dateStr = "FECHA TBD";
-    if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
-    else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
-    else if (entryB) dateStr = formatSpanishDate(entryB.fecha);
+    if (profile.dualDate) {
+        // S4 Logic: Show both A and B days
+        const entryA = data.cal.find(c => c.dia == DIA && c.ciclo === "A");
+        const entryB = data.cal.find(c => c.dia == DIA && c.ciclo === "B");
+        if (entryA && entryB) dateStr = `${formatSpanishDate(entryA.fecha)} / ${formatSpanishDate(entryB.fecha)}`;
+        else if (entryA) dateStr = formatSpanishDate(entryA.fecha);
+        else if (entryB) dateStr = formatSpanishDate(entryB.fecha);
+    } else {
+        // S2 Logic: Show only the filtered Ciclo
+        const calendarEntry = data.cal.find(c => c.dia == DIA && c.ciclo === CONFIG.CICLO_FILTER);
+        if (calendarEntry) dateStr = formatSpanishDate(calendarEntry.fecha);
+    }
 
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = dateStr.toUpperCase();
     document.getElementById('calBtn').style.backgroundColor = overrides.calentamiento || accent;
-
     // 1. ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
