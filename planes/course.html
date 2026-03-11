@@ -805,34 +805,28 @@ async function renderByDate() {
 }
 
 // ============================================================
-// THE ULTIMATE MEMORY ENGINE
+// THE ULTIMATE MEMORY ENGINE (WITH VISUAL TRACKING)
 // ============================================================
 const MemoryEngine = {
-    getDateString: function() {
-        // Guarantees exact YYYY-MM-DD format regardless of browser/timezone
-        const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+    save: function(key, dataObj) {
+        try { 
+            localStorage.setItem(key, JSON.stringify(dataObj)); 
+            console.log("💾 Guardado en memoria:", key);
+        } catch (e) { console.warn("Memoria bloqueada:", e); }
     },
-    getKey: function(gameName) {
-        return `${gameName}_${CONFIG.COURSE}_${this.getDateString()}`;
-    },
-    save: function(gameName, dataObj) {
+    load: function(key) {
         try {
-            localStorage.setItem(this.getKey(gameName), JSON.stringify(dataObj));
-        } catch (e) { console.warn("⚠️ LocalStorage bloqueado:", e); }
-    },
-    load: function(gameName) {
-        try {
-            const saved = localStorage.getItem(this.getKey(gameName));
-            if (saved) return JSON.parse(saved);
-        } catch (e) { console.warn("⚠️ Error leyendo memoria:", e); }
+            const saved = localStorage.getItem(key);
+            if (saved) {
+                console.log("📂 Memoria cargada exitosamente:", key);
+                return JSON.parse(saved);
+            }
+        } catch (e) { console.warn("Error leyendo memoria:", e); }
+        
+        console.log("📄 No hay memoria guardada para:", key);
         return null;
     }
 };
-
 // ============================================================
 // SEÑORDLE LOGIC
 // ============================================================
@@ -842,12 +836,17 @@ let senRow = 0; let senCol = 0;
 let senGameOver = false;
 let senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
 
+function getSenordleKey() {
+    // Saves based on the actual word, making it immune to timezone bugs!
+    return `senordle_${CONFIG.COURSE}_${senTargetWord}`;
+}
+
 function saveSenordleState() {
-    MemoryEngine.save('senordle', { guesses: senGuesses, row: senRow, col: senCol, gameOver: senGameOver });
+    MemoryEngine.save(getSenordleKey(), { guesses: senGuesses, row: senRow, col: senCol, gameOver: senGameOver });
 }
 
 function loadSenordleState() {
-    const state = MemoryEngine.load('senordle');
+    const state = MemoryEngine.load(getSenordleKey());
     if (state && state.guesses) {
         senGuesses = state.guesses; 
         senRow = state.row || 0; 
@@ -868,8 +867,9 @@ async function initSenordle() {
         const dictData = dictRes.ok ? await dictRes.json() : [];
         
         if (dailyData) {
+            const todayStr = new Date().toLocaleDateString('en-CA');
             const courseDict = dailyData[CONFIG.COURSE] || dailyData.dailyWords || {};
-            senTargetWord = courseDict[MemoryEngine.getDateString()] || "libro";
+            senTargetWord = courseDict[todayStr] || "libro";
             senValidWords = [...dictData, senTargetWord];
         }
     } catch (e) { console.error("Error loading dictionaries:", e); }
@@ -972,19 +972,25 @@ initSenordle();
 // ============================================================
 let acPuzzle = null; let acActiveWords = []; let acSelected = []; let acMistakes = 4; let acSolvedCount = 0; let acSolvedGroups = [];
 
+function getAcKey() {
+    // Saves based on the exact JSON puzzle ID so it never forgets!
+    return `ac_${CONFIG.COURSE}_${acPuzzle.id}`;
+}
+
 function saveAcState() {
-    MemoryEngine.save('ac', { activeWords: acActiveWords, selected: acSelected, mistakes: acMistakes, solvedCount: acSolvedCount, solvedGroups: acSolvedGroups });
+    MemoryEngine.save(getAcKey(), { activeWords: acActiveWords, selected: acSelected, mistakes: acMistakes, solvedCount: acSolvedCount, solvedGroups: acSolvedGroups });
 }
 
 function renderAtandoCabos(data, dia) {
     const box = document.getElementById('atandoCabosBox');
     const allPuzzles = data.atandoCabos?.atando_cabos || [];
-    acPuzzle = allPuzzles.find(p => p.fecha === MemoryEngine.getDateString() && p.course === CONFIG.COURSE);
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    acPuzzle = allPuzzles.find(p => p.fecha === todayStr && p.course === CONFIG.COURSE);
     
     if (!acPuzzle) { box.style.display = 'none'; return; }
     box.style.display = 'block';
 
-    const state = MemoryEngine.load('ac');
+    const state = MemoryEngine.load(getAcKey());
     if (state && state.activeWords) {
         acActiveWords = state.activeWords; acSelected = state.selected || []; acMistakes = state.mistakes; acSolvedCount = state.solvedCount; acSolvedGroups = state.solvedGroups || [];
         document.getElementById('ac-mistakes').textContent = acMistakes;
