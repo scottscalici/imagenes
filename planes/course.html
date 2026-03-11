@@ -184,7 +184,7 @@
                 </div>
 
                 <div id="countdownBox" class="bg-white rounded-xl p-6 shadow-md border-8 border-slate-200 text-center hidden">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen Oral IB</h3>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800 uppercase tracking-wide">⏳ Cuenta regresiva: Examen escrito IB</h3>
                     <div class="flex justify-center gap-4 text-slate-600">
                         <div><span id="cntDays" class="text-3xl font-black block text-slate-900">--</span>Días</div>
                         <div><span id="cntHrs" class="text-3xl font-black block text-slate-900">--</span>Hrs</div>
@@ -299,7 +299,7 @@ const COURSE_PROFILES = {
         vocabKey: "descubre3",
         showCountdown: true,
         dualDate: true, // <-- TELLS S4 TO SHOW BOTH A & B DAYS
-        oralExamDate: "2026-03-09",
+        oralExamDate: "2026-05-13",
         dynamicCards: ["vocab", "misd", "ib"]
     }
 };
@@ -451,7 +451,7 @@ function updateCountdown() {
     const box = document.getElementById('countdownBox');
     if (!profile.showCountdown) { box.classList.add('hidden'); return; }
 
-    const target = new Date(profile.oralExamDate + "T07:30:00");
+    const target = new Date(profile.oralExamDate + "T12:05:00");
     const diff = target - new Date();
 
     if (diff > 0) {
