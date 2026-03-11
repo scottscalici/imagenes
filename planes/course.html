@@ -805,10 +805,58 @@ async function renderByDate() {
 }
 
 // ============================================================
+// THE ULTIMATE MEMORY ENGINE
+// ============================================================
+const MemoryEngine = {
+    getDateString: function() {
+        // Guarantees exact YYYY-MM-DD format regardless of browser/timezone
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    },
+    getKey: function(gameName) {
+        return `${gameName}_${CONFIG.COURSE}_${this.getDateString()}`;
+    },
+    save: function(gameName, dataObj) {
+        try {
+            localStorage.setItem(this.getKey(gameName), JSON.stringify(dataObj));
+        } catch (e) { console.warn("⚠️ LocalStorage bloqueado:", e); }
+    },
+    load: function(gameName) {
+        try {
+            const saved = localStorage.getItem(this.getKey(gameName));
+            if (saved) return JSON.parse(saved);
+        } catch (e) { console.warn("⚠️ Error leyendo memoria:", e); }
+        return null;
+    }
+};
+
+// ============================================================
 // SEÑORDLE LOGIC
 // ============================================================
-let senTargetWord = "playa"; let senValidWords = []; let senRow = 0; let senCol = 0; let senGameOver = false;
-const senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
+let senTargetWord = "playa"; 
+let senValidWords = [];
+let senRow = 0; let senCol = 0;
+let senGameOver = false;
+let senGuesses = Array.from({length: 6}, () => ['', '', '', '', '']);
+
+function saveSenordleState() {
+    MemoryEngine.save('senordle', { guesses: senGuesses, row: senRow, col: senCol, gameOver: senGameOver });
+}
+
+function loadSenordleState() {
+    const state = MemoryEngine.load('senordle');
+    if (state && state.guesses) {
+        senGuesses = state.guesses; 
+        senRow = state.row || 0; 
+        senCol = state.col || 0; 
+        senGameOver = !!state.gameOver;
+        return true;
+    }
+    return false;
+}
 
 async function initSenordle() {
     try {
@@ -816,16 +864,18 @@ async function initSenordle() {
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/words.json'),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/senordle/diccionario.json')
         ]);
-        const dailyData = await dailyRes.ok ? await dailyRes.json() : null;
-        const dictData = await dictRes.ok ? await dictRes.json() : [];
+        const dailyData = dailyRes.ok ? await dailyRes.json() : null;
+        const dictData = dictRes.ok ? await dictRes.json() : [];
+        
         if (dailyData) {
-            const todayStr = new Date().toLocaleDateString('en-CA');
             const courseDict = dailyData[CONFIG.COURSE] || dailyData.dailyWords || {};
-            senTargetWord = courseDict[todayStr] || "libro";
+            senTargetWord = courseDict[MemoryEngine.getDateString()] || "libro";
             senValidWords = [...dictData, senTargetWord];
         }
-    } catch (e) { console.error("Error loading Señordle dictionaries:", e); }
-    buildSenordleUI();
+    } catch (e) { console.error("Error loading dictionaries:", e); }
+    
+    buildSenordleUI(); 
+    if (loadSenordleState()) redrawSenordleBoard();
 }
 
 function buildSenordleUI() {
@@ -847,14 +897,49 @@ function buildSenordleUI() {
     });
 }
 
+function redrawSenordleBoard() {
+    const submittedRows = senGameOver ? senRow + 1 : senRow;
+    for (let r = 0; r < submittedRows; r++) {
+        let targetCopy = String(senTargetWord).split(''); 
+        const guess = senGuesses[r].join("").toLowerCase();
+        const guessArr = guess.split(''); 
+        const statuses = Array(5).fill('absent');
+
+        for (let i = 0; i < 5; i++) { if (guessArr[i] === targetCopy[i]) { statuses[i] = 'correct'; targetCopy[i] = null; guessArr[i] = null; } }
+        for (let i = 0; i < 5; i++) {
+            if (guessArr[i] !== null) {
+                const tIdx = targetCopy.indexOf(guessArr[i]);
+                if (tIdx > -1) { statuses[i] = 'present'; targetCopy[tIdx] = null; }
+            }
+        }
+        for (let i = 0; i < 5; i++) {
+            const tile = document.getElementById(`sen-tile-${r}-${i}`); 
+            const letter = senGuesses[r][i]; 
+            if (!letter) continue; 
+            const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
+            
+            tile.textContent = letter; tile.className = "senordle-tile"; tile.classList.add(statuses[i]);
+            if (keyEl) {
+                if (statuses[i] === 'correct') { keyEl.classList.remove("present", "absent"); keyEl.classList.add("correct"); } 
+                else if (statuses[i] === 'present' && !keyEl.classList.contains("correct")) { keyEl.classList.remove("absent"); keyEl.classList.add("present"); } 
+                else if (statuses[i] === 'absent' && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) { keyEl.classList.add("absent"); }
+            }
+        }
+    }
+    if (senRow < 6 && !senGameOver) {
+        for (let c = 0; c < 5; c++) { document.getElementById(`sen-tile-${senRow}-${c}`).textContent = senGuesses[senRow][c] || ''; }
+    }
+}
+
 function handleSenordleKey(key) {
     if (senGameOver) return;
     if (key === "DEL" || key === "BACKSPACE") {
         if (senCol > 0) { senCol--; senGuesses[senRow][senCol] = ''; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = ''; }
-    } else if (key === "ENTER") { checkSenordleRow(); } 
+    } else if (key === "ENTER") { checkSenordleRow(); return; } 
     else if (/^[A-ZÑ]$/.test(key) && senCol < 5 && senRow < 6) {
         senGuesses[senRow][senCol] = key; document.getElementById(`sen-tile-${senRow}-${senCol}`).textContent = key; senCol++;
     }
+    saveSenordleState(); 
 }
 
 function checkSenordleRow() {
@@ -862,165 +947,112 @@ function checkSenordleRow() {
     const guess = senGuesses[senRow].join("").toLowerCase();
     if (senValidWords.length > 0 && !senValidWords.includes(guess)) { alert("La palabra no está en la lista."); return; }
 
-    let targetCopy = senTargetWord.split(''); const guessArr = guess.split(''); const statuses = Array(5).fill('absent');
-    for (let i = 0; i < 5; i++) { if (guessArr[i] === targetCopy[i]) { statuses[i] = 'correct'; targetCopy[i] = null; guessArr[i] = null; } }
-    for (let i = 0; i < 5; i++) {
-        if (guessArr[i] !== null) {
-            const targetIndex = targetCopy.indexOf(guessArr[i]);
-            if (targetIndex > -1) { statuses[i] = 'present'; targetCopy[targetIndex] = null; }
-        }
-    }
-    for (let i = 0; i < 5; i++) {
-        const tile = document.getElementById(`sen-tile-${senRow}-${i}`); const letter = guess[i]; const keyEl = document.getElementById(`sen-key-${letter.toUpperCase()}`);
-        tile.classList.add(statuses[i]);
-        if (keyEl) {
-            if (statuses[i] === 'correct') { keyEl.classList.remove("present", "absent"); keyEl.classList.add("correct"); } 
-            else if (statuses[i] === 'present' && !keyEl.classList.contains("correct")) { keyEl.classList.remove("absent"); keyEl.classList.add("present"); } 
-            else if (statuses[i] === 'absent' && !keyEl.classList.contains("correct") && !keyEl.classList.contains("present")) { keyEl.classList.add("absent"); }
-        }
-    }
-
     if (guess === senTargetWord) {
-        senGameOver = true;
+        senGameOver = true; redrawSenordleBoard(); saveSenordleState();
         setTimeout(() => {
-            if (typeof startEffect === "function") { startEffect({ char: "🎉", maxSize: 40, minSize: 20, count: 60, direction: "down" }); setTimeout(() => { if (typeof stopEffect === "function") stopEffect(); }, 4000); }
+            if (typeof startEffect === "function") { startEffect({ char: "🎉", maxSize: 40, minSize: 20, count: 60, direction: "down" }); setTimeout(() => stopEffect(), 4000); }
             alert(`¡Pura vida! Lo adivinaste en ${senRow + 1} intentos.`);
         }, 400);
-    } else if (senRow === 5) { senGameOver = true; setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400); } 
-    else { senRow++; senCol = 0; }
+    } else if (senRow === 5) { 
+        senGameOver = true; redrawSenordleBoard(); saveSenordleState();
+        setTimeout(() => alert("La palabra era: " + senTargetWord.toUpperCase()), 400); 
+    } else { 
+        senRow++; senCol = 0; redrawSenordleBoard(); saveSenordleState();
+    }
 }
 
 function openSenordle() { document.getElementById('senordleModal').style.display = 'flex'; document.addEventListener("keydown", handlePhysicalKey); }
 function closeSenordle() { document.getElementById('senordleModal').style.display = 'none'; document.removeEventListener("keydown", handlePhysicalKey); }
 function handlePhysicalKey(e) { const key = e.key.toUpperCase(); if (key === "BACKSPACE" || key === "ENTER" || /^[A-ZÑ]$/.test(key)) handleSenordleKey(key); }
-
-
     
 initSenordle(); 
 
 // ============================================================
-// ATANDO CABOS (CONEXIONES) LOGIC
+// ATANDO CABOS LOGIC
 // ============================================================
-let acPuzzle = null;
-let acActiveWords = [];
-let acSelected = [];
-let acMistakes = 4;
-let acSolvedCount = 0;
+let acPuzzle = null; let acActiveWords = []; let acSelected = []; let acMistakes = 4; let acSolvedCount = 0; let acSolvedGroups = [];
+
+function saveAcState() {
+    MemoryEngine.save('ac', { activeWords: acActiveWords, selected: acSelected, mistakes: acMistakes, solvedCount: acSolvedCount, solvedGroups: acSolvedGroups });
+}
 
 function renderAtandoCabos(data, dia) {
     const box = document.getElementById('atandoCabosBox');
     const allPuzzles = data.atandoCabos?.atando_cabos || [];
+    acPuzzle = allPuzzles.find(p => p.fecha === MemoryEngine.getDateString() && p.course === CONFIG.COURSE);
     
-    // Find today's puzzle for the current course
-  const todayStr = new Date().toLocaleDateString('en-CA');
-    acPuzzle = allPuzzles.find(p => p.fecha === todayStr && p.course === CONFIG.COURSE);
-    
-    if (!acPuzzle) {
-        box.style.display = 'none'; // Hide if no puzzle today
-        return;
-    }
-
+    if (!acPuzzle) { box.style.display = 'none'; return; }
     box.style.display = 'block';
-    acMistakes = 4;
-    acSolvedCount = 0;
-    acSelected = [];
-    document.getElementById('ac-solved-area').innerHTML = '';
-    document.getElementById('ac-mistakes').textContent = acMistakes;
 
-    // Extract all 16 words and shuffle them
-    acActiveWords = [];
-    acPuzzle.categories.forEach(cat => {
-        cat.items.forEach(word => {
-            acActiveWords.push({ word: word, level: cat.level, category: cat.title });
-        });
+    const state = MemoryEngine.load('ac');
+    if (state && state.activeWords) {
+        acActiveWords = state.activeWords; acSelected = state.selected || []; acMistakes = state.mistakes; acSolvedCount = state.solvedCount; acSolvedGroups = state.solvedGroups || [];
+        document.getElementById('ac-mistakes').textContent = acMistakes;
+        reRenderAcSolvedGroups(); drawAcGrid();
+    } else {
+        acMistakes = 4; acSolvedCount = 0; acSelected = []; acSolvedGroups = [];
+        document.getElementById('ac-solved-area').innerHTML = '';
+        document.getElementById('ac-mistakes').textContent = acMistakes;
+
+        acActiveWords = [];
+        acPuzzle.categories.forEach(cat => { cat.items.forEach(word => { acActiveWords.push({ word: word, level: cat.level, category: cat.title }); }); });
+        acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); 
+        drawAcGrid(); saveAcState();
+    }
+}
+
+function reRenderAcSolvedGroups() {
+    const solvedArea = document.getElementById('ac-solved-area'); solvedArea.innerHTML = '';
+    acSolvedGroups.forEach(group => {
+        const row = document.createElement('div'); row.className = `ac-solved-row ac-level-${group.level}`;
+        row.innerHTML = `<div class="ac-solved-title">${group.category}</div><div class="ac-solved-words">${group.words.join(', ')}</div>`;
+        solvedArea.appendChild(row);
     });
-    acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); // Quick shuffle
-    
-    drawAcGrid();
 }
 
 function drawAcGrid() {
-    const grid = document.getElementById('ac-grid');
-    grid.innerHTML = '';
-    
+    const grid = document.getElementById('ac-grid'); grid.innerHTML = '';
+    const isGameOver = acMistakes <= 0 || acSolvedCount === 4;
     acActiveWords.forEach((item) => {
         const btn = document.createElement('button');
-        btn.className = `ac-btn ${acSelected.includes(item.word) ? 'selected' : ''}`;
-        btn.textContent = item.word;
-        btn.onclick = () => acToggleWord(item.word);
+        const deadStyle = isGameOver ? 'opacity-50 cursor-not-allowed bg-slate-200 border-slate-300 text-slate-400' : '';
+        const selectedStyle = acSelected.includes(item.word) ? 'selected' : '';
+        btn.className = `ac-btn ${selectedStyle} ${deadStyle}`; btn.textContent = item.word; btn.onclick = () => acToggleWord(item.word);
         grid.appendChild(btn);
     });
 }
 
 function acToggleWord(word) {
-    if (acSelected.includes(word)) {
-        acSelected = acSelected.filter(w => w !== word);
-    } else {
-        if (acSelected.length < 4) acSelected.push(word);
-    }
-    drawAcGrid();
+    if (acMistakes <= 0 || acSolvedCount === 4) return; 
+    if (acSelected.includes(word)) { acSelected = acSelected.filter(w => w !== word); } else { if (acSelected.length < 4) acSelected.push(word); }
+    drawAcGrid(); saveAcState();
 }
 
-function acDeselectAll() {
-    acSelected = [];
-    drawAcGrid();
-}
-
-function acShuffle() {
-    acActiveWords = acActiveWords.sort(() => Math.random() - 0.5);
-    drawAcGrid();
-}
+function acDeselectAll() { if (acMistakes <= 0 || acSolvedCount === 4) return; acSelected = []; drawAcGrid(); saveAcState(); }
+function acShuffle() { if (acMistakes <= 0 || acSolvedCount === 4) return; acActiveWords = acActiveWords.sort(() => Math.random() - 0.5); drawAcGrid(); saveAcState(); }
 
 function acSubmit() {
-    if (acSelected.length !== 4) return;
-    
-    // Check if all 4 selected words share the same category
+    if (acSelected.length !== 4 || acMistakes <= 0 || acSolvedCount === 4) return;
     const selectedData = acActiveWords.filter(item => acSelected.includes(item.word));
     const firstCategory = selectedData[0].category;
     const isMatch = selectedData.every(item => item.category === firstCategory);
     
     if (isMatch) {
-        // WINNING A GROUP
-        const level = selectedData[0].level;
-        acSolvedCount++;
-        
-        // Remove from active grid
+        const level = selectedData[0].level; acSolvedCount++;
         acActiveWords = acActiveWords.filter(item => !acSelected.includes(item.word));
-        acSelected = [];
-        
-        // Create the solved row block
-        const solvedArea = document.getElementById('ac-solved-area');
-        const row = document.createElement('div');
-        row.className = `ac-solved-row ac-level-${level}`;
-        row.innerHTML = `<div class="ac-solved-title">${firstCategory}</div><div class="ac-solved-words">${selectedData.map(d => d.word).join(', ')}</div>`;
-        solvedArea.appendChild(row);
-        
-        drawAcGrid();
-        
-        // If all 4 are solved
+        acSolvedGroups.push({ level: level, category: firstCategory, words: selectedData.map(d => d.word) });
+        acSelected = []; reRenderAcSolvedGroups(); drawAcGrid(); saveAcState();
         if (acSolvedCount === 4) {
-            setTimeout(() => {
-                if (typeof startEffect === "function") { startEffect({ char: "🧶", maxSize: 30, minSize: 15, count: 50, direction: "down" }); setTimeout(stopEffect, 4000); }
-                alert("¡Excelente! Has atado todos los cabos.");
-            }, 300);
+            setTimeout(() => { if (typeof startEffect === "function") { startEffect({ char: "🧶", maxSize: 30, minSize: 15, count: 50, direction: "down" }); setTimeout(stopEffect, 4000); } alert("¡Excelente! Has atado todos los cabos."); }, 300);
         }
     } else {
-        // MISTAKE
-        acMistakes--;
-        document.getElementById('ac-mistakes').textContent = acMistakes;
-        const grid = document.getElementById('ac-grid');
-        grid.classList.add('shake-err');
-        setTimeout(() => grid.classList.remove('shake-err'), 300);
-        
-        if (acMistakes <= 0) {
-            setTimeout(() => {
-                alert("Te quedaste sin intentos. ¡Mejor suerte mañana!");
-                // Optionally reveal answers here in a future update!
-                acDeselectAll();
-            }, 300);
-        }
+        acMistakes--; document.getElementById('ac-mistakes').textContent = acMistakes;
+        const grid = document.getElementById('ac-grid'); grid.classList.add('shake-err'); setTimeout(() => grid.classList.remove('shake-err'), 300);
+        saveAcState();
+        if (acMistakes <= 0) { setTimeout(() => { alert("❌ Te quedaste sin intentos. Tablero bloqueado."); acDeselectAll(); }, 300); }
     }
 }
+
 init();
 </script>
 </body>
