@@ -96,6 +96,7 @@ button.senordle-key.absent  { background-color: var(--absent) !important; opacit
 
                 <div id="curiosityBlock"></div>
                 <div id="estructuraBlock"></div>
+                <div id="practicaBlock"></div>
                 <div id="extrasBlock"></div>
                 <div id="videoBlock"></div>
             </div>
@@ -269,6 +270,7 @@ const CONFIG = {
     ANUNCIOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/anuncios.json",
     GRAMATICA_DIARIA: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json", 
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json",
+    PRACTICAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/practicas.json",
     DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json",
     ATANDO_CABOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/atandocabos/atandocabos.json"
 };
@@ -331,14 +333,14 @@ async function loadData() {
             safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
             safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
             safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO), safeFetch(CONFIG.ATANDO_CABOS)
+            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO), safeFetch(CONFIG.ATANDO_CABOS), safeFetch(CONFIG.PRACTICAS)
         ]);
         
         return { 
             temas, 
             cal: cal.filter ? cal : (cal.map || []), 
             curios, evals, tareas, vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado, atandoCabos 
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas
         };
     } catch (e) { console.error("Critical Load Error", e); }
 }
@@ -642,6 +644,57 @@ const theme = await applyThemeStyles(data, DIA);
             }
         });    
 
+        // ============================================================
+// EXÁMENES DE PRÁCTICA (Sleek dynamic rows)
+// ============================================================
+try {
+    const practicaBlock = document.getElementById('practicaBlock');
+    practicaBlock.innerHTML = "";
+    
+    // Assuming you add data.practicas to your loadData() function
+    const dayPractices = (data.practicas?.practicas || []).filter(p => 
+        p.dias.includes(parseInt(DIA)) && p.courses.includes(CONFIG.COURSE)
+    );
+
+    dayPractices.forEach(practica => {
+        const pColor = overrides.practica || accent;
+        let levelsHtml = "";
+
+        practica.levels.forEach(level => {
+            // Flexbox magic: flex-1 ensures the buttons share the row equally
+            const textsHtml = level.texts.map(text => `
+                <a href="${text.url}" target="_blank" class="flex-1 flex flex-col bg-slate-50 border border-slate-200 rounded-lg p-3 hover:border-indigo-400 hover:shadow-md transition-all group">
+                    <span class="text-[9px] font-black bg-slate-200 text-slate-500 px-2 py-0.5 rounded w-max mb-1.5 uppercase tracking-widest group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors">${text.label}</span>
+                    <span class="font-bold text-sm text-slate-800 leading-tight">${text.title}</span>
+                </a>
+            `).join('');
+
+            levelsHtml += `
+                <div class="mb-4 last:mb-0">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">${level.level_name}</h4>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        ${textsHtml}
+                    </div>
+                </div>
+            `;
+        });
+
+        practicaBlock.innerHTML += `
+            <section class="bg-white rounded-xl shadow-sm border border-slate-200 mb-6 overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center gap-2">
+                    <span class="text-lg">${practica.icon || "📝"}</span>
+                    <h3 class="font-black text-xs text-slate-600 uppercase tracking-widest">${practica.title}</h3>
+                </div>
+                <div class="p-5">
+                    ${levelsHtml}
+                </div>
+            </section>
+        `;
+    });
+} catch (e) { console.error("Error en Prácticas:", e); }
+
+        
+
         // 3. RENDER MÚSICA (Custom Spotify-style card)
         extractItems(data.musica).filter(isTodayForCourse).forEach(item => {
              const mColor = overrides.musica || "#1DB954"; 
@@ -708,7 +761,7 @@ const theme = await applyThemeStyles(data, DIA);
         // Define all possible cards
         const vocabCard = ch ? `<div class="bg-white rounded-xl border-l-[6px] shadow-md flex flex-col h-full" style="border-color: ${overrides.vocabulario || accent}"><div class="h-32 overflow-hidden border-b relative"><img src="${vTree}" class="w-full h-full object-cover"></div><div class="p-5 flex flex-col flex-grow justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${overrides.vocabulario || accent}">Vocabulario</h3><h3 class="text-slate-900 font-bold text-lg mb-4">${ch.label}</h3></div><div class="flex gap-2"><a href="${ch.listas}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Lista</a><a href="${ch.flashcards}" target="_blank" class="flex-1 text-center py-2 border rounded font-bold text-xs">Cards</a></div></div></div>` : `<div class="p-8 text-center text-slate-400 italic bg-white rounded-xl border h-full flex items-center justify-center">No hay vocabulario hoy</div>`;
         const misdCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.misd || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">MISD Portal</h3><a href="https://connection.misd.net/index.html" target="_blank" class="bg-slate-800 text-white text-center py-2 rounded font-bold text-sm">Abrir Portal</a></div></div>`;
-        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.ib || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png'}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Recursos IB</a></div></div>`;
+        const ibCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.ib || 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/International_Baccalaureate_Logo.svg/1200px-International_Baccalaureate_Logo.svg.png'}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><div><h3 class="font-black text-[10px] uppercase mb-1" style="color: ${accent}">Evaluación</h3><h3 class="font-bold text-lg mb-4">Recursos IB / Examen</h3></div><div class="flex gap-2"><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/las-evaluaciones-de-ib" target="_blank" class="flex-1 text-center py-2 rounded font-bold text-xs text-white shadow-sm" style="background-color:${accent}">Recursos</a><a href="https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/%C3%ADndice-de-los-ex%C3%A1menes-de-pr%C3%A1ctica" target="_blank" class="flex-1 text-center py-2 rounded font-bold text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200 transition-colors shadow-sm">Exámenes</a></div></div></div>`;        
         const crCard = `<div class="bg-white rounded-xl shadow-md flex flex-col h-full"><div class="h-32 overflow-hidden border-b"><img src="${mascots.sloth || ''}" class="w-full h-full object-cover"></div><div class="p-5 flex-grow flex flex-col justify-between"><h3 class="font-bold text-lg mb-4">Costa Rica 2027</h3><a href="https://senoraburak.weebly.com/costa-rica-2027.html" target="_blank" class="text-center py-2 rounded font-bold text-sm text-white" style="background-color:${accent}">Ver Detalles</a></div></div>`;
         
         // Build the grid based on the profile
