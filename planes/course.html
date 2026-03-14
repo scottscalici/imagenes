@@ -326,7 +326,7 @@ async function loadData() {
             temas, cal, curios, evals, tareas,
             vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios, destacado, atandoCabos 
+            videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas 
         ] = await Promise.all([
             safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
             safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
