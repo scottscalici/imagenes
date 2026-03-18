@@ -2078,5 +2078,68 @@
       }
     ],
     "date": "2026-03-16"
+  },
+  {
+    "dia": 57,
+    "topic": "Subjuntivo",
+    "vocabFile": "vocab/D3-9-3.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Presente de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_2"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Nuevo Bloque",
+        "bank": "bancos/banco_imperfecto_de_subjuntivo.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "count": 10
+      }
+    ],
+    "date": "2026-03-18"
+  },
+  {
+    "dia": 58,
+    "topic": "Participios pasados",
+    "vocabFile": "vocab/D3-9-4.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Participio Pasado",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Participio Pasado",
+        "bank": "bancos/banco_participios_pasados.json",
+        "identityCategory": "participios_pasados",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 20
+      }
+    ],
+    "date": "2026-03-20"
   }
 ]
