@@ -69,7 +69,7 @@
         
         <div class="export-group">
             <button class="btn btn-export-gram" onclick="exportJSON('gramatica')">💾 Copiar Gramática</button>
-            <button class="btn btn-export-tar" onclick="exportJSON('tareas')">💾 Copiar Tareas (Actual)</button>
+            <button class="btn btn-export-tar" onclick="exportJSON('tareas')">💾 Copiar Tareas (S2 y S4)</button>
             <button class="btn btn-export-apu" onclick="exportJSON('apuntes')">💾 Copiar Apuntes</button>
         </div>
     </div>
@@ -79,7 +79,8 @@
     </div>
 
     <script>
-        let db = { gramatica: {}, apuntes: {}, tareasS2: {tareas:[]}, tareasS4: {tareas:[]} };
+        // Consolidated tareas into a single object
+        let db = { gramatica: {}, apuntes: {}, tareas: {} };
         let dayToDatesMap = {}; 
         let currentCourse = 's2'; 
         let currentView = 'dias'; 
@@ -89,13 +90,13 @@
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/gramatica_diaria.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/apuntes.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas.json?v=' + Date.now()).then(r => r.json()),
-            fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/tareas4.json?v=' + Date.now()).then(r => r.json()),
             fetch('https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
-        ]).then(([gramData, apunData, tarS2Data, tarS4Data, calData]) => {
+        ]).then(([gramData, apunData, tarData, calData]) => {
             db.gramatica = gramData || {};
             db.apuntes = apunData || {};
-            db.tareasS2 = tarS2Data || {tareas:[]};
-            db.tareasS4 = tarS4Data || {tareas:[]};
+            
+            // Assign consolidated tareas data
+            db.tareas = tarData || { s2: { tareas: [] }, s4: { tareas: [] } };
             
             if (calData && calData.map && Array.isArray(calData.map)) {
                 calData.map.forEach(entry => {
@@ -147,7 +148,6 @@
             else renderApuntes();
         }
 
-        // Buscador robusto para encontrar dónde están los días de Gramática
         function getGramObj(course) {
             let data = db.gramatica;
             if (!data) return {};
@@ -163,14 +163,26 @@
             }
         }
 
-        // Convierte Arrays o Strings al formato correcto para la caja de texto
+        // Helper to defensively get the tasks array regardless of JSON format (array vs object)
+        function getTareasArray(course) {
+            if (!db.tareas) db.tareas = {};
+            if (!db.tareas[course]) db.tareas[course] = { tareas: [] };
+            
+            // If the JSON is directly an array: "s2": [...]
+            if (Array.isArray(db.tareas[course])) return db.tareas[course];
+            
+            // If the JSON is an object: "s2": { "tareas": [...] }
+            if (!db.tareas[course].tareas) db.tareas[course].tareas = [];
+            
+            return db.tareas[course].tareas;
+        }
+
         function parseDataToStr(data) {
             if (!data) return '';
             if (Array.isArray(data)) return data.join('\n');
             return data.toString();
         }
 
-        // Obtiene la fecha bonita para la UI
         function getDateBadge(dayNum) {
             let fechas = dayToDatesMap[dayNum] || [];
             return fechas.length > 0 ? fechas.join(' | ') : '';
@@ -178,18 +190,16 @@
 
         function renderDias() {
             let gridHtml = '';
-            let tareasList = currentCourse === 's2' ? (db.tareasS2.tareas || []) : (db.tareasS4.tareas || []);
+            let tareasList = getTareasArray(currentCourse);
             let gramObj = getGramObj(currentCourse);
 
             for (let day = 1; day <= 80; day++) {
                 let dayStr = day.toString();
                 
-                // Extraer Gramática (Acepta Strings o Arrays gracias a parseDataToStr)
                 let gramDay = gramObj[dayStr] || { intro: '', repaso: '' };
                 let introStr = parseDataToStr(gramDay.intro);
                 let repasoStr = parseDataToStr(gramDay.repaso);
 
-                // Extraer Tareas
                 let tareasDelDia = tareasList.filter(t => t.day_assigned == dayStr);
                 let tareasHtml = '';
                 tareasDelDia.forEach(t => {
@@ -216,7 +226,6 @@
                     `;
                 });
 
-                // Fecha del Calendario para la Cabecera
                 let headerDate = getDateBadge(day);
                 let dateHtml = headerDate ? `<span class="date-badge">📅 ${headerDate}</span>` : '';
 
@@ -288,7 +297,6 @@
             let val = selectElem.value;
             if(!val) return; 
 
-            // Extraemos el título del dropdown para armar tu estructura con "|"
             let title = selectElem.options[selectElem.selectedIndex].getAttribute('data-title');
             let insertText = `${val} | ${title}`;
 
@@ -301,14 +309,12 @@
             updateGrammar(dayStr);
         }
 
-        // Guarda SOLO si el usuario ha editado esa tarjeta
         function updateGrammar(dayStr) {
             let introArr = document.getElementById(`intro-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
             let repasoArr = document.getElementById(`repaso-${dayStr}`).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');
 
             let targetObj = getGramObj(currentCourse);
             
-            // Inicializar en el objeto maestro si estaba totalmente vacío
             if (Object.keys(targetObj).length === 0) {
                 if (currentCourse === 's4') {
                     if(!db.gramatica.s4) db.gramatica.s4 = {};
@@ -329,7 +335,7 @@
         }
 
         function createNewTarea(dayStr) {
-            let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
+            let tareasList = getTareasArray(currentCourse);
             let existingForDay = tareasList.filter(t => t.day_assigned == dayStr);
             let nextNum = existingForDay.length + 1;
             let newId = `t${dayStr}-0${nextNum}`;
@@ -346,11 +352,10 @@
         }
 
         function updateTarea(globalIndex, field, value) {
-            let tareasList = currentCourse === 's2' ? db.tareasS2.tareas : db.tareasS4.tareas;
+            let tareasList = getTareasArray(currentCourse);
             if (field === 'day_assigned' || field === 'day_due') value = parseInt(value) || 0;
             tareasList[globalIndex][field] = value;
             
-            // Si cambian la fecha de entrega, re-renderizar para actualizar el calendario visual
             if (field === 'day_due') renderDias();
         }
 
@@ -375,8 +380,9 @@
                 dataToCopy = db.apuntes;
                 filename = 'apuntes.json';
             } else if (target === 'tareas') {
-                dataToCopy = currentCourse === 's2' ? db.tareasS2 : db.tareasS4;
-                filename = currentCourse === 's2' ? 'tareas.json' : 'tareas4.json';
+                // Now copies the entire consolidated database for both S2 & S4
+                dataToCopy = db.tareas;
+                filename = 'tareas.json';
             }
 
             let jsonString = JSON.stringify(dataToCopy, null, 2);
