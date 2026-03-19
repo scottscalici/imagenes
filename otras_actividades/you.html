@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Complejidad de "You": Blancanieves</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .intro-box, .conclusion-box {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-left: 5px solid #2980b9;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .conclusion-box {
+            border-left-color: #27ae60;
+        }
+        .info-card {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #bce8f1;
+        }
+        .activity-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-top: 4px solid #e74c3c;
+        }
+        .quote-header {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .region-block {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+        .grammar-note {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+            display: block;
+            margin-top: 5px;
+        }
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 120px;
+            text-align: center;
+        }
+        .clickable-word {
+            color: #2980b9;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .clickable-word:hover {
+            color: #e74c3c;
+        }
+        .revealed-answer {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .video-container {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .video-box {
+            flex: 1;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Traduciendo "You": El Caso de Blancanieves</h1>
+    </header>
+
+    <div class="intro-box">
+        <p>En el avance de la película Blancanieves, el uso de "you" se traduce de diversas maneras dependiendo de si es el doblaje para España o para Latinoamérica, y también refleja las relaciones de poder y respeto entre los personajes. Aquí tienes un desglose:</p>
+    </div>
+
+    <div class="activity-card">
+        <h3 class="quote-header">1. Reina a Guardias/Cazador</h3>
+        <p><strong>Inglés:</strong> "Find his home and burn it to the ground. / Bring me her heart."</p>
+        
+        <div class="region-block">
+            <strong>Latinoamérica:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'busquen')">(buscar)</span> su casa y <input type="text"> <span class="clickable-word" onclick="reveal(this, 'quémenla')">(quemar + la)</span> toda! / ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Tráiganme')">(Traer + me)</span> su corazón!
+            <span class="grammar-note">(Ustedes - plural estándar, marcando autoridad).</span>
+        </div>
+
+        <div class="region-block">
+            <strong>España:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'encontrad')">(encontrar)</span> su casa y <input type="text"> <span class="clickable-word" onclick="reveal(this, 'destruidla')">(destruir + la)</span>! / ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Traedme')">(Traer + me)</span> su corazón!
+            <span class="grammar-note">(Vosotros - uso de plural informal para subordinados).</span>
+        </div>
+    </div>
+
+    <div class="activity-card">
+        <h3 class="quote-header">2. Blancanieves a Enanitos</h3>
+        <p><strong>Inglés:</strong> "Follow me."</p>
+        
+        <div class="region-block">
+            <strong>Latinoamérica:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Síganme')">(Seguir + me)</span>!
+            <span class="grammar-note">(Ustedes - plural estándar).</span>
+        </div>
+
+        <div class="region-block">
+            <strong>España:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Seguidme')">(Seguir + me)</span>!
+            <span class="grammar-note">(Vosotros - plural informal).</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h3>Nota Cultural: Relaciones Íntimas (Cazador a Blancanieves)</h3>
+        <p><strong>Inglés:</strong> "Run away, hide... and never come back."</p>
+        <p>En este caso, <strong>tanto España como Latinoamérica</strong> usan la misma forma:</p>
+        <p><em>"Huye, escóndete... y no vuelvas."</em></p>
+        <span class="grammar-note">(Tú - muestra que el cazador la ve como una niña o alguien a quien quiere proteger, dándole un tono más íntimo y urgente en ambas regiones).</span>
+    </div>
+
+    <div class="activity-card">
+        <h3 class="quote-header">3. Blancanieves a Cazador</h3>
+        <p><strong>Inglés:</strong> "Please, show mercy."</p>
+        
+        <div class="region-block">
+            <strong>Latinoamérica:</strong> Por favor, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'tenga')">(tener)</span> piedad.
+            <span class="grammar-note">(Usted - muestra respeto y súplica hacia una figura de autoridad).</span>
+        </div>
+
+        <div class="region-block">
+            <strong>España:</strong> Por favor, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'tened')">(tener)</span> compasión.
+            <span class="grammar-note">(Vosotros - se dirige a los guardias en general o al cazador de forma plural/formal arcaica).</span>
+        </div>
+    </div>
+
+    <div class="activity-card">
+        <h3 class="quote-header">4. Espejo a Reina</h3>
+        <p><strong>Inglés:</strong> "My queen, you are the fairest of them all. / My queen, your beauty is beyond compare."</p>
+        
+        <div class="region-block">
+            <strong>Latinoamérica:</strong> Mi reina, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'eres')">(ser)</span> la más hermosa. / Mi reina, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'tu')">(your)</span> belleza no tiene comparación.
+            <span class="grammar-note">(Tú - trato más cercano, quizás reflejando que el espejo es una extensión de ella misma).</span>
+        </div>
+
+        <div class="region-block">
+            <strong>España:</strong> Mi reina, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'sois')">(ser)</span> la más hermosa. / Mi reina, <input type="text"> <span class="clickable-word" onclick="reveal(this, 'vuestra')">(your)</span> belleza es incomparable.
+            <span class="grammar-note">(Vos/Vuestra - trato altamente formal y arcaico, demostrando extrema reverencia).</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h3>Nota Cultural: Reina a Espejo</h3>
+        <p><strong>Inglés:</strong> "Magic mirror on the wall, who is the fairest one of all?"</p>
+        <p><strong>Latinoamérica:</strong> "Espejo mágico, dime una cosa, ¿quién de todas es la más hermosa?" <br><span class="grammar-note">(Dime - Tú - trato informal y directo).</span></p>
+        <p><strong>España:</strong> "Espejito, espejito mágico, ¿quién es la más hermosa de todas?" <br><span class="grammar-note">(No hay pronombre directo, pero el trato es informal).</span></p>
+    </div>
+
+    <div class="activity-card">
+        <h3 class="quote-header">5. Enanitos a Blancanieves</h3>
+        <p><strong>Inglés:</strong> "Wait for me! / You can't stay here."</p>
+        
+        <div class="region-block">
+            <strong>Latinoamérica:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Espérenme')">(Esperar + me)</span>! / No <input type="text"> <span class="clickable-word" onclick="reveal(this, 'te')">(te)</span> puedes quedar aquí.
+            <span class="grammar-note">(Espérenme - Ustedes; te - Tú).</span>
+        </div>
+
+        <div class="region-block">
+            <strong>España:</strong> ¡<input type="text"> <span class="clickable-word" onclick="reveal(this, 'Esperadme')">(Esperar + me)</span>! / No <input type="text"> <span class="clickable-word" onclick="reveal(this, 'te')">(te)</span> puedes quedar aquí.
+            <span class="grammar-note">(Esperadme - Vosotros; te - Tú).</span>
+        </div>
+    </div>
+
+    <div class="conclusion-box">
+        <strong>En resumen:</strong> las traducciones de “you” en estos avances reflejan no solo diferencias gramaticales entre el español latinoamericano y peninsular, sino también enriquecen la narrativa al revelar información adicional sobre las dinámicas entre los personajes.
+    </div>
+
+    <div class="video-container">
+        <div class="video-box">
+            <h3>Doblaje Latinoamericano</h3>
+            <iframe src="https://www.youtube.com/embed/BE0BwFSYXOQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-box">
+            <h3>Doblaje España</h3>
+            <iframe src="https://www.youtube.com/embed/Iqhf2jglRdc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div style="text-align:center; margin-top: 20px; padding-bottom: 40px;">
+        <a href="https://youtu.be/KsSoo5K8CpA" target="_blank" style="color: #2980b9; text-decoration: none; font-weight: bold;">Ver el Tráiler Original en Inglés Aquí</a>
+    </div>
+
+    <script>
+        function reveal(element, answer) {
+            // Replaces the clickable word with the correct answer
+            element.innerHTML = answer;
+            element.className = 'revealed-answer';
+            element.onclick = null; // Removes the click event after revealing
+        }
+    </script>
+</body>
+</html>
