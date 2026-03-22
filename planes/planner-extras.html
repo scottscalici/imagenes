@@ -236,12 +236,18 @@
                 `;
             } else if (ext.kind === 'card') {
                 let img = (ext.img || '').replace(/"/g, '&quot;');
+                let linkUrl = (ext.url || '').replace(/"/g, '&quot;');
+                
                 dynamicHtml = `
                     <div class="row-group" style="margin-top:8px;">
                         <label>Imagen URL:</label>
-                        <input type="text" value="${img}" placeholder="Pega URL de imagen..." onchange="updateExtra(${globalIndex}, 'img', this.value)">
+                        <input type="text" value="${img}" placeholder="Pega URL de la imagen..." onchange="updateExtra(${globalIndex}, 'img', this.value)">
                     </div>
-                    ${img ? `<img src="${img}" style="max-height:80px; margin-top:5px; border-radius:4px; object-fit:contain; background:#eee; padding:2px;">` : ''}
+                    <div class="row-group">
+                        <label>Destino URL:</label>
+                        <input type="text" value="${linkUrl}" placeholder="Opcional: Enlace al hacer clic..." onchange="updateExtra(${globalIndex}, 'url', this.value)">
+                    </div>
+                    ${img ? `<a href="${linkUrl || img}" target="_blank"><img src="${img}" style="max-height:80px; margin-top:5px; border-radius:4px; object-fit:contain; background:#eee; padding:2px; ${linkUrl ? 'border: 2px solid #2ecc71; cursor:pointer;' : ''}" title="${linkUrl ? 'Hará clic hacia: ' + linkUrl : 'Solo imagen'}"></a>` : ''}
                 `;
             }
 
@@ -286,7 +292,7 @@
                         <select onchange="updateExtra(${globalIndex}, 'kind', this.value)">
                             <option value="links" ${ext.kind === 'links' ? 'selected' : ''}>🔗 Enlaces</option>
                             <option value="sentences" ${ext.kind === 'sentences' ? 'selected' : ''}>📝 Textos</option>
-                            <option value="card" ${ext.kind === 'card' ? 'selected' : ''}>🖼️ Imagen (Card)</option>
+                            <option value="card" ${ext.kind === 'card' ? 'selected' : ''}>🖼️ Imagen (Card / Enlace)</option>
                         </select>
                     </div>
                     
@@ -462,10 +468,24 @@
             }
             db.extras.items[index][field] = value;
             
+            // Limpieza al cambiar de tipo para no dejar basura en el JSON
             if (field === 'kind') {
-                if(value === 'links') { delete db.extras.items[index].sentences; delete db.extras.items[index].instructions; if(!db.extras.items[index].links) db.extras.items[index].links = []; }
-                if(value === 'sentences') { delete db.extras.items[index].links; delete db.extras.items[index].img; }
-                if(value === 'card') { delete db.extras.items[index].sentences; delete db.extras.items[index].links; }
+                if(value === 'links') { 
+                    delete db.extras.items[index].sentences; 
+                    delete db.extras.items[index].instructions; 
+                    delete db.extras.items[index].img; 
+                    delete db.extras.items[index].url; 
+                    if(!db.extras.items[index].links) db.extras.items[index].links = []; 
+                }
+                if(value === 'sentences') { 
+                    delete db.extras.items[index].links; 
+                    delete db.extras.items[index].img; 
+                    delete db.extras.items[index].url; 
+                }
+                if(value === 'card') { 
+                    delete db.extras.items[index].sentences; 
+                    delete db.extras.items[index].links; 
+                }
                 renderGrid();
             }
         }
