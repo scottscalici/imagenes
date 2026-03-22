@@ -11,7 +11,7 @@
         .top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; gap: 15px; }
         
         /* Buscador de Recursos */
-        .search-zone { flex-grow: 1; max-width: 500px; position: relative; }
+        .search-zone { flex-grow: 1; max-width: 400px; position: relative; }
         .search-box { width: 100%; padding: 8px; border: 2px solid #3498db; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; }
         .search-results { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 0 0 6px 6px; z-index: 100; max-height: 250px; overflow-y: auto; }
         .search-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
@@ -78,18 +78,36 @@
             <div id="search-results" class="search-results"></div>
         </div>
         
-        <div>
-            <button class="btn btn-export" onclick="exportExtras()">💾 Copiar EXTRAS_DIARIOS.JSON</button>
+        <div style="display:flex; gap:10px;">
+            <button class="btn" style="background:#27ae60; color:white;" onclick="createGlobalExtra()">➕ Crear Extra Nuevo</button>
+            <button class="btn btn-export" onclick="exportExtras()">💾 Copiar JSON</button>
         </div>
     </div>
 
-    <div id="main-grid" class="grid">
+    <div id="bank-container" style="display:none;">
+        <div style="background: #34495e; color: white; padding: 10px 20px; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>🏦 Banco de Extras (No asignados a este curso)</span>
+            <span style="font-size:0.8rem; background: #e74c3c; padding: 4px 8px; border-radius: 4px;">Estos extras están huérfanos en la BD. Asígnalos o bórralos.</span>
+        </div>
+        <div id="bank-grid" class="grid" style="background: white; padding: 20px; border: 2px solid #34495e; border-top: none; border-radius: 0 0 8px 8px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+    </div>
+
+    <div style="background: #9b59b6; color: white; padding: 10px 20px; border-radius: 8px 8px 0 0; font-weight: bold; font-size: 1.2rem;">
+        📅 Días del Planificador
+    </div>
+    <div id="main-grid" class="grid" style="background: white; padding: 20px; border: 2px solid #9b59b6; border-top: none; border-radius: 0 0 8px 8px; min-height: 200px;">
         <h3 style="text-align:center; width:100%; color:#7f8c8d;">Cargando Extras y Recursos desde GitHub...</h3>
+    </div>
+
+    <div style="text-align:center; margin: 40px 0;">
+        <button id="btn-more-days" class="btn" style="background:#3498db; color:white; font-size:1.1rem; padding:12px 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="addOneDay()">⬇️ Añadir Nuevo Día al Planificador</button>
     </div>
 
     <script>
         let db = { extras: null, cal: {}, recursos: [] };
         let currentCourse = 's2';
+        let visibleDays = 45; // Valor inicial base
         const baseUrl = 'https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/';
 
         Promise.all([
@@ -124,6 +142,16 @@
                 });
             }
             
+            // Auto-ajustar días visibles al día más alto que exista en la BD
+            let maxDayInDB = 0;
+            db.extras.items.forEach(ext => {
+                let maxS2 = (ext.s2_dias && ext.s2_dias.length > 0) ? Math.max(...ext.s2_dias) : 0;
+                let maxS4 = (ext.s4_dias && ext.s4_dias.length > 0) ? Math.max(...ext.s4_dias) : 0;
+                if (maxS2 > maxDayInDB) maxDayInDB = maxS2;
+                if (maxS4 > maxDayInDB) maxDayInDB = maxS4;
+            });
+            if (maxDayInDB > visibleDays) visibleDays = maxDayInDB;
+
             renderGrid();
         }).catch(err => {
             document.getElementById('main-grid').innerHTML = `<p style="color:red; padding: 20px;">Error al cargar: ${err.message}</p>`;
@@ -167,142 +195,202 @@
             if (!e.target.closest('.search-zone')) document.getElementById('search-results').style.display = 'none';
         });
 
-        // --- RENDERIZADO VISTA POR DÍA ---
+        // --- RENDERIZADO PRINCIPAL ---
         
+        function addOneDay() {
+            visibleDays++;
+            renderGrid();
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        function buildExtraCardHtml(ext, globalIndex, dayNum) {
+            let targetArrayName = currentCourse === 's2' ? 's2_dias' : 's4_dias';
+            let activeDaysStr = (ext[targetArrayName] || []).join(', ');
+
+            // Constructor Dinámico de HTML por tipo
+            let dynamicHtml = '';
+            if (ext.kind === 'sentences') {
+                let inst = (ext.instructions || '').replace(/"/g, '&quot;');
+                let sents = (ext.sentences || []).join('\n');
+                dynamicHtml = `
+                    <div class="row-group" style="margin-top:8px;">
+                        <label>Instrucciones:</label>
+                        <input type="text" value="${inst}" placeholder="Opcional..." onchange="updateExtra(${globalIndex}, 'instructions', this.value)">
+                    </div>
+                    <textarea placeholder="Frases/Textos (una por línea)..." onchange="updateExtra(${globalIndex}, 'sentences', this.value)">${sents}</textarea>
+                `;
+            } else if (ext.kind === 'links') {
+                let linksHtml = (ext.links || []).map((l, i) => {
+                    let urlVal = (l.url || l.sentences || '').replace(/"/g, '&quot;');
+                    let labelVal = (l.label || '').replace(/"/g, '&quot;');
+                    return `
+                    <div class="link-row">
+                        <input type="text" value="${labelVal}" placeholder="Texto" onchange="updateExtraLink(${globalIndex}, ${i}, 'label', this.value)" style="width:35%;">
+                        <input type="text" value="${urlVal}" placeholder="URL (Pega aquí)" onchange="updateExtraLink(${globalIndex}, ${i}, 'url', this.value)" style="width:65%;">
+                    </div>`;
+                }).join('');
+                dynamicHtml = `
+                    <div style="margin-top:8px; font-size:0.8rem; font-weight:bold; color:#555;">Enlaces:</div>
+                    ${linksHtml}
+                    <button class="btn" style="background:#2ecc71; color:white; padding:4px; margin-top:5px; font-size:0.75rem; width:100%;" onclick="addLinkToExtra(${globalIndex})">+ Añadir enlace</button>
+                `;
+            } else if (ext.kind === 'card') {
+                let img = (ext.img || '').replace(/"/g, '&quot;');
+                dynamicHtml = `
+                    <div class="row-group" style="margin-top:8px;">
+                        <label>Imagen URL:</label>
+                        <input type="text" value="${img}" placeholder="Pega URL de imagen..." onchange="updateExtra(${globalIndex}, 'img', this.value)">
+                    </div>
+                    ${img ? `<img src="${img}" style="max-height:80px; margin-top:5px; border-radius:4px; object-fit:contain; background:#eee; padding:2px;">` : ''}
+                `;
+            }
+
+            // Botones de Acción Superiores
+            let actionsHtml = '';
+            if (dayNum !== null) {
+                actionsHtml += `<button class="btn-icon" title="Quitar de este día" onclick="removeExtraFromDay(${globalIndex}, ${dayNum})">❌ Quitar</button>`;
+            }
+            actionsHtml += `<button class="btn-icon del" title="Borrar de la base de datos completa" onclick="deleteExtraComplete(${globalIndex})">🗑️ Borrar</button>`;
+
+            // Botón rápido de asignación si está en el Banco
+            let quickAssignHtml = '';
+            if (dayNum === null) {
+                quickAssignHtml = `
+                    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc; display: flex; gap: 5px; align-items:center;">
+                        <label style="font-size:0.8rem; font-weight:bold; color:#555;">Mover rápido al día:</label>
+                        <input type="number" id="quick-assign-${globalIndex}" placeholder="Nº Día" style="width: 60px; padding: 4px; border: 1px solid #ccc; border-radius: 4px;">
+                        <button class="btn" style="background:#f39c12; color:white; padding: 4px 8px; font-size: 0.8rem;" onclick="quickAssign(${globalIndex})">Asignar</button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="extra-box kind-${ext.kind}">
+                    <div class="extra-header">
+                        <input type="text" class="extra-title-input" value="${(ext.title || '').replace(/"/g, '&quot;')}" placeholder="Título..." onchange="updateExtra(${globalIndex}, 'title', this.value)">
+                        <div class="extra-actions">
+                            ${actionsHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="row-group">
+                        <label>ID:</label>
+                        <input type="text" value="${(ext.id || '').replace(/"/g, '&quot;')}" style="font-family:monospace; color:#c0392b;" onchange="updateExtra(${globalIndex}, 'id', this.value)">
+                    </div>
+                    <div class="row-group">
+                        <label>Tag/Etiqueta:</label>
+                        <input type="text" value="${(ext.tag || '').replace(/"/g, '&quot;')}" placeholder="Ej: Nivel superior..." onchange="updateExtra(${globalIndex}, 'tag', this.value)">
+                    </div>
+                    <div class="row-group">
+                        <label>Tipo:</label>
+                        <select onchange="updateExtra(${globalIndex}, 'kind', this.value)">
+                            <option value="links" ${ext.kind === 'links' ? 'selected' : ''}>🔗 Enlaces</option>
+                            <option value="sentences" ${ext.kind === 'sentences' ? 'selected' : ''}>📝 Textos</option>
+                            <option value="card" ${ext.kind === 'card' ? 'selected' : ''}>🖼️ Imagen (Card)</option>
+                        </select>
+                    </div>
+                    
+                    ${dynamicHtml}
+                    
+                    <div class="active-days-badge" title="Cualquier edición actualizará el extra en estos días">📍 Activo en días: ${activeDaysStr || 'Ninguno'}</div>
+                    ${quickAssignHtml}
+                </div>
+            `;
+        }
+
         function renderGrid() {
             if(!db.extras || !db.extras.items) return;
-            let gridHtml = '';
             let targetArrayName = currentCourse === 's2' ? 's2_dias' : 's4_dias';
 
-            for (let day = 1; day <= 80; day++) {
-                
-                // Buscar extras que caen en este día para este curso
-                let extrasDelDia = db.extras.items.filter(ext => ext[targetArrayName] && ext[targetArrayName].includes(day));
-                
-                // Mostrar si hay extras, o si estamos en los primeros 45 días
-                if (extrasDelDia.length > 0 || day <= 45) {
-                    
-                    let fechas = db.cal[day] ? db.cal[day].join(' | ') : '';
-                    let dateHtml = fechas ? `<span class="date-badge">📅 ${fechas}</span>` : '';
+            let bankHtml = '';
+            let gridHtml = '';
 
-                    let extrasHtml = '';
-                    extrasDelDia.forEach(ext => {
-                        let globalIndex = db.extras.items.findIndex(x => x === ext);
-                        
-                        // Generar el HTML Dinámico según el tipo
-                        let dynamicHtml = '';
-                        if (ext.kind === 'sentences') {
-                            let inst = ext.instructions || '';
-                            let sents = (ext.sentences || []).join('\n');
-                            dynamicHtml = `
-                                <div class="row-group" style="margin-top:8px;">
-                                    <label>Instrucciones:</label>
-                                    <input type="text" value="${inst}" placeholder="Opcional..." onchange="updateExtra(${globalIndex}, 'instructions', this.value)">
-                                </div>
-                                <textarea placeholder="Frases/Textos (una por línea)..." onchange="updateExtra(${globalIndex}, 'sentences', this.value)">${sents}</textarea>
-                            `;
-                        } else if (ext.kind === 'links') {
-                            let linksHtml = (ext.links || []).map((l, i) => {
-                                let urlVal = l.url || l.sentences || ''; // Soporta el error tipográfico previo
-                                return `
-                                <div class="link-row">
-                                    <input type="text" value="${l.label || ''}" placeholder="Texto" onchange="updateExtraLink(${globalIndex}, ${i}, 'label', this.value)" style="width:35%;">
-                                    <input type="text" value="${urlVal}" placeholder="URL (Pega aquí)" onchange="updateExtraLink(${globalIndex}, ${i}, 'url', this.value)" style="width:65%;">
-                                </div>`;
-                            }).join('');
-                            dynamicHtml = `
-                                <div style="margin-top:8px; font-size:0.8rem; font-weight:bold; color:#555;">Enlaces:</div>
-                                ${linksHtml}
-                                <button class="btn" style="background:#2ecc71; color:white; padding:4px; margin-top:5px; font-size:0.75rem; width:100%;" onclick="addLinkToExtra(${globalIndex})">+ Añadir enlace</button>
-                            `;
-                        } else if (ext.kind === 'card') {
-                            let img = ext.img || '';
-                            dynamicHtml = `
-                                <div class="row-group" style="margin-top:8px;">
-                                    <label>Imagen URL:</label>
-                                    <input type="text" value="${img}" placeholder="Pega URL de imagen..." onchange="updateExtra(${globalIndex}, 'img', this.value)">
-                                </div>
-                                ${img ? `<img src="${img}" style="max-height:80px; margin-top:5px; border-radius:4px; object-fit:contain; background:#eee; padding:2px;">` : ''}
-                            `;
-                        }
+            // 1. RENDERIZAR EL BANCO (Extras sin asignar)
+            let unassignedExtras = [];
+            db.extras.items.forEach((ext, i) => {
+                if (!ext[targetArrayName] || ext[targetArrayName].length === 0) {
+                    unassignedExtras.push({ext, index: i});
+                }
+            });
 
-                        // Etiqueta de días activos
-                        let activeDaysStr = ext[targetArrayName].join(', ');
-                        
-                        extrasHtml += `
-                            <div class="extra-box kind-${ext.kind}">
-                                <div class="extra-header">
-                                    <input type="text" class="extra-title-input" value="${ext.title || ''}" placeholder="Título..." onchange="updateExtra(${globalIndex}, 'title', this.value)">
-                                    <div class="extra-actions">
-                                        <button class="btn-icon" title="Quitar de este día" onclick="removeExtraFromDay(${globalIndex}, ${day})">❌ Quitar</button>
-                                        <button class="btn-icon del" title="Borrar de la base de datos completa" onclick="deleteExtraComplete(${globalIndex})">🗑️ Borrar</button>
-                                    </div>
-                                </div>
+            if (unassignedExtras.length > 0) {
+                bankHtml = unassignedExtras.map(item => buildExtraCardHtml(item.ext, item.index, null)).join('');
+                document.getElementById('bank-container').style.display = 'block';
+                document.getElementById('bank-grid').innerHTML = bankHtml;
+            } else {
+                document.getElementById('bank-container').style.display = 'none';
+            }
+
+            // 2. RENDERIZAR LOS DÍAS
+            for (let day = 1; day <= visibleDays; day++) {
+                
+                let extrasDelDia = [];
+                db.extras.items.forEach((ext, i) => {
+                    if (ext[targetArrayName] && ext[targetArrayName].includes(day)) {
+                        extrasDelDia.push({ext, index: i});
+                    }
+                });
+                
+                let fechas = db.cal[day] ? db.cal[day].join(' | ') : '';
+                let dateHtml = fechas ? `<span class="date-badge">📅 ${fechas}</span>` : '';
+
+                let extrasHtml = extrasDelDia.map(item => buildExtraCardHtml(item.ext, item.index, day)).join('');
+
+                // Dropdown para asignar extras que NO están en este día
+                let unassignedOptionsHtml = `<option value="">-- Asignar Extra Existente --</option>`;
+                db.extras.items.forEach((ext, i) => {
+                    if (!ext[targetArrayName] || !ext[targetArrayName].includes(day)) {
+                        let text = ext.title || ext.id || `Extra sin título (${ext.kind})`;
+                        unassignedOptionsHtml += `<option value="${i}">${text}</option>`;
+                    }
+                });
+
+                gridHtml += `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>Día ${day}</div>
+                            ${dateHtml}
+                        </div>
+                        <div class="card-body">
+                            ${extrasHtml}
+
+                            <div class="assign-zone">
+                                <button class="btn" style="background:#34495e; color:white; width:100%; padding:8px;" onclick="createNewExtraInDay(${day})">➕ Crear Nuevo Extra Aquí</button>
                                 
-                                <div class="row-group">
-                                    <label>ID:</label>
-                                    <input type="text" value="${ext.id || ''}" style="font-family:monospace; color:#c0392b;" onchange="updateExtra(${globalIndex}, 'id', this.value)">
-                                </div>
-                                <div class="row-group">
-                                    <label>Tag/Etiqueta:</label>
-                                    <input type="text" value="${ext.tag || ''}" placeholder="Ej: Nivel superior..." onchange="updateExtra(${globalIndex}, 'tag', this.value)">
-                                </div>
-                                <div class="row-group">
-                                    <label>Tipo:</label>
-                                    <select onchange="updateExtra(${globalIndex}, 'kind', this.value)">
-                                        <option value="links" ${ext.kind === 'links' ? 'selected' : ''}>🔗 Enlaces</option>
-                                        <option value="sentences" ${ext.kind === 'sentences' ? 'selected' : ''}>📝 Textos</option>
-                                        <option value="card" ${ext.kind === 'card' ? 'selected' : ''}>🖼️ Imagen (Card)</option>
+                                <div style="display:flex; gap:5px; margin-top:5px;">
+                                    <select id="assign-ext-${day}" style="flex-grow:1; padding:6px; border:1px solid #ccc; border-radius:4px;">
+                                        ${unassignedOptionsHtml}
                                     </select>
+                                    <button class="btn" style="background:#f39c12; color:white; padding:6px 10px;" onclick="assignExistingExtra(${day})">➕ Asignar</button>
                                 </div>
-                                
-                                ${dynamicHtml}
-                                
-                                <div class="active-days-badge" title="Cualquier edición aquí actualizará el extra en todos estos días">📍 Activo en días: ${activeDaysStr}</div>
-                            </div>
-                        `;
-                    });
-
-                    // Dropdown para asignar extras existentes
-                    let unassignedExtrasHtml = `<option value="">-- Asignar Extra Existente --</option>`;
-                    db.extras.items.forEach((ext, i) => {
-                        if (!ext[targetArrayName] || !ext[targetArrayName].includes(day)) {
-                            unassignedExtrasHtml += `<option value="${i}">${ext.title || ext.id}</option>`;
-                        }
-                    });
-
-                    gridHtml += `
-                        <div class="card">
-                            <div class="card-header">
-                                <div>Día ${day}</div>
-                                ${dateHtml}
-                            </div>
-                            <div class="card-body">
-                                
-                                ${extrasHtml}
-
-                                <div class="assign-zone">
-                                    <button class="btn" style="background:#34495e; color:white; width:100%; padding:8px;" onclick="createNewExtraInDay(${day})">➕ Crear Nuevo Extra Aquí</button>
-                                    
-                                    <div style="display:flex; gap:5px; margin-top:5px;">
-                                        <select id="assign-ext-${day}" style="flex-grow:1; padding:6px; border:1px solid #ccc; border-radius:4px;">
-                                            ${unassignedExtrasHtml}
-                                        </select>
-                                        <button class="btn" style="background:#f39c12; color:white; padding:6px 10px;" onclick="assignExistingExtra(${day})">➕ Asignar</button>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
-                    `;
-                }
+                    </div>
+                `;
             }
 
             document.getElementById('main-grid').innerHTML = gridHtml;
+            document.getElementById('btn-more-days').textContent = `⬇️ Añadir Día ${visibleDays + 1} al Planificador`;
         }
 
         // --- FUNCIONES MUTADORAS ---
 
+        // Crea extra global sin asignar y lo pone en el Banco
+        function createGlobalExtra() {
+            let newExt = {
+                id: "extra-" + Math.floor(Math.random()*10000),
+                kind: "links",
+                title: "Nuevo Extra (Banco)",
+                links: [{label: "", url: ""}],
+                s2_dias: [],
+                s4_dias: []
+            };
+            db.extras.items.unshift(newExt);
+            renderGrid();
+            window.scrollTo(0, 0);
+        }
+
+        // Crea extra ya pre-asignado a un día
         function createNewExtraInDay(dayNum) {
             let newExt = {
                 id: "extra-" + Math.floor(Math.random()*10000),
@@ -312,7 +400,7 @@
                 s2_dias: currentCourse === 's2' ? [dayNum] : [],
                 s4_dias: currentCourse === 's4' ? [dayNum] : []
             };
-            db.extras.items.unshift(newExt); // Lo añade al principio de la BD
+            db.extras.items.unshift(newExt); 
             renderGrid();
         }
 
@@ -326,15 +414,39 @@
             
             if (!ext[targetArray]) ext[targetArray] = [];
             ext[targetArray].push(dayNum);
-            ext[targetArray].sort((a,b)=>a-b); // Ordenar para que se vea bonito
+            ext[targetArray].sort((a,b)=>a-b);
             
             renderGrid();
+        }
+
+        function quickAssign(globalIndex) {
+            let dayInput = document.getElementById(`quick-assign-${globalIndex}`).value;
+            let dayNum = parseInt(dayInput);
+            if(isNaN(dayNum) || dayNum < 1) return;
+
+            let ext = db.extras.items[globalIndex];
+            let targetArray = currentCourse === 's2' ? 's2_dias' : 's4_dias';
+            
+            if (!ext[targetArray]) ext[targetArray] = [];
+            if (!ext[targetArray].includes(dayNum)) {
+                ext[targetArray].push(dayNum);
+                ext[targetArray].sort((a,b)=>a-b);
+            }
+
+            if (dayNum > visibleDays) visibleDays = dayNum; // Auto-expande los días si lo mandas lejos
+            renderGrid();
+            
+            // Hacer scroll hasta el día asignado suavemente
+            setTimeout(() => {
+                let dayHeader = Array.from(document.querySelectorAll('.card-header')).find(el => el.textContent.includes(`Día ${dayNum}`));
+                if(dayHeader) dayHeader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
 
         function removeExtraFromDay(extIndex, dayNum) {
             let targetArray = currentCourse === 's2' ? 's2_dias' : 's4_dias';
             db.extras.items[extIndex][targetArray] = db.extras.items[extIndex][targetArray].filter(d => d !== dayNum);
-            renderGrid();
+            renderGrid(); // Al quitarlo, si se queda sin días, se irá automáticamente al Banco.
         }
 
         function deleteExtraComplete(extIndex) {
@@ -350,7 +462,6 @@
             }
             db.extras.items[index][field] = value;
             
-            // Limpieza al cambiar de tipo
             if (field === 'kind') {
                 if(value === 'links') { delete db.extras.items[index].sentences; delete db.extras.items[index].instructions; if(!db.extras.items[index].links) db.extras.items[index].links = []; }
                 if(value === 'sentences') { delete db.extras.items[index].links; delete db.extras.items[index].img; }
@@ -362,7 +473,6 @@
         function updateExtraLink(extraIndex, linkIndex, field, value) {
             if (!db.extras.items[extraIndex].links) db.extras.items[extraIndex].links = [];
             
-            // Limpia el typo antiguo si se está editando una URL nueva
             if (field === 'url' && db.extras.items[extraIndex].links[linkIndex].sentences !== undefined) {
                 delete db.extras.items[extraIndex].links[linkIndex].sentences;
             }
