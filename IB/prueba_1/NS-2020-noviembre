@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Práctica de Expresión Escrita - Prueba 1 (HL)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .selected-btn { background-color: #1e40af !important; color: white !important; border-color: #1e40af !important; }
+        .feedback-box { display: none; transition: all 0.3s ease; }
+        .feedback-box.visible { display: block; }
+        .markscheme-box { display: none; }
+        .markscheme-box.visible { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 pb-20">
+
+    <div class="max-w-4xl mx-auto p-4 space-y-6">
+        
+        <header class="bg-slate-800 text-white rounded-3xl p-8 shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-black">Prueba 1: Expresión Escrita (HL)</h1>
+                <span class="bg-slate-700 text-slate-200 px-4 py-1 rounded-full text-sm font-bold tracking-widest">NOVIEMBRE 2020</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+                <strong>Instrucciones:</strong> Elige una de las siguientes tres tareas. Para la tarea que elijas, haz clic en el tipo de texto que consideres más apropiado para ver la valoración del IB. Luego, redacta tu texto en el recuadro (el contador se pondrá verde entre 450 y 600 palabras). Finalmente, revisa las notas del examinador para autoevaluar tu trabajo.
+            </p>
+        </header>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg font-black text-sm">TAREA 1</span>
+            </div>
+            <p class="text-lg font-medium text-slate-700 mb-6 leading-relaxed">
+                Recientemente se ha celebrado en tu ciudad un día dedicado a promocionar la dieta vegana. Como representante de los alumnos de tu clase, te han pedido que describas a tus compañeros las ventajas y las desventajas de ese tipo de dieta y por qué es importante reflexionar antes de tomar una decisión.
+            </p>
+            
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6">
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">1. Selecciona el tipo de texto:</p>
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <button onclick="showFeedback(1, 'A')" id="btn-1-A" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Artículo</button>
+                    <button onclick="showFeedback(1, 'B')" id="btn-1-B" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Blog</button>
+                    <button onclick="showFeedback(1, 'C')" id="btn-1-C" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Panfleto</button>
+                </div>
+                
+                <div id="feedback-1-A" class="feedback-box bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-emerald-800">🎯 Adecuado</p>
+                    <p class="text-sm text-emerald-700 mt-1">Este tipo de texto es el adecuado para explicar y expresar opiniones sobre ciertos asuntos de interés a un público amplio.</p>
+                </div>
+                <div id="feedback-1-B" class="feedback-box bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-amber-800">⚠️ Generalmente adecuado</p>
+                    <p class="text-sm text-amber-700 mt-1">Este tipo de texto puede servir para explicar y expresar puntos de vista a un público amplio, pero también puede ser que haya un blog del colegio, de acceso exclusivo a los estudiantes.</p>
+                </div>
+                <div id="feedback-1-C" class="feedback-box bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-red-800">❌ Generalmente inadecuado</p>
+                    <p class="text-sm text-red-700 mt-1">Este tipo de texto es el adecuado para informar sobre ciertos asuntos de interés a un público concreto, como puede ser el grupo de alumnos.</p>
+                </div>
+            </div>
+
+            <div class="mb-6 relative">
+                <textarea id="text-1" oninput="updateWordCount(1)" class="w-full h-64 p-4 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none resize-y text-slate-700" placeholder="Escribe tu respuesta aquí..."></textarea>
+                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg border shadow-sm flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Palabras:</span>
+                    <span id="count-1" class="font-mono font-black text-red-500">0</span>
+                </div>
+            </div>
+
+            <button onclick="toggleMarkscheme(1)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors border border-slate-200">
+                📋 Revelar notas del examinador (Markscheme)
+            </button>
+            <div id="markscheme-1" class="markscheme-box mt-4 bg-white border-2 border-indigo-100 rounded-2xl p-6">
+                
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-5 rounded-r-lg">
+                    <p class="text-sm font-black text-indigo-900 mb-1"> TL;DR (English Summary)</p>
+                    <p class="text-sm text-indigo-800">Pros and cons can be longer than the reflection part. You don't need to mention the specific city event. The reflection can be woven throughout the text instead of having its own paragraph. Use a semi-formal, mostly neutral tone.</p>
+                </div>
+
+                <h4 class="font-black text-indigo-900 mb-2">Criterio B: Mensaje</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2 mb-4">
+                    <li>Se admitirá que las explicaciones sobre ventajas y desventajas del veganismo sean más extensas que los comentarios relacionados con por qué es importante pensárselo bien antes de decidir hacerse vegano.</li>
+                    <li>No es necesario mencionar lo que ha ocurrido en la ciudad (el día organizado para promocionar la dieta vegana).</li>
+                    <li>Puede ser que la parte relacionada con "por qué es importante reflexionar" no tenga una sección aparte, sino que se mencione cuando se hace referencia a las ventajas y desventajas, a lo largo de todo el texto.</li>
+                </ul>
+                <h4 class="font-black text-indigo-900 mb-2">Criterio C: Registro y tono</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2">
+                    <li><strong>Registro:</strong> Semi-formal, dado el público al que va dirigido.</li>
+                    <li><strong>Tono:</strong> Neutral, imparcial, aunque puede admitirse cierta parcialidad, dependiendo del tipo de texto escogido y de cómo se exprese el contenido.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg font-black text-sm">TAREA 2</span>
+            </div>
+            <p class="text-lg font-medium text-slate-700 mb-6 leading-relaxed">
+                Como parte de las actividades extraescolares, tu grupo ha visitado una exposición de arte de un país hispanohablante. En tu opinión ese país no se ha representado de manera positiva. Escribe un texto en el que presentes tu punto de vista, lo justifiques y expliques cómo te gustaría que hubiera sido representado.
+            </p>
+            
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6">
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">1. Selecciona el tipo de texto:</p>
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <button onclick="showFeedback(2, 'A')" id="btn-2-A" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Columna de opinión</button>
+                    <button onclick="showFeedback(2, 'B')" id="btn-2-B" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Diario personal</button>
+                    <button onclick="showFeedback(2, 'C')" id="btn-2-C" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Discurso</button>
+                </div>
+                
+                <div id="feedback-2-A" class="feedback-box bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-emerald-800">🎯 Adecuado</p>
+                    <p class="text-sm text-emerald-700 mt-1">Este tipo de texto es adecuado para expresar y desarrollar opiniones y puntos de vista sobre un asunto determinado a un público amplio.</p>
+                </div>
+                <div id="feedback-2-B" class="feedback-box bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-amber-800">⚠️ Generalmente adecuado</p>
+                    <p class="text-sm text-amber-700 mt-1">Este tipo de texto es adecuado para narrar acontecimientos y expresar sentimientos y reacciones personales a estos acontecimientos de forma privada, sin esperar ser leído.</p>
+                </div>
+                <div id="feedback-2-C" class="feedback-box bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-red-800">❌ Generalmente inadecuado</p>
+                    <p class="text-sm text-red-700 mt-1">Este tipo de texto es más adecuado para informar y no solo expresar opiniones personales con las que el público puede no estar de acuerdo.</p>
+                </div>
+            </div>
+
+            <div class="mb-6 relative">
+                <textarea id="text-2" oninput="updateWordCount(2)" class="w-full h-64 p-4 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none resize-y text-slate-700" placeholder="Escribe tu respuesta aquí..."></textarea>
+                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg border shadow-sm flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Palabras:</span>
+                    <span id="count-2" class="font-mono font-black text-red-500">0</span>
+                </div>
+            </div>
+
+            <button onclick="toggleMarkscheme(2)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors border border-slate-200">
+                📋 Revelar notas del examinador (Markscheme)
+            </button>
+            <div id="markscheme-2" class="markscheme-box mt-4 bg-white border-2 border-indigo-100 rounded-2xl p-6">
+                
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-5 rounded-r-lg">
+                    <p class="text-sm font-black text-indigo-900 mb-1"> TL;DR (English Summary)</p>
+                    <p class="text-sm text-indigo-800">Describe the exhibition in detail to make your opinion believable. Focus on typical art forms (paintings, sculptures, etc.). The section explaining how you <em>wish</em> it was represented doesn't have to be a separate paragraph or as long as the rest. Use a semi-formal, subjective, and slightly indignant tone.</p>
+                </div>
+
+                <h4 class="font-black text-indigo-900 mb-2">Criterio B: Mensaje</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2 mb-4">
+                    <li>Para que las opiniones expresadas sean convincentes, se debería describir con cierto detalle en qué consistía la exposición.</li>
+                    <li>El foco principal de la respuesta debería girar en torno a la exposición y arte esperado en este tipo de exposiciones (pintura, música, cerámica, escultura, arte popular..., no tanto música u otras formas artísticas menos típicas).</li>
+                    <li>No es necesario que la parte en la que se explica cómo preferirían que se hubiera representado el país hispanohablante tenga la misma longitud que las otras partes de la pregunta o aparezca en una sección aparte.</li>
+                </ul>
+                <h4 class="font-black text-indigo-900 mb-2">Criterio C: Registro y tono</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2">
+                    <li><strong>Registro:</strong> Semiformal; puede adoptar, por medio de la ironía, otros registros.</li>
+                    <li><strong>Tono:</strong> Subjetivo, con un toque de indignación o cierto enfado por lo experimentado.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-lg font-black text-sm">TAREA 3</span>
+            </div>
+            <p class="text-lg font-medium text-slate-700 mb-6 leading-relaxed">
+                En los últimos tiempos, el uso masivo de plásticos se ha convertido en un gran problema medioambiental. De vacaciones en un país hispanohablante, has comprobado cómo su población apenas emplea plástico en la vida diaria. Escribe un texto en el que compares y contrastes tu país con el hispanohablante y expliques por qué es importante actuar para reducir el uso de plásticos.
+            </p>
+            
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6">
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">1. Selecciona el tipo de texto:</p>
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <button onclick="showFeedback(3, 'A')" id="btn-3-A" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Blog</button>
+                    <button onclick="showFeedback(3, 'B')" id="btn-3-B" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Artículo</button>
+                    <button onclick="showFeedback(3, 'C')" id="btn-3-C" class="px-5 py-2 rounded-xl border-2 border-slate-300 text-slate-600 font-bold hover:bg-slate-100 transition-colors">Diario personal</button>
+                </div>
+                
+                <div id="feedback-3-A" class="feedback-box bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-emerald-800">🎯 Adecuado</p>
+                    <p class="text-sm text-emerald-700 mt-1">Este tipo de texto es adecuado para, desde un punto de vista personal (por medio de narración de alguna experiencia personal a modo de introducción), informar y opinar sobre asuntos de interés público.</p>
+                </div>
+                <div id="feedback-3-B" class="feedback-box bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-amber-800">⚠️ Generalmente adecuado</p>
+                    <p class="text-sm text-amber-700 mt-1">Este tipo de texto es adecuado para explicar, analizar y opinar sobre asuntos de interés público, sin necesidad de enfocarse en experiencias personales.</p>
+                </div>
+                <div id="feedback-3-C" class="feedback-box bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-red-800">❌ Generalmente inadecuado</p>
+                    <p class="text-sm text-red-700 mt-1">Este tipo de texto es adecuado para narrar acontecimientos y expresar sentimientos y reacciones personales a estos acontecimientos de forma privada, sin esperar ser leído.</p>
+                </div>
+            </div>
+
+            <div class="mb-6 relative">
+                <textarea id="text-3" oninput="updateWordCount(3)" class="w-full h-64 p-4 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none resize-y text-slate-700" placeholder="Escribe tu respuesta aquí..."></textarea>
+                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg border shadow-sm flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Palabras:</span>
+                    <span id="count-3" class="font-mono font-black text-red-500">0</span>
+                </div>
+            </div>
+
+            <button onclick="toggleMarkscheme(3)" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors border border-slate-200">
+                📋 Revelar notas del examinador (Markscheme)
+            </button>
+            <div id="markscheme-3" class="markscheme-box mt-4 bg-white border-2 border-indigo-100 rounded-2xl p-6">
+                
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-5 rounded-r-lg">
+                    <p class="text-sm font-black text-indigo-900 mb-1"> TL;DR (English Summary)</p>
+                    <p class="text-sm text-indigo-800">Stick strictly to the topic of plastics, not general pollution. Include personal details about the vacation to make it authentic. Use a semi-formal or informal register with a serious, opinionated tone. (Don't worry too much if you misunderstood the word <em>"apenas"</em> as long as you compare the two countries).</p>
+                </div>
+
+                <h4 class="font-black text-indigo-900 mb-2">Criterio B: Mensaje</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2 mb-4">
+                    <li>Se debería enfocar la respuesta en el tema de los plásticos y su impacto medioambiental y no en otras formas de contaminación o deterioro del medioambiente.</li>
+                    <li>No se penalizará excesivamente la confusión con la palabra "apenas" (puede haber respuestas que simplemente comparen los dos países en lo relacionado al uso del plástico y no tengan grandes diferencias entre ellos).</li>
+                    <li>Se debería describir con cierto detalle la situación experimentada cuando se estuvo de vacaciones, para darle el toque personal al texto.</li>
+                </ul>
+                <h4 class="font-black text-indigo-900 mb-2">Criterio C: Registro y tono</h4>
+                <ul class="list-disc pl-5 text-sm text-slate-600 space-y-2">
+                    <li><strong>Registro:</strong> Semiformal o informal (dependiendo de los lectores).</li>
+                    <li><strong>Tono:</strong> Serio, adoptando un punto de vista claro (parcialidad).</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showFeedback(taskId, option) {
+            // Reset buttons for this task
+            const buttons = ['A', 'B', 'C'];
+            buttons.forEach(btn => {
+                document.getElementById(`btn-${taskId}-${btn}`).classList.remove('selected-btn');
+                document.getElementById(`feedback-${taskId}-${btn}`).classList.remove('visible');
+            });
+            
+            // Activate selected
+            document.getElementById(`btn-${taskId}-${option}`).classList.add('selected-btn');
+            document.getElementById(`feedback-${taskId}-${option}`).classList.add('visible');
+        }
+
+        function updateWordCount(taskId) {
+            const text = document.getElementById(`text-${taskId}`).value.trim();
+            const countDisplay = document.getElementById(`count-${taskId}`);
+            
+            // Count words ignoring extra spaces
+            const wordCount = text.length > 0 ? text.split(/\s+/).length : 0;
+            countDisplay.innerText = wordCount;
+
+            // HL requirement: 450 - 600 words
+            if (wordCount >= 450 && wordCount <= 600) {
+                countDisplay.classList.remove('text-red-500', 'text-amber-500');
+                countDisplay.classList.add('text-emerald-500');
+            } else if (wordCount > 0 && wordCount < 450) {
+                countDisplay.classList.remove('text-emerald-500', 'text-red-500');
+                countDisplay.classList.add('text-amber-500'); // Getting closer
+            } else {
+                countDisplay.classList.remove('text-emerald-500', 'text-amber-500');
+                countDisplay.classList.add('text-red-500'); // Empty or way over
+            }
+        }
+
+        function toggleMarkscheme(taskId) {
+            document.getElementById(`markscheme-${taskId}`).classList.toggle('visible');
+        }
+    </script>
+</body>
+</html>
