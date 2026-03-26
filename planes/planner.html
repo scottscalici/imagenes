@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>S2/S4 Teacher Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid black !important; padding: 8px; font-size: 10pt; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 p-8">
+    <div class="max-w-5xl mx-auto bg-white p-6 shadow no-print">
+        <h1 class="text-2xl font-bold mb-4">Teacher Planner Sync</h1>
+        <div class="flex gap-4 mb-6">
+            <select id="courseSelect" class="border p-2 rounded">
+                <option value="s2">Español 2 (S2)</option>
+                <option value="s4">IB Español (S4)</option>
+            </select>
+            <input type="number" id="startDia" placeholder="Día inicial" class="border p-2 rounded w-24">
+            <button onclick="generatePlanner()" class="bg-blue-600 text-white px-4 py-2 rounded">Generate Planner</button>
+            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded">Print to Paper</button>
+        </div>
+    </div>
+
+    <div id="plannerOutput" class="max-w-5xl mx-auto mt-8">
+        </div>
+
+    <script>
+        const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/";
+
+        async function generatePlanner() {
+            const course = document.getElementById('courseSelect').value;
+            const start = parseInt(document.getElementById('startDia').value) || 1;
+            const output = document.getElementById('plannerOutput');
+            
+            // Fetch necessary files (using your site's logic)
+            const [cal, evals, gram] = await Promise.all([
+                fetch(BASE_URL + 'calendario.json').then(r => r.json()),
+                fetch(BASE_URL + 'evaluaciones.json').then(r => r.json()),
+                fetch(BASE_URL + 'gramatica_diaria.json').then(r => r.json())
+            ]);
+
+            let html = `<h2 class="text-xl font-bold mb-4 uppercase text-center">${course} Forecast: Días ${start}-${start+9}</h2>`;
+            html += `<table class="w-full text-left border">
+                <thead>
+                    <tr class="bg-slate-100">
+                        <th class="border p-2">Día</th>
+                        <th class="border p-2">Fecha(s)</th>
+                        <th class="border p-2">Evaluación</th>
+                        <th class="border p-2">Gramática (Topic)</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            for (let i = start; i < start + 10; i++) {
+                const dayEntries = cal.filter(c => c.dia == i);
+                const dateStr = dayEntries.map(e => e.fecha).join(" / ");
+                const evalData = evals.courses[course].find(e => e.dia == i)?.label || "";
+                const gramData = gram[course]?.[i]?.intro?.join(", ") || "";
+
+                html += `<tr>
+                    <td class="border p-2 font-bold">${i}</td>
+                    <td class="border p-2">${dateStr}</td>
+                    <td class="border p-2">${evalData}</td>
+                    <td class="border p-2 text-sm">${gramData}</td>
+                </tr>`;
+            }
+
+            html += `</tbody></table>`;
+            output.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
