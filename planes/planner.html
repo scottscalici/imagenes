@@ -1,78 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>S2/S4 Teacher Planner</title>
+    <meta charset="UTF-8">
+    <title>S2/S4 Teacher Planner Sync</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
         @media print {
             .no-print { display: none !important; }
-            body { background: white; padding: 0; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid black !important; padding: 8px; font-size: 10pt; }
+            .page-break { page-break-before: always; }
+            body { background: white; p: 0; }
+            .planner-card { border: 1px solid #e2e8f0 !important; box-shadow: none !important; }
         }
+        
+        .planner-table th { @apply border border-slate-300 p-2 bg-slate-100 text-[10px] uppercase font-black; }
+        .planner-table td { @apply border border-slate-300 p-2 text-sm; }
     </style>
 </head>
-<body class="bg-slate-50 p-8">
-    <div class="max-w-5xl mx-auto bg-white p-6 shadow no-print">
-        <h1 class="text-2xl font-bold mb-4">Teacher Planner Sync</h1>
-        <div class="flex gap-4 mb-6">
-            <select id="courseSelect" class="border p-2 rounded">
-                <option value="s2">Español 2 (S2)</option>
-                <option value="s4">IB Español (S4)</option>
-            </select>
-            <input type="number" id="startDia" placeholder="Día inicial" class="border p-2 rounded w-24">
-            <button onclick="generatePlanner()" class="bg-blue-600 text-white px-4 py-2 rounded">Generate Planner</button>
-            <button onclick="window.print()" class="bg-gray-800 text-white px-4 py-2 rounded">Print to Paper</button>
+<body class="bg-slate-100 min-h-screen pb-20">
+
+    <div class="no-print bg-white border-b shadow-sm p-6 mb-8">
+        <div class="max-w-5xl mx-auto flex flex-wrap items-center gap-4">
+            <div>
+                <label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Curso</label>
+                <select id="courseSelect" class="border rounded px-3 py-2 font-bold text-slate-700">
+                    <option value="s2">Español 2 (S2)</option>
+                    <option value="s4">IB Español (S4)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Día Inicial</label>
+                <input type="number" id="startDia" value="61" class="border rounded px-3 py-2 w-24 font-bold">
+            </div>
+            <div>
+                <label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Días a Mostrar</label>
+                <input type="number" id="dayRange" value="10" class="border rounded px-3 py-2 w-24 font-bold">
+            </div>
+            <div class="flex gap-2 self-end">
+                <button onclick="fetchAllData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2 rounded transition-colors">
+                    Generar Planner
+                </button>
+                <button onclick="window.print()" class="bg-slate-800 hover:bg-black text-white font-bold px-6 py-2 rounded transition-colors">
+                    Imprimir 🖨️
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="plannerOutput" class="max-w-5xl mx-auto mt-8">
-        </div>
+    <div id="loading" class="hidden text-center p-20 font-bold text-slate-400 animate-pulse">Cargando datos desde GitHub...</div>
 
-    <script>
-        const BASE_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/";
+    <main id="plannerOutput" class="max-w-5xl mx-auto px-4 space-y-12">
+        </main>
 
-        async function generatePlanner() {
-            const course = document.getElementById('courseSelect').value;
-            const start = parseInt(document.getElementById('startDia').value) || 1;
-            const output = document.getElementById('plannerOutput');
-            
-            // Fetch necessary files (using your site's logic)
-            const [cal, evals, gram] = await Promise.all([
-                fetch(BASE_URL + 'calendario.json').then(r => r.json()),
-                fetch(BASE_URL + 'evaluaciones.json').then(r => r.json()),
-                fetch(BASE_URL + 'gramatica_diaria.json').then(r => r.json())
-            ]);
+<script>
+const REPO_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/";
 
-            let html = `<h2 class="text-xl font-bold mb-4 uppercase text-center">${course} Forecast: Días ${start}-${start+9}</h2>`;
-            html += `<table class="w-full text-left border">
-                <thead>
-                    <tr class="bg-slate-100">
-                        <th class="border p-2">Día</th>
-                        <th class="border p-2">Fecha(s)</th>
-                        <th class="border p-2">Evaluación</th>
-                        <th class="border p-2">Gramática (Topic)</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+async function fetchAllData() {
+    const loader = document.getElementById('loading');
+    const output = document.getElementById('plannerOutput');
+    const course = document.getElementById('courseSelect').value;
+    const start = parseInt(document.getElementById('startDia').value);
+    const range = parseInt(document.getElementById('dayRange').value);
+    
+    loader.classList.remove('hidden');
+    output.innerHTML = "";
 
-            for (let i = start; i < start + 10; i++) {
-                const dayEntries = cal.filter(c => c.dia == i);
-                const dateStr = dayEntries.map(e => e.fecha).join(" / ");
-                const evalData = evals.courses[course].find(e => e.dia == i)?.label || "";
-                const gramData = gram[course]?.[i]?.intro?.join(", ") || "";
+    try {
+        const safeFetch = url => fetch(url).then(r => r.ok ? r.json() : {}).catch(() => ({}));
 
-                html += `<tr>
-                    <td class="border p-2 font-bold">${i}</td>
-                    <td class="border p-2">${dateStr}</td>
-                    <td class="border p-2">${evalData}</td>
-                    <td class="border p-2 text-sm">${gramData}</td>
-                </tr>`;
+        const [cal, evals, gram, curios, dest, musica, cultura, conv, lectura, extras, videos] = await Promise.all([
+            safeFetch(REPO_URL + 'calendario.json'),
+            safeFetch(REPO_URL + 'evaluaciones.json'),
+            safeFetch(REPO_URL + 'gramatica_diaria.json'),
+            safeFetch(REPO_URL + 'curiosidades.json'),
+            safeFetch(REPO_URL + 'destacadodiario.json'),
+            safeFetch(REPO_URL + 'musica.json'),
+            safeFetch(REPO_URL + 'cultura.json'),
+            safeFetch(REPO_URL + 'conversaciones.json'),
+            safeFetch(REPO_URL + 'lectura.json'),
+            safeFetch(REPO_URL + 'extras_diarios.json'),
+            safeFetch(REPO_URL + 'videos.json')
+        ]);
+
+        // 1. GENERAR TABLA LARGO PLAZO
+        let tableHtml = `
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-black mb-4 uppercase text-slate-800 border-b-4 border-indigo-600 inline-block">Forecast: ${course.toUpperCase()} (Días ${start}-${start+range-1})</h2>
+                <table class="w-full planner-table mt-4">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px">Día</th>
+                            <th style="width: 200px">Fecha(s)</th>
+                            <th>Evaluación</th>
+                            <th>Gramática (Intro/Repaso)</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+        for (let d = start; d < start + range; d++) {
+            const dayEntries = cal.filter(c => c.dia == d);
+            let dateStr = "";
+            if (course === "s4") {
+                const a = dayEntries.find(c => c.ciclo === "A")?.fecha || "";
+                const b = dayEntries.find(c => c.ciclo === "B")?.fecha || "";
+                dateStr = a && b ? `${a} / ${b}` : (a || b || "TBD");
+            } else {
+                dateStr = dayEntries.find(c => c.ciclo === "B")?.fecha || "TBD";
             }
 
-            html += `</tbody></table>`;
-            output.innerHTML = html;
+            const evalLabel = evals.courses?.[course]?.find(e => e.dia == d)?.label || "—";
+            const gramIntro = gram[course]?.[d]?.intro?.join(", ") || "";
+            const gramRepaso = gram[course]?.[d]?.repaso?.join(", ") || "";
+            const gramFull = [gramIntro ? `<b>Intro:</b> ${gramIntro}` : "", gramRepaso ? `<b>Repaso:</b> ${gramRepaso}` : ""].filter(x => x).join("<br>");
+
+            tableHtml += `<tr>
+                <td class="font-bold text-center text-lg">${d}</td>
+                <td class="text-xs">${dateStr}</td>
+                <td class="font-medium text-red-600">${evalLabel}</td>
+                <td class="text-xs">${gramFull || "—"}</td>
+            </tr>`;
         }
-    </script>
+        tableHtml += `</tbody></table></section>`;
+
+        // 2. GENERAR PLANES DIARIOS DETALLADOS
+        let detailHtml = "";
+        for (let d = start; d < start + range; d++) {
+            const dayEntries = cal.filter(c => c.dia == d);
+            const curiosidad = curios.find(c => c[course + "_dia"] == d);
+            const destacado = dest.find(h => h.dia == d && h.course.includes(course));
+            
+            // Helper to check for content in specific classes
+            const checkContent = (arr) => (arr.items || arr).filter(item => {
+                const cKey = course + "_dias";
+                return (item[cKey] && item[cKey].includes(d)) || (item.courses && item.courses.includes(course) && item.dias && item.dias.includes(d));
+            });
+
+            const dayMusica = checkContent(musica);
+            const dayCultura = checkContent(cultura);
+            const dayConv = checkContent(conv);
+            const dayLectura = checkContent(lectura);
+            const dayExtras = checkContent(extras);
+
+            detailHtml += `
+                <div class="page-break bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                    <div class="flex justify-between items-center border-b-2 pb-4">
+                        <h2 class="text-4xl font-black uppercase text-indigo-900">Día ${d} <span class="text-xl font-normal text-slate-400">| ${course.toUpperCase()}</span></h2>
+                        <div class="text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">Teacher Daily Planner</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xs font-black uppercase text-slate-400 mb-2">Instrucción</h3>
+                            <div class="bg-slate-50 p-4 rounded-lg border italic text-sm">
+                                <b>Gramática:</b> ${gram[course]?.[d]?.intro?.join(", ") || "N/A"}<br>
+                                <b>Práctica:</b> ${gram[course]?.[d]?.repaso?.join(", ") || "N/A"}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-black uppercase text-slate-400 mb-2">Evaluación del Día</h3>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100 font-bold text-red-700">
+                                ${evals.courses?.[course]?.find(e => e.dia == d)?.label || "No hay evaluaciones"}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        ${curiosidad ? `<div class="border p-4 rounded-lg bg-yellow-50"><h4 class="font-black text-[9px] uppercase mb-1">Curiosidad</h4><p class="text-xs font-bold">${curiosidad.title}</p></div>` : ''}
+                        ${destacado ? `<div class="border p-4 rounded-lg bg-blue-50"><h4 class="font-black text-[9px] uppercase mb-1 text-blue-600">Palabra del Día</h4><p class="text-sm font-black">${destacado.word_of_the_day.word}</p></div>` : ''}
+                        ${dayMusica.length ? `<div class="border p-4 rounded-lg"><h4 class="font-black text-[9px] uppercase mb-1 text-green-600">Música</h4><p class="text-xs">${dayMusica[0].titulo || dayMusica[0].title}</p></div>` : ''}
+                    </div>
+
+                    ${(dayCultura.length || dayLectura.length || dayExtras.length) ? `
+                        <div class="pt-4 border-t">
+                            <h3 class="text-xs font-black uppercase text-slate-400 mb-2">Actividades de Clase</h3>
+                            <ul class="text-sm space-y-1">
+                                ${dayCultura.map(c => `<li>• <b>Cultura:</b> ${c.titulo || c.title}</li>`).join('')}
+                                ${dayLectura.map(l => `<li>• <b>Lectura:</b> ${l.titulo || l.title}</li>`).join('')}
+                                ${dayExtras.map(e => `<li>• <b>Extra:</b> ${e.title}</li>`).join('')}
+                                ${dayConv.map(c => `<li>• <b>Conversación:</b> ${c.titulo || c.title}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>`;
+        }
+
+        output.innerHTML = tableHtml + detailHtml;
+    } catch (e) {
+        output.innerHTML = `<div class="text-red-500 font-bold p-10 border-2 border-red-200 rounded">Error: No se pudieron cargar los datos. Verifica que el repo sea público.</div>`;
+        console.error(e);
+    } finally {
+        loader.classList.add('hidden');
+    }
+}
+</script>
 </body>
 </html>
