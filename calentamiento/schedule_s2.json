@@ -1471,68 +1471,79 @@
   },
   {
     "dia": 60,
-    "topic": "Participios Pasados",
+    "topic": "Pretérito perfecto",
     "vocabFile": "vocab/D2-5-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Participios ",
-        "bank": "bancos/banco_participios_pasados.json",
-        "identityCategory": "participios_pasados",
-        "identityGroups": [
-          "nivel_2"
-        ],
-        "count": 5
-      },
-      {
-        "label": "Participios ",
-        "bank": "bancos/banco_participios_pasados.json",
-        "identityCategory": "participios_pasados",
+        "label": "Pretérito perfecto (HABER + participio pasado)",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
         "identityGroups": [
           "nivel_1",
-          "nivel_2"
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
         ],
-        "count": 15
+        "count": 20
       }
     ],
     "date": "2026-03-26"
   },
   {
     "dia": 61,
-    "topic": "Subjuntivo (Práctica)",
+    "topic": "Pretérito perfecto",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
     "vocabFile": "vocab/D2-5-4.json",
-    "date": "2026-04-06"
+    "date": "2026-04-06",
+    "blocks": [
+      {
+        "label": "Pretérito perfecto (HABER + participio pasado)",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 20
+      }
+    ]
   },
   {
     "dia": 62,
-    "topic": "Subjuntivo (Frecuentes)",
+    "topic": "Pretérito perfecto",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
     "vocabFile": "vocab/D2-5-5.json",
     "blocks": [
       {
         "count": 10,
-        "label": "Presente de Subjuntivo",
-        "bank": "bancos/banco_subjuntivo_presente.json",
-        "identityCategory": "presente_de_subjuntivo",
+        "label": "Pretérito perfecto (indicativo)",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
         "identityGroups": [
-          "frecuente"
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
         ]
       },
       {
-        "count": 10,
-        "label": "Presente de Subjuntivo",
-        "bank": "bancos/banco_subjuntivo_presente.json",
-        "identityCategory": "presente_de_subjuntivo"
+        "label": "Pretérito perfecto (subjuntivo)",
+        "bank": "",
+        "identityCategory": "",
+        "identityGroups": [],
+        "count": 10
       }
     ],
     "date": "2026-04-08"
   },
   {
     "dia": 63,
-    "topic": "Subjuntivo (Práctica)",
+    "topic": "Pretérito perfecto",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
     "vocabFile": "vocab/D2-5-6.json",
@@ -1540,7 +1551,7 @@
   },
   {
     "dia": 64,
-    "topic": "Subjuntivo (Práctica)",
+    "topic": "Pretérito perfecto",
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
     "vocabFile": "vocab/D2-6-1.json",
