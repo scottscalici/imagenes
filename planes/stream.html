@@ -140,15 +140,31 @@
   <script>
     /* --- JAVASCRIPT LÓGICA --- */
 
-    // 1. Tu JSON de videos (Your curated database)
-    const videoDatabase = [
-      { id: "1", platform: "youtube", title: "Cultura de España", level: "Spanish 4" },
-      { id: "2", platform: "tiktok", title: "Verbos Reflexivos en 60s", level: "Spanish II" },
-      { id: "3", platform: "instagram", title: "Comida Callejera en México", level: "Spanish II" },
-      { id: "4", platform: "youtube", title: "Entrevista Exclusiva", level: "Spanish 4" },
-      { id: "5", platform: "tiktok", title: "Vocabulario: La Casa", level: "Spanish II" }
-    ];
+ // 1. Tu JSON de videos (Your curated database)
+let videoDatabase = []; // Starts empty, will be filled by GitHub
 
+const jsonUrl = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/stream.json";
+
+async function loadVideos() {
+  try {
+    const response = await fetch(jsonUrl);
+    
+    // Check if the connection was successful
+    if (!response.ok) {
+      throw new Error("Could not load the JSON file.");
+    }
+    
+    // Parse the JSON data and save it to your variable
+    videoDatabase = await response.json();
+    
+    // Now that the data is ready, start the Señor Stream app
+    init(); 
+    
+  } catch (error) {
+    console.error("Error loading FYP database:", error);
+    document.getElementById('slot-a').innerHTML = `<p style="color:white;">Error loading videos. Please try again.</p>`;
+  }
+}
     // Element References
     const scrollTrack = document.getElementById('scroll-track');
     const slotA = document.getElementById('slot-a');
@@ -242,9 +258,7 @@
       }
     }
 
-    // Start the app
-    init();
-
+    loadVideos();
   </script>
 </body>
 </html>
