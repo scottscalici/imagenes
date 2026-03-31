@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed de Videos en Español</title>
+  <style>
+    /* --- CSS ESTILOS --- */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #121212;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .stream-header {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10; /* Keeps it on top of the scrolling videos */
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.stream-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.fyp-tab {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+.fyp-tab span {
+  font-size: 0.7rem;
+  font-weight: normal;
+  opacity: 0.7;
+}
+    
+    /* The "Phone Screen" boundary */
+    #app-window {
+      width: 100%;
+      max-width: 380px;
+      height: 75vh;
+      background-color: #000;
+      border-radius: 24px;
+      overflow: hidden; /* Hides the video waiting below */
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border: 4px solid #333;
+    }
+
+    /* The track that physically slides up and down */
+    #scroll-track {
+      height: 200%; /* Fits two videos exactly */
+      width: 100%;
+      transition: transform 0.5s ease-in-out; 
+    }
+
+    /* The individual video containers */
+    .video-slot {
+      height: 50%; /* 50% of the track = 100% of the app-window */
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+
+    /* Animation Classes */
+    .animating-up {
+      transform: translateY(-50%);
+    }
+
+    /* Disables animation for the invisible reset */
+    .no-transition {
+      transition: none !important;
+    }
+
+    /* Physical Button Styling */
+    #next-btn {
+      margin-top: 25px;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background-color: #e50914; /* Netflix/YouTube Red */
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+      transition: transform 0.1s;
+    }
+
+    #next-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Helper styles for the dummy video placeholders */
+    .dummy-video { padding: 20px; border-radius: 10px; width: 80%; }
+    .bg-youtube { background: #c4302b; }
+    .bg-tiktok { background: #00f2fe; color: black; }
+    .bg-instagram { background: #c13584; }
+  </style>
+</head>
+<body>
+<div id="app-window">
+  
+  <div class="stream-header">
+    <h2>Señor Stream</h2>
+    <div class="fyp-tab">FYP <span>(Fluidez y Práctica)</span></div>
+  </div>
+
+  <div id="scroll-track">
+     </div>
+</div>
+  
+  <div id="app-window">
+    <div id="scroll-track">
+      <div id="slot-a" class="video-slot">
+        </div>
+      
+      <div id="slot-b" class="video-slot"></div>
+    </div>
+  </div>
+
+  <button id="next-btn">Siguiente ⬇</button>
+
+  <script>
+    /* --- JAVASCRIPT LÓGICA --- */
+
+    // 1. Tu JSON de videos (Your curated database)
+    const videoDatabase = [
+      { id: "1", platform: "youtube", title: "Cultura de España", level: "Spanish 4" },
+      { id: "2", platform: "tiktok", title: "Verbos Reflexivos en 60s", level: "Spanish II" },
+      { id: "3", platform: "instagram", title: "Comida Callejera en México", level: "Spanish II" },
+      { id: "4", platform: "youtube", title: "Entrevista Exclusiva", level: "Spanish 4" },
+      { id: "5", platform: "tiktok", title: "Vocabulario: La Casa", level: "Spanish II" }
+    ];
+
+    // Element References
+    const scrollTrack = document.getElementById('scroll-track');
+    const slotA = document.getElementById('slot-a');
+    const slotB = document.getElementById('slot-b');
+    const nextBtn = document.getElementById('next-btn');
+    const appWindow = document.getElementById('app-window');
+
+    let isAnimating = false; // Prevents breaking the animation if they click too fast
+
+    // Helper: Generates the embed code based on platform
+    // *Note: For this template, I am using colored boxes so you can test the logic 
+    // without worrying about iframe security errors locally. You will replace these 
+    // with actual <iframe> or <blockquote> tags later.
+    function getEmbedHTML(videoObj) {
+      return `
+        <div class="dummy-video bg-${videoObj.platform}">
+          <h2>${videoObj.platform.toUpperCase()}</h2>
+          <h3>${videoObj.title}</h3>
+          <p>Nivel: ${videoObj.level}</p>
+          <p><em>(Embed code goes here)</em></p>
+        </div>
+      `;
+    }
+
+    // Load the very first video when the page opens
+    function init() {
+      const firstVideo = videoDatabase[Math.floor(Math.random() * videoDatabase.length)];
+      slotA.innerHTML = getEmbedHTML(firstVideo);
+    }
+
+    // THE MASTER FUNCTION: Handles the fake scroll and reset
+    function advanceFeed() {
+      if (isAnimating) return; // Ignore clicks if already sliding
+      isAnimating = true;
+
+      // 1. Pick a random next video and load it into the hidden Slot B
+      const nextVideo = videoDatabase[Math.floor(Math.random() * videoDatabase.length)];
+      slotB.innerHTML = getEmbedHTML(nextVideo);
+
+      // 2. Trigger the CSS sliding animation
+      scrollTrack.classList.add('animating-up');
+
+      // 3. Wait exactly 500ms (the duration of the CSS transition)
+      setTimeout(() => {
+        // a) Turn off the animation temporarily
+        scrollTrack.classList.add('no-transition');
+
+        // b) Swap the contents: Move B into A
+        slotA.innerHTML = slotB.innerHTML;
+        slotB.innerHTML = ''; // Clear B
+
+        // c) Reset the track's physical position
+        scrollTrack.classList.remove('animating-up');
+
+        // d) Force the browser to register the new position instantly (Reflow)
+        void scrollTrack.offsetWidth; 
+
+        // e) Turn the CSS transition back on for the next time
+        scrollTrack.classList.remove('no-transition');
+
+        // f) Unlock the button
+        isAnimating = false;
+      }, 500);
+    }
+
+    // --- EVENT LISTENERS ---
+
+    // Trigger 1: Button Click
+    nextBtn.addEventListener('click', advanceFeed);
+
+    // Trigger 2: Touch Swipe Logic
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    appWindow.addEventListener('touchstart', (e) => {
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    appWindow.addEventListener('touchend', (e) => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchStartY - touchEndY;
+      const minSwipeDistance = 60; // Require a purposeful swipe
+
+      // If they swiped UP far enough
+      if (swipeDistance > minSwipeDistance) {
+        advanceFeed();
+      }
+    }
+
+    // Start the app
+    init();
+
+  </script>
+</body>
+</html>
