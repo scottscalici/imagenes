@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Señor Stream - FYP</title>
+
+  <style>
+    /* --- CSS ESTILOS --- */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #121212;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* The "Phone Screen" boundary */
+    #app-window {
+      width: 100%;
+      max-width: 380px;
+      height: 75vh;
+      background-color: #000;
+      border-radius: 24px;
+      overflow: hidden; 
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      border: 4px solid #333;
+    }
+
+    /* Floating Branding for Señor Stream */
+    .stream-header {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 10;
+      color: white;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+      pointer-events: none; 
+    }
+
+    .stream-header h2 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .fyp-tab {
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-top: 2px;
+      opacity: 0.9;
+    }
+
+    .fyp-tab span {
+      font-size: 0.7rem;
+      font-weight: normal;
+      opacity: 0.8;
+    }
+
+    /* The track that physically slides up and down */
+    #scroll-track {
+      height: 200%; 
+      width: 100%;
+      transition: transform 0.5s ease-in-out; 
+    }
+
+    /* The individual video containers */
+    .video-slot {
+      height: 50%; 
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      background-color: #000; 
+      position: relative; /* CRUCIAL: Keeps the badge inside the video area */
+    }
+
+    /* Animation Classes */
+    .animating-up {
+      transform: translateY(-50%);
+    }
+
+    /* Disables animation for the invisible reset */
+    .no-transition {
+      transition: none !important;
+    }
+
+    /* Physical Button Styling */
+    #next-btn {
+      margin-top: 25px;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background-color: #e50914; 
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+      transition: transform 0.1s;
+      z-index: 20;
+    }
+
+    #next-btn:active {
+      transform: scale(0.95);
+    }
+    
+    /* Loading text style */
+    .loading-text {
+      color: #fff;
+      font-size: 1.2rem;
+    }
+
+    /* Testing Mode ID Badge */
+    .video-overlay-id {
+      position: absolute;
+      bottom: 80px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.85);
+      color: #00f2fe; /* Bright neon cyan for visibility */
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      border: 1px solid #333;
+      z-index: 30;
+      pointer-events: none; /* So it doesn't block taps/clicks */
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app-window">
+    
+    <div class="stream-header">
+      <h2>Señor Stream</h2>
+      <div class="fyp-tab">FYP <span>(Fluidez y Práctica)</span></div>
+    </div>
+
+    <div id="scroll-track">
+      <div id="slot-a" class="video-slot">
+        <p class="loading-text">Cargando...</p>
+      </div>
+      
+      <div id="slot-b" class="video-slot"></div>
+    </div>
+  </div>
+
+  <button id="next-btn">Siguiente ⬇</button>
+
+  <script>
+    /* --- JAVASCRIPT LÓGICA --- */
+
+    let videoDatabase = []; 
+    const jsonUrl = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/stream.json";
+
+    // Element References
+    const scrollTrack = document.getElementById('scroll-track');
+    const slotA = document.getElementById('slot-a');
+    const slotB = document.getElementById('slot-b');
+    const nextBtn = document.getElementById('next-btn');
+    const appWindow = document.getElementById('app-window');
+
+    let isAnimating = false; 
+    let currentIndex = 0; // Testing counter
+
+    // Fetches the JSON from your GitHub repository
+    async function loadVideos() {
+      try {
+        const response = await fetch(jsonUrl + '?v=' + new Date().getTime());
+        
+        if (!response.ok) throw new Error("Could not load the JSON file.");
+        
+        videoDatabase = await response.json();
+        init(); 
+        
+      } catch (error) {
+        console.error("Error loading FYP database:", error);
+        slotA.innerHTML = `<p style="color:white;">Error loading videos. Check console.</p>`;
+      }
+    }
+
+    // Generates the real embed code based on platform
+    function getEmbedHTML(videoObj) {
+      let finalId = videoObj.video_id || "";
+      let embedCode = "";
+
+      // Smart Parser: Extracts the ID automatically if you pasted a full URL
+      if (videoObj.url) {
+        if (videoObj.platform === "youtube") {
+          const ytMatch = videoObj.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
+          finalId = ytMatch ? ytMatch[1] : videoObj.url;
+        } else if (videoObj.platform === "tiktok") {
+          const ttMatch = videoObj.url.match(/video\/(\d+)/);
+          finalId = ttMatch ? ttMatch[1] : videoObj.url;
+        } else if (videoObj.platform === "instagram") {
+          const igMatch = videoObj.url.match(/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
+          finalId = igMatch ? igMatch[1] : videoObj.url;
+        }
+      }
+
+      // 1. YOUTUBE
+      if (videoObj.platform === "youtube") {
+        embedCode = `
+          <iframe width="100%" height="100%" 
+            src="https://www.youtube.com/embed/${finalId}?autoplay=1&mute=1&playsinline=1" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        `;
+      }
+      // 2. TIKTOK
+      else if (videoObj.platform === "tiktok") {
+        embedCode = `
+          <iframe width="100%" height="100%" 
+            src="https://www.tiktok.com/embed/v2/${finalId}" 
+            frameborder="0" 
+            allow="fullscreen; autoplay; encrypted-media;" 
+            allowfullscreen>
+          </iframe>
+        `;
+      }
+      // 3. INSTAGRAM
+      else if (videoObj.platform === "instagram") {
+        embedCode = `
+          <iframe width="100%" height="100%" 
+            src="https://www.instagram.com/reel/${finalId}/embed/" 
+            frameborder="0" 
+            scrolling="no" 
+            allowtransparency="true" 
+            allowfullscreen>
+          </iframe>
+        `;
+      } else {
+        embedCode = `<p style="color:white;">Plataforma no soportada</p>`;
+      }
+
+      // Inject the testing badge right on top of the iframe
+      return `
+        ${embedCode}
+        <div class="video-overlay-id">ID: ${finalId}</div>
+      `;
+    }
+
+    // Load the very first video (Index 0) when the page opens
+    function init() {
+      if (videoDatabase.length === 0) return;
+      currentIndex = 0; // Always start at the top of the list
+      const firstVideo = videoDatabase[currentIndex];
+      slotA.innerHTML = getEmbedHTML(firstVideo);
+    } 
+
+    // THE MASTER FUNCTION: Sequential Testing Version
+    function advanceFeed() {
+      if (isAnimating || videoDatabase.length === 0) return; 
+      isAnimating = true;
+
+      // 1. Move to the next video in the list
+      currentIndex++;
+      
+      // 2. If we hit the end of the JSON, loop back to the beginning
+      if (currentIndex >= videoDatabase.length) {
+        currentIndex = 0;
+      }
+
+      // 3. Load the specific video into Slot B
+      const nextVideo = videoDatabase[currentIndex];
+      slotB.innerHTML = getEmbedHTML(nextVideo);
+
+      // 4. Trigger the CSS sliding animation
+      scrollTrack.classList.add('animating-up');
+
+      setTimeout(() => {
+        scrollTrack.classList.add('no-transition');
+        slotA.innerHTML = slotB.innerHTML;
+        slotB.innerHTML = ''; 
+        scrollTrack.classList.remove('animating-up');
+        void scrollTrack.offsetWidth; 
+        scrollTrack.classList.remove('no-transition');
+        isAnimating = false;
+      }, 500);
+    }
+
+    // --- EVENT LISTENERS ---
+
+    // Trigger 1: Button Click
+    nextBtn.addEventListener('click', advanceFeed);
+
+    // Trigger 2: Touch Swipe Logic
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    appWindow.addEventListener('touchstart', (e) => {
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    appWindow.addEventListener('touchend', (e) => {
+      touchEndY = e.changedTouches[0].screenY;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchStartY - touchEndY;
+      const minSwipeDistance = 60; 
+
+      // If they swiped UP far enough
+      if (swipeDistance > minSwipeDistance) {
+        advanceFeed();
+      }
+    }
+
+    // Start the app by downloading the JSON
+    loadVideos();
+
+  </script>
+</body>
+</html>
