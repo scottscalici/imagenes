@@ -18,11 +18,12 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* The "Phone Screen" boundary */
+    /* The "Phone Screen" boundary (Updated for perfect vertical TikTok sizing) */
     #app-window {
       width: 100%;
       max-width: 380px;
-      height: 75vh;
+      aspect-ratio: 9 / 16; 
+      max-height: 85vh;     
       background-color: #000;
       border-radius: 24px;
       overflow: hidden; 
@@ -80,6 +81,7 @@
       color: white;
       text-align: center;
       background-color: #000; 
+      position: relative;
     }
 
     /* Animation Classes */
@@ -143,7 +145,7 @@
     /* --- JAVASCRIPT LÓGICA --- */
 
     let videoDatabase = []; 
-    const jsonUrl = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/stream.json";
+    const jsonUrl = "https://script.google.com/macros/s/AKfycbx36xRRpa5XGe9aVHeXAUomsGTeEpVfNs2F9Egt2MZyaELS7tVpXVrgLDRz3D6VBWqS/exec";
 
     // Element References
     const scrollTrack = document.getElementById('scroll-track');
@@ -170,11 +172,12 @@
       }
     }
 
-    // Generates the real embed code based on platform (Handles both URL and exact ID methods)
+    // Generates the real embed code based on platform
     function getEmbedHTML(videoObj) {
       let finalId = videoObj.video_id || "";
+      let embedCode = "";
 
-      // Smart Parser: Extracts the ID automatically if you pasted a full URL instead of an exact ID
+      // Smart Parser: Extracts the ID automatically if you pasted a full URL
       if (videoObj.url) {
         if (videoObj.platform === "youtube") {
           const ytMatch = videoObj.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
@@ -188,33 +191,38 @@
         }
       }
 
-      // 1. YOUTUBE
+      // 1. YOUTUBE (With Timestamps)
       if (videoObj.platform === "youtube") {
-        return `
+        let timeParams = "";
+        if (videoObj.start) timeParams += `&start=${videoObj.start}`;
+        if (videoObj.end) timeParams += `&end=${videoObj.end}`;
+
+        embedCode = `
           <iframe width="100%" height="100%" 
-            src="https://www.youtube.com/embed/${finalId}?autoplay=1&mute=1&playsinline=1" 
+            src="https://www.youtube.com/embed/${finalId}?autoplay=1&mute=1&playsinline=1${timeParams}" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
           </iframe>
         `;
       }
-
-      // 2. TIKTOK
-      if (videoObj.platform === "tiktok") {
-        return `
+      
+      // 2. TIKTOK (With Scroll Killer)
+      else if (videoObj.platform === "tiktok") {
+        embedCode = `
           <iframe width="100%" height="100%" 
             src="https://www.tiktok.com/embed/v2/${finalId}" 
             frameborder="0" 
+            scrolling="no" 
             allow="fullscreen; autoplay; encrypted-media;" 
             allowfullscreen>
           </iframe>
         `;
       }
-
+      
       // 3. INSTAGRAM
-      if (videoObj.platform === "instagram") {
-        return `
+      else if (videoObj.platform === "instagram") {
+        embedCode = `
           <iframe width="100%" height="100%" 
             src="https://www.instagram.com/reel/${finalId}/embed/" 
             frameborder="0" 
@@ -225,17 +233,46 @@
         `;
       }
       
-      return `<p style="color:white;">Plataforma no soportada</p>`;
+      // 4. FACEBOOK (Full Encoded URL)
+      else if (videoObj.platform === "facebook") {
+        const encodedUrl = encodeURIComponent(videoObj.url || "");
+        embedCode = `
+          <iframe 
+            src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=auto" 
+            width="100%" height="100%" 
+            style="border:none; overflow:hidden;" 
+            scrolling="no" 
+            frameborder="0" 
+            allowfullscreen="true" 
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+          </iframe>
+        `;
+      }
+
+      // 5. CUSTOM HOSTED MP4 (Google Drive, S3, etc.)
+      else if (videoObj.platform === "custom") {
+        embedCode = `
+          <video width="100%" height="100%" autoplay muted playsinline loop style="object-fit: cover; background: #000;">
+            <source src="${videoObj.url}" type="video/mp4">
+          </video>
+        `;
+      }
+      
+      else {
+        embedCode = `<p style="color:white;">Plataforma no soportada</p>`;
+      }
+
+      return embedCode;
     }
 
-    // Load the very first video when the page opens
+    // Load the very first random video when the page opens
     function init() {
       if (videoDatabase.length === 0) return;
       const firstVideo = videoDatabase[Math.floor(Math.random() * videoDatabase.length)];
       slotA.innerHTML = getEmbedHTML(firstVideo);
     } 
 
-    // THE MASTER FUNCTION: Handles the fake scroll and reset
+    // THE MASTER FUNCTION: Student-Facing Randomizer
     function advanceFeed() {
       if (isAnimating || videoDatabase.length === 0) return; 
       isAnimating = true;
