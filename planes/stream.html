@@ -18,7 +18,6 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* The "Phone Screen" boundary (Updated for perfect vertical TikTok sizing) */
     #app-window {
       width: 100%;
       max-width: 380px;
@@ -32,7 +31,6 @@
       border: 4px solid #333;
     }
 
-    /* Floating Branding for Señor Stream */
     .stream-header {
       position: absolute;
       top: 15px;
@@ -63,14 +61,12 @@
       opacity: 0.8;
     }
 
-    /* The track that physically slides up and down */
     #scroll-track {
       height: 200%; 
       width: 100%;
       transition: transform 0.5s ease-in-out; 
     }
 
-    /* The individual video containers */
     .video-slot {
       height: 50%; 
       width: 100%;
@@ -84,17 +80,9 @@
       position: relative;
     }
 
-    /* Animation Classes */
-    .animating-up {
-      transform: translateY(-50%);
-    }
+    .animating-up { transform: translateY(-50%); }
+    .no-transition { transition: none !important; }
 
-    /* Disables animation for the invisible reset */
-    .no-transition {
-      transition: none !important;
-    }
-
-    /* Physical Button Styling */
     #next-btn {
       margin-top: 25px;
       padding: 15px 40px;
@@ -110,21 +98,13 @@
       z-index: 20;
     }
 
-    #next-btn:active {
-      transform: scale(0.95);
-    }
-    
-    /* Loading text style */
-    .loading-text {
-      color: #fff;
-      font-size: 1.2rem;
-    }
+    #next-btn:active { transform: scale(0.95); }
+    .loading-text { color: #fff; font-size: 1.2rem; }
   </style>
 </head>
 <body>
 
   <div id="app-window">
-    
     <div class="stream-header">
       <h2>Señor Stream</h2>
       <div class="fyp-tab">FYP <span>(Fluidez y Práctica)</span></div>
@@ -134,7 +114,6 @@
       <div id="slot-a" class="video-slot">
         <p class="loading-text">Cargando...</p>
       </div>
-      
       <div id="slot-b" class="video-slot"></div>
     </div>
   </div>
@@ -145,9 +124,9 @@
     /* --- JAVASCRIPT LÓGICA --- */
 
     let videoDatabase = []; 
+    // Your exact Apps Script Web App URL
     const jsonUrl = "https://script.google.com/macros/s/AKfycbyL_siaRKlrOAtyrbE5v-53PH0gRJDhS9LFEAdUH3zB3czS10DzGc6tlwo7YovNBoGi/exec";
 
-    // Element References
     const scrollTrack = document.getElementById('scroll-track');
     const slotA = document.getElementById('slot-a');
     const slotB = document.getElementById('slot-b');
@@ -156,28 +135,22 @@
 
     let isAnimating = false; 
 
-    // Fetches the JSON from your GitHub repository
     async function loadVideos() {
       try {
         const response = await fetch(jsonUrl + '?v=' + new Date().getTime());
-        
         if (!response.ok) throw new Error("Could not load the JSON file.");
-        
         videoDatabase = await response.json();
         init(); 
-        
       } catch (error) {
         console.error("Error loading FYP database:", error);
         slotA.innerHTML = `<p style="color:white;">Error loading videos. Check console.</p>`;
       }
     }
 
-    // Generates the real embed code based on platform
     function getEmbedHTML(videoObj) {
       let finalId = videoObj.video_id || "";
       let embedCode = "";
 
-      // Smart Parser: Extracts the ID automatically if you pasted a full URL
       if (videoObj.url) {
         if (videoObj.platform === "youtube") {
           const ytMatch = videoObj.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
@@ -191,66 +164,34 @@
         }
       }
 
-      // 1. YOUTUBE (With Timestamps)
       if (videoObj.platform === "youtube") {
         let timeParams = "";
         if (videoObj.start) timeParams += `&start=${videoObj.start}`;
         if (videoObj.end) timeParams += `&end=${videoObj.end}`;
-
-        embedCode = `
-          <iframe width="100%" height="100%" 
-            src="https://www.youtube.com/embed/${finalId}?autoplay=1&mute=1&playsinline=1${timeParams}" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-          </iframe>
-        `;
-      }
-      
-      // 2. TIKTOK (With Scroll Killer)
+        embedCode = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${finalId}?autoplay=1&mute=1&playsinline=1${timeParams}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      } 
       else if (videoObj.platform === "tiktok") {
-        embedCode = `
-          <iframe width="100%" height="100%" 
-            src="https://www.tiktok.com/embed/v2/${finalId}" 
-            frameborder="0" 
-            scrolling="no" 
-            allow="fullscreen; autoplay; encrypted-media;" 
-            allowfullscreen>
-          </iframe>
-        `;
-      }
-      
-      // 3. INSTAGRAM
+        embedCode = `<iframe width="100%" height="100%" src="https://www.tiktok.com/embed/v2/${finalId}" frameborder="0" scrolling="no" allow="fullscreen; autoplay; encrypted-media;" allowfullscreen></iframe>`;
+      } 
       else if (videoObj.platform === "instagram") {
-        embedCode = `
-          <iframe width="100%" height="100%" 
-            src="https://www.instagram.com/reel/${finalId}/embed/" 
-            frameborder="0" 
-            scrolling="no" 
-            allowtransparency="true" 
-            allowfullscreen>
-          </iframe>
-        `;
-      }
-      
-      // 4. FACEBOOK (Full Encoded URL)
+        embedCode = `<iframe width="100%" height="100%" src="https://www.instagram.com/reel/${finalId}/embed/" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen></iframe>`;
+      } 
       else if (videoObj.platform === "facebook") {
         const encodedUrl = encodeURIComponent(videoObj.url || "");
+        embedCode = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=auto" width="100%" height="100%" style="border:none; overflow:hidden;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+      } 
+      
+      // THE NEW SMART LOGIC: 
+      // 5a. Small Drive Files (<25MB) get the seamless autoplay video tag
+      else if (videoObj.platform === "drive_seamless") {
         embedCode = `
-          <iframe 
-            src="https://www.facebook.com/plugins/video.php?href=${encodedUrl}&show_text=false&width=auto" 
-            width="100%" height="100%" 
-            style="border:none; overflow:hidden;" 
-            scrolling="no" 
-            frameborder="0" 
-            allowfullscreen="true" 
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
-          </iframe>
+          <video width="100%" height="100%" autoplay muted playsinline loop style="object-fit: cover; background: #000;">
+            <source src="https://drive.google.com/uc?export=download&id=${finalId}" type="video/mp4">
+          </video>
         `;
-      }
-
-    // 5. GOOGLE DRIVE (Using Drive's native iframe player)
-      else if (videoObj.platform === "drive") {
+      } 
+      // 5b. Large Drive Files (>25MB) get the iframe fallback to bypass the virus scan crash
+      else if (videoObj.platform === "drive_large") {
         embedCode = `
           <iframe width="100%" height="100%" 
             src="https://drive.google.com/file/d/${finalId}/preview" 
@@ -259,8 +200,7 @@
             allowfullscreen>
           </iframe>
         `;
-      }
-        
+      } 
       else {
         embedCode = `<p style="color:white;">Plataforma no soportada</p>`;
       }
@@ -268,54 +208,34 @@
       return embedCode;
     }
 
-    // Load the very first random video when the page opens
     function init() {
       if (videoDatabase.length === 0) return;
       const firstVideo = videoDatabase[Math.floor(Math.random() * videoDatabase.length)];
       slotA.innerHTML = getEmbedHTML(firstVideo);
     } 
 
-    // THE MASTER FUNCTION: Student-Facing Randomizer
     function advanceFeed() {
       if (isAnimating || videoDatabase.length === 0) return; 
       isAnimating = true;
 
-      // 1. Pick a random next video and load it into the hidden Slot B
       const nextVideo = videoDatabase[Math.floor(Math.random() * videoDatabase.length)];
       slotB.innerHTML = getEmbedHTML(nextVideo);
 
-      // 2. Trigger the CSS sliding animation
       scrollTrack.classList.add('animating-up');
 
-      // 3. Wait exactly 500ms (the duration of the CSS transition)
       setTimeout(() => {
-        // a) Turn off the animation temporarily
         scrollTrack.classList.add('no-transition');
-
-        // b) Swap the contents: Move B into A
         slotA.innerHTML = slotB.innerHTML;
-        slotB.innerHTML = ''; // Clear B
-
-        // c) Reset the track's physical position
+        slotB.innerHTML = ''; 
         scrollTrack.classList.remove('animating-up');
-
-        // d) Force the browser to register the new position instantly
         void scrollTrack.offsetWidth; 
-
-        // e) Turn the CSS transition back on
         scrollTrack.classList.remove('no-transition');
-
-        // f) Unlock the button
         isAnimating = false;
       }, 500);
     }
 
-    // --- EVENT LISTENERS ---
-
-    // Trigger 1: Button Click
     nextBtn.addEventListener('click', advanceFeed);
 
-    // Trigger 2: Touch Swipe Logic
     let touchStartY = 0;
     let touchEndY = 0;
 
@@ -330,17 +250,12 @@
 
     function handleSwipe() {
       const swipeDistance = touchStartY - touchEndY;
-      const minSwipeDistance = 60; 
-
-      // If they swiped UP far enough
-      if (swipeDistance > minSwipeDistance) {
+      if (swipeDistance > 60) {
         advanceFeed();
       }
     }
 
-    // Start the app by downloading the JSON
     loadVideos();
-
   </script>
 </body>
 </html>
