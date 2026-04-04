@@ -249,13 +249,15 @@
         `;
       }
 
-      // 5. CUSTOM HOSTED MP4 (Google Drive, S3, etc.)
-     // 5. GOOGLE DRIVE (Direct MP4 Autoplay)
+    // 5. GOOGLE DRIVE (Using Drive's native iframe player)
       else if (videoObj.platform === "drive") {
         embedCode = `
-          <video width="100%" height="100%" autoplay muted playsinline loop style="object-fit: cover; background: #000;">
-            <source src="https://drive.google.com/uc?export=download&id=${finalId}" type="video/mp4">
-          </video>
+          <iframe width="100%" height="100%" 
+            src="https://drive.google.com/file/d/${finalId}/preview" 
+            frameborder="0" 
+            allow="autoplay; fullscreen" 
+            allowfullscreen>
+          </iframe>
         `;
       }
         
