@@ -64,7 +64,6 @@
   </main>
 
 <script>
-    // --- CONFIGURATION ---
     const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
     const CONTENT_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/prueba1_calentamiento.json";
     
@@ -78,7 +77,6 @@
         teacherMode: false
     };
 
-    // --- SECRET TEACHER UNLOCKER ---
     let clickCount = 0;
     document.getElementById('pageTitle').addEventListener('click', () => {
         clickCount++;
@@ -183,18 +181,24 @@
 
     function buildFillInTheBlank(sectionKey, moduleNum) {
         const sectionData = runtime.db[runtime.activeDia][sectionKey];
+        
+        // Shuffle the Word Bank
+        const shuffledBanco = [...sectionData.banco].sort(() => 0.5 - Math.random());
+        // Shuffle the Sentences
+        const shuffledOraciones = [...sectionData.oraciones].sort(() => 0.5 - Math.random());
+
         let selectHTML = `<select class="connector-select border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer appearance-none text-center">
                             <option value="">[ Selecciona ]</option>
-                            ${sectionData.banco.map(w => `<option value="${w}">${w}</option>`).join('')}
+                            ${shuffledBanco.map(w => `<option value="${w}">${w}</option>`).join('')}
                           </select>`;
 
         return `
             <div class="mb-6 border-b-2 border-sky-100 pb-2">
                 <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">BANCO DE PALABRAS</h2>
-                <p class="text-sm text-slate-500 font-medium mt-2">${sectionData.banco.join(' • ')}</p>
+                <p class="text-sm text-slate-500 font-medium mt-2">${shuffledBanco.join(' • ')}</p>
             </div>
             <div class="space-y-4 mb-6">
-                ${sectionData.oraciones.map((o, i) => {
+                ${shuffledOraciones.map((o, i) => {
                     const sentenceWithBlank = o.texto.replace('_', selectHTML);
                     return `
                     <div class="sentence-item p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3" data-ans="${o.respuesta}">
