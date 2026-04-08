@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calentamiento Maestro - Conectores</title>
+  <title>Calentamiento Maestro - IB Seniors</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
-    @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     .animate-pop { animation: popIn 0.3s ease-out forwards; }
     .match-selected { background-color: #e0f2fe !important; border-color: #0ea5e9 !important; border-width: 2px !important; }
     .matched { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 0.3s ease; }
-    .btn-next { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    .checkbox-checked { background-color: #10b981; border-color: #10b981; }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen">
@@ -20,10 +20,9 @@
   <header class="sticky top-0 z-20 bg-white shadow-sm border-b border-slate-200">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <div>
-        <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CONECTORES LÓGICOS</h1>
+        <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CONECTORES Y FORMATOS IB</h1>
         <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando...</div>
       </div>
-      
       <div class="w-40 sm:w-64 text-right">
         <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div id="progress-fill" class="h-full bg-sky-500 transition-all duration-300 w-0"></div>
@@ -55,44 +54,97 @@
   </main>
 
 <script>
-    // --- MOCK DATABASE ---
-    // You would replace this with a fetch() to your raw GitHub JSON
+    // --- EXPANDED MOCK DATABASE ---
     const DB = {
         "62": {
             "topic": "Añadir y Excluir",
-            "banco": ["También", "Además", "Excepto", "Incluso", "A excepción de"],
-            "oraciones": [
-                { "texto": "Me gustan todas las verduras _ el brócoli.", "respuesta": "Excepto" },
-                { "texto": "Hizo mucho frío y _ empezó a nevar.", "respuesta": "Además" },
-                { "texto": "Todos fueron a la fiesta, _ los profesores.", "respuesta": "Incluso" },
-                { "texto": "Yo _ quiero ir al cine esta noche.", "respuesta": "También" },
-                { "texto": "Abriremos todos los días _ los domingos.", "respuesta": "A excepción de" }
-            ],
+            "oraciones_parte1": {
+                "banco": ["También", "Además", "Excepto", "Incluso", "A excepción de"],
+                "oraciones": [
+                    { "texto": "Yo pedí una ensalada y mi hermano _ pidió una.", "respuesta": "También" },
+                    { "texto": "Ese coche es muy seguro. _, consume muy poca gasolina.", "respuesta": "Además" },
+                    { "texto": "Me gustan todos los deportes _ el golf, me aburre mucho.", "respuesta": "Excepto" },
+                    { "texto": "Hacía tanto frío que _ el agua del lago se congeló.", "respuesta": "Incluso" },
+                    { "texto": "El museo abre todos los días, _ los domingos por la tarde.", "respuesta": "A excepción de" }
+                ]
+            },
+            "oraciones_parte2": {
+                "banco": ["Asimismo", "Igualmente", "Incluido", "Menos", "Salvo"],
+                "oraciones": [
+                    { "texto": "Les agradecemos su presencia. _, queremos dar las gracias a los patrocinadores.", "respuesta": "Asimismo" },
+                    { "texto": "Te deseo un feliz año nuevo, e _ para toda tu familia.", "respuesta": "Igualmente" },
+                    { "texto": "Trabajamos todos los días _ los sábados.", "respuesta": "Menos" },
+                    { "texto": "No hay nadie en el edificio _ el guardia de seguridad.", "respuesta": "Salvo" },
+                    { "texto": "Todos reprobaron el examen, _ el estudiante más inteligente.", "respuesta": "Incluido" }
+                ]
+            },
             "vocabulario": [
                 {"es": "También", "en": "Also"}, {"es": "Asimismo", "en": "Likewise, also"},
                 {"es": "Igualmente", "en": "Equally, likewise"}, {"es": "Además", "en": "Besides"},
-                {"es": "Incluso", "en": "Included"}, {"es": "A excepción de", "en": "Excepting"},
-                {"es": "Excepto", "en": "Except for"}, {"es": "En mi opinión", "en": "In my opinion"},
-                {"es": "Desde mi punto de vista", "en": "From my point of view"}, {"es": "Creo que", "en": "I think that"}
-            ]
+                {"es": "Incluso", "en": "Included / Even"}, {"es": "A excepción de", "en": "Excepting"},
+                {"es": "Excepto", "en": "Except for"}, {"es": "Menos", "en": "Less / Except"},
+                {"es": "Salvo", "en": "Except / Save for"}, {"es": "Incluido", "en": "Including"}
+            ],
+            "prueba_ib": {
+                "escenario": "Has probado una nueva aplicación para aprender idiomas que se ha vuelto muy popular entre tus compañeros de colegio. Sin embargo, te ha parecido totalmente ineficaz comparada con las conversaciones reales. Escribe un texto dirigido a los estudiantes de tu escuela en el que describas tu experiencia con la aplicación, expliques por qué crees que no funciona para aprender a comunicarse y sugieras métodos más efectivos para practicar un idioma en la vida real.",
+                "opciones_texto": ["Blog", "Artículo", "Conjunto de instrucciones"],
+                "texto_correcto": "Blog",
+                "registro_opciones": ["Formal (Usted)", "Informal / Familiar (Tú/Vosotros)", "Académico / Objetivo"],
+                "registro_correcto": "Informal / Familiar (Tú/Vosotros)",
+                "audiencia_opciones": ["El director de la escuela (Singular)", "Compañeros de escuela (Plural)", "Público general adulto (Plural)"],
+                "audiencia_correcta": "Compañeros de escuela (Plural)",
+                "convenciones": [
+                    "Título llamativo y personal.",
+                    "Uso de primera persona para compartir opiniones (Yo creo que...).",
+                    "Tono persuasivo y evaluativo de la aplicación.",
+                    "Invitación a los lectores a comentar al final."
+                ]
+            }
         },
         "63": {
             "topic": "Causas y Consecuencias",
-            "banco": ["Porque", "Debido a", "Por lo tanto", "Así que", "Ya que"],
-            "oraciones": [
-                { "texto": "No fuimos a la playa _ la lluvia fuerte.", "respuesta": "Debido a" },
-                { "texto": "Estaba enfermo, _ me quedé en casa.", "respuesta": "Así que" },
-                { "texto": "No tengo dinero _ perdí mi cartera.", "respuesta": "Porque" },
-                { "texto": "Pienso, _ existo.", "respuesta": "Por lo tanto" },
-                { "texto": "_ estamos aquí, deberíamos cenar.", "respuesta": "Ya que" }
-            ],
+            "oraciones_parte1": {
+                "banco": ["Porque", "Por eso", "Debido a", "Ya que", "Por lo tanto"],
+                "oraciones": [
+                    { "texto": "Llegué tarde al colegio _ el autobús se averió en el camino.", "respuesta": "Porque" },
+                    { "texto": "No estudió para el examen, _ reprobó la clase.", "respuesta": "Por lo tanto" },
+                    { "texto": "El partido de béisbol fue cancelado _ la intensa tormenta.", "respuesta": "Debido a" },
+                    { "texto": "_ no tienes tarea, ¿me ayudas a limpiar la cocina?", "respuesta": "Ya que" },
+                    { "texto": "Me encanta la cultura española, _ decidí estudiar en Madrid este verano.", "respuesta": "Por eso" }
+                ]
+            },
+            "oraciones_parte2": {
+                "banco": ["Como", "Así que", "Dado que", "Pues", "De modo que"],
+                "oraciones": [
+                    { "texto": "_ llovía mucho, decidimos quedarnos en casa a ver una película.", "respuesta": "Como" },
+                    { "texto": "No tengo dinero, _ no puedo salir con ustedes esta noche.", "respuesta": "Así que" },
+                    { "texto": "Cierra la puerta con llave _ nadie pueda entrar sin permiso.", "respuesta": "De modo que" },
+                    { "texto": "Te prestaré mis apuntes, _ eres mi mejor amigo y faltaste a clase.", "respuesta": "Dado que" },
+                    { "texto": "No me llames más tarde, _ estaré durmiendo.", "respuesta": "Pues" }
+                ]
+            },
             "vocabulario": [
-                {"es": "Porque", "en": "Because"}, {"es": "Puesto que", "en": "Given that"},
+                {"es": "Porque", "en": "Because"}, {"es": "Ya que", "en": "Given that"},
                 {"es": "Por eso", "en": "Therefore, that is why"}, {"es": "Debido a", "en": "Due to"},
-                {"es": "Así pues", "en": "Thus"}, {"es": "Por lo tanto", "en": "Therefore"},
-                {"es": "De manera que", "en": "So that"}, {"es": "Así", "en": "So, thus"},
-                {"es": "Así que", "en": "So then, anyway"}, {"es": "En efecto", "en": "In effect, in fact"}
-            ]
+                {"es": "Como", "en": "Since / As (Beginning of sentence)"}, {"es": "Por lo tanto", "en": "Therefore"},
+                {"es": "De modo que", "en": "So that"}, {"es": "Dado que", "en": "Given that"},
+                {"es": "Así que", "en": "So then, anyway"}, {"es": "Pues", "en": "Well / Since"}
+            ],
+            "prueba_ib": {
+                "escenario": "El ayuntamiento de tu ciudad ha propuesto un plan para destruir varios centros deportivos y culturales juveniles para construir nuevos centros comerciales, argumentando que esto aumentará los ingresos económicos de la ciudad. Escribe un texto dirigido al alcalde/a de la ciudad en el que analices las consecuencias sociales de eliminar estos espacios para los jóvenes, evalúes el equilibrio entre el crecimiento económico y el bienestar de la comunidad, y propongas una solución de compromiso.",
+                "opciones_texto": ["Carta (Correspondencia formal)", "Columna de opinión", "Diario personal"],
+                "texto_correcto": "Carta (Correspondencia formal)",
+                "registro_opciones": ["Informal (Tú)", "Formal (Usted / Estimado/a)", "Coloquial / Jerga juvenil"],
+                "registro_correcto": "Formal (Usted / Estimado/a)",
+                "audiencia_opciones": ["Jóvenes de la ciudad (Plural)", "Alcalde/sa de la ciudad (Singular)", "Turistas visitantes (Plural)"],
+                "audiencia_correcta": "Alcalde/sa de la ciudad (Singular)",
+                "convenciones": [
+                    "Lugar y fecha en la parte superior.",
+                    "Fórmula de saludo formal (Estimado/a Sr./Sra. Alcalde/sa).",
+                    "Lenguaje respetuoso, persuasivo y estructurado en párrafos claros.",
+                    "Fórmula de despedida formal (Atentamente) y firma."
+                ]
+            }
         }
     };
 
@@ -100,16 +152,15 @@
         activeDia: "62",
         data: null,
         currentModule: 1,
-        completed: 0
+        completed: 0,
+        ibState: { textType: false, regAud: false, conventions: 0 }
     };
 
     function init() {
-        // Build Dropdown for testing
         const select = document.getElementById('day-select');
         select.innerHTML = Object.keys(DB).map(d => `<option value="${d}">Día ${d}: ${DB[d].topic}</option>`).join('');
         select.value = runtime.activeDia;
         select.onchange = (e) => loadDay(e.target.value);
-        
         loadDay(runtime.activeDia);
     }
 
@@ -117,16 +168,15 @@
         runtime.activeDia = dia;
         runtime.data = DB[dia];
         runtime.completed = 0;
-        
+        runtime.ibState = { textType: false, regAud: false, conventions: 0 };
         document.getElementById('pageSubtitle').innerHTML = `<span class="text-sky-600 font-black tracking-widest">DÍA ${dia}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-slate-400 font-bold">${runtime.data.topic.toUpperCase()}</span>`;
-        
         renderSidebar();
         showModule(1);
     }
 
     function renderSidebar() {
         const nav = document.getElementById('nav-tabs');
-        const labels = ["1. Oraciones", "2. Parejas", "Listo"];
+        const labels = ["1. Oraciones (A)", "2. Oraciones (B)", "3. Parejas", "4. Formato IB", "Listo"];
         nav.innerHTML = labels.map((l, i) => `
             <button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" id="tab-${i+1}" disabled>
                 <span class="text-[10px] font-black uppercase tracking-tighter">${l}</span>
@@ -135,70 +185,74 @@
         `).join('');
     }
 
+    function buildFillInTheBlank(sectionKey, moduleNum) {
+        const sectionData = runtime.data[sectionKey];
+        let selectHTML = `<select class="connector-select border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer appearance-none text-center">
+                            <option value="">[ Selecciona ]</option>
+                            ${sectionData.banco.map(w => `<option value="${w}">${w}</option>`).join('')}
+                          </select>`;
+
+        return `
+            <div class="mb-6 border-b-2 border-sky-100 pb-2">
+                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">BANCO DE PALABRAS</h2>
+                <p class="text-sm text-slate-500 font-medium mt-2">${sectionData.banco.join(' • ')}</p>
+            </div>
+            <div class="space-y-4 mb-6">
+                ${sectionData.oraciones.map((o, i) => {
+                    const sentenceWithBlank = o.texto.replace('_', selectHTML);
+                    return `
+                    <div class="sentence-item p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3" data-ans="${o.respuesta}">
+                        <span class="text-xs font-black text-slate-400">${i + 1}.</span>
+                        <div class="text-slate-700 font-medium leading-loose text-sm w-full">${sentenceWithBlank}</div>
+                    </div>`;
+                }).join('')}
+            </div>
+            <div class="flex gap-2">
+                <button onclick="checkSentences(${moduleNum})" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700 shadow-md">Revisar</button>
+                <div id="next-btn-container-${moduleNum}"></div>
+            </div>`;
+    }
+
     function showModule(n) {
         runtime.currentModule = n;
         const content = document.getElementById('module-content');
-        
-        if (n === 1) {
-            // MODULE 1: SENTENCES (Dropdowns)
-            let selectHTML = `<select class="connector-select border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer appearance-none text-center">
-                                <option value="">[ Selecciona ]</option>
-                                ${runtime.data.banco.map(w => `<option value="${w}">${w}</option>`).join('')}
-                              </select>`;
+        content.classList.remove('animate-pop');
+        void content.offsetWidth; // trigger reflow
+        content.classList.add('animate-pop');
 
-            content.innerHTML = `
-                <div class="mb-6 border-b-2 border-sky-100 pb-2">
-                    <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">BANCO DE PALABRAS</h2>
-                    <p class="text-sm text-slate-500 font-medium mt-2">${runtime.data.banco.join(' • ')}</p>
-                </div>
-                <div class="space-y-4 mb-6">
-                    ${runtime.data.oraciones.map((o, i) => {
-                        const sentenceWithBlank = o.texto.replace('_', selectHTML);
-                        return `
-                        <div class="sentence-item p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3" data-ans="${o.respuesta}">
-                            <span class="text-xs font-black text-slate-400">${i + 1}.</span>
-                            <div class="text-slate-700 font-medium leading-loose text-sm">${sentenceWithBlank}</div>
-                        </div>`;
-                    }).join('')}
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="checkSentences()" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700 shadow-md">Revisar</button>
-                    <div id="next-btn-container"></div>
-                </div>`;
-                
+        if (n === 1) {
+            content.innerHTML = buildFillInTheBlank('oraciones_parte1', 1);
         } else if (n === 2) {
-            // MODULE 2: VOCAB MATCHING
+            content.innerHTML = buildFillInTheBlank('oraciones_parte2', 2);
+        } else if (n === 3) {
             content.innerHTML = `
                 <div class="mb-4 border-b-2 border-sky-100 pb-2 flex justify-between items-end">
                     <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">Encuentra la pareja</h2>
                     <span id="match-counter" class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">0 / 10</span>
                 </div>
-                <div id="match-area" class="mt-4 p-6 bg-slate-50 rounded-2xl border border-slate-200 animate-pop"></div>
-                <div id="next-btn-container" class="mt-6 flex justify-end"></div>`;
+                <div id="match-area" class="mt-4 p-6 bg-slate-50 rounded-2xl border border-slate-200"></div>
+                <div id="next-btn-container-3" class="mt-6 flex justify-end"></div>`;
             startMatchingGame();
-            
+        } else if (n === 4) {
+            renderIBModule(content);
         } else {
-            // MODULE 3: FINISHED
             content.innerHTML = `
-                <div class="text-center py-12 animate-pop">
+                <div class="text-center py-12">
                     <div class="text-6xl mb-4">🏆</div>
                     <h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Excelente!</h2>
-                    <p class="text-slate-500 font-medium mb-8">Has dominado los conectores de hoy.</p>
-                    <button onclick="startRandomPractice()" class="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg uppercase tracking-widest text-xs transition-all">🔄 Repasar Otro Día</button>
+                    <p class="text-slate-500 font-medium mb-8">Estás preparadísimo para la Prueba 1.</p>
                 </div>`;
         }
         updateProgress();
     }
 
-    function checkSentences() {
+    function checkSentences(moduleNum) {
         let correctCount = 0;
         const items = document.querySelectorAll('.sentence-item');
         
         items.forEach(item => {
             const select = item.querySelector('select');
             const ans = item.dataset.ans;
-            
-            // Reset styles
             select.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-400', 'bg-red-50', 'text-red-700');
             
             if (select.value === ans) {
@@ -210,13 +264,13 @@
         });
 
         if (correctCount === items.length) {
-            runtime.completed = Math.max(runtime.completed, 1);
-            showNextButton(1);
+            runtime.completed = Math.max(runtime.completed, moduleNum);
+            showNextButton(moduleNum);
             updateProgress();
         }
     }
 
-    // MATCHING GAME LOGIC
+    // --- MATCHING GAME ---
     let selectedEs = null;
     let pairsSolved = 0;
 
@@ -226,7 +280,6 @@
         pairsSolved = 0;
         selectedEs = null;
 
-        // Shuffle arrays independently
         const shuffledEs = [...pairs].sort(() => 0.5 - Math.random());
         const shuffledEn = [...pairs].sort(() => 0.5 - Math.random());
 
@@ -254,7 +307,6 @@
             btn.textContent = p.en;
             btn.onclick = () => {
                 if (selectedEs && selectedEs.en === p.en) {
-                    // Match found!
                     btn.classList.add('matched');
                     document.querySelectorAll('#match-es button').forEach(x => { 
                         if(x.textContent === selectedEs.es) x.classList.add('matched'); 
@@ -264,13 +316,12 @@
                     selectedEs = null;
                     
                     if (pairsSolved === pairs.length) {
-                        runtime.completed = Math.max(runtime.completed, 2);
-                        showNextButton(2);
+                        runtime.completed = Math.max(runtime.completed, 3);
+                        showNextButton(3);
                         updateProgress();
                         document.getElementById('match-area').innerHTML = `<div class="text-center text-emerald-500 font-black text-2xl py-8 animate-pop">¡PERFECTO!</div>`;
                     }
                 } else if (selectedEs) {
-                    // Wrong Match Feedback
                     btn.classList.add('border-red-400', 'bg-red-50');
                     setTimeout(() => btn.classList.remove('border-red-400', 'bg-red-50'), 500);
                 }
@@ -279,18 +330,133 @@
         });
     }
 
+    // --- IB PAPER 1 MODULE ---
+    function renderIBModule(content) {
+        const ib = runtime.data.prueba_ib;
+        content.innerHTML = `
+            <div class="mb-4 border-b-2 border-indigo-100 pb-2">
+                <h2 class="text-xl font-black text-indigo-900 uppercase tracking-tight">Práctica: Prueba 1</h2>
+                <p class="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mt-1">Análisis de Formato</p>
+            </div>
+            
+            <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-xl mb-6 shadow-sm">
+                <p class="text-sm text-indigo-900 leading-relaxed font-medium">"${ib.escenario}"</p>
+            </div>
+
+            <div id="ib-step-1">
+                <p class="text-xs font-black text-slate-500 uppercase mb-3">1. Selecciona el Tipo de Texto adecuado:</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    ${ib.opciones_texto.map(op => `
+                        <button onclick="checkIBTextType(this, '${op}')" class="ib-tt-btn w-full p-4 bg-white border-2 border-slate-200 rounded-xl text-sm font-bold text-slate-700 transition-all hover:bg-slate-50 shadow-sm">${op}</button>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div id="ib-step-2" class="hidden mt-8 animate-pop border-t-2 border-slate-100 pt-6">
+                <p class="text-xs font-black text-slate-500 uppercase mb-4">2. Define el Tono y la Audiencia:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Registro</label>
+                        <select id="ib-reg-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400">
+                            <option value="">[ Selecciona Registro ]</option>
+                            ${[...ib.registro_opciones].sort().map(o => `<option value="${o}">${o}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Audiencia</label>
+                        <select id="ib-aud-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400">
+                            <option value="">[ Selecciona Audiencia ]</option>
+                            ${[...ib.audiencia_opciones].sort().map(o => `<option value="${o}">${o}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <button onclick="checkIBRegAud()" class="mt-4 px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all">Confirmar</button>
+                <p id="ib-reg-feedback" class="text-xs font-bold text-red-500 mt-2 hidden">Revisa tus selecciones.</p>
+            </div>
+
+            <div id="ib-step-3" class="hidden mt-8 animate-pop border-t-2 border-slate-100 pt-6">
+                <p class="text-xs font-black text-emerald-600 uppercase mb-3">3. Checklist de Convenciones</p>
+                <p class="text-sm text-slate-500 mb-4">Para sacar la nota máxima, debes incluir estas convenciones en tu texto. Marca cada una para confirmar que lo entiendes:</p>
+                <div class="space-y-3">
+                    ${ib.convenciones.map((conv, i) => `
+                        <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-all">
+                            <input type="checkbox" onchange="checkIBConventions()" class="ib-conv-check w-5 h-5 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500">
+                            <span class="text-sm text-slate-700">${conv}</span>
+                        </label>
+                    `).join('')}
+                </div>
+                <div id="next-btn-container-4" class="mt-6 flex justify-end"></div>
+            </div>
+        `;
+    }
+
+    window.checkIBTextType = function(btn, selectedOption) {
+        if (runtime.ibState.textType) return; // already solved
+        const correct = runtime.data.prueba_ib.texto_correcto;
+        
+        document.querySelectorAll('.ib-tt-btn').forEach(b => {
+            b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-400', 'bg-red-50', 'text-red-700');
+        });
+
+        if (selectedOption === correct) {
+            btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+            runtime.ibState.textType = true;
+            document.getElementById('ib-step-2').classList.remove('hidden');
+        } else {
+            btn.classList.add('border-red-400', 'bg-red-50', 'text-red-700');
+        }
+    };
+
+    window.checkIBRegAud = function() {
+        const regSelect = document.getElementById('ib-reg-select');
+        const audSelect = document.getElementById('ib-aud-select');
+        const feedback = document.getElementById('ib-reg-feedback');
+        
+        const ib = runtime.data.prueba_ib;
+        let isRegCorrect = regSelect.value === ib.registro_correcto;
+        let isAudCorrect = audSelect.value === ib.audiencia_correcta;
+
+        regSelect.classList.toggle('border-red-400', !isRegCorrect && regSelect.value !== "");
+        regSelect.classList.toggle('border-emerald-500', isRegCorrect);
+        audSelect.classList.toggle('border-red-400', !isAudCorrect && audSelect.value !== "");
+        audSelect.classList.toggle('border-emerald-500', isAudCorrect);
+
+        if (isRegCorrect && isAudCorrect) {
+            feedback.classList.add('hidden');
+            runtime.ibState.regAud = true;
+            document.getElementById('ib-step-3').classList.remove('hidden');
+            regSelect.disabled = true; audSelect.disabled = true;
+        } else {
+            feedback.classList.remove('hidden');
+        }
+    };
+
+    window.checkIBConventions = function() {
+        const checkboxes = document.querySelectorAll('.ib-conv-check');
+        let checkedCount = 0;
+        checkboxes.forEach(cb => { if(cb.checked) checkedCount++; });
+        
+        if (checkedCount === checkboxes.length) {
+            runtime.completed = Math.max(runtime.completed, 4);
+            showNextButton(4);
+            updateProgress();
+        }
+    };
+
+    // --- UTILITIES ---
     function showNextButton(currentModule) {
-        const container = document.getElementById('next-btn-container');
-        container.innerHTML = `
-            <button onclick="showModule(${currentModule + 1})" class="btn-next px-8 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-lg hover:bg-slate-700 transition-all">
-                Siguiente ➡
-            </button>`;
+        const container = document.getElementById(`next-btn-container-${currentModule}`);
+        if(container) {
+            container.innerHTML = `
+                <button onclick="showModule(${currentModule + 1})" class="btn-next px-8 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-lg hover:bg-slate-700 transition-all">
+                    Siguiente ➡
+                </button>`;
+        }
     }
 
     function updateProgress() {
-        const totalModules = 3;
+        const totalModules = 5;
         const pct = Math.round((runtime.completed / (totalModules - 1)) * 100);
-        
         document.getElementById('progress-fill').style.width = pct + "%";
         document.getElementById('progress-label').textContent = pct + "%";
         
@@ -304,14 +470,6 @@
         });
     }
 
-    window.startRandomPractice = () => {
-        const days = Object.keys(DB);
-        const randomDay = days[Math.floor(Math.random() * days.length)];
-        document.getElementById('day-select').value = randomDay;
-        loadDay(randomDay);
-    };
-
-    // Boot up
     init();
 </script>
 </body>
