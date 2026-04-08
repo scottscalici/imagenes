@@ -1,32 +1,32 @@
 {
   "62": {
-    "topic": "Añadir y Excluir",
+    "topic": "Conectores 1",
     "oraciones_parte1": {
-      "banco": ["También", "Además", "Excepto", "Incluso", "A excepción de"],
+      "banco": ["Además", "Sin embargo", "Porque", "Por ejemplo", "Finalmente"],
       "oraciones": [
-        { "texto": "Yo pedí una ensalada y mi hermano _ pidió una.", "respuesta": "También" },
-        { "texto": "Ese coche es muy seguro. _, consume muy poca gasolina.", "respuesta": "Además" },
-        { "texto": "Me gustan todos los deportes _ el golf, me aburre mucho.", "respuesta": "Excepto" },
-        { "texto": "Hacía tanto frío que _ el agua del lago se congeló.", "respuesta": "Incluso" },
-        { "texto": "El museo abre todos los días, _ los domingos por la tarde.", "respuesta": "A excepción de" }
+        { "texto": "Me encanta jugar al tenis. _, es un buen ejercicio cardiovascular.", "respuesta": "Además" },
+        { "texto": "Quería salir a correr por la mañana, _ empezó a llover muy fuerte.", "respuesta": "Sin embargo" },
+        { "texto": "No fuimos al parque nacional _ estaba cerrado por mantenimiento.", "respuesta": "Porque" },
+        { "texto": "Hay muchos países hispanohablantes en Sudamérica, _ Argentina y Colombia.", "respuesta": "Por ejemplo" },
+        { "texto": "Después de muchas horas de trabajo, _ logramos terminar el proyecto.", "respuesta": "Finalmente" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["Asimismo", "Igualmente", "Incluido", "Menos", "Salvo"],
+      "banco": ["Excepto", "En mi opinión", "Por lo tanto", "Aunque", "A menos que"],
       "oraciones": [
-        { "texto": "Les agradecemos su presencia. _, queremos dar las gracias a los patrocinadores.", "respuesta": "Asimismo" },
-        { "texto": "Te deseo un feliz año nuevo, e _ para toda tu familia.", "respuesta": "Igualmente" },
-        { "texto": "Trabajamos todos los días _ los sábados.", "respuesta": "Menos" },
-        { "texto": "No hay nadie en el edificio _ el guardia de seguridad.", "respuesta": "Salvo" },
-        { "texto": "Todos reprobaron el examen, _ el estudiante más inteligente.", "respuesta": "Incluido" }
+        { "texto": "Todos mis amigos fueron a la fiesta el viernes, _ Carlos, que estaba enfermo.", "respuesta": "Excepto" },
+        { "texto": "_, el transporte público debería ser gratuito para todos los estudiantes.", "respuesta": "En mi opinión" },
+        { "texto": "No estudiaste nada para el examen final, _ reprobaste la clase.", "respuesta": "Por lo tanto" },
+        { "texto": "_ estaba lloviendo a cántaros, decidimos ir a caminar por el bosque.", "respuesta": "Aunque" },
+        { "texto": "No te dejarán entrar al teatro _ tengas un boleto válido en la mano.", "respuesta": "A menos que" }
       ]
     },
     "vocabulario": [
-      {"es": "También", "en": "Also"}, {"es": "Asimismo", "en": "Likewise, also"},
-      {"es": "Igualmente", "en": "Equally, likewise"}, {"es": "Además", "en": "Besides"},
-      {"es": "Incluso", "en": "Included / Even"}, {"es": "A excepción de", "en": "Excepting"},
-      {"es": "Excepto", "en": "Except for"}, {"es": "Menos", "en": "Less / Except"},
-      {"es": "Salvo", "en": "Except / Save for"}, {"es": "Incluido", "en": "Including"}
+      {"es": "También", "en": "Also"}, {"es": "Sin embargo", "en": "However / Nevertheless"},
+      {"es": "Porque", "en": "Because"}, {"es": "Por ejemplo", "en": "For example"},
+      {"es": "Finalmente", "en": "Finally"}, {"es": "Excepto", "en": "Except for"},
+      {"es": "En mi opinión", "en": "In my opinion"}, {"es": "Por lo tanto", "en": "Therefore"},
+      {"es": "Aunque", "en": "Although / Even though"}, {"es": "A menos que", "en": "Unless"}
     ],
     "prueba_ib": {
       "escenario": "Has probado una nueva aplicación para aprender idiomas que se ha vuelto muy popular. Sin embargo, te ha parecido ineficaz comparada con las conversaciones reales. Escribe un texto dirigido a los estudiantes de tu escuela en el que describas tu experiencia, expliques por qué no funciona y sugieras métodos más efectivos.",
@@ -45,33 +45,33 @@
     }
   },
   "63": {
-    "topic": "Causas y Consecuencias",
+    "topic": "Conectores 2",
     "oraciones_parte1": {
-      "banco": ["Porque", "Por eso", "Debido a", "Ya que", "Por lo tanto"],
+      "banco": ["También", "En cambio", "Ya que", "De hecho", "En resumen"],
       "oraciones": [
-        { "texto": "Llegué tarde al colegio _ el autobús se averió.", "respuesta": "Porque" },
-        { "texto": "No estudió para el examen, _ reprobó la clase.", "respuesta": "Por lo tanto" },
-        { "texto": "El partido fue cancelado _ la intensa tormenta.", "respuesta": "Debido a" },
-        { "texto": "_ no tienes tarea, ¿me ayudas a limpiar?", "respuesta": "Ya que" },
-        { "texto": "Me encanta la cultura española, _ decidí estudiar en Madrid.", "respuesta": "Por eso" }
+        { "texto": "Voy a comprar manzanas y _ compraré unas cuantas peras.", "respuesta": "También" },
+        { "texto": "A mí me gusta levantarme temprano; a mi hermana, _, le encanta dormir hasta tarde.", "respuesta": "En cambio" },
+        { "texto": "_ ya tienes tu licencia, puedes conducir el coche de la familia.", "respuesta": "Ya que" },
+        { "texto": "Ese restaurante no es malo. _, tiene las mejores pizzas de la ciudad.", "respuesta": "De hecho" },
+        { "texto": "Hablamos de presupuestos, ventas y marketing. _, cubrimos todos los temas del año.", "respuesta": "En resumen" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["Como", "Así que", "Dado que", "Pues", "De modo que"],
+      "banco": ["A excepción de", "Desde mi punto de vista", "Así que", "A pesar de que", "Siempre que"],
       "oraciones": [
-        { "texto": "_ llovía mucho, decidimos quedarnos en casa.", "respuesta": "Como" },
-        { "texto": "No tengo dinero, _ no puedo salir con ustedes.", "respuesta": "Así que" },
-        { "texto": "Cierra la puerta con llave _ nadie pueda entrar.", "respuesta": "De modo que" },
-        { "texto": "Te prestaré mis apuntes, _ eres mi mejor amigo y faltaste.", "respuesta": "Dado que" },
-        { "texto": "No me llames más tarde, _ estaré durmiendo.", "respuesta": "Pues" }
+        { "texto": "Abrimos de lunes a sábado, _ los días festivos.", "respuesta": "A excepción de" },
+        { "texto": "_, reciclar es la obligación ciudadana más importante hoy en día.", "respuesta": "Desde mi punto de vista" },
+        { "texto": "No había tráfico en la autopista, _ llegamos al aeropuerto muy temprano.", "respuesta": "Así que" },
+        { "texto": "_ no tenía mucha experiencia, logró conseguir el trabajo.", "respuesta": "A pesar de que" },
+        { "texto": "Te prestaré mi bicicleta _ me prometas que la cuidarás bien.", "respuesta": "Siempre que" }
       ]
     },
     "vocabulario": [
-      {"es": "Porque", "en": "Because"}, {"es": "Ya que", "en": "Given that"},
-      {"es": "Por eso", "en": "Therefore, that is why"}, {"es": "Debido a", "en": "Due to"},
-      {"es": "Como", "en": "Since / As (Beginning of sentence)"}, {"es": "Por lo tanto", "en": "Therefore"},
-      {"es": "De modo que", "en": "So that"}, {"es": "Dado que", "en": "Given that"},
-      {"es": "Así que", "en": "So then, anyway"}, {"es": "Pues", "en": "Well / Since"}
+      {"es": "También", "en": "Also"}, {"es": "En cambio", "en": "On the other hand / Instead"},
+      {"es": "Ya que", "en": "Given that"}, {"es": "De hecho", "en": "In fact"},
+      {"es": "En resumen", "en": "In short"}, {"es": "A excepción de", "en": "Excepting"},
+      {"es": "Desde mi punto de vista", "en": "From my point of view"}, {"es": "Así que", "en": "So then / anyway"},
+      {"es": "A pesar de que", "en": "Although / In spite of the fact that"}, {"es": "Siempre que", "en": "Provided that / As long as"}
     ],
     "prueba_ib": {
       "escenario": "El ayuntamiento planea destruir centros deportivos juveniles para construir centros comerciales. Escribe un texto dirigido al alcalde/a en el que analices las consecuencias sociales de eliminar estos espacios, evalúes el equilibrio económico y propongas un compromiso.",
@@ -90,42 +90,42 @@
     }
   },
   "64": {
-    "topic": "Oposición y Contraste",
+    "topic": "Conectores 3",
     "oraciones_parte1": {
-      "banco": ["Pero", "Sino", "Sin embargo", "Mientras que", "Aunque"],
+      "banco": ["Incluso", "Mientras que", "Debido a", "Es decir", "Por último"],
       "oraciones": [
-        { "texto": "Quería ir a la fiesta, _ tenía que trabajar.", "respuesta": "Pero" },
-        { "texto": "No quiero té, _ café, por favor.", "respuesta": "Sino" },
-        { "texto": "Estudió toda la noche. _, no aprobó el examen.", "respuesta": "Sin embargo" },
-        { "texto": "Juan es muy callado, _ su hermano no para de hablar.", "respuesta": "Mientras que" },
-        { "texto": "_ estaba lloviendo, fuimos a caminar por el parque.", "respuesta": "Aunque" }
+        { "texto": "Hacía tanto frío que _ el agua dentro de las tuberías se congeló.", "respuesta": "Incluso" },
+        { "texto": "Yo prefiero leer libros de misterio, _ mis amigos prefieren los cómics.", "respuesta": "Mientras que" },
+        { "texto": "El vuelo fue cancelado _ la huelga de los pilotos de la aerolínea.", "respuesta": "Debido a" },
+        { "texto": "El animal es un mamífero acuático, _, respira aire pero vive en el mar.", "respuesta": "Es decir" },
+        { "texto": "Y _, me gustaría agradecer a mis padres por su apoyo incondicional.", "respuesta": "Por último" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["No obstante", "En cambio", "Por el contrario", "A pesar de", "Al contrario"],
+      "banco": ["Salvo", "Creo que", "En consecuencia", "Afortunadamente", "En caso de que"],
       "oraciones": [
-        { "texto": "El problema es difícil. _, intentaremos resolverlo.", "respuesta": "No obstante" },
-        { "texto": "A mí me gusta el verano; _, a mi hermana le encanta el invierno.", "respuesta": "En cambio" },
-        { "texto": "¿Te molestó la película? _, me pareció fascinante.", "respuesta": "Al contrario" },
-        { "texto": "Logró terminar la carrera _ su lesión en la rodilla.", "respuesta": "A pesar de" },
-        { "texto": "Muchos piensan que la tecnología nos aísla; _, yo creo que nos conecta más.", "respuesta": "Por el contrario" }
+        { "texto": "El museo está abierto todos los días del año, _ el veinticinco de diciembre.", "respuesta": "Salvo" },
+        { "texto": "_, la tecnología moderna nos ayuda más de lo que nos perjudica.", "respuesta": "Creo que" },
+        { "texto": "Hubo una sequía terrible y, _, la cosecha de este año se perdió.", "respuesta": "En consecuencia" },
+        { "texto": "Tuvimos un accidente en la carretera pero, _, nadie resultó herido.", "respuesta": "Afortunadamente" },
+        { "texto": "Lleva tu paraguas y un abrigo _ empiece a llover más tarde.", "respuesta": "En caso de que" }
       ]
     },
     "vocabulario": [
-      {"es": "Pero", "en": "But"}, {"es": "Sino", "en": "But rather / instead"},
-      {"es": "Sin embargo", "en": "However / Nevertheless"}, {"es": "Mientras que", "en": "While / Whereas"},
-      {"es": "Aunque", "en": "Although / Even though"}, {"es": "No obstante", "en": "Nevertheless"},
-      {"es": "En cambio", "en": "On the other hand / Instead"}, {"es": "Por el contrario", "en": "On the contrary"},
-      {"es": "A pesar de", "en": "In spite of / Despite"}, {"es": "Al contrario", "en": "On the contrary / Not at all"}
+      {"es": "Incluso", "en": "Included / Even"}, {"es": "Mientras que", "en": "While / Whereas"},
+      {"es": "Debido a", "en": "Due to"}, {"es": "Es decir", "en": "That is to say / In other words"},
+      {"es": "Por último", "en": "Lastly"}, {"es": "Salvo", "en": "Except / Save for"},
+      {"es": "Creo que", "en": "I think that"}, {"es": "En consecuencia", "en": "Consequently"},
+      {"es": "Afortunadamente", "en": "Fortunately"}, {"es": "En caso de que", "en": "In case"}
     ],
     "prueba_ib": {
-      "escenario": "Acabas de ver una película muy esperada que a la mayoría de la gente le encantó, pero a ti te pareció predecible y aburrida. Escribe un texto para la revista literaria/artística de tu escuela contrastando las expectativas del público con la realidad fílmica.",
+      "escenario": "Acabas de ver una película muy esperada que a la mayoría de la gente le encantó, pero a ti te pareció predecible y aburrida. Escribe un texto para la revista literaria de tu escuela contrastando las expectativas del público con la realidad fílmica.",
       "opciones_texto": ["Reseña", "Entrevista", "Propuesta"],
       "texto_correcto": "Reseña",
       "registro_opciones": ["Formal/Académico", "Semiformal / Crítico", "Íntimo / Confesional"],
       "registro_correcto": "Semiformal / Crítico",
-      "audiencia_opciones": ["El director de la película", "Compañeros de escuela interesados en el cine", "Niños de primaria"],
-      "audiencia_correcta": "Compañeros de escuela interesados en el cine",
+      "audiencia_opciones": ["El director de la película", "Compañeros interesados en el cine", "Niños de primaria"],
+      "audiencia_correcta": "Compañeros interesados en el cine",
       "convenciones": [
         "Título que indique la obra reseñada.",
         "Resumen breve de la trama sin dar 'spoilers'.",
@@ -135,83 +135,83 @@
     }
   },
   "65": {
-    "topic": "Orden y Secuencia",
+    "topic": "Conectores 4",
     "oraciones_parte1": {
-      "banco": ["En primer lugar", "A continuación", "Luego", "Después", "Por último"],
+      "banco": ["Igualmente", "Pero", "Puesto que", "O sea", "Para empezar"],
       "oraciones": [
-        { "texto": "Para hacer el pastel, _, debes mezclar la harina y el azúcar.", "respuesta": "En primer lugar" },
-        { "texto": "Batimos los huevos y, _, los añadimos a la mezcla.", "respuesta": "A continuación" },
-        { "texto": "Ponemos la masa en el horno y _ esperamos cuarenta minutos.", "respuesta": "Luego" },
-        { "texto": "Nos lavamos las manos _ de usar el baño.", "respuesta": "Después" },
-        { "texto": "Y _, decora el pastel con fresas.", "respuesta": "Por último" }
+        { "texto": "Deseo que tengas un buen fin de semana, e _ para tu familia.", "respuesta": "Igualmente" },
+        { "texto": "Quería ir al concierto de rock, _ no tenía dinero para el boleto.", "respuesta": "Pero" },
+        { "texto": "_ no me quieres decir la verdad, tendré que investigarlo yo mismo.", "respuesta": "Puesto que" },
+        { "texto": "La tienda cierra a las nueve, _ que tenemos que darnos mucha prisa.", "respuesta": "O sea" },
+        { "texto": "Bienvenidos a la clase. _, vamos a repasar la tarea de ayer.", "respuesta": "Para empezar" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["Para empezar", "Más adelante", "Finalmente", "Para terminar", "En conclusión"],
+      "banco": ["Menos", "Según la profesora", "Así pues", "Por suerte", "Con tal que"],
       "oraciones": [
-        { "texto": "Bienvenidos a la reunión. _, revisaremos los números del mes pasado.", "respuesta": "Para empezar" },
-        { "texto": "Hablaremos de este tema con más detalle _ en la presentación.", "respuesta": "Más adelante" },
-        { "texto": "Trabajamos durante meses y _, logramos lanzar la aplicación.", "respuesta": "Finalmente" },
-        { "texto": "Ya hemos discutido todos los puntos. _, quiero agradecer su tiempo.", "respuesta": "Para terminar" },
-        { "texto": "_, los beneficios de hacer ejercicio superan ampliamente a los riesgos.", "respuesta": "En conclusión" }
+        { "texto": "Todos los estudiantes aprobaron el examen de matemáticas _ Juan.", "respuesta": "Menos" },
+        { "texto": "_, el examen de mañana será el más difícil de todo el semestre.", "respuesta": "Según la profesora" },
+        { "texto": "Se nos acabó el tiempo; _, continuaremos con el debate mañana.", "respuesta": "Así pues" },
+        { "texto": "Perdí mi teléfono móvil en el tren, pero _ alguien lo encontró y me lo devolvió.", "respuesta": "Por suerte" },
+        { "texto": "Iré contigo a la fiesta _ me prometas que regresaremos antes de la medianoche.", "respuesta": "Con tal que" }
       ]
     },
     "vocabulario": [
-      {"es": "En primer lugar", "en": "In the first place / Firstly"}, {"es": "A continuación", "en": "Next / Following that"},
-      {"es": "Luego", "en": "Then / Later"}, {"es": "Después", "en": "After / Afterward"},
-      {"es": "Por último", "en": "Lastly"}, {"es": "Para empezar", "en": "To begin with"},
-      {"es": "Más adelante", "en": "Later on / Further on"}, {"es": "Finalmente", "en": "Finally"},
-      {"es": "Para terminar", "en": "To finish"}, {"es": "En conclusión", "en": "In conclusion"}
+      {"es": "Igualmente", "en": "Equally, likewise"}, {"es": "Pero", "en": "But"},
+      {"es": "Puesto que", "en": "Given that"}, {"es": "O sea", "en": "I mean / In other words"},
+      {"es": "Para empezar", "en": "To begin with"}, {"es": "Menos", "en": "Less / Except"},
+      {"es": "Según", "en": "According to"}, {"es": "Así pues", "en": "Thus"},
+      {"es": "Por suerte", "en": "Fortunately / By luck"}, {"es": "Con tal que", "en": "Provided that"}
     ],
     "prueba_ib": {
       "escenario": "Tu colegio va a organizar un viaje de campamento y te han pedido que escribas un texto para los participantes explicando el equipo necesario, las reglas de seguridad y la secuencia de actividades desde la llegada hasta la salida.",
-      "opciones_texto": ["Folleto / Conjunto de instrucciones", "Correo electrónico informal", "Ensayo"],
-      "texto_correcto": "Folleto / Conjunto de instrucciones",
-      "registro_opciones": ["Muy formal (Ustedes)", "Directo / Claro (Imperativos / Infinitivos)", "Coloquial extremo"],
-      "registro_correcto": "Directo / Claro (Imperativos / Infinitivos)",
-      "audiencia_opciones": ["Profesores", "Padres de familia", "Estudiantes que asisten al campamento"],
-      "audiencia_correcta": "Estudiantes que asisten al campamento",
+      "opciones_texto": ["Folleto / Instrucciones", "Correo informal", "Ensayo"],
+      "texto_correcto": "Folleto / Instrucciones",
+      "registro_opciones": ["Muy formal", "Directo / Claro (Imperativos)", "Coloquial extremo"],
+      "registro_correcto": "Directo / Claro (Imperativos)",
+      "audiencia_opciones": ["Profesores", "Padres de familia", "Estudiantes que asisten"],
+      "audiencia_correcta": "Estudiantes que asisten",
       "convenciones": [
         "Título claro e informativo.",
-        "Uso de subtítulos, viñetas (bullet points) o listas numeradas.",
-        "Instrucciones directas usando mandatos, infinitivos o 'se' impersonal.",
+        "Uso de subtítulos o listas numeradas.",
+        "Instrucciones directas usando mandatos o infinitivos.",
         "Estructura lógica y secuencial."
       ]
     }
   },
   "66": {
-    "topic": "Ejemplificación y Aclaración",
+    "topic": "Conectores 5",
     "oraciones_parte1": {
-      "banco": ["Por ejemplo", "Como", "Tal como", "Es decir", "O sea"],
+      "banco": ["Asimismo", "No obstante", "Por eso", "Como", "En conclusión"],
       "oraciones": [
-        { "texto": "Hay muchas frutas ricas en vitamina C, _ las naranjas y los kiwis.", "respuesta": "Por ejemplo" },
-        { "texto": "Animales domésticos, _ los perros y los gatos, necesitan mucho cuidado.", "respuesta": "Como" },
-        { "texto": "_, te expliqué ayer, las reglas no van a cambiar.", "respuesta": "Tal como" },
-        { "texto": "Mi hermano es vegetariano, _, no come nada de carne.", "respuesta": "Es decir" },
-        { "texto": "La tienda cierra a las ocho, _ que tenemos que darnos prisa.", "respuesta": "O sea" }
+        { "texto": "El hotel ofrece desayuno gratis. _, cuenta con piscina cubierta y gimnasio.", "respuesta": "Asimismo" },
+        { "texto": "El problema es bastante difícil. _, confío en que podremos resolverlo juntos.", "respuesta": "No obstante" },
+        { "texto": "No dormí bien anoche, _ estoy tomando tanto café esta mañana.", "respuesta": "Por eso" },
+        { "texto": "_ llovía a cántaros cuando salí, decidí pedir un taxi en lugar de caminar.", "respuesta": "Como" },
+        { "texto": "_, los beneficios de hacer ejercicio superan ampliamente cualquier riesgo.", "respuesta": "En conclusión" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["En otras palabras", "En efecto", "De hecho", "Especialmente", "En particular"],
+      "banco": ["Incluido", "Me parece que", "De manera que", "Estar de acuerdo con", "A no ser que"],
       "oraciones": [
-        { "texto": "No ganamos el partido, pero jugamos muy bien. _, estoy orgulloso del equipo.", "respuesta": "En otras palabras" },
-        { "texto": "Dijeron que llovería y, _, está diluviando.", "respuesta": "En efecto" },
-        { "texto": "No me gusta mucho el pescado; _, nunca lo pido en los restaurantes.", "respuesta": "De hecho" },
-        { "texto": "Me encantan todos los postres, _ los que tienen chocolate.", "respuesta": "Especialmente" },
-        { "texto": "Tengo muchos pasatiempos, pero la fotografía, _, me relaja mucho.", "respuesta": "En particular" }
+        { "texto": "Todos los empleados recibirán un bono, _ el personal de limpieza.", "respuesta": "Incluido" },
+        { "texto": "_ esta es la decisión más inteligente para el futuro de la empresa.", "respuesta": "Me parece que" },
+        { "texto": "Acomodamos las sillas en círculo _ todos pudieran verse las caras al hablar.", "respuesta": "De manera que" },
+        { "texto": "Es imposible _ las nuevas reglas; son totalmente injustas.", "respuesta": "Estar de acuerdo con" },
+        { "texto": "Iremos a nadar al lago esta tarde _ haga demasiado frío.", "respuesta": "A no ser que" }
       ]
     },
     "vocabulario": [
-      {"es": "Por ejemplo", "en": "For example"}, {"es": "Como", "en": "Such as / Like"},
-      {"es": "Tal como", "en": "Just as / Such as"}, {"es": "Es decir", "en": "That is to say / In other words"},
-      {"es": "O sea", "en": "I mean / In other words"}, {"es": "En otras palabras", "en": "In other words"},
-      {"es": "En efecto", "en": "Indeed / In effect"}, {"es": "De hecho", "en": "In fact"},
-      {"es": "Especialmente", "en": "Especially"}, {"es": "En particular", "en": "In particular"}
+      {"es": "Asimismo", "en": "Likewise, also"}, {"es": "No obstante", "en": "Nevertheless"},
+      {"es": "Por eso", "en": "Therefore, that is why"}, {"es": "Como", "en": "Since / As (Start of sentence)"},
+      {"es": "En conclusión", "en": "In conclusion"}, {"es": "Incluido", "en": "Including"},
+      {"es": "Me parece que", "en": "It seems to me that"}, {"es": "De manera que", "en": "So that"},
+      {"es": "Estar de acuerdo con", "en": "To agree with"}, {"es": "A no ser que", "en": "Unless"}
     ],
     "prueba_ib": {
-      "escenario": "Quieres convencer a los jóvenes de tu comunidad sobre los beneficios ocultos de reducir el tiempo frente a las pantallas, usando estudios recientes y anécdotas personales para aclarar conceptos complicados de salud mental.",
-      "opciones_texto": ["Artículo (Revista escolar)", "Carta formal", "Diario personal"],
-      "texto_correcto": "Artículo (Revista escolar)",
+      "escenario": "Quieres convencer a los jóvenes de tu comunidad sobre los beneficios de reducir el tiempo frente a las pantallas, usando estudios recientes para aclarar conceptos de salud mental.",
+      "opciones_texto": ["Artículo", "Carta formal", "Diario personal"],
+      "texto_correcto": "Artículo",
       "registro_opciones": ["Íntimo", "Informativo / Persuasivo", "Académico muy rígido"],
       "registro_correcto": "Informativo / Persuasivo",
       "audiencia_opciones": ["Médicos", "Jóvenes de tu comunidad", "Padres preocupados"],
@@ -225,91 +225,91 @@
     }
   },
   "67": {
-    "topic": "Condición y Finalidad",
+    "topic": "Conectores 6",
     "oraciones_parte1": {
-      "banco": ["Si", "Siempre que", "A condición de que", "En caso de que", "A menos que"],
+      "banco": ["Además", "Al contrario", "Dado que", "Tal como", "A continuación"],
       "oraciones": [
-        { "texto": "_ estudias mucho, sacarás buenas notas.", "respuesta": "Si" },
-        { "texto": "Te presto el coche _ me lo devuelvas con el tanque lleno.", "respuesta": "Siempre que" },
-        { "texto": "Iremos a la playa _ no llueva.", "respuesta": "A condición de que" },
-        { "texto": "Lleva un paraguas _ llueva más tarde.", "respuesta": "En caso de que" },
-        { "texto": "No podremos entrar al concierto _ compremos los boletos ahora.", "respuesta": "A menos que" }
+        { "texto": "Aprobó todos sus exámenes y, _, consiguió una beca para la universidad.", "respuesta": "Además" },
+        { "texto": "¿Estás aburrido? _, me lo estoy pasando genial en esta fiesta.", "respuesta": "Al contrario" },
+        { "texto": "_ no tenemos leche en el refrigerador, tendré que ir al supermercado.", "respuesta": "Dado que" },
+        { "texto": "Todo salió exactamente _ lo habíamos planeado desde el principio.", "respuesta": "Tal como" },
+        { "texto": "Batimos los huevos y, _, los añadimos a la mezcla de harina.", "respuesta": "A continuación" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["Para que", "A fin de que", "Con el objetivo de", "De manera que", "Con tal de que"],
+      "banco": ["Excepto", "A mi juicio", "Por consiguiente", "A pesar de", "Si"],
       "oraciones": [
-        { "texto": "Te lo explico otra vez _ lo entiendas perfectamente.", "respuesta": "Para que" },
-        { "texto": "El gobierno aprobó la ley _ se proteja el medio ambiente.", "respuesta": "A fin de que" },
-        { "texto": "Estudió medicina _ ayudar a las personas enfermas.", "respuesta": "Con el objetivo de" },
-        { "texto": "Habla más despacio _ todos puedan escucharte.", "respuesta": "De manera que" },
-        { "texto": "Haré lo que sea _ seas feliz.", "respuesta": "Con tal de que" }
+        { "texto": "Me gustan todas las verduras _ la cebolla, que me hace llorar.", "respuesta": "Excepto" },
+        { "texto": "_, el autor de este libro no explica bien sus argumentos.", "respuesta": "A mi juicio" },
+        { "texto": "Hubo una avería en la fábrica; _, la producción se retrasó dos días.", "respuesta": "Por consiguiente" },
+        { "texto": "Logró terminar la carrera _ su grave lesión en la rodilla.", "respuesta": "A pesar de" },
+        { "texto": "_ estudias un poco todos los días, dominarás el español muy pronto.", "respuesta": "Si" }
       ]
     },
     "vocabulario": [
-      {"es": "Si", "en": "If"}, {"es": "Siempre que", "en": "As long as / Provided that"},
-      {"es": "En caso de que", "en": "In case"}, {"es": "A menos que", "en": "Unless"},
-      {"es": "Para que", "en": "So that / In order that"}, {"es": "A fin de que", "en": "So that / In order to"},
-      {"es": "Con el objetivo de", "en": "With the goal of"}, {"es": "De manera que", "en": "So that / In such a way that"},
-      {"es": "Con tal de que", "en": "As long as / Provided that"}, {"es": "A condición de que", "en": "On the condition that"}
+      {"es": "Además", "en": "Besides / Also"}, {"es": "Al contrario", "en": "On the contrary"},
+      {"es": "Dado que", "en": "Given that"}, {"es": "Tal como", "en": "Just as / Such as"},
+      {"es": "A continuación", "en": "Next / Following that"}, {"es": "Excepto", "en": "Except for"},
+      {"es": "A mi juicio", "en": "In my judgment"}, {"es": "Por consiguiente", "en": "Consequently"},
+      {"es": "A pesar de", "en": "In spite of"}, {"es": "Si", "en": "If"}
     ],
     "prueba_ib": {
-      "escenario": "Representas al consejo estudiantil y necesitas redactar un documento oficial al director del colegio solicitando fondos económicos para realizar un viaje de servicio comunitario a Costa Rica, estableciendo las condiciones y los objetivos del viaje.",
-      "opciones_texto": ["Carta (Propuesta formal)", "Folleto", "Blog"],
-      "texto_correcto": "Carta (Propuesta formal)",
-      "registro_opciones": ["Informal (Tú)", "Formal (Usted) / Respetuoso", "Satírico"],
-      "registro_correcto": "Formal (Usted) / Respetuoso",
-      "audiencia_opciones": ["Estudiantes del viaje", "El director del colegio", "Los padres de familia"],
+      "escenario": "Representas al consejo estudiantil y redactas un documento al director solicitando fondos para un viaje de servicio a Costa Rica, estableciendo condiciones y objetivos.",
+      "opciones_texto": ["Carta formal", "Folleto", "Blog"],
+      "texto_correcto": "Carta formal",
+      "registro_opciones": ["Informal (Tú)", "Formal (Usted)", "Satírico"],
+      "registro_correcto": "Formal (Usted)",
+      "audiencia_opciones": ["Estudiantes", "El director del colegio", "Los padres"],
       "audiencia_correcta": "El director del colegio",
       "convenciones": [
-        "Encabezado formal con el nombre del destinatario.",
-        "Planteamiento claro del problema o petición inicial.",
+        "Encabezado formal con destinatario.",
+        "Planteamiento claro de la petición.",
         "Justificación lógica (argumentos) y condiciones.",
-        "Despedida formal y firma del representante."
+        "Despedida formal y firma."
       ]
     }
   },
   "68": {
-    "topic": "Opinión y Certeza",
+    "topic": "Conectores 7",
     "oraciones_parte1": {
-      "banco": ["En mi opinión", "A mi juicio", "Desde mi punto de vista", "Personalmente", "Me parece que"],
+      "banco": ["También", "Sino", "Porque", "Por ejemplo", "Para terminar"],
       "oraciones": [
-        { "texto": "_, este es el mejor libro que he leído este año.", "respuesta": "En mi opinión" },
-        { "texto": "_, el acusado no es culpable de los cargos.", "respuesta": "A mi juicio" },
-        { "texto": "_, la economía mejorará el próximo año.", "respuesta": "Desde mi punto de vista" },
-        { "texto": "_, prefiero las películas de acción a las comedias.", "respuesta": "Personalmente" },
-        { "texto": "_ la clase de hoy fue muy interesante.", "respuesta": "Me parece que" }
+        { "texto": "Yo pedí una ensalada y mi hermano _ pidió una para él.", "respuesta": "También" },
+        { "texto": "No quiero té, _ café bien cargado, por favor.", "respuesta": "Sino" },
+        { "texto": "No fuimos al partido de fútbol _ no teníamos suficiente dinero para las entradas.", "respuesta": "Porque" },
+        { "texto": "Hay muchos animales salvajes aquí, _ osos y lobos.", "respuesta": "Por ejemplo" },
+        { "texto": "Ya hemos discutido todos los puntos. _, quiero agradecer su tiempo.", "respuesta": "Para terminar" }
       ]
     },
     "oraciones_parte2": {
-      "banco": ["Es indudable", "Sin duda", "Efectivamente", "Está claro que", "Por supuesto"],
+      "banco": ["A excepción de", "Es indudable", "De modo que", "Aunque", "En caso de que"],
       "oraciones": [
-        { "texto": "_ que el calentamiento global es una crisis urgente.", "respuesta": "Es indudable" },
-        { "texto": "Ese fue, _, el partido más emocionante del torneo.", "respuesta": "Sin duda" },
-        { "texto": "Me preguntaste si estaba cansado y, _, lo estoy.", "respuesta": "Efectivamente" },
-        { "texto": "Con estas pruebas, _ él es el ganador legítimo.", "respuesta": "Está claro que" },
-        { "texto": "¿Vas a venir a mi fiesta el sábado? ¡_!", "respuesta": "Por supuesto" }
+        { "texto": "Todos los empleados asistieron a la reunión _ la gerente de ventas.", "respuesta": "A excepción de" },
+        { "texto": "_ que el calentamiento global es una de las crisis más urgentes hoy.", "respuesta": "Es indudable" },
+        { "texto": "Cierra la puerta de la calle con llave _ nadie pueda entrar sin permiso.", "respuesta": "De modo que" },
+        { "texto": "_ el restaurante estaba lleno, conseguimos una mesa rápidamente.", "respuesta": "Aunque" },
+        { "texto": "Te dejaré una llave de repuesto bajo la maceta _ llegues antes que yo.", "respuesta": "En caso de que" }
       ]
     },
     "vocabulario": [
-      {"es": "En mi opinión", "en": "In my opinion"}, {"es": "A mi juicio", "en": "In my judgment"},
-      {"es": "Desde mi punto de vista", "en": "From my point of view"}, {"es": "Personalmente", "en": "Personally"},
-      {"es": "Me parece que", "en": "It seems to me that"}, {"es": "Es indudable", "en": "It is unquestionable / undoubtedly"},
-      {"es": "Sin duda", "en": "Without a doubt"}, {"es": "Efectivamente", "en": "Indeed / Effectively"},
-      {"es": "Está claro que", "en": "It is clear that"}, {"es": "Por supuesto", "en": "Of course"}
+      {"es": "También", "en": "Also"}, {"es": "Sino", "en": "But rather / Instead"},
+      {"es": "Porque", "en": "Because"}, {"es": "Por ejemplo", "en": "For example"},
+      {"es": "Para terminar", "en": "To finish"}, {"es": "A excepción de", "en": "Excepting"},
+      {"es": "Es indudable", "en": "It is unquestionable"}, {"es": "De modo que", "en": "So that"},
+      {"es": "Aunque", "en": "Although"}, {"es": "En caso de que", "en": "In case"}
     ],
     "prueba_ib": {
-      "escenario": "Te han invitado a hablar en la asamblea de toda la escuela sobre la importancia de implementar 'días de salud mental' obligatorios para los estudiantes. Debes expresar opiniones firmes y convencer a los profesores y alumnos presentes.",
-      "opciones_texto": ["Discurso / Presentación", "Reseña", "Conjunto de instrucciones"],
-      "texto_correcto": "Discurso / Presentación",
-      "registro_opciones": ["Íntimo", "Inspirador / Retórico / Persuasivo", "Académico y pasivo"],
-      "registro_correcto": "Inspirador / Retórico / Persuasivo",
-      "audiencia_opciones": ["Solo el director", "Toda la comunidad escolar (profesores y alumnos)", "Tus padres"],
-      "audiencia_correcta": "Toda la comunidad escolar (profesores y alumnos)",
+      "escenario": "Te han invitado a hablar en la asamblea sobre la importancia de implementar 'días de salud mental' obligatorios para los estudiantes. Debes expresar opiniones firmes y convencer a la audiencia.",
+      "opciones_texto": ["Discurso", "Reseña", "Conjunto de instrucciones"],
+      "texto_correcto": "Discurso",
+      "registro_opciones": ["Íntimo", "Inspirador / Persuasivo", "Académico"],
+      "registro_correcto": "Inspirador / Persuasivo",
+      "audiencia_opciones": ["Solo el director", "Toda la comunidad escolar", "Tus padres"],
+      "audiencia_correcta": "Toda la comunidad escolar",
       "convenciones": [
-        "Saludo inicial a la audiencia específica (Ej. Buenos días a todos).",
-        "Uso de recursos retóricos (preguntas retóricas, repeticiones).",
-        "Contacto directo con la audiencia (uso de 'nosotros' o 'ustedes').",
+        "Saludo inicial a la audiencia específica.",
+        "Uso de recursos retóricos (preguntas, repeticiones).",
+        "Contacto directo con la audiencia ('nosotros').",
         "Agradecimiento final por la atención."
       ]
     }
