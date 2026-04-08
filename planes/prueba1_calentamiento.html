@@ -12,7 +12,6 @@
     .animate-pop { animation: popIn 0.3s ease-out forwards; }
     .match-selected { background-color: #e0f2fe !important; border-color: #0ea5e9 !important; border-width: 2px !important; }
     .matched { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 0.3s ease; }
-    /* Loading Spinner */
     .spinner { border: 3px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #0ea5e9; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
@@ -39,6 +38,11 @@
   <main class="max-w-6xl mx-auto px-4 py-6">
     <div class="grid md:grid-cols-[230px,1fr] gap-6">
       <aside class="space-y-4">
+        
+        <a href="https://sites.google.com/view/srscalici/vocabulario/conectores" target="_blank" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-md transition-all uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
+            📖 Lista de Conectores
+        </a>
+
         <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
           <div id="time-machine-container" class="hidden">
             <label class="text-[9px] font-black text-slate-400 uppercase mb-1 flex justify-between items-center tracking-widest text-center">
@@ -81,15 +85,14 @@
         if (clickCount >= 5 && !runtime.teacherMode) {
             runtime.teacherMode = true;
             document.getElementById('unlock-badge').classList.remove('hidden');
-            buildDropdown(); // Rebuild dropdown to show everything
+            buildDropdown(); 
             clickCount = 0;
         }
-        setTimeout(() => { clickCount = 0; }, 2000); // Reset if not clicked fast enough
+        setTimeout(() => { clickCount = 0; }, 2000); 
     });
 
     async function init() {
         try {
-            // 1. Fetch JSONs with Cache Busting
             const cacheBuster = "?t=" + new Date().getTime();
             const [calRes, contentRes] = await Promise.all([
                 fetch(CALENDAR_URL + cacheBuster),
@@ -99,12 +102,9 @@
             const calendarData = await calRes.json();
             runtime.db = await contentRes.json();
 
-            // 2. Determine the Actual School Day based on today's date
             const today = new Date();
-            // Format YYYY-MM-DD
             const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
             
-            // Filter calendar for dates up to today, sort descending
             const pastDays = calendarData.map
                 .filter(d => d.fecha <= todayStr && d.dia !== null)
                 .sort((a, b) => b.fecha.localeCompare(a.fecha));
@@ -112,24 +112,21 @@
             if (pastDays.length > 0) {
                 runtime.actualSchoolDay = pastDays[0].dia.toString();
             } else {
-                // Failsafe if it's before the school year starts
                 runtime.actualSchoolDay = "62"; 
             }
 
-            // Failsafe: if the calculated day isn't in our DB yet, default to highest available
             const availableDays = Object.keys(runtime.db).map(Number).sort((a, b) => a - b);
             if (!runtime.db[runtime.actualSchoolDay]) {
                  const pastAvailable = availableDays.filter(d => d <= parseInt(runtime.actualSchoolDay));
                  if(pastAvailable.length > 0) {
                      runtime.actualSchoolDay = pastAvailable[pastAvailable.length-1].toString();
                  } else {
-                     runtime.actualSchoolDay = availableDays[0].toString(); // lowest day in DB
+                     runtime.actualSchoolDay = availableDays[0].toString(); 
                  }
             }
 
             runtime.activeDia = runtime.actualSchoolDay;
 
-            // 3. UI Setup
             document.getElementById('time-machine-container').classList.remove('hidden');
             buildDropdown();
             
@@ -152,9 +149,8 @@
         let html = '';
         availableDays.forEach(dayNum => {
             const dStr = dayNum.toString();
-            // If not teacher mode, lock future days
             if (!runtime.teacherMode && dayNum > parseInt(runtime.actualSchoolDay)) {
-                return; // Skip adding to dropdown
+                return; 
             }
             html += `<option value="${dStr}">Día ${dStr}: ${runtime.db[dStr].topic}</option>`;
         });
@@ -217,7 +213,6 @@
         runtime.currentModule = n;
         const content = document.getElementById('module-content');
         
-        // Reset animation
         content.classList.remove('animate-pop');
         void content.offsetWidth; 
         content.classList.add('animate-pop');
@@ -272,7 +267,6 @@
         }
     }
 
-    // --- MATCHING GAME ---
     let selectedEs = null;
     let pairsSolved = 0;
 
@@ -332,7 +326,6 @@
         });
     }
 
-    // --- IB PAPER 1 MODULE ---
     function renderIBModule(content) {
         const ib = runtime.db[runtime.activeDia].prueba_ib;
         content.innerHTML = `
@@ -393,7 +386,6 @@
             </div>
         `;
         
-        // Re-apply states if navigating back
         if(runtime.ibState.textType) {
             document.querySelectorAll('.ib-tt-btn').forEach(b => {
                if(b.textContent === ib.texto_correcto) b.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700'); 
@@ -443,7 +435,6 @@
             runtime.ibState.regAud = true;
             document.getElementById('ib-step-3').classList.remove('hidden');
             regSelect.disabled = true; audSelect.disabled = true;
-            // Hide the confirm button
             event.target.classList.add('hidden');
         } else {
             feedback.classList.remove('hidden');
@@ -462,7 +453,6 @@
         }
     };
 
-    // --- UTILITIES ---
     function showNextButton(currentModule) {
         const container = document.getElementById(`next-btn-container-${currentModule}`);
         if(container && !container.innerHTML.includes('Siguiente')) {
@@ -489,7 +479,6 @@
         });
     }
 
-    // Start the app
     init();
 </script>
 </body>
