@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Práctica Ilimitada - Conectores Lógicos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @keyframes fadeIn { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+    .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+    select { -webkit-appearance: none; -moz-appearance: none; appearance: none; text-align: center; }
+    .spinner { border: 3px solid rgba(0,0,0,0.1); width: 20px; height: 20px; border-radius: 50%; border-left-color: #0ea5e9; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-20 bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-black text-slate-800 uppercase tracking-tighter leading-tight">Práctica Ilimitada</h1>
+        <div class="text-xs font-bold text-sky-500 uppercase tracking-widest mt-1">Conectores Lógicos</div>
+      </div>
+      <div class="text-right">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Rondas Completadas</p>
+        <p id="round-counter" class="text-2xl font-black text-slate-800 leading-none mt-1">0</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
+    <div class="grid md:grid-cols-[250px,1fr] gap-6 items-start">
+      
+      <aside class="space-y-4 sticky top-24">
+        <a href="https://sites.google.com/view/srscalici/vocabulario/conectores" target="_blank" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-lg transition-all uppercase text-[11px] tracking-widest flex flex-col items-center justify-center gap-2 border-b-4 border-indigo-800">
+            <span class="text-2xl">📖</span>
+            <span>Lista de Conectores</span>
+        </a>
+
+        <div class="bg-white rounded-2xl shadow p-5 border border-slate-200 text-center">
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Puntuación Actual</p>
+            <div id="score-display" class="text-4xl font-black text-slate-300">- / 10</div>
+            <p id="feedback-msg" class="text-xs font-bold mt-3 text-transparent">¡Sigue así!</p>
+        </div>
+      </aside>
+      
+      <section class="bg-white rounded-2xl shadow p-6 md:p-8 border border-slate-200 min-h-[600px] flex flex-col relative" id="exercise-container">
+        
+        <div id="loading-state" class="flex flex-col items-center justify-center h-full space-y-4">
+            <div class="spinner w-10 h-10 border-4"></div>
+            <p class="text-slate-400 font-bold tracking-widest uppercase text-xs">Cargando Banco de Preguntas...</p>
+        </div>
+
+        <div id="active-state" class="hidden flex-col h-full">
+            <div class="mb-8 border-b-2 border-sky-100 pb-4">
+                <h2 class="text-lg font-black text-slate-800 uppercase tracking-tight mb-3">Banco de Palabras</h2>
+                <div id="word-bank" class="flex flex-wrap gap-2">
+                    </div>
+            </div>
+
+            <div id="sentences-container" class="space-y-5 mb-8 flex-grow">
+                </div>
+
+            <div class="flex items-center justify-between pt-6 border-t border-slate-100 mt-auto">
+                <button onclick="checkAnswers()" id="btn-revisar" class="px-8 py-4 bg-sky-600 text-white font-black rounded-xl text-sm uppercase tracking-widest transition-all hover:bg-sky-700 shadow-md border-b-4 border-sky-800">
+                    Revisar Respuestas
+                </button>
+                <button onclick="generateRound()" id="btn-siguiente" class="px-8 py-4 bg-slate-200 text-slate-400 font-black rounded-xl text-sm uppercase tracking-widest transition-all pointer-events-none opacity-50 hidden">
+                    Siguiente Ronda ➡
+                </button>
+            </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+<script>
+    const DATA_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/práctica/conectores.json";
+    
+    let MASTER_BANK = [];
+    let currentQuestions = [];
+    let roundsCompleted = 0;
+
+    async function init() {
+        try {
+            const cacheBuster = "?t=" + new Date().getTime();
+            const response = await fetch(DATA_URL + cacheBuster);
+            
+            if (!response.ok) throw new Error("No se pudo cargar el banco de preguntas");
+            
+            MASTER_BANK = await response.json();
+            
+            // Hide loading, show content
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('active-state').classList.remove('hidden');
+            document.getElementById('active-state').classList.add('flex');
+            
+            generateRound();
+            
+        } catch (error) {
+            console.error("Error:", error);
+            document.getElementById('loading-state').innerHTML = `<p class="text-red-500 font-bold">Error cargando los datos. Revisa la URL.</p>`;
+        }
+    }
+
+    function generateRound() {
+        const container = document.getElementById('sentences-container');
+        const bankContainer = document.getElementById('word-bank');
+        const btnSiguiente = document.getElementById('btn-siguiente');
+        const btnRevisar = document.getElementById('btn-revisar');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackMsg = document.getElementById('feedback-msg');
+
+        // Reset UI
+        container.innerHTML = "";
+        bankContainer.innerHTML = "";
+        container.classList.remove('animate-fade');
+        void container.offsetWidth; // trigger reflow
+        container.classList.add('animate-fade');
+        
+        btnSiguiente.classList.add('hidden', 'pointer-events-none', 'opacity-50');
+        btnRevisar.classList.remove('hidden');
+        scoreDisplay.textContent = "- / 10";
+        scoreDisplay.className = "text-4xl font-black text-slate-300";
+        feedbackMsg.className = "text-xs font-bold mt-3 text-transparent";
+
+        // Logic: Pick 10 random questions with completely unique answers
+        let shuffledBank = [...MASTER_BANK].sort(() => 0.5 - Math.random());
+        currentQuestions = [];
+        let usedAnswers = new Set();
+
+        for (let q of shuffledBank) {
+            if (!usedAnswers.has(q.respuesta)) {
+                currentQuestions.push(q);
+                usedAnswers.add(q.respuesta);
+                if (currentQuestions.length === 10) break;
+            }
+        }
+
+        // Generate Word Bank
+        let currentAnswers = currentQuestions.map(q => q.respuesta).sort(() => 0.5 - Math.random());
+        
+        currentAnswers.forEach(ans => {
+            const badge = document.createElement('span');
+            badge.className = "px-3 py-1 bg-slate-800 text-white text-xs font-bold rounded-md shadow-sm";
+            badge.textContent = ans;
+            bankContainer.appendChild(badge);
+        });
+
+        // Build `<select>` options string
+        let optionsHTML = `<option value="">[ Selecciona ]</option>`;
+        currentAnswers.forEach(ans => {
+            optionsHTML += `<option value="${ans}">${ans}</option>`;
+        });
+
+        // Generate Sentences
+        currentQuestions.forEach((q, index) => {
+            const selectHTML = `<select class="border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer">${optionsHTML}</select>`;
+            const sentenceWithBlank = q.texto.replace('_', selectHTML);
+
+            const div = document.createElement('div');
+            div.className = "sentence-item p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 transition-colors duration-300";
+            div.dataset.ans = q.respuesta;
+            
+            div.innerHTML = `
+                <span class="text-xs font-black text-slate-400 w-6 text-right shrink-0">${index + 1}.</span>
+                <div class="text-slate-700 font-medium leading-loose text-sm w-full">${sentenceWithBlank}</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function checkAnswers() {
+        const items = document.querySelectorAll('.sentence-item');
+        let correctCount = 0;
+
+        items.forEach(item => {
+            const select = item.querySelector('select');
+            const ans = item.dataset.ans;
+            
+            // Reset styles
+            select.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-400', 'bg-red-50', 'text-red-700');
+            item.classList.remove('border-emerald-300', 'bg-emerald-50/50', 'border-red-300', 'bg-red-50/50');
+
+            if (select.value === ans) {
+                correctCount++;
+                select.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+                item.classList.add('border-emerald-300', 'bg-emerald-50/50');
+            } else if (select.value !== "") {
+                select.classList.add('border-red-400', 'bg-red-50', 'text-red-700');
+                item.classList.add('border-red-300', 'bg-red-50/50');
+            }
+        });
+
+        // Update Score UI
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackMsg = document.getElementById('feedback-msg');
+        
+        scoreDisplay.textContent = `${correctCount} / 10`;
+        
+        if (correctCount === 10) {
+            scoreDisplay.className = "text-4xl font-black text-emerald-500";
+            feedbackMsg.className = "text-xs font-bold mt-3 text-emerald-600";
+            feedbackMsg.textContent = "¡Perfecto! Has dominado esta ronda.";
+            
+            document.getElementById('btn-revisar').classList.add('hidden');
+            const btnSiguiente = document.getElementById('btn-siguiente');
+            btnSiguiente.classList.remove('hidden', 'pointer-events-none', 'opacity-50');
+            btnSiguiente.classList.add('bg-emerald-500', 'text-white', 'hover:bg-emerald-600', 'border-b-4', 'border-emerald-700');
+            
+            roundsCompleted++;
+            document.getElementById('round-counter').textContent = roundsCompleted;
+            
+        } else if (correctCount >= 7) {
+            scoreDisplay.className = "text-4xl font-black text-amber-500";
+            feedbackMsg.className = "text-xs font-bold mt-3 text-amber-600";
+            feedbackMsg.textContent = "¡Casi! Corrige los errores en rojo.";
+        } else {
+            scoreDisplay.className = "text-4xl font-black text-red-500";
+            feedbackMsg.className = "text-xs font-bold mt-3 text-red-600";
+            feedbackMsg.textContent = "Revisa tus respuestas e inténtalo de nuevo.";
+        }
+    }
+
+    // Initialize fetching on load
+    window.onload = init;
+
+</script>
+</body>
+</html>
