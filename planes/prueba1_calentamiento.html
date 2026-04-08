@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calentamiento Maestro - Conectores</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+    .animate-pop { animation: popIn 0.3s ease-out forwards; }
+    .match-selected { background-color: #e0f2fe !important; border-color: #0ea5e9 !important; border-width: 2px !important; }
+    .matched { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 0.3s ease; }
+    .btn-next { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+  <header class="sticky top-0 z-20 bg-white shadow-sm border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div>
+        <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CONECTORES LÓGICOS</h1>
+        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando...</div>
+      </div>
+      
+      <div class="w-40 sm:w-64 text-right">
+        <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div id="progress-fill" class="h-full bg-sky-500 transition-all duration-300 w-0"></div>
+        </div>
+        <p id="progress-label" class="text-[10px] text-slate-600 mt-1 font-bold uppercase font-mono tracking-widest">0%</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div class="grid md:grid-cols-[230px,1fr] gap-6">
+      <aside class="space-y-4">
+        <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
+          <div id="time-machine-container">
+            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">SELECCIONAR DÍA</label>
+            <select id="day-select" class="w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer uppercase"></select>
+          </div>
+          <nav id="nav-tabs" class="space-y-1">
+             </nav>
+        </div>
+      </aside>
+      
+      <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px] relative">
+        <div id="module-content">
+            <p id="loading-msg" class="text-slate-400 text-sm italic">Cargando...</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+<script>
+    // --- MOCK DATABASE ---
+    // You would replace this with a fetch() to your raw GitHub JSON
+    const DB = {
+        "62": {
+            "topic": "Añadir y Excluir",
+            "banco": ["También", "Además", "Excepto", "Incluso", "A excepción de"],
+            "oraciones": [
+                { "texto": "Me gustan todas las verduras _ el brócoli.", "respuesta": "Excepto" },
+                { "texto": "Hizo mucho frío y _ empezó a nevar.", "respuesta": "Además" },
+                { "texto": "Todos fueron a la fiesta, _ los profesores.", "respuesta": "Incluso" },
+                { "texto": "Yo _ quiero ir al cine esta noche.", "respuesta": "También" },
+                { "texto": "Abriremos todos los días _ los domingos.", "respuesta": "A excepción de" }
+            ],
+            "vocabulario": [
+                {"es": "También", "en": "Also"}, {"es": "Asimismo", "en": "Likewise, also"},
+                {"es": "Igualmente", "en": "Equally, likewise"}, {"es": "Además", "en": "Besides"},
+                {"es": "Incluso", "en": "Included"}, {"es": "A excepción de", "en": "Excepting"},
+                {"es": "Excepto", "en": "Except for"}, {"es": "En mi opinión", "en": "In my opinion"},
+                {"es": "Desde mi punto de vista", "en": "From my point of view"}, {"es": "Creo que", "en": "I think that"}
+            ]
+        },
+        "63": {
+            "topic": "Causas y Consecuencias",
+            "banco": ["Porque", "Debido a", "Por lo tanto", "Así que", "Ya que"],
+            "oraciones": [
+                { "texto": "No fuimos a la playa _ la lluvia fuerte.", "respuesta": "Debido a" },
+                { "texto": "Estaba enfermo, _ me quedé en casa.", "respuesta": "Así que" },
+                { "texto": "No tengo dinero _ perdí mi cartera.", "respuesta": "Porque" },
+                { "texto": "Pienso, _ existo.", "respuesta": "Por lo tanto" },
+                { "texto": "_ estamos aquí, deberíamos cenar.", "respuesta": "Ya que" }
+            ],
+            "vocabulario": [
+                {"es": "Porque", "en": "Because"}, {"es": "Puesto que", "en": "Given that"},
+                {"es": "Por eso", "en": "Therefore, that is why"}, {"es": "Debido a", "en": "Due to"},
+                {"es": "Así pues", "en": "Thus"}, {"es": "Por lo tanto", "en": "Therefore"},
+                {"es": "De manera que", "en": "So that"}, {"es": "Así", "en": "So, thus"},
+                {"es": "Así que", "en": "So then, anyway"}, {"es": "En efecto", "en": "In effect, in fact"}
+            ]
+        }
+    };
+
+    const runtime = {
+        activeDia: "62",
+        data: null,
+        currentModule: 1,
+        completed: 0
+    };
+
+    function init() {
+        // Build Dropdown for testing
+        const select = document.getElementById('day-select');
+        select.innerHTML = Object.keys(DB).map(d => `<option value="${d}">Día ${d}: ${DB[d].topic}</option>`).join('');
+        select.value = runtime.activeDia;
+        select.onchange = (e) => loadDay(e.target.value);
+        
+        loadDay(runtime.activeDia);
+    }
+
+    function loadDay(dia) {
+        runtime.activeDia = dia;
+        runtime.data = DB[dia];
+        runtime.completed = 0;
+        
+        document.getElementById('pageSubtitle').innerHTML = `<span class="text-sky-600 font-black tracking-widest">DÍA ${dia}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-slate-400 font-bold">${runtime.data.topic.toUpperCase()}</span>`;
+        
+        renderSidebar();
+        showModule(1);
+    }
+
+    function renderSidebar() {
+        const nav = document.getElementById('nav-tabs');
+        const labels = ["1. Oraciones", "2. Parejas", "Listo"];
+        nav.innerHTML = labels.map((l, i) => `
+            <button onclick="showModule(${i+1})" class="module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all" id="tab-${i+1}" disabled>
+                <span class="text-[10px] font-black uppercase tracking-tighter">${l}</span>
+                <span id="badge-${i+1}">🔒</span>
+            </button>
+        `).join('');
+    }
+
+    function showModule(n) {
+        runtime.currentModule = n;
+        const content = document.getElementById('module-content');
+        
+        if (n === 1) {
+            // MODULE 1: SENTENCES (Dropdowns)
+            let selectHTML = `<select class="connector-select border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer appearance-none text-center">
+                                <option value="">[ Selecciona ]</option>
+                                ${runtime.data.banco.map(w => `<option value="${w}">${w}</option>`).join('')}
+                              </select>`;
+
+            content.innerHTML = `
+                <div class="mb-6 border-b-2 border-sky-100 pb-2">
+                    <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">BANCO DE PALABRAS</h2>
+                    <p class="text-sm text-slate-500 font-medium mt-2">${runtime.data.banco.join(' • ')}</p>
+                </div>
+                <div class="space-y-4 mb-6">
+                    ${runtime.data.oraciones.map((o, i) => {
+                        const sentenceWithBlank = o.texto.replace('_', selectHTML);
+                        return `
+                        <div class="sentence-item p-4 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3" data-ans="${o.respuesta}">
+                            <span class="text-xs font-black text-slate-400">${i + 1}.</span>
+                            <div class="text-slate-700 font-medium leading-loose text-sm">${sentenceWithBlank}</div>
+                        </div>`;
+                    }).join('')}
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="checkSentences()" class="px-6 py-3 bg-sky-600 text-white font-black rounded-xl text-xs uppercase tracking-widest transition-all hover:bg-sky-700 shadow-md">Revisar</button>
+                    <div id="next-btn-container"></div>
+                </div>`;
+                
+        } else if (n === 2) {
+            // MODULE 2: VOCAB MATCHING
+            content.innerHTML = `
+                <div class="mb-4 border-b-2 border-sky-100 pb-2 flex justify-between items-end">
+                    <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight">Encuentra la pareja</h2>
+                    <span id="match-counter" class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">0 / 10</span>
+                </div>
+                <div id="match-area" class="mt-4 p-6 bg-slate-50 rounded-2xl border border-slate-200 animate-pop"></div>
+                <div id="next-btn-container" class="mt-6 flex justify-end"></div>`;
+            startMatchingGame();
+            
+        } else {
+            // MODULE 3: FINISHED
+            content.innerHTML = `
+                <div class="text-center py-12 animate-pop">
+                    <div class="text-6xl mb-4">🏆</div>
+                    <h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Excelente!</h2>
+                    <p class="text-slate-500 font-medium mb-8">Has dominado los conectores de hoy.</p>
+                    <button onclick="startRandomPractice()" class="px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-2xl shadow-lg uppercase tracking-widest text-xs transition-all">🔄 Repasar Otro Día</button>
+                </div>`;
+        }
+        updateProgress();
+    }
+
+    function checkSentences() {
+        let correctCount = 0;
+        const items = document.querySelectorAll('.sentence-item');
+        
+        items.forEach(item => {
+            const select = item.querySelector('select');
+            const ans = item.dataset.ans;
+            
+            // Reset styles
+            select.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-400', 'bg-red-50', 'text-red-700');
+            
+            if (select.value === ans) {
+                correctCount++;
+                select.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700');
+            } else {
+                select.classList.add('border-red-400', 'bg-red-50', 'text-red-700');
+            }
+        });
+
+        if (correctCount === items.length) {
+            runtime.completed = Math.max(runtime.completed, 1);
+            showNextButton(1);
+            updateProgress();
+        }
+    }
+
+    // MATCHING GAME LOGIC
+    let selectedEs = null;
+    let pairsSolved = 0;
+
+    function startMatchingGame() {
+        const area = document.getElementById('match-area');
+        const pairs = runtime.data.vocabulario;
+        pairsSolved = 0;
+        selectedEs = null;
+
+        // Shuffle arrays independently
+        const shuffledEs = [...pairs].sort(() => 0.5 - Math.random());
+        const shuffledEn = [...pairs].sort(() => 0.5 - Math.random());
+
+        area.innerHTML = `
+            <div class="grid grid-cols-2 gap-4">
+                <div id="match-es" class="space-y-3"></div>
+                <div id="match-en" class="space-y-3"></div>
+            </div>`;
+
+        shuffledEs.forEach(p => {
+            const btn = document.createElement('button');
+            btn.className = "w-full p-3 bg-white border-2 border-slate-200 rounded-xl text-sm font-bold text-slate-700 shadow-sm transition-all hover:border-sky-300";
+            btn.textContent = p.es;
+            btn.onclick = () => {
+                document.querySelectorAll('#match-es button').forEach(x => x.classList.remove('match-selected'));
+                btn.classList.add('match-selected');
+                selectedEs = p;
+            };
+            document.getElementById('match-es').appendChild(btn);
+        });
+
+        shuffledEn.forEach(p => {
+            const btn = document.createElement('button');
+            btn.className = "w-full p-3 bg-white border-2 border-dashed border-slate-300 rounded-xl text-sm text-slate-600 transition-all hover:bg-slate-50";
+            btn.textContent = p.en;
+            btn.onclick = () => {
+                if (selectedEs && selectedEs.en === p.en) {
+                    // Match found!
+                    btn.classList.add('matched');
+                    document.querySelectorAll('#match-es button').forEach(x => { 
+                        if(x.textContent === selectedEs.es) x.classList.add('matched'); 
+                    });
+                    pairsSolved++;
+                    document.getElementById('match-counter').textContent = `${pairsSolved} / 10`;
+                    selectedEs = null;
+                    
+                    if (pairsSolved === pairs.length) {
+                        runtime.completed = Math.max(runtime.completed, 2);
+                        showNextButton(2);
+                        updateProgress();
+                        document.getElementById('match-area').innerHTML = `<div class="text-center text-emerald-500 font-black text-2xl py-8 animate-pop">¡PERFECTO!</div>`;
+                    }
+                } else if (selectedEs) {
+                    // Wrong Match Feedback
+                    btn.classList.add('border-red-400', 'bg-red-50');
+                    setTimeout(() => btn.classList.remove('border-red-400', 'bg-red-50'), 500);
+                }
+            };
+            document.getElementById('match-en').appendChild(btn);
+        });
+    }
+
+    function showNextButton(currentModule) {
+        const container = document.getElementById('next-btn-container');
+        container.innerHTML = `
+            <button onclick="showModule(${currentModule + 1})" class="btn-next px-8 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-lg hover:bg-slate-700 transition-all">
+                Siguiente ➡
+            </button>`;
+    }
+
+    function updateProgress() {
+        const totalModules = 3;
+        const pct = Math.round((runtime.completed / (totalModules - 1)) * 100);
+        
+        document.getElementById('progress-fill').style.width = pct + "%";
+        document.getElementById('progress-label').textContent = pct + "%";
+        
+        document.querySelectorAll('.module-tab').forEach((btn, i) => {
+            const m = i + 1;
+            if (m <= runtime.completed + 1) {
+                btn.disabled = false;
+                btn.className = `module-tab w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-all ${m === runtime.currentModule ? 'bg-sky-50 text-sky-800 border-2 border-sky-300' : 'text-slate-500 hover:bg-slate-50 border-2 border-transparent'}`;
+                document.getElementById(`badge-${m}`).textContent = m <= runtime.completed ? "✔" : "●";
+            }
+        });
+    }
+
+    window.startRandomPractice = () => {
+        const days = Object.keys(DB);
+        const randomDay = days[Math.floor(Math.random() * days.length)];
+        document.getElementById('day-select').value = randomDay;
+        loadDay(randomDay);
+    };
+
+    // Boot up
+    init();
+</script>
+</body>
+</html>
