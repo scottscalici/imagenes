@@ -12,7 +12,9 @@
     .animate-pop { animation: popIn 0.3s ease-out forwards; }
     .match-selected { background-color: #e0f2fe !important; border-color: #0ea5e9 !important; border-width: 2px !important; }
     .matched { opacity: 0; pointer-events: none; transform: scale(0.9); transition: all 0.3s ease; }
-    .checkbox-checked { background-color: #10b981; border-color: #10b981; }
+    /* Loading Spinner */
+    .spinner { border: 3px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #0ea5e9; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen">
@@ -20,8 +22,10 @@
   <header class="sticky top-0 z-20 bg-white shadow-sm border-b border-slate-200">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
       <div>
-        <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight">CONECTORES Y FORMATOS IB</h1>
-        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando...</div>
+        <h1 id="pageTitle" class="text-lg font-black text-slate-800 uppercase tracking-tighter leading-tight cursor-pointer select-none">CONECTORES Y FORMATOS IB</h1>
+        <div id="pageSubtitle" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+            <div class="spinner"></div> Sincronizando datos...
+        </div>
       </div>
       <div class="w-40 sm:w-64 text-right">
         <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
@@ -36,8 +40,10 @@
     <div class="grid md:grid-cols-[230px,1fr] gap-6">
       <aside class="space-y-4">
         <div class="bg-white rounded-2xl shadow p-4 border border-slate-200 space-y-3">
-          <div id="time-machine-container">
-            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest text-center">SELECCIONAR DÍA</label>
+          <div id="time-machine-container" class="hidden">
+            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 flex justify-between items-center tracking-widest text-center">
+                SELECCIONAR DÍA <span id="unlock-badge" class="hidden text-amber-500 font-bold">🔓 PROFESOR</span>
+            </label>
             <select id="day-select" class="w-full p-2 text-[10px] font-bold bg-slate-50 border rounded-lg outline-none cursor-pointer uppercase"></select>
           </div>
           <nav id="nav-tabs" class="space-y-1">
@@ -46,130 +52,124 @@
       </aside>
       
       <section id="module-container" class="bg-white rounded-2xl shadow p-6 border border-slate-200 min-h-[550px] relative">
-        <div id="module-content">
-            <p id="loading-msg" class="text-slate-400 text-sm italic">Cargando...</p>
+        <div id="module-content" class="flex justify-center items-center h-full">
+            <p class="text-slate-400 text-sm font-medium animate-pulse">Obteniendo datos de GitHub...</p>
         </div>
       </section>
     </div>
   </main>
 
 <script>
-    // --- EXPANDED MOCK DATABASE ---
-    const DB = {
-        "62": {
-            "topic": "Añadir y Excluir",
-            "oraciones_parte1": {
-                "banco": ["También", "Además", "Excepto", "Incluso", "A excepción de"],
-                "oraciones": [
-                    { "texto": "Yo pedí una ensalada y mi hermano _ pidió una.", "respuesta": "También" },
-                    { "texto": "Ese coche es muy seguro. _, consume muy poca gasolina.", "respuesta": "Además" },
-                    { "texto": "Me gustan todos los deportes _ el golf, me aburre mucho.", "respuesta": "Excepto" },
-                    { "texto": "Hacía tanto frío que _ el agua del lago se congeló.", "respuesta": "Incluso" },
-                    { "texto": "El museo abre todos los días, _ los domingos por la tarde.", "respuesta": "A excepción de" }
-                ]
-            },
-            "oraciones_parte2": {
-                "banco": ["Asimismo", "Igualmente", "Incluido", "Menos", "Salvo"],
-                "oraciones": [
-                    { "texto": "Les agradecemos su presencia. _, queremos dar las gracias a los patrocinadores.", "respuesta": "Asimismo" },
-                    { "texto": "Te deseo un feliz año nuevo, e _ para toda tu familia.", "respuesta": "Igualmente" },
-                    { "texto": "Trabajamos todos los días _ los sábados.", "respuesta": "Menos" },
-                    { "texto": "No hay nadie en el edificio _ el guardia de seguridad.", "respuesta": "Salvo" },
-                    { "texto": "Todos reprobaron el examen, _ el estudiante más inteligente.", "respuesta": "Incluido" }
-                ]
-            },
-            "vocabulario": [
-                {"es": "También", "en": "Also"}, {"es": "Asimismo", "en": "Likewise, also"},
-                {"es": "Igualmente", "en": "Equally, likewise"}, {"es": "Además", "en": "Besides"},
-                {"es": "Incluso", "en": "Included / Even"}, {"es": "A excepción de", "en": "Excepting"},
-                {"es": "Excepto", "en": "Except for"}, {"es": "Menos", "en": "Less / Except"},
-                {"es": "Salvo", "en": "Except / Save for"}, {"es": "Incluido", "en": "Including"}
-            ],
-            "prueba_ib": {
-                "escenario": "Has probado una nueva aplicación para aprender idiomas que se ha vuelto muy popular entre tus compañeros de colegio. Sin embargo, te ha parecido totalmente ineficaz comparada con las conversaciones reales. Escribe un texto dirigido a los estudiantes de tu escuela en el que describas tu experiencia con la aplicación, expliques por qué crees que no funciona para aprender a comunicarse y sugieras métodos más efectivos para practicar un idioma en la vida real.",
-                "opciones_texto": ["Blog", "Artículo", "Conjunto de instrucciones"],
-                "texto_correcto": "Blog",
-                "registro_opciones": ["Formal (Usted)", "Informal / Familiar (Tú/Vosotros)", "Académico / Objetivo"],
-                "registro_correcto": "Informal / Familiar (Tú/Vosotros)",
-                "audiencia_opciones": ["El director de la escuela (Singular)", "Compañeros de escuela (Plural)", "Público general adulto (Plural)"],
-                "audiencia_correcta": "Compañeros de escuela (Plural)",
-                "convenciones": [
-                    "Título llamativo y personal.",
-                    "Uso de primera persona para compartir opiniones (Yo creo que...).",
-                    "Tono persuasivo y evaluativo de la aplicación.",
-                    "Invitación a los lectores a comentar al final."
-                ]
-            }
-        },
-        "63": {
-            "topic": "Causas y Consecuencias",
-            "oraciones_parte1": {
-                "banco": ["Porque", "Por eso", "Debido a", "Ya que", "Por lo tanto"],
-                "oraciones": [
-                    { "texto": "Llegué tarde al colegio _ el autobús se averió en el camino.", "respuesta": "Porque" },
-                    { "texto": "No estudió para el examen, _ reprobó la clase.", "respuesta": "Por lo tanto" },
-                    { "texto": "El partido de béisbol fue cancelado _ la intensa tormenta.", "respuesta": "Debido a" },
-                    { "texto": "_ no tienes tarea, ¿me ayudas a limpiar la cocina?", "respuesta": "Ya que" },
-                    { "texto": "Me encanta la cultura española, _ decidí estudiar en Madrid este verano.", "respuesta": "Por eso" }
-                ]
-            },
-            "oraciones_parte2": {
-                "banco": ["Como", "Así que", "Dado que", "Pues", "De modo que"],
-                "oraciones": [
-                    { "texto": "_ llovía mucho, decidimos quedarnos en casa a ver una película.", "respuesta": "Como" },
-                    { "texto": "No tengo dinero, _ no puedo salir con ustedes esta noche.", "respuesta": "Así que" },
-                    { "texto": "Cierra la puerta con llave _ nadie pueda entrar sin permiso.", "respuesta": "De modo que" },
-                    { "texto": "Te prestaré mis apuntes, _ eres mi mejor amigo y faltaste a clase.", "respuesta": "Dado que" },
-                    { "texto": "No me llames más tarde, _ estaré durmiendo.", "respuesta": "Pues" }
-                ]
-            },
-            "vocabulario": [
-                {"es": "Porque", "en": "Because"}, {"es": "Ya que", "en": "Given that"},
-                {"es": "Por eso", "en": "Therefore, that is why"}, {"es": "Debido a", "en": "Due to"},
-                {"es": "Como", "en": "Since / As (Beginning of sentence)"}, {"es": "Por lo tanto", "en": "Therefore"},
-                {"es": "De modo que", "en": "So that"}, {"es": "Dado que", "en": "Given that"},
-                {"es": "Así que", "en": "So then, anyway"}, {"es": "Pues", "en": "Well / Since"}
-            ],
-            "prueba_ib": {
-                "escenario": "El ayuntamiento de tu ciudad ha propuesto un plan para destruir varios centros deportivos y culturales juveniles para construir nuevos centros comerciales, argumentando que esto aumentará los ingresos económicos de la ciudad. Escribe un texto dirigido al alcalde/a de la ciudad en el que analices las consecuencias sociales de eliminar estos espacios para los jóvenes, evalúes el equilibrio entre el crecimiento económico y el bienestar de la comunidad, y propongas una solución de compromiso.",
-                "opciones_texto": ["Carta (Correspondencia formal)", "Columna de opinión", "Diario personal"],
-                "texto_correcto": "Carta (Correspondencia formal)",
-                "registro_opciones": ["Informal (Tú)", "Formal (Usted / Estimado/a)", "Coloquial / Jerga juvenil"],
-                "registro_correcto": "Formal (Usted / Estimado/a)",
-                "audiencia_opciones": ["Jóvenes de la ciudad (Plural)", "Alcalde/sa de la ciudad (Singular)", "Turistas visitantes (Plural)"],
-                "audiencia_correcta": "Alcalde/sa de la ciudad (Singular)",
-                "convenciones": [
-                    "Lugar y fecha en la parte superior.",
-                    "Fórmula de saludo formal (Estimado/a Sr./Sra. Alcalde/sa).",
-                    "Lenguaje respetuoso, persuasivo y estructurado en párrafos claros.",
-                    "Fórmula de despedida formal (Atentamente) y firma."
-                ]
-            }
-        }
-    };
-
-    const runtime = {
-        activeDia: "62",
-        data: null,
+    // --- CONFIGURATION ---
+    const CALENDAR_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/calendario.json";
+    const CONTENT_URL = "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/prueba1_calentamiento.json";
+    
+    let runtime = {
+        activeDia: null,
+        actualSchoolDay: null,
+        db: null,
         currentModule: 1,
         completed: 0,
-        ibState: { textType: false, regAud: false, conventions: 0 }
+        ibState: { textType: false, regAud: false, conventions: 0 },
+        teacherMode: false
     };
 
-    function init() {
+    // --- SECRET TEACHER UNLOCKER ---
+    let clickCount = 0;
+    document.getElementById('pageTitle').addEventListener('click', () => {
+        clickCount++;
+        if (clickCount >= 5 && !runtime.teacherMode) {
+            runtime.teacherMode = true;
+            document.getElementById('unlock-badge').classList.remove('hidden');
+            buildDropdown(); // Rebuild dropdown to show everything
+            clickCount = 0;
+        }
+        setTimeout(() => { clickCount = 0; }, 2000); // Reset if not clicked fast enough
+    });
+
+    async function init() {
+        try {
+            // 1. Fetch JSONs with Cache Busting
+            const cacheBuster = "?t=" + new Date().getTime();
+            const [calRes, contentRes] = await Promise.all([
+                fetch(CALENDAR_URL + cacheBuster),
+                fetch(CONTENT_URL + cacheBuster)
+            ]);
+
+            const calendarData = await calRes.json();
+            runtime.db = await contentRes.json();
+
+            // 2. Determine the Actual School Day based on today's date
+            const today = new Date();
+            // Format YYYY-MM-DD
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+            
+            // Filter calendar for dates up to today, sort descending
+            const pastDays = calendarData.map
+                .filter(d => d.fecha <= todayStr && d.dia !== null)
+                .sort((a, b) => b.fecha.localeCompare(a.fecha));
+
+            if (pastDays.length > 0) {
+                runtime.actualSchoolDay = pastDays[0].dia.toString();
+            } else {
+                // Failsafe if it's before the school year starts
+                runtime.actualSchoolDay = "62"; 
+            }
+
+            // Failsafe: if the calculated day isn't in our DB yet, default to highest available
+            const availableDays = Object.keys(runtime.db).map(Number).sort((a, b) => a - b);
+            if (!runtime.db[runtime.actualSchoolDay]) {
+                 const pastAvailable = availableDays.filter(d => d <= parseInt(runtime.actualSchoolDay));
+                 if(pastAvailable.length > 0) {
+                     runtime.actualSchoolDay = pastAvailable[pastAvailable.length-1].toString();
+                 } else {
+                     runtime.actualSchoolDay = availableDays[0].toString(); // lowest day in DB
+                 }
+            }
+
+            runtime.activeDia = runtime.actualSchoolDay;
+
+            // 3. UI Setup
+            document.getElementById('time-machine-container').classList.remove('hidden');
+            buildDropdown();
+            
+            const select = document.getElementById('day-select');
+            select.onchange = (e) => loadDay(e.target.value);
+            
+            loadDay(runtime.activeDia);
+
+        } catch (error) {
+            console.error("Error loading data:", error);
+            document.getElementById('module-content').innerHTML = `<div class="text-red-500 font-bold p-4 bg-red-50 rounded-xl border border-red-200">Error cargando los datos. Asegúrate de que las URLs de GitHub sean correctas.</div>`;
+            document.getElementById('pageSubtitle').innerHTML = `<span class="text-red-500 font-bold">Error de conexión</span>`;
+        }
+    }
+
+    function buildDropdown() {
         const select = document.getElementById('day-select');
-        select.innerHTML = Object.keys(DB).map(d => `<option value="${d}">Día ${d}: ${DB[d].topic}</option>`).join('');
+        const availableDays = Object.keys(runtime.db).map(Number).sort((a, b) => a - b);
+        
+        let html = '';
+        availableDays.forEach(dayNum => {
+            const dStr = dayNum.toString();
+            // If not teacher mode, lock future days
+            if (!runtime.teacherMode && dayNum > parseInt(runtime.actualSchoolDay)) {
+                return; // Skip adding to dropdown
+            }
+            html += `<option value="${dStr}">Día ${dStr}: ${runtime.db[dStr].topic}</option>`;
+        });
+        
+        select.innerHTML = html;
         select.value = runtime.activeDia;
-        select.onchange = (e) => loadDay(e.target.value);
-        loadDay(runtime.activeDia);
     }
 
     function loadDay(dia) {
         runtime.activeDia = dia;
-        runtime.data = DB[dia];
         runtime.completed = 0;
         runtime.ibState = { textType: false, regAud: false, conventions: 0 };
-        document.getElementById('pageSubtitle').innerHTML = `<span class="text-sky-600 font-black tracking-widest">DÍA ${dia}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-slate-400 font-bold">${runtime.data.topic.toUpperCase()}</span>`;
+        
+        document.getElementById('pageSubtitle').innerHTML = `<span class="text-sky-600 font-black tracking-widest">DÍA ${dia}</span> <span class="mx-2 text-slate-200">|</span> <span class="text-slate-500 font-bold">${runtime.db[dia].topic.toUpperCase()}</span>`;
+        
         renderSidebar();
         showModule(1);
     }
@@ -186,7 +186,7 @@
     }
 
     function buildFillInTheBlank(sectionKey, moduleNum) {
-        const sectionData = runtime.data[sectionKey];
+        const sectionData = runtime.db[runtime.activeDia][sectionKey];
         let selectHTML = `<select class="connector-select border-b-2 border-sky-400 bg-sky-50 text-sky-800 font-bold px-2 py-1 mx-1 outline-none text-sm cursor-pointer appearance-none text-center">
                             <option value="">[ Selecciona ]</option>
                             ${sectionData.banco.map(w => `<option value="${w}">${w}</option>`).join('')}
@@ -216,8 +216,10 @@
     function showModule(n) {
         runtime.currentModule = n;
         const content = document.getElementById('module-content');
+        
+        // Reset animation
         content.classList.remove('animate-pop');
-        void content.offsetWidth; // trigger reflow
+        void content.offsetWidth; 
         content.classList.add('animate-pop');
 
         if (n === 1) {
@@ -276,7 +278,7 @@
 
     function startMatchingGame() {
         const area = document.getElementById('match-area');
-        const pairs = runtime.data.vocabulario;
+        const pairs = runtime.db[runtime.activeDia].vocabulario;
         pairsSolved = 0;
         selectedEs = null;
 
@@ -332,7 +334,7 @@
 
     // --- IB PAPER 1 MODULE ---
     function renderIBModule(content) {
-        const ib = runtime.data.prueba_ib;
+        const ib = runtime.db[runtime.activeDia].prueba_ib;
         content.innerHTML = `
             <div class="mb-4 border-b-2 border-indigo-100 pb-2">
                 <h2 class="text-xl font-black text-indigo-900 uppercase tracking-tight">Práctica: Prueba 1</h2>
@@ -352,31 +354,31 @@
                 </div>
             </div>
 
-            <div id="ib-step-2" class="hidden mt-8 animate-pop border-t-2 border-slate-100 pt-6">
+            <div id="ib-step-2" class="${runtime.ibState.textType ? '' : 'hidden'} mt-8 animate-pop border-t-2 border-slate-100 pt-6">
                 <p class="text-xs font-black text-slate-500 uppercase mb-4">2. Define el Tono y la Audiencia:</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Registro</label>
-                        <select id="ib-reg-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400">
+                        <select id="ib-reg-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" ${runtime.ibState.regAud ? 'disabled' : ''}>
                             <option value="">[ Selecciona Registro ]</option>
                             ${[...ib.registro_opciones].sort().map(o => `<option value="${o}">${o}</option>`).join('')}
                         </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Audiencia</label>
-                        <select id="ib-aud-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400">
+                        <select id="ib-aud-select" class="w-full p-3 border-2 border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-400" ${runtime.ibState.regAud ? 'disabled' : ''}>
                             <option value="">[ Selecciona Audiencia ]</option>
                             ${[...ib.audiencia_opciones].sort().map(o => `<option value="${o}">${o}</option>`).join('')}
                         </select>
                     </div>
                 </div>
-                <button onclick="checkIBRegAud()" class="mt-4 px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all">Confirmar</button>
+                ${!runtime.ibState.regAud ? `<button onclick="checkIBRegAud()" class="mt-4 px-6 py-2 bg-indigo-600 text-white font-bold rounded-lg text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all">Confirmar</button>` : ''}
                 <p id="ib-reg-feedback" class="text-xs font-bold text-red-500 mt-2 hidden">Revisa tus selecciones.</p>
             </div>
 
-            <div id="ib-step-3" class="hidden mt-8 animate-pop border-t-2 border-slate-100 pt-6">
+            <div id="ib-step-3" class="${runtime.ibState.regAud ? '' : 'hidden'} mt-8 animate-pop border-t-2 border-slate-100 pt-6">
                 <p class="text-xs font-black text-emerald-600 uppercase mb-3">3. Checklist de Convenciones</p>
-                <p class="text-sm text-slate-500 mb-4">Para sacar la nota máxima, debes incluir estas convenciones en tu texto. Marca cada una para confirmar que lo entiendes:</p>
+                <p class="text-sm text-slate-500 mb-4">Para sacar la nota máxima, debes incluir estas convenciones. Marca cada una:</p>
                 <div class="space-y-3">
                     ${ib.convenciones.map((conv, i) => `
                         <label class="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50 transition-all">
@@ -385,14 +387,29 @@
                         </label>
                     `).join('')}
                 </div>
-                <div id="next-btn-container-4" class="mt-6 flex justify-end"></div>
+                <div id="next-btn-container-4" class="mt-6 flex justify-end">
+                    ${runtime.completed >= 4 ? `<button onclick="showModule(5)" class="btn-next px-8 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-lg hover:bg-slate-700 transition-all">Siguiente ➡</button>` : ''}
+                </div>
             </div>
         `;
+        
+        // Re-apply states if navigating back
+        if(runtime.ibState.textType) {
+            document.querySelectorAll('.ib-tt-btn').forEach(b => {
+               if(b.textContent === ib.texto_correcto) b.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-700'); 
+            });
+        }
+        if(runtime.ibState.regAud) {
+             document.getElementById('ib-reg-select').value = ib.registro_correcto;
+             document.getElementById('ib-aud-select').value = ib.audiencia_correcta;
+             document.getElementById('ib-reg-select').classList.add('border-emerald-500');
+             document.getElementById('ib-aud-select').classList.add('border-emerald-500');
+        }
     }
 
     window.checkIBTextType = function(btn, selectedOption) {
-        if (runtime.ibState.textType) return; // already solved
-        const correct = runtime.data.prueba_ib.texto_correcto;
+        if (runtime.ibState.textType) return;
+        const correct = runtime.db[runtime.activeDia].prueba_ib.texto_correcto;
         
         document.querySelectorAll('.ib-tt-btn').forEach(b => {
             b.classList.remove('border-emerald-500', 'bg-emerald-50', 'text-emerald-700', 'border-red-400', 'bg-red-50', 'text-red-700');
@@ -412,7 +429,7 @@
         const audSelect = document.getElementById('ib-aud-select');
         const feedback = document.getElementById('ib-reg-feedback');
         
-        const ib = runtime.data.prueba_ib;
+        const ib = runtime.db[runtime.activeDia].prueba_ib;
         let isRegCorrect = regSelect.value === ib.registro_correcto;
         let isAudCorrect = audSelect.value === ib.audiencia_correcta;
 
@@ -426,6 +443,8 @@
             runtime.ibState.regAud = true;
             document.getElementById('ib-step-3').classList.remove('hidden');
             regSelect.disabled = true; audSelect.disabled = true;
+            // Hide the confirm button
+            event.target.classList.add('hidden');
         } else {
             feedback.classList.remove('hidden');
         }
@@ -446,7 +465,7 @@
     // --- UTILITIES ---
     function showNextButton(currentModule) {
         const container = document.getElementById(`next-btn-container-${currentModule}`);
-        if(container) {
+        if(container && !container.innerHTML.includes('Siguiente')) {
             container.innerHTML = `
                 <button onclick="showModule(${currentModule + 1})" class="btn-next px-8 py-3 bg-slate-800 text-white font-black rounded-xl text-xs uppercase tracking-widest shadow-lg hover:bg-slate-700 transition-all">
                     Siguiente ➡
@@ -470,6 +489,7 @@
         });
     }
 
+    // Start the app
     init();
 </script>
 </body>
