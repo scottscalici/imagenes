@@ -1533,9 +1533,14 @@
       },
       {
         "label": "Pretérito perfecto (subjuntivo)",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
+        "bank": "bancos/banco_preterito_perfecto_de_subjuntivo.json",
+        "identityCategory": "preterito_perfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 10
       }
     ],
