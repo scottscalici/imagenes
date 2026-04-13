@@ -1552,7 +1552,33 @@
     "identityCategory": "presente_de_subjuntivo",
     "bank": "bancos/banco_subjuntivo_presente.json",
     "vocabFile": "vocab/D2-5-6.json",
-    "date": "2026-04-10"
+    "date": "2026-04-10",
+    "blocks": [
+      {
+        "label": "Pretérito perfecto (indicativo)",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Pretérito perfecto (subjuntivo)",
+        "bank": "bancos/banco_preterito_perfecto_de_subjuntivo.json",
+        "identityCategory": "preterito_perfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 10
+      }
+    ]
   },
   {
     "dia": 64,
