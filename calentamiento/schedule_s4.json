@@ -2406,16 +2406,23 @@
   },
   {
     "dia": 64,
-    "topic": "Repaso",
+    "topic": "Repaso: Presente de subjuntivo",
     "vocabFile": "vocab/D3-10-2.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Nuevo Bloque",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
-        "count": 5
+        "label": "Presente de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7",
+          "nivel_2"
+        ],
+        "count": 20
       }
     ],
     "date": "2026-04-14"
