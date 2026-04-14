@@ -2429,15 +2429,54 @@
   },
   {
     "dia": 65,
-    "topic": "Repaso",
+    "topic": "Repaso: Futuro y Condicional",
     "vocabFile": "vocab/D3-10-3.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Nuevo Bloque",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 5
       }
     ],
@@ -2445,15 +2484,44 @@
   },
   {
     "dia": 66,
-    "topic": "Repaso",
+    "topic": "Repaso: Cláusulas con si",
     "vocabFile": "vocab/D3-10-4.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Nuevo Bloque",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
+        "label": "Imperfecto de subjuntivo (Si....)",
+        "bank": "bancos/banco_imperfecto_de_subjuntivo.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 5
       }
     ],
@@ -2461,15 +2529,66 @@
   },
   {
     "dia": 67,
-    "topic": "Repaso",
+    "topic": "Repaso: Los perfectos",
     "vocabFile": "vocab/D3-10-5.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Nuevo Bloque",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
+        "label": "Pretérito perfecto",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pretérito perfecto de subjuntivo",
+        "bank": "bancos/banco_preterito_perfecto_de_subjuntivo.json",
+        "identityCategory": "preterito_perfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pluscuamperfecto",
+        "bank": "bancos/banco_pluscuamperfecto.json",
+        "identityCategory": "pluscuamperfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pluscuamperfecto de subjuntivo",
+        "bank": "bancos/banco_pluscuamperfecto_de_subjuntivo.json",
+        "identityCategory": "pluscuamperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro perfecto",
+        "bank": "bancos/banco_futuro_perfecto.json",
+        "identityCategory": "futuro_perfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional perfecto",
+        "bank": "bancos/banco_condicional_perfecto.json",
+        "identityCategory": "condicional_perfecto",
+        "identityGroups": [
+          "nivel_2"
+        ],
         "count": 5
       }
     ],
@@ -2477,15 +2596,96 @@
   },
   {
     "dia": 68,
-    "topic": "Repaso",
+    "topic": "Repaso: Muchos",
     "vocabFile": "vocab/D3-10-6.json",
     "proficiency": 0.8,
     "blocks": [
       {
-        "label": "Nuevo Bloque",
-        "bank": "",
-        "identityCategory": "",
-        "identityGroups": [],
+        "label": "Presente",
+        "bank": "bancos/banco_presente.json",
+        "identityCategory": "presente",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_8"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Presente de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7",
+          "nivel_2"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7",
+          "nivel_8"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto",
+        "bank": "imperfecto_de_subjuntivo",
+        "identityCategory": "imperfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_imperfecto_de_subjuntivo.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 5
       }
     ],
