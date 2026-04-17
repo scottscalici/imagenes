@@ -563,23 +563,8 @@ const theme = await applyThemeStyles(data, DIA);
     updateCountdown();
 
     renderAtandoCabos(data, DIA);
- function renderEslabones(data, dia) {
-    const box = document.getElementById('eslabonesSlide');
-    eslAllPuzzles = data.eslabones || []; 
+renderEslabones(data, DIA);
     
-eslActivePuzzle = eslAllPuzzles.find(p => 
-    p.dia == dia && 
-    (p.course === CONFIG.COURSE || (Array.isArray(p.course) && p.course.includes(CONFIG.COURSE)))
-);
-
-    if (!eslActivePuzzle) { 
-        box.style.display = 'none'; 
-        return; 
-    }
-    
-    box.style.display = 'flex';
-    loadEslPuzzle(eslActivePuzzle);
-}
     
     // 3. TAREAS (NOW FILTERED BY COURSE)
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
@@ -1205,7 +1190,25 @@ function acSubmit() {
 let eslAllPuzzles = [];
 let eslActivePuzzle = null;
 let eslState = { attempts: 0, currentWordIndex: 1, revealedCounts: {}, isGameOver: false };
+function renderEslabones(data, dia) {
+    const box = document.getElementById('eslabonesSlide');
+    
+    // Defensive check just in case your JSON root is 'eslabones' or 'eslabon_perdido'
+    eslAllPuzzles = data.eslabones?.eslabones || data.eslabones?.eslabon_perdido || data.eslabones || []; 
+    
+    eslActivePuzzle = eslAllPuzzles.find(p => 
+        p.dia == dia && 
+        (p.course === CONFIG.COURSE || (Array.isArray(p.course) && p.course.includes(CONFIG.COURSE)))
+    );
 
+    if (!eslActivePuzzle) { 
+        box.style.display = 'none'; 
+        return; 
+    }
+    
+    box.style.display = 'flex';
+    loadEslPuzzle(eslActivePuzzle);
+}
 function getEslKey() { return `eslabones_${CONFIG.COURSE}_${eslActivePuzzle?.id}`; }
 function saveEslState() { MemoryEngine.save(getEslKey(), eslState); }
 
