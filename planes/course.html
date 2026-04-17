@@ -563,7 +563,23 @@ const theme = await applyThemeStyles(data, DIA);
     updateCountdown();
 
     renderAtandoCabos(data, DIA);
-    initEslabones(data);
+ function renderEslabones(data, dia) {
+    const box = document.getElementById('eslabonesSlide');
+    eslAllPuzzles = data.eslabones || []; 
+    
+eslActivePuzzle = eslAllPuzzles.find(p => 
+    p.dia == dia && 
+    (p.course === CONFIG.COURSE || (Array.isArray(p.course) && p.course.includes(CONFIG.COURSE)))
+);
+
+    if (!eslActivePuzzle) { 
+        box.style.display = 'none'; 
+        return; 
+    }
+    
+    box.style.display = 'flex';
+    loadEslPuzzle(eslActivePuzzle);
+}
     
     // 3. TAREAS (NOW FILTERED BY COURSE)
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
