@@ -1,51 +1,83 @@
 {
   "version": 2,
   "items": [
-      {
-    "id": "pluscuamperfecto_ind_salud",
-    "kind": "sentences",
-    "title": "¿Qué había pasado antes?",
-    "s2_dias": [
-      64
-    ],
-    "s4_dias": [],
-    "sentences": [
-      "Cuando el entrenador llegó al gimnasio, nosotros ya _________________________ (calentarse) por quince minutos en la bicicleta.",
-      "Yo nunca _________________________ (sufrir) tantas presiones hasta que empecé a trabajar en esa nueva empresa el año pasado.",
-      "Antes de consultar al nutricionista en enero, tú no _________________________ (llevar una vida sana) ni comías muchos vegetales.",
-      "Cuando el teleadicto decidió levantarse del sofá, desafortunadamente ya _________________________ (engordar) diez kilos.",
-      "Mis amigos y yo fuimos a correr al parque, pero no pudimos terminar porque ya _________________________ (merendar) demasiado y nos dolió el estómago.",
-      "¿Alguna vez tú _________________________ (hacer gimnasia) antes de tomar esta clase tan difícil con el instructor nuevo?",
-      "La doctora vio en el reporte que el paciente _________________________ (adelgazar) mucho en poco tiempo y le preocupó.",
-      "Para cuando terminó la competencia, los atletas ya _________________________ (sudar) toda el agua que bebieron.",
-      "Me sentí muy fuerte y rápido en el maratón porque yo me _________________________ (entrenarse) todos los días durante seis meses.",
-      "Ayer no pudimos usar la cinta caminadora porque alguien la _________________________ (romper) el día anterior."
-    ],
-    "instructions": "Completa las oraciones con la forma correcta del pluscuamperfecto de indicativo. Presta atención a las pistas de contexto que indican que la acción ocurrió antes que otra acción en el pasado."
-  },
-  {
-    "id": "mixed_perfect_tenses_salud",
-    "kind": "sentences",
-    "title": "¿Qué ha pasado, había pasado o haya pasado?",
-    "s2_dias": [
-      64,
-      65
-    ],
-    "s4_dias": [],
-    "sentences": [
-      "Cuando llegué a la clase de ejercicios aeróbicos ayer, el instructor ya _________________________ (empezar) la sesión sin mí.",
-      "Esta semana, yo _________________________ (tratar) de comer una dieta equilibrada, pero es muy difícil con tantas fiestas.",
-      "Es dudoso que el gimnasio de nuestra ciudad _________________________ (comprar) nuevas máquinas de pesas este año; no tienen dinero.",
-      "Antes de tener un entrenador personal, nosotros nunca _________________________ (levantar pesas) correctamente y nos dolía la espalda.",
-      "Me alegro mucho de que tú _________________________ (dejar de fumar); es la mejor decisión para tus pulmones y tu salud.",
-      "Últimamente, mi hermano y yo _________________________ (disfrutar) mucho de nuestras caminatas por la naturaleza para aliviar el estrés.",
-      "El doctor leyó en el historial médico que el paciente _________________________ (consumir) demasiado alcohol el año pasado antes de su operación.",
-      "Es una lástima que muchas personas todavía no _________________________ (aprender) a comer alimentos orgánicos y saludables.",
-      "¿(Tú) _________________________ (ir) al médico para hacerte un chequeo de colesterol este año?",
-      "Yo no pude participar en la carrera de ciclismo ayer porque no _________________________ (dormir) bien la noche anterior y no tenía energía."
-    ],
-    "instructions": "Completa las oraciones con la forma correcta del pluscuamperfecto de indicativo, el pretérito perfecto de indicativo o el pretérito perfecto de subjuntivo, según el contexto de la oración y las expresiones de tiempo."
-  },
+    {
+      "id": "texto_a_modelo_2",
+      "kind": "links",
+      "title": "Nuevo Extra",
+      "links": [
+        {
+          "label": "Fuego, arte y tradición: Las Fallas de Valencia",
+          "url": "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/ex%C3%A1menes-nm-comprensi%C3%B3n-de-lectura/modelo-2-texto-a-nm"
+        }
+      ],
+      "s2_dias": [],
+      "s4_dias": [
+        66
+      ],
+      "tag": "Texto A"
+    },
+    {
+      "id": "texto_a_modelo_1",
+      "kind": "links",
+      "title": "Nuevo Extra",
+      "s2_dias": [],
+      "s4_dias": [
+        66
+      ],
+      "tag": "Texto A",
+      "links": [
+        {
+          "label": "La Semana Santa en España: Devoción y Cultura",
+          "url": "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/ib/ex%C3%A1menes-nm-comprensi%C3%B3n-de-lectura/modelo-1-texto-a-nm"
+        }
+      ]
+    },
+    {
+      "id": "pluscuamperfecto_ind_salud",
+      "kind": "sentences",
+      "title": "¿Qué había pasado antes?",
+      "s2_dias": [
+        64
+      ],
+      "s4_dias": [],
+      "sentences": [
+        "Cuando el entrenador llegó al gimnasio, nosotros ya _________________________ (calentarse) por quince minutos en la bicicleta.",
+        "Yo nunca _________________________ (sufrir) tantas presiones hasta que empecé a trabajar en esa nueva empresa el año pasado.",
+        "Antes de consultar al nutricionista en enero, tú no _________________________ (llevar una vida sana) ni comías muchos vegetales.",
+        "Cuando el teleadicto decidió levantarse del sofá, desafortunadamente ya _________________________ (engordar) diez kilos.",
+        "Mis amigos y yo fuimos a correr al parque, pero no pudimos terminar porque ya _________________________ (merendar) demasiado y nos dolió el estómago.",
+        "¿Alguna vez tú _________________________ (hacer gimnasia) antes de tomar esta clase tan difícil con el instructor nuevo?",
+        "La doctora vio en el reporte que el paciente _________________________ (adelgazar) mucho en poco tiempo y le preocupó.",
+        "Para cuando terminó la competencia, los atletas ya _________________________ (sudar) toda el agua que bebieron.",
+        "Me sentí muy fuerte y rápido en el maratón porque yo me _________________________ (entrenarse) todos los días durante seis meses.",
+        "Ayer no pudimos usar la cinta caminadora porque alguien la _________________________ (romper) el día anterior."
+      ],
+      "instructions": "Completa las oraciones con la forma correcta del pluscuamperfecto de indicativo. Presta atención a las pistas de contexto que indican que la acción ocurrió antes que otra acción en el pasado."
+    },
+    {
+      "id": "mixed_perfect_tenses_salud",
+      "kind": "sentences",
+      "title": "¿Qué ha pasado, había pasado o haya pasado?",
+      "s2_dias": [
+        64,
+        65
+      ],
+      "s4_dias": [],
+      "sentences": [
+        "Cuando llegué a la clase de ejercicios aeróbicos ayer, el instructor ya _________________________ (empezar) la sesión sin mí.",
+        "Esta semana, yo _________________________ (tratar) de comer una dieta equilibrada, pero es muy difícil con tantas fiestas.",
+        "Es dudoso que el gimnasio de nuestra ciudad _________________________ (comprar) nuevas máquinas de pesas este año; no tienen dinero.",
+        "Antes de tener un entrenador personal, nosotros nunca _________________________ (levantar pesas) correctamente y nos dolía la espalda.",
+        "Me alegro mucho de que tú _________________________ (dejar de fumar); es la mejor decisión para tus pulmones y tu salud.",
+        "Últimamente, mi hermano y yo _________________________ (disfrutar) mucho de nuestras caminatas por la naturaleza para aliviar el estrés.",
+        "El doctor leyó en el historial médico que el paciente _________________________ (consumir) demasiado alcohol el año pasado antes de su operación.",
+        "Es una lástima que muchas personas todavía no _________________________ (aprender) a comer alimentos orgánicos y saludables.",
+        "¿(Tú) _________________________ (ir) al médico para hacerte un chequeo de colesterol este año?",
+        "Yo no pude participar en la carrera de ciclismo ayer porque no _________________________ (dormir) bien la noche anterior y no tenía energía."
+      ],
+      "instructions": "Completa las oraciones con la forma correcta del pluscuamperfecto de indicativo, el pretérito perfecto de indicativo o el pretérito perfecto de subjuntivo, según el contexto de la oración y las expresiones de tiempo."
+    },
     {
       "id": "extra-5676",
       "kind": "card",
