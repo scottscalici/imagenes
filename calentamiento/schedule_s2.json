@@ -1682,18 +1682,40 @@
   },
   {
     "dia": 67,
-    "topic": "",
+    "topic": "Pluscuamperfecto",
     "vocabFile": "vocab/D2-6-4.json",
     "proficiency": 0.8,
-    "blocks": [],
+    "blocks": [
+      {
+        "label": "Pluscuamperfecto",
+        "bank": "bancos/banco_pluscuamperfecto.json",
+        "identityCategory": "pluscuamperfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 20
+      }
+    ],
     "date": "2026-04-22"
   },
   {
     "dia": 68,
-    "topic": "",
+    "topic": "Pretérito perfecto",
     "vocabFile": "vocab/D2-6-5.json",
     "proficiency": 0.8,
-    "blocks": [],
+    "blocks": [
+      {
+        "label": "Pretérito perfecto",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 20
+      }
+    ],
     "date": "2026-04-24"
   }
 ]
