@@ -88,8 +88,11 @@ button.senordle-key.absent  { background-color: var(--absent) !important; opacit
 
                 <section id="calentamientoSection" class="bg-white rounded-xl border-l-[6px] p-6 card-shadow">
                     <div class="flex justify-between items-start mb-3">
-                        <h2 class="font-bold text-xl">🔥 Calentamiento</h2>
-                        <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-3 py-1.5 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme">Práctica Interactiva ↗</a>
+                        <h2 class="font-bold text-xl mt-1">🔥 Calentamiento</h2>
+                        <div class="flex flex-col gap-2 items-end">
+                            <a id="calBtn" href="#" target="_blank" class="text-[10px] font-bold px-4 py-2 rounded-lg border hover:opacity-80 transition-opacity uppercase btn-theme w-48 text-center shadow-sm">Práctica de Verbos ↗</a>
+                            <a id="p1CalBtn" href="#" target="_blank" class="hidden text-[10px] font-bold px-4 py-2 rounded-lg border hover:opacity-80 transition-opacity uppercase bg-slate-800 text-white w-48 text-center shadow-sm hover:bg-slate-700">Prueba 1 / Conectores ↗</a>
+                        </div>
                     </div>
                     <div id="calDetail" class="text-slate-700 text-md">Práctica interactiva para empezar la clase.</div>
                 </section>
@@ -155,35 +158,6 @@ button.senordle-key.absent  { background-color: var(--absent) !important; opacit
                                 </div>
                             </div>
                         </div>
-
-                        <div id="eslabonesSlide" class="snap-center shrink-0 w-full bg-white rounded-xl p-6 shadow-md border-8 flex flex-col justify-between" style="display:none;">
-    <div class="flex justify-between items-start mb-4 border-b pb-3">
-        <div>
-            <h3 class="font-black text-2xl mb-1 flex items-center gap-2 text-slate-800"><span>⛓️</span> Eslabones</h3>
-            <p id="eslTheme" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Tema: Cargando...</p>
-        </div>
-        <div class="text-right">
-            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Intentos</span>
-            <span id="eslAttempts" class="text-2xl font-black text-indigo-600 block leading-none">0</span>
-        </div>
-    </div>
-    
-    <div class="bg-slate-50 rounded-xl p-5 mb-6 border border-slate-100 shadow-inner flex-grow flex flex-col justify-center items-center gap-2" id="eslBoard">
-        </div>
-
-    <div id="eslControls" class="flex gap-2 w-full">
-        <input type="text" id="eslInput" class="flex-grow bg-slate-100 border border-slate-300 rounded-lg px-4 py-2 font-bold text-slate-800 uppercase text-center tracking-widest" placeholder="Escribe aquí..." onkeypress="if(event.key === 'Enter') handleEslSubmit()">
-        <button onclick="handleEslSubmit()" class="btn-theme px-4 py-2 rounded-lg font-black uppercase tracking-widest text-white shadow-md hover:-translate-y-0.5 transition-transform">Ir</button>
-    </div>
-
-    <div id="eslPostGame" class="hidden flex-col gap-2 w-full">
-        <button onclick="playRandomEslabones()" class="w-full bg-slate-800 text-white font-black py-2 rounded-lg uppercase tracking-widest text-[10px] shadow-md hover:bg-slate-700 transition-colors">Jugar Aleatorio 🎲</button>
-        <div class="flex gap-2">
-            <input type="number" id="eslFriendId" class="w-16 bg-slate-100 border border-slate-300 rounded-lg px-2 py-2 font-bold text-slate-800 text-center text-xs" placeholder="ID">
-            <button onclick="playSpecificEslabones()" class="flex-grow bg-slate-200 text-slate-600 font-black py-2 rounded-lg uppercase tracking-widest text-[10px] shadow-sm hover:bg-slate-300 transition-colors">Unirse a un amigo 🤝</button>
-        </div>
-    </div>
-</div>
 
                         <div id="archivoSlide" class="snap-center shrink-0 w-full bg-white rounded-xl p-6 shadow-md border-8 flex flex-col justify-between">
                             <div>
@@ -273,6 +247,20 @@ button.senordle-key.absent  { background-color: var(--absent) !important; opacit
                 </div>
             </div>
         </div>
+        <div class="fixed bottom-6 right-6 z-50 group">
+    <div class="absolute -top-8 right-0 bg-slate-800 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+        Música de fondo
+    </div>
+    
+    <div class="bg-white/90 backdrop-blur-md p-2 rounded-full shadow-2xl border-2 border-slate-200 flex items-center gap-2 hover:scale-105 transition-transform">
+        <img src="https://www.canalsur.es/css/cssimg/favicon.ico" class="w-10 h-10 rounded-full shadow-sm">
+        <div class="w-0 overflow-hidden group-hover:w-64 transition-all duration-500 ease-in-out">
+            <audio controls preload="none" class="w-64 h-8 px-2 outline-none">
+                <source src="https://rtva-live-radio.flumotion.com/rtva/cfr.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </div>
+</div>
     </main>
 
 <script>
@@ -280,7 +268,7 @@ button.senordle-key.absent  { background-color: var(--absent) !important; opacit
 // THE ONE SWITCH TO RULE THEM ALL
 // ============================================================
 const CONFIG = {
-    COURSE: "s2", // <-- CHANGE THIS TO "s4" FOR YOUR SENIORS
+    COURSE: "s4", // <-- CHANGE THIS TO "s4" FOR YOUR SENIORS
     CICLO_FILTER: "B",
     
     // Unified Data Files
@@ -301,13 +289,9 @@ const CONFIG = {
     VIDEOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/videos.json",
     PRACTICAS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/practicas.json",
     DESTACADO: "https://raw.githubusercontent.com/scottscalici/imagenes/main/planes/destacadodiario.json",
-    ATANDO_CABOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/atandocabos/ac.json",
-    ESLABONES: "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/eslabon_perdido/eslabon_perdido.json" 
+    ATANDO_CABOS: "https://raw.githubusercontent.com/scottscalici/imagenes/main/juegos/atandocabos/ac.json"
 };
 
-// ============================================================
-// THE COURSE PROFILES (The Brains)
-// ============================================================
 // ============================================================
 // THE COURSE PROFILES (The Brains)
 // ============================================================
@@ -329,6 +313,7 @@ const COURSE_PROFILES = {
         badgeText: "IB Español B II",
         links: {
             calentamiento: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/calentamiento",
+            p1calentamiento: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/P1calentamiento", // <-- THE NEW IB WARMUP LINK
             evaluaciones: "https://sites.google.com/view/srscalici/ib-espa%C3%B1ol-ii/evaluaciones"
         },
         vocabKey: "descubre3",
@@ -347,7 +332,14 @@ document.getElementById('courseBadge').textContent = profile.badgeText;
 document.getElementById('calBtn').href = profile.links.calentamiento;
 document.getElementById('evalLinkBtn').href = profile.links.evaluaciones;
 
-// --- DATA LOADER ---
+// NEW: Handle P1 Calentamiento link specifically for S4
+if (profile.links.p1calentamiento) {
+    const p1Btn = document.getElementById('p1CalBtn');
+    p1Btn.href = profile.links.p1calentamiento;
+    p1Btn.classList.remove('hidden');
+    p1Btn.classList.add('inline-block');
+}
+
 // --- DATA LOADER ---
 async function loadData() {
     const safeFetch = (url) => fetch(url).then(r => r.ok ? r.json() : {}).catch(e => { console.warn(`Failed to load ${url}`, e); return {}; });
@@ -356,21 +348,21 @@ async function loadData() {
             temas, cal, curios, evals, tareas,
             vocab, apuntes, extrasDiarios, 
             musica, lectura, cultura, conv,
-            videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas, eslabones 
+            videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas 
         ] = await Promise.all([
             safeFetch(CONFIG.TEMAS), safeFetch(CONFIG.CALENDARIO),
             safeFetch(CONFIG.CURIOSIDADES), safeFetch(CONFIG.EVALS), safeFetch(CONFIG.TAREAS),
             safeFetch(CONFIG.VOCAB_BANK), safeFetch(CONFIG.APUNTES_BANK), safeFetch(CONFIG.EXTRAS), 
             safeFetch(CONFIG.MUSICA), safeFetch(CONFIG.LECTURA), safeFetch(CONFIG.CULTURA),
             safeFetch(CONFIG.CONV), safeFetch(CONFIG.VIDEOS), safeFetch(CONFIG.GRAMATICA_DIARIA),
-            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO), safeFetch(CONFIG.ATANDO_CABOS), safeFetch(CONFIG.PRACTICAS), safeFetch(CONFIG.ESLABONES)
+            safeFetch(CONFIG.ANUNCIOS), safeFetch(CONFIG.DESTACADO), safeFetch(CONFIG.ATANDO_CABOS), safeFetch(CONFIG.PRACTICAS)
         ]);
         
         return { 
             temas, 
             cal: cal.filter ? cal : (cal.map || []), 
             curios, evals, tareas, vocab, apuntes, extrasDiarios, 
-            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas, eslabones
+            musica, lectura, cultura, conv, videos, gramaticaDiaria, anuncios, destacado, atandoCabos, practicas
         };
     } catch (e) { console.error("Critical Load Error", e); }
 }
@@ -540,6 +532,7 @@ const theme = await applyThemeStyles(data, DIA);
     document.getElementById('dayTitle').textContent = `Día ${DIA}`;
     document.getElementById('headerDate').textContent = dateStr.toUpperCase();
     document.getElementById('calBtn').style.backgroundColor = overrides.calentamiento || accent;
+    
     // 1. ANUNCIOS
     const anunciosBlock = document.getElementById('anunciosBlock');
     if (anunciosBlock) {
@@ -563,9 +556,7 @@ const theme = await applyThemeStyles(data, DIA);
     updateCountdown();
 
     renderAtandoCabos(data, DIA);
-renderEslabones(data, DIA);
-    
-    
+
     // 3. TAREAS (NOW FILTERED BY COURSE)
     const tList = document.getElementById('tareasList'); tList.innerHTML = "";
     const courseTasks = (data.tareas?.tareas || []).filter(t => 
@@ -634,7 +625,7 @@ renderEslabones(data, DIA);
         }
     } catch (e) { console.error("Error en Gramática:", e); }
 
-// ============================================================// ============================================================
+// ============================================================
     // 7. EXTRAS & BLOQUES DIARIOS (Música, Cultura, Lectura, Conversación)
     // ============================================================
     try {
@@ -684,9 +675,6 @@ renderEslabones(data, DIA);
                 extrasBlock.innerHTML += `<section class="bg-white rounded-xl border-l-[6px] p-6 shadow-md mb-6" style="border-color: ${exColor}"><h3 class="font-black text-lg mb-3">${item.title}</h3><div class="space-y-2">${links}</div></section>`;
             }
         });    
-
-
-        
 
         // 3. RENDER MÚSICA (Custom Spotify-style card)
         extractItems(data.musica).filter(isTodayForCourse).forEach(item => {
@@ -749,7 +737,7 @@ try {
             // Flexbox magic: flex-1 ensures the buttons share the row equally
             const textsHtml = level.texts.map(text => `
                 <a href="${text.url}" target="_blank" class="flex-1 flex flex-col bg-slate-50 border border-slate-200 rounded-lg p-3 hover:border-indigo-400 hover:shadow-md transition-all group">
-                    <span class="text-[9px] font-black bg-slate-200 text-slate-500 px-2 py-0.5 rounded w-max mb-1.5 uppercase tracking-widest group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors">${text.label}</span>
+                    <span class="text-[9px] font-black bg-slate-200 text-slate-50 px-2 py-0.5 rounded w-max mb-1.5 uppercase tracking-widest group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors">${text.label}</span>
                     <span class="font-bold text-sm text-slate-800 leading-tight">${text.title}</span>
                 </a>
             `).join('');
@@ -1181,182 +1169,6 @@ function acSubmit() {
         const grid = document.getElementById('ac-grid'); grid.classList.add('shake-err'); setTimeout(() => grid.classList.remove('shake-err'), 300);
         saveAcState();
         if (acMistakes <= 0) { setTimeout(() => { alert("❌ Te quedaste sin intentos. Tablero bloqueado."); acDeselectAll(); }, 300); }
-    }
-}
-
-    // ============================================================
-// ESLABONES LOGIC
-// ============================================================
-let eslAllPuzzles = [];
-let eslActivePuzzle = null;
-let eslState = { attempts: 0, currentWordIndex: 1, revealedCounts: {}, isGameOver: false };
-function renderEslabones(data, dia) {
-    const box = document.getElementById('eslabonesSlide');
-    
-    // Defensive check just in case your JSON root is 'eslabones' or 'eslabon_perdido'
-    eslAllPuzzles = data.eslabones?.eslabones || data.eslabones?.eslabon_perdido || data.eslabones || []; 
-    
-    eslActivePuzzle = eslAllPuzzles.find(p => 
-        p.dia == dia && 
-        (p.course === CONFIG.COURSE || (Array.isArray(p.course) && p.course.includes(CONFIG.COURSE)))
-    );
-
-    if (!eslActivePuzzle) { 
-        box.style.display = 'none'; 
-        return; 
-    }
-    
-    box.style.display = 'flex';
-    loadEslPuzzle(eslActivePuzzle);
-}
-function getEslKey() { return `eslabones_${CONFIG.COURSE}_${eslActivePuzzle?.id}`; }
-function saveEslState() { MemoryEngine.save(getEslKey(), eslState); }
-
-function initEslabones(data) {
-    const box = document.getElementById('eslabonesSlide');
-    eslAllPuzzles = data.eslabones || []; // Assuming JSON root is "eslabones"
-    const todayStr = new Date().toLocaleDateString('en-CA');
-    
-    // Find today's puzzle, or default to the latest one if none matches today
-    eslActivePuzzle = eslAllPuzzles.find(p => p.fecha === todayStr && p.course === CONFIG.COURSE) 
-                      || eslAllPuzzles[0]; 
-
-    if (!eslActivePuzzle) { box.style.display = 'none'; return; }
-    box.style.display = 'flex';
-
-    loadEslPuzzle(eslActivePuzzle);
-}
-
-function loadEslPuzzle(puzzle) {
-    eslActivePuzzle = puzzle;
-    document.getElementById('eslTheme').textContent = `Tema: ${puzzle.theme}`;
-    
-    const saved = MemoryEngine.load(getEslKey());
-    if (saved) {
-        eslState = saved;
-    } else {
-        eslState = { attempts: 0, currentWordIndex: 1, revealedCounts: {}, isGameOver: false };
-        // Start by revealing 1 letter for all middle words
-        for(let i = 1; i < puzzle.chain.length - 1; i++) eslState.revealedCounts[i] = 1;
-        saveEslState();
-    }
-    drawEslabonesBoard();
-}
-
-function drawEslabonesBoard() {
-    document.getElementById('eslAttempts').textContent = eslState.attempts;
-    const board = document.getElementById('eslBoard');
-    board.innerHTML = "";
-    
-    const chain = eslActivePuzzle.chain;
-
-    chain.forEach((word, index) => {
-        const wordDiv = document.createElement('div');
-        const isFirstOrLast = (index === 0 || index === chain.length - 1);
-        const isSolved = index < eslState.currentWordIndex;
-        const isActive = index === eslState.currentWordIndex;
-        
-        wordDiv.className = `font-black text-xl tracking-[0.2em] uppercase transition-all ${
-            isFirstOrLast || isSolved ? 'text-slate-800' : 
-            isActive ? 'text-indigo-600 scale-110 my-2' : 'text-slate-300'
-        }`;
-
-        if (isFirstOrLast || isSolved || eslState.isGameOver) {
-            wordDiv.textContent = word;
-        } else if (isActive) {
-            // Draw blanks with progressive hints
-            const revealedCount = eslState.revealedCounts[index] || 1;
-            let displayStr = "";
-            for (let i = 0; i < word.length; i++) {
-                displayStr += (i < revealedCount) ? word[i] : "_ ";
-            }
-            wordDiv.textContent = displayStr.trim();
-        } else {
-            // Future words just show question marks or solid lines
-            wordDiv.textContent = "? ".repeat(word.length).trim();
-        }
-        
-        board.appendChild(wordDiv);
-    });
-
-    // Toggle Input/Buttons vs End Screen
-    const controls = document.getElementById('eslControls');
-    const postGame = document.getElementById('eslPostGame');
-    const input = document.getElementById('eslInput');
-
-    if (eslState.isGameOver) {
-        controls.classList.add('hidden');
-        postGame.classList.remove('hidden');
-        postGame.classList.add('flex');
-    } else {
-        controls.classList.remove('hidden');
-        controls.classList.add('flex');
-        postGame.classList.add('hidden');
-        postGame.classList.remove('flex');
-        input.value = "";
-        input.focus();
-    }
-}
-
-function handleEslSubmit() {
-    if (eslState.isGameOver) return;
-    
-    const inputEl = document.getElementById('eslInput');
-    const guess = inputEl.value.trim().toUpperCase();
-    if (!guess) return;
-
-    eslState.attempts++;
-    const targetWord = eslActivePuzzle.chain[eslState.currentWordIndex].toUpperCase();
-
-    if (guess === targetWord) {
-        // Correct guess! Move to next word.
-        eslState.currentWordIndex++;
-        if (eslState.currentWordIndex === eslActivePuzzle.chain.length - 1) {
-            eslState.isGameOver = true;
-            setTimeout(() => { 
-                if (typeof startEffect === "function") { startEffect({ char: "🔗", maxSize: 30, minSize: 15, count: 50, direction: "down" }); setTimeout(stopEffect, 4000); } 
-                alert(`¡Cadena completa en ${eslState.attempts} intentos!`); 
-            }, 300);
-        }
-    } else {
-        // Incorrect guess! Reveal next letter
-        const currentRevealed = eslState.revealedCounts[eslState.currentWordIndex];
-        if (currentRevealed < targetWord.length) {
-            eslState.revealedCounts[eslState.currentWordIndex]++;
-            
-            // Auto-solve if all letters are revealed via hints
-            if (eslState.revealedCounts[eslState.currentWordIndex] === targetWord.length) {
-                 eslState.currentWordIndex++;
-                 if (eslState.currentWordIndex === eslActivePuzzle.chain.length - 1) {
-                    eslState.isGameOver = true;
-                 }
-            }
-        }
-        // Small shake animation for visual feedback on error
-        const board = document.getElementById('eslBoard');
-        board.classList.add('shake-err'); 
-        setTimeout(() => board.classList.remove('shake-err'), 300);
-    }
-
-    saveEslState();
-    drawEslabonesBoard();
-}
-
-// Post-game navigation
-function playRandomEslabones() {
-    const unplayed = eslAllPuzzles.filter(p => p.id !== eslActivePuzzle.id);
-    if (unplayed.length === 0) { alert("¡Has jugado todos los rompecabezas disponibles!"); return; }
-    const randomPuzzle = unplayed[Math.floor(Math.random() * unplayed.length)];
-    loadEslPuzzle(randomPuzzle);
-}
-
-function playSpecificEslabones() {
-    const idInput = document.getElementById('eslFriendId').value;
-    const targetPuzzle = eslAllPuzzles.find(p => p.id == idInput);
-    if (targetPuzzle) {
-        loadEslPuzzle(targetPuzzle);
-    } else {
-        alert("Juego no encontrado. Verifica el ID.");
     }
 }
 
