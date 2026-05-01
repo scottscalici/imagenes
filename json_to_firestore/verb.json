@@ -1,0 +1,197 @@
+{
+  "palabra": "mover",
+  "translations": {
+    "gerundio": { "target": "moviendo", "english": "moving" },
+    "participio": { "target": "movido", "english": "moved" }
+  },
+  "tenses": {
+    "presente": {
+      "meta": { "is_irregular": true, "tags": ["stem-change-o-ue"] },
+      "yo": { "target": "muevo", "english": "I move" },
+      "tú": { "target": "mueves", "english": "you move" },
+      "vos": { "target": "movés", "english": "you (voseo) move" },
+      "él_ella_ud": { "target": "mueve", "english": "he/she/you move" },
+      "nosotros": { "target": "movemos", "english": "we move" },
+      "vosotros": { "target": "movéis", "english": "you all (Spain) move" },
+      "ellos_ellas_uds": { "target": "mueven", "english": "they/you all move" }
+    },
+    "pretérito": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "moví", "english": "I moved" },
+      "tú": { "target": "moviste", "english": "you moved" },
+      "vos": { "target": "moviste", "english": "you (voseo) moved" },
+      "él_ella_ud": { "target": "movió", "english": "he/she/you moved" },
+      "nosotros": { "target": "movimos", "english": "we moved" },
+      "vosotros": { "target": "movisteis", "english": "you all (Spain) moved" },
+      "ellos_ellas_uds": { "target": "movieron", "english": "they/you all moved" }
+    },
+    "imperfecto": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "movía", "english": "I used to move" },
+      "tú": { "target": "movías", "english": "you used to move" },
+      "vos": { "target": "movías", "english": "you (voseo) used to move" },
+      "él_ella_ud": { "target": "movía", "english": "he/she/you used to move" },
+      "nosotros": { "target": "movíamos", "english": "we used to move" },
+      "vosotros": { "target": "movíais", "english": "you all (Spain) used to move" },
+      "ellos_ellas_uds": { "target": "movían", "english": "they/you all used to move" }
+    },
+    "condicional": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "movería", "english": "I would move" },
+      "tú": { "target": "moverías", "english": "you would move" },
+      "vos": { "target": "moverías", "english": "you (voseo) would move" },
+      "él_ella_ud": { "target": "movería", "english": "he/she/you would move" },
+      "nosotros": { "target": "moveríamos", "english": "we would move" },
+      "vosotros": { "target": "moveríais", "english": "you all (Spain) would move" },
+      "ellos_ellas_uds": { "target": "moverían", "english": "they/you all would move" }
+    },
+    "futuro": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "moveré", "english": "I will move" },
+      "tú": { "target": "moverás", "english": "you will move" },
+      "vos": { "target": "moverás", "english": "you (voseo) will move" },
+      "él_ella_ud": { "target": "moverá", "english": "he/she/you will move" },
+      "nosotros": { "target": "moveremos", "english": "we will move" },
+      "vosotros": { "target": "moveréis", "english": "you all (Spain) will move" },
+      "ellos_ellas_uds": { "target": "moverán", "english": "they/you all will move" }
+    },
+    "pretérito_perfecto": {
+      "meta": { "is_irregular": false, "tags": ["compound"] },
+      "yo": { "target": "he movido", "english": "I have moved" },
+      "tú": { "target": "has movido", "english": "you have moved" },
+      "vos": { "target": "has movido", "english": "you (voseo) have moved" },
+      "él_ella_ud": { "target": "ha movido", "english": "he/she/you have moved" },
+      "nosotros": { "target": "hemos movido", "english": "we have moved" },
+      "vosotros": { "target": "habéis movido", "english": "you all (Spain) have moved" },
+      "ellos_ellas_uds": { "target": "han movido", "english": "they/you all have moved" }
+    },
+    "pluscuamperfecto": {
+      "meta": { "is_irregular": false, "tags": ["compound"] },
+      "yo": { "target": "había movido", "english": "I had moved" },
+      "tú": { "target": "habías movido", "english": "you had moved" },
+      "vos": { "target": "habías movido", "english": "you (voseo) had moved" },
+      "él_ella_ud": { "target": "había movido", "english": "he/she/you had moved" },
+      "nosotros": { "target": "habíamos movido", "english": "we had moved" },
+      "vosotros": { "target": "habíais movido", "english": "you all (Spain) had moved" },
+      "ellos_ellas_uds": { "target": "habían movido", "english": "they/you all had moved" }
+    },
+    "condicional_perfecto": {
+      "meta": { "is_irregular": false, "tags": ["compound"] },
+      "yo": { "target": "habría movido", "english": "I would have moved" },
+      "tú": { "target": "habrías movido", "english": "you would have moved" },
+      "vos": { "target": "habrías movido", "english": "you (voseo) would have moved" },
+      "él_ella_ud": { "target": "habría movido", "english": "he/she/you would have moved" },
+      "nosotros": { "target": "habríamos movido", "english": "we would have moved" },
+      "vosotros": { "target": "habríais movido", "english": "you all (Spain) would have moved" },
+      "ellos_ellas_uds": { "target": "habrían movido", "english": "they/you all would have moved" }
+    },
+    "futuro_perfecto": {
+      "meta": { "is_irregular": false, "tags": ["compound"] },
+      "yo": { "target": "habré movido", "english": "I will have moved" },
+      "tú": { "target": "habrás movido", "english": "you will have moved" },
+      "vos": { "target": "habrás movido", "english": "you (voseo) will have moved" },
+      "él_ella_ud": { "target": "habrá movido", "english": "he/she/you will have moved" },
+      "nosotros": { "target": "habremos movido", "english": "we will have moved" },
+      "vosotros": { "target": "habréis movido", "english": "you all (Spain) will have moved" },
+      "ellos_ellas_uds": { "target": "habrán movido", "english": "they/you all will have moved" }
+    },
+    "presente_progresivo": {
+      "meta": { "is_irregular": false, "tags": ["progressive"] },
+      "yo": { "target": "estoy moviendo", "english": "I am moving" },
+      "tú": { "target": "estás moviendo", "english": "you are moving" },
+      "vos": { "target": "estás moviendo", "english": "you (voseo) are moving" },
+      "él_ella_ud": { "target": "está moviendo", "english": "he/she/you are moving" },
+      "nosotros": { "target": "estamos moviendo", "english": "we are moving" },
+      "vosotros": { "target": "estáis moviendo", "english": "you all (Spain) are moving" },
+      "ellos_ellas_uds": { "target": "están moviendo", "english": "they/you all are moving" }
+    },
+    "imperfecto_progresivo": {
+      "meta": { "is_irregular": false, "tags": ["progressive"] },
+      "yo": { "target": "estaba moviendo", "english": "I was moving" },
+      "tú": { "target": "estabas moviendo", "english": "you were moving" },
+      "vos": { "target": "estabas moviendo", "english": "you (voseo) were moving" },
+      "él_ella_ud": { "target": "estaba moviendo", "english": "he/she/you were moving" },
+      "nosotros": { "target": "estábamos moviendo", "english": "we were moving" },
+      "vosotros": { "target": "estabais moviendo", "english": "you all (Spain) were moving" },
+      "ellos_ellas_uds": { "target": "estaban moviendo", "english": "they/you all were moving" }
+    },
+    "subjuntivo_presente": {
+      "meta": { "is_irregular": true, "tags": ["stem-change-o-ue"] },
+      "yo": { "target": "mueva", "english": "SUBJUNCTIVE CONTEXT: I move" },
+      "tú": { "target": "muevas", "english": "SUBJUNCTIVE CONTEXT: you move" },
+      "vos": { "target": "movás", "english": "SUBJUNCTIVE CONTEXT: you (voseo) move" },
+      "él_ella_ud": { "target": "mueva", "english": "SUBJUNCTIVE CONTEXT: he/she/you move" },
+      "nosotros": { "target": "movamos", "english": "SUBJUNCTIVE CONTEXT: we move" },
+      "vosotros": { "target": "mováis", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) move" },
+      "ellos_ellas_uds": { "target": "muevan", "english": "SUBJUNCTIVE CONTEXT: they/you all move" }
+    },
+    "subjuntivo_perfecto": {
+      "meta": { "is_irregular": false, "tags": ["compound", "subjunctive"] },
+      "yo": { "target": "haya movido", "english": "SUBJUNCTIVE CONTEXT: I have moved" },
+      "tú": { "target": "hayas movido", "english": "SUBJUNCTIVE CONTEXT: you have moved" },
+      "vos": { "target": "hayas movido", "english": "SUBJUNCTIVE CONTEXT: you (voseo) have moved" },
+      "él_ella_ud": { "target": "haya movido", "english": "SUBJUNCTIVE CONTEXT: he/she/you have moved" },
+      "nosotros": { "target": "hayamos movido", "english": "SUBJUNCTIVE CONTEXT: we have moved" },
+      "vosotros": { "target": "hayáis movido", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) have moved" },
+      "ellos_ellas_uds": { "target": "hayan movido", "english": "SUBJUNCTIVE CONTEXT: they/you all have moved" }
+    },
+    "subjuntivo_imperfecto_ra": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "moviera", "english": "SUBJUNCTIVE CONTEXT: I moved" },
+      "tú": { "target": "movieras", "english": "SUBJUNCTIVE CONTEXT: you moved" },
+      "vos": { "target": "movieras", "english": "SUBJUNCTIVE CONTEXT: you (voseo) moved" },
+      "él_ella_ud": { "target": "moviera", "english": "SUBJUNCTIVE CONTEXT: he/she/you moved" },
+      "nosotros": { "target": "moviéramos", "english": "SUBJUNCTIVE CONTEXT: we moved" },
+      "vosotros": { "target": "movierais", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) moved" },
+      "ellos_ellas_uds": { "target": "movieran", "english": "SUBJUNCTIVE CONTEXT: they/you all moved" }
+    },
+    "subjuntivo_imperfecto_se": {
+      "meta": { "is_irregular": false, "tags": ["regular-er"] },
+      "yo": { "target": "moviese", "english": "SUBJUNCTIVE CONTEXT: I moved" },
+      "tú": { "target": "movieses", "english": "SUBJUNCTIVE CONTEXT: you moved" },
+      "vos": { "target": "movieses", "english": "SUBJUNCTIVE CONTEXT: you (voseo) moved" },
+      "él_ella_ud": { "target": "moviese", "english": "SUBJUNCTIVE CONTEXT: he/she/you moved" },
+      "nosotros": { "target": "moviésemos", "english": "SUBJUNCTIVE CONTEXT: we moved" },
+      "vosotros": { "target": "movieseis", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) moved" },
+      "ellos_ellas_uds": { "target": "moviesen", "english": "SUBJUNCTIVE CONTEXT: they/you all moved" }
+    },
+    "pluscuamperfecto_subjuntivo_ra": {
+      "meta": { "is_irregular": false, "tags": ["compound", "subjunctive"] },
+      "yo": { "target": "hubiera movido", "english": "SUBJUNCTIVE CONTEXT: I had moved" },
+      "tú": { "target": "hubieras movido", "english": "SUBJUNCTIVE CONTEXT: you had moved" },
+      "vos": { "target": "hubieras movido", "english": "SUBJUNCTIVE CONTEXT: you (voseo) had moved" },
+      "él_ella_ud": { "target": "hubiera movido", "english": "SUBJUNCTIVE CONTEXT: he/she/you had moved" },
+      "nosotros": { "target": "hubiéramos movido", "english": "SUBJUNCTIVE CONTEXT: we had moved" },
+      "vosotros": { "target": "hubierais movido", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) had moved" },
+      "ellos_ellas_uds": { "target": "hubieran movido", "english": "SUBJUNCTIVE CONTEXT: they/you all had moved" }
+    },
+    "pluscuamperfecto_subjuntivo_se": {
+      "meta": { "is_irregular": false, "tags": ["compound", "subjunctive"] },
+      "yo": { "target": "hubiese movido", "english": "SUBJUNCTIVE CONTEXT: I had moved" },
+      "tú": { "target": "hubieses movido", "english": "SUBJUNCTIVE CONTEXT: you had moved" },
+      "vos": { "target": "hubieses movido", "english": "SUBJUNCTIVE CONTEXT: you (voseo) had moved" },
+      "él_ella_ud": { "target": "hubiese movido", "english": "SUBJUNCTIVE CONTEXT: he/she/you had moved" },
+      "nosotros": { "target": "hubiésemos movido", "english": "SUBJUNCTIVE CONTEXT: we had moved" },
+      "vosotros": { "target": "hubieseis movido", "english": "SUBJUNCTIVE CONTEXT: you all (Spain) had moved" },
+      "ellos_ellas_uds": { "target": "hubiesen movido", "english": "SUBJUNCTIVE CONTEXT: they/you all had moved" }
+    },
+    "imperativo_afirmativo": {
+      "meta": { "is_irregular": true, "tags": ["stem-change-o-ue"] },
+      "tú": { "target": "mueve", "english": "move!" },
+      "vos": { "target": "mové", "english": "move! (voseo)" },
+      "ud": { "target": "mueva", "english": "move! (formal)" },
+      "nosotros": { "target": "movamos", "english": "let's move!" },
+      "vosotros": { "target": "moved", "english": "move! (Spain)" },
+      "uds": { "target": "muevan", "english": "move! (group)" }
+    },
+    "imperativo_negativo": {
+      "meta": { "is_irregular": true, "tags": ["subjunctive-base"] },
+      "tú": { "target": "no muevas", "english": "don't move!" },
+      "vos": { "target": "no movás", "english": "don't move! (voseo)" },
+      "ud": { "target": "no mueva", "english": "don't move! (formal)" },
+      "nosotros": { "target": "no movamos", "english": "let's not move!" },
+      "vosotros": { "target": "no mováis", "english": "don't move! (Spain)" },
+      "uds": { "target": "no muevan", "english": "don't move! (group)" }
+    }
+  }
+}
