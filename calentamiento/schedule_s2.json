@@ -1765,5 +1765,77 @@
       }
     ],
     "date": "2026-04-28"
+  },
+  {
+    "dia": 70,
+    "topic": "Futuro",
+    "vocabFile": "vocab/D2-7-1.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 10
+      }
+    ],
+    "date": "2026-04-30"
+  },
+  {
+    "dia": 71,
+    "topic": "Futuro (Perfecto)",
+    "vocabFile": "vocab/D2-7-2.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_5"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Futuro Perfecto",
+        "bank": "bancos/banco_futuro_perfecto.json",
+        "identityCategory": "futuro_perfecto",
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "count": 5
+      }
+    ],
+    "date": "2026-05-04"
   }
 ]
