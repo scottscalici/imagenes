@@ -1,0 +1,43 @@
+Project Architecture: The Modular Classroom Orchestrator
+1. Core Logic: The "Día" System (Sequential Queue)
+Concept: Curriculum is a sequence of date-agnostic "Día" documents (dia_001, dia_002).
+
+Calendar Mapping: A separate collection maps actual dates to Día IDs.
+
+The Waterfall Shift: A "Push All" function in the UI to shift the entire calendar sequence forward when unexpected schedule changes occur.
+
+Section Filtering: Ability to toggle views between different class sections (e.g., Section A vs. Section B) that might be on different Día numbers despite sharing the same curriculum.
+
+2. Activity Engine: "Calentamiento" (Warm-ups)
+The Verb Engine: A React component (VerbPlayer) that generates activities dynamically from the Firestore verbs collection.
+
+High-Fidelity Data: Uses nested maps (Tense > Person > Target/English) and metadata (is_irregular, tags).
+
+Activity Types: Mixed matching (Spanish-to-English and Spanish-Definition-to-Word) to avoid typing/formatting frustrations.
+
+Data Collection: Capture "First-Strike" data (the student's first incorrect entry) even if they eventually correct it, to identify specific linguistic friction points.
+
+3. Student Experience: Progress & Gamification
+Daily Progress Bar: A visual 0–100% bar that updates as the student completes each module (Verb Warm-up, Vocab, Curiosidad, Grammar Check).
+
+Learning Paths (The "Journey"): A proficiency-based layer separate from daily tasks.
+
+Structure: Pasos (Steps) → Hitos (Milestones) → Etapas (Stages).
+
+Themes: Branching paths like "Climbing Teotihuacan" or "Walking El Camino de Santiago."
+
+High Scores: Competitive or personal best tracking for specific timed or accuracy-based modules.
+
+4. Teacher Command Center (Admin UI)
+The Planner Canvas: A UI to "stamp" unit templates (sequences of Días) onto the calendar.
+
+Blueprint Builder: A tool to create "recipes" for Días (e.g., "Pull 5 J-Stem verbs + 5 Regular verbs + 1 Culture link").
+
+The Uploader: A JSON-driven pipeline to "upsert" high-fidelity verb and vocabulary objects into Firestore efficiently.
+
+The Media Slot: A flexible container in each Día for "Hero" resources (Authentic YouTube links, articles, or infographics) found on the fly.
+
+5. Technical Strategy: React + Firestore
+Atomic Components: Build independent "Bricks" (Verb Matcher, Progress Bar, Media Viewer) so they can be swapped or updated globally without rewriting the whole year.
+
+Data Integrity: Use serverTimestamp and sanitized document IDs (e.g., reir-reirse) for reliable querying and deep-linking.
