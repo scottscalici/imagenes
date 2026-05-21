@@ -2038,34 +2038,166 @@
   },
   {
     "dia": 77,
-    "topic": "",
+    "topic": "Futuro y Condicional",
     "vocabFile": "vocab/D2-9-1.json",
     "proficiency": 0.8,
-    "blocks": [],
+    "blocks": [
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
+        "count": 10
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_1",
+          "nivel_5"
+        ],
+        "count": 10
+      }
+    ],
     "date": "2026-05-20"
   },
   {
     "dia": 78,
-    "topic": "",
+    "topic": "Pretérito",
     "vocabFile": "vocab/D2-9-2.json",
     "proficiency": 0.8,
-    "blocks": [],
-    "date": "2026-05-22"
+    "blocks": [
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3"
+        ],
+        "count": 5,
+        "constraints": {
+          "persona_base": "ellos/ellas/Uds."
+        }
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_4",
+          "nivel_7"
+        ],
+        "count": 5,
+        "constraints": {
+          "persona_base": "ellos/ellas/Uds."
+        }
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_5"
+        ],
+        "count": 5,
+        "constraints": {
+          "persona_base": "ellos/ellas/Uds."
+        }
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_6"
+        ],
+        "count": 5,
+        "constraints": {
+          "persona_base": "ellos/ellas/Uds."
+        }
+      }
+    ],
+    "date": "2026-05-26"
   },
   {
     "dia": 79,
-    "topic": "",
+    "topic": "Imperfecto de subjuntivo",
     "vocabFile": "vocab/D2-9-3.json",
     "proficiency": 0.8,
-    "blocks": [],
-    "date": "2026-05-28"
+    "blocks": [
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_pasado.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_pasado.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_4",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_pasado.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_5"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_pasado.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_6"
+        ],
+        "count": 5
+      }
+    ],
+    "date": "2026-05-29"
   },
   {
     "dia": 80,
-    "topic": "",
+    "topic": "Imperfecto de subjuntivo",
     "vocabFile": "vocab/D2-9-4.json",
     "proficiency": 0.8,
-    "blocks": [],
-    "date": "2026-06-01"
+    "blocks": [
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_pasado.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "count": 20
+      }
+    ],
+    "date": "2026-06-02"
   }
 ]
