@@ -448,13 +448,28 @@
       updateProgress();
     }
   
-    function renderFinalScreen(contentElement) {
+function renderFinalScreen(contentElement) {
         const timeDisplay = runtime.verbTimeFinal ? formatTime(parseInt(runtime.verbTimeFinal)) : "--:--";
+        
+        // Array of valid 5-letter codes (no numbers, no special characters)
+        const validCodes = ["MXPLR", "BKNVQ", "CRTXH", "FLPWZ", "JNDSM", "VGHRC", "WQZLK", "PTFDB", "RMNXC", "HKJBD"];
+        const finalCode = validCodes[Math.floor(Math.random() * validCodes.length)];
+
         let html = `<div class="text-center py-8 animate-pop"><h2 class="text-4xl font-black text-slate-800 mb-2 uppercase tracking-tighter">¡Felicidades!</h2><p class="text-slate-400 font-bold uppercase text-[10px] tracking-widest mb-6">Tiempo Final: <span class="text-sky-600 text-lg font-mono">${timeDisplay}</span></p>`;
+        
         if (runtime.curiosidadImg) {
-            html += `<div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 mb-8"><div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative"><img src="${runtime.curiosidadImg}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-gradient-t-t from-black/70 to-transparent p-4"><p class="text-white font-bold text-sm uppercase tracking-widest">Día ${runtime.activeDia}</p></div></div></div>`;
+            // Note: Fixed a minor typo in your original code (bg-gradient-t-t is now bg-gradient-to-t)
+            html += `<div class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-xl border border-slate-200 mb-8"><div class="aspect-video bg-slate-100 rounded-xl overflow-hidden relative"><img src="${runtime.curiosidadImg}" class="w-full h-full object-cover"><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4"><p class="text-white font-bold text-sm uppercase tracking-widest">Día ${runtime.activeDia}</p></div></div></div>`;
         }
-        html += `<div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6"><div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 text-[10px] uppercase tracking-widest text-center">📱 Abre Schoology para completar la Curiosidad</div><button onclick="startRandomPractice()" class="w-64 px-8 py-4 bg-amber-500 text-white font-black rounded-2xl shadow-lg uppercase tracking-widest text-xs">🔄 Práctica Extra</button></div></div>`;
+        
+        html += `<div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6">
+            <div class="w-64 px-6 py-4 bg-indigo-50 text-indigo-800 font-bold rounded-2xl border border-indigo-100 text-[10px] uppercase tracking-widest text-center shadow-sm">
+                📱 Código Schoology:<br>
+                <span class="text-2xl font-black text-indigo-600 mt-2 block tracking-widest">${finalCode}</span>
+            </div>
+            <button onclick="startRandomPractice()" class="w-64 px-8 py-4 bg-amber-500 text-white font-black rounded-2xl shadow-lg uppercase tracking-widest text-xs transition-transform hover:scale-105">🔄 Práctica Extra</button>
+        </div></div>`;
+        
         contentElement.innerHTML = html;
     }
 
