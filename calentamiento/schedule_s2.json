@@ -2291,23 +2291,60 @@
       {
         "label": "Mandatos Formales y Plurales",
         "bank": "bancos/banco_mandatos_formales_plurales.json",
-        "identityCategory": "mandatos_formales_plurales",
-        "identityGroups": [],
+        "identityCategory": "mandatos_formales_y_plurales",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
         "count": 5
       },
       {
         "label": "Futuro",
         "bank": "bancos/banco_futuro.json",
-        "identityCategory": "futuro.json",
-        "identityGroups": [],
+        "identityCategory": "futuro",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 5
       },
       {
         "label": "Condicional",
         "bank": "bancos/banco_condicional.json",
-        "identityCategory": "condicional.json",
-        "identityGroups": [],
+        "identityCategory": "condicional",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4"
+        ],
         "count": 5
+      },
+      {
+        "label": "Pretérito perfecto",
+        "bank": "bancos/banco_preterito_perfecto.json",
+        "identityCategory": "preterito_perfecto",
+        "identityGroups": [
+          "nivel_2"
+        ],
+        "count": 2
+      },
+      {
+        "label": "Pretérito perfecto de subjuntivo",
+        "bank": "bancos/banco_preterito_perfecto_de_subjuntivo.json",
+        "identityCategory": "preterito_perfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2"
+        ],
+        "count": 3
       }
     ],
     "date": "2026-06-04"
