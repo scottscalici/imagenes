@@ -44,17 +44,21 @@
         
         .btn-add-block { background: #3498db; color: white; width: 100%; text-align: center; border-radius: 4px; padding: 8px; font-weight: bold; cursor: pointer; border: none; }
         .btn-del-block { background: #e74c3c; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; cursor: pointer; position: absolute; top: 5px; right: 5px; }
+        
+        /* Botones de Control de Día (Copiar y Borrar) */
+        .btn-copy-day { background: transparent; border: none; cursor: pointer; font-size: 1.1rem; padding: 0 5px; transition: transform 0.2s; }
+        .btn-copy-day:hover { transform: scale(1.2); }
         .btn-del-day { background: transparent; border: none; cursor: pointer; font-size: 1.1rem; padding: 0 5px; transition: transform 0.2s; }
         .btn-del-day:hover { transform: scale(1.2); }
 
         .section-title { font-size: 0.85rem; text-transform: uppercase; font-weight: bold; color: #34495e; margin-bottom: 5px; border-bottom: 2px solid #eee; padding-bottom: 3px; }
 
         /* Estilos para los selectores de Nivel */
-.niveles-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; padding-left: 75px; }
-.badge-nivel { background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 12px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer; color: #7f8c8d; transition: all 0.2s; text-align: left; }
-.badge-nivel:hover { background: #dcdde1; color: #2c3e50; }
-.badge-nivel.active { background: #3498db; color: white; border-color: #2980b9; }
-.badge-nivel-preview { font-size: 0.65rem; font-style: italic; opacity: 0.8; display: block; margin-top: 1px; }
+        .niveles-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; padding-left: 75px; }
+        .badge-nivel { background: #ecf0f1; border: 1px solid #bdc3c7; border-radius: 12px; padding: 4px 8px; font-size: 0.7rem; cursor: pointer; color: #7f8c8d; transition: all 0.2s; text-align: left; }
+        .badge-nivel:hover { background: #dcdde1; color: #2c3e50; }
+        .badge-nivel.active { background: #3498db; color: white; border-color: #2980b9; }
+        .badge-nivel-preview { font-size: 0.65rem; font-style: italic; opacity: 0.8; display: block; margin-top: 1px; }
         
     </style>
 </head>
@@ -133,8 +137,7 @@
 
     <script>
 
-        const verbDictionary = {
-  // Pega tu JSON completo aquí. (Solo muestro un fragmento por brevedad)
+const verbDictionary = {
   "presente": {
     "nivel_1": ["acabar", "aceptar", "acercar", "adivinar", "alcanzar", "alquilar", "andar", "apagar", "arreglar", "ayudar", "bailar", "bajar", "buscar", "cambiar", "caminar", "cantar", "celebrar", "cocinar", "comprar", "contestar", "conversar", "cruzar", "dejar", "descansar", "enseñar", "entrar", "entregar", "escuchar", "esperar", "estudiar", "explicar", "ganar", "gastar", "hablar", "invitar", "lavar", "levantar", "limpiar", "llamar", "llegar", "llevar", "lograr", "mandar", "mirar", "nadar", "necesitar", "olvidar", "pagar", "parar", "pasar", "practicar", "preguntar", "preparar", "presentar", "prestar", "quedar", "quitar", "regresar", "sacar", "terminar", "tocar", "tomar", "trabajar", "usar", "viajar", "visitar"],
     "nivel_2": ["abrir", "admitir", "aprender", "asistir", "barrer", "beber", "comer", "compartir", "comprender", "correr", "creer", "cubrir", "cumplir", "deber", "decidir", "depender", "describir", "descubrir", "discutir", "dividir", "escribir", "existir", "imprimir", "leer", "meter", "ocurrir", "permitir", "prometer", "recibir", "responder", "romper", "subir", "sufrir", "vender", "vivir"],
@@ -281,6 +284,7 @@
     "nivel_8": ["acordarse", "acostarse", "bañarse", "casarse", "cepillarse", "despertarse", "divertirse", "dormirse", "irse", "lavarse", "levantarse", "llamarse", "ponerse", "preocuparse", "sentarse", "sentirse", "vestirse"]
   }
 };
+
         let db = { s2: [], s4: [], cal: {} };
         let currentCourse = 's2'; 
 
@@ -330,7 +334,11 @@
 
             targetSchedule.sort((a, b) => a.dia - b.dia);
 
-            for (let day = 1; day <= 90; day++) {
+            // Dynamic maxDay so you aren't capped at 90 if you add more days later!
+            let calDays = Object.keys(db.cal).map(Number);
+            let maxDay = calDays.length > 0 ? Math.max(90, ...calDays) : 90;
+
+            for (let day = 1; day <= maxDay; day++) {
                 
                 let dayData = targetSchedule.find(d => d.dia === day);
                 
@@ -347,72 +355,74 @@
                 let dateHtml = fechas ? `<span class="date-badge">📅 ${fechas}</span>` : '';
 
                 let blocksHtml = '';
-(dayData.blocks || []).forEach((b, bIndex) => {
-    let groupsStr = Array.isArray(b.identityGroups) ? b.identityGroups.join(', ') : '';
-    let constStr = formatConstraints(b.constraints);
-    let specStr = Array.isArray(b.specificVerbs) ? b.specificVerbs.join(', ') : ''; 
-    let currentCategory = b.identityCategory || '';
+                (dayData.blocks || []).forEach((b, bIndex) => {
+                    let groupsStr = Array.isArray(b.identityGroups) ? b.identityGroups.join(', ') : '';
+                    let constStr = formatConstraints(b.constraints);
+                    let specStr = Array.isArray(b.specificVerbs) ? b.specificVerbs.join(', ') : ''; 
+                    
+                    // Fixed to ignore .json endings to keep your badges working perfectly
+                    let currentCategory = (b.identityCategory || '').replace('.json', '').trim();
 
-    // Generate Clickable Badges if the category exists in the dictionary
-    let badgesHtml = '';
-    if (currentCategory && verbDictionary[currentCategory]) {
-        let nivelesObj = verbDictionary[currentCategory];
-        
-        let badges = Object.keys(nivelesObj).map(nivKey => {
-            // Get the first 3 verbs for the preview text
-            let verbList = nivelesObj[nivKey];
-            let preview = verbList.slice(0, 3).join(', ') + (verbList.length > 3 ? '...' : '');
-            let fullList = verbList.join(', '); // For the mouse hover tooltip
-            
-            // Check if this badge is currently selected
-            let isSelected = b.identityGroups && b.identityGroups.includes(nivKey);
-            let badgeClass = isSelected ? 'badge-nivel active' : 'badge-nivel';
-            let label = nivKey.replace('_', ' ').toUpperCase();
-            
-            return `<button class="${badgeClass}" title="${fullList}" onclick="toggleGrupo(${day}, ${bIndex}, '${nivKey}')">
-                        <strong>${label}</strong>
-                        <span class="badge-nivel-preview">${preview}</span>
-                    </button>`;
-        }).join('');
-        
-        badgesHtml = `<div class="niveles-container">${badges}</div>`;
-    }
+                    // Generate Clickable Badges if the category exists in the dictionary
+                    let badgesHtml = '';
+                    if (currentCategory && verbDictionary[currentCategory]) {
+                        let nivelesObj = verbDictionary[currentCategory];
+                        
+                        let badges = Object.keys(nivelesObj).map(nivKey => {
+                            let verbList = nivelesObj[nivKey];
+                            let preview = verbList.slice(0, 3).join(', ') + (verbList.length > 3 ? '...' : '');
+                            let fullList = verbList.join(', '); 
+                            
+                            let isSelected = b.identityGroups && b.identityGroups.includes(nivKey);
+                            let badgeClass = isSelected ? 'badge-nivel active' : 'badge-nivel';
+                            let label = nivKey.replace('_', ' ').toUpperCase();
+                            
+                            return `<button class="${badgeClass}" title="${fullList}" onclick="toggleGrupo(${day}, ${bIndex}, '${nivKey}')">
+                                        <strong>${label}</strong>
+                                        <span class="badge-nivel-preview">${preview}</span>
+                                    </button>`;
+                        }).join('');
+                        
+                        badgesHtml = `<div class="niveles-container">${badges}</div>`;
+                    }
 
-    blocksHtml += `
-        <div class="block-item">
-            <button class="btn-del-block" title="Borrar bloque" onclick="deleteBlock(${day}, ${bIndex})">X</button>
-            
-            <div class="block-row">
-                <input type="number" style="width:50px; font-weight:bold; color:#2980b9;" value="${b.count || 0}" title="Cantidad (Count)" onchange="updateBlock(${day}, ${bIndex}, 'count', this.value)">
-                <input type="text" value="${b.label || ''}" placeholder="Etiqueta (ej. Tú afirmativo)" style="font-weight:bold;" onchange="updateBlock(${day}, ${bIndex}, 'label', this.value)">
-            </div>
-            
-            <div class="block-row">
-                <label>Bank JSON:</label>
-                <input type="text" list="common-banks" value="${b.bank || ''}" placeholder="bancos/banco_X.json" onchange="updateBlock(${day}, ${bIndex}, 'bank', this.value)">
-            </div>
-            
-            <div class="block-row">
-                <label>Categoría ID:</label>
-                <input type="text" list="category-ids" value="${currentCategory}" placeholder="ej. mandatos_informales" onchange="updateBlock(${day}, ${bIndex}, 'identityCategory', this.value)">
-            </div>
-            
-            <div class="block-row" style="margin-bottom: 0;">
-                <label>Grupos:</label>
-                <input type="text" value="${groupsStr}" placeholder="ej. regulares_ar, nivel_1" title="Separados por coma" onchange="updateBlock(${day}, ${bIndex}, 'identityGroups', this.value)">
-            </div>
-            ${badgesHtml} <div class="block-row" style="margin-top: 6px;">
-                <label>Filtros (Opt):</label>
-                <input type="text" list="common-filtros" value="${constStr}" placeholder="ej. persona_base:afirmativo" onchange="updateBlock(${day}, ${bIndex}, 'constraints', this.value)">
-            </div>
-            
-            <div class="block-row">
-                <label style="color:#8e44ad;">Específicos:</label>
-                <input type="text" value="${specStr}" placeholder="ej. ser:yo, estar:tú, ir" title="Fuerza verbos exactos. El resto se llena aleatoriamente." style="border-color:#d2b4de; background:#f5eef8;" onchange="updateBlock(${day}, ${bIndex}, 'specificVerbs', this.value)">
-            </div>
-        </div>
-    `;
-});
+                    blocksHtml += `
+                        <div class="block-item">
+                            <button class="btn-del-block" title="Borrar bloque" onclick="deleteBlock(${day}, ${bIndex})">X</button>
+                            
+                            <div class="block-row">
+                                <input type="number" style="width:50px; font-weight:bold; color:#2980b9;" value="${b.count || 0}" title="Cantidad (Count)" onchange="updateBlock(${day}, ${bIndex}, 'count', this.value)">
+                                <input type="text" value="${b.label || ''}" placeholder="Etiqueta (ej. Tú afirmativo)" style="font-weight:bold;" onchange="updateBlock(${day}, ${bIndex}, 'label', this.value)">
+                            </div>
+                            
+                            <div class="block-row">
+                                <label>Bank JSON:</label>
+                                <input type="text" list="common-banks" value="${b.bank || ''}" placeholder="bancos/banco_X.json" onchange="updateBlock(${day}, ${bIndex}, 'bank', this.value)">
+                            </div>
+                            
+                            <div class="block-row">
+                                <label>Categoría ID:</label>
+                                <input type="text" list="category-ids" value="${b.identityCategory || ''}" placeholder="ej. mandatos_informales" onchange="updateBlock(${day}, ${bIndex}, 'identityCategory', this.value)">
+                            </div>
+                            
+                            <div class="block-row" style="margin-bottom: 0;">
+                                <label>Grupos:</label>
+                                <input type="text" value="${groupsStr}" placeholder="ej. regulares_ar, nivel_1" title="Separados por coma" onchange="updateBlock(${day}, ${bIndex}, 'identityGroups', this.value)">
+                            </div>
+                            ${badgesHtml} 
+                            
+                            <div class="block-row" style="margin-top: 6px;">
+                                <label>Filtros (Opt):</label>
+                                <input type="text" list="common-filtros" value="${constStr}" placeholder="ej. persona_base:afirmativo" onchange="updateBlock(${day}, ${bIndex}, 'constraints', this.value)">
+                            </div>
+                            
+                            <div class="block-row">
+                                <label style="color:#8e44ad;">Específicos:</label>
+                                <input type="text" value="${specStr}" placeholder="ej. ser:yo, estar:tú, ir" title="Fuerza verbos exactos. El resto se llena aleatoriamente." style="border-color:#d2b4de; background:#f5eef8;" onchange="updateBlock(${day}, ${bIndex}, 'specificVerbs', this.value)">
+                            </div>
+                        </div>
+                    `;
+                });
 
                 gridHtml += `
                     <div class="card">
@@ -420,6 +430,7 @@
                             <div>Día ${day} <span class="count-badge ${countClass}" style="margin-left:10px;">${countText}</span></div>
                             <div style="display:flex; align-items:center; gap:10px;">
                                 ${dateHtml}
+                                <button class="btn-copy-day" title="Duplicar este Día" onclick="duplicateDayCard(${day})">📋</button>
                                 <button class="btn-del-day" title="Borrar todo este Día" onclick="deleteDayCard(${day})">🗑️</button>
                             </div>
                         </div>
@@ -478,6 +489,42 @@
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
             targetSchedule.push({ dia: dayNum, topic: '', vocabFile: '', proficiency: 0.8, blocks: [] });
             
+            renderGrid();
+        }
+
+        function duplicateDayCard(sourceDayNum) {
+            let targetDayNum = prompt(`¿A qué número de Día quieres copiar todo el contenido del Día ${sourceDayNum}?`);
+            
+            if (!targetDayNum) return; 
+            
+            targetDayNum = parseInt(targetDayNum);
+            if (isNaN(targetDayNum) || targetDayNum <= 0) {
+                alert("Por favor ingresa un número de día válido.");
+                return;
+            }
+
+            let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
+            let existingTarget = targetSchedule.find(d => d.dia === targetDayNum);
+            
+            if (existingTarget) {
+                if (!confirm(`⚠️ El Día ${targetDayNum} ya existe en este curso. ¿Quieres sobrescribirlo por completo?`)) {
+                    return; 
+                }
+                if (currentCourse === 's2') {
+                    db.s2 = db.s2.filter(d => d.dia !== targetDayNum);
+                } else {
+                    db.s4 = db.s4.filter(d => d.dia !== targetDayNum);
+                }
+                targetSchedule = currentCourse === 's2' ? db.s2 : db.s4; 
+            }
+
+            let sourceDayObj = targetSchedule.find(d => d.dia === sourceDayNum);
+            if (!sourceDayObj) return;
+
+            let newDayObj = JSON.parse(JSON.stringify(sourceDayObj));
+            newDayObj.dia = targetDayNum;
+            
+            targetSchedule.push(newDayObj);
             renderGrid();
         }
 
@@ -570,22 +617,21 @@
         }
 
         function toggleGrupo(dayNum, blockIndex, grupo) {
-    let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
-    let dayObj = targetSchedule.find(d => d.dia === dayNum);
-    if (!dayObj || !dayObj.blocks || !dayObj.blocks[blockIndex]) return;
+            let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
+            let dayObj = targetSchedule.find(d => d.dia === dayNum);
+            if (!dayObj || !dayObj.blocks || !dayObj.blocks[blockIndex]) return;
 
-    let block = dayObj.blocks[blockIndex];
-    if (!block.identityGroups) block.identityGroups = [];
+            let block = dayObj.blocks[blockIndex];
+            if (!block.identityGroups) block.identityGroups = [];
 
-    // Toggle logic: if it's there, remove it. If it's not, add it.
-    if (block.identityGroups.includes(grupo)) {
-        block.identityGroups = block.identityGroups.filter(g => g !== grupo);
-    } else {
-        block.identityGroups.push(grupo);
-    }
-    
-    renderGrid();
-}
+            if (block.identityGroups.includes(grupo)) {
+                block.identityGroups = block.identityGroups.filter(g => g !== grupo);
+            } else {
+                block.identityGroups.push(grupo);
+            }
+            
+            renderGrid();
+        }
         
         function exportSchedule() {
             let targetSchedule = currentCourse === 's2' ? db.s2 : db.s4;
