@@ -2199,5 +2199,117 @@
       }
     ],
     "date": "2026-06-02"
+  },
+  {
+    "dia": 81,
+    "topic": "Examen Final",
+    "vocabFile": "vocab/D2-9-5.json",
+    "proficiency": 0.8,
+    "blocks": [
+      {
+        "label": "Presente",
+        "bank": "bancos/banco_presente.json",
+        "identityCategory": "presente",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_4",
+          "nivel_8"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Pretérito",
+        "bank": "bancos/banco_preterito.json",
+        "identityCategory": "preterito",
+        "identityGroups": [
+          "nivel_5",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto",
+        "bank": "bancos/banco_imperfecto.json",
+        "identityCategory": "imperfecto",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_3"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Presente de subjuntivo",
+        "bank": "bancos/banco_subjuntivo_presente.json",
+        "identityCategory": "presente_de_subjuntivo",
+        "identityGroups": [
+          "nivel_2",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_3",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Imperfecto de subjuntivo",
+        "bank": "bancos/banco_imperfecto_de_subjuntivo.json",
+        "identityCategory": "imperfecto_de_subjuntivo",
+        "identityGroups": [
+          "nivel_3",
+          "nivel_7",
+          "nivel_6",
+          "nivel_5",
+          "nivel_4"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Mandatos informales",
+        "bank": "bancos/banco_mandatos_informales.json",
+        "identityCategory": "mandatos_informales_afirmativos",
+        "identityGroups": [
+          "nivel_3"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Mandatos informales",
+        "bank": "bancos/banco_mandatos_informales.json",
+        "identityCategory": "mandatos_informales_negativos",
+        "identityGroups": [
+          "nivel_1",
+          "nivel_2",
+          "nivel_3",
+          "nivel_4",
+          "nivel_5",
+          "nivel_6",
+          "nivel_7"
+        ],
+        "count": 5
+      },
+      {
+        "label": "Mandatos Formales y Plurales",
+        "bank": "bancos/banco_mandatos_formales_plurales.json",
+        "identityCategory": "mandatos_formales_plurales",
+        "identityGroups": [],
+        "count": 5
+      },
+      {
+        "label": "Futuro",
+        "bank": "bancos/banco_futuro.json",
+        "identityCategory": "futuro.json",
+        "identityGroups": [],
+        "count": 5
+      },
+      {
+        "label": "Condicional",
+        "bank": "bancos/banco_condicional.json",
+        "identityCategory": "condicional.json",
+        "identityGroups": [],
+        "count": 5
+      }
+    ],
+    "date": "2026-06-04"
   }
 ]
